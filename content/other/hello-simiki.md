@@ -14,4 +14,32 @@ if __name__ == __main__:
 
 ```
 
+发布的脚本：
+```shell
+do_commit() {
+    cmd="git commit -a -m\"$log\""
+    echo $cmd
+    git add .;
+    git commit -am"$log"
+    git push -u origin source;
+
+    simiki generate;
+    cd output;
+    git pull;
+    git add .
+    git commit -am"$log";
+    git push
+    cd ../
+
+}
+
+while [ $# -gt 0 ]
+do
+    case $1 in
+        -commit |-u) shift; log=$1; do_commit; exit 0;;
+    esac
+    shift
+done
+```
+
 我觉得还需要增加的功能是检索。
