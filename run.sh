@@ -1,6 +1,5 @@
 #!/bin/sh
 
-log="update"
 
 do_commit() {
     cmd="git commit -a -m\"$log\""
