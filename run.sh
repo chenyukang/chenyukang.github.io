@@ -10,6 +10,7 @@ do_commit() {
 
     simiki generate;
     cd output;
+    git pull;
     git add .
     git commit -am"$log";
     git push
