@@ -19,14 +19,14 @@ if __name__ == __main__:
 do_commit() {
     cmd="git commit -a -m\"$log\""
     echo $cmd
-    git add .;
+    git add . -A;
     git commit -am"$log"
     git push -u origin source;
 
     simiki generate;
     cd output;
     git pull;
-    git add .
+    git add . -A;
     git commit -am"$log";
     git push
     cd ../
