@@ -6,7 +6,7 @@ do_commit() {
     echo $cmd
     git add .;
     git commit -am"$log"
-    git push;
+    git push -u origin source;
 
     simiki generate;
     cd output;
