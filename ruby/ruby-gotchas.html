@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
+        <title>ruby-gotchas - Yukang's Wiki</title>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+        <a href="https://github.com/tankywoo/wiki.tankywoo.com"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+        <!--
+        <div id="nav">
+            <ul>
+                <li><a href="http://tankywoo.com"></a></li>
+                <li><a href="">Github</a></li>
+                <li><a href="">Simiki</a></li>
+            </ul>
+        </div>
+        -->
+        <div id="container">
+            
+    <div id="header">
+        <div id="post-nav">
+            
+            <a href="/">Home</a> » <a href="/#ruby">ruby</a> » ruby-gotchas
+            
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div id="title">ruby-gotchas</div>
+    <div id="content">
+        <h2 id="whitespace-is-sensitive">Whitespace is sensitive</h2>
+<div class="hlcode"><pre><span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">);</span> <span class="k">end</span>
+
+<span class="nb">method</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+<span class="nb">method</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="nb">method</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">## ERROR</span>
+
+<span class="k">def</span> <span class="nf">method</span><span class="p">;</span> <span class="mi">42</span><span class="p">;</span> <span class="k">end</span>
+<span class="n">num</span> <span class="o">=</span> <span class="mi">21</span>
+<span class="nb">method</span><span class="o">/</span><span class="n">num</span>
+<span class="nb">method</span> <span class="o">/</span> <span class="n">num</span>
+<span class="nb">method</span><span class="o">/</span> <span class="n">num</span>
+<span class="nb">method</span> <span class="sr">/num ## ERROR</span>
+</pre></div>
+
+
+<h2 id="is-confusing"><code>===</code> is confusing</h2>
+<p>like this:</p>
+<div class="hlcode"><pre><span class="mi">1</span> <span class="o">===</span> <span class="mi">1</span>            <span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="no">Fixnum</span> <span class="o">===</span> <span class="mi">1</span>       <span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="mi">1</span> <span class="o">===</span> <span class="no">Fixnum</span>       <span class="o">=&gt;</span> <span class="kp">false</span>
+
+<span class="no">Fixnum</span> <span class="o">===</span> <span class="no">Fixnum</span>  <span class="o">=&gt;</span> <span class="kp">false</span>
+
+<span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="p">)</span> <span class="o">===</span> <span class="mi">2</span>       <span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="mi">2</span> <span class="o">===</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">3</span><span class="p">)</span>       <span class="o">=&gt;</span> <span class="kp">false</span>
+</pre></div>
+
+
+<p>Remember, <code>===</code> used to test equality within a when clause of a case statement.</p>
+<div class="hlcode"><pre><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span><span class="p">)</span> <span class="o">===</span> <span class="mi">5</span>       <span class="o">=&gt;</span> <span class="kp">false</span>
+</pre></div>
+
+
+<h2 id="operator-precedence">Operator precedence</h2>
+<div class="hlcode"><pre><span class="n">x</span> <span class="o">=</span> <span class="kp">true</span> <span class="o">&amp;</span> <span class="kp">false</span>
+<span class="n">x</span> <span class="o">=&gt;</span> <span class="kp">false</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="kp">true</span> <span class="ow">and</span> <span class="kp">false</span>
+<span class="n">x</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</pre></div>
+
+
+<h2 id="regexps-is-not-same">Regexps is not same</h2>
+<p>In "standard" regexps:</p>
+<div class="hlcode"><pre><span class="sb">`^`</span> <span class="n">is</span> <span class="n">start</span> <span class="ow">and</span> <span class="sb">`$`</span> <span class="n">is</span> <span class="k">end</span> <span class="n">of</span> <span class="n">the</span> <span class="n">whole</span> <span class="n">string</span><span class="o">.</span>
+</pre></div>
+
+
+<p>Ruby's regexps default to multiple line, so:</p>
+<div class="hlcode"><pre><span class="o">^</span> <span class="ow">and</span> <span class="err">$</span> <span class="n">is</span> <span class="n">start</span> <span class="ow">and</span> <span class="k">end</span> <span class="n">of</span> <span class="n">any</span> <span class="n">line</span><span class="p">,</span>
+<span class="n">A</span> <span class="ow">and</span> <span class="n">E</span> <span class="n">is</span> <span class="n">start</span> <span class="ow">and</span> <span class="k">end</span> <span class="n">of</span> <span class="n">whole</span> <span class="n">string</span><span class="o">.</span>
+</pre></div>
+
+
+<h2 id="gettingany">getting.any?</h2>
+<div class="hlcode"><pre><span class="o">[].</span><span class="n">any?</span>            <span class="o">=&gt;</span> <span class="kp">false</span>
+<span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">any?</span>           <span class="o">=&gt;</span> <span class="kp">true</span>
+<span class="o">[</span><span class="ss">:foo</span><span class="p">,</span> <span class="ss">:bar</span><span class="o">].</span><span class="n">any</span>   <span class="o">=&gt;</span> <span class="kp">true</span>
+
+<span class="c1"># ok so far, BUT:</span>
+<span class="o">[</span><span class="kp">false</span><span class="o">].</span><span class="n">any?</span>       <span class="o">=&gt;</span> <span class="kp">false</span>
+<span class="o">[</span><span class="kp">nil</span><span class="o">].</span><span class="n">any?</span>         <span class="o">=&gt;</span> <span class="kp">false</span>
+<span class="o">[</span><span class="kp">false</span><span class="p">,</span> <span class="kp">nil</span><span class="o">].</span><span class="n">any?</span>  <span class="o">=&gt;</span> <span class="kp">false</span>
+<span class="o">[</span><span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="o">].</span><span class="n">any?</span> <span class="o">=&gt;</span> <span class="kp">true</span>
+</pre></div>
+
+
+<p>Actually <code>any?</code> means <code>are any truthy?</code></p>
+    </div>
+
+        </div>
+        <div id="footer">
+            <span>
+                Copyright © 2012-2014 <a href="http://cyukang.com/" target="_blank">Yukang</a>.
+                Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.
+            </span>
+        </div>
+    </body>
+</html>
