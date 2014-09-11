@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
+        <title>编译理论 - Yukang's Wiki</title>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+        <a href="https://github.com/tankywoo/wiki.tankywoo.com"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+        <!--
+        <div id="nav">
+            <ul>
+                <li><a href="http://tankywoo.com"></a></li>
+                <li><a href="">Github</a></li>
+                <li><a href="">Simiki</a></li>
+            </ul>
+        </div>
+        -->
+        <div id="container">
+            
+    <div id="header">
+        <div id="post-nav">
+            
+            <a href="/">Home</a> » <a href="/#programming">programming</a> » 编译理论
+            
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div id="title">编译理论</div>
+    <div id="content">
+        <h2 id="_1">简介</h2>
+<p>编译器设计中有很多用数学来抽象解决现实问题的例子，学习编译器设计主要是内容是学习如何选择合适的数学模型和合适的算法，如何在通用性和简洁，效率之间找到一个平衡点。</p>
+<p>代码优化：为什么代码优化重要，编译一次运行多次，编译一次长时间运行。代码优化注重的是生成更简单、效率更高的代码。因为硬件的不断改进(多核的机器)，代码优化是一个值得研究的领域。</p>
+<p>代码优化的原则：保持程序的正确性，提高代码执行效率，优化的时间和实现的复杂度在可控制范围内。</p>
+<p>学习编译器设计的意义： 学习编译器的目的不只是为了写编译器，事实上，绝大部分人从来没用过编译器里的技术去写过一个主流语言的编译器(甚至是部分)。</p>
+<p>编译器设计是一个复杂的open-ended问题，在开发过程中涉及到各种理论和实验。</p>
+<p>编译器设计是一个大而全的问题，涉及到计算机的各个领域。</p>
+<h3 id="_2">高级语言的实现</h3>
+<p>更高层的语言是更高层次的抽象，编译器作为高层次抽象和硬件之间的translator.</p>
+<p>C/C++里面的<code>register</code>，这个关键字随着编译器的发展其作用渐渐消失，本来是对编译器的一个优化提示，但现在的大多数编译器都能做auto register allocation，编译器做出来的选择可能会更好。</p>
+<h3 id="_3">计算机构架的优化</h3>
+<p>两个重要的方向，并行和存储层次</p>
+<h3 id="program-translation">Program translation</h3>
+<div class="hlcode"><pre><span class="n">Binary</span> <span class="n">translation</span>
+<span class="n">Hardware</span> <span class="n">synthesis</span>
+<span class="n">Database</span> <span class="n">query</span> <span class="n">interpreters</span><span class="p">.</span>
+</pre></div>
+
+
+<h3 id="productivity-tools">做软件的Productivity Tools</h3>
+<div class="hlcode"><pre><span class="err">类型系统</span> <span class="n">type</span> <span class="n">checker</span><span class="err">用于防止一些编程中的错误</span>
+<span class="err">边界检查</span> <span class="n">bounds</span> <span class="n">checking</span>
+<span class="err">内存管理工具</span> <span class="n">GC</span>
+</pre></div>
+
+
+<h2 id="parsing">Parsing</h2>
+<p>含有N个终结节点的conext-free语法，Parser的最坏复杂度为O(N^3)。不过实际应用中线性复杂度的Parser对于绝大多数编程语言都足够了。</p>
+<p>Parser实现方法分为了两类： 自底向上和自顶向下。通常手写的Parser是自顶向下的，这种方式对于手写Parser更容易些。</p>
+<p>Syntax-directed translation, 最简单的Parser。</p>
+<p>intermediate code： Abstract syntax, three-address code.</p>
+<h2 id="lexical-analysis">Lexical Analysis</h2>
+<p>Lexical Analysis识别出token，Parsing分为Lexical Analysis和Syntax Analysis。为了设计的简单，层次清晰，效率。</p>
+<h2 id="top-down-parser">Top-down parser</h2>
+<p>LL(K), DFA和NFA，一般来说DFA耗的内存要多一些，任何NFA都能转换为DFA。</p>
+<p>Parser generator的本质原理都是自动状态机。</p>
+<h2 id="bottm-up-parser">Bottm-up parser</h2>
+<p>LR(k)</p>
+<h2 id="intermediate-code-generation">Intermediate-code Generation</h2>
+<div class="hlcode"><pre><span class="n">The</span> <span class="n">term</span> <span class="s">&quot;three-address code&quot;</span> <span class="n">comes</span> <span class="n">from</span> <span class="n">instructions</span> <span class="n">of</span> <span class="n">the</span> <span class="n">general</span> <span class="n">form</span> <span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="n">op</span> <span class="n">z</span> <span class="n">with</span> <span class="n">three</span> <span class="n">addresses</span><span class="o">:</span>
+<span class="n">two</span> <span class="k">for</span> <span class="n">the</span> <span class="n">operands</span> <span class="n">y</span> <span class="n">and</span> <span class="n">z</span> <span class="n">and</span> <span class="n">one</span> <span class="k">for</span> <span class="n">the</span> <span class="n">result</span> <span class="n">x</span><span class="p">.</span>
+
+
+<span class="n">C</span> <span class="n">is</span> <span class="n">a</span> <span class="n">programming</span> <span class="n">language</span><span class="p">,</span> <span class="n">yet</span> <span class="n">it</span> <span class="n">is</span> <span class="n">often</span> <span class="n">used</span> <span class="n">as</span> <span class="n">an</span> <span class="n">intermediate</span> <span class="n">form</span> <span class="n">because</span> <span class="n">it</span> <span class="n">is</span> <span class="n">flexible</span><span class="p">,</span>
+<span class="n">it</span> <span class="n">compiles</span> <span class="n">into</span> <span class="n">efficient</span> <span class="n">machine</span> <span class="n">code</span><span class="p">,</span> <span class="n">and</span> <span class="n">its</span> <span class="n">com</span><span class="err">­</span> <span class="n">pilers</span> <span class="n">are</span> <span class="n">widely</span> <span class="n">available</span><span class="p">.</span>
+</pre></div>
+
+
+<p>在生成three-address code之前，syntax tree可以转换为DAG，通常DAG里面的节点可以通过一个hashtable去存取。</p>
+    </div>
+
+        </div>
+        <div id="footer">
+            <span>
+                Copyright © 2012-2014 <a href="http://cyukang.com/" target="_blank">Yukang</a>.
+                Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.
+            </span>
+        </div>
+    </body>
+</html>
