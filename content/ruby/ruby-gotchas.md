@@ -20,8 +20,6 @@ method/ num
 method /num ## ERROR
 ```
 
-
-
 ## `===` is confusing
 
 like this:
