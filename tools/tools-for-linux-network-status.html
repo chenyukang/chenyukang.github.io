@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
+        <title>Tools for Linux network status - Yukang's Wiki</title>
+        <meta name="keywords" content=""/>
+        <meta name="description" content=""/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+        <a href="https://github.com/tankywoo/wiki.tankywoo.com"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+        <!--
+        <div id="nav">
+            <ul>
+                <li><a href="http://tankywoo.com"></a></li>
+                <li><a href="">Github</a></li>
+                <li><a href="">Simiki</a></li>
+            </ul>
+        </div>
+        -->
+        <div id="container">
+            
+    <div id="header">
+        <div id="post-nav">
+            
+            <a href="/">Home</a> » <a href="/#tools">tools</a> » Tools for Linux network status
+            
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div id="title">Tools for Linux network status</div>
+    <div id="content">
+        <h2 id="netstat">netstat</h2>
+<div class="hlcode"><pre><span class="n">netstat</span> <span class="o">-</span><span class="n">tulpn</span>
+</pre></div>
+
+
+<p>sample result is:</p>
+<div class="hlcode"><pre><span class="n">Active</span> <span class="n">Internet</span> <span class="n">connections</span> <span class="p">(</span><span class="n">only</span> <span class="n">servers</span><span class="p">)</span>
+<span class="n">Proto</span> <span class="n">Recv</span><span class="o">-</span><span class="n">Q</span> <span class="n">Send</span><span class="o">-</span><span class="n">Q</span> <span class="n">Local</span> <span class="n">Address</span>           <span class="n">Foreign</span> <span class="n">Address</span>         <span class="n">State</span>       <span class="n">PID</span><span class="o">/</span><span class="n">Program</span> <span class="n">name</span>
+<span class="n">tcp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">127.0.0.1</span><span class="o">:</span><span class="mi">3306</span>          <span class="mf">0.0.0.0</span><span class="o">:*</span>               <span class="n">LISTEN</span>      <span class="mi">1138</span><span class="o">/</span><span class="n">mysqld</span>
+<span class="n">tcp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">0.0.0.0</span><span class="o">:</span><span class="mi">111</span>             <span class="mf">0.0.0.0</span><span class="o">:*</span>               <span class="n">LISTEN</span>      <span class="mi">850</span><span class="o">/</span><span class="n">portmap</span>
+<span class="n">tcp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">0.0.0.0</span><span class="o">:</span><span class="mi">80</span>              <span class="mf">0.0.0.0</span><span class="o">:*</span>               <span class="n">LISTEN</span>      <span class="mi">1607</span><span class="o">/</span><span class="n">apache2</span>
+<span class="n">tcp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">0.0.0.0</span><span class="o">:</span><span class="mi">55091</span>           <span class="mf">0.0.0.0</span><span class="o">:*</span>               <span class="n">LISTEN</span>      <span class="mi">910</span><span class="o">/</span><span class="n">rpc</span><span class="p">.</span><span class="n">statd</span>
+<span class="n">tcp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">192.168.122.1</span><span class="o">:</span><span class="mi">53</span>        <span class="mf">0.0.0.0</span><span class="o">:*</span>               <span class="n">LISTEN</span>      <span class="mi">1467</span><span class="o">/</span><span class="n">dnsmasq</span>
+<span class="n">tcp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">0.0.0.0</span><span class="o">:</span><span class="mi">22</span>              <span class="mf">0.0.0.0</span><span class="o">:*</span>               <span class="n">LISTEN</span>      <span class="mi">992</span><span class="o">/</span><span class="n">sshd</span>
+<span class="n">tcp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">127.0.0.1</span><span class="o">:</span><span class="mi">631</span>           <span class="mf">0.0.0.0</span><span class="o">:*</span>               <span class="n">LISTEN</span>      <span class="mi">1565</span><span class="o">/</span><span class="n">cupsd</span>
+<span class="n">tcp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">0.0.0.0</span><span class="o">:</span><span class="mi">7000</span>            <span class="mf">0.0.0.0</span><span class="o">:*</span>               <span class="n">LISTEN</span>      <span class="mi">3813</span><span class="o">/</span><span class="n">transmission</span>
+<span class="n">tcp6</span>       <span class="mi">0</span>      <span class="mi">0</span> <span class="o">:::</span><span class="mi">22</span>                   <span class="o">:::*</span>                    <span class="n">LISTEN</span>      <span class="mi">992</span><span class="o">/</span><span class="n">sshd</span>
+<span class="n">tcp6</span>       <span class="mi">0</span>      <span class="mi">0</span> <span class="o">::</span><span class="mi">1</span><span class="o">:</span><span class="mi">631</span>                 <span class="o">:::*</span>                    <span class="n">LISTEN</span>      <span class="mi">1565</span><span class="o">/</span><span class="n">cupsd</span>
+<span class="n">tcp6</span>       <span class="mi">0</span>      <span class="mi">0</span> <span class="o">:::</span><span class="mi">7000</span>                 <span class="o">:::*</span>                    <span class="n">LISTEN</span>      <span class="mi">3813</span><span class="o">/</span><span class="n">transmission</span>
+<span class="n">udp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">0.0.0.0</span><span class="o">:</span><span class="mi">111</span>             <span class="mf">0.0.0.0</span><span class="o">:*</span>                           <span class="mi">850</span><span class="o">/</span><span class="n">portmap</span>
+<span class="n">udp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">0.0.0.0</span><span class="o">:</span><span class="mi">662</span>             <span class="mf">0.0.0.0</span><span class="o">:*</span>                           <span class="mi">910</span><span class="o">/</span><span class="n">rpc</span><span class="p">.</span><span class="n">statd</span>
+<span class="n">udp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">192.168.122.1</span><span class="o">:</span><span class="mi">53</span>        <span class="mf">0.0.0.0</span><span class="o">:*</span>                           <span class="mi">1467</span><span class="o">/</span><span class="n">dnsmasq</span>
+<span class="n">udp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">0.0.0.0</span><span class="o">:</span><span class="mi">67</span>              <span class="mf">0.0.0.0</span><span class="o">:*</span>                           <span class="mi">1467</span><span class="o">/</span><span class="n">dnsmasq</span>
+<span class="n">udp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">0.0.0.0</span><span class="o">:</span><span class="mi">68</span>              <span class="mf">0.0.0.0</span><span class="o">:*</span>                           <span class="mi">3697</span><span class="o">/</span><span class="n">dhclient</span>
+<span class="n">udp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">0.0.0.0</span><span class="o">:</span><span class="mi">7000</span>            <span class="mf">0.0.0.0</span><span class="o">:*</span>                           <span class="mi">3813</span><span class="o">/</span><span class="n">transmission</span>
+<span class="n">udp</span>        <span class="mi">0</span>      <span class="mi">0</span> <span class="mf">0.0.0.0</span><span class="o">:</span><span class="mi">54746</span>           <span class="mf">0.0.0.0</span><span class="o">:*</span>                           <span class="mi">910</span><span class="o">/</span><span class="n">rpc</span><span class="p">.</span><span class="n">statd</span>
+</pre></div>
+
+
+<p>more info links to:</p>
+<p><a href="http://www.cyberciti.biz/faq/what-process-has-open-linux-port/">Linux: Find Out Which Process Is Listening Upon a Port</a></p>
+    </div>
+
+        </div>
+        <div id="footer">
+            <span>
+                Copyright © 2012-2014 <a href="http://cyukang.com/" target="_blank">Yukang</a>.
+                Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.
+            </span>
+        </div>
+    </body>
+</html>
