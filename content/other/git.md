@@ -25,3 +25,9 @@ git checkout -- file
 ```shell
 git log -- file
 ```
+
+
+清除所有untracked files in Git repo:
+```shell
+git clean -fxd
+```
