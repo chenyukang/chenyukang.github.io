@@ -28,3 +28,9 @@ or use mutt:
 ```shell
 echo "This is the message body" | mutt -a file.to.attach -s "subject of message" recipient@domain.com
 ```
+
+## add ssh public key to remote server
+
+```shell
+cat ~/.ssh/id_rsa.pub | ssh username@host 'cat >> .ssh/authorized_keys'
+```
