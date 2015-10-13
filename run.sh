@@ -8,6 +8,7 @@ do_commit() {
     git commit -am"$log"
     git push -u origin source;
 
+    cd output; git pull; cd ../;
     simiki generate;
     cd output;
     git pull;

@@ -9,15 +9,15 @@ date: 2015-10-13 22:36
 
 解决方案
 
-1、为新项目生成一个新的rsa key
+1. 为新项目生成一个新的rsa key
 
 ```sh
 ssh-keygen -t rsa -C "your_email@youremail.com”
 ```
 
-2、github库中加入新的rsa key公钥
+2. github库中加入新的rsa key公钥
 
-3、添加git配置文件（~/.ssh/id_rsa_newprj 为rsa私钥路径）
+3. 添加git配置文件（~/.ssh/id_rsa_newprj 为rsa私钥路径）
 
 vim ~/.ssh/config
 
@@ -35,7 +35,7 @@ Host github.com-newprj
     IdentityFile ~/.ssh/id_rsa_newprj
 ```
 
-4、clone项目或者修改现有项目的.git/config
+4. clone项目或者修改现有项目的.git/config
 
 ```sh
 git clone git@github.com-newprj:XXXXX/yyyy.git
