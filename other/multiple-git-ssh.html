@@ -34,13 +34,21 @@
     <div id="content">
         <p>场景: 服务器中有多个Github项目，每个项目用的不同github rsa key，于是默认的~/.ssh/id_rsa就不能解决问题。</p>
 <p>解决方案</p>
-<p>1、为新项目生成一个新的rsa key</p>
+<ol>
+<li>为新项目生成一个新的rsa key</li>
+</ol>
 <div class="hlcode"><pre>ssh-keygen -t rsa -C <span class="err">&quot;</span>your_email@youremail.com”
 </pre></div>
 
 
-<p>2、github库中加入新的rsa key公钥</p>
-<p>3、添加git配置文件（~/.ssh/id_rsa_newprj 为rsa私钥路径）</p>
+<ol>
+<li>
+<p>github库中加入新的rsa key公钥</p>
+</li>
+<li>
+<p>添加git配置文件（~/.ssh/id_rsa_newprj 为rsa私钥路径）</p>
+</li>
+</ol>
 <p>vim ~/.ssh/config</p>
 <div class="hlcode"><pre><span class="c">#default account</span>
 Host github.com
@@ -56,7 +64,9 @@ Host github.com-newprj
 </pre></div>
 
 
-<p>4、clone项目或者修改现有项目的.git/config</p>
+<ol>
+<li>clone项目或者修改现有项目的.git/config</li>
+</ol>
 <div class="hlcode"><pre>git clone git@github.com-newprj:XXXXX/yyyy.git
 </pre></div>
     </div>
