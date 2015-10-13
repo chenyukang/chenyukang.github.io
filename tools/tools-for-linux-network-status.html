@@ -3,7 +3,7 @@
     <head>
         <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
         <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
-        <title>multiple-git-ssh - Yukang's Wiki</title>
+        <title>Tools for Linux network status - Yukang's Wiki</title>
         <meta name="keywords" content=""/>
         <meta name="description" content=""/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -25,40 +25,22 @@
     <div id="header">
         <div id="post-nav">
             
-            <a href="/">Home</a> » <a href="/#other">other</a> » multiple-git-ssh
+            <a href="/">Home</a> » <a href="/#tools">tools</a> » Tools for Linux network status
             
         </div>
     </div>
     <div class="clearfix"></div>
-    <div id="title">multiple-git-ssh</div>
+    <div id="title">Tools for Linux network status</div>
     <div id="content">
-        <p>场景: 服务器中有多个Github项目，每个项目用的不同github rsa key，于是默认的~/.ssh/id_rsa就不能解决问题。</p>
-<p>解决方案</p>
-<p>1、为新项目生成一个新的rsa key</p>
-<div class="hlcode"><pre>ssh-keygen -t rsa -C <span class="err">&quot;</span>your_email@youremail.com”
+        <h2 id="netstat">netstat</h2>
+<div class="hlcode"><pre><span class="n">netstat</span> <span class="o">-</span><span class="n">tulpn</span>       <span class="err">#</span> <span class="n">see</span> <span class="n">the</span> <span class="n">network</span> <span class="n">status</span>
+<span class="n">lsof</span>                 <span class="err">#</span> <span class="n">see</span> <span class="n">the</span> <span class="n">open</span> <span class="n">files</span> <span class="n">of</span> <span class="n">a</span> <span class="n">process</span>
+<span class="n">ls</span> <span class="o">-</span><span class="n">l</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="n">pid</span><span class="o">/</span><span class="n">exe</span>  <span class="err">#</span> <span class="n">see</span> <span class="n">the</span> <span class="n">binary</span> <span class="n">file</span>
 </pre></div>
 
 
-<p>2、github库中加入新的rsa key公钥</p>
-<p>3、添加git配置文件（~/.ssh/id_rsa_newprj 为rsa私钥路径）</p>
-<p>vim ~/.ssh/config</p>
-<div class="hlcode"><pre><span class="c">#default account</span>
-Host github.com
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_rsa
-
-<span class="c">#your project account</span>
-Host github.com-newprj
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_rsa_newprj
-</pre></div>
-
-
-<p>4、clone项目或者修改现有项目的.git/config</p>
-<div class="hlcode"><pre>git clone git@github.com-newprj:XXXXX/yyyy.git
-</pre></div>
+<p>more info links to:</p>
+<p><a href="http://www.cyberciti.biz/faq/what-process-has-open-linux-port/">Linux: Find Out Which Process Is Listening Upon a Port</a></p>
     </div>
 
         </div>

@@ -3,7 +3,7 @@
     <head>
         <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
         <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
-        <title>multiple-git-ssh - Yukang's Wiki</title>
+        <title>Ruby on Rails Tips - Yukang's Wiki</title>
         <meta name="keywords" content=""/>
         <meta name="description" content=""/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -25,40 +25,16 @@
     <div id="header">
         <div id="post-nav">
             
-            <a href="/">Home</a> » <a href="/#other">other</a> » multiple-git-ssh
+            <a href="/">Home</a> » <a href="/#programming">programming</a> » Ruby on Rails Tips
             
         </div>
     </div>
     <div class="clearfix"></div>
-    <div id="title">multiple-git-ssh</div>
+    <div id="title">Ruby on Rails Tips</div>
     <div id="content">
-        <p>场景: 服务器中有多个Github项目，每个项目用的不同github rsa key，于是默认的~/.ssh/id_rsa就不能解决问题。</p>
-<p>解决方案</p>
-<p>1、为新项目生成一个新的rsa key</p>
-<div class="hlcode"><pre>ssh-keygen -t rsa -C <span class="err">&quot;</span>your_email@youremail.com”
-</pre></div>
-
-
-<p>2、github库中加入新的rsa key公钥</p>
-<p>3、添加git配置文件（~/.ssh/id_rsa_newprj 为rsa私钥路径）</p>
-<p>vim ~/.ssh/config</p>
-<div class="hlcode"><pre><span class="c">#default account</span>
-Host github.com
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_rsa
-
-<span class="c">#your project account</span>
-Host github.com-newprj
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_rsa_newprj
-</pre></div>
-
-
-<p>4、clone项目或者修改现有项目的.git/config</p>
-<div class="hlcode"><pre>git clone git@github.com-newprj:XXXXX/yyyy.git
-</pre></div>
+        <h2 id="dont-do-too-much-in-hooks-transaction">Don't do too much in hooks transaction.</h2>
+<p>This may cause dead lock in Database,
+more details refer to <a href="http://stackoverflow.com/questions/2596005/working-around-mysql-error-deadlock-found-when-trying-to-get-lock-try-restarti">Mysql Dead lock</a></p>
     </div>
 
         </div>

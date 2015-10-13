@@ -3,7 +3,7 @@
     <head>
         <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
         <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
-        <title>multiple-git-ssh - Yukang's Wiki</title>
+        <title>Git使用 - Yukang's Wiki</title>
         <meta name="keywords" content=""/>
         <meta name="description" content=""/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -25,39 +25,36 @@
     <div id="header">
         <div id="post-nav">
             
-            <a href="/">Home</a> » <a href="/#other">other</a> » multiple-git-ssh
+            <a href="/">Home</a> » <a href="/#other">other</a> » Git使用
             
         </div>
     </div>
     <div class="clearfix"></div>
-    <div id="title">multiple-git-ssh</div>
+    <div id="title">Git使用</div>
     <div id="content">
-        <p>场景: 服务器中有多个Github项目，每个项目用的不同github rsa key，于是默认的~/.ssh/id_rsa就不能解决问题。</p>
-<p>解决方案</p>
-<p>1、为新项目生成一个新的rsa key</p>
-<div class="hlcode"><pre>ssh-keygen -t rsa -C <span class="err">&quot;</span>your_email@youremail.com”
+        <p>更新代码的时候尽量，这样代码的diff要好看一些。</p>
+<div class="hlcode"><pre><span class="n">git</span> <span class="n">pull</span> <span class="o">--</span><span class="n">rebase</span>
 </pre></div>
 
 
-<p>2、github库中加入新的rsa key公钥</p>
-<p>3、添加git配置文件（~/.ssh/id_rsa_newprj 为rsa私钥路径）</p>
-<p>vim ~/.ssh/config</p>
-<div class="hlcode"><pre><span class="c">#default account</span>
-Host github.com
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_rsa
-
-<span class="c">#your project account</span>
-Host github.com-newprj
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_rsa_newprj
+<p>撤销本地操作:</p>
+<div class="hlcode"><pre><span class="n">git</span> <span class="n">reset</span> <span class="o">--</span><span class="n">hard</span>
 </pre></div>
 
 
-<p>4、clone项目或者修改现有项目的.git/config</p>
-<div class="hlcode"><pre>git clone git@github.com-newprj:XXXXX/yyyy.git
+<p>撤销一个文件的本地操作：</p>
+<div class="hlcode"><pre><span class="n">git</span> <span class="n">checkout</span> <span class="o">--</span> <span class="n">file</span>
+<span class="err">````</span>
+
+<span class="err">查看哪一次</span><span class="n">commit</span><span class="err">删除了某个文件</span>
+
+<span class="err">```</span><span class="n">shell</span>
+<span class="n">git</span> <span class="n">log</span> <span class="o">--</span> <span class="n">file</span>
+</pre></div>
+
+
+<p>清除所有untracked files in Git repo:</p>
+<div class="hlcode"><pre><span class="n">git</span> <span class="n">clean</span> <span class="o">-</span><span class="n">fxd</span>
 </pre></div>
     </div>
 
