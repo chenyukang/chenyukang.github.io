@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>使用Jekyll和Github搭建博客 | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="基于Github提供平台，使用jekyll来写博客，这是非常适合程序员的博客环境">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">使用Jekyll和Github搭建博客</h1>
+
+    
+<h2 id="section">为什么要折腾</h2>
+<p>折腾了几次终于把博客从wordpress搬到Github了，迁徙这事本来是够麻烦的，而且也比较无聊。不过最终还是抑制不住诱惑，这有下面几点点好处。</p>
+
+<hr />
+
+<ul>
+  <li>
+    <p><strong>编辑方便，专注写作</strong></p>
+
+    <p>在线下编辑，可以随便选择自己喜欢的编辑器。当然wordpress也有离线编辑工具，不过Linux下我还没找到合适的，
+我平常是用<a href="http://mwolson.org/projects/EmacsMuse.html">Muse</a>生成html，然后再粘贴到站上。其实还好，
+就是插入图片不方便。使用Github和Jekyll是完全的离线，你甚至都不需要离开终端就可以发布文章，一切都只是简单的git push而已。
+写的过程中还可以用jekyll  –server预览最终排版。</p>
+  </li>
+  <li>
+    <p><strong>可以使用Github进行版本管理</strong></p>
+  </li>
+</ul>
+
+<p>像写程序一样写日志，这对程序员吸引很大。
+我用这个小脚本来完成发布:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="c">#!/bin/sh</span>
+do_commit<span class="o">()</span> <span class="o">{</span>
+    <span class="nv">cmd</span><span class="o">=</span><span class="s2">&quot;git commit -a -m\&quot;$log\&quot;&quot;</span>
+    <span class="nb">echo</span> <span class="nv">$cmd</span>
+    git add .<span class="p">;</span>
+    git commit -a -m<span class="s2">&quot;$log&quot;</span>
+    git push<span class="p">;</span>
+<span class="o">}</span>
+
+<span class="k">while</span> <span class="o">[</span> <span class="nv">$# </span>-gt <span class="m">0</span> <span class="o">]</span>
+<span class="k">do</span>
+  <span class="k">case</span> <span class="nv">$1</span> in
+    -commit <span class="p">|</span>-u<span class="o">)</span> <span class="nb">shift</span><span class="p">;</span> <span class="nv">log</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span> do_commit<span class="p">;</span> <span class="nb">exit </span>0<span class="p">;;</span>
+  <span class="k">esac</span>
+  <span class="nb">shift</span>
+<span class="k">done</span></code></pre></figure>
+
+<ul>
+  <li><strong>简洁</strong></li>
+</ul>
+
+<p>我喜欢这套是因为感觉一切都很简单,在_post目录下写markdown格式的文章，生成网页、push上去就发布了。页面也非常整洁，这对于一个以文字和代码为主要内容的站点来说最合适不过了。而且因为生成的全是静态网页，所以打开的速度也非常快。</p>
+
+<hr />
+
+<h2 id="section-1">折腾过程</h2>
+
+<hr />
+
+<p>这套工具适合程序员，因为一切都可以在本机上操作，你可以自己写程序来批量处理文档。我是自己写了一点Python小程序转移图片。 迁徙的过程中也会碰上一些问题，不过如果你懂一点Ruby，这些都还是比较好解决的。基本步骤为：</p>
+
+<ul>
+  <li>
+    <p>申请GitHub，这个不少程序员有，直接跳过。</p>
+  </li>
+  <li>
+    <p>安装Jekyll 在本地，可能会遇上ruby版本的问题，我的机子上是1.8.7，需要1.9.2，使用<a href="https://rvm.io//">rvm</a>来解决，具体参考<a href="http://lanvige.iteye.com/blog/857501">这里</a>。具体使用下面一些命令:</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-get install gems curl
+gem install rvm
+rvm get latest 
+rvm reload
+rvm install 1.9.2
+rvm use 1.9.2
+ruby -v <span class="c">#(use 1.9.2)</span>
+gem install directory_watcher liquid open4 maruku classifier jekyll</code></pre></figure>
+
+<ul>
+  <li>
+    <p>再建立yourname.github.com项目，git clone <a href="https://github.com/plusjade/jekyll-bootstrap.git">jekyll bootstrap</a>到自己的代码库。</p>
+  </li>
+  <li>
+    <p>从wordpress迁徙，我使用wordpress.xml这个方法，最后修改域名解析就大功告成了。
+修改域名的时候在Git上建立CNAME为demo.com，在DNS处设置demo.com的A记录到Github的地址(207.97.227.245)，同时为了使得www.demo.com也指向GitHub,设定
+www的A记录到这个地址。这是我设置的时候出错了的地方。</p>
+  </li>
+</ul>
+
+<p>整个流程非常简单，你甚至可以在<a href="http://ztpala.com/2012/01/12/zero-to-hosted-jekyll-blog-in-3-minutes/">三分钟内完成Github的博客搭建</a>，更相详细可以参考<a href="http://jekyllbootstrap.com/usage/jekyll-quick-start.html">这里</a><a href="http://vitobotta.com/how-to-migrate-from-wordpress-to-jekyll/">这里</a>。</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2012/04/11/find-duplicated-cycle-detection.html" title="Find duplicated Number and Cycle detection">Find duplicated Number and Cycle detection&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2012/06/20/bsfl-bitmap.html" title="bsfl指令和Bitmap的一个优化">&larr; bsfl指令和Bitmap的一个优化</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2012/06/13/try-jekyll-git.html" title="使用Jekyll和Github搭建博客" rel="nofollow">使用Jekyll和Github搭建博客</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>13 June 2012</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#jekyll-ref">jekyll <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#git-ref">git <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

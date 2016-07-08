@@ -1,0 +1,448 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>OS dev的Bochs调试 | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">OS dev的Bochs调试</h1>
+
+    
+<p>最近在弄一个自己的hobby OS，作为菜鸟在调试时候积累一些经验，记录一下。</p>
+
+<h2 id="bochs">Bochs调试</h2>
+
+<p>Bochs自带调试功能，但是如果你是apt装上的是不行的，下源码来自己编译，编译选项为：</p>
+
+<pre><code>./configure --enable-debugger --enable-disasm
+</code></pre>
+
+<p>这个我只是尝试过，在OS的loader阶段可能会用到，当如果进入C语言实现部分的代码如何调试?我希望看到C的源码级别调试，而不是汇编的。</p>
+
+<h2 id="bochs--gdb">Bochs + gdb调试</h2>
+
+<p>同样需要在编译的时候加上选项，这个选项必须注意，否则在gdb调试的时候会出现”Cannot find bounds of current function”之类的问题。</p>
+
+<pre><code>./configure --enable-debugger --enable-disasm --enable-gdb-stub
+</code></pre>
+
+<p>诡异的是这个–enable-gdb-stub选项和上面的 –enable-debugger选项只能二选一。也行，编译出来后重命名吧。编译完成后在Bochs的配置文件.bashrc中加上这么一行:</p>
+
+<pre><code>gdbstub: enabled=1, port=1234, text_base=0, data_base=0, bss_base=0
+</code></pre>
+
+<p>另外注意kernel的代码也需要加入-g编译选项。最后在编译完成后的文件是带调试信息的，但是我们在用Bochs启动的img文件不需要这些，现在比如kernel.elf是带编译信息的kernel
+文件，用下面的这个步骤去掉调试信息，据说也可以用strip来。</p>
+
+<pre><code>cmd="objcopy -R .pdr -R .comment -R .note -S -O binary kernel.elf kernel.bin"
+
+cat boot.bin setup.bin kernel.bin &gt; ../a.img;
+Bochs 使用的是这个a.img文件， gdb载入的是kernel.elf文件。
+</code></pre>
+
+<p>启动Bochs后会等待gdb连进来(其实Qemu也可以这样进行调试的)，查资料过程中发现还可在调试的目录加上.gdbinit，这样每次启动gdb就不那么麻烦了：</p>
+
+<pre><code>file ./objs/kernel.elf
+target remote localhost:1234
+set disassembly-flavor intel
+b kmain
+</code></pre>
+
+<h2 id="tips">一些有用tips</h2>
+
+<p>OS的代码中经常会有内联汇编，有的时候一条内联过去就崩溃了，所以在gdb里需要查看反汇编语句和registers。下面这些gdb指令比较有用：</p>
+
+<pre><code>(gdb) info line main.c:26  (查看main.c:26行在目标文件中的位置，为0x1cbc) 
+Line 26 of "./kernel/main.c" starts at address 0x1cbc &lt;kmain&gt; and ends at 0x1cc2 &lt;kmain+6&gt;.
+
+(gdb) info line *0x1cbc  (上面的反操作)
+Line 26 of "./kernel/main.c" starts at address 0x1cbc &lt;kmain&gt; and ends at 0x1cc2 &lt;kmain+6&gt;.
+
+
+(反汇编kmain函数，箭头指向的是当前运行的汇编代码)
+(gdb) disas kmain  
+Dump of assembler code for function kmain:
+=&gt; 0x00001cbc &lt;+0&gt;:	push   ebp
+   0x00001cbd &lt;+1&gt;:	mov    ebp,esp
+   0x00001cbf &lt;+3&gt;:	sub    esp,0x28
+   0x00001cc2 &lt;+6&gt;:	mov    eax,DWORD PTR [ebp+0x8]
+   0x00001cc5 &lt;+9&gt;:	mov    ds:0x5ccc,eax
+   0x00001cca &lt;+14&gt;:	call   0x2a29 &lt;init_video&gt;
+   0x00001ccf &lt;+19&gt;:	mov    DWORD PTR [esp+0x4],0xb
+   0x00001cd7 &lt;+27&gt;:	mov    DWORD PTR [esp],0x4777
+   0x00001cde &lt;+34&gt;:	call   0x2a40 &lt;puts_color_str&gt;
+   0x00001ce3 &lt;+39&gt;:	mov    DWORD PTR [esp+0x4],0xa
+   0x00001ceb &lt;+47&gt;:	mov    DWORD PTR [esp],0x478d
+   0x00001cf2 &lt;+54&gt;:	call   0x2a40 &lt;puts_color_str&gt;
+   0x00001cf7 &lt;+59&gt;:	cli    
+   0x00001cf8 &lt;+60&gt;:	call   0x3876 &lt;time_init&gt;
+   0x00001cfd &lt;+65&gt;:	call   0xc13 &lt;gdt_init&gt;
+</code></pre>
+
+<p>要正确的看到反汇编最好设置好gdb里面的汇编指令集，对于Nasm设置”set disassembly-flavor intel”,在.gdbinit里面弄好就行。</p>
+
+<p>最后info registers查看cpu寄存器内容，info registers %eax只查看eax内容，而
+info all-registers会把cpu的所有寄存器内容显示出来，不过cr0,cr3这些貌似没有 :(。看看这里<a href="http://www.delorie.com/gnu/docs/gdb/gdb_50.html" title="GDB参考">GDB参考</a>。</p>
+
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2012/08/09/switch-screen.html" title="Linux下快捷切换屏幕">Linux下快捷切换屏幕&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2012/09/13/change-domain-name.html" title="换域名了cyukang.com">&larr; 换域名了cyukang.com</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2012/08/19/os-dev-debug.html" title="OS dev的Bochs调试" rel="nofollow">OS dev的Bochs调试</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>19 August 2012</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#bochs-ref">bochs <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#OS-ref">OS <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#debug-ref">debug <span>2</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

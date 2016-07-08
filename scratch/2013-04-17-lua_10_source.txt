@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>看看Lua 1.0 代码 | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">看看Lua 1.0 代码</h1>
+
+    
+
+最近稍微看了一些Lua方面的东西，当前的实现是5.2版本的，代码也才2w来行。不过偶然下载了1.0版本的代码，发现更精简。Lua的设计原则一直坚持着，
+作者甚至在OO盛行的年代也没有给Lua加上原生的class和object概念。这个版本虽然简陋，但还是可以稍微看看来体会Lua的设计原则，也为阅读最新的Lua代码做个预热。
+
+首先来看看Lua1.0的一些基本情况：
+
+     The implementation followed a tenet that is now central to Extreme Programming: 
+	 “the simplest thing that could possibly work” . 
+	 The lexical scanner was written with lex and the parser with yacc, 
+	 The parser translated Lua programs into instructions for a stack-based 
+	 virtual machine, which were then executed by a simple interpreter. 
+	 
+     Despite this simple implementation — or possibly because of it — 
+	 Lua surpassed our expectations.
+
+这里的主要内容包含两个部分：stack based虚拟机，lex/yacc语法分析。
+
+y_tab.c这个文件主要功能是语法分析，工具yacc生成的代码，没什么可读性。或者应该找文件lua.stx来看看，不过这个文件并没有被包含在1.0的代码里。
+
+当执行`./lua array.lua`类似代码的时候，首先打开文件array.lua，把io读写设置为文件读写，然后这段代码开始parse生成指令并运行。
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">lua_parse</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Byte</span> <span class="o">*</span><span class="n">initcode</span> <span class="o">=</span> <span class="n">maincode</span><span class="p">;</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">yyparse</span> <span class="p">()</span> <span class="o">||</span> <span class="p">(</span><span class="n">err</span><span class="o">==</span><span class="mi">1</span><span class="p">))</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="o">*</span><span class="n">maincode</span><span class="o">++</span> <span class="o">=</span> <span class="n">HALT</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">lua_execute</span> <span class="p">(</span><span class="n">initcode</span><span class="p">))</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">maincode</span> <span class="o">=</span> <span class="n">initcode</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+stack-based的虚拟机用来执行生成的虚拟指令，最重要的几个变量是pc指向当前运行的指令(也可能是数据)，top指向执行栈的顶部，base指向栈的底部。指令分为几类，Push/Store，跳转类(JMP, ONTJMP, ONFJMP,IFFJMP) 运算类(+,-,*,/ 等等)，还有和函数调用相关的(CALLFUNC,RETCODE)。
+top往下的几个指针指向的是最近计算需要的变量，而结果也往往是放在栈的顶部，最简单的四则运算执行过程如下：
+<img src="/images/two_op.png" alt="My code is compiling" class="img-center" />
+另外有一些只要一个Op的指令也类似，不过不会把top往下移动。 
+
+Lua的代码风格很好，很值得学习，一些人已经在写一些源码分析方面的书籍了，比如云风的这个系列[Reading Lua](http://www.codingnow.com/temp/readinglua.pdf)，还有这个[系列](http://www.codedump.info/?tag=lua)。再挖一个坑，以后花时间好好研读新的Lua代码。我快从原来挖的那个坑里走出来了，一个Hobby OS至少可以运行了， :)。
+
+另外如果你对实现一个小语言感兴趣，[这里Ruby quiz #135有一个使用虚拟机实现的方式](http://www.ruby-forum.com/topic/121846#545361)。
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/scratch/2013-04-17-lua_10_source.txt" title="看看Lua 1.0 代码" rel="nofollow">看看Lua 1.0 代码</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

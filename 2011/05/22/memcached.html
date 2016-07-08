@@ -1,0 +1,409 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>读memcached | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">读memcached</h1>
+
+    <p>
+最近在看memcached的源代码，边看边随手记录了一下。
+</p>
+<p>
+assoc.c: 记录一个item是否存在于缓存中，这里使用了power 2扩展，primary_hashtable,和old_hashtable分别存新申请的hashtable和旧的hashtable。这里起了个线程来做拷贝的工作，当需要扩展hashtable的时候就触发assoc_expand函数，但是这个函数做的工作是备份primary_hashtable，即old_hashtable=primary_hashtable；然后申请新的空间，标识expanding为true，如果申请空间失败则交换回来。通过条件信号量，assoc_maintenance_thread把old_hashtable的数据逐步拷贝到新的hashtable中，当拷贝完了后释放old_hashtable的空间。耗时的操作用另外一个线程逐步来处理，不过查询和插入都要注意是否是在扩展状态，判断是去old还是primary里面去操作。
+</p>
+
+<p>
+cache.c: 在malloc和free的基础上封装了一层，多线程安全的。维持了一个指针列表，释放的时候并没有一下就把内存还给系统，而是在列表中保存了下来，申请时如果列表中有没用的指针就直接返回给出来。能这么因为这个cache模块只是负责申请和释放size相同的内存块。
+</p>
+<p>
+
+thread.c: 维持连接列表相关的内容。为一个队列，cq_push、cq_pop，维持一个LRU机制。cqi_new函数返回一个新的CQ_ITEM指针，同样维持了一个cqi_freelist，当有空闲指针的时候直接返回，当没有空闲的时候申请一个列表，从第二个开始连结成链表形式，返回第一个元素的指针。create_worker，创建一个处理线程。Item为memcached中处理的主要对象，item_alloc、item_get、item_link、item_unlink、item_remove方法，处理的时候都要锁住cache_lock。threadlocal_stats_reset、threadlocal_stats_aggregate：统计信息相关。slab_stats_aggregate：统计一个线程使用的slab信息。threadlocal_stats_reset：清空统计信息。
+</p>
+<p>
+
+thread_init：主程序中调用的创建多线程函数，包括初始化互斥锁(cache_lock,stats_lock)，条件锁，空闲连接列表等。nthreads为初始化的线程数目，继续调用setup_thread启动每一个线程，调用create_worker创建处理线程。
+</p>
+<p>
+stats.c:负责统计信息，记录get、set、delete、hits的数目。以前缀作为key。
+</p>
+
+<p>
+slabs.c：负责管理内存申请和释放，slabs主要是为了避免内存碎片问题，同时提高申请内存的速度，其基本原理是大块地申请内存，根据不同的slabclass块大小分给slabclass，申请内存的时候根据地址选择最适合的slabclass，从中去下内存返回指针，释放的时候只是放在其空闲指针列表中(不少地方都用到这样的方式)。slab_list没什么用，因为释放的指针放在了slots里面啊！slabs贪婪地使用内存，整个这东西的作用就是用内存空间来换时间效率的。
+</p>
+
+<p>
+memcached.c：主程序，分析设置参数默认值，分析参数根据参数修改配置参数。初始化stats，assoc，conn，slabs等。thread_init启动线程，每一个线程都有自己的struct event_base，setup_thread函数初始化这些，最重要的设置thread_libevent_process来处理新的连接。一直到：
+<pre class="src">  <span style="color: #5f9ea0; font-style: italic;">/* </span><span style="color: #5f9ea0; font-style: italic;">Create threads after we've done all the libevent setup. </span><span style="color: #5f9ea0; font-style: italic;">*/</span>
+    <span style="color: #00bfff; font-weight: bold;">for</span> (i = 0; i &lt; nthreads; i++) {
+        create_worker(worker_libevent, &amp;threads[i]);
+    }</pre>
+每个线程进入自己的event_loop。
+</p>
+<p>
+
+当请求来临的时候对于每一个连接，增加一个事件来调用处理函数event_handler。每个连接的处理过程是一个状态机，drive_machine(conn* c)来处理，由even_handler来调用，状态转移这部分代码比较复杂，conn_listening —&gt; conn_new_cmd —&gt; conn_parse_cmd —&gt; conn_mwrite —&gt; conn_closing。process_command来处理各种命令。
+</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2011/05/06/valgrind.html" title="valgrind">valgrind&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2011/05/23/hexiethings.html" title="有些该知道的">&larr; 有些该知道的</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2011/05/22/memcached.html" title="读memcached" rel="nofollow">读memcached</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>22 May 2011</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Backup-ref">Backup <span>17</span></a></li>
+     
+    	<li><a href="/tags.html#C-ref">C <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#Linux-ref">Linux <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#memcached-ref">memcached <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

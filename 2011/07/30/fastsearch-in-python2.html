@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>一种更快的字符串匹配算法-源自Python2.5 | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">一种更快的字符串匹配算法-源自Python2.5</h1>
+
+    Python2.5的实现中有一个字符串匹配算法，在s中查找p是否存在，s的长度为n，p的长度为m。这个算法符合以下要求：
+<blockquote>
+ * 任何情况下都要比brute-force算法快
+ * O(1)的空间，O(m)的初始化复杂度
+ * O(n/m)的查找复杂度
+ * 最坏情况下不能比O(nm)时间复杂度差
+ * 实现简单，对于实际中的查找大部分表现良好，最坏情况出现概率小
+</blockquote>
+标准的字符串查找算法不满足这些要求，KMP的时间复杂度为O(m+n)(初始化O(m)加第二部分O(n)， Boyer-Moore和其变形要求额外的空间，Python2.5里面增加了这个结合了Boyer-Moore和Sunday的思想的变形实现。来看看这是怎么个神奇的算法，KMP的思想是在每一次不匹配的情况下尽量的向右边移动，所以计算一个Next的移动下标数组。如果不匹配，最理想的情况下是向右边移动多长?应该是m，这样就能尽量减少对比的次数。所以每次比较的时候先比较p的最后一个字符，比如s="aaaaaaad"，p="aae"，如果从s的开头查找，只要发现第3个和p的第三个不一样，移动指标，移动多少？如果发现没有e，最长能移动p的长度，就是3。如果最后一个不匹配并且s[i+m]不是p中的字符就移动m，否则移动1。这里有两个问题：
+<blockquote>
+ * 如何知道s中的某一个字符是否是p中的一部分?
+ * 如何尽量移动m而不出现少找的情况? 
+</blockquote>
+第一个问题，可以用某个存储空间存下是否有p中的某个字符出现过，方便以后查找。Hash的思想，但是这里字符串查找里面再弄个Hash太无语了吧。一个简单的Bloom-filter，这里是这样实现的。
+
+<pre class="src"> 
+    <span style="color: #ff4500; font-style: italic;">/*</span><span style="color: #ff4500; font-style: italic;">&#35745;&#31639;mask</span><span style="color: #ff4500; font-style: italic;">*/</span> 
+    mlast = m-1;
+    <span style="color: #00ffff; font-weight: bold;">for</span> (mask = i = 0; i &lt;= mlast; i++) {
+        mask |= (1 &lt;&lt; (p[i] &amp; 0x1F));
+    }
+ 
+    <span style="color: #ff4500; font-style: italic;">/*</span><span style="color: #ff4500; font-style: italic;">&#21028;&#26029;s[i]&#19981;&#26159;p&#20013;&#30340;&#19968;&#20010;&#23383;&#31526;&#20018;</span><span style="color: #ff4500; font-style: italic;">*/</span> 
+    <span style="color: #00ffff; font-weight: bold;">if</span>(!(mask &amp; (1 &lt;&lt; (s[i] &amp; 0x1F))))
+         printf(<span style="color: #ffa07a;">"s[i] is not in pattern"</span>);
+    <span style="color: #00ffff; font-weight: bold;">else</span> 
+         printf(<span style="color: #ffa07a;">"s[i] is in pattern"</span>);
+</pre> 
+
+其实我们是要判断一个s中的一个字符串没有出现在p中，取低5位不是可能产生冲突么？产生冲突也没问题，就像一个Hash只要一个元素算出来的Key指定的slot没元素不就能确定这个元素不在里面了么。
+
+第二个问题，有些巧妙。上面那个例子是因为s的最后一个字符没被匹配，所以能移动m的长度。如果这个例子s="aaacaaaacaa"，p="aacaa"，第5个位置都为a，最后一个匹配，但是s里面前几个其实不为aacaa，所以需要移动，但是移动多少呢?如果移动p的长度，那从第2个位置开始的aacaa就没被检查到。所以需要一个变量记录在每次最后一个字母匹配的情况下向右移动的合理偏移量，在这里为skip，初始化的时候计算出来，这最偏移量其实是计算的最小偏移量，就是移动skip个位置到第一个s[m-1]的位置。 整个实现既节省空间又速度快，强大。
+<!--more-->
+具体实现如下：
+<pre class="src"> 
+ 
+<span style="color: #ff4500; font-style: italic;">//</span><span style="color: #ff4500; font-style: italic;">&#22914;&#26524;mode&#20026;FAST_COUNT&#65292;&#21017;&#26597;&#25214;pattern&#20986;&#29616;&#30340;&#27425;&#25968;
+</span><span style="color: #7fffd4;">#define</span> <span style="color: #eedd82;">FAST_COUNT</span> 1
+ 
+<span style="color: #98fb98;">int</span> <span style="color: #87cefa; font-weight: bold;">fastsearch</span>(<span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #98fb98;">char</span>* <span style="color: #eedd82;">s</span>, <span style="color: #98fb98;">size_t</span> <span style="color: #eedd82;">n</span>,
+           <span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #98fb98;">char</span>* <span style="color: #eedd82;">p</span>, <span style="color: #98fb98;">size_t</span> <span style="color: #eedd82;">m</span>,
+           <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">mode</span>)
+{
+    <span style="color: #98fb98;">long</span> <span style="color: #eedd82;">mask</span>;
+    <span style="color: #98fb98;">size_t</span> <span style="color: #eedd82;">skip</span>, <span style="color: #eedd82;">count</span> = 0;
+    <span style="color: #98fb98;">size_t</span> <span style="color: #eedd82;">i</span>, <span style="color: #eedd82;">j</span>, <span style="color: #eedd82;">mlast</span>, <span style="color: #eedd82;">w</span>;
+ 
+    w = n - m;
+ 
+    <span style="color: #00ffff; font-weight: bold;">if</span> (w &lt; 0)
+        <span style="color: #00ffff; font-weight: bold;">return</span> -1;
+ 
+    <span style="color: #ff4500; font-style: italic;">/* </span><span style="color: #ff4500; font-style: italic;">&#22914;&#26524;m=1&#65292;&#29305;&#20363;&#65292;&#25195;&#25551;&#19968;&#36941;&#35299;&#20915;</span><span style="color: #ff4500; font-style: italic;">*/</span> 
+    <span style="color: #00ffff; font-weight: bold;">if</span> (m &lt;= 1) {
+        <span style="color: #00ffff; font-weight: bold;">if</span> (m &lt;= 0)
+            <span style="color: #00ffff; font-weight: bold;">return</span> -1;
+        <span style="color: #00ffff; font-weight: bold;">if</span> (mode == FAST_COUNT) {
+            <span style="color: #00ffff; font-weight: bold;">for</span> (i = 0; i &lt; n; i++)
+                <span style="color: #00ffff; font-weight: bold;">if</span> (s[i] == p[0])
+                    count++;
+            <span style="color: #00ffff; font-weight: bold;">return</span> count;
+        } <span style="color: #00ffff; font-weight: bold;">else</span> {
+            <span style="color: #00ffff; font-weight: bold;">for</span> (i = 0; i &lt; n; i++)
+                <span style="color: #00ffff; font-weight: bold;">if</span> (s[i] == p[0])
+                    <span style="color: #00ffff; font-weight: bold;">return</span> i;
+        }
+        <span style="color: #00ffff; font-weight: bold;">return</span> -1;
+    }
+ 
+    mlast = m - 1;
+ 
+    skip = mlast - 1;
+    <span style="color: #ff4500; font-style: italic;">/*</span><span style="color: #ff4500; font-style: italic;">&#35745;&#31639;mask</span><span style="color: #ff4500; font-style: italic;">*/</span> 
+    <span style="color: #00ffff; font-weight: bold;">for</span> (mask = i = 0; i &lt; mlast; i++) {
+        mask |= (1 &lt;&lt; (p[i] &amp; 0x1F));
+        <span style="color: #00ffff; font-weight: bold;">if</span> (p[i] == p[mlast])
+            skip = mlast - i - 1;
+    }
+    mask |= (1 &lt;&lt; (p[mlast] &amp; 0x1F));
+ 
+    <span style="color: #00ffff; font-weight: bold;">for</span> (i = 0; i &lt;= w; i++) {
+        <span style="color: #00ffff; font-weight: bold;">if</span> (s[i+m-1] == p[m-1]) {<span style="color: #ff4500; font-style: italic;">//</span><span style="color: #ff4500; font-style: italic;">pattern&#26411;&#23614;&#21305;&#37197;
+</span>            <span style="color: #ff4500; font-style: italic;">/* </span><span style="color: #ff4500; font-style: italic;">candidate match </span><span style="color: #ff4500; font-style: italic;">*/</span> 
+            <span style="color: #00ffff; font-weight: bold;">for</span> (j = 0; j &lt; mlast; j++)
+                <span style="color: #00ffff; font-weight: bold;">if</span> (s[i+j] != p[j])
+                    <span style="color: #00ffff; font-weight: bold;">break</span>;
+            <span style="color: #00ffff; font-weight: bold;">if</span> (j == mlast) {<span style="color: #ff4500; font-style: italic;">//</span><span style="color: #ff4500; font-style: italic;">&#19968;&#20010;&#21305;&#37197;&#25104;&#21151;
+</span>                <span style="color: #00ffff; font-weight: bold;">if</span> (mode != FAST_COUNT)
+                    <span style="color: #00ffff; font-weight: bold;">return</span> i;
+                count++;
+                i = i + mlast;
+                <span style="color: #00ffff; font-weight: bold;">continue</span>;
+            }
+            <span style="color: #ff4500; font-style: italic;">/*</span><span style="color: #ff4500; font-style: italic;">&#31227;&#21160;&#22810;&#23569;?,&#26681;&#25454;mask</span><span style="color: #ff4500; font-style: italic;">*/</span> 
+            <span style="color: #00ffff; font-weight: bold;">if</span> (!(mask &amp; (1 &lt;&lt; (s[i+m] &amp; 0x1F))))
+                i = i + m;
+            <span style="color: #00ffff; font-weight: bold;">else</span> 
+                i = i + skip;
+        } <span style="color: #00ffff; font-weight: bold;">else</span> {
+            <span style="color: #ff4500; font-style: italic;">/* </span><span style="color: #ff4500; font-style: italic;">skip: check if next character is part of pattern </span><span style="color: #ff4500; font-style: italic;">*/</span> 
+            <span style="color: #00ffff; font-weight: bold;">if</span> (!(mask &amp; (1 &lt;&lt; (s[i+m] &amp; 0x1F))))
+                i = i + m;
+        }
+    }
+ 
+    <span style="color: #00ffff; font-weight: bold;">if</span> (mode != FAST_COUNT)
+        <span style="color: #00ffff; font-weight: bold;">return</span> -1;
+    <span style="color: #00ffff; font-weight: bold;">return</span> count;
+}
+</pre>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2011/07/24/emacssleep.html" title="让Emacs提醒睡觉">让Emacs提醒睡觉&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2011/08/16/ooc_in_python.html" title="C的面向对象风格代码">&larr; C的面向对象风格代码</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2011/07/30/fastsearch-in-python2.html" title="一种更快的字符串匹配算法-源自Python2.5" rel="nofollow">一种更快的字符串匹配算法-源自Python2.5</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>30 July 2011</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#C-ref">C <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#Life|Notes-ref">Life|Notes <span>14</span></a></li>
+     
+    	<li><a href="/tags.html#Python-ref">Python <span>5</span></a></li>
+     
+    	<li><a href="/tags.html#string-match-ref">string-match <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>Wumpus and 《Land of Lisp》 | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">Wumpus and 《Land of Lisp》</h1>
+
+    <p>
+最近在看一本书《Land OF Lisp》，看了大部分。离前一次看Lisp方面的书刚好三年，用Emacs也有四年了，这期间接触的多是简单的Elisp。总得来说，Lisp的书看起来是比较有趣的，这本也不错，稍微比《Practical Lisp》简单。竟然有个第6.5章，Lambda这么重要，怎么说也要占一章！第八章实现了一个小游戏。Wumpus(Hunt the wumpus)是个古老的游戏，那个年代还没有绚丽画面，只有文字界面。这里游戏的规则是：
+</p>
+
+<pre><code>
+<blockquote>1. 地图为一个无向图，玩家控制一个人物在图中行走，目的是寻找潜伏在节点中的一个怪兽。其中要边走边推理，得出怪兽在哪个节点。
+
+2. 还有其他角色，有的节点隐藏着超级蝙蝠，它能把你扔到图的任何位置。节点之间的边可能有警察。
+
+3. 如果你推测出怪兽的位置，向那里射箭，如果射中则胜利，否则输掉。如果你不小心从有警察的边通过了，也死掉。
+
+4. 在怪兽的附近两个距离范围内，会有血气。如果一个点的某条边有警察，这个点会有光晕。</blockquote>
+</code></pre>
+
+<p>
+说起来复杂，来看副图。有点像挖地雷那种小游戏。有？符号的为没访问过的点，*为当前点，从14到15遇到警察死掉了。
+</p>
+<p style="text-align: center;"><a href="/images/known-city.dot_.png"><img class="aligncenter size-full wp-image-614" title="known-city.dot" src="/images/known-city.dot_.png" alt="" width="416" height="332" /></a></p>
+上周末玩了好几个小时，还挺难胜，主要还是图比较大，游戏一开是整个地图是已经生成了的，要偷懒可以看看。
+
+<a href="/images/city.dot_.png"><img src="/images/city.dot_.png" alt="" title="city.dot" width="690" height="430" class="aligncenter size-full wp-image-617" /></a>
+
+<p>
+来看看如何用Lisp代码来实现这个程序，程序比较短。首先是如何生成图，需要生成一个随机的连通图。设定节点数目和边的数目，以编号代表节点。random-node:随机地选一个节点。edge-pair:连接两个点表示边。make-edge-list: 重复N次，生成N条边的集合。这个随机图可能不是连通的，下面的代码找出孤立的点集，用一些边连接起来这些孤立的点集，随机图产生完成。第二步向某些点之间加警察，随机的。这其中用了各种mapcar和Lambda，这样的效果使得Lisp程序看起来全是括号。mapcar的意思就是我要在这个列表上面所有的元素上都执行这个Lambda函数。visited列表保存已经访问过的节点，know-city-nodes更新(不是纯函数式编程的风格)，know-city-edges根据访问的节点，生成已知的路径，当前已知的用dot画出来。<em>graphviz</em>是个好东西，最近也在学习用这个来画一些流程图，效果挺好的。
+</p>
+
+<p>
+
+乱说说Common Lisp，看了一些这方面的资料，这语言不管有多少牛逼人士簇拥(<a href="http://book.douban.com/subject/6021440/">最近Paul Grahamd的书被翻译了</a>)，使用的人还是太少还是有一定的历史原因，早期的实现效率是一个问题，而当实现和硬件都不错了的时候C/C++已经成大局了。另一个很重要的原因是，文档不是很好，我想找个处理图片方面的库，见到一个README文件跟救命稻草似的，打开一看"Do you really need DOCS?"。Lisp的哲学是语言不能给太多限制，甚至做到代码就是数据、数据就是代码，你可以轻而地为语言添加特性，你还可以用宏来写出生成代码的代码。Lisp给了程序员最大的自由来挑战语言的限制，所以会出现如此多种的方言。好的一面是面对特定的问题或许能得到优美而高效率的解决方法，而这个代码对于另外一个程序员来说太难读懂(特别是夹杂了宏的代码)，继而难于流传。这里有篇经典的<a href="http://dreamsongs.com/Files/LispGoodNewsBadNews.pdf">Lisp:Good news,Bad news</a>，作者为早期用Lisp作为开发语言开公司的。
+</p>
+<p>
+
+以后看看Haskell吧，这个比较有前途。
+</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2011/06/14/advanced-linux-porg-notes.html" title="《Advanced linux progamming》笔记">《Advanced linux progamming》笔记&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2011/07/23/toshanghia.html" title="到上海了">&larr; 到上海了</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2011/07/22/wumpus-and-2.html" title="Wumpus and 《Land of Lisp》" rel="nofollow">Wumpus and 《Land of Lisp》</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>22 July 2011</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Books-ref">Books <span>6</span></a></li>
+     
+    	<li><a href="/tags.html#Lisp-ref">Lisp <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+     
+    	<li><a href="/tags.html#wumpus-ref">wumpus <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

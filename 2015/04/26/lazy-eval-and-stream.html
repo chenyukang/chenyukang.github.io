@@ -1,0 +1,497 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>惰性求值和流 | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">惰性求值和流</h1>
+
+    
+<p><img src="/images/lazy-eval.png" alt="lazy-eval" class="img-center" /></p>
+
+<h2 id="section">什么是惰性求值</h2>
+
+<p>惰性在函数式编程语言中很常见，他的通俗解释就是一个变量或者表达式，不到必要的时候不会被eval。比如函数在传递参数的时候，参数的值可以不确定。</p>
+
+<p>这种方式叫做call-by-name, 首先很明显这可能会造成一部分performance差异，如果一个表达式没有用到，那么计算出其结果是毫无意义的。而惰性求值是memoized的call-by-name, 叫做call-by-need。
+从技术实现上来说，一个表达式在计算其结果之前其状态是Deferred或者Delayed的，在计算之后将其结果存储下来并修改状态为Value，之后再取就没有必要重新去计算。用一些OCaml代码来说明：</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="o">#</span> <span class="k">let</span> <span class="n">v</span> <span class="o">=</span> <span class="k">lazy</span> <span class="o">(</span><span class="n">print_string</span> <span class="s2">&quot;performing lazy computation</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">;</span> <span class="n">sqrt</span> <span class="mi">16</span><span class="o">.);;</span>
+<span class="k">val</span> <span class="n">v</span> <span class="o">:</span> <span class="kt">float</span> <span class="n">lazy_t</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">lazy</span><span class="o">&gt;</span>
+
+<span class="o">#</span> <span class="nn">Lazy</span><span class="p">.</span><span class="n">force</span> <span class="n">v</span><span class="o">;;</span>
+<span class="n">performing</span> <span class="k">lazy</span> <span class="n">computation</span>
+
+<span class="o">-</span> <span class="o">:</span> <span class="kt">float</span> <span class="o">=</span> <span class="mi">4</span><span class="o">.</span>
+<span class="o">#</span> <span class="nn">Lazy</span><span class="p">.</span><span class="n">force</span> <span class="n">v</span><span class="o">;;</span> <span class="o">-</span> <span class="o">:</span> <span class="kt">float</span> <span class="o">=</span> <span class="mi">4</span><span class="o">.</span></code></pre></figure>
+
+<p>关键字lazy表示延迟计算这个表达式， Lazy.force表示求值。可以看到第一次force的时候会打印出performing…信息，后面的force就直接返回了value。</p>
+
+<p>为了更好的理解这个概念，我们可以实现一把Lazy。首先定义一个lazy_state:</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="o">#</span> <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">lazy_state</span> <span class="o">=</span>
+<span class="o">|</span> <span class="nc">Delayed</span> <span class="k">of</span> <span class="o">(</span><span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
+<span class="o">|</span> <span class="nc">Value</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span>
+<span class="o">|</span> <span class="nc">Exn</span> <span class="k">of</span> <span class="n">exn</span>
+<span class="o">;;</span>
+
+<span class="o">#</span> <span class="k">let</span> <span class="n">create_lazy</span> <span class="n">f</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">(</span><span class="nc">Delayed</span> <span class="n">f</span><span class="o">);;</span></code></pre></figure>
+
+<p>这个lazy_state有三种状态，第一种就是dealyed，’a表示任何类型的value。Value表示被eval过了，并且保存下来他的值。Exn表示错误或者异常的状态。那么create_lazy就表示创建一个lazy_expression,这里的参数f可以是任何类型的函数(函数的参数类型和返回类型都可以不确定)，ref是OCaml里面的类似指针的概念。</p>
+
+<p>上面例子就可以这样来写了:</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="o">#</span> <span class="k">let</span> <span class="n">v</span> <span class="o">=</span> <span class="n">create_lazy</span> <span class="o">(</span><span class="n">print_string</span> <span class="s2">&quot;performing lazy computation</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">;</span> <span class="n">sqrt</span> <span class="mi">16</span><span class="o">.);;</span></code></pre></figure>
+
+<p>然后实现核心的force:</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="o">#</span> <span class="k">let</span> <span class="n">force</span> <span class="n">v</span> <span class="o">=</span> <span class="k">match</span> <span class="o">!</span><span class="n">v</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">Value</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span>        <span class="c">(* 如果已经求值就直接返回value *)</span>
+    <span class="o">|</span> <span class="nc">Exn</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="n">e</span>    <span class="c">(* 如果发生错误，raise错误*)</span>
+    <span class="o">|</span> <span class="nc">Delayed</span> <span class="n">f</span> <span class="o">-&gt;</span>
+        <span class="k">try</span>
+            <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">f</span> <span class="bp">()</span> <span class="k">in</span>  <span class="c">(* 如果还未求值，eval保存下来的f *)</span>
+            <span class="n">v</span> <span class="o">:=</span> <span class="nc">Value</span> <span class="n">x</span><span class="o">;</span>    <span class="c">(* 并把结果保存下来 *)</span>
+            <span class="n">x</span>
+        <span class="k">with</span> <span class="n">exn</span> <span class="o">-&gt;</span>
+            <span class="n">v</span> <span class="o">:=</span> <span class="nc">Exn</span> <span class="n">exn</span><span class="o">;</span>    <span class="c">(* 如果发生错误，保存下来 *)</span>
+    <span class="k">raise</span> <span class="n">exn</span>
+    <span class="o">;;</span></code></pre></figure>
+
+<p>这里的!v就是取这个引用里面的值(类比C语言里面的*pointer)。然后pattern match这个lazy_state，注释里面写了每一行的操作。这里的代码很简短，最核心的意思是我们能把一个函数或者代码块保存下来，在真正需要的时候去运行这个代码块。在函数式编程里面这很常见，函数和变量一样可以自由传递。虽然看起来好不起眼，不过这会给编程带来一些深刻的影响。</p>
+
+<h2 id="memoization">Memoization</h2>
+<p>通过上面对laziness的解释，我们可以发现这个概念的核心思想类似算法设计里面的memoization，这样在计算过程中把重复计算的过程省略掉。比如这段代码有些好玩:</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">memoize</span> <span class="n">f</span> <span class="o">=</span>
+    <span class="k">let</span> <span class="n">table</span> <span class="o">=</span> <span class="nn">Hashtbl</span><span class="p">.</span><span class="nn">Poly</span><span class="p">.</span><span class="n">create</span> <span class="bp">()</span>
+    <span class="k">in</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span>
+      <span class="k">match</span> <span class="nn">Hashtbl</span><span class="p">.</span><span class="n">find</span> <span class="n">table</span> <span class="n">x</span> <span class="k">with</span>
+      <span class="o">|</span> <span class="nc">Some</span> <span class="n">y</span> <span class="o">-&gt;</span> <span class="n">y</span>
+      <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span>
+        <span class="k">let</span> <span class="n">y</span> <span class="o">=</span> <span class="n">f</span> <span class="n">x</span> <span class="k">in</span>
+        <span class="nn">Hashtbl</span><span class="p">.</span><span class="n">add_exn</span> <span class="n">table</span> <span class="o">~</span><span class="n">key</span><span class="o">:</span><span class="n">x</span> <span class="o">~</span><span class="n">data</span><span class="o">:</span><span class="n">y</span><span class="o">;</span>
+        <span class="n">y</span>
+     <span class="o">);;</span></code></pre></figure>
+
+<p>这个函数接收任何类型的函数f，他会像一个wrapper一样给你包装一下: 给你一个table用来存储这个函数的结果，键值是你的参数x，如果发现参数是x的结果还没计算的时候，把结果算出来并存储在table里面。
+这里我们又能看到函数式编程带来的好处，f是任何类型的函数(这里暂且还没处理递归)，这类问题在算法设计里面挺多的比如fibnacci，edit-distance。</p>
+
+<p>在递归情况下如何处理可以看看这，这是我看过的排版最好的技术类博客<a href="http://typeocaml.com">Type OCaml</a>:
+<a href="http://typeocaml.com/2015/01/25/memoize-rec-untying-the-recursive-knot/">Recursive Memoize &amp; Untying the Recursive Knot</a></p>
+
+<h2 id="stream">Stream</h2>
+
+<p>有了lazy的概念之后，我们可以在编程里面表示一些看起来很数学的概念，比如一个表示所有整数的流:</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stream_t</span> <span class="o">=</span> <span class="nc">Nil</span> <span class="o">|</span> <span class="nc">Cons</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="o">(</span><span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stream_t</span><span class="o">)</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span class="n">from</span> <span class="n">i</span> <span class="o">=</span> <span class="nc">Cons</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="k">fun</span><span class="bp">()</span> <span class="o">-&gt;</span> <span class="n">from</span> <span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">))</span>
+
+<span class="k">let</span> <span class="n">hd</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="nc">Nil</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;hd&quot;</span>
+    <span class="o">|</span> <span class="nc">Cons</span> <span class="o">(</span><span class="n">v</span><span class="o">,</span> <span class="o">_)</span> <span class="o">-&gt;</span> <span class="n">v</span>
+
+<span class="k">let</span> <span class="n">tl</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="nc">Nil</span> <span class="o">-&gt;</span> <span class="n">failwith</span> <span class="s2">&quot;tl&quot;</span>
+    <span class="o">|</span> <span class="nc">Cons</span> <span class="o">(_,</span> <span class="n">g</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">g</span><span class="bp">()</span>
+
+<span class="k">let</span> <span class="k">rec</span> <span class="n">take</span> <span class="n">n</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="nc">Nil</span> <span class="o">-&gt;</span> <span class="bp">[]</span>
+    <span class="o">|</span> <span class="nc">Cons</span> <span class="o">(_,</span> <span class="o">_)</span>  <span class="k">when</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="bp">[]</span>
+    <span class="o">|</span> <span class="nc">Cons</span> <span class="o">(</span><span class="n">hd</span><span class="o">,</span> <span class="n">g</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">hd</span><span class="o">::</span><span class="n">take</span> <span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">(</span><span class="n">g</span><span class="bp">()</span><span class="o">)</span></code></pre></figure>
+
+<p>Cons是把两个元素组成链表，递归函数from做的事情就是把i和一个匿名函数fun() -&gt; from(i+1)链起来，当然匿名函数又在做类似的事情。
+那么(from 1)就可以表示从1开始的所有整数了，hd是取一个流的头部，tl是取流的尾部(除头部剩下的)，take是从一个流里面取前n个元素。这可是非常的方便，还有更方便的：</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="k">rec</span> <span class="n">filter</span> <span class="n">f</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="nc">Nil</span> <span class="o">-&gt;</span> <span class="nc">Nil</span>
+    <span class="o">|</span> <span class="nc">Cons</span> <span class="o">(</span><span class="n">hd</span><span class="o">,</span> <span class="n">g</span><span class="o">)</span> <span class="o">-&gt;</span>
+        <span class="k">if</span> <span class="n">f</span> <span class="n">hd</span> <span class="k">then</span> <span class="nc">Cons</span> <span class="o">(</span><span class="n">hd</span><span class="o">,</span> <span class="k">fun</span><span class="bp">()</span> <span class="o">-&gt;</span> <span class="n">filter</span> <span class="n">f</span> <span class="o">(</span><span class="n">g</span><span class="bp">()</span><span class="o">))</span>
+        <span class="k">else</span> <span class="n">filter</span> <span class="n">f</span> <span class="o">(</span><span class="n">g</span><span class="bp">()</span><span class="o">)</span></code></pre></figure>
+
+<p>我们虽然只知道有这么一个流，但还是可以加一个筛选条件给他，filter函数接收筛选函数f和一个流，返回的结果就是被筛选后的流！</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="c">(* delete multiples of p from a stream *)</span>
+<span class="k">let</span> <span class="n">sift</span> <span class="n">p</span> <span class="o">=</span> <span class="n">filter</span> <span class="o">(</span><span class="k">fun</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="n">n</span> <span class="ow">mod</span> <span class="n">p</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="o">)</span>
+
+<span class="c">(* sieve of Eratosthenes *)</span>
+<span class="k">let</span> <span class="k">rec</span> <span class="n">sieve</span> <span class="o">=</span> <span class="k">function</span>
+    <span class="o">|</span> <span class="nc">Nil</span> <span class="o">-&gt;</span> <span class="nc">Nil</span>
+    <span class="o">|</span> <span class="nc">Cons</span> <span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">g</span><span class="o">)</span> <span class="o">-&gt;</span>
+        <span class="k">let</span> <span class="n">next</span> <span class="o">=</span> <span class="n">sift</span> <span class="n">p</span> <span class="o">(</span><span class="n">g</span><span class="bp">()</span><span class="o">)</span> <span class="k">in</span>
+        <span class="nc">Cons</span> <span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="k">fun</span> <span class="bp">()</span> <span class="o">-&gt;</span> <span class="n">sieve</span> <span class="n">next</span><span class="o">)</span>
+
+<span class="c">(* primes *)</span>
+<span class="k">let</span> <span class="n">primes</span> <span class="o">=</span> <span class="n">sieve</span> <span class="o">(</span><span class="n">from</span> <span class="mi">2</span><span class="o">)</span></code></pre></figure>
+
+<p>所有素数就可以这么来写了，有了这个流之后要取多少就取多少。</p>
+
+<h2 id="section-1">其他</h2>
+
+<p>Haskell是纯函数式纯Lazy的实现，OCaml有imperative的部分，而且运行时不是Lazy的。相对来说我更喜欢OCaml的语法以及设计原则，FP有其好处，但imperative programming也有其益处。Lazy有其好处，但还是在用户明确需要的时候能提供就好。</p>
+
+<p>部分代码引用<a href="https://realworldocaml.org/">Real World OCaml</a></p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)">Types and Programming Languages (3)&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书">&larr; 最近读的一些杂书</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="nofollow">惰性求值和流</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>26 April 2015</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#PL-ref">PL <span>4</span></a></li>
+     
+    	<li><a href="/tags.html#OCaml-ref">OCaml <span>4</span></a></li>
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>内存又泄漏:( | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">内存又泄漏:(</h1>
+
+    <h3>内存泄漏</h3>
+<p class="first">上一次以为内存泄露查完了，发现服务器跑了比较长时间后又占用太多内存。刚好这段时间加了一些新的模块，又该查查了。整个服务器模块分的还行，但是中间经过几个人一起写，所以看起来就麻烦了。要解决问题还是必须找到泄露的代码段。在C/C++中，只要用了指针这东西，很多逻辑上的问题也会产生内存泄露。在线下用上次封装malloc和free的方法测试，找不到产生内存泄露的样例，grep了一下没有用原来的malloc之类的东西啊，那就应该是测试数量太少的问题。没法，从线上的log中导入一些天的访问记录，其中包含了一天的访问url。试着用Python写个小程序把一天中所有的url依次往线下的服务器发送，这应该有几万条数据了。Python中这相关的库够多的,可以用的httplib,或者webbrowser模块中的webbrowser.open("url_address",1),不过这得打开系统的默认的浏览器，并且好像还没关掉一个tab的接口。最合适这个简单任务的是urllib这个模块，下面这样就行了，往线下的服务器狂发请求吧:</p>
+
+<pre class="src">    <span style="color: #00bfff; font-weight: bold;">for</span> rec <span style="color: #00bfff; font-weight: bold;">in</span> alllogs:
+        urlstr = rec[0]
+        <span style="color: #5f9ea0; font-style: italic;">#</span><span style="color: #5f9ea0; font-style: italic;">print urlstr
+</span>        line=line+1
+        <span style="color: #00bfff; font-weight: bold;">print</span> line,allnum,allnum-line,urlstr
+        <span style="color: #00bfff; font-weight: bold;">try:</span>
+            u = urllib.urlopen(urlstr)
+        <span style="color: #00bfff; font-weight: bold;">except</span> <span style="color: #00bfff; font-weight: bold;">IOError</span>,e:
+            <span style="color: #00bfff; font-weight: bold;">print</span> <span style="color: #deb887;">'connect refused'</span>,e
+        <span style="color: #00bfff; font-weight: bold;">except</span> <span style="color: #00bfff; font-weight: bold;">UnicodeError</span>,e:
+            <span style="color: #00bfff; font-weight: bold;">print</span> <span style="color: #deb887;">'UnicodeError'</span>,e
+        res = u.read()
+        <span style="color: #5f9ea0; font-style: italic;">#</span><span style="color: #5f9ea0; font-style: italic;">#print u.info()
+
+</span>        <span style="color: #00bfff; font-weight: bold;">print</span> <span style="color: #deb887;">"read %d data"</span>%(<span style="color: #00bfff; font-weight: bold;">len</span>(res))
+        <span style="color: #5f9ea0; font-style: italic;">#</span><span style="color: #5f9ea0; font-style: italic;">#time.sleep(0.01)</span></pre>
+<h3>调试方式</h3>
+<p class="first">Linux下有一些内存调试工具，不过感觉要么过于复杂要么对代码改动太多，对于在后台这种长时间运行的程序不是很适用。上次提到的封装malloc,calloc,free这些函数的检测方法本来是挺好的，但是有两个问题：</p>
+
+<pre class="example">1.用于存储内存信息的空间是用数组的，其大小运行时候就固定。
+2.不适合多线程程序。</pre>
+<p>
+如果用上面所有的url向服务器发送完毕后，再来检查输出文件不可行，因为运行中超过了数组的最大记录数后面的检测就没办法记录下来了。对于第二个问题，这个服务器模型是一种简单的多线程并发，启动时设定其启动线程的数目，多个线程排队，一个线程处理一个请求所以之间并无过多的交互。如果保证一个线程运行过程中不会出现内存泄漏，那应该就没问题了。调试的时候在每一个线程开始跑的时候就启动清空上面的记录内存申请和释放的数组，如果某个一个url请求产生了泄漏就停下来查看生成的meminfo.xls。这样跑完几万个url后，发现一些代码问题。这些bug要是通过人来审查代码不可能查出来，所以测试还是非常重要。其中一部分代码错误是使用了C写了一些基本的数据结构，这些里面有的使用了malloc来动态调整空间大小，用起来倒是比较方便，但是用完后必须显式地释放掉。这和指针的问题是一样的:何时何地释放。调试后会在代码中加入了很多语句，打印信息、脚手架位置等等，这可以用下面这些命令来替换成空白或者注释。
+<pre class="src"> grep debug_str -rl ./*.c | xargs sed -i <span style="color: #deb887;">"s/debug_str/substr/g"</span></pre>
+</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2011/03/27/guitar.html" title="近期">近期&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2011/05/06/valgrind.html" title="valgrind">&larr; valgrind</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2011/04/25/memleak2.html" title="内存又泄漏:(" rel="nofollow">内存又泄漏:(</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>25 April 2011</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Backup-ref">Backup <span>17</span></a></li>
+     
+    	<li><a href="/tags.html#C-ref">C <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#Python-ref">Python <span>5</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

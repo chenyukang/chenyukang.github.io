@@ -1,0 +1,442 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>一个小题目 | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">一个小题目</h1>
+
+    前些天在班级群里看到一个笔试题：
+<blockquote>
+<p class="quoted">从1到100000中任意拿掉两个数字，把剩下的99998个数顺序打乱，并且放入数组A中。要求只扫描一遍，把这两个数找出来；可以使用最多不超过5个局部变量，不能使用数组变量，并且不能改变原数组的值。</p>
+</blockquote>
+也想不到什么更好的解法，原解法是顺序扫一边求得所有数的乘积(mul_res)、和(sum_res)。用(N!)/mul_res得到两个数的乘积，1到100000的和减去sum_res得到两个数之和。 解这个方程得到两个数。关键是N!太大了，C会溢出。刚开始想想乘积每次模100000，后来写了一下还是不对的，因为模100000中可能就出现了0，后面全为0了。最后想到这么一个办法，不过中间 除法和比较多。也许有更快的解法。
+<div id="_mcePaste" style="overflow: hidden; position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px;">file:///home/heipang/document/wiki/Home_Page/Computer/笔试题.html</div>
+<pre class="src"><span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">1到100 000
+</span><span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;iostream&gt;</span>
+<span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;math.h&gt;</span>
+
+<span style="color: #00bfff; font-weight: bold;">using</span> <span style="color: #00bfff; font-weight: bold;">namespace</span> <span style="color: #ffd700;">std</span>;
+<span style="color: #ffd700;">#define</span> <span style="color: #4eee94;">N</span> 100000
+<span style="color: #00bfff; font-weight: bold;">typedef</span> <span style="color: #98f5ff;">long</span> <span style="color: #98f5ff;">long</span> <span style="color: #98f5ff;">LL</span>;
+
+<span style="color: #98f5ff;">LL</span> <span style="color: #4eee94;">a</span>;
+<span style="color: #98f5ff;">LL</span> <span style="color: #4eee94;">b</span>;
+<span style="color: #98f5ff;">LL</span> <span style="color: #4eee94;">vec</span>[N];
+<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">cnt</span>;
+<span style="color: #98f5ff;">LL</span>  <span style="color: #4eee94;">MAX_MUL</span>;
+
+<span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">Find</span>(<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">LL</span>* <span style="color: #4eee94;">vec</span>)
+{
+    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">sum</span>=0;
+    <span style="color: #98f5ff;">LL</span>  <span style="color: #4eee94;">mul</span>=1;
+    <span style="color: #98f5ff;">LL</span>  <span style="color: #4eee94;">Now</span>=1;
+    <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=0;i&lt;cnt;i++)
+    {
+        sum+=vec[i];
+        <span style="color: #00bfff; font-weight: bold;">while</span>(mul%vec[i]!=0)
+            mul*=(++Now);
+        mul/=vec[i];
+    }
+<span style="color: #00bfff; font-weight: bold;">    while</span>(Now&lt;100000)
+         mul*=(++Now);
+    <span style="color: #98f5ff;">LL</span> <span style="color: #4eee94;">diff</span>=((1+N)*N)/2-sum;
+    cout&lt;&lt;diff&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;mul&lt;&lt;endl;
+    <span style="color: #98f5ff;">LL</span> <span style="color: #4eee94;">a</span>=(diff+sqrt(diff*diff-4*mul))/2;
+    cout&lt;&lt;a&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;diff-a&lt;&lt;endl;
+}
+
+<span style="color: #98f5ff;">int</span> <span style="color: #daa520; font-weight: bold;">main</span>()
+{
+    srand(time(<span style="color: #ffd700;">NULL</span>));
+    a=(rand()%100000)+1;
+    b=(rand()%100000)+1;
+    cnt=0;
+    <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=1;i&lt;=N;i++)
+    {
+        <span style="color: #00bfff; font-weight: bold;">if</span>(i!=a&amp;&amp;i!=b)
+            vec[cnt++]=i;
+    }
+    cout&lt;&lt;a&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;b&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;endl;
+    cout&lt;&lt;a+b&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;a*b&lt;&lt;endl;
+    Find(vec);
+}
+</pre>
+----------------------------------------------------------
+经熊师兄指点，上面的解法还是不对，如果vec前面刚好为比较大的素数，mul就溢出了。正确的解法应该为求x+y=B, x^2+y^2=A, 1-100000的平方和可以用double存下来，然后减去vec里面的平方和就得到x^2+y^2的值。
+<pre class="src"><span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">Find</span>(<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">LL</span>* <span style="color: #4eee94;">vec</span>)
+{
+    <span style="color: #98f5ff;">double</span> <span style="color: #4eee94;">sum</span>=0;
+    <span style="color: #98f5ff;">double</span>  <span style="color: #4eee94;">square_sum</span>=0;
+    <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=0;i&lt;cnt;i++)
+    {
+        sum+=vec[i];
+        square_sum+=(vec[i]*vec[i]);
+    }
+    <span style="color: #98f5ff;">double</span> <span style="color: #4eee94;">diff</span>=((1+N)*N)/2-sum;
+    <span style="color: #98f5ff;">double</span> <span style="color: #4eee94;">square_sum_diff</span>=
+        ((<span style="color: #98f5ff;">double</span>)N*(N+1)*(2*(<span style="color: #98f5ff;">double</span>)N+1))/6 - square_sum;
+    cout&lt;&lt;diff&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;square_sum_diff&lt;&lt;endl;
+    a=(2*(diff)+sqrt(8*square_sum_diff-4*diff*diff))/4;
+    cout&lt;&lt;a&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;diff-a&lt;&lt;endl;
+}
+
+
+</pre>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2010/08/02/astart-k-shortest-path.html" title="A*算法与K-shortest path问题">A*算法与K-shortest path问题&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2010/08/04/nba-kids.html" title="孩子们眼中的NBA球员薪水">&larr; 孩子们眼中的NBA球员薪水</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2010/08/02/findsum.html" title="一个小题目" rel="nofollow">一个小题目</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>02 August 2010</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

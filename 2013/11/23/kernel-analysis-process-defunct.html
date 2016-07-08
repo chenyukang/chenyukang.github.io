@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>Kernel analysis: Defunct Process | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">Kernel analysis: Defunct Process</h1>
+
+    
+<p>我发现带着问题去看内核代码比较容易理解。如果一个父进程显示的设置SIGCHLD为Ignore，子进程将自己清理自己。</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;signal.h&gt;</span>
+<span class="cp">#include &lt;unistd.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include &lt;string.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">struct</span> <span class="n">sigaction</span> <span class="n">sa</span><span class="p">;</span>
+	<span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sa</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">sa</span><span class="p">));</span>
+	<span class="n">sa</span><span class="p">.</span><span class="n">sa_handler</span> <span class="o">=</span> <span class="n">SIG_IGN</span><span class="p">;</span>
+	<span class="n">sigaction</span><span class="p">(</span><span class="n">SIGCHLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sa</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">fork</span><span class="p">();</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">pid</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;parent:%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+		<span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;child:%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+		<span class="n">sleep</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;finished</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>我们可以顺便看看内核里面是怎么写的，</p>
+
+<p>linux/kernel/exit.c里面这部分是负责进程退出的，我截取了相关的代码：</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cm">/*</span>
+<span class="cm"> * Send signals to all our closest relatives so that they know</span>
+<span class="cm"> * to properly mourn us..</span>
+<span class="cm"> */</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">exit_notify</span><span class="p">(</span><span class="k">struct</span> <span class="n">task_struct</span> <span class="o">*</span><span class="n">tsk</span><span class="p">,</span> <span class="kt">int</span> <span class="n">group_dead</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">autoreap</span><span class="p">;</span>
+
+    <span class="n">forget_original_parent</span><span class="p">(</span><span class="n">tsk</span><span class="p">);</span>
+    <span class="n">write_lock_irq</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tasklist_lock</span><span class="p">);</span>
+
+    <span class="cm">/* .... */</span>
+
+    <span class="p">}</span> <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">thread_group_leader</span><span class="p">(</span><span class="n">tsk</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">autoreap</span> <span class="o">=</span> <span class="n">thread_group_empty</span><span class="p">(</span><span class="n">tsk</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+            <span class="n">do_notify_parent</span><span class="p">(</span><span class="n">tsk</span><span class="p">,</span> <span class="n">tsk</span><span class="o">-&gt;</span><span class="n">exit_signal</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">autoreap</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">tsk</span><span class="o">-&gt;</span><span class="n">exit_state</span> <span class="o">=</span> <span class="n">autoreap</span> <span class="o">?</span> <span class="nl">EXIT_DEAD</span> <span class="p">:</span> <span class="n">EXIT_ZOMBIE</span><span class="p">;</span>
+
+    <span class="cm">/*..... */</span>
+
+    <span class="cm">/* If the process is dead, release it - nobody will wait for it */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">autoreap</span><span class="p">)</span>
+        <span class="n">release_task</span><span class="p">(</span><span class="n">tsk</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>其中有一段是判断是否autoreap，我们继续可以看看
+linux/kernel/signal.c里面的do_notify_parent函数:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">bool</span> <span class="nf">do_notify_parent</span><span class="p">(</span><span class="k">struct</span> <span class="n">task_struct</span> <span class="o">*</span><span class="n">tsk</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sig</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">struct</span> <span class="n">siginfo</span> <span class="n">info</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">flags</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">sighand_struct</span> <span class="o">*</span><span class="n">psig</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">autoreap</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+    <span class="cm">/* .... */</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">tsk</span><span class="o">-&gt;</span><span class="n">ptrace</span> <span class="o">&amp;&amp;</span> <span class="n">sig</span> <span class="o">==</span> <span class="n">SIGCHLD</span> <span class="o">&amp;&amp;</span>
+        <span class="p">(</span><span class="n">psig</span><span class="o">-&gt;</span><span class="n">action</span><span class="p">[</span><span class="n">SIGCHLD</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">sa</span><span class="p">.</span><span class="n">sa_handler</span> <span class="o">==</span> <span class="n">SIG_IGN</span> <span class="o">||</span>
+         <span class="p">(</span><span class="n">psig</span><span class="o">-&gt;</span><span class="n">action</span><span class="p">[</span><span class="n">SIGCHLD</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">sa</span><span class="p">.</span><span class="n">sa_flags</span> <span class="o">&amp;</span> <span class="n">SA_NOCLDWAIT</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="cm">/*</span>
+<span class="cm">         * We are exiting and our parent doesn&#39;t care.  POSIX.1</span>
+<span class="cm">         * defines special semantics for setting SIGCHLD to SIG_IGN</span>
+<span class="cm">         * or setting the SA_NOCLDWAIT flag: we should be reaped</span>
+<span class="cm">         * automatically and not left for our parent&#39;s wait4 call.</span>
+<span class="cm">         * Rather than having the parent do it as a magic kind of</span>
+<span class="cm">         * signal handler, we just set this to tell do_exit that we</span>
+<span class="cm">         * can be cleaned up without becoming a zombie.  Note that</span>
+<span class="cm">         * we still call __wake_up_parent in this case, because a</span>
+<span class="cm">         * blocked sys_wait4 might now return -ECHILD.</span>
+<span class="cm">         *</span>
+<span class="cm">         * Whether we send SIGCHLD or not for SA_NOCLDWAIT</span>
+<span class="cm">         * is implementation-defined: we do (if you don&#39;t want</span>
+<span class="cm">         * it, just use SIG_IGN instead).</span>
+<span class="cm">         */</span>
+        <span class="n">autoreap</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">psig</span><span class="o">-&gt;</span><span class="n">action</span><span class="p">[</span><span class="n">SIGCHLD</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">sa</span><span class="p">.</span><span class="n">sa_handler</span> <span class="o">==</span> <span class="n">SIG_IGN</span><span class="p">)</span>
+            <span class="n">sig</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">valid_signal</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">sig</span><span class="p">)</span>
+        <span class="n">__group_send_sig_info</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">info</span><span class="p">,</span> <span class="n">tsk</span><span class="o">-&gt;</span><span class="n">parent</span><span class="p">);</span>
+
+    <span class="n">__wake_up_parent</span><span class="p">(</span><span class="n">tsk</span><span class="p">,</span> <span class="n">tsk</span><span class="o">-&gt;</span><span class="n">parent</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">autoreap</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>可以看到如果父进程对子进程的生死不关心，那么设置autoreap为TRUE，甚至这个信号也可以不发送了。</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2013/11/20/topological-sort.html" title="拓扑排序">拓扑排序&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2014/01/04/regular-expression-matching-dfa.html" title="正则表达式匹配和NFA/DFA">&larr; 正则表达式匹配和NFA/DFA</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2013/11/23/kernel-analysis-process-defunct.html" title="Kernel analysis: Defunct Process" rel="nofollow">Kernel analysis: Defunct Process</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>23 November 2013</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Kernel-ref">Kernel <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Linux-ref">Linux <span>8</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

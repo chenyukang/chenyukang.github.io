@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>Types and Programming Languages (1) | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">Types and Programming Languages (1)</h1>
+
+    
+<p>最近掉进另外一个PL的坑里面，就是想读一下<a href="http://www.cis.upenn.edu/~bcpierce/tapl/">这本书</a>，顺便继续熟悉一下Ocaml。下面的记录是阅读过程中的一些摘录和理解。</p>
+
+<p>1-2章是数学预备部分，理论部分有些地方比较难懂，主要是一些数学符号看久了眼花。
+解释器的实现大多只用看syntax.ml和core.ml，就是语法和具体eval，typeof函数。</p>
+
+<h2 id="untyped-systems">Untyped Systems</h2>
+<p>arith是一个无类型的解释器，是后面所有章节的基础。printtm_Term用了Format模块来格式化打印。</p>
+
+<h2 id="the-untyped-lambda-calculus">The Untyped Lambda-Calculus</h2>
+<p>浅显易懂的Lambda-Calculus解释，同时列举了一些lambda calculus扩展其他语言部分的例子。</p>
+
+<h2 id="an-ml-implementation-of-the-lambda-calculus">An ML Implementation of the Lambda-Calculus</h2>
+
+<p>shifting和substitution的实现挺难看懂的，本质上是把context里面的变量用index来替换，处理变量查找的一种实现而已。eval部分是非常地简洁，我觉得ML系的语法看起来比Scheme都舒服紧凑。</p>
+
+<pre><code>Just because you’ve implemented something doesn’t mean you understand it.
+                                                    —Brian Cantwell Smith
+</code></pre>
+
+<p>说起来全是泪，用这种函数式的编程语言来解释自己确实比较简单，但现实往往不是这样。语言能比较容易地实现自己至少可以表明语言的内核挺小，一个语言能实现bootstrap是成熟的一个表现。Rust的实现最初是用Ocaml写的，然后编译出一个Rust的编译器，然后用上一版本的Rust再重新实现Rust编译器。</p>
+
+<h2 id="typed-arithmetic-expressions">Typed Arithmetic Expressions</h2>
+
+<p>tyarith是最简单的带类型的解释器，有bool和Nat类型。</p>
+
+<pre><code>Progress: A well-typed term is not stuck (either it is a value or it can take a step according to the evaluation rules).
+Preservation: If a well-typed term takes a step of evaluation, then the resulting term is also well typed
+</code></pre>
+
+<p>These properties together tell us that a well-typed term can never reach a stuck state during evaluation.</p>
+
+<p>Safety = Progress + Preservation</p>
+
+<h2 id="simply-typed-lambda-calculus">Simply Typed Lambda-Calculus</h2>
+
+<pre><code> In general, languages in which type annotations in terms are used to help guide the typechecker are called explicitly typed. Languages in which we ask the typechecker to infer or reconstruct this information are called implicitly typed.
+
+ Well-typed programs cannot “go wrong.” —Robin Milner (1978)
+</code></pre>
+
+<h2 id="an-ml-implementation-of-simple-types">An ML Implementation of Simple Types</h2>
+<p>simplebool是一个只有bool类型的解释器，但是加上了函数。typeof挺简单，主要是函数这里注意处理形参和实参:</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml">  <span class="o">|</span> <span class="nc">TmAbs</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">x</span><span class="o">,</span><span class="n">tyT1</span><span class="o">,</span><span class="n">t2</span><span class="o">)</span> <span class="o">-&gt;</span>
+      <span class="k">let</span> <span class="n">ctx&#39;</span> <span class="o">=</span> <span class="n">addbinding</span> <span class="n">ctx</span> <span class="n">x</span> <span class="o">(</span><span class="nc">VarBind</span><span class="o">(</span><span class="n">tyT1</span><span class="o">))</span> <span class="k">in</span>
+      <span class="k">let</span> <span class="n">tyT2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">ctx&#39;</span> <span class="n">t2</span> <span class="k">in</span>
+      <span class="nc">TyArr</span><span class="o">(</span><span class="n">tyT1</span><span class="o">,</span> <span class="n">tyT2</span><span class="o">)</span>
+  <span class="o">|</span> <span class="nc">TmApp</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">t1</span><span class="o">,</span><span class="n">t2</span><span class="o">)</span> <span class="o">-&gt;</span>
+      <span class="k">let</span> <span class="n">tyT1</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t1</span> <span class="k">in</span>
+      <span class="k">let</span> <span class="n">tyT2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t2</span> <span class="k">in</span>
+      <span class="o">(</span><span class="k">match</span> <span class="n">tyT1</span> <span class="k">with</span>
+          <span class="nc">TyArr</span><span class="o">(</span><span class="n">tyT11</span><span class="o">,</span> <span class="n">tyT12</span><span class="o">)</span> <span class="o">-&gt;</span>
+            <span class="k">if</span> <span class="o">(=)</span> <span class="n">tyT2</span> <span class="n">tyT11</span> <span class="k">then</span> <span class="n">tyT12</span>
+            <span class="k">else</span> <span class="n">error</span> <span class="n">fi</span> <span class="s2">&quot;parameter type mismatch&quot;</span>
+        <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">error</span> <span class="n">fi</span> <span class="s2">&quot;arrow type expected&quot;</span><span class="o">)</span></code></pre></figure>
+
+<p>if的判断部分必须为bool，而且两个分支必须为同一类型:</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml">  <span class="o">|</span> <span class="nc">TmIf</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">t1</span><span class="o">,</span><span class="n">t2</span><span class="o">,</span><span class="n">t3</span><span class="o">)</span> <span class="o">-&gt;</span>
+     <span class="k">if</span> <span class="o">(=)</span> <span class="o">(</span><span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t1</span><span class="o">)</span> <span class="nc">TyBool</span> <span class="k">then</span>
+       <span class="k">let</span> <span class="n">tyT2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t2</span> <span class="k">in</span>
+       <span class="k">if</span> <span class="o">(=)</span> <span class="n">tyT2</span> <span class="o">(</span><span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t3</span><span class="o">)</span> <span class="k">then</span> <span class="n">tyT2</span>
+       <span class="k">else</span> <span class="n">error</span> <span class="n">fi</span> <span class="s2">&quot;arms of conditional have different types&quot;</span>
+       <span class="k">else</span> <span class="n">error</span> <span class="n">fi</span> <span class="s2">&quot;guard of conditional not a boolean&quot;</span></code></pre></figure>
+
+<h2 id="simple-extensions">Simple Extensions</h2>
+<p>在上一章的基础上，加上各种Drived Form。</p>
+
+<p>####Sequencing
+是多个表达式串，这在有副作用的语言里面很常见。另外也可以把t1;t2理解为(λx:Unit.t2) t1。</p>
+
+<p>####Wildcards
+如何翻译好，意思就是无用形参可以不指定名字。</p>
+
+<p>####Ascription
+是指类型缩写(或者昵名)，C++里面的typedef，和Rust里面的usize as U都是。这个的好处在于文档和接口更清晰，如果函数的参数可以是函数，类型加进以后语法看起来就比较繁琐了，用类型缩写更清晰。typechecker的时候当然需要展开来进行。ascription和casting也有一定关系。</p>
+
+<p>增加各种简单的基础类型，比如String，还有Pairs，Tuple，Record， Sum，Enum，List。支持一种类型除了一个新类型名字外，其evaluation rules和type rules也要明确。这里的datatypes是按照Ocaml的语法来说明的。</p>
+
+<p>因为加上了好多种类型，fullsimple这个解释器复杂多了。</p>
+
+<p>####Type Dynamic</p>
+
+<pre><code> Even in statically typed languages, there is often the need to deal with data whose type cannot be determined at compile time. This occurs in particular when the lifetime of the data spans multiple machines or many runs of the compiler—when, for example, the data is stored in an external file system or database, or communicated across a network. To handle such situations safely, many languages offer facilities for inspecting the types of values at run time.
+</code></pre>
+
+<p>####General Recursion
+typed lambda-calculus加上fix combinator就是一门极小的但是是full abstraction的语言。Ocaml里面的letrec可以用来定义递归函数。fix point的概念需要继续理解。</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2015/02/10/understanding-computation.html" title="Understanding Computation">Understanding Computation&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)">&larr; Types and Programming Languages (2)</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="nofollow">Types and Programming Languages (1)</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>01 March 2015</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#PL-ref">PL <span>4</span></a></li>
+     
+    	<li><a href="/tags.html#OCaml-ref">OCaml <span>4</span></a></li>
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

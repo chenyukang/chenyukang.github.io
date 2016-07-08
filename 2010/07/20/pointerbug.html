@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>指针指针 | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">指针指针</h1>
+
+    <p>
+今天由一个函数加深了对指针的理解，是这么一个函数：
+<pre class="src"><span style="color: #98fb98;">void</span> <span style="color: #87cefa;">BST_Delete</span>(<span style="color: #98fb98;">BITREE</span> <span style="color: #eedd82;">y</span>) <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">删除节点y
+</span>{
+    <span style="color: #00ffff;">if</span> (y-&gt;lch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;rch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;p)
+    {
+        <span style="color: #00ffff;">if</span>(y==(y-&gt;p)-&gt;lch) (y-&gt;p)-&gt;lch=<span style="color: #7fffd4;">NULL</span>;
+        <span style="color: #00ffff;">else</span> (y-&gt;p)-&gt;rch=<span style="color: #7fffd4;">NULL</span>;
+    }
+    <span style="color: #00ffff;">else</span> <span style="color: #00ffff;">if</span> (y-&gt;rch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;p)
+    {
+        <span style="color: #00ffff;">if</span>(y==y-&gt;p-&gt;lch) y-&gt;p-&gt;lch=y-&gt;lch;
+        <span style="color: #00ffff;">else</span> y-&gt;p-&gt;rch=y-&gt;lch;
+    }
+    <span style="color: #00ffff;">else</span> <span style="color: #00ffff;">if</span> (y-&gt;lch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;p){
+        <span style="color: #00ffff;">if</span>(y==y-&gt;p-&gt;lch) y-&gt;p-&gt;lch=y-&gt;rch;
+        <span style="color: #00ffff;">else</span> y-&gt;p-&gt;rch=y-&gt;rch;
+    }
+    <span style="color: #00ffff;">else</span>    {
+        <span style="color: #98fb98;">BITREE</span> <span style="color: #eedd82;">t</span>=BST_Successor(y);
+        y-&gt;data=t-&gt;data;
+        BST_Delete(t);
+        y=t;<span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">y=NULL
+
+</span>    }
+    free(y);
+}</pre>
+</p>
+<p>
+在最后一个else内，如果二叉搜索树中有左右孩子，那么找这个删除节点的后继，把内容互换，然后删除后继 节点，因为后继节点一定只有一个孩子或者没有孩子。最后只有一个free()操作其实是为了代码简洁,可以把前面每一个else if后面加一个free， 最后不写free()操作。但是这么写运行起来会有问题，y=t,就是所指向的地址相同，但是因为是 递归操作，t指向的地址在调用BST_Delete(t)的时候已经被free掉了，所以如果再删除一次就会 出现内存错误，修改方法是y=NULL,或者修改函数参数，用指针引用的形式 void BST_Delete( BITREE&amp; y)，然后再在free(y)后面增加一句y=NULL。以前以为两次调用free(p)是不会出现问题的，free()在释放掉p指向的内存以后，会 自动将p赋值为NULL，其实没有这部分操作。
+</p>
+<p>
+
+前些天还看到一个面试题目，malloc申请的空间用delete删除会有什么问题？一般来说没有问题， 内存会释放掉，而且即使是有析构函数的对象指针，用delete删除的时候同样会调用析构函数。这说明 c++的delete操作其实是在c的基础增加了一些操作，先调用析构函数，然后释放空间。良好的编程风格 就是free/malloc，new/delete一一对应，甚至不要出现一次调用，多次释放，像上面那样的因为递归 而产生的多次释放并不是很好发现
+</p>
+
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2010/07/20/concrete-abstractions.html" title="《Concrete Abstractions》的一些解答">《Concrete Abstractions》的一些解答&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2010/07/20/the-game-of-life.html" title="The Game of Life">&larr; The Game of Life</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2010/07/20/pointerbug.html" title="指针指针" rel="nofollow">指针指针</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>20 July 2010</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#C-ref">C <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

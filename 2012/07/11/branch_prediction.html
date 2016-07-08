@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>分支预测优化 | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">分支预测优化</h1>
+
+    
+<h2 id="section">问题</h2>
+
+<p>Stack_overflow上有这么一个<a href="http://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-an-unsorted-array">帖子:为什么排序后会快很多</a>，说是下面这段代码比较诡异，引发了比较多的回复，一起来看看。</p>
+
+<script src="https://gist.github.com/3090254.js?file=gistfile1.cpp">gist</script>
+
+<ul>
+  <li>如果把std::sort(data, data + arraySize);注释掉，下面那段for循环所花费的时间是11.54秒。</li>
+  <li>如果不注释掉，即排序后下面那段所用的时间是1.93秒。</li>
+</ul>
+
+<p>相差比较大。那个for循环总是要执行完的，为什么排序后会快不少?</p>
+
+<h2 id="section-1">分支预测</h2>
+
+<p>下面的获得票数最多的回复质量非常高，很生动细致地说明了cpu的分支预测技术。</p>
+
+<p><img src="/images/train.jpg" alt="Black Cube Theme" class="img-center" width="500px" /></p>
+
+<p>看上面这情形，如果在没有通讯设备的年代，如果你是这个火车枢纽的操作人员，
+是不是要让火车驾驶员把车停下来，然后告诉你他需要往哪个方向行驶，等你完成转向操作的时候再继续行驶火车呢。也许有一些更好的办法，你可以猜测火车要往哪边行驶。</p>
+
+<ul>
+<li>如果你猜对了，那么节省了不少时间。</li>
+<li> 如果猜错了，火车停下来，等你撤销刚才的操作，再往前走，这会比较耗费时间。</li>
+</ul>
+
+<p>同样在执行指令的时候，cpu也能做这样类似的工作。现代cpu都采用 <strong>指令流水线技术</strong> ，即处理器会预取下面要执行的一些指令，如果下面的指令正是需要被执行的那就节省了时间，如果在概率上大部分能猜对下面要运行的指令，那就提高了cpu的运行效率。更详细的图文介绍可以参考<a href="http://en.wikipedia.org/wiki/Branch_predictor">wiki</a>。简单的说明就是cpu会根据前面所执行的指令的历史，归纳出相应的模式，把预测的指令预取进来，然后继续沿着预测的指令执行。如果发现预测错误，则倒过来重新初始化预测表、刷新指令管道然后继续执行。所以看上面的例子：</p>
+
+<pre><code>
+T = branch taken
+N = branch not taken
+
+data[] = 0, 1, 2, 3, 4, ... 126, 127, 128, 129, 130, ... 250, 251, 252, ...
+branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
+
+       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)
+</code></pre>
+
+<p>后面作者又加了一条hack，把这段代码重新改写一下：</p>
+
+<pre><code>  if (data[c] &gt;= 128)       ====&gt;              int t = (data[c] - 128) &gt;&gt; 31; 
+     sum += data[c];        ====&gt;              sum += ~t &amp; data[c];
+</code></pre>
+
+<p>那么前面是否排序就对这段代码效率没有影响了，同样是2秒多。 这和编译器的优化非常相关，不同的编译器的结果不一样，4.6.1 GCC 加上-O3或者-ftree-vectorize编译选项可以对这种情况进行优化，所以排序与否没有关系，而VC++2010却不能进行类似优化(GCC果然强大)。</p>
+
+<h2 id="section-2">一个优化例子</h2>
+<p>在Linux kernel里面会看到类似likely和unlikely这样的代码，从其名字就很直观的解释了其意义。看其定义为两个宏。</p>
+<pre><code>
+include/linux/compiler.h
+ #define likely(x) __builtin_expect   (!!(x), 1)
+ #define unlikely(x) __builtin_expect (!!(x), 0)
+</code></pre>
+
+<p>Linux内核开发者使用这两个宏来通过编译器提示cpu：某一段代码很可能会执行，应该被预测，而有的情况出现的概率比较小，不必预测。类似这样的代码：</p>
+
+<pre><code>
+if(likely(some_cond)) { //this is often happen!
+    /* Do something */
+}
+
+if (unlikely(some_cond)) { //this is rare!
+    /* Do something */
+}
+</code></pre>
+
+<p>关于这个方面，在这篇论文<a href="http://www.akkadia.org/drepper/cpumemory.pdf">What every Programmer should know about Memory</a>里面有更详细的讲述。分支预测在现代cpu上如此通用，竟然还有人利用这个来尝试破解RSA的，看这个<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.80.1438&amp;rep=rep1&amp;type=pdf">On the Power of Simple Branch Prediction Analysis</a>。</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2012/06/25/gdb-with-libso.html" title="GDB调试动态链接库">GDB调试动态链接库&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2012/08/09/switch-screen.html" title="Linux下快捷切换屏幕">&larr; Linux下快捷切换屏幕</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2012/07/11/branch_prediction.html" title="分支预测优化" rel="nofollow">分支预测优化</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>11 July 2012</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+     
+    	<li><a href="/tags.html#优化-ref">优化 <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#分支预测-ref">分支预测 <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

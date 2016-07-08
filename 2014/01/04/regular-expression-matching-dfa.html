@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>正则表达式匹配和NFA/DFA | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="regular expression matching DFA/NFA">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">正则表达式匹配和NFA/DFA</h1>
+
+    
+<p>正则表达式匹配是一个经典问题，这里有一个<a href="http://oj.leetcode.com/problems/regular-expression-matching/">问题</a>。
+实现isMatch，其中.表示任意一个字符，*表示0个或者任一个前面的字符：</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>,<span class="s2">&quot;a&quot;</span><span class="o">)</span>       → <span class="nb">false</span>
+isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>,<span class="s2">&quot;aa&quot;</span><span class="o">)</span>      → <span class="nb">true</span>
+isMatch<span class="o">(</span><span class="s2">&quot;aaa&quot;</span>,<span class="s2">&quot;aa&quot;</span><span class="o">)</span>     → <span class="nb">false</span>
+isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>, <span class="s2">&quot;a*&quot;</span><span class="o">)</span>     → <span class="nb">true</span>
+isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>, <span class="s2">&quot;.*&quot;</span><span class="o">)</span>     → <span class="nb">true</span>
+isMatch<span class="o">(</span><span class="s2">&quot;ab&quot;</span>, <span class="s2">&quot;.*&quot;</span><span class="o">)</span>     → <span class="nb">true</span>
+isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span class="s2">&quot;c*a*b&quot;</span><span class="o">)</span> → <span class="nb">true</span></code></pre></figure>
+
+<p>这是一个正则表达式问题的简化版本只有<code>.</code>和<code>*</code>，可以用递归来解决。正则表达式涉及到自动机理论，顺便再复习一下当年没好好学的东西。查找一番后发现了这篇Russ Cox写的文章非常好(这家伙写了不少文章，xv6里也有他的代码，现在在为Go项目工作)。于是我也尝试着用DFA来解决这个问题。</p>
+
+<h2 id="dfanfa">DFA和NFA的概念</h2>
+<p>首先对于没一个正则表达式都有一个对应的DFA可以来表示, DFA是Deterministic Finite Automaton的简称，还有NFA(Non-deterministic Finite Automata)。NFA对于一个字符的输入有可能存在多个以上的状态转移，而DFA对于没一个输入只存在一个选择。所以每一个NFA都可以转化为一个DFA，但是一个DFA可以转化为多个NFA。我们来看一个例子:</p>
+
+<p>对于正则表达<code>(a|b)*abb</code>的NFA和DFA分别表示为：</p>
+
+<p><img src="/images/nfa.jpeg" alt="nfa" class="img-center" width="350" height="350" /></p>
+
+<p><img src="/images/dfa.jpeg" alt="dfa" class="img-center" width="350" height="350" /></p>
+
+<p>DFA的状态数目和NFA一样，但是一般实践过程中DFA的状态转移要多，所以DFA相对来说要难构造一些，同时DFA比NFA需要的内存空间更大。正因为在NFA中一个状态可能向多个状态转移，在极端的情况下其效率比不过DFA。更多关于正则分类可以参考<a href="http://kb.cnblogs.com/page/86751/">正则表达式引擎及其分类</a>。</p>
+
+<p>对于NFA不同的实现效率会不一样，这也是Russ的文章里所说的。Russ的文章里面介绍了Thompson NFA算法实现(没错就是发明C的那神)，一些老的Unix工具是用的这个算法，比如Awk，Tcl，GNU grep等，而一些更通用的编程语言用的是基于回溯的一种NFA实现，比如Perl/Python。通过数据比较，在最坏的情况下用Thompson NFA实现的awk表现比匹配回溯的NFA要好很多倍。最坏情况下的复杂度不一样，回溯NFA是O(2^N)，而Thompson的复杂度是O(N^2)。文中的代码可以号好看看，非常简洁的C实现。</p>
+
+<h2 id="section">一个尝试实现</h2>
+
+<p>对上面那个问题我尝试着实现了一个程序构建DFA来解决，提交上去完成439个测试用例只用了28ms，相对于递归版本的需要104ms。也可能LeetCode上面的测试数据太少，比较的意义不大。代码长度当然要比递归的长不少。
+定义State：</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">enum</span> <span class="n">OpType</span> <span class="p">{</span>
+    <span class="n">ZERO_PLUS_ONE</span><span class="p">,</span>
+    <span class="n">ANY_ONE</span><span class="p">,</span>
+    <span class="n">MUST_ONE</span>
+<span class="p">};</span>
+<span class="k">struct</span> <span class="n">State</span> <span class="p">{</span>
+    <span class="n">OpType</span>         <span class="n">type</span><span class="p">;</span>
+    <span class="kt">int</span>            <span class="n">id</span><span class="p">;</span>
+    <span class="kt">char</span>           <span class="n">value</span><span class="p">;</span>
+    <span class="kt">bool</span>           <span class="n">end</span><span class="p">;</span>
+    <span class="n">State</span><span class="o">*</span>         <span class="n">prev</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">State</span><span class="o">*&gt;</span> <span class="n">next</span><span class="p">;</span>
+
+    <span class="n">State</span><span class="p">(</span><span class="n">OpType</span> <span class="n">t</span><span class="p">,</span> <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">char</span> <span class="n">v</span><span class="p">,</span> <span class="n">State</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="o">:</span>
+        <span class="n">type</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">id</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">value</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">end</span><span class="p">(</span><span class="nb">false</span><span class="p">),</span> <span class="n">prev</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="n">ZERO_PLUS_ONE</span><span class="p">)</span>
+            <span class="n">next</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">//匹配任意个 next加上自己</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">add</span><span class="p">(</span><span class="n">State</span><span class="o">*</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">next</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="n">ZERO_PLUS_ONE</span> <span class="o">&amp;&amp;</span> <span class="n">prev</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="c1">//匹配任意，前驱加上当前需要添加的状态</span>
+            <span class="n">prev</span><span class="o">-&gt;</span><span class="n">add</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span></code></pre></figure>
+
+<p>构建DFA的过程如下，注释的部分需要注意：</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">State</span><span class="o">*</span> <span class="nf">construct_dfa</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pattern</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">pattern</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">;</span>
+    <span class="n">State</span><span class="o">*</span> <span class="n">start</span> <span class="o">=</span> <span class="k">new</span> <span class="n">State</span><span class="p">(</span><span class="n">ANY_ONE</span><span class="p">,</span> <span class="n">Num</span><span class="p">,</span> <span class="sc">&#39;.&#39;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">State</span><span class="o">*</span> <span class="n">cur</span>   <span class="o">=</span> <span class="n">start</span><span class="p">;</span>
+    <span class="n">State</span><span class="o">*</span> <span class="n">next</span>  <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="kt">char</span>   <span class="n">prev</span>  <span class="o">=</span> <span class="sc">&#39;.&#39;</span><span class="p">;</span>
+    <span class="n">Num</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">&#39;\0&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="sc">&#39;*&#39;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">OpType</span> <span class="n">type</span><span class="p">;</span>
+            <span class="kt">char</span> <span class="n">value</span><span class="p">;</span>
+            <span class="k">if</span><span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;*&#39;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">type</span> <span class="o">=</span> <span class="n">ZERO_PLUS_ONE</span><span class="p">;</span> <span class="c1">//匹配0个或者多个</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">prev</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+                <span class="n">type</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;.&#39;</span><span class="o">?</span> <span class="nl">ANY_ONE</span> <span class="p">:</span> <span class="n">MUST_ONE</span><span class="p">;</span> <span class="c1">//匹配任意一个. 或者指定的字符</span>
+            <span class="p">}</span>
+            <span class="n">next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">State</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">Num</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">cur</span><span class="p">);</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">State</span><span class="p">(</span><span class="n">ZERO_PLUS_ONE</span><span class="p">,</span> <span class="n">Num</span><span class="p">,</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="n">cur</span><span class="p">);</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="sc">&#39;*&#39;</span><span class="p">,</span> <span class="n">p</span><span class="o">+=</span><span class="mi">2</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">add</span><span class="p">(</span><span class="n">next</span><span class="p">);</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">next</span><span class="p">;</span>
+        <span class="n">Num</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">cur</span><span class="o">-&gt;</span><span class="n">end</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="c1">// 例如  ab*a*c*  对于 &quot;a&quot;， 即使后面几个*, &quot;a&quot;也算是一个end，</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">cur</span><span class="o">-&gt;</span><span class="n">type</span> <span class="o">==</span> <span class="n">ZERO_PLUS_ONE</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">prev</span><span class="p">;</span>
+        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">end</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">start</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>匹配的过程就是一个搜索的过程，需要注意避免重复访问，另外如果下一层要访问的为空就可以退出整个搜索过程了，整个代码看这个<a href="https://gist.github.com/chenyukang/8265615">Gist</a>。</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2013/11/23/kernel-analysis-process-defunct.html" title="Kernel analysis: Defunct Process">Kernel analysis: Defunct Process&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2014/01/14/leetcode-anagrams.html" title="LeetCode: anagrams">&larr; LeetCode: anagrams</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2014/01/04/regular-expression-matching-dfa.html" title="正则表达式匹配和NFA/DFA" rel="nofollow">正则表达式匹配和NFA/DFA</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>04 January 2014</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+     
+    	<li><a href="/tags.html#Algorithms-ref">Algorithms <span>6</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+
