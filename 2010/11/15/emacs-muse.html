@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>Emacs Muse的使用 | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">Emacs Muse的使用</h1>
+
+    <div class="contents"><dl> <dt> <a href="#sec1">Muse简介</a> </dt> <dt> <a href="#sec2">Muse的配置</a> </dt> <dt> <a href="#sec3">Muse中源代码高亮显示</a> </dt> <dt> <a href="#sec4">Muse 来写主页和博客</a> </dt> </dl></div>
+<h2>Muse简介</h2>
+<p class="first">Muse 是由 <a href="http://www.emacswiki.org/cgi-bin/wiki/">EmacsWiki</a> 衍生的，为emacs下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括html,pdf，latex等等。Muse的编辑规则很简单，而且支持“所见即所得”的编辑方式可以让文档编辑更轻松。我使用这个工具已经快一年了，强烈推荐。这个html文件就是从Muse调用htmlize生成的。</p>
+
+<h2><a name="sec2"></a>
+Muse的配置</h2>
+<p class="first">从<a href="http://mwolson.org/static/dist/muse/muse-3.12.tar.gz">这里</a>下载最新版本的Muse，比较简单的安装方法是解压后直接在目录下运行make，然后把所有的文件都拷贝到emacs的一个加载目录下面(比如~/.emacs.d/muse/)。设置.emacs加入以下几行。</p>
+
+<pre>;; 加载 muse
+(require 'muse-mode)
+(require 'muse-html)</pre>
+然后就可以利用Muse-mode来方便地创建文档。这里有个<a href="http://mwolson.org/projects/MuseQuickStart.html">QuickStarted</a>，看一遍就基本掌握了编辑规则。编辑完成以后按键C-u C-c C-t即可发布该文档。
+<h2><a name="sec3"></a>
+Muse中源代码高亮显示</h2>
+<p class="first">在Muse-mode中编辑时是所见即所得样式的显示，但是有一个问题是代码不能高亮显示，要贴代码就有点不方便，解决的方法是要下载htmlize.el,而且需要1.34以后的版本才支持这个功能，在<a href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el">这里</a>下载。使用方法也有说明。</p>
+
+<h2><a name="sec4"></a>
+Muse 来写主页和博客</h2>
+<p class="first">很多搞学术的同学喜欢建一个看起来很严谨的静态主页，这样的主页用Muse来维护非常方便。对于wordpress的博客或者主页，一款离线撰写工具是必须的，在windows下可以用WindowsLiveWriter,Linux下也有相应工具。不过我大部分还是在自己电脑上用Muse来写完发布成html格式，然后再发布到主页上。首先我们需要建立一个主页的工程。比如我的：</p>
+
+<pre class="src"><span style="color: #ff7f24;">;;</span><span style="color: #ff7f24;">==新建一个wiki工程
+</span>(setq muse-project-alist
+      '((<span style="color: #ffa07a;">"MainPage"</span>
+         (<span style="color: #ffa07a;">"~/document/blog/Home"</span> <span style="color: #b0c4de;">:default</span> <span style="color: #ffa07a;">"index"</span>)
+         (<span style="color: #b0c4de;">:base</span> <span style="color: #ffa07a;">"html"</span> <span style="color: #b0c4de;">:path</span> <span style="color: #ffa07a;">"~/document/blog/Home_Page"</span>))
+        (<span style="color: #ffa07a;">"Computer"</span>
+         (<span style="color: #ffa07a;">"~/document/blog/Home/Computer/"</span> <span style="color: #b0c4de;">:default</span> <span style="color: #ffa07a;">"index"</span>)
+         (<span style="color: #b0c4de;">:base</span> <span style="color: #ffa07a;">"html"</span> <span style="color: #b0c4de;">:path</span> <span style="color: #ffa07a;">"~/document/blog/Home_Page/Computer"</span>))
+        (<span style="color: #ffa07a;">"Sport"</span>
+         (<span style="color: #ffa07a;">"~/document/blog/Home/Sport"</span> <span style="color: #b0c4de;">:default</span> <span style="color: #ffa07a;">"index"</span>)
+         (<span style="color: #b0c4de;">:base</span> <span style="color: #ffa07a;">"html"</span> <span style="color: #b0c4de;">:path</span> <span style="color: #ffa07a;">"~/document/blog/Home_Page/Sports"</span>))
+        (<span style="color: #ffa07a;">"Other"</span>
+         (<span style="color: #ffa07a;">"~/document/blog/Home/Other"</span> <span style="color: #b0c4de;">:defualt</span> <span style="color: #ffa07a;">"index"</span>)
+         (<span style="color: #b0c4de;">:base</span> <span style="color: #ffa07a;">"html"</span> <span style="color: #b0c4de;">:path</span> <span style="color: #ffa07a;">"~/document/blog/Home_Page/Other"</span>))))</pre>
+
+<p>
+然后到相应目录下撰写muse文件，快捷键C-c c-p就发布了整个工程，在Home_Page相应的目录下生成了html的文件。看起来有点复杂，其实还是很方便的，代码高亮这个程序员都喜欢的功能肯定就不用操心了，同时在本机上留有个备份。这种wiki风格的网页还是很利于浏览。不过有一个弊端，图片插入虽然在撰写过程中能直接预览的，但是上传到wordpress上路径肯定会变，所以还是要再稍微编辑一下。
+</p>
+
+<p><img src="/images/muse.jpg" alt="screen" class="img-center" width="400" height="400"/></p>
+
+</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2010/11/14/damien-rice.html" title="又是一些歌">又是一些歌&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2010/11/20/gene-alg.html" title="优化算法">&larr; 优化算法</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2010/11/15/emacs-muse.html" title="Emacs Muse的使用" rel="nofollow">Emacs Muse的使用</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>15 November 2010</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Backup-ref">Backup <span>17</span></a></li>
+     
+    	<li><a href="/tags.html#Emacs-ref">Emacs <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#muse-ref">muse <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

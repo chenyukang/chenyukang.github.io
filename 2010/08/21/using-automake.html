@@ -1,0 +1,449 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>using automake | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">using automake</h1>
+
+    以前都是手写makefile,没使用automake之类的工具,今天看了一些相关资料,简单地总结一下，留个备份。
+<h4>使用Makefile</h4>
+<p class="first">unix/linux下面使用相当广泛,对于简单一些的程序,手写makefile还是比较容易的,只要指定清目标文件,
+最后可执行文件的依赖关系。使用一些高级一点的功能更方便,比如下面这个就比较好用,稍微编辑一下就可以用于常用的小工程。
+这个Makefile把所有.cpp的文件编译成相应的.o文件,然后链接为Targetfile文件。</p>
+
+<blockquote>
+<pre class="src">CC = g++  -O2
+LD = g++
+TARGET = Targetfile
+SOURCES = $(wildcard *.cpp)
+OBJS = $(patsubst %.cpp,%.o,$(SOURCES))
+
+%.o:%.cpp
+        $(CC) $(CFLAGS) -c $&lt; -o $@
+
+Targetfile:$(OBJS)
+        $(CC) $(OBJS) -lglut -lglui  -o Targetfile
+
+clean:
+        @/bin/rm *.o</pre>
+</blockquote>
+<h4>使用automake等工具</h4>
+<p class="first">1. 首先运行autoscan,这之后会生成一个configure.scan文件,修改为configure.in，并编辑。典型的一个文件如下,
+AC_CONFIG_SRCDIR,AC_CONFIG_HEADER这两项还不知道干什么用的,如果不注释掉后面automake会出现错误,那就先注释掉吧。
+重点修改AC_INIT，AC_INIT_AUTOMAKE。AC_CHECK那些不用管,后面提示-lglui提示要注意,这是需要链接的库文件，这里链接glui这个库。</p>
+
+<blockquote>
+<pre class="src">#                                               -*- Autoconf -*-
+<span style="color: #ffd700;"># Process</span> <span style="color: #00bfff; font-weight: bold;">this</span> file with autoconf to produce a configure script.
+
+AC_PREREQ(2.61)
+AC_INIT(TSPdemo, 1.0, moorekang@gamil.com)
+AM_INIT_AUTOMAKE(TSPdemo, 1.0)
+<span style="color: #ffd700;">#AC_CONFIG_SRCDIR</span>([Elastic_Alg.cpp])
+<span style="color: #ffd700;">#AC_CONFIG_HEADER</span>([config.h])
+
+<span style="color: #ffd700;"># Checks</span> <span style="color: #00bfff; font-weight: bold;">for</span> programs.
+AC_PROG_CXX
+<span style="color: #98f5ff;">AC_PROG_CC</span>
+
+<span style="color: #ffd700;"># Checks</span> <span style="color: #00bfff; font-weight: bold;">for</span> libraries.
+<span style="color: #ffd700;"># FIXME</span>: Replace `main<span style="color: #deb887;">' with a function in `-lglui'</span>:
+<span style="color: #daa520; font-weight: bold;">AC_CHECK_LIB</span>([glui], [main])
+<span style="color: #ffd700;"># FIXME</span>: Replace `main<span style="color: #deb887;">' with a function in `-lglut'</span>:
+AC_CHECK_LIB([glut], [main])
+
+<span style="color: #ffd700;"># Checks</span> <span style="color: #00bfff; font-weight: bold;">for</span> header files.
+
+<span style="color: #98f5ff;">AC_HEADER_STDC</span>
+<span style="color: #daa520; font-weight: bold;">AC_CHECK_HEADERS</span>([stdlib.h])
+
+<span style="color: #ffd700;"># Checks</span> <span style="color: #00bfff; font-weight: bold;">for</span> typedefs, structures, <span style="color: #00bfff; font-weight: bold;">and</span> compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_C_INLINE
+<span style="color: #98f5ff;">AC_TYPE_SIZE_T</span>
+
+<span style="color: #ffd700;"># Checks</span> <span style="color: #00bfff; font-weight: bold;">for</span> library functions.
+
+<span style="color: #daa520; font-weight: bold;">AC_CHECK_FUNCS</span>([sqrt])
+<span style="color: #ffd700;">#AC_CONFIG_FILES</span>([makefile])
+AC_OUTPUT(Makefile)</pre>
+</blockquote>
+2. 编写Makefile.am,如下面这样。和makefile一样,写上可执行文件依赖于的源文件,_LDADD是要链接的库文件名。
+<blockquote>
+<pre class="src">AUTOMAKE_OPTIONS=foreign
+bin_PROGRAMS=TSPdemo
+TSPdemo_SOURCES= Elastic_Alg.cpp  MyMap.cpp   mathlib.cpp \
+Elastic_Alg.h    MyMap.h      mathlib.h \
+LaoMan.cpp       SOM.cpp        pointdef.h \
+LaoMan.h         SOM.h      main.cpp
+TSPdemo_LDADD = -lglut</pre>
+</blockquote>
+3. 然后执行aclocal,和autoconf，最后automake —add-missing 生成configure文件。这就完成了,下面就是unix下编译安装软件的三个步骤了,
+./configure，make,makeinstall等。
+
+写得比较粗略,详细查看<a href="http://wenku.baidu.com/view/b01bed02de80d4d8d15a4f4e.html">这个文档</a>。
+
+<!-- Page published by Emacs Muse ends here -->
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2010/08/21/emacs-for-fun.html" title="Emacs自虐">Emacs自虐&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2010/09/30/forjob.html" title="找工作小结">&larr; 找工作小结</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2010/08/21/using-automake.html" title="using automake" rel="nofollow">using automake</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>21 August 2010</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Backup-ref">Backup <span>17</span></a></li>
+     
+    	<li><a href="/tags.html#Linux-ref">Linux <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#makefile-ref">makefile <span>2</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

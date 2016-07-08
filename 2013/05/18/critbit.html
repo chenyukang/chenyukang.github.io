@@ -1,0 +1,474 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>高效的Crit-bit Tree | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">高效的Crit-bit Tree</h1>
+
+    
+<p>最近了解到有这么一种数据结构，想拿来在工作中做一些事情，结果效果不好。原来我的理解有一些不对。在这里记录一下。</p>
+
+<p><a href="http://cr.yp.to/critbit.html">Crit-bit tree</a>是一种特别的树结构，一般用于存放字符串。Critbit tree是一种<a href="http://en.wikipedia.org/wiki/Trie#Bitwise_tries">BitWise tries</a>，其树的深度为O(longest-length)，有点像二叉树，不过对于字符串做分支检测的时候代价很小。</p>
+
+<p>Crit-bit快速高效的支持下面的一些操作：</p>
+
+<ul>
+  <li>插入一个字符串</li>
+  <li>测试一个字符串是否在树里</li>
+  <li>删除一个字符串</li>
+  <li>查找出树中所有以某个字符串开始的所有字符串</li>
+</ul>
+
+<p>和hash有点像，不过hash对于第四点没这么方便。
+我做了一些性能对比，测试数据是<code>/usr/share/dict/words</code>里面的所有单词，同时做插入和查询的操作。具体测试代码看<a href="https://github.com/chenyukang/critbit-perf">这里</a>，结果是：</p>
+
+<table border="2" cellpadding="5" align="center">
+  <tbody>
+<tr>
+<td>critbit </td> <td> 11.6 MB</td> <td>  23.34s </td>
+</tr>
+<tr>
+<td>set </td>    <td>21.6 MB</td><td>   45.85s</td>
+</tr>
+<tr>
+<td>trie </td>   <td>332.3 MB</td> <td> 17.84s</td>
+</tr>
+</tbody>
+</table>
+
+<p>从中可以看到trie树的内存消耗是比较大的，但是查找速度最好。critbit的内存消耗真的非常小，如果只是把这里所有的单词存下来都要4MB的内存，其查找的速度虽然和trie树比起来差一些，但还是相当不错。</p>
+
+<p>好好的研读了crit-bit的实现和这篇文章，里面技巧挺多的。
+critbit的结构很简单:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">typedef</span> <span class="k">struct</span><span class="p">{</span>
+    <span class="kt">void</span><span class="o">*</span> <span class="n">child</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+    <span class="n">uint32</span> <span class="n">byte</span><span class="p">;</span>
+    <span class="n">uint8</span> <span class="n">otherbits</span><span class="p">;</span>
+<span class="p">}</span><span class="n">critbit0_node</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="k">struct</span><span class="p">{</span>
+    <span class="kt">void</span><span class="o">*</span> <span class="n">root</span><span class="p">;</span>
+<span class="p">}</span><span class="n">critbit0_tree</span><span class="p">;</span></code></pre></figure>
+
+<p>其中child是void*指针，对于树的内部节点其指向的是子节点，对于叶子节点其指向的是字符串。
+byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用来快速的取得不同最高位，在查询的过程中用这个来做branch。</p>
+
+<p>具体的代码分析这里比较少，最复杂的函数是critbit0_insert。在插入过程中需要记录下来byte和otherbits,
+并且更新前面的父节点。</p>
+
+<p><img src="/images/critbit.png" alt="critbit" class="img-center" height="400" width="400" /></p>
+
+<p>然后再继续插入后的结构变化是:
+<img src="/images/critbit_insert.png" alt="critbit" class="img-center" height="400" width="400" /></p>
+
+<p>下面记录一下其中的几个技巧。</p>
+
+<h4 id="align">align指针最后一位用来做标志</h4>
+
+<p>树的结构需要一个标志变量来表示是否是内部节点或者是叶子节点。这个变量如何能省掉？
+看上面的void* root和void* child, 都是即可以用来指向字符串又可以指向节点，一般申请过来的指针变量都是align好的，所以最低位为0，这是可以拿来用的。因此对于内部节点我们可以在这个位上设置为1，只是要注意在通过这个指针取值的时候需要减回去。</p>
+
+<p><code>a = (posix_memalign((void**)&amp;x, sizeof(void*), ulen+1))</code></p>
+
+<p>posix_memalign在这里用的是sizeof(void*)，其实就和malloc一样了，因为一般Linux上编译器和C库已经处理了对齐问题。</p>
+
+<p>因此在查找的这段代码里是这样的：</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">critbit0_contains</span><span class="p">(</span><span class="n">critbit0_tree</span><span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">u</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">uint8</span><span class="o">*</span> <span class="n">ubytes</span><span class="o">=</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">u</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">size_t</span> <span class="n">ulen</span><span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
+    <span class="n">uint8</span><span class="o">*</span> <span class="n">p</span><span class="o">=</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">root</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">p</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span> <span class="mi">1</span> <span class="o">&amp;</span> <span class="p">(</span><span class="kt">intptr_t</span><span class="p">)</span><span class="n">p</span> <span class="p">){</span>       <span class="c1">//内部节点? </span>
+        <span class="n">critbit0_node</span><span class="o">*</span> <span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)(</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>  <span class="c1">//取得真正的指针</span>
+        <span class="n">uint8</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">q</span><span class="o">-&gt;</span><span class="n">byte</span> <span class="o">&lt;</span> <span class="n">ulen</span><span class="p">)</span> <span class="n">c</span> <span class="o">=</span> <span class="n">ubytes</span><span class="p">[</span><span class="n">q</span><span class="o">-&gt;</span><span class="n">byte</span><span class="p">];</span>
+        <span class="k">const</span> <span class="kt">int</span> <span class="n">direction</span><span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="n">q</span><span class="o">-&gt;</span><span class="n">otherbits</span><span class="o">|</span><span class="n">c</span><span class="p">))</span><span class="o">&gt;&gt;</span><span class="mi">8</span><span class="p">;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">q</span><span class="o">-&gt;</span><span class="n">child</span><span class="p">[</span><span class="n">direction</span><span class="p">];</span>
+    <span class="p">}</span>
+	<span class="c1">//叶子节点</span>
+    <span class="k">return</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">strcmp</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">p</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<h4 id="bit">取最高位的非0bit</h4>
+
+<p>在插入过程中计算最高位的不同位。</p>
+
+<p><code>newotherbits = p[newbyte]^ubytes[newbyte];</code></p>
+
+<p>其实也可以用一个for循环来计算，不过这里是这样实现的:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">newotherbits</span> <span class="o">|=</span> <span class="n">newotherbits</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">newotherbits</span> <span class="o">|=</span> <span class="n">newotherbits</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">;</span>
+<span class="n">newotherbits</span> <span class="o">|=</span> <span class="n">newotherbits</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">;</span></code></pre></figure>
+
+<p>这相当于是计算不小于它的2的整数次幂，对于32bit的代码可以看看<a href="http://blog.codingnow.com/cloud/CodeCollection">这里</a>的<code>next_pow_of_2</code>。</p>
+
+<hr />
+
+<p><a href="https://github.com/agl/critbit">文章和代码</a>，其中那篇文章有详细分析。</p>
+
+<p><a href="https://github.com/chenyukang/critbit-perf">我的测试代码,trie/set等</a>。</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2013/05/09/git-command.html" title="迁移到Git">迁移到Git&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2013/07/06/studying-rails.html" title="初学Rails">&larr; 初学Rails</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2013/05/18/critbit.html" title="高效的Crit-bit Tree" rel="nofollow">高效的Crit-bit Tree</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>18 May 2013</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+     
+    	<li><a href="/tags.html#Critbit-ref">Critbit <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

@@ -1,0 +1,487 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>《C深度探索》笔记 | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">《C深度探索》笔记</h1>
+
+    <h3>最名不副实的关键字 static</h3>
+这个关键字在C语言里面有两个作用，C++对这个关键词进行了扩展。
+
+1：修饰变量，又分为局部变量和全局变量，被修饰的变量都存储在静态的内存区域。 修饰静态变量，那么只有在这个文件内可以引用它，在其他文件里面即使使用extern也不能进行访问。所以一般是放在文件头部分。 修饰局部变量，只有在定义的函数内访问，函数外不能访问，即使是在同文件内。
+
+2：修饰函数，在函数前面添加static，那么这个函数只能在该文件内使用。这样，不同人编写的函数，如果不在同文件内，可以不用担心函数名字 相同。
+<pre>main.c
+
+int main()
+{
+   Func();
+   reutrn 0;
+}
+
+Def.c
+
+static void Func()
+{
+  printf("Func called\n");
+}
+
+编译: gcc main.c Def.c -o main 链接错误</pre>
+<h3><a id="sec2" name="sec2"></a>变量的命名</h3>
+min-length&amp;&amp;max-information
+
+低精度数据向高精度数据扩展。
+
+<strong>被冤枉的关键字 sizeof 用法：sizeof(int), sizeof(i), sizeof i;</strong>
+
+<strong></strong>if ,else float类型值与0值比较，定义一个很小的数，在某个范围内。同时不要在一个很大的浮点数和很小的浮点数之间进行运算。
+<h3><a id="sec3" name="sec3"></a>循环注意点</h3>
+嵌套循环中，长循环放在内，短循环放在外面，这样可以减少cpu跨切循环层的次数，利用cpu cache。 循环里面的代码尽量短，一般不超过20行。如果不行就改为循环调用函数。
+<h3><a id="sec4" name="sec4"></a>void</h3>
+主要作用在于对函数参数的限定和函数返回值的限定。不能对void进行算法操作。
+<h3><a id="sec5" name="sec5"></a>const</h3>
+修饰指针的时候的记法，就近原则。 const int *p ; p可变，指向的对象不可变 int const *p ; p可变，指向的对象不可变 int* const p; p不可变，指向的对象可变
+<h3><a id="sec6" name="sec6"></a>struct 和class的区别</h3>
+在C++中struct关键字与class一般可以通用，一个区别就是struct的成员默认情况下是public的，而class的是private的。
+<h3><a id="sec7" name="sec7"></a>union</h3>
+一个union只配置一个足够大的空间来容纳最大的数据成员，union的作用在于压缩空间。
+
+存储的大小端：
+<pre>union
+{
+  int i;
+  char a[2];
+}*p,u;
+
+int main()
+{
+  p=&amp;u;
+  p-&gt;a[0]=0x39;
+  p-&gt;a[1]=0x38;
+  printf("%d\n",p-&gt;i);
+  PrintBinary(14393);
+  PrintBinary(56);
+  PrintBinary(57);
+  if(CheckSystem()==1)
+    printf("Little endian\n");
+  else
+    printf("Big endian\n");
+
+  return 0;
+}
+
+11100000111001
+111000
+111001
+Little endian  低字节存储在低地址</pre>
+<h3><a id="sec8" name="sec8"></a>指针，访问内存的钥匙</h3>
+前段时间听过一个面试题，就是如何读写某人地址，答案就是指针？
+<pre>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+int main()
+{
+    int i=0;
+    int* pp=&amp;i;
+    printf("%x\n",pp);
+    int* p=(int*)0x12ff60;
+    printf("%x\n",p);
+    *p=1;
+    printf("%d\n",i);
+    getchar();
+    return 0;
+}</pre>
+这段代码在vc中编译是能够运行的，但是在gcc中不行，gcc中编译后i的地址并不是固定的，这样直接给指针赋值，写指向的地址出现访问越界。
+<h3><a id="sec9" name="sec9"></a>a和&amp;a的区别</h3>
+<pre>int main()
+{
+  int a[5]={1,2,3,4,5};
+  int* ptr=(int*)(&amp;a+1);
+  int* p=(int*)(&amp;a);
+  printf("%x\n",ptr);
+  printf("%x\n",p);
+  printf("%d,%d\n",*(a+1),*(ptr-1));
+  return 0;
+}</pre>
+bfeae860 bfeae84c 2,5 说明ptr和a的地址相差5*4=20个byte。 定义数组int a<sup><a name="fnr.5" href="file:///home/heipang/document/wiki/Home_Page/Computer/%E6%B7%B1%E5%BA%A6%E6%8E%A2%E7%B4%A2C.html#fn.5">5</a></sup>; a表示的是数组中首元素的地址，&amp;a才是数组的首地址，两者的值是一样的，但是意义却不同。
+<h3><a id="sec10" name="sec10"></a>数组当作函数参数传递</h3>
+传递的是指针，也就是数组的地址，但注意如果把指针本身传递进函数的时候进行了数组的拷贝，传递的是一个拷贝。
+<pre>void func(char* p)
+{
+  char c=p[3];
+  *(p+3)='X';
+  printf("%c\n",c);
+}
+
+int main()
+{
+  //char* p="abcdef";
+  char p[]="abcdefg";
+  func(p);
+  printf("%s\n",p);
+  return 0;
+
+}</pre>
+注意上面的区别，如果是char* p="abcdef"，那么p为main函数的局部变量，"abcdef"的存储空间在静态内存中，func函数中可以通过指针p去访问其内容， 但如果改变其内容会发生访问越界。而char p[]="abcdefg"，其数组的内容是在栈上。
+<h3><a id="sec11" name="sec11"></a>内存管理</h3>
+静态区:保存自动全局变量和 static 变量(包括 static 全局和局部变量)。静态区的内容 在总个程序的生命周期内都存在,由编译器在编译的时候分配。 栈(堆栈):保存局部变量。栈上的内容只在函数的范围内存在,当函数运行结束,这些内容 也会自动被销毁。其特点是效率高,但空间大小有限。 堆:由 malloc 系列函数或 new 操作符分配的内存。其生命周期由 free 或 delete 决定。 在没有释放之前一直存在,直到程序结束。其特点是使用灵活,空间比较大,但容易出错。
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2010/07/17/emacs-keyboard-macros.html" title="Emacs: keyboard macros">Emacs: keyboard macros&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2010/07/20/concrete-abstractions.html" title="《Concrete Abstractions》的一些解答">&larr; 《Concrete Abstractions》的一些解答</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2010/07/20/c-deep.html" title="《C深度探索》笔记" rel="nofollow">《C深度探索》笔记</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>20 July 2010</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Books-ref">Books <span>6</span></a></li>
+     
+    	<li><a href="/tags.html#C-ref">C <span>8</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

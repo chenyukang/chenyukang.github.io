@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>Find duplicated Number and Cycle detection | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">Find duplicated Number and Cycle detection</h1>
+
+    <p>
+一个有趣的问题，据说这个题目耗费了Don Knuth 24小时解决。一起来看看。
+<pre class="example"># "You are given an array of integers of length n, where each element ranges
+#  from 0 to n - 2, inclusive.  Prove that at least one  duplicate element must
+#  exist, and give an O(n)-time, O(1)-space algorithm for finding some
+#  duplicated element.  You must not modify the array elements during this
+#  process."</pre>
+</p>
+<p>
+这有几个重要的约束，O(n)，O(1)的复杂度，不能修改这个数组。可能有多个数重复了，但至少有一个数重复了。
+
+首先第一个证明问题，等价于n个鸽子，n-1个笼子，那么至少有一个笼子里面有2个鸽子，就是鸽笼原理(抽屉原理), 反证法可以证明。
+
+难的是第二个问题，假设a[0, n], 值都在0,1, ..., n-2 范围内。如果扫描这个数组，重复的会出现第二次(废话,囧)，
+关键是只能用O(1)的空间，否则用空间记录出现过的就行了。如果把数组看成一个映射，i -&gt; f(i) = a[i]， 那么这个问题可以转换成更抽象的模型。 举个例子：
+</p>
+
+<pre class="example">n = 6
+index: 0 1 2 3 4 5
+value: 1 4 0 0 3 2</pre>
+<p>
+其index对应value映射为为0-&gt;1, 1-&gt;4, 2-&gt;0等等，那么把这个图画出来就是这样：
+</p>
+
+<a href="/images/cycle3.png"><img class="img-center size-full wp-image-844" title="cycle" src="/images/cycle3.png" alt="" width="275" height="259" /></a>
+
+&nbsp;
+<p>
+这个问题转换为求图中环开始的点，因为出现环说明某个点重复出现了。从5开始遍历这个图会在0处发现环，为什么选取5，因为5肯定为一个起点，并且不在0~N-2内。其实只要选取不孤立的那个点当作起点就可以检测环，极端情况比如：
+</p>
+
+<pre>n = 6
+index: 0 1 2 3 4 5
+value: 0 1 2 4 5 3</pre>
+<p>
+选择index=5还是可以发现环，如果选取0就发现不了3和4,5之间的那个环。
+</p>
+
+<p>
+[Cycle detection]是一个经典的计算机问题。经典的算法是Floyd's cycle-finding algorithm，这个算法简单而优美。严格的数学证明当然可以，也能更明显的从现实经验得出结论。如果一个赛道中间出现某个环(分两种情况，赛道本身是环、赛道前面有一段没环而中间出现一个环9字形)，求这个环的周长C。让两位运动员同时出发，并且P1的速度是P2的两倍，当他们第一重新相遇的时候，一定是在环的某个点上，并且其路程之差为这个环的周长的K倍(K&gt;=1)，这解决了一部分问题，我们知道了KC的值，如果K==1，则得出结果，说明两人刚好是在环开始点相遇。否则就是在环内其余点相遇，可以得知现在P2的路程为KC(P1的路程为2KC), 如果让P3以和P2同样的速度从起点开始，P2继续从相遇点开始跑，那么P2和P3肯定还会相遇，并且相遇的点一定为环开始点! 回到这个问题，这个index的值就是重复的值。代码描述如下：
+</p>
+<pre class="src"><span style="color: #ff7f50;">int</span> <span style="color: #4186be;">detectCycle</span>(<span style="color: #ff7f50;">int</span>* <span style="color: #4186be; font-weight: bold;">seq， int Num)</span>
+{
+    <span style="color: #ff7f50;">int</span> <span style="color: #4186be; font-weight: bold;">slow</span> = Num -1;
+    <span style="color: #ff7f50;">int</span> <span style="color: #4186be; font-weight: bold;">fast</span> = Num -1;
+    <span style="color: #00ffff;">while</span>(1) {
+        slow = seq[slow];
+        fast = seq[seq[fast]];
+        <span style="color: #00ffff;">if</span>(slow == fast)
+            <span style="color: #00ffff;">break</span>;
+    }
+    <span style="color: #ff7f50;">int</span> <span style="color: #4186be; font-weight: bold;">finder</span> = Num - 1;
+    <span style="color: #00ffff;">while</span>(1) {
+        slow = seq[slow];
+        finder = seq[finder];
+        <span style="color: #00ffff;">if</span>(slow == finder)
+            <span style="color: #00ffff;">break</span>;
+    }
+    <span style="color: #00ffff;">return</span> finder;
+}</pre>
+<p>
+算法描述很简单，但其中思维的却很有乐趣。以前同样有一个问题，检测一个链表是否有环，这是由此出来的一个特例，因为对于一个链表的每个节点除了头节点都有一个前节点和后节点(无环则末节点指向空)，而图是一个更通用的模型。
+</p>
+
+<pre class="src">
+<span style="color: #ff7f50;">int</span> <span style="color: #4186be;">list_has_cycle</span>(<span style="color: #ff7f50;">NODE</span> *<span style="color: #4186be; font-weight: bold;">list</span>)
+{
+    <span style="color: #ff7f50;">NODE</span> *<span style="color: #4186be; font-weight: bold;">fast</span>=list;
+    <span style="color: #00ffff;">while</span>(1) {
+        <span style="color: #00ffff;">if</span>(!(fast=fast-&gt;next)) <span style="color: #00ffff;">return</span> 0;
+        <span style="color: #00ffff;">if</span>(fast==list) <span style="color: #00ffff;">return</span> 1;
+        <span style="color: #00ffff;">if</span>(!(fast=fast-&gt;next)) <span style="color: #00ffff;">return</span> 0;
+        <span style="color: #00ffff;">if</span>(fast==list) <span style="color: #00ffff;">return</span> 1;
+        list=list-&gt;next;
+    }
+    <span style="color: #00ffff;">return</span> 0;
+}
+</pre>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2012/03/08/eproject.html" title="eproject">eproject&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2012/06/13/try-jekyll-git.html" title="使用Jekyll和Github搭建博客">&larr; 使用Jekyll和Github搭建博客</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2012/04/11/find-duplicated-cycle-detection.html" title="Find duplicated Number and Cycle detection" rel="nofollow">Find duplicated Number and Cycle detection</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>11 April 2012</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Algorithms-ref">Algorithms <span>6</span></a></li>
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

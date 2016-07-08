@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>Types and Programming Languages (3) | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">Types and Programming Languages (3)</h1>
+
+    
+<h2 id="subtyping">Subtyping</h2>
+
+<p>subtyping解决的问题是多态，OO的一个基本要素。</p>
+
+<pre><code>we say that S is a subtype of T, written S &lt;: T, to mean that any term of type S can safely be used in a context where a term of type T is expected. This view of subtyping is often called the principle of safe substitution.
+</code></pre>
+
+<p>这章只是以record来作为例子说明，直白的所一个类型S是另外一个类型的T的子类型，意思是任何使用T的context，我们可以安全的使用S。对于record类型来说，field数量多的是field数量少的子类型，因为这样任何从T要取得的field都可以从子类型里面取到。</p>
+
+<p>对于函数类型来说，如果<code>S1-&gt;S2</code>, <code>T1-&gt;T2</code>, S1是T1的子类型，S2是T2的子类行，那么<code>S1-&gt;S2</code>是<code>T1-&gt;T2</code>的子类型。</p>
+
+<p>引入Top类型，是所有类型的父类，对应很多编程语言里面的Object(OOP里面常见的伎俩)，Go里面我就这样定义：</p>
+
+<figure class="highlight"><pre><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Object</span> <span class="kd">interface</span><span class="p">{}</span></code></pre></figure>
+
+<p>引入Bottom类型似乎就没什么大用处了，还增加了typecheker的复杂度。</p>
+
+<h2 id="ascription-and-casting">Ascription and Casting</h2>
+
+<p>类型的强制转换，分为up-cast和down-cast。up-cast对于类型检查来说要简单一些，比如类型<code>Animal -&gt; Dog</code>, <code>Animal -&gt; Cat</code>，由<code>Cat</code>到<code>Animal</code>的类型转换为up-cast。在很多语言里面是当做一种抽象方法。</p>
+
+<p>down-cast要复杂一些，而且也可能会导致类型系统的不安全，比如：</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="n">f</span> <span class="o">=</span> <span class="err">λ</span><span class="o">(</span><span class="n">x</span><span class="o">:</span><span class="nc">Top</span><span class="o">)</span> <span class="o">(</span><span class="n">x</span> <span class="k">as</span> <span class="o">{</span><span class="n">a</span><span class="o">:</span><span class="nc">Nat</span><span class="o">}).</span><span class="n">a</span><span class="o">;</span></code></pre></figure>
+
+<p>这个函数接收任何类型的参数，但是隐含一个假设，必须是一个有成员变量为数字类型的a，如果传递一个错误的参数typechecker也不报错，但运行的时候就会有错误了。所以含有down-cast的类型系统应该遵循： <code>trust, but verify</code>，编译的时候不报错，但是留着运行的时候检查。为了避免down-cast引起的复杂问题，ML等语言选择的是<code>down-cast with type tags</code>。</p>
+
+<p><code>channels</code>:</p>
+
+<pre><code>The key observation is that, from the point of view of typing, a communication channel behaves exactly like a reference cell: it can be used for both reading and writing, and, since it is difficult to determine statically which reads correspond to which writes, the only simple way to ensure type safety is to require that all the values passed along the channel must belong to the same type.
+</code></pre>
+
+<p>subtyping的引入导致分支多的情况下类型检查麻烦，因此引入了Join和Meet的概念，实现可参考代码里面的:</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="k">rec</span> <span class="n">join</span> <span class="n">ctx</span> <span class="n">tyS</span> <span class="n">tyT</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">subtype</span> <span class="n">ctx</span> <span class="n">tyS</span> <span class="n">tyT</span> <span class="k">then</span> <span class="n">tyT</span> <span class="k">else</span>
+  <span class="k">if</span> <span class="n">subtype</span> <span class="n">ctx</span> <span class="n">tyT</span> <span class="n">tyS</span> <span class="k">then</span> <span class="n">tyS</span> <span class="k">else</span>
+  <span class="k">let</span> <span class="n">tyS</span> <span class="o">=</span> <span class="n">simplifyty</span> <span class="n">ctx</span> <span class="n">tyS</span> <span class="k">in</span>
+  <span class="k">let</span> <span class="n">tyT</span> <span class="o">=</span> <span class="n">simplifyty</span> <span class="n">ctx</span> <span class="n">tyT</span> <span class="k">in</span>
+  <span class="k">match</span> <span class="o">(</span><span class="n">tyS</span><span class="o">,</span><span class="n">tyT</span><span class="o">)</span> <span class="k">with</span>
+    <span class="o">(</span><span class="nc">TyArr</span><span class="o">(</span><span class="n">tyS1</span><span class="o">,</span><span class="n">tyS2</span><span class="o">),</span><span class="nc">TyArr</span><span class="o">(</span><span class="n">tyT1</span><span class="o">,</span><span class="n">tyT2</span><span class="o">))</span> <span class="o">-&gt;</span>
+      <span class="nc">TyArr</span><span class="o">(</span><span class="n">meet</span> <span class="n">ctx</span>  <span class="n">tyS1</span> <span class="n">tyT1</span><span class="o">,</span> <span class="n">join</span> <span class="n">ctx</span> <span class="n">tyS2</span> <span class="n">tyT2</span><span class="o">)</span>
+  <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span>
+      <span class="nc">TyTop</span>
+
+<span class="ow">and</span> <span class="n">meet</span> <span class="n">ctx</span> <span class="n">tyS</span> <span class="n">tyT</span> <span class="o">=</span>
+  <span class="o">.......</span></code></pre></figure>
+
+<h2 id="case-study-imperative-objects">Case Study: Imperative Objects</h2>
+
+<p>不考虑实现效率和语法简洁的条件下，目前为止学到的语言特性已经足够来模拟实现OOP。最简单的例子就是一个counter:</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="n">c</span> <span class="o">=</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">1</span> <span class="k">in</span>
+    <span class="o">{</span><span class="n">get</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="err">!</span><span class="n">x</span><span class="o">,</span>
+    <span class="n">inc</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="n">x</span><span class="o">:=</span><span class="n">succ</span><span class="o">(!</span><span class="n">x</span><span class="o">)};</span></code></pre></figure>
+
+<p>OOP作为一种抽象手段，可以让通过接口来隐藏实现，客户端的代码只通过同一个接口才操作各种子类的对象。这里的例子一个子类只是比父类多接口而已。</p>
+
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="n">newResetCounter</span> <span class="o">=</span>
+    <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="n">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">1</span> <span class="k">in</span>
+    <span class="o">{</span><span class="n">get</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="err">!</span><span class="n">x</span><span class="o">,</span>
+    <span class="n">inc</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="n">x</span><span class="o">:=</span><span class="n">succ</span><span class="o">(!</span><span class="n">x</span><span class="o">),</span> <span class="n">reset</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="n">x</span><span class="o">:=</span><span class="mi">1</span><span class="o">};</span></code></pre></figure>
+
+<p>self的简单是现实需要动态找到对应的method，更高效的实现当然是对象创建好后method table建好。</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)">Types and Programming Languages (2)&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流">&larr; 惰性求值和流</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="nofollow">Types and Programming Languages (3)</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>07 March 2015</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#PL-ref">PL <span>4</span></a></li>
+     
+    	<li><a href="/tags.html#OCaml-ref">OCaml <span>4</span></a></li>
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

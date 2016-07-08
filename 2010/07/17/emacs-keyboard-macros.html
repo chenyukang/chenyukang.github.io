@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>Emacs: keyboard macros | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">Emacs: keyboard macros</h1>
+
+    <h4>宏编辑</h4>
+以前知道Emacs有一个keyboard macros，不过一直没认真看一下，今天算是粗略懂了一些。宏编辑很早就有了，很多编辑器都有这种功能，word好像是有的，不过没用过，格式刷算宏编辑不？甚至Emacs 的起名有一种说法就是 Edit MACroS，最初是作为一个叫作TECO编辑器上的一套宏而编写，然后就是重写了N次，现在Emacs上还有个模拟TECO的模式：）。kbd macros就是把一系列要做的动作集合成一个，然后可以执行多次。以前有时在网上拷贝代码，但是前面都加有行好，不编辑一下不能编译，这种情况 就可以用这个kbd macro一下就解决了。 先来一个例子，比如说有这么一段文字：
+<pre>Newton, Isaac
+Einstein, Albert
+Maxwell, James
+Turing, Alan
+...</pre>
+现在要变成这个样子
+<pre>Isaac Newton
+James Maxwell
+Alan Turing
+...</pre>
+在Emacs下可以执行下面一系列快捷键来处理一行。
+<table border="2" cellpadding="5">
+<tbody>
+<tr>
+<td>action</td>
+<td>key</td>
+</tr>
+<tr>
+<td>到行首</td>
+<td>C-a</td>
+</tr>
+<tr>
+<td>剪切第一个word，</td>
+<td>M-d</td>
+</tr>
+<tr>
+<td>删除下面两个空格</td>
+<td>DEL DEL</td>
+</tr>
+<tr>
+<td>到行尾</td>
+<td>C-e</td>
+</tr>
+<tr>
+<td>插入一个空格</td>
+<td>SPC</td>
+</tr>
+<tr>
+<td>粘贴</td>
+<td>C-y</td>
+</tr>
+<tr>
+<td>到下一行</td>
+<td>C-n</td>
+</tr>
+</tbody>
+</table>
+<h4>定义一个kbd macro</h4>
+如果行数不多，那么敲几下键盘就可以了，如果是很多行呢，总不可能一直这样用手动的吧。上次遇到那个几百行的代码，每 行前面都有一个表示行数目的数字，一狠心写了个C程序来处理，囧。为了不让手指报废，定义一个kbd macro是很快速的方法。也就是在我处理的一行的之前按F3(或者"C-x (" ),在处理第一行的时候Emacs已经在记录这即个命令，结束完一行的处理就可以按F4(或者"C-x )"。这样就已经完成了定义。
+<h4>使用宏</h4>
+定义好以后下面的很多行都可以使用这个宏去操作，只要按C-x e就是执行上一次定义的宏，C-u 20 C-x e执行20次，甚至可以选中一个区域然后执行M-x apply-macro-to-region-lines (或者 C-x C-k r)。但这个时候宏里面别加go-to-the-next-line，因为上面这个命令就已经是逐渐移动区域的每一行，执行上面的宏，如果再加goto命 令就会跳过一些行。另外还可以手动编辑这个宏，命令M-x edit-kbd-macro，会让你选择要编辑的宏，比如说选刚才保存的那个宏，得到：
+<pre>;; Keyboard Macro Editor.  Press C-c C-c to finish; press C-x k RET to cancel.
+;; Original keys: C-a M-d 2*C-d C-e SPC C-y C-n
+Command: last-kbd-macro
+Key: none
+Macro:
+C-a			;; move-beginning-of-line
+M-d			;; kill-word
+2*C-d			;; delete-char
+C-e			;; move-end-of-line
+SPC			;; self-insert-command
+C-y			;; yank
+C-n			;; next-line</pre>
+编辑完后按C-c C-c完成。
+
+如果这个操作经常会用到(比如清楚带行号的代码)，还可以把这个操作保存下来，以后都可以用。在.emacs或者自己的配置文件中增加:
+<pre>(fset 'foo
+   [?\C-a ?\M-d delete delete ?\C-e ?  ?\C-y ?\C-n])</pre>
+<pre>然后可以把这个函数绑定个快捷键，或者直接M-x调用。</pre>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2010/07/15/thinking.html" title="胡乱想想">胡乱想想&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2010/07/20/c-deep.html" title="《C深度探索》笔记">&larr; 《C深度探索》笔记</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2010/07/17/emacs-keyboard-macros.html" title="Emacs: keyboard macros" rel="nofollow">Emacs: keyboard macros</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>17 July 2010</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Backup-ref">Backup <span>17</span></a></li>
+     
+    	<li><a href="/tags.html#Emacs-ref">Emacs <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#macros-ref">macros <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>C的面向对象风格代码 | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">C的面向对象风格代码</h1>
+
+    <span class="Apple-style-span" style="font-size: 13px; font-weight: normal;">OO是一种编程范型，而不只是特定语言的特定支持，所以用C来实现也是可行的。最近碰到的一部分代码都是用C实现的面向对象风格，可能是参考了Python里面的实现，Python内部实现的基本对象这块也全是这样的代码。在这里做一个小小的总结。</span>
+
+C语言里面没有语言层面的面向对象支持，那OO中的三个基本要素封装、继承、多态如何实现？C里面最强大的东西是指针，指针中最神奇的是void指针，这是一切的基本。首先来看封装，如何通过实例来调用方法，而对内部数据进行隐藏。完全可以写一些struct，然后写对应的函数来针对这个struct来操作，我们需要更进一步，把数据和方法绑定起来。这样写初看起来并没什么好处，后面会发现，通过函数指针去找对应的函数是多态的关键。
+<pre class="src"><span style="color: #ff4500;">//</span><span style="color: #ff4500;">object.h </span>
+<span style="color: #00ffff;">typedef</span> <span style="color: #00ffff;">struct</span> <span style="color: #98fb98;">_obj</span>{
+    <span style="color: #98fb98;">char</span> <span style="color: #eedd82;">name</span>[MAXLEN];
+    <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">ref_cnt</span>;
+    <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">value</span>;
+    <span style="color: #98fb98;">void</span> (*<span style="color: #87cefa;">destructor</span>) (<span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>);
+    <span style="color: #98fb98;">void</span> (*<span style="color: #87cefa;">print</span>) (<span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>);
+    <span style="color: #98fb98;">int</span> (*<span style="color: #87cefa;">equal</span>) (<span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>, <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">other</span>);
+}<span style="color: #eedd82;">Obj</span>;
+
+<span style="color: #ff4500;">//</span><span style="color: #ff4500;">object.c destruct,print,equal定义为static </span>
+
+<span style="color: #98fb98;">Obj</span>* <span style="color: #87cefa;">Obj_new</span>(<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">value</span>)
+{
+    <span style="color: #98fb98;">Obj</span>* <span style="color: #eedd82;">o</span> = <span style="color: #ffa500;">malloc</span>(<span style="color: #00ffff;">sizeof</span>(Obj));
+    <span style="color: #ffa500;">strcpy</span>(o-&gt;name,<span style="color: #ffa07a;">"baseobj"</span>);
+    o-&gt;ref_cnt    = 1;
+    o-&gt;value      = value;
+    o-&gt;destructor = &amp;destruct;
+    o-&gt;print      = &amp;print;
+    o-&gt;equal      = &amp;equal;
+    <span style="color: #ffa500;">assert</span>(o);
+    <span style="color: #00ffff;">return</span> o;
+}
+
+<span style="color: #ff4500;">//</span><span style="color: #ff4500;">使用方法 </span>
+{
+    <span style="color: #98fb98;">Obj</span>* <span style="color: #eedd82;">first</span> = <span style="color: #ffa500;">Obj_new</span>(1);
+    <span style="color: #98fb98;">Obj</span>* <span style="color: #eedd82;">other</span> = <span style="color: #ffa500;">Obj_new</span>(2);
+
+    first-&gt;<span style="color: #ffa500;">print</span>(first);
+    other-&gt;<span style="color: #ffa500;">print</span>(other);
+    <span style="color: #ffa500;">assert</span>(!first-&gt;<span style="color: #ffa500;">equal</span>(first,other));
+    <span style="color: #ffa500;">Obj_drop</span>(first);
+    <span style="color: #ffa500;">Obj_drop</span>(other);
+    <span style="color: #00ffff;">return</span> 0;
+}</pre>
+对于继承C当然也没原生的支持，可以在子类的定义中写入父类中的成员变量和成员函数，这里如果父类中定义的时候就是宏，直接拿过来就是。所以把父类的定义重新改写一下，分为DATA类型和TYPE类型，在Python里面就是这样，PyObject和PyVarObject是一切其他对象都包含有的。下面是一个例子People继承Object,Student继承People。
+<pre class="src"><span style="color: #7fffd4;">#define</span> <span style="color: #eedd82;">PEOPLE_DATA</span> \
+    OBJ_DATA \
+    <span style="color: #98fb98;">int</span> age;\
+    <span style="color: #98fb98;">char</span> <span style="color: #eedd82;">fullname</span>[100];
+<span style="color: #ff4500;">//</span><span style="color: #ff4500;">OBJ_DATA必须放在子类新的数据成员前面，只有这样才能把子类的指针强制转换成父类指针 </span><span style="color: #ff4500;">或者转化为Object指针 </span>
+<span style="color: #7fffd4;">#define</span> <span style="color: #eedd82;">PEOPLE_TYPE</span> \
+    OBJ_TYPE \
+    <span style="color: #98fb98;">void</span> (*sleep)(<span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>);
+
+<span style="color: #00ffff;">typedef</span> <span style="color: #00ffff;">struct</span> <span style="color: #98fb98;">_People_Type</span>{
+    PEOPLE_TYPE
+}<span style="color: #eedd82;">People_Type</span>;
+
+<span style="color: #00ffff;">extern</span> <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">Object_Type</span> <span style="color: #eedd82;">Object_type</span>;
+<span style="color: #00ffff;">extern</span> <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">People_Type</span> <span style="color: #eedd82;">People_type</span>;
+
+<span style="color: #00ffff;">typedef</span> <span style="color: #00ffff;">struct</span> <span style="color: #98fb98;">_People</span>{
+    <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">People_Type</span>* <span style="color: #eedd82;">methods</span>;
+    PEOPLE_DATA
+}<span style="color: #eedd82;">People</span>;</pre>
+这里sleep为新增加的子类方法，fullname为新增加的成员变量。注释部分为特别注意的，只有在保证内存的里面数据的分布前面部分都是一样的(一个methods指针和obj_data部分)才能进行指针之间的强制转换时候不出问题。例子里面的Student类也是类似的继承People类，这里可以看到sleep这个方法不好弄，因为在People那里申明为static了，这里想复用就麻烦，所以只有再自己写一个(即使实现是一样的)，这也是C++内部帮用户做好的。可以看到通过type里面的函数指针的不同，不同对象相同的方法实现就不同了，因此实现了多态。
+
+最后我们可以写一个基于计数的指针管理，在持有一个指针的时候调用Obj_pick,用完以后执行Obj_drop。
+<pre class="src"><span style="color: #98fb98;">void</span> <span style="color: #87cefa;">Obj_pick</span>(<span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>)
+{
+    <span style="color: #ffa500;">assert</span>(thiz);
+    <span style="color: #98fb98;">Object</span>* <span style="color: #eedd82;">o</span> = (<span style="color: #98fb98;">Object</span>*)thiz;
+    o-&gt;ref_cnt++;
+}
+
+<span style="color: #98fb98;">void</span> <span style="color: #87cefa;">Obj_drop</span>(<span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>)
+{
+    <span style="color: #98fb98;">Object</span>* <span style="color: #eedd82;">o</span> = (<span style="color: #98fb98;">Object</span>*)thiz;
+    <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">Object_Type</span>* <span style="color: #eedd82;">p</span>;
+    <span style="color: #00ffff;">if</span>( --o-&gt;ref_cnt &lt;= 0){
+        <span style="color: #00ffff;">for</span>( p = o-&gt;methods; p; p=p-&gt;father){
+            <span style="color: #00ffff;">if</span>(p-&gt;destructor)
+                p-&gt;<span style="color: #ffa500;">destructor</span>(o);
+        }
+    }
+    <span style="color: #ffa500;">free</span>(o);
+}</pre>
+按照这种OO的风格的C代码感觉要清晰一些，至少我习惯了。不过还是看个人品位吧，这样的代码风格是我另外一个同事所鄙视的。关于用C实现OO风格，还有一本比较好的书叫做<a href="http://www.cs.rit.edu/~ats/books/ooc.pdf">Object-oriented Programming with ANSI-C</a>，感兴趣可以看看。
+
+上面的代码在这里下载：<a href="https://github.com/chenyukang/ooc" target="_blank">https://github.com/chenyukang/ooc</a>。
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2011/07/30/fastsearch-in-python2.html" title="一种更快的字符串匹配算法-源自Python2.5">一种更快的字符串匹配算法-源自Python2.5&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2011/08/18/life_in_shangha.html" title="在外漂着">&larr; 在外漂着</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2011/08/16/ooc_in_python.html" title="C的面向对象风格代码" rel="nofollow">C的面向对象风格代码</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>16 August 2011</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Backup-ref">Backup <span>17</span></a></li>
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

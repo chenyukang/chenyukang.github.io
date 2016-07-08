@@ -1,0 +1,481 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>关于随机数 | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="一些关于随机数小问题总结">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">关于随机数</h1>
+
+    <p><img src="/images/dilbert.jpg" alt="dicker" class="img-center" /></p>
+
+<p>随机数代表着不确定性，其在计算机中广泛使用，比如用作加密的key、密码的生成、模拟，扑克游戏中，还有一些经典的算法(比如<a href="http://en.wikipedia.org/wiki/Monte_Carlo_method">Monte Carlo</a>)依赖随机数的产生。以下是一些随机数相关的问题简单总结。</p>
+
+<h2 id="section">随机数产生，真随机数和伪随机数生成器</h2>
+
+<p>随机数的产生是一个很有趣的问题。我们希望只通过计算机来产生随机数的时候会有一些困难，计算机擅长做确定的事情，按照制定的指令去依次执行。
+有两种产生随机数的方法，真随机数和伪随机数，这两种有各自的优点和缺点。</p>
+
+<p>伪随机数生成器(PRNG)，顾名思义产生的不是严格意义上的随机数，一般是通过一些数学公式(或者计算好的表)来产生。比如简单的<a href="http://en.wikipedia.org/wiki/Linear_congruential_generator">Linear congruential generator</a>，可以用来产生伪随机数。伪随机数的行为是可被预测的，但是在统计意义上来说是随机的。因为这个特点其所以使用范围有限，比如一些模拟程序。而且伪随机数有可能出现固定的周期，比如下面<a href="http://www.random.org/analysis/#visual">这两幅图</a>分别是通过真正的随机数产生器和Windows下面的PHP的伪随机数生成器产生的Bitmap，可以清楚地看到右边的那副图有规律可循。</p>
+
+<p>另外如Borland随机数生成器Random的实现:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">long</span> <span class="kt">long</span> <span class="n">RandSeed</span> <span class="o">=</span> <span class="err">####</span> <span class="p">;</span>
+<span class="kt">unsigned</span> <span class="kt">long</span> <span class="nf">Random</span><span class="p">(</span><span class="kt">long</span> <span class="n">max</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">long</span> <span class="kt">long</span> <span class="n">x</span> <span class="p">;</span>
+    <span class="kt">double</span> <span class="n">i</span> <span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="k">final</span> <span class="p">;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mh">0xffffffff</span><span class="p">;</span>
+    <span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span>
+
+    <span class="n">RandSeed</span> <span class="o">*=</span> <span class="p">((</span><span class="kt">long</span> <span class="kt">long</span><span class="p">)</span><span class="mi">134775813</span><span class="p">);</span>
+    <span class="n">RandSeed</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span>
+    <span class="n">RandSeed</span> <span class="o">=</span> <span class="n">RandSeed</span> <span class="o">%</span> <span class="n">x</span> <span class="p">;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">RandSeed</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="mh">0xffffffff</span> <span class="p">;</span>
+    <span class="k">final</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">max</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="p">;</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="k">final</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>可以看到Random的最初一个随机数依赖于seed，后一个随机数依赖前一个随机数。</p>
+
+<p>真随机数生成器(RNG)，通过向计算机中引入一些不可预测的物理信息，比如键盘敲击和鼠标移动等。所以真随机数才是很难预测的或者根本来说不可预测。每个操作系统的实现有各自的区别，
+比如Linux中产生随机数引入了物理噪音作为输入，比如mac地址可以用来初始化entropy pool，随机源可以加入中断时间，硬盘的寻址时间等等。
+接口是/dev/random、/dev/urandom、get_random_bytes()，其中get_random_bytes在内核中使用。
+/dev/random和/dev/urandom的区别是/dev/random强度更大并且是阻塞的，因为要收集更多熵。</p>
+
+<h2 id="section-1">随机数的使用</h2>
+
+<p>涉及到随机数的程序要特别小心。比如一个很简单的程序，我们知道C语言中的rand()产生的随机数是有范围的，0～32767，如果我要生成范围在0～10的随机数如何做？
+可能你会简单认为rand()%10可以得到(惭愧我以前也这样用的)，但是这真的是随机的吗？如果你把0～32767的所有数字依次%10，统计一下可以发现有的数出现的次数要大一些，因此最后出现某些数的概率相应的要大一些。</p>
+
+<p>另外一个思考题，给一个rand()可以产生[1, 5]之间的随机整数，利用这个rand产生[1, 7]之间的随机整数？</p>
+
+<p>另写一个抽奖程序，从30w个用户中随机抽取10w个中奖用户？</p>
+
+<h2 id="section-2">写个好的洗牌程序不容易</h2>
+
+<p><img src="/images/dicker.jpg" alt="dicker" class="img-center" /></p>
+
+<p>写一个对的洗牌程序看起来很容易，其实不然。Robert Sedgewick说过：</p>
+
+<pre><code>"That's a pretty tough thing to have happen if you're implementing online poker.
+ You might want to make sure that if you're advertising that you're doing a random
+ shuffle that you go ahead and do so."
+  —Robert Sedgewick, Professor of Computer Science, Princeton
+</code></pre>
+
+<p>比如ASF Software在多年前写的一个流行的网上扑克游戏，其中的洗牌程序是这段Pascal代码：</p>
+
+<figure class="highlight"><pre><code class="language-pascal" data-lang="pascal"><span class="k">procedure</span> <span class="nc">TDeck</span><span class="o">.</span><span class="nf">Shuffle</span><span class="o">;</span>
+<span class="k">var</span>
+   <span class="n">ctr</span><span class="o">:</span> <span class="kt">Byte</span><span class="o">;</span>
+   <span class="n">tmp</span><span class="o">:</span> <span class="kt">Byte</span><span class="o">;</span>
+   <span class="n">random_number</span><span class="o">:</span> <span class="kt">Byte</span><span class="o">;</span>
+<span class="k">begin</span>
+   <span class="cm">{ Fill the deck with unique cards }</span>
+   <span class="k">for</span> <span class="n">ctr</span> <span class="o">:=</span> <span class="mi">1</span> <span class="k">to</span> <span class="mi">52</span> <span class="k">do</span>
+      <span class="n">Card</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">:=</span> <span class="n">ctr</span><span class="o">;</span>
+   <span class="cm">{ Generate a new seed based on the system clock }</span>
+   <span class="nb">randomize</span><span class="o">;</span>
+   <span class="cm">{ Randomly rearrange each card }</span>
+   <span class="k">for</span> <span class="n">ctr</span> <span class="o">:=</span> <span class="mi">1</span> <span class="k">to</span> <span class="mi">52</span> <span class="k">do</span> <span class="k">begin</span>
+      <span class="n">random_number</span> <span class="o">:=</span> <span class="nb">random</span><span class="p">(</span><span class="mi">51</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+      <span class="n">tmp</span> <span class="o">:=</span> <span class="n">card</span><span class="p">[</span><span class="n">random_number</span><span class="p">]</span><span class="o">;</span>
+      <span class="n">card</span><span class="p">[</span><span class="n">random_number</span><span class="p">]</span> <span class="o">:=</span> <span class="n">card</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span><span class="o">;</span>
+      <span class="n">card</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">:=</span> <span class="n">tmp</span><span class="o">;</span>
+   <span class="k">end</span><span class="o">;</span>
+   <span class="n">CurrentCard</span> <span class="o">:=</span> <span class="mi">1</span><span class="o">;</span>
+   <span class="n">JustShuffled</span> <span class="o">:=</span> <span class="k">True</span><span class="o">;</span>
+<span class="k">end</span><span class="o">;</span></code></pre></figure>
+
+<p>可以分析一下这里的好几处问题，这里的洗牌算法也有问题，52!个排列出现的概率不一样。拿三张牌来作为例子就明白了。</p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="n">is</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">N</span><span class="p">)</span>
+    <span class="n">Swap</span> <span class="n">i</span> <span class="n">with</span> <span class="n">random</span> <span class="n">position</span> <span class="n">between</span> <span class="mi">1</span> <span class="n">and</span> <span class="n">N</span></code></pre></figure>
+
+<p><img src="/images/poker.gif" alt="dicker" class="img-center" />
+可以看出231, 213, 132出现的次数要多一些，因此相对应的概率也大。</p>
+
+<p>正确的洗牌程序算法是：</p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="n">is</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">N</span><span class="p">)</span>
+    <span class="n">Swap</span> <span class="n">i</span> <span class="n">with</span> <span class="n">random</span> <span class="n">position</span> <span class="n">between</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="n">and</span> <span class="n">N</span></code></pre></figure>
+
+<p>一个32位的数作为seed，对于伪随机长生器是有问题的，因为如果给定seed伪随机产生器的行为是可以预测的。
+32的seed的所有可能值的个数为2^32个，这相比52!(8.0658 * 10 ^ 67)小得很多。所以对于32位的seed，甚至可以用蛮力法来攻破。</p>
+
+<h2 id="section-3">其他</h2>
+
+<p>摘自«思考的乐趣»10个人坐在一起谈天，突然他们想知道他们的平均年薪是多少，但每个人都不愿意透露自己的工资数额，有没有什么办法让他们能够得到答案，并不用担心自己的年薪被曝光？
+一个简单的协议模型，当然与随机数有点关系。</p>
+
+<p>参考：</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Random_number_generation">Wiki: Random number generation</a>。</p>
+
+<p><a href="http://www.cigital.com/papers/download/developer_gambling.php">How We Learned to Cheat at Online Poker: A Study in Software Security</a>。</p>
+
+<p><a href="http://book.douban.com/subject/10779597/">顾森, 思考的乐趣</a>。</p>
+
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2014/01/14/leetcode-anagrams.html" title="LeetCode: anagrams">LeetCode: anagrams&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2014/03/29/eopl.html" title="另一本魔法书: EOPL">&larr; 另一本魔法书: EOPL</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2014/03/06/random-number.html" title="关于随机数" rel="nofollow">关于随机数</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>06 March 2014</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+     
+    	<li><a href="/tags.html#Algorithms-ref">Algorithms <span>6</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

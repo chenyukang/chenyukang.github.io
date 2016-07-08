@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>最近在用Go | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="Go experience">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">最近在用Go</h1>
+
+    
+<p><img src="/images/golang-600x600.jpg" alt="Golang" class="img-center" height="320" width="320" /></p>
+
+<p>最近一直在用Go做开发，我们打算整一套和Rails对应的Go开发框架。一些代码在我们的<a href="https://github.com/sipin">Github小组里有</a>。这里的几个项目都用到了代码生成的方法，生成Go文件，最后的整个web程序被编译成一个可执行文件。
+我们正在用一个项目来验证这个想法。其中：</p>
+
+<h3 id="xuanwu">1. xuanwu(玄武)</h3>
+
+<p>根据thrift文件产生对应MVC里面的Model。生成的go文件里面，一个thrift类型对应一个go里面的type struct，生成的代码中包含一些基本的方法，比如FindByID等等，这都是根据thrift文件定义的对象属性自动生成的。这里用到了<a href="https://github.com/wickman/ptsd">ptsd</a>来解析thrift文件，自己定义模板来生成Go代码。我后来加了<a href="https://github.com/sipin/xuanwu/blob/master/crud.py">crud.py</a>和<a href="https://github.com/sipin/xuanwu/blob/master/tmpl/crud.tmpl">crud.tmpl</a>来生成Controller的代码，这样MVC里面Model和Controller就都有了。不过对于Go这样的静态语言，生成代码这套方案有个难解决的问题就是如何在生成的代码基础上实现用户自定义。我们现在的解决办法是另外写一个对应的fix文件，在里面写入自己要重写的函数，另外写一个程序根据gen文件和fix文件来做一个基于函数定义的diff，如果用户定义了就忽略自动生成的函数。好绕的方法，不过因为Go库里面自带的的parser和AST，做这么一个diff程序还挺简单的。</p>
+
+<h3 id="gorazor">2. gorazor(白虎)</h3>
+
+<p>功能是MVC里面的view engine，从C#里面的razor模仿而来，具体为什么要这么做<a href="https://github.com/sipin/gorazor/blob/master/docs/about_chinese.md">这个详细的中文文档</a>里面说了。有了这个东西我们可以混着html写Go代码了。我是从这个项目开始正式学习Go的，整个开发过程还是比较顺利的。刚开始lexer大量使用了正则表达式，后来发现速度有些受影响就手动写了一部分。parser部分现在还有些难看，后面继续重构一下。Debug一直都是Println，很多时候已经够用了。</p>
+
+<h3 id="web">3. web</h3>
+
+<p>在web.go的基础上做了一些自己的修改。</p>
+
+<p>再说一下使用Go的一些感受，<code>大部分时候是很爽的</code>。对于喜欢C和Python的人来说上手Go是很容易的事情。Go更像是一个更现代化的C(而不是C++)，因为简洁是其一个重要特性。和Python相似的地方是提倡一种事有一种解决方法，而不像Ruby那样有各种魔法写法，所以看别人的代码容易一些。Go对代码的格式化有一些强制约定，但是缩进并不是语法的一部分，而是通过gofmt工具来自动纠正格式，这太方便了。再加上goimport这样的工具来自动加上或者移除不必要的import，我现在写Go代码的时候基本不需要关心格式和import这些琐事，绑定Emacs快捷键保存文件以后基本都解决了。</p>
+
+<p><code>Go的编译速度很快</code>，我的机器上这里20w行左右的Go代码基本编译在13s左右，这和C++比起来要快很多很多。</p>
+
+<hr />
+
+<h3 id="section">其他</h3>
+
+<p><a href="https://gist.github.com/chenyukang/9bbf1ef3be82fad7484f">我是这么配置Emacs的Go相关的东西的</a></p>
+
+<p>其中go-autocomplete是来自动补全的，对于内置的库函数补全还是很好的。有的自定义的补全不出来。</p>
+
+<p>goimports修正import的。</p>
+
+<p>gocover是我自己写的一个程序，看到同事写在Vim里写Go代码的时候一个快捷键就跑相关的pkg的testing，并把结果打印出来。对于Go的这么快的编译速度，真的可以边写代码迅速按下快捷键测试的结果就出来了(还包括coverage噢)。于是我也写了个程序分析出当前编辑文件对应的package名字，设定好GOPATH，然后去tmp目录跑测试。这个程序就是<a href="https://gist.github.com/chenyukang/8b968320d959a6c25ec3">gocover</a>，我绑定到<code>C-x g</code>，太方便了。</p>
+
+<p><code>Vim和Emacs的可扩展，是我们这群装逼党依然坚持用这些老古董的原因。</code>因为可扩展意味着将来要面对新的编程语言和环境时候，我们可以做出自己改变来适应。</p>
+
+<p>好的Go上手教程:</p>
+
+<p><a href="https://gobyexample.com/">Go by Example</a></p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2014/05/24/recent.html" title="想清楚一些事">想清楚一些事&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go">&larr; A mini Scheme interpreter written in Go</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="nofollow">最近在用Go</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>22 June 2014</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+     
+    	<li><a href="/tags.html#Go-ref">Go <span>2</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

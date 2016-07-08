@@ -1,0 +1,466 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>Emacs自虐 | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">Emacs自虐</h1>
+
+    无意中用了一下C#,发现VS下面有一个功能还是非常好的，就是每次按下回车键盘的时候，都可以把刚刚输入的那行代码自动排版一下，
+
+看起来要清晰一些。比如
+<blockquote>
+<pre class="src"><span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">a</span>=0;                       ==&gt;  <span style="color: #98f5ff;">int</span> a = 0;
+<span style="color: #00bfff; font-weight: bold;">struct</span> <span style="color: #98f5ff;">Node</span>* <span style="color: #4eee94;">p</span>=&amp;node;          ==&gt; <span style="color: #00bfff; font-weight: bold;">struct</span> <span style="color: #98f5ff;">Node</span>* p = &amp;node;
+a+=b;                          ==&gt;  a += b;
+<span style="color: #98f5ff;">int</span> *<span style="color: #4eee94;">p</span>=&amp;a;                     ==&gt;  <span style="color: #98f5ff;">int</span> *p = &amp;a;
+<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">a</span>=b+c+d+f;                 ==&gt;  <span style="color: #98f5ff;">int</span> a = b + c + d + f;
+<span style="color: #00bfff; font-weight: bold;">for</span>(a=0,b=0;a&lt;10;a++)          ==&gt;  <span style="color: #00bfff; font-weight: bold;">for</span>(a = 0, b=0; a&lt; 10; a++)
+<span style="color: #00bfff; font-weight: bold;">if</span>(a==b)                       ==&gt;  <span style="color: #00bfff; font-weight: bold;">if</span>(a == b)
+<span style="color: #00bfff; font-weight: bold;">if</span>(pbuf!=0)                    ==&gt;  <span style="color: #00bfff; font-weight: bold;">if</span>(a != b)
+fwrite(buf,1,size,fp);         ==&gt;  fwrite(buf, 1, size, fp);
+printf(<span style="color: #deb887;">"%d %s\n"</span>,len,buf);     ==&gt;  printf(<span style="color: #deb887;">"%d %s\n"</span>, len, buf); <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">引号内的不变，引号外的","后面加空格
+</span><span style="color: #00bfff; font-weight: bold;">if</span>(p&gt;=allocbuf&amp;&amp;p&lt;buf+size)      ==&gt; <span style="color: #00bfff; font-weight: bold;">if</span>(p &gt;= allocbuf &amp;&amp; p &lt; buf + size)
+<span style="color: #00bfff; font-weight: bold;">return</span> (b!=0)?gcd_ver2(b,a%b):a;  ==&gt; <span style="color: #00bfff; font-weight: bold;">return</span> (b != 0) ? gcd_ver2(b, a % b) : a;
+</pre>
+</blockquote>
+同时要注意的情况，还有些情况下我不想让符号两边加空格：
+<blockquote>
+<pre class="src"><span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;stdio.h&gt;</span>       <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">&lt; &gt; 两边不加
+
+</span>printf(<span style="color: #deb887;">"%d%d%d\n"</span>,n,m,k);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">这个%两边不加 检测是否在引号内部
+</span>a++;                     <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">不加空格
+</span><span style="color: #98f5ff;">int</span> *<span style="color: #4eee94;">p</span>;                  <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">不加空格
+</span><span style="color: #00bfff; font-weight: bold;">return</span> manip(*<span style="color: #00bfff; font-weight: bold;">this</span>);     <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">这个*两边不加 找到*前面或者后面是否为(
+</span>strcpy(mode,<span style="color: #deb887;">"w+"</span>);       <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">引号里面的不变 检测是否在引号内部
+</span></pre>
+</blockquote>
+我以前写代码习惯都不加空格，感觉不加要写得快一些，可是这不是个很好的习惯。linux下有indent这样的工具，不过是针对于最后完成的源程序来排版。在写程序的过程中像赋值操作符两边加上空格会显得比较清晰，Emacs里面好像还没这么个插件，那我来折腾一下自己写了一个。原来还是比较复杂的。应该好好学学正则表达式，这就是一个正则匹配和替换的过程。呜，括号看得头都晕呼呼的，不过还好，最终有这么一个东西用起来比较顺手了。
+
+首先定一个关键字和替换列表：
+<blockquote>
+<pre class="src">(setq beautifly-line-list
+      '(
+        (<span style="color: #deb887;">"+"</span> . <span style="color: #deb887;">" + "</span>)
+        (<span style="color: #deb887;">"-"</span> . <span style="color: #deb887;">" - "</span>)
+        (<span style="color: #deb887;">"="</span> . <span style="color: #deb887;">" = "</span>)
+        (<span style="color: #deb887;">"*"</span> . <span style="color: #deb887;">" * "</span>)
+        (<span style="color: #deb887;">"/"</span> . <span style="color: #deb887;">" / "</span>)
+        (<span style="color: #deb887;">"%"</span> . <span style="color: #deb887;">" % "</span>)
+        (<span style="color: #deb887;">"&lt;"</span> . <span style="color: #deb887;">" &lt; "</span>)
+        (<span style="color: #deb887;">"&gt;"</span> . <span style="color: #deb887;">" &gt; "</span>)
+        (<span style="color: #deb887;">","</span> . <span style="color: #deb887;">", "</span>)
+        (<span style="color: #deb887;">"+="</span> . <span style="color: #deb887;">" += "</span>)
+        (<span style="color: #deb887;">"*="</span> . <span style="color: #deb887;">" *= "</span>)
+        (<span style="color: #deb887;">"/="</span> . <span style="color: #deb887;">" /= "</span>)
+        (<span style="color: #deb887;">"%="</span> . <span style="color: #deb887;">" %= "</span>)
+        (<span style="color: #deb887;">"=="</span> . <span style="color: #deb887;">" == "</span>)))
+</pre>
+</blockquote>
+一个用来测试dest是否为上面关键字的函数，后面用char-after来获取一个point的字符，对应的是asci码。
+<blockquote>
+<pre class="src">(<span style="color: #00bfff; font-weight: bold;">defun</span> <span style="color: #daa520; font-weight: bold;">test-valid</span>(dest)
+  (interactive)
+  (<span style="color: #00bfff; font-weight: bold;">if</span>(or (equal dest 43)
+         (equal dest 45)
+         (equal dest 42)
+         (equal dest 47)
+         (equal dest 37)
+         (equal dest 62)
+         (equal dest 60)) <span style="color: #5f9ea0; font-style: italic;">;;</span><span style="color: #5f9ea0; font-style: italic;">&lt;
+</span>      t
+    nil))
+
+<span style="color: #5f9ea0; font-style: italic;">;;</span><span style="color: #5f9ea0; font-style: italic;">打印出当前位置的字符 调试用
+</span>(<span style="color: #00bfff; font-weight: bold;">defun</span> <span style="color: #daa520; font-weight: bold;">print-pos-char</span> ()
+  (interactive)
+  (setq value (char-after (point)))
+  (print value))
+
+<span style="color: #5f9ea0; font-style: italic;">;;</span><span style="color: #5f9ea0; font-style: italic;">从point-pos位置开始 到这一行的尾部，检测是否有"，即检测是否在" "内部
+</span>(<span style="color: #00bfff; font-weight: bold;">defun</span> <span style="color: #daa520; font-weight: bold;">test-in-quote</span> (point-pos)
+  (interactive)
+  (move-end-of-line 1)
+  (setq end-pos (point))
+  (goto-char point-pos)
+  (setq ret-value nil)
+  (<span style="color: #00bfff; font-weight: bold;">if</span> (search-forward <span style="color: #deb887;">"\""</span> end-pos t)
+      (setq ret-value t)
+    )
+  (goto-char point-pos)
+  ret-value)
+</pre>
+<pre class="src"><span style="color: #5f9ea0; font-style: italic;">;;</span><span style="color: #5f9ea0; font-style: italic;">这个函数先调用我的排版函数，然后调用原来的new-line-and-indent
+</span>(<span style="color: #00bfff; font-weight: bold;">defun</span> <span style="color: #daa520; font-weight: bold;">my-new-line-and-beautyfly</span> ()
+  (interactive)
+  (beautifly-line)
+  (newline-and-indent))
+
+<span style="color: #5f9ea0; font-style: italic;">;;</span><span style="color: #5f9ea0; font-style: italic;">在my-c-mode-common-hook下面加上这么一句，表示把回车键绑定在上面那个函数上。
+</span>  (define-key c-mode-base-map [(<span style="color: #00bfff; font-weight: bold;">return</span>)] 'my-new-line-and-beautyfly)
+</pre>
+</blockquote>
+下面就剩下这两个函数了，写的太过复杂，可惜不会用高级一点的正则表达式，所以显得不好看。其想法比较简单，按照上面那个列表，一次查找，我要找一个两员操作符，其两边都是空格，在其两边加上空格，注意排除掉++,—操作。然后识别+=,-=,*=等符号，再两边加上空格。用起来还可以。逐渐写了些elisp，感觉特别适合自底向上的方式进行，通过一些小函数，逐步累积成一个功能，再最后只用一个上层函数来调用这个功能。每个小函数除了返回结果不改变函数外的其他变量(无副作用)。同时写一个小的函数可以马上写一个测试函数，保证其正确无误。
+
+最后bueatifly_line的代码有点点长，不贴咯。
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2010/08/20/zheteng.html" title="折腾记录">折腾记录&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2010/08/21/using-automake.html" title="using automake">&larr; using automake</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2010/08/21/emacs-for-fun.html" title="Emacs自虐" rel="nofollow">Emacs自虐</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>21 August 2010</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Backup-ref">Backup <span>17</span></a></li>
+     
+    	<li><a href="/tags.html#Emacs-ref">Emacs <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#Linux-ref">Linux <span>8</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

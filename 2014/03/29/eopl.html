@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>另一本魔法书: EOPL | Yukang's Page</title>
+    
+
+    
+    <meta name="description" content="Scheme">
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">另一本魔法书: EOPL</h1>
+
+    
+<p><img src="/images/eopl.jpg" alt="eopl" class="img-center" height="250" width="250" /></p>
+
+<h2 id="section">概述</h2>
+
+<p>很多学习计算机的同学都知道有一本号称魔法书的经典教材叫作<a href="http://mitpress.mit.edu/sicp/">《SICP》</a>，<a href="2010/07/27/sicp.html">《计算机程序的构造和解释》</a>，MIT的计算机入门课程用的教程。这本书内容广泛而深邃，从出版几十年来影响了很多程序员。今天介绍另外一本我认为也是魔法书的教材，叫做<a href="http://www.eopl3.com/">《Essential of Programming Language》</a>，简称EOPL，当然能获得简称的书都是不简单的。这本书虽然也年代久远，但是知名度不如SICP高。其作者是Dan Friedman，就是那位王垠同学的导师。这位程序语言领域的大牛写过很多Scheme相关的书籍，比如《The Little Scheme》系列，这个系列广受好评，可能很多人都读过。</p>
+
+<p>我读的是EOPL3，据说这个版本稍微有点冗长，不过我还没读过前面的版本，所以对此不好评价。
+EOPL主要关注程序语言的方方面面，一共分为9章。这本书的讲解方式是先稍微概述主题，然后会有相关语法的定义，然后是关键代码的实现。这里同样采用了Scheme来讲解。用Scheme的好处的我们可以站在一个更抽象的角度来编写程序(Scheme如此强大，可以定义自己的语法，比如这里面的define-datatype和sllgen)。你可以看到这本书在反复折腾各种解释器，里面都是在往一个简单的解释器添加各种特性。</p>
+
+<h2 id="section-1">预备基础</h2>
+
+<p>阅读这本需要一些简单的Scheme基础，不过对于有一些编程经验的人来说不难。我推荐这本<a href="http://www.ccs.neu.edu/home/dorai/t-y-scheme/t-y-scheme.html">Teach Yourself Scheme in Fixnum Days</a>。Scheme的基本元素很少、内核简单（用Scheme写一个能自身的元解释器非常容易），这和象棋有些像：规则简单，组合变化多。至少需要了解以下Scheme的基本内容</p>
+
+<h3 id="section-2">递归思想</h3>
+<p>递归不只是理解程序的一种方式，同样也是写程序的一种方式。在EOPL中到处都是递归，解释器执行的过程是递归，里面的Checker也是递归。递归无处不在。</p>
+
+<h3 id="section-3">高阶函数</h3>
+<p>在函数式编程语言中，函数和变量一样也是一等公民。在Scheme里函数可以接收函数作为参数，可以把函数作为返回值。在EOPL中的envrioment可以用函数来表示。</p>
+
+<h3 id="section-4">代码即数据 数据即代码</h3>
+
+<p>抛开效率不说，用List可以表示很多数据结构。
+用Scheme的一个好处，就是代码和数据几乎没有界限，比如Parser部分，因为书里自带的sllgen如此强大，要修改语法的定义是如此的简单。而Parser出来的结果就是语法树，这语法树同样是个层层嵌套的表，解释器把这个作为输入就行了。</p>
+
+<h2 id="section-5">各章内容</h2>
+
+<h3 id="abstraction">Abstraction</h3>
+<p>前两章都是基础准备，介绍了如何用递归来做抽象，包括定义和相关数据结构的实现。比如Enviroment，这不过是在一个小的envrioment上添加一个新的绑定。仔细思考那种用高阶函数的表示方法，这在以前的语言中不常见。</p>
+
+<h3 id="expression">Expression</h3>
+<p>基本的解释器，但这个解释器是后面章节的基础。到这里这个简单的语言已经可以支持递归了。</p>
+
+<h3 id="state">State</h3>
+<p>实现了一个简单的store，用来映射variable到value。接着讲述call-by-value, call-by-reference。到这里你可以看到程序语言中指针到底是个什么东西，以及这到底是如何实现的。</p>
+
+<h3 id="cps">CPS</h3>
+<p>CPS内容比较难理解，但是CPS也是一个很有用的概念。可以看到使用CPS使得程序的空间固定，如何使用CPS来实现多线程。后面一章也是关于CPS的，实现了一个通用算法来进行CPS转换。</p>
+
+<h3 id="type-system">Type System</h3>
+<p>为语言添加类型的好处，类型推倒如何实现，用替换法来做的一个简单的Type Checker。</p>
+
+<h3 id="module">Module</h3>
+<p>如何从语言层面支持Module，以及面向接口编程。</p>
+
+<h3 id="oo">OO</h3>
+<p>面向对象和接口是如何实现的，在这里OO的实现看起来是有点繁杂，通过实现OO来看清楚本质。</p>
+
+<h2 id="section-6">习题</h2>
+<p>这本书有很多习题，每一个题目都有相应的星号标示难度，三颗星的习题大部分还是需要很多思考。
+这里大部分习题都是需要coding，在解释器里添加一些新的特性，往往需要一些简单的代码修改即可。</p>
+
+<p>我做了大部分习题，<a href="https://github.com/chenyukang/eopl">https://github.com/chenyukang/eopl</a>，不敢保证全是正确的代码，可供参考。</p>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2014/03/06/random-number.html" title="关于随机数">关于随机数&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2014/04/11/heartbleed.html" title="Heartbleed简单分析">&larr; Heartbleed简单分析</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2014/03/29/eopl.html" title="另一本魔法书: EOPL" rel="nofollow">另一本魔法书: EOPL</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>29 March 2014</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+

@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+<html>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+
+   <header>
+    <meta charset="utf-8">
+    
+    <title>A*算法与K-shortest path问题 | Yukang's Page</title>
+    
+
+    
+    <meta name="author" content="Yukang">
+
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">Yukang's Page</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">归档</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">标签</a></li>
+      	
+      
+    
+  
+
+
+
+
+            <li class="divider-vertical"></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="/about.html">关于</a></li>
+            <li><a href="/links.html">链接</a></li>
+            <li><a href="/atom.xml">订阅</a></li>
+          </ul>
+
+          <span class="pull-right slogan"> Don't Panic </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <body>
+    <div class="container">
+      <div class="content">
+        
+
+<div class="row post">
+  <div class="span8">
+    <h1 class="title">A*算法与K-shortest path问题</h1>
+
+    <p>
+那天师兄给面试，面到一道图算法题目，求图中两个点的前K短路径。当时觉得用Dijkstra+heap应该可以，不过也没想清楚。以前看到过这个，那时还没怎么仔细看图算法所以丢一边了， 今天好好看了一下。简单一点的解法是用Dijkstra+Astar。典型的题目就是<a href="http://acm.pku.edu.cn/JudgeOnline/problem?id=2449">POJ 2449</a>。   
+</p>
+
+<h4>A* 算法</h4>
+<p>
+再谈A*算法。A*算法中的评估函数为f(N)=cost(N)+h*(N)。其中cost(N)为从源点到N点的距离，h*(N)为N点到终点的的一个评估路径长度，设h(N)为实际N点到终点的路径长度。只要满足条件： h*(N)&lt;=h(N)，那么用这个评估函数找到最短路径。具体证明看这篇论文<a href="http://www.cs.auckland.ac.nz/compsci767s2c/projectReportExamples.d/astarNilsson.pdf">A Formal Basis for the Heuristic Determination of Minimum Cost Paths</a>。 其优势在于在选择每个路径 上的点的时候给予了h(N)这个启发，在搜索空间中尽量选择可能最有可能产生最优解的下一个状态，使得搜索的时间都相应地减少。A*算法的思想也是贪心 的，Dijkstra是A*的一个特例，当h*(N)=0时，A*就退化成了Dijkstra算法，那么就是盲目的扩展当前最短路径了。   
+
+来个例子，下面这是一个城市的公路图网，一共有18263个点，23874条边，视为无向图。我们知道起点和终点的坐标，现在我们要求某两点之间的最短路径。   
+</p>
+<p>
+1.  用Dijkstra算法来，其中白色的点表示搜索过程中访问了的点。可以看出Dijkstra算法有点像BFS向周围扩展,做了很多无用的搜索。当然这与图的形状也有一定关系。   
+</p>
+
+[Dijkstra 访问18191个点]
+
+<p><img title="Dij" src="/images/Dij.jpg" alt="" width="532" height="510" align="center"></p>
+
+ 
+
+<p>
+2.  用A*算法，设S为起点，T为终点，启发函数为F(N)=Path_Dist(S-&gt;N)+Dist(N-&gt;T)。在搜索过程中Path_Dist一直维持着S-&gt;N的路径长度，Disk(N-&gt;T)的计算可以有多钟选择，这里我选择 Dist(N-&gt;T)=sqrt(|Xn-Xt|*|Xn-Xt|+|Yn-Yt|*|Yn-Yt|),这个为两点之间的理论最短路径，肯定是满足条件h*(N) &lt;= h(N)的，那么能得到最优解。可以看到搜索偏向于目标点的方向。   
+</p>
+
+[A* 两点之间距离为评估函数 访问4398个点]
+<p><a href="/images/Astar.jpg"><img class="size-full wp-image-77 " title="Astar" src="/images/Astar.jpg" alt="" width="526" height="499" align="center"></a></p>
+
+ 
+
+<p>
+3. 另外(x+y)/2 &lt;= sqrt(x^2+y^2)，所以也可以选择(|Xn-Xt|+|Yn-Yt|)/2作为启发函数。但为了节省这个sqrt的操作，代价就是访问了更多的点。   
+</p>
+
+[A* (x+y)/2作为启发函数 访问14374个点]
+<p><a href="/images/Astar3.jpg"><img class="size-full wp-image-79 " title="Astar3" src="/images/Astar3.jpg" alt="" width="559" height="503" align="center"></a></p>
+
+ 
+
+<p>
+4. 可以做得更好，修改启发函数。Dist(N-&gt;T)=|Xn-Xt|+|Yn-Yt|,这为曼哈顿函数，这样就不满足条件h*(N)&lt;=h(N)了。所以得不到最优解，但是速度上会快很多，搜索的点也会减少很多。   
+</p>
+
+[A* 曼哈顿距离作为启发函数 访问296个点]
+<p><a href="/images/Astar2.jpg"><img class="size-full wp-image-78  " title="Astar2" src="/images/Astar2.jpg" alt="" width="556" height="508" align="center"></a></p>
+
+
+<p> 
+大概能得到一个规律，搜索效率依赖于h*(N)的启发作用，当h*(N) &lt;= h(N)时候，我们能得到最优解，用第二种启发函数能也满足最优解的条件，但是因为启发用少了所以访问了更多的点。当h*(N)&gt;h(N)时，得到的可能是比较优的解(非最短路径)，可以认为因为得到的启发更多(多到超出了得到最优解的条件限制)，所以能取得更快的效率。这又是一个普遍的问题，在速度、精确度两者之间经常会只能二选一，对于不同的应用从中作出折中。上面那篇论文证明了，对于刚才举例的这个问题，用两点之间的直线距离最为启发函数的A*算法是所有能得到最优解的算法中访问点最少的。启发函数对于特定的问题有特定的取法，那么A*作为一个搜索的算法框架用处还是挺多的。   
+</p>
+
+
+<h4>Dijkstra＋A* 求k短路径</h4>
+<p>
+当然这个算法不是我想出来的，这里只是说一下看后自己的理解。在A*算法中，优先队列出来的点如果扩展到了终点，那么 就得到了最短路径。如果能得到实际的评估函数(也就是h*(N))，那么第二次 从优先队列里面弹出来的就是第2段的路径，依次直到k短。如何得到h(N),就是图中各个点到T的实际最短路径距离，可以从图的反向图以T为源点进行 Dijkstra算法，最后Dist[N]就可以作为h(N)。然后以cnt[N]表示N点从优先队列里面弹出来的次数。K-shortest问题还有更快的解法，不过还没看，这里有<a href="http://www.mat.uc.pt/~eqvm/cientificos/investigacao/r_papers.html">大把论文</a>。这里还分结果路径中是否可以有环，像现实中公路网肯定是要求无环的k-shortest path。下面这个算法是可以有环的。 
+</p>
+
+<p>
+完整代码如下：   
+</p>
+
+<pre class="src"><span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">7040K 282MS
+</span><span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;iostream&gt;</span>
+
+<span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;queue&gt;</span>
+<span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;vector&gt;</span>
+<span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;stdio.h&gt;</span>
+<span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;cstring&gt;</span>
+<span style="color: #00bfff; font-weight: bold;">using</span> <span style="color: #00bfff; font-weight: bold;">namespace</span> <span style="color: #ffd700;">std</span>;
+
+<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">MAXN</span>=1001;
+<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">INF</span>=(1&lt;&lt;20);
+<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">N</span>,<span style="color: #4eee94;">M</span>; <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">N个点 M条边
+
+</span><span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">S</span>,<span style="color: #4eee94;">T</span>,<span style="color: #4eee94;">K</span>; <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">起点和终点
+</span><span style="color: #00bfff; font-weight: bold;">typedef</span> <span style="color: #00bfff; font-weight: bold;">struct</span> <span style="color: #98f5ff;">_Edge</span>
+{
+    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">v</span>;<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">边顶点
+
+</span>    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">len</span>;<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">边长度
+</span>}<span style="color: #4eee94;">Edge</span>;
+
+<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">dist</span>[MAXN];
+<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">cnt</span>[MAXN];
+
+<span style="color: #98f5ff;">bool</span> <span style="color: #4eee94;">mark</span>[MAXN];
+
+<span style="color: #00bfff; font-weight: bold;">struct</span> <span style="color: #98f5ff;">Node</span>{
+    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">v</span>,<span style="color: #4eee94;">len</span>;
+    <span style="color: #daa520; font-weight: bold;">Node</span>() {};
+    <span style="color: #daa520; font-weight: bold;">Node</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">a</span>,<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">b</span>):v(a),len(b) {}
+};
+
+<span style="color: #98f5ff;">bool</span> <span style="color: #00bfff; font-weight: bold;">operator</span> <span style="color: #daa520; font-weight: bold;">&lt;</span> (<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">Node</span>&amp; <span style="color: #4eee94;">a</span>,<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">Node</span>&amp; <span style="color: #4eee94;">b</span>)
+{
+    <span style="color: #00bfff; font-weight: bold;">return</span> (a.len+dist[a.v]&gt;b.len+dist[b.v]);
+}
+
+<span style="color: #98f5ff;">vector</span>&lt;Edge&gt; <span style="color: #4eee94;">Adj</span>[MAXN];<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">图的邻接表表示
+</span><span style="color: #98f5ff;">vector</span>&lt;Edge&gt; <span style="color: #4eee94;">Rev</span>[MAXN];<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">图的逆图
+</span>
+<span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">Init_graph</span>()
+{
+    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">u</span>,<span style="color: #4eee94;">v</span>,<span style="color: #4eee94;">l</span>;
+    <span style="color: #98f5ff;">Edge</span> <span style="color: #4eee94;">edge</span>;
+    scanf(<span style="color: #deb887;">"%d%d"</span>,&amp;N,&amp;M);
+    <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=0;i&lt;M;i++)
+    {
+        scanf(<span style="color: #deb887;">"%d%d%d"</span>,&amp;u,&amp;v,&amp;l);
+        edge.v=v;
+        edge.len=l;
+        Adj[u].push_back(edge);
+        edge.v=u;
+        Rev[v].push_back(edge);
+    }
+    scanf(<span style="color: #deb887;">"%d%d%d"</span>,&amp;S,&amp;T,&amp;K);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">计算S到T的第K短路径
+
+</span>    <span style="color: #00bfff; font-weight: bold;">if</span>(S==T) K++;
+}
+
+<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">Dijkstra 算法 找出各个点到T的最短距离
+</span><span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">Dijkstra</span>()
+{
+    memset(mark,<span style="color: #ffd700;">false</span>,<span style="color: #00bfff; font-weight: bold;">sizeof</span>(mark));
+    <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=1;i&lt;=N;i++)
+        dist[i]=INF;
+    dist[T]=0;
+    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">u</span>,<span style="color: #4eee94;">v</span>,<span style="color: #4eee94;">min</span>;
+    <span style="color: #00bfff; font-weight: bold;">while</span>(1)
+    {
+        u=-1,min=INF;
+        <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=1;i&lt;=N;i++)
+            <span style="color: #00bfff; font-weight: bold;">if</span>(!mark[i] &amp;&amp; dist[i]&lt;min)
+            {
+                min=dist[i];
+                u=i;
+            }
+        <span style="color: #00bfff; font-weight: bold;">if</span>(u==-1) <span style="color: #00bfff; font-weight: bold;">break</span>;
+        mark[u]=<span style="color: #ffd700;">true</span>;
+        <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">k</span>=0;k&lt;Rev[u].size();k++)
+        {
+            v=Rev[u][k].v;
+            <span style="color: #00bfff; font-weight: bold;">if</span>(!mark[v] &amp;&amp; dist[v]&gt;dist[u]+Rev[u][k].len)
+                dist[v]=dist[u]+Rev[u][k].len;
+        }
+    }<span style="color: #5f9ea0; font-style: italic;">
+</span>}
+
+<span style="color: #98f5ff;">int</span> <span style="color: #daa520; font-weight: bold;">Astar</span>()
+{
+    <span style="color: #00bfff; font-weight: bold;">if</span>(dist[S]==INF) <span style="color: #00bfff; font-weight: bold;">return</span> -1;
+    memset(cnt,0,<span style="color: #00bfff; font-weight: bold;">sizeof</span>(cnt));
+    <span style="color: #98f5ff;">priority_queue</span>&lt;<span style="color: #98f5ff;">Node</span>&gt; <span style="color: #4eee94;">Q</span>;
+    Q.push(Node(S,0));
+    <span style="color: #00bfff; font-weight: bold;">while</span>(!Q.empty())
+    {
+        <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">len</span>=Q.top().len;
+        <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">v</span>=Q.top().v;
+        Q.pop();
+        cnt[v]++;
+        <span style="color: #00bfff; font-weight: bold;">if</span>(cnt[T]==K)
+            <span style="color: #00bfff; font-weight: bold;">return</span> len;
+        <span style="color: #00bfff; font-weight: bold;">if</span>(cnt[v]&gt;K)
+            <span style="color: #00bfff; font-weight: bold;">continue</span>;
+        <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=0;i&lt;Adj[v].size();i++)
+            Q.push(Node(Adj[v][i].v,len+Adj[v][i].len));
+    }
+    <span style="color: #00bfff; font-weight: bold;">return</span> -1;
+}
+
+<span style="color: #98f5ff;">int</span> <span style="color: #daa520; font-weight: bold;">main</span>()
+{
+    Init_graph();
+    Dijkstra();
+    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">ans</span>=Astar();
+    printf(<span style="color: #deb887;">"%d\n"</span>,ans);
+    <span style="color: #00bfff; font-weight: bold;">return</span> 0;
+}</pre>
+
+
+    <p class="meta"> -- EOF -- </p>
+
+    <ul class="pager">
+      
+      <li class="next"><a href="/2010/07/27/sicp.html" title="魔法书：SICP">魔法书：SICP&rarr;</a></li>
+      
+
+      
+      <li class="previous"><a href="/2010/08/02/findsum.html" title="一个小题目">&larr; 一个小题目</a></li>
+      
+    </ul>
+
+    <div class="span8">
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2010/08/02/astart-k-shortest-path.html" title="A*算法与K-shortest path问题" rel="nofollow">A*算法与K-shortest path问题</a></p>
+    </div>
+
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_developer = 1;
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'yukang'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <!--*********************************************************-->
+
+  </div>
+
+
+  <div class="span4 sidebar">
+    
+    <h4 class="date">发布日期：<span>02 August 2010</span></h4>
+    
+    <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
+
+    
+    <h4>标签</h4>
+    <ul class="tag_box">
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#A* k-shortest-ref">A* k-shortest <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Programming-ref">Programming <span>47</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">最近</h4>
+      <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/07/29/buffer-size-limit-for-eshell.html" title="Automatically cleanup the buffer for Eshell" rel="bookmark">Automatically cleanup the buffer for Eshell</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
+        </li>
+        
+        <li class="v-aside-li">
+          <a href="/2014/05/24/recent.html" title="想清楚一些事" rel="bookmark">想清楚一些事</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="violet-aside-post">
+      <h4 class="v-section-tit">页面</h4>
+      <nav class="nav">
+        <ul>
+          <li><a href="/archive.html" >归档</a></li>
+          <li><a href="/tags.html">标签</a></li>
+          <li><a href="/links.html" >链接</a></li>
+          <li><a href="/about.html" >关于</a></li>
+          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+      </div>
+
+      <footer>
+        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2012.
+          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+
+      </footer>
+    </div> <!-- /container -->
+
+    <!--*********************************************************-->
+    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+    <!--*********************************************************-->
+    
+    <script>
+     var _hmt = _hmt || [];
+     (function() {
+         var hm = document.createElement("script");
+         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
+         var s = document.getElementsByTagName("script")[0]; 
+         s.parentNode.insertBefore(hm, s);
+     })();
+    </script>
+
+    <!--*********************************************************-->
+
+  </body>
+
+</html>
+
