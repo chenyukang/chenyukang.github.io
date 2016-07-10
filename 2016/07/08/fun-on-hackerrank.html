@@ -8,11 +8,11 @@
    <header>
     <meta charset="utf-8">
     
-    <title>Heartbleed简单分析 | Yukang's Page</title>
+    <title>刷刷算法和 OJ | Yukang's Page</title>
     
 
     
-    <meta name="description" content="Heartbleed简单分析">
+    <meta name="description" content="Hackerrank is a online judger for programming contest and practice">
     
     <meta name="author" content="Yukang">
 
@@ -177,70 +177,29 @@
 
 <div class="row post">
   <div class="span8">
-    <h1 class="title">Heartbleed简单分析</h1>
+    <h1 class="title">刷刷算法和 OJ</h1>
 
     
-<p><img src="/images/heartbleed.png" alt="heartbleed" class="img-center" height="200" width="200" /></p>
+<p>最近我们部门内部组成了一个算法读书小组，每周大家轮流分享自己的学习心得。为了方便学习我还写了一个小的 内部OJ，看起来还挺还好玩的。界面风格学习了<a href="https://qduoj.com/submissions/">青岛大学的 OJ</a>，后台使用  Docker 来做沙盒跑测试输出结果。顺便学习了实际使用Docker。唯一麻烦点的是选了一个阿里的主机，最开始更新起来比较慢。还是用亚马逊的比较好。讨论形式还在摸索，我们现在每周选择一两个主题，会有两个分享人主讲，另外在 OJ 上弄几道题目大家做。总的来说还是可以提高一些东西，算法方面的知识，比如分享、表达的技巧。</p>
 
-<p>这几天不断听到一个词“心血漏洞”，近年来影响最严重的互联网漏洞。今天小小地研究了一把，顺便把引起一些思考记录下来。</p>
+<p>等 OJ 完善得差不多了再分享出来。</p>
 
-<h2 id="section">到底是什么样的代码</h2>
+<p>另外业务时间也在 HackerRank 上做了一些题目，刚开始是为了熟悉 OCaml，专门用 OCaml写<a href="https://www.hackerrank.com/domains/fp/intro">FP 方面的题目</a>。 最近两周也顺便参加了<a href="https://www.hackerrank.com/contests">一些比赛</a>。这些比赛有的是和一些公司合办的，有的是各个主题的。比如有周赛，从周一到周五每天一个问题。个人觉得这个比较适合已经工作了的程序员，因为可以在空闲时间慢慢思考。等比赛结束之后也可以看其他人的解法和代码。我<a href="https://www.hackerrank.com/cyukang">最近写得比较多</a>，又找到了在学校时写程序的乐趣了。而且熟悉了之后用 OCaml实现算法还是挺快的。我的一些代码放在了<a href="https://github.com/chenyukang/CodeSnippet/tree/master/hackerrank">这里</a>，感兴趣的可以参考。</p>
 
-<p>有一些C语言和开发经验的朋友看看这个<a href="https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=96db9023b881d7cd9f379b0c154650d6c108e9a3;hp=0d7717fc9c83dafab8153cbd5e2180e6e04cc802">Fix</a>就能了解些具体细节了。
-在网络传输中有一个叫做心跳的概念，简单来讲就是客户端发送一个简单的心跳包给服务端，服务端又返回给客户端，然后客户端检查传回来的内容是否是预期，这样就知道了当前的TLS通信是否正常。这个Bug不是协议的问题，而是具体实现的时候的遗漏了相关的逻辑。</p>
-
-<p>这个函数dtls1_process_heartbeat就是处理这块代码的，先读出长度和包类型，然后申请一段内存空间做一个memcpy，其中长度为write_length, 而这里遗漏的就是这个长度的合法性检查。</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cm">/* Read type and payload length first */</span>
-      <span class="n">hbtype</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="o">++</span><span class="p">;</span>
-      <span class="n">n2s</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">payload</span><span class="p">);</span>
-      <span class="n">pl</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span></code></pre></figure>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp">   <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">buffer</span><span class="p">,</span> <span class="o">*</span><span class="n">bp</span><span class="p">;</span>
-   <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">write_length</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">payload</span> <span class="o">+</span> <span class="n">padding</span><span class="p">;</span>
-   <span class="n">buffer</span> <span class="o">=</span> <span class="n">OPENSSL_malloc</span><span class="p">(</span><span class="n">write_length</span><span class="p">);</span>
-   <span class="n">bp</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">;</span>
-
-   <span class="cm">/* Enter response type, length and copy payload */</span>
-   <span class="o">*</span><span class="n">bp</span><span class="o">++</span> <span class="o">=</span> <span class="n">TLS1_HB_RESPONSE</span><span class="p">;</span>
-   <span class="n">s2n</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">bp</span><span class="p">);</span>
-   <span class="n">memcpy</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span> <span class="n">pl</span><span class="p">,</span> <span class="n">payload</span><span class="p">);</span>
-   <span class="n">bp</span> <span class="o">+=</span> <span class="n">payload</span><span class="p">;</span>
-
-   <span class="cm">/* Random padding */</span>
-   <span class="n">RAND_pseudo_bytes</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span> <span class="n">padding</span><span class="p">);</span>
-
-   <span class="n">r</span> <span class="o">=</span> <span class="n">dtls1_write_bytes</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">TLS1_RT_HEARTBEAT</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">write_length</span><span class="p">);</span></code></pre></figure>
-
-<p>可以想象如果客户端发送一个长度为很大的数，而实际给的内容还是在符合范围内的长度，而memcpy仍旧拷贝了一个比较大范围的内存空间(因为申明的包长度类型这里最大为64K)。
-而这个临近的内存空间存的是些什么东西就不确定了，偶尔可能包含一些敏感信息，比如用户密码等等，这些数据有一定特征，是可以通过一定手段检测出来的。这个Bug的名字很形象，就像是血从服务器这个身体里慢慢渗出来一样。</p>
-
-<p>这个简单的长度检查遗漏照理来说应该会被发现，因为内存如果越界了可能会引起SegmentFault。但是OpenSSL有一个自己的内存分配器。可以想象OpenSSL先开辟一大块内存，后面的内存使用再自行分配。这样memcpy即使超出了预订的范围也没有造成问题。</p>
-
-<h2 id="section-1">影响有多大</h2>
-<p>OpenSSL作为一个基础设施，世界上大量现存的网络相关的软件都在使用，特别是一些服务器。光Apache和nginx就占了Web server的66%，甚至还包括Email服务器(SMTP,POP, IMAP协议等)，VPN，和一大堆的客户端软件。这些都使得大量用户的密码有可能泄露。各个互联网公司都在为自己的产品打patch来解决这个潜在的风险。用户也有可能要再修改自己的密码来规避风险。</p>
-
-<h2 id="bug">如何避免这样的Bug</h2>
-<p>这个Bug引起了一些争议，是否开源软件存在更大的风险。因为这个Bug如果是在私有软件里，可能不会一下引起这么多人的关注，整个互联网也不必整个为此patch一遍。</p>
-
-<p>对于程序员来说，如何避免这样的Bug? Redis的开发者Antirez的这篇文章<a href="http://antirez.com/news/76">Using Heartbleed as a starting point
-</a>写得挺不错，公司应该投入更多的资金在这种关键的涉及到安全的代码上，<a href="http://www.solidot.org/story?sid=39112">OpenSSL每年接收到的资助为2000美金</a>。系统程序员和测试人员应该使用一些静态代码分析器，另外动态检测器(比如Valgrind)也很有帮助。因为C是一个贴近硬件的语言，可以在C上再增加一个抽象层来保护关键信息。Random测试有可能发现很多软件中潜在的问题，单元测试有可能测不到这种情况。我现在工作的公司对于测试这块还是做得挺不错(这也与我的产品特性有关，测试相对容易一些)，我们每天晚上除了跑单元测试，还需要跑Valgrind来检测内存问题，还有大量极端的random case可以发现很多Bug。</p>
 
 
     <p class="meta"> -- EOF -- </p>
 
     <ul class="pager">
       
-      <li class="next"><a href="/2014/03/29/eopl.html" title="另一本魔法书: EOPL">另一本魔法书: EOPL&rarr;</a></li>
+      <li class="next"><a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters">Tiny Interpreters&rarr;</a></li>
       
 
-      
-      <li class="previous"><a href="/2014/04/18/visualize-git-proj.html" title="Visualize Git Projects with Ubigraph">&larr; Visualize Git Projects with Ubigraph</a></li>
       
     </ul>
 
     <div class="span8">
-      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2014/04/11/heartbleed.html" title="Heartbleed简单分析" rel="nofollow">Heartbleed简单分析</a></p>
+      <p>声明: 本文采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="nofollow" title="署名-非商业性使用-相同方式共享">BY-NC-SA</a> 协议进行授权. 转载请注明转自: <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="nofollow">刷刷算法和 OJ</a></p>
     </div>
 
 
@@ -269,7 +228,7 @@
 
   <div class="span4 sidebar">
     
-    <h4 class="date">发布日期：<span>11 April 2014</span></h4>
+    <h4 class="date">发布日期：<span>08 July 2016</span></h4>
     
     <!-- <p class="meta">By <a href="/about.html" class="author" title="author">Yukang</a><g:plusone size="small"></g:plusone></p> -->
 
@@ -283,8 +242,6 @@
   
      
     	<li><a href="/tags.html#Programming-ref">Programming <span>48</span></a></li>
-     
-    	<li><a href="/tags.html#Bug-ref">Bug <span>1</span></a></li>
     
   
 
