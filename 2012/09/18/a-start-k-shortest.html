@@ -1,32 +1,35 @@
 
 <!DOCTYPE html>
 <html>
-   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
-   <link rel="stylesheet" href="/assets/themes//css/style.css" />
+    <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" media="screen and (min-device-width: 700px)"/>
    <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" media="screen"/>
+   <link rel="stylesheet" href="/assets/themes//css/mobile.css" media="handheld"/>
 
    <header>
-    <meta charset="utf-8">
-    
-    <title>A*算法解决kth-shortest路径问题(2) | Yukang's Page</title>
-    
+       <meta charset="utf-8">
+       <meta charset="UTF-8"/>
+       <meta name="viewport" content="width=device-width,initial-scale=0.52">
+       
+       <title>A*算法解决kth-shortest路径问题(2) | Yukang's Page</title>
+       
 
-    
-    <meta name="description" content="我之前写过一篇图文并茂的文章来介绍这个算法，有好几次有朋友反馈说对自己有帮助，深感荣幸。这次再次写这个也是因为帮忙于一个朋友解决这类问题，这里再成一篇，稍显罗嗦。">
-    
-    <meta name="author" content="Yukang">
+       
+       <meta name="description" content="我之前写过一篇图文并茂的文章来介绍这个算法，有好几次有朋友反馈说对自己有帮助，深感荣幸。这次再次写这个也是因为帮忙于一个朋友解决这类问题，这里再成一篇，稍显罗嗦。">
+       
+       <meta name="author" content="Yukang">
 
-    <script type="text/javascript"
-            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
+       <script type="text/javascript"
+               href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+       </script>
 
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="/images/favicon.ico">
-    <div class="navbar">
-      <div class="navbar-inner">
+       <!-- Le fav and touch icons -->
+       <link rel="shortcut icon" href="/images/favicon.ico">
+       <div class="navbar" id="navbar">
+           <div class="navbar-inner">
         <div class="container">
           <a class="brand" href="/">Yukang's Page</a>
-          <ul class="nav">
+          <ul class="nav" id="navbar-inner">
             
             
             
@@ -97,72 +100,6 @@
             <li><a href="/about.html">关于</a></li>
             <li><a href="/links.html">链接</a></li>
             <li><a href="/atom.xml">订阅</a></li>
-            <!--  -->
-            <!--  -->
-            <!-- 
-
-
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/about">关于</a></li>
-      	
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/links">链接</a></li>
-      	
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-
-
-
- -->
           </ul>
           <span class="pull-right slogan"> Don't Panic </span>
         </div>
@@ -170,7 +107,7 @@
     </div>
   </header>
 
-   <body>
+  <body>
     <div class="container">
       <div class="content">
         
@@ -428,6 +365,16 @@ Dijkstra算法的复杂度为<code>((m+n)log n)</code>(二叉树实现的优先�
          var s = document.getElementsByTagName("script")[0]; 
          s.parentNode.insertBefore(hm, s);
      })();
+
+     (function() {
+         var width = document.body.offsetWidth;
+         if(width < 701) {
+             var nav = document.getElementById("navbar-inner");
+             nav.remove();
+         };
+     })();
+
+
     </script>
 
     <!--*********************************************************-->
