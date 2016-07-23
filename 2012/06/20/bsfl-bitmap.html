@@ -116,8 +116,7 @@
   <div class="span8">
     <h1 class="title">bsfl指令和Bitmap的一个优化</h1>
 
-    
-<h2 id="int1">如何找出int中第一个1</h2>
+    <h2>如何找出int中第一个1</h2>
 
 <p>对于这个问题我们可以从最原始的做法开始，如果没找到1返回0，如果第一位为1返回1。所以代码很简单如下：</p>
 
@@ -129,7 +128,7 @@ static int first_onebit(int x){
         int idx = 0;
         if(x%2 != 0) return 1;
         while( x%2 == 0 ) {
-            x&gt;&gt;=1;
+            x>>=1;
             idx++;
         }
         return idx+1;
@@ -155,12 +154,11 @@ static int first_onebit(int x)
 }
 </pre>
 
-<p>这里的bsfl是一条intel汇编指令，它的用法是bsfl op1,op2:顺向位扫描从右向左（从位0–&gt;位15或位31）扫描单节字或双字节操作数op2中第一个含”1”的位，并把扫描到的第一个含’1’的位的位号送操作数op1中。
+<p>这里的bsfl是一条intel汇编指令，它的用法是bsfl op1,op2:顺向位扫描从右向左（从位0--&gt;位15或位31）扫描单节字或双字节操作数op2中第一个含&quot;1&quot;的位，并把扫描到的第一个含&#39;1&#39;的位的位号送操作数op1中。
 所以就是一条指令完成了这个计算过程。</p>
 
 <p>这里真的会有多大的差别么，我们可以用程序来计算一下，测试如下:</p>
-
-<pre><code>int main()
+<div class="highlight"><pre><code class="language-text" data-lang="text">int main()
 {
     int x;
     for(x=0; x&lt;=1000000000; x++){
@@ -168,21 +166,17 @@ static int first_onebit(int x)
     }
     return 0;
 }
-</code></pre>
-
+</code></pre></div>
 <p>第一个版本花费时间15.685s，第二个版本花费时间5.960s,而其实如果只是循环1000000000次什么也不做也好花费3.091s,所以第二个版本快到如此程度。</p>
 
-<h2 id="bitmap">bitmap的优化</h2>
+<h2>bitmap的优化</h2>
 
 <p>bitmap是一种常用的数据结构，在编程珠玑有详细介绍，应用也比较广泛比如可以用来做操作系统当中的<a href="http://wiki.osdev.org/Page_Frame_Allocation">地址索引查询</a>。
 对于bitmap中我们常常需要一个操作来找一个空位的bit来做set操作。既然我们知道了第一个1是如何快速查找的，第一0也就好办了，先取反，然后再找第一个1就行了。</p>
-
-<pre><code>#define first_zerobit(x) (first_onebit(~(x)))
-</code></pre>
-
+<div class="highlight"><pre><code class="language-text" data-lang="text">#define first_zerobit(x) (first_onebit(~(x)))
+</code></pre></div>
 <p>继续bitmap的first_empty就优化成这样了:</p>
-
-<pre><code>u32 first_empty()
+<div class="highlight"><pre><code class="language-text" data-lang="text">u32 first_empty()
 {
     u32 idx;
     for(idx=0; idx&lt;max_idx; idx++){
@@ -193,12 +187,10 @@ static int first_onebit(int x)
     }
     return -1;
 }
-</code></pre>
-
-<h2 id="section">注意</h2>
+</code></pre></div>
+<h2>注意</h2>
 
 <p>这样的用汇编指令来优化可能会有平台差异，所以你最好清楚自己的平台是否适用。</p>
-
 
 
     <ul class="pager">
@@ -266,6 +258,10 @@ static int first_onebit(int x)
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -319,10 +315,6 @@ static int first_onebit(int x)
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

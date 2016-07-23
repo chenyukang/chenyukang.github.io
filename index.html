@@ -113,26 +113,52 @@
 
 <div class="row post">
   <div class="span8">
-      <h1 class="title"><a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ">刷刷算法和 OJ</a></h1>
+      <h1 class="title"><a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano">Add syntax check for Capistrano</a></h1>
 
-    
-<p>最近我们部门内部组成了一个算法读书小组，每周大家轮流分享自己的学习心得。为了方便学习我还写了一个小的 内部OJ，看起来还挺还好玩的。界面风格学习了<a href="https://qduoj.com/submissions/">青岛大学的 OJ</a>，后台使用  Docker 来做沙盒跑测试输出结果。顺便学习了实际使用Docker。唯一麻烦点的是选了一个阿里的主机，最开始更新起来比较慢。还是用亚马逊的比较好。讨论形式还在摸索，我们现在每周选择一两个主题，会有两个分享人主讲，另外在 OJ 上弄几道题目大家做。总的来说还是可以提高一些东西，算法方面的知识，比如分享、表达的技巧。</p>
+    <p>In an normal release, Rails app&#39;s unit testing will avoid most errors. But for the urgent code publishing, we have got several time of typo error. Code syntax error may cause server crash for a little while(Passenger web server and we using <code>./tmp/restart.txt</code> to restart). We use Capistrano to publish code, so I plan to add a syntax checking before publishing code.
+The method is writing a task to bundle exec rails runner, this will report most ruby syntax error(except the undef variables in some functions, runner will load .rb files). </p>
 
-<p>等 OJ 完善得差不多了再分享出来。</p>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">namespace</span> <span class="ss">:app</span> <span class="k">do</span>
+  <span class="n">desc</span> <span class="s2">&quot;check all the ruby code&quot;</span>
+  <span class="n">task</span> <span class="ss">:check</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="sb">`RAILS_ENV=</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="si">}</span><span class="sb">  bundle exec rails runner &quot;&quot; 2&gt;&amp;1`</span>
+    <span class="k">raise</span> <span class="n">res</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre></figure>
 
-<p>另外业务时间也在 HackerRank 上做了一些题目，刚开始是为了熟悉 OCaml，专门用 OCaml写<a href="https://www.hackerrank.com/domains/fp/intro">FP 方面的题目</a>。 最近两周也顺便参加了<a href="https://www.hackerrank.com/contests">一些比赛</a>。这些比赛有的是和一些公司合办的，有的是各个主题的。比如有周赛，从周一到周五每天一个问题。个人觉得这个比较适合已经工作了的程序员，因为可以在空闲时间慢慢思考。等比赛结束之后也可以看其他人的解法和代码。我<a href="https://www.hackerrank.com/cyukang">最近写得比较多</a>，又找到了在学校时写程序的乐趣了。而且熟悉了之后用 OCaml实现算法还是挺快的。我的一些代码放在了<a href="https://github.com/chenyukang/CodeSnippet/tree/master/hackerrank">这里</a>，感兴趣的可以参考。</p>
+<p>then add this in the deploy.rb (Capistrano 3.1):</p>
 
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span>
+
+  <span class="n">task</span> <span class="ss">:run_code_check</span> <span class="k">do</span>
+    <span class="n">on</span> <span class="n">roles</span><span class="p">(</span><span class="ss">:all</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">within</span> <span class="n">release_path</span> <span class="k">do</span>
+        <span class="n">with</span> <span class="ss">rails_env</span><span class="p">:</span> <span class="n">fetch</span><span class="p">(</span><span class="ss">:rails_env</span><span class="p">)</span> <span class="k">do</span>
+          <span class="n">execute</span> <span class="ss">:rake</span><span class="p">,</span> <span class="s1">&#39;app:check&#39;</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="n">before</span> <span class="s2">&quot;deploy:updated&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy:run_code_check&quot;</span>
+<span class="k">end</span></code></pre></figure>
+
+<p>This is not a tricky part, but please pay attention to the line:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">res</span> <span class="o">=</span> <span class="sb">`RAILS_ENV=</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="si">}</span><span class="sb">  bundle exec rails runner &quot;&quot; 2&gt;&amp;1`</span></code></pre></figure>
+
+<p>This line of code cost me some time, I forget the <code>2&gt;&amp;1</code>. so <code>res</code> will just got the stdout, not the stderr output, which causes the exception is not raised, and Capistrano flow is not stopped.</p>
 
 
     <ul class="pager">
-        <li class="previous"><a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ">评论&darr;</a></li>
+        <li class="previous"><a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano">评论&darr;</a></li>
       <li class="next"><a href="/archive.html" title="所有文章">查看所有文章 &rarr;</a></li>
     </ul>
 
   </div>
 
   <div class="span4 sidebar">
-    <h4 class="date">日期：<span>08 July 2016</span></h4>
+    <h4 class="date">日期：<span>22 July 2016</span></h4>
     
     <h4>标签</h4>
     <ul class="tag_box">
@@ -142,7 +168,7 @@
 
   
      
-    	<li><a href="/tags.html#Programming-ref">Programming <span>48</span></a></li>
+    	<li><a href="/tags.html#Rails-ref">Rails <span>2</span></a></li>
     
   
 
@@ -154,6 +180,10 @@
     <div class="violet-aside-post">
       <h4 class="v-section-tit">最近</h4>
       <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
         
         <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
@@ -209,10 +239,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

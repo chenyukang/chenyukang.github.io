@@ -116,20 +116,21 @@
   <div class="span8">
     <h1 class="title">Have a try on Ninja</h1>
 
-    
-<p><img src="/images/compiling.png" alt="My code is compiling" class="img-center" /></p>
+    <p><img src="/images/compiling.png" alt="My code is compiling" class="img-center" /></p>
 
-<h2 id="ninja">什么是Ninja</h2>
+<h2>什么是Ninja</h2>
+
 <p>在Unix/Linux下通常使用Makefile来控制代码的编译，但是Makefile对于比较大的项目有时候会比较慢，看看上面那副漫画，代码在编译都变成了程序员放松的借口了。所以这个Google的程序员在开发Chrome的时候因为忍受不了Makefile的速度，自己重新开发出来一套新的控制编译的工具叫作<a href="https://github.com/martine/ninja">Ninja</a>，Ninja相对于Makefile这套工具更注重于编译速度。除了Chrome现在还有一些其他的比较大的项目也在开始使用Ninja，比如LLVM。我试用了一下感觉还是不错，比如编译Cmake时间大概是原来的1/4。Ninja试用C++实现，<a href="http://martine.github.com/ninja/manual.html">其支持的语法非常简单</a>，作者在这里说明了为了控制复杂度。</p>
 
-<h2 id="section">代码如何编译</h2>
+<h2>代码如何编译</h2>
+
 <p>其实对于C/C++和很多其他程序的编译都是一个道理，就是把一些源代码文件编译成目标文件，或者有的目标文件再编译到一个库里，然后再链接起来。所以Ninja的配置文件分为两个部分，rule和文件依赖关系。看个简单的例子:</p>
 
 <figure class="highlight"><pre><code class="language-sh" data-lang="sh">    <span class="nv">cc</span><span class="o">=</span>gcc
     <span class="nv">cflags</span><span class="o">=</span> -g -c
     
     rule cc
-         <span class="nb">command</span> <span class="o">=</span>	<span class="nv">$cc</span> <span class="nv">$cflags</span> <span class="nv">$in</span> -o <span class="nv">$out</span>
+         <span class="nb">command</span> <span class="o">=</span>   <span class="nv">$cc</span> <span class="nv">$cflags</span> <span class="nv">$in</span> -o <span class="nv">$out</span>
     
     rule link
          <span class="nb">command</span> <span class="o">=</span> <span class="nv">$cc</span> <span class="nv">$in</span> -o <span class="nv">$out</span>
@@ -144,6 +145,7 @@
     
     build all:  phony <span class="o">||</span> app.exe
     build clean: cleanup </code></pre></figure>
+    
 
 <p>非常易懂，编译的可执行未见叫做app.exe, 其中有三条rule: cc, link, cleanup。看看这个官方的试用手册，还有一些附加参数可以加在rule的下面，比如description用来在编译的时候显示出来。Ninja还有个比较好玩的功能就是Ninja -t graph all命令，这可以用来生成编译时候的依赖关系，可以用dot来生成图片等。Ninja的实现也可以大概推测到，根据用户给的依赖关系图，<em>并行</em> 地编译各个文件。</p>
 
@@ -160,7 +162,7 @@ target_link_libraries<span class="o">(</span>Maze.exe maze<span class="o">)</spa
 
 <p>add_library写明了生成一个叫做maze.a的库文件，然后和main.cpp编译出来的main.o生成可执行文件，写好CmakeList.txt后运行Cmake -G Ninja, 然后运行ninja all就能编译这个工程。具体的Cmake语法参考<a href="http://www.cmake.org/cmake/help/cmake_tutorial.html">这里</a>，对于不少项目来说Cmake已经足够使用，只是我觉得Cmake还是稍微复杂了一点。</p>
 
-<h2 id="section-1">我这样来使用</h2>
+<h2>我这样来使用</h2>
 
 <p>整个Ninja是使用C++写的开源项目，如果我们想增加一些自己的feature可以hack一下，不过作者估计不会接受增加语法支持的patch。我准备做一个小的hack来自动分析我当前的源码，自动生成build.ninja文件，不要求处理所有的复杂情况，只是分析.cc和.c，自动检测main函数文件。最后用户只用配置链接参数就可以了。我觉得这样用起来就非常方便了，待完成中，顺便看看Ninja的内部实现。</p>
 
@@ -230,6 +232,10 @@ target_link_libraries<span class="o">(</span>Maze.exe maze<span class="o">)</spa
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -283,10 +289,6 @@ target_link_libraries<span class="o">(</span>Maze.exe maze<span class="o">)</spa
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

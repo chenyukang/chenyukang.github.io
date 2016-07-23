@@ -116,8 +116,7 @@
   <div class="span8">
     <h1 class="title">正则表达式匹配和NFA/DFA</h1>
 
-    
-<p>正则表达式匹配是一个经典问题，这里有一个<a href="http://oj.leetcode.com/problems/regular-expression-matching/">问题</a>。
+    <p>正则表达式匹配是一个经典问题，这里有一个<a href="http://oj.leetcode.com/problems/regular-expression-matching/">问题</a>。
 实现isMatch，其中.表示任意一个字符，*表示0个或者任一个前面的字符：</p>
 
 <figure class="highlight"><pre><code class="language-sh" data-lang="sh">isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>,<span class="s2">&quot;a&quot;</span><span class="o">)</span>       → <span class="nb">false</span>
@@ -130,20 +129,21 @@ isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span cl
 
 <p>这是一个正则表达式问题的简化版本只有<code>.</code>和<code>*</code>，可以用递归来解决。正则表达式涉及到自动机理论，顺便再复习一下当年没好好学的东西。查找一番后发现了这篇Russ Cox写的文章非常好(这家伙写了不少文章，xv6里也有他的代码，现在在为Go项目工作)。于是我也尝试着用DFA来解决这个问题。</p>
 
-<h2 id="dfanfa">DFA和NFA的概念</h2>
+<h2>DFA和NFA的概念</h2>
+
 <p>首先对于没一个正则表达式都有一个对应的DFA可以来表示, DFA是Deterministic Finite Automaton的简称，还有NFA(Non-deterministic Finite Automata)。NFA对于一个字符的输入有可能存在多个以上的状态转移，而DFA对于没一个输入只存在一个选择。所以每一个NFA都可以转化为一个DFA，但是一个DFA可以转化为多个NFA。我们来看一个例子:</p>
 
 <p>对于正则表达<code>(a|b)*abb</code>的NFA和DFA分别表示为：</p>
 
-<p><img src="/images/nfa.jpeg" alt="nfa" class="img-center" width="350" height="350" /></p>
+<p><img src="/images/nfa.jpeg" alt="nfa" class="img-center" width="350" height="350"/></p>
 
-<p><img src="/images/dfa.jpeg" alt="dfa" class="img-center" width="350" height="350" /></p>
+<p><img src="/images/dfa.jpeg" alt="dfa" class="img-center" width="350" height="350"/></p>
 
 <p>DFA的状态数目和NFA一样，但是一般实践过程中DFA的状态转移要多，所以DFA相对来说要难构造一些，同时DFA比NFA需要的内存空间更大。正因为在NFA中一个状态可能向多个状态转移，在极端的情况下其效率比不过DFA。更多关于正则分类可以参考<a href="http://kb.cnblogs.com/page/86751/">正则表达式引擎及其分类</a>。</p>
 
 <p>对于NFA不同的实现效率会不一样，这也是Russ的文章里所说的。Russ的文章里面介绍了Thompson NFA算法实现(没错就是发明C的那神)，一些老的Unix工具是用的这个算法，比如Awk，Tcl，GNU grep等，而一些更通用的编程语言用的是基于回溯的一种NFA实现，比如Perl/Python。通过数据比较，在最坏的情况下用Thompson NFA实现的awk表现比匹配回溯的NFA要好很多倍。最坏情况下的复杂度不一样，回溯NFA是O(2^N)，而Thompson的复杂度是O(N^2)。文中的代码可以号好看看，非常简洁的C实现。</p>
 
-<h2 id="section">一个尝试实现</h2>
+<h2>一个尝试实现</h2>
 
 <p>对上面那个问题我尝试着实现了一个程序构建DFA来解决，提交上去完成439个测试用例只用了28ms，相对于递归版本的需要104ms。也可能LeetCode上面的测试数据太少，比较的意义不大。代码长度当然要比递归的长不少。
 定义State：</p>
@@ -284,6 +284,10 @@ isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span cl
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -337,10 +341,6 @@ isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span cl
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

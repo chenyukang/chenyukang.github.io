@@ -116,24 +116,23 @@
   <div class="span8">
     <h1 class="title">使用Jekyll和Github搭建博客</h1>
 
-    
-<h2 id="section">为什么要折腾</h2>
+    <h2>为什么要折腾</h2>
+
 <p>折腾了几次终于把博客从wordpress搬到Github了，迁徙这事本来是够麻烦的，而且也比较无聊。不过最终还是抑制不住诱惑，这有下面几点点好处。</p>
 
-<hr />
+<hr>
 
 <ul>
-  <li>
-    <p><strong>编辑方便，专注写作</strong></p>
+<li><strong>编辑方便，专注写作</strong></li>
+</ul>
 
-    <p>在线下编辑，可以随便选择自己喜欢的编辑器。当然wordpress也有离线编辑工具，不过Linux下我还没找到合适的，
+<p>在线下编辑，可以随便选择自己喜欢的编辑器。当然wordpress也有离线编辑工具，不过Linux下我还没找到合适的，
 我平常是用<a href="http://mwolson.org/projects/EmacsMuse.html">Muse</a>生成html，然后再粘贴到站上。其实还好，
 就是插入图片不方便。使用Github和Jekyll是完全的离线，你甚至都不需要离开终端就可以发布文章，一切都只是简单的git push而已。
-写的过程中还可以用jekyll  –server预览最终排版。</p>
-  </li>
-  <li>
-    <p><strong>可以使用Github进行版本管理</strong></p>
-  </li>
+写的过程中还可以用jekyll  --server预览最终排版。</p>
+
+<ul>
+<li><strong>可以使用Github进行版本管理</strong></li>
 </ul>
 
 <p>像写程序一样写日志，这对程序员吸引很大。
@@ -157,26 +156,22 @@ do_commit<span class="o">()</span> <span class="o">{</span>
 <span class="k">done</span></code></pre></figure>
 
 <ul>
-  <li><strong>简洁</strong></li>
+<li><strong>简洁</strong></li>
 </ul>
 
 <p>我喜欢这套是因为感觉一切都很简单,在_post目录下写markdown格式的文章，生成网页、push上去就发布了。页面也非常整洁，这对于一个以文字和代码为主要内容的站点来说最合适不过了。而且因为生成的全是静态网页，所以打开的速度也非常快。</p>
 
-<hr />
+<hr>
 
-<h2 id="section-1">折腾过程</h2>
+<h2>折腾过程</h2>
 
-<hr />
+<hr>
 
 <p>这套工具适合程序员，因为一切都可以在本机上操作，你可以自己写程序来批量处理文档。我是自己写了一点Python小程序转移图片。 迁徙的过程中也会碰上一些问题，不过如果你懂一点Ruby，这些都还是比较好解决的。基本步骤为：</p>
 
 <ul>
-  <li>
-    <p>申请GitHub，这个不少程序员有，直接跳过。</p>
-  </li>
-  <li>
-    <p>安装Jekyll 在本地，可能会遇上ruby版本的问题，我的机子上是1.8.7，需要1.9.2，使用<a href="https://rvm.io//">rvm</a>来解决，具体参考<a href="http://lanvige.iteye.com/blog/857501">这里</a>。具体使用下面一些命令:</p>
-  </li>
+<li><p>申请GitHub，这个不少程序员有，直接跳过。</p></li>
+<li><p>安装Jekyll 在本地，可能会遇上ruby版本的问题，我的机子上是1.8.7，需要1.9.2，使用<a href="https://rvm.io//">rvm</a>来解决，具体参考<a href="http://lanvige.iteye.com/blog/857501">这里</a>。具体使用下面一些命令:</p></li>
 </ul>
 
 <figure class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-get install gems curl
@@ -189,14 +184,10 @@ ruby -v <span class="c">#(use 1.9.2)</span>
 gem install directory_watcher liquid open4 maruku classifier jekyll</code></pre></figure>
 
 <ul>
-  <li>
-    <p>再建立yourname.github.com项目，git clone <a href="https://github.com/plusjade/jekyll-bootstrap.git">jekyll bootstrap</a>到自己的代码库。</p>
-  </li>
-  <li>
-    <p>从wordpress迁徙，我使用wordpress.xml这个方法，最后修改域名解析就大功告成了。
+<li><p>再建立yourname.github.com项目，git clone <a href="https://github.com/plusjade/jekyll-bootstrap.git">jekyll bootstrap</a>到自己的代码库。</p></li>
+<li><p>从wordpress迁徙，我使用wordpress.xml这个方法，最后修改域名解析就大功告成了。
 修改域名的时候在Git上建立CNAME为demo.com，在DNS处设置demo.com的A记录到Github的地址(207.97.227.245)，同时为了使得www.demo.com也指向GitHub,设定
-www的A记录到这个地址。这是我设置的时候出错了的地方。</p>
-  </li>
+www的A记录到这个地址。这是我设置的时候出错了的地方。</p></li>
 </ul>
 
 <p>整个流程非常简单，你甚至可以在<a href="http://ztpala.com/2012/01/12/zero-to-hosted-jekyll-blog-in-3-minutes/">三分钟内完成Github的博客搭建</a>，更相详细可以参考<a href="http://jekyllbootstrap.com/usage/jekyll-quick-start.html">这里</a><a href="http://vitobotta.com/how-to-migrate-from-wordpress-to-jekyll/">这里</a>。</p>
@@ -267,6 +258,10 @@ www的A记录到这个地址。这是我设置的时候出错了的地方。</p>
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -320,10 +315,6 @@ www的A记录到这个地址。这是我设置的时候出错了的地方。</p>
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

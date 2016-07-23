@@ -116,103 +116,108 @@
   <div class="span8">
     <h1 class="title">Metaprogramming Ruby</h1>
 
-    
-<p>『Metaprogramming Ruby』这本书看了两遍，从这本书里获取了一些乐趣。技术书籍就应该这样简明扼要，寓理于事。通过一个显示中的例子引入问题，展示元编程的解决办法， 顺带介绍一下用到相关技术的gems。</p>
+    <p>『Metaprogramming Ruby』这本书看了两遍，从这本书里获取了一些乐趣。技术书籍就应该这样简明扼要，寓理于事。通过一个显示中的例子引入问题，展示元编程的解决办法， 顺带介绍一下用到相关技术的gems。</p>
 
 <p>下面这些不是书评，只是我在看第二遍的时候的一些简单的择要，用于自己的记忆和检索。</p>
 
-<h2 id="introduction">Introduction</h2>
+<h2>Introduction</h2>
 
 <ul>
-  <li>Meteprogramming is writing code that writes code</li>
-  <li>鬼城和集市，很多语言的运行环境在执行的时候已经固定，一片死寂。而支持Metaprogramming的语言的执行环境是充满活力的集市。很好的比喻。</li>
-  <li>动态元编程和静态元编程，C++的template属于静态元编程。</li>
+<li>Meteprogramming is writing code that writes code</li>
+<li>鬼城和集市，很多语言的运行环境在执行的时候已经固定，一片死寂。而支持Metaprogramming的语言的执行环境是充满活力的集市。很好的比喻。</li>
+<li>动态元编程和静态元编程，C++的template属于静态元编程。</li>
 </ul>
 
-<h2 id="the-ruby-object-model">The Ruby Object Model</h2>
+<h2>The Ruby Object Model</h2>
 
 <ol>
-  <li>Class定义永远是开放的，你能重新定义任何类或者给类加上一些新的东西。注意MonkeyPatch可能导致的Bug。</li>
-  <li>分清楚instance_method和class_method，</li>
-  <li><img src="/images/instance_method.png" alt="instance_method" class="img-center" /></li>
-  <li>Class也是对象。与C#/Java的Class不一样的地方，Ruby允许在代码运行期间操作类相关的信息，比如增加method或者重新定义method。</li>
-  <li><img src="/images/object_model.png" alt="object_model" class="img-center" /></li>
+<li>Class定义永远是开放的，你能重新定义任何类或者给类加上一些新的东西。注意MonkeyPatch可能导致的Bug。</li>
+<li>分清楚instance_method和class_method，</li>
+<li><img src="/images/instance_method.png" alt="instance_method" class="img-center" /></li>
+<li>Class也是对象。与C#/Java的Class不一样的地方，Ruby允许在代码运行期间操作类相关的信息，比如增加method或者重新定义method。</li>
+<li><img src="/images/object_model.png" alt="object_model" class="img-center" /></li>
 </ol>
 
-<h2 id="methods">Methods</h2>
+<h2>Methods</h2>
+
 <ul>
-  <li>static type checking, for example, if you call simple_talk() on Layer object that has no such method, the compiler protests loudly.</li>
-  <li>call method dynamic using send().</li>
-  <li>define_method generates instance method dynamically, to_s vs to_sym.</li>
-  <li>Ghost method, method_missing.</li>
+<li>static type checking, for example, if you call simple_talk() on Layer object that has no such method, the compiler protests loudly.</li>
+<li>call method dynamic using send().</li>
+<li>define_method generates instance method dynamically, to_s vs to_sym.</li>
+<li>Ghost method, method_missing.</li>
 </ul>
 
 <blockquote>
-  <p>过多是用会不会拖慢执行效率，要顺着继承链一直查找method。</p>
+<p>过多是用会不会拖慢执行效率，要顺着继承链一直查找method。</p>
 
-  <p>注意method_missing可能导致的死循环调用。</p>
+<p>注意method_missing可能导致的死循环调用。</p>
 
-  <p>和继承过来的method之间的冲突， undef_method解决。</p>
+<p>和继承过来的method之间的冲突， undef_method解决。</p>
 </blockquote>
 
-<h2 id="blocks">Blocks</h2>
+<h2>Blocks</h2>
+
 <ul>
-  <li>class, module, and def change scope.</li>
-  <li>Flat Scope.</li>
-  <li>instacen_eval/instance_exec</li>
-  <li>create block : lambda/proc/Proc.new</li>
-  <li>lambda vs Proc</li>
+<li>class, module, and def change scope.</li>
+<li>Flat Scope.</li>
+<li>instacen_eval/instance_exec</li>
+<li>create block : lambda/proc/Proc.new</li>
+<li>lambda vs Proc</li>
 </ul>
 
 <blockquote>
-  <p>return in Proc also return from the scope.</p>
+<p>return in Proc also return from the scope.</p>
 
-  <p>lambda’s argument checking is more strict.</p>
+<p>lambda&#39;s argument checking is more strict.</p>
 </blockquote>
 
 <ul>
-  <li>A event DSL, a elegent example for blocks.</li>
+<li>A event DSL, a elegent example for blocks.</li>
 </ul>
 
-<h2 id="class-definitions">Class Definitions</h2>
+<h2>Class Definitions</h2>
+
 <ul>
-  <li>A Ruby class definition is actually regular code that runs.</li>
-  <li>class_eval vs instance_eval</li>
+<li>A Ruby class definition is actually regular code that runs.</li>
+<li>class_eval vs instance_eval</li>
 </ul>
 
 <blockquote>
-  <p>class_eval both changes self and current class</p>
+<p>class_eval both changes self and current class</p>
 
-  <ul>
-    <li>Eigenclass, the metaclass of a object</li>
-    <li>three way to define class method</li>
-    <li>Around alias</li>
-  </ul>
+<ul>
+<li>Eigenclass, the metaclass of a object</li>
+<li>three way to define class method</li>
+<li>Around alias</li>
+</ul>
 </blockquote>
 
-<h2 id="code-writes-code">Code writes code</h2>
+<h2>Code writes code</h2>
+
 <ul>
-  <li>The powerful weapon: eval</li>
-  <li>A good example: add_attribute</li>
-  <li>Three ways to express this idea</li>
+<li>The powerful weapon: eval</li>
+<li>A good example: add_attribute</li>
+<li>Three ways to express this idea</li>
 </ul>
 
-<h2 id="active-record">Active record</h2>
+<h2>Active record</h2>
+
 <ul>
-  <li>Validations</li>
-  <li>alias_method_chain</li>
+<li>Validations</li>
+<li>alias_method_chain</li>
 </ul>
 
-<hr />
+<hr>
 
 <ul>
-  <li>Dynamic attributes, define read/write/question Dynamic Methods for all the columns in databases, for performance.</li>
-  <li>Lesson learned, performance/complexity/readable trade-offs.</li>
+<li>Dynamic attributes, define read/write/question Dynamic Methods for all the columns in databases, for performance.</li>
+<li>Lesson learned, performance/complexity/readable trade-offs.</li>
 </ul>
 
-<h2 id="metaprogramming-safely">Metaprogramming safely</h2>
+<h2>Metaprogramming safely</h2>
+
 <ul>
-  <li>Defusing Monkeypatches, make it explicit with module, check it before patche, add warning messages.</li>
+<li>Defusing Monkeypatches, make it explicit with module, check it before patche, add warning messages.</li>
 </ul>
 
 
@@ -261,6 +266,10 @@
     <div class="violet-aside-post">
       <h4 class="v-section-tit">最近</h4>
       <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
         
         <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
@@ -316,10 +325,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

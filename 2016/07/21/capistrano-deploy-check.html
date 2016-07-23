@@ -1,35 +1,32 @@
 
 <!DOCTYPE html>
 <html>
-    <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" media="screen and (min-device-width: 700px)"/>
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" />
+   <link rel="stylesheet" href="/assets/themes//css/style.css" />
    <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
-   <link rel="stylesheet" href="/assets/themes//css/style.css" media="screen"/>
-   <link rel="stylesheet" href="/assets/themes//css/mobile.css" media="handheld"/>
 
    <header>
-       <meta charset="utf-8">
-       <meta charset="UTF-8"/>
-       <meta name="viewport" content="width=device-width,initial-scale=0.52">
-       
-       <title>一些包管理命令 | Yukang's Page</title>
-       
+    <meta charset="utf-8">
+    
+    <title>capistrano deploy check | Yukang's Page</title>
+    
 
-       
-       <meta name="description" content="some useful apt usage">
-       
-       <meta name="author" content="Yukang">
+    
+    <meta name="description" content="">
+    
+    <meta name="author" content="Yukang">
 
-       <script type="text/javascript"
-               href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-       </script>
+    <script type="text/javascript"
+            href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
 
-       <!-- Le fav and touch icons -->
-       <link rel="shortcut icon" href="/images/favicon.ico">
-       <div class="navbar" id="navbar">
-           <div class="navbar-inner">
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <div class="navbar">
+      <div class="navbar-inner">
         <div class="container">
           <a class="brand" href="/">Yukang's Page</a>
-          <ul class="nav" id="navbar-inner">
+          <ul class="nav">
             
             
             
@@ -97,70 +94,102 @@
 
 
             <li class="divider-vertical"></li>
-            <li><a href="/about.html">关于</a></li>
+
+            <!--  -->
+            <!--  -->
+            <!-- 
+
+
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/about">关于</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/links">链接</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+
+
+
+ -->
+
+            <li><a href="//about.html">关于</a></li>
             <li><a href="/links.html">链接</a></li>
-            <li><a href="/atom.xml">订阅</a></li>
+            <li><a href="{/atom.xml">订阅</a></li>
           </ul>
+
           <span class="pull-right slogan"> Don't Panic </span>
         </div>
       </div>
     </div>
   </header>
 
-  <body>
+   <body>
     <div class="container">
       <div class="content">
         
 
 <div class="row post">
   <div class="span8">
-    <h1 class="title">一些包管理命令</h1>
+    <h1 class="title">capistrano deploy check</h1>
 
-    <p>包管理器是Linux上一个经常用的东西，我觉得下面这几个命令是非常有用的，便于查询包的状态，或者搜索我该安装哪些包。</p>
+    
 
-<h2>apt-cache</h2>
-
-<p>用来根据名字查询软件包，比如apt-cache search vim查询vim相关的。</p>
-
-<h2>apt-file</h2>
-
-<p>用来根据某个文件查询软件包，这在编译程序的时候非常有用，可以通过所需要的头文件去查询要安装的东西，可以避免去Google了。注意使用之前需要安装并update。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install apt-file
-sudo apt-file update
-</code></pre></div>
-<p>比如我在编译某个软件的时候找不到<readline/readline.h>，使用下面的命令来查询一下：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-file readline.h
-</code></pre></div>
-<p>结果中有这么一行，那么我就知道继续安装libreadline5-dev库就行了。</p>
-
-<h2>dpkg</h2>
-
-<p>apt是基于dpkg开发的，dpkg是更古老更底层的一套工具，Debian系统管理器的基础。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">dpkg -l 列出所有已经安装的包
-dpkg -s vim 列出包vim的状态
-dpkg -L vim 列出本地所有vim相关联系的文件
-dpkg -S vim 搜索所属包的内容
-</code></pre></div>
-<h2>brew</h2>
-
-<p>Mac下推荐Brew来替代apt，大部分的开源包都有对应的地址源了。我没使用过MacPorts，无法比较这两套的差别。
-不过我个人很喜欢的一点是brew所有安装的东西都在<code>brew -prefix</code>/Cellar这个统一目录下，</p>
-
-<p>brew相关的命令：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">brew list   — 列出已安装的软件
-brew update — 更新Homebrew
-brew home   — 用浏览器打开
-brew info   — 显示软件内容信息
-brew deps   - 显示包依赖
-</code></pre></div>
 
     <ul class="pager">
       
-      <li class="next"><a href="/2013/04/11/xor_link_list.html" title="巧妙的XOR Link List">巧妙的XOR Link List&rarr;</a></li>
+      <li class="next"><a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ">刷刷算法和 OJ&rarr;</a></li>
       
 
-      
-      <li class="previous"><a href="/2013/05/09/git-command.html" title="迁移到Git">&larr; 迁移到Git</a></li>
       
     </ul>
 
@@ -191,25 +220,9 @@ brew deps   - 显示包依赖
 
   <div class="span4 sidebar">
     
-    <h4 class="date">日期：<span>17 April 2013</span></h4>
+    <h4 class="date">日期：<span>21 July 2016</span></h4>
     
 
-    
-    <h4>标签</h4>
-    <ul class="tag_box">
-      
-      
-
-
-  
-     
-    	<li><a href="/tags.html#工具-ref">工具 <span>1</span></a></li>
-    
-  
-
-
-
-    </ul>
     
 
     <div class="violet-aside-post">
@@ -217,7 +230,7 @@ brew deps   - 显示包依赖
       <ul>
         
         <li class="v-aside-li">
-          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+          <a href="/2016/07/21/capistrano-deploy-check.html" title="capistrano deploy check" rel="bookmark">capistrano deploy check</a>
         </li>
         
         <li class="v-aside-li">
@@ -312,7 +325,7 @@ brew deps   - 显示包依赖
     <!--*********************************************************-->
     <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
     <!--*********************************************************-->
-    
+
     <script>
      var _hmt = _hmt || [];
      (function() {
@@ -321,16 +334,6 @@ brew deps   - 显示包依赖
          var s = document.getElementsByTagName("script")[0]; 
          s.parentNode.insertBefore(hm, s);
      })();
-
-     (function() {
-         var width = document.body.offsetWidth;
-         if(width < 701) {
-             var nav = document.getElementById("navbar-inner");
-             nav.remove();
-         };
-     })();
-
-
     </script>
 
     <!--*********************************************************-->

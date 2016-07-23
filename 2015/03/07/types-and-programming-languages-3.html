@@ -116,14 +116,11 @@
   <div class="span8">
     <h1 class="title">Types and Programming Languages (3)</h1>
 
-    
-<h2 id="subtyping">Subtyping</h2>
+    <h2>Subtyping</h2>
 
 <p>subtyping解决的问题是多态，OO的一个基本要素。</p>
-
-<pre><code>we say that S is a subtype of T, written S &lt;: T, to mean that any term of type S can safely be used in a context where a term of type T is expected. This view of subtyping is often called the principle of safe substitution.
-</code></pre>
-
+<div class="highlight"><pre><code class="language-text" data-lang="text">we say that S is a subtype of T, written S &lt;: T, to mean that any term of type S can safely be used in a context where a term of type T is expected. This view of subtyping is often called the principle of safe substitution.
+</code></pre></div>
 <p>这章只是以record来作为例子说明，直白的所一个类型S是另外一个类型的T的子类型，意思是任何使用T的context，我们可以安全的使用S。对于record类型来说，field数量多的是field数量少的子类型，因为这样任何从T要取得的field都可以从子类型里面取到。</p>
 
 <p>对于函数类型来说，如果<code>S1-&gt;S2</code>, <code>T1-&gt;T2</code>, S1是T1的子类型，S2是T2的子类行，那么<code>S1-&gt;S2</code>是<code>T1-&gt;T2</code>的子类型。</p>
@@ -134,7 +131,7 @@
 
 <p>引入Bottom类型似乎就没什么大用处了，还增加了typecheker的复杂度。</p>
 
-<h2 id="ascription-and-casting">Ascription and Casting</h2>
+<h2>Ascription and Casting</h2>
 
 <p>类型的强制转换，分为up-cast和down-cast。up-cast对于类型检查来说要简单一些，比如类型<code>Animal -&gt; Dog</code>, <code>Animal -&gt; Cat</code>，由<code>Cat</code>到<code>Animal</code>的类型转换为up-cast。在很多语言里面是当做一种抽象方法。</p>
 
@@ -145,10 +142,8 @@
 <p>这个函数接收任何类型的参数，但是隐含一个假设，必须是一个有成员变量为数字类型的a，如果传递一个错误的参数typechecker也不报错，但运行的时候就会有错误了。所以含有down-cast的类型系统应该遵循： <code>trust, but verify</code>，编译的时候不报错，但是留着运行的时候检查。为了避免down-cast引起的复杂问题，ML等语言选择的是<code>down-cast with type tags</code>。</p>
 
 <p><code>channels</code>:</p>
-
-<pre><code>The key observation is that, from the point of view of typing, a communication channel behaves exactly like a reference cell: it can be used for both reading and writing, and, since it is difficult to determine statically which reads correspond to which writes, the only simple way to ensure type safety is to require that all the values passed along the channel must belong to the same type.
-</code></pre>
-
+<div class="highlight"><pre><code class="language-text" data-lang="text">The key observation is that, from the point of view of typing, a communication channel behaves exactly like a reference cell: it can be used for both reading and writing, and, since it is difficult to determine statically which reads correspond to which writes, the only simple way to ensure type safety is to require that all the values passed along the channel must belong to the same type.
+</code></pre></div>
 <p>subtyping的引入导致分支多的情况下类型检查麻烦，因此引入了Join和Meet的概念，实现可参考代码里面的:</p>
 
 <figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="k">rec</span> <span class="n">join</span> <span class="n">ctx</span> <span class="n">tyS</span> <span class="n">tyT</span> <span class="o">=</span>
@@ -165,7 +160,7 @@
 <span class="ow">and</span> <span class="n">meet</span> <span class="n">ctx</span> <span class="n">tyS</span> <span class="n">tyT</span> <span class="o">=</span>
   <span class="o">.......</span></code></pre></figure>
 
-<h2 id="case-study-imperative-objects">Case Study: Imperative Objects</h2>
+<h2>Case Study: Imperative Objects</h2>
 
 <p>不考虑实现效率和语法简洁的条件下，目前为止学到的语言特性已经足够来模拟实现OOP。最简单的例子就是一个counter:</p>
 
@@ -250,6 +245,10 @@
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -303,10 +302,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>
