@@ -116,8 +116,7 @@
   <div class="span8">
     <h1 class="title">Automatically cleanup the buffer for Eshell</h1>
 
-    
-<p>Keep writing some simple thing in English, for I will have less chance for writing English words in daily working.</p>
+    <p>Keep writing some simple thing in English, for I will have less chance for writing English words in daily working.</p>
 
 <p>I will always run eshell for shell tasks, because this is really like the normal buffer in Emacs, so all the command for Emacs will keep working for this buffer. This is convenient for some actions.</p>
 
@@ -128,14 +127,14 @@
   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&gt;</span> <span class="p">(</span><span class="nv">count-lines</span> <span class="mi">1</span> <span class="p">(</span><span class="nv">point</span><span class="p">))</span> <span class="mi">800</span><span class="p">)</span>
       <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">inhibit-read-only</span> <span class="no">t</span><span class="p">))</span>
         <span class="p">(</span><span class="nv">message</span> <span class="s">&quot;Clear the eshell now !&quot;</span><span class="p">)</span>
-	<span class="p">(</span><span class="nv">erase-buffer</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">erase-buffer</span><span class="p">)))</span>
   <span class="p">(</span><span class="nv">eshell-send-input</span><span class="p">))</span>
 
 <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;eshell-mode-hook</span>
-	  <span class="p">(</span><span class="k">lambda</span> <span class="p">()</span>
-	  <span class="p">(</span><span class="nv">local-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;return&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;clear-and-send-input</span><span class="p">)))</span></code></pre></figure>
+      <span class="p">(</span><span class="k">lambda</span> <span class="p">()</span>
+      <span class="p">(</span><span class="nv">local-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;return&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;clear-and-send-input</span><span class="p">)))</span></code></pre></figure>
 
-<p>clear-and-send-input is a wrapper for eshell-send-input, I set the maximal number of eshell buffer to 800, and I bind this function to <return>, so every time if the buffer size is too big, this wrapper will automatically clean up the buffer.</return></p>
+<p>clear-and-send-input is a wrapper for eshell-send-input, I set the maximal number of eshell buffer to 800, and I bind this function to <return>, so every time if the buffer size is too big, this wrapper will automatically clean up the buffer.</p>
 
 <p>And yesterday I found this article <a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide">Mastering Emacs in one year guide</a>is really thought-provoking, Hope this may help you.</p>
 
@@ -205,6 +204,10 @@
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -258,10 +261,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

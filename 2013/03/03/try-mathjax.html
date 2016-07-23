@@ -116,36 +116,32 @@
   <div class="span8">
     <h1 class="title">Jekyll使用MathJax来显示数学式</h1>
 
-    
-<p>使用Jekyll写作文章的时候有可能需要内嵌一些数学公式, <a href="http://www.mathjax.org/">MathJax</a>就是用来干这个的，试用了一下感觉非常方便。步骤如下:</p>
+    <p>使用Jekyll写作文章的时候有可能需要内嵌一些数学公式, <a href="http://www.mathjax.org/">MathJax</a>就是用来干这个的，试用了一下感觉非常方便。步骤如下:</p>
 
 <ul>
-  <li>
-    <p>修改html头部。</p>
-
-    <p>在每个页面开头加上这么一句，在Jekyll下可以通过修改default.html加上。</p>
-  </li>
+<li>修改html头部。</li>
 </ul>
+
+<p>在每个页面开头加上这么一句，在Jekyll下可以通过修改default.html加上。</p>
 
 <figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="o">&lt;</span><span class="n">script</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;text/javascript&quot;</span>
  <span class="n">src</span><span class="o">=</span><span class="s">&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;</span><span class="o">&gt;</span>
 <span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span></code></pre></figure>
 
 <ul>
-  <li>
-    <p>本地安装kramdown。</p>
-
-    <p>因为rdiscount和默认的markdown在解析带公式文件的时候都会出现<a href="http://stackoverflow.com/questions/10987992/using-mathjax-with-jekyll">一些问题</a>，所以最简单办法还是安装kramdown。
- ` $ gem install kramdown`</p>
-  </li>
-  <li>
-    <p>修改_config.yml，把markdown选项修改为:</p>
-
-    <p><code>markdown: kramdown</code></p>
-  </li>
+<li>本地安装kramdown。</li>
 </ul>
 
-<hr />
+<p>因为rdiscount和默认的markdown在解析带公式文件的时候都会出现<a href="http://stackoverflow.com/questions/10987992/using-mathjax-with-jekyll">一些问题</a>，所以最简单办法还是安装kramdown。
+ <code>$ gem install kramdown</code></p>
+
+<ul>
+<li>修改_config.yml，把markdown选项修改为:</li>
+</ul>
+
+<p><code>markdown: kramdown</code></p>
+
+<hr>
 
 <p>然后在发布的时候就可以使用<code>$$</code>来把需要显示的数学式子扩起来。像这样：</p>
 
@@ -153,26 +149,28 @@
 
 <p>发布出来就是漂亮的公式了。</p>
 
-<script type="math/tex; mode=display">a^2 + b^2 = c^2</script>
+<p>$$a^2 + b^2 = c^2$$</p>
 
-<script type="math/tex; mode=display">x^my + a^2 + b^2 = c^2</script>
+<p>$$x^my + a^2 + b^2 = c^2$$</p>
 
-<script type="math/tex; mode=display">x_\mu</script>
+<p>$$x_\mu$$</p>
 
 <p>一些更酷的例子：</p>
 
-<script type="math/tex; mode=display">J_\alpha(x) = \sum\limits_{m=0}^\infty \frac{(-1)^m}{m! \, \Gamma(m + \alpha + 1)}{\left({\frac{x}{2}}\right)}^{2 m + \alpha}</script>
+<p>$$ J_\alpha(x) = \sum\limits_{m=0}^\infty \frac{(-1)^m}{m! \, \Gamma(m + \alpha + 1)}{\left({\frac{x}{2}}\right)}^{2 m + \alpha} $$</p>
 
-<script type="math/tex; mode=display">\frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} =
+<p>$$ \frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} =
 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}}
-{1+\frac{e^{-8\pi}} {1+\ldots} } } }</script>
+{1+\frac{e^{-8\pi}} {1+\ldots} } } } $$</p>
 
-<script type="math/tex; mode=display">\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)</script>
+<p>$$ \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$$</p>
 
-<script type="math/tex; mode=display">\begin{aligned}
-\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} = \frac{4\pi}{c}\vec{\mathbf{j}} \\ \nabla \cdot \vec{\mathbf{E}} = 4 \pi \rho \\
-\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} = \vec{\mathbf{0}} \\
-\nabla \cdot \vec{\mathbf{B}} = 0 \end{aligned}</script>
+<p>$$
+\begin{aligned}
+\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} = \frac{4\pi}{c}\vec{\mathbf{j}} \ \nabla \cdot \vec{\mathbf{E}} = 4 \pi \rho \
+\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} = \vec{\mathbf{0}} \
+\nabla \cdot \vec{\mathbf{B}} = 0 \end{aligned}
+$$</p>
 
 <p>不过我可能永远用不到这么复杂的表达式 :).</p>
 
@@ -243,6 +241,10 @@
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -296,10 +298,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

@@ -116,18 +116,17 @@
   <div class="span8">
     <h1 class="title">高效的Crit-bit Tree</h1>
 
-    
-<p>最近了解到有这么一种数据结构，想拿来在工作中做一些事情，结果效果不好。原来我的理解有一些不对。在这里记录一下。</p>
+    <p>最近了解到有这么一种数据结构，想拿来在工作中做一些事情，结果效果不好。原来我的理解有一些不对。在这里记录一下。</p>
 
 <p><a href="http://cr.yp.to/critbit.html">Crit-bit tree</a>是一种特别的树结构，一般用于存放字符串。Critbit tree是一种<a href="http://en.wikipedia.org/wiki/Trie#Bitwise_tries">BitWise tries</a>，其树的深度为O(longest-length)，有点像二叉树，不过对于字符串做分支检测的时候代价很小。</p>
 
 <p>Crit-bit快速高效的支持下面的一些操作：</p>
 
 <ul>
-  <li>插入一个字符串</li>
-  <li>测试一个字符串是否在树里</li>
-  <li>删除一个字符串</li>
-  <li>查找出树中所有以某个字符串开始的所有字符串</li>
+<li>插入一个字符串</li>
+<li>测试一个字符串是否在树里</li>
+<li>删除一个字符串</li>
+<li>查找出树中所有以某个字符串开始的所有字符串</li>
 </ul>
 
 <p>和hash有点像，不过hash对于第四点没这么方便。
@@ -175,7 +174,7 @@ byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用
 
 <p>下面记录一下其中的几个技巧。</p>
 
-<h4 id="align">align指针最后一位用来做标志</h4>
+<h4>align指针最后一位用来做标志</h4>
 
 <p>树的结构需要一个标志变量来表示是否是内部节点或者是叶子节点。这个变量如何能省掉？
 看上面的void* root和void* child, 都是即可以用来指向字符串又可以指向节点，一般申请过来的指针变量都是align好的，所以最低位为0，这是可以拿来用的。因此对于内部节点我们可以在这个位上设置为1，只是要注意在通过这个指针取值的时候需要减回去。</p>
@@ -198,11 +197,11 @@ byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用
         <span class="k">const</span> <span class="kt">int</span> <span class="n">direction</span><span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="n">q</span><span class="o">-&gt;</span><span class="n">otherbits</span><span class="o">|</span><span class="n">c</span><span class="p">))</span><span class="o">&gt;&gt;</span><span class="mi">8</span><span class="p">;</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">q</span><span class="o">-&gt;</span><span class="n">child</span><span class="p">[</span><span class="n">direction</span><span class="p">];</span>
     <span class="p">}</span>
-	<span class="c1">//叶子节点</span>
+    <span class="c1">//叶子节点</span>
     <span class="k">return</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">strcmp</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">p</span><span class="p">);</span>
 <span class="p">}</span></code></pre></figure>
 
-<h4 id="bit">取最高位的非0bit</h4>
+<h4>取最高位的非0bit</h4>
 
 <p>在插入过程中计算最高位的不同位。</p>
 
@@ -216,11 +215,11 @@ byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用
 
 <p>这相当于是计算不小于它的2的整数次幂，对于32bit的代码可以看看<a href="http://blog.codingnow.com/cloud/CodeCollection">这里</a>的<code>next_pow_of_2</code>。</p>
 
-<hr />
+<hr>
 
 <p><a href="https://github.com/agl/critbit">文章和代码</a>，其中那篇文章有详细分析。</p>
 
-<p><a href="https://github.com/chenyukang/critbit-perf">我的测试代码,trie/set等</a>。</p>
+<p><a href="https://github.com/chenyukang/critbit-perf">我的测试代码,trie/set等</a>。 </p>
 
 
     <ul class="pager">
@@ -288,6 +287,10 @@ byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -341,10 +344,6 @@ byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

@@ -116,14 +116,13 @@
   <div class="span8">
     <h1 class="title">Rust coming to 1.0</h1>
 
-    
-<p>Again, one article just for writing practice. :)</p>
+    <p>Again, one article just for writing practice. :)</p>
 
-<p>Rust-lang <a href="http://blog.rust-lang.org/2015/01/09/Rust-1.0-alpha.html">release alpha 1.0 today</a>. Rust aims to be a systems level programming language to replace C and C++. I hit Rust-lang about two month ago, and found it’s a funny language. Then I read some Rust code and also wrote a hobby project with it.</p>
+<p>Rust-lang <a href="http://blog.rust-lang.org/2015/01/09/Rust-1.0-alpha.html">release alpha 1.0 today</a>. Rust aims to be a systems level programming language to replace C and C++. I hit Rust-lang about two month ago, and found it&#39;s a funny language. Then I read some Rust code and also wrote a hobby project with it.</p>
 
 <p>There are several feature attract me:</p>
 
-<h3 id="write-low-level-code-with-safety-guarantees">Write low-level code with safety guarantees</h3>
+<h3>Write low-level code with safety guarantees</h3>
 
 <p>Rust have the concept of onwership. For the resource in computation(this is usually refer to memory, file handler etc), the should be an owner. Rust try to solve the common errors caused by pointers in C/C++, such like dangling pointer, unfree pointer, double free issues. The borrow checker in compiler will keep the resource onwership move correctly with some rules. for more details please refer to <a href="http://doc.rust-lang.org/nightly/intro.html#ownership">offical guide</a>. So as a newbie, writing code in Rust code seems always fighting with compiler. We can not just write code and then fix the memory later, the compiler refuses to accept anything which maybe unsafe, but this also make me think more about the code and design.
 By the way, the error hints from compiler is very helpful, this is not like C++(specially templates got in).</p>
@@ -132,9 +131,9 @@ By the way, the error hints from compiler is very helpful, this is not like C++(
 
 <p>Recent changes of removing runtime make Rust lower level. There are even some hobby projects writting OS with Rust, refer to <a href="https://github.com/ckkashyap/unix">this</a> and <a href="https://github.com/charliesome/rustboot">this</a>.</p>
 
-<h3 id="high-level-abstraction-for-system-programming">High level abstraction for system programming</h3>
+<h3>High level abstraction for system programming</h3>
 
-<p>As a modern system programming, Rust is surprisingly expressive. I like the Ruby syntax, Rust has the same similarly mind-blowing effect. Rust carry some functional programming concepts, these make code looks just simple and elegant. Let’s have some trivial code snippet:</p>
+<p>As a modern system programming, Rust is surprisingly expressive. I like the Ruby syntax, Rust has the same similarly mind-blowing effect. Rust carry some functional programming concepts, these make code looks just simple and elegant. Let&#39;s have some trivial code snippet:</p>
 
 <figure class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="c1">// construct array with 0 3 6 ...</span>
 <span class="kd">let</span> <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.</span><span class="p">.</span><span class="mi">10</span><span class="k">u</span><span class="n">s</span><span class="p">).</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">3</span><span class="p">).</span><span class="n">collect</span><span class="o">::&lt;</span><span class="n">Vec</span><span class="o">&lt;</span><span class="n">_</span><span class="o">&gt;&gt;</span><span class="p">();</span>
@@ -153,7 +152,7 @@ By the way, the error hints from compiler is very helpful, this is not like C++(
         <span class="n">_</span> <span class="o">=&gt;</span> <span class="nb">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;Ain&#39;t special&quot;</span><span class="p">),</span>
     <span class="p">}</span></code></pre></figure>
 
-<p>Colsures, reminds me with Ruby’s block:</p>
+<p>Colsures, reminds me with Ruby&#39;s block:</p>
 
 <figure class="highlight"><pre><code class="language-rust" data-lang="rust"><span class="k">fn</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="n">captured_value</span> <span class="o">=</span> <span class="mi">7</span><span class="k">u</span><span class="p">;</span>
@@ -165,15 +164,15 @@ By the way, the error hints from compiler is very helpful, this is not like C++(
     <span class="nb">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;Closure returned: {}&quot;</span><span class="p">,</span> <span class="n">closure</span><span class="p">(</span><span class="s">&quot;a string&quot;</span><span class="p">));</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>Almost every statement is an expression, this means that the statement returns a value. Blocks are also expression. This is good thing, we may write less “return”! Mixing with pattern match ends with a better sugar.</p>
+<p>Almost every statement is an expression, this means that the statement returns a value. Blocks are also expression. This is good thing, we may write less &quot;return&quot;! Mixing with pattern match ends with a better sugar.</p>
 
-<p>Of course, nice syntax doesn’t really mean real expresiveness, There are more abstraction tools in Rust, like traits, macro definiation, generic types etc. I have tried some macros for testing in <a href="https://github.com/chenyukang/rust-scm/blob/master/src/eval.rs">rust-scm</a>.</p>
+<p>Of course, nice syntax doesn&#39;t really mean real expresiveness, There are more abstraction tools in Rust, like traits, macro definiation, generic types etc. I have tried some macros for testing in <a href="https://github.com/chenyukang/rust-scm/blob/master/src/eval.rs">rust-scm</a>.</p>
 
-<h2 id="high-speed">High Speed</h2>
+<h2>High Speed</h2>
 
-<p>I have found my favorite interpeter language, it’s Ruby. But in real world, we need to write some code need critical time performance. For this kind of task, Rust maybe a good choice. <a href="http://benchmarksgame.alioth.debian.org/u64q/rust.html">Benchmarks</a> show Rust is almost as fast as C++.</p>
+<p>I have found my favorite interpeter language, it&#39;s Ruby. But in real world, we need to write some code need critical time performance. For this kind of task, Rust maybe a good choice. <a href="http://benchmarksgame.alioth.debian.org/u64q/rust.html">Benchmarks</a> show Rust is almost as fast as C++.</p>
 
-<h2 id="community">Community</h2>
+<h2>Community</h2>
 
 <p>The Rust have a small, but exciting, openly community. The language have been evolving several years, most design discussion are open source. The core team <a href="https://github.com/rust-lang/rust/issues/17967">seems nice</a>.</p>
 
@@ -245,6 +244,10 @@ By the way, the error hints from compiler is very helpful, this is not like C++(
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -298,10 +301,6 @@ By the way, the error hints from compiler is very helpful, this is not like C++(
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

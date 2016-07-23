@@ -116,10 +116,9 @@
   <div class="span8">
     <h1 class="title">惰性求值和流</h1>
 
-    
-<p><img src="/images/lazy-eval.png" alt="lazy-eval" class="img-center" /></p>
+    <p><img src="/images/lazy-eval.png" alt="lazy-eval" class="img-center" /></p>
 
-<h2 id="section">什么是惰性求值</h2>
+<h2>什么是惰性求值</h2>
 
 <p>惰性在函数式编程语言中很常见，他的通俗解释就是一个变量或者表达式，不到必要的时候不会被eval。比如函数在传递参数的时候，参数的值可以不确定。</p>
 
@@ -135,7 +134,7 @@
 <span class="o">-</span> <span class="o">:</span> <span class="kt">float</span> <span class="o">=</span> <span class="mi">4</span><span class="o">.</span>
 <span class="o">#</span> <span class="nn">Lazy</span><span class="p">.</span><span class="n">force</span> <span class="n">v</span><span class="o">;;</span> <span class="o">-</span> <span class="o">:</span> <span class="kt">float</span> <span class="o">=</span> <span class="mi">4</span><span class="o">.</span></code></pre></figure>
 
-<p>关键字lazy表示延迟计算这个表达式， Lazy.force表示求值。可以看到第一次force的时候会打印出performing…信息，后面的force就直接返回了value。</p>
+<p>关键字lazy表示延迟计算这个表达式， Lazy.force表示求值。可以看到第一次force的时候会打印出performing...信息，后面的force就直接返回了value。</p>
 
 <p>为了更好的理解这个概念，我们可以实现一把Lazy。首先定义一个lazy_state:</p>
 
@@ -147,7 +146,7 @@
 
 <span class="o">#</span> <span class="k">let</span> <span class="n">create_lazy</span> <span class="n">f</span> <span class="o">=</span> <span class="n">ref</span> <span class="o">(</span><span class="nc">Delayed</span> <span class="n">f</span><span class="o">);;</span></code></pre></figure>
 
-<p>这个lazy_state有三种状态，第一种就是dealyed，’a表示任何类型的value。Value表示被eval过了，并且保存下来他的值。Exn表示错误或者异常的状态。那么create_lazy就表示创建一个lazy_expression,这里的参数f可以是任何类型的函数(函数的参数类型和返回类型都可以不确定)，ref是OCaml里面的类似指针的概念。</p>
+<p>这个lazy_state有三种状态，第一种就是dealyed，&#39;a表示任何类型的value。Value表示被eval过了，并且保存下来他的值。Exn表示错误或者异常的状态。那么create_lazy就表示创建一个lazy_expression,这里的参数f可以是任何类型的函数(函数的参数类型和返回类型都可以不确定)，ref是OCaml里面的类似指针的概念。</p>
 
 <p>上面例子就可以这样来写了:</p>
 
@@ -170,7 +169,8 @@
 
 <p>这里的!v就是取这个引用里面的值(类比C语言里面的*pointer)。然后pattern match这个lazy_state，注释里面写了每一行的操作。这里的代码很简短，最核心的意思是我们能把一个函数或者代码块保存下来，在真正需要的时候去运行这个代码块。在函数式编程里面这很常见，函数和变量一样可以自由传递。虽然看起来好不起眼，不过这会给编程带来一些深刻的影响。</p>
 
-<h2 id="memoization">Memoization</h2>
+<h2>Memoization</h2>
+
 <p>通过上面对laziness的解释，我们可以发现这个概念的核心思想类似算法设计里面的memoization，这样在计算过程中把重复计算的过程省略掉。比如这段代码有些好玩:</p>
 
 <figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">memoize</span> <span class="n">f</span> <span class="o">=</span>
@@ -190,7 +190,7 @@
 <p>在递归情况下如何处理可以看看这，这是我看过的排版最好的技术类博客<a href="http://typeocaml.com">Type OCaml</a>:
 <a href="http://typeocaml.com/2015/01/25/memoize-rec-untying-the-recursive-knot/">Recursive Memoize &amp; Untying the Recursive Knot</a></p>
 
-<h2 id="stream">Stream</h2>
+<h2>Stream</h2>
 
 <p>有了lazy的概念之后，我们可以在编程里面表示一些看起来很数学的概念，比如一个表示所有整数的流:</p>
 
@@ -237,7 +237,7 @@
 
 <p>所有素数就可以这么来写了，有了这个流之后要取多少就取多少。</p>
 
-<h2 id="section-1">其他</h2>
+<h2>其他</h2>
 
 <p>Haskell是纯函数式纯Lazy的实现，OCaml有imperative的部分，而且运行时不是Lazy的。相对来说我更喜欢OCaml的语法以及设计原则，FP有其好处，但imperative programming也有其益处。Lazy有其好处，但还是在用户明确需要的时候能提供就好。</p>
 
@@ -311,6 +311,10 @@
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -364,10 +368,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

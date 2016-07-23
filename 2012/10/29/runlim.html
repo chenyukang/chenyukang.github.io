@@ -116,8 +116,7 @@
   <div class="span8">
     <h1 class="title">调优的小工具RunLim</h1>
 
-    
-<p>在公司有同事用这个小程序<a href="http://fmv.jku.at/runlim/">RunLim</a>来调试程序的内存问题。刚开始以为是我们上海的一个同事写的，就弄来看了看。后来发现是公司一个早期同事<a href="http://fmv.jku.at/biere/index.html">Armin Biere</a>写的，还开源了，debian的源里有这个东西。我在公司维护的一部分代码是这个人写的，据说厉害的程序员，他现在在学术圈里。</p>
+    <p>在公司有同事用这个小程序<a href="http://fmv.jku.at/runlim/">RunLim</a>来调试程序的内存问题。刚开始以为是我们上海的一个同事写的，就弄来看了看。后来发现是公司一个早期同事<a href="http://fmv.jku.at/biere/index.html">Armin Biere</a>写的，还开源了，debian的源里有这个东西。我在公司维护的一部分代码是这个人写的，据说厉害的程序员，他现在在学术圈里。</p>
 
 <p>用这个小程序来测试程序跑的时间和内存，用法很简单:</p>
 
@@ -126,22 +125,22 @@
 
 比如：
 kang@ubuntu:~/download/runlim-1.7$ ./runlim sleep  1
-[runlim] version:		1.7
-[runlim] time limit:		311040000 seconds
-[runlim] real time limit:	311040000 seconds
-[runlim] space limit:		4294966090 MB
-[runlim] argv[0]:		sleep
-[runlim] argv[1]:		1
-[runlim] start:			Tue Oct 30 00:02:52 2012
-[runlim] main pid:		22546
-[runlim] end:			Tue Oct 30 00:02:53 2012
-[runlim] status:		ok
-[runlim] result:		0
-[runlim] children:		0
-[runlim] real:			1.63 seconds
-[runlim] time:			0.00 seconds
-[runlim] space:			0.5 MB
-[runlim] samples:		10
+[runlim] version:       1.7
+[runlim] time limit:        311040000 seconds
+[runlim] real time limit:   311040000 seconds
+[runlim] space limit:       4294966090 MB
+[runlim] argv[0]:       sleep
+[runlim] argv[1]:       1
+[runlim] start:         Tue Oct 30 00:02:52 2012
+[runlim] main pid:      22546
+[runlim] end:           Tue Oct 30 00:02:53 2012
+[runlim] status:        ok
+[runlim] result:        0
+[runlim] children:      0
+[runlim] real:          1.63 seconds
+[runlim] time:          0.00 seconds
+[runlim] space:         0.5 MB
+[runlim] samples:       10
 
 </pre>
 
@@ -157,7 +156,7 @@ get_physical_mb ()
     unsigned long long mem;
     mem = (unsigned long long)sysconf(_SC_PAGE_SIZE)*
         (unsigned long long)sysconf(_SC_PHYS_PAGES);
-    return mem &gt;&gt;= 20;
+    return mem >>= 20;
 }
 </pre>
 
@@ -166,7 +165,6 @@ get_physical_mb ()
 <p>这个小工具还是查询/proc下的进程统计信息的，根据fork出来的子进程pid，递归地查询统计信息。</p>
 
 <p>时间的统计可能会稍显粗略，如果需要更精确的时间统计该如何实现。</p>
-
 
 
     <ul class="pager">
@@ -234,6 +232,10 @@ get_physical_mb ()
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -287,10 +289,6 @@ get_physical_mb ()
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

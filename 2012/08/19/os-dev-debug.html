@@ -116,83 +116,69 @@
   <div class="span8">
     <h1 class="title">OS dev的Bochs调试</h1>
 
-    
-<p>最近在弄一个自己的hobby OS，作为菜鸟在调试时候积累一些经验，记录一下。</p>
+    <p>最近在弄一个自己的hobby OS，作为菜鸟在调试时候积累一些经验，记录一下。</p>
 
-<h2 id="bochs">Bochs调试</h2>
+<h2>Bochs调试</h2>
 
 <p>Bochs自带调试功能，但是如果你是apt装上的是不行的，下源码来自己编译，编译选项为：</p>
-
-<pre><code>./configure --enable-debugger --enable-disasm
-</code></pre>
-
+<div class="highlight"><pre><code class="language-text" data-lang="text">./configure --enable-debugger --enable-disasm
+</code></pre></div>
 <p>这个我只是尝试过，在OS的loader阶段可能会用到，当如果进入C语言实现部分的代码如何调试?我希望看到C的源码级别调试，而不是汇编的。</p>
 
-<h2 id="bochs--gdb">Bochs + gdb调试</h2>
+<h2>Bochs + gdb调试</h2>
 
-<p>同样需要在编译的时候加上选项，这个选项必须注意，否则在gdb调试的时候会出现”Cannot find bounds of current function”之类的问题。</p>
-
-<pre><code>./configure --enable-debugger --enable-disasm --enable-gdb-stub
-</code></pre>
-
-<p>诡异的是这个–enable-gdb-stub选项和上面的 –enable-debugger选项只能二选一。也行，编译出来后重命名吧。编译完成后在Bochs的配置文件.bashrc中加上这么一行:</p>
-
-<pre><code>gdbstub: enabled=1, port=1234, text_base=0, data_base=0, bss_base=0
-</code></pre>
-
+<p>同样需要在编译的时候加上选项，这个选项必须注意，否则在gdb调试的时候会出现&quot;Cannot find bounds of current function&quot;之类的问题。</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">./configure --enable-debugger --enable-disasm --enable-gdb-stub
+</code></pre></div>
+<p>诡异的是这个--enable-gdb-stub选项和上面的 --enable-debugger选项只能二选一。也行，编译出来后重命名吧。编译完成后在Bochs的配置文件.bashrc中加上这么一行:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">gdbstub: enabled=1, port=1234, text_base=0, data_base=0, bss_base=0
+</code></pre></div>
 <p>另外注意kernel的代码也需要加入-g编译选项。最后在编译完成后的文件是带调试信息的，但是我们在用Bochs启动的img文件不需要这些，现在比如kernel.elf是带编译信息的kernel
 文件，用下面的这个步骤去掉调试信息，据说也可以用strip来。</p>
-
-<pre><code>cmd="objcopy -R .pdr -R .comment -R .note -S -O binary kernel.elf kernel.bin"
+<div class="highlight"><pre><code class="language-text" data-lang="text">cmd=&quot;objcopy -R .pdr -R .comment -R .note -S -O binary kernel.elf kernel.bin&quot;
 
 cat boot.bin setup.bin kernel.bin &gt; ../a.img;
 Bochs 使用的是这个a.img文件， gdb载入的是kernel.elf文件。
-</code></pre>
-
+</code></pre></div>
 <p>启动Bochs后会等待gdb连进来(其实Qemu也可以这样进行调试的)，查资料过程中发现还可在调试的目录加上.gdbinit，这样每次启动gdb就不那么麻烦了：</p>
-
-<pre><code>file ./objs/kernel.elf
+<div class="highlight"><pre><code class="language-text" data-lang="text">file ./objs/kernel.elf
 target remote localhost:1234
 set disassembly-flavor intel
 b kmain
-</code></pre>
-
-<h2 id="tips">一些有用tips</h2>
+</code></pre></div>
+<h2>一些有用tips</h2>
 
 <p>OS的代码中经常会有内联汇编，有的时候一条内联过去就崩溃了，所以在gdb里需要查看反汇编语句和registers。下面这些gdb指令比较有用：</p>
-
-<pre><code>(gdb) info line main.c:26  (查看main.c:26行在目标文件中的位置，为0x1cbc) 
-Line 26 of "./kernel/main.c" starts at address 0x1cbc &lt;kmain&gt; and ends at 0x1cc2 &lt;kmain+6&gt;.
+<div class="highlight"><pre><code class="language-text" data-lang="text">(gdb) info line main.c:26  (查看main.c:26行在目标文件中的位置，为0x1cbc) 
+Line 26 of &quot;./kernel/main.c&quot; starts at address 0x1cbc &lt;kmain&gt; and ends at 0x1cc2 &lt;kmain+6&gt;.
 
 (gdb) info line *0x1cbc  (上面的反操作)
-Line 26 of "./kernel/main.c" starts at address 0x1cbc &lt;kmain&gt; and ends at 0x1cc2 &lt;kmain+6&gt;.
+Line 26 of &quot;./kernel/main.c&quot; starts at address 0x1cbc &lt;kmain&gt; and ends at 0x1cc2 &lt;kmain+6&gt;.
 
 
 (反汇编kmain函数，箭头指向的是当前运行的汇编代码)
 (gdb) disas kmain  
 Dump of assembler code for function kmain:
-=&gt; 0x00001cbc &lt;+0&gt;:	push   ebp
-   0x00001cbd &lt;+1&gt;:	mov    ebp,esp
-   0x00001cbf &lt;+3&gt;:	sub    esp,0x28
-   0x00001cc2 &lt;+6&gt;:	mov    eax,DWORD PTR [ebp+0x8]
-   0x00001cc5 &lt;+9&gt;:	mov    ds:0x5ccc,eax
-   0x00001cca &lt;+14&gt;:	call   0x2a29 &lt;init_video&gt;
-   0x00001ccf &lt;+19&gt;:	mov    DWORD PTR [esp+0x4],0xb
-   0x00001cd7 &lt;+27&gt;:	mov    DWORD PTR [esp],0x4777
-   0x00001cde &lt;+34&gt;:	call   0x2a40 &lt;puts_color_str&gt;
-   0x00001ce3 &lt;+39&gt;:	mov    DWORD PTR [esp+0x4],0xa
-   0x00001ceb &lt;+47&gt;:	mov    DWORD PTR [esp],0x478d
-   0x00001cf2 &lt;+54&gt;:	call   0x2a40 &lt;puts_color_str&gt;
-   0x00001cf7 &lt;+59&gt;:	cli    
-   0x00001cf8 &lt;+60&gt;:	call   0x3876 &lt;time_init&gt;
-   0x00001cfd &lt;+65&gt;:	call   0xc13 &lt;gdt_init&gt;
-</code></pre>
-
-<p>要正确的看到反汇编最好设置好gdb里面的汇编指令集，对于Nasm设置”set disassembly-flavor intel”,在.gdbinit里面弄好就行。</p>
+=&gt; 0x00001cbc &lt;+0&gt;: push   ebp
+   0x00001cbd &lt;+1&gt;: mov    ebp,esp
+   0x00001cbf &lt;+3&gt;: sub    esp,0x28
+   0x00001cc2 &lt;+6&gt;: mov    eax,DWORD PTR [ebp+0x8]
+   0x00001cc5 &lt;+9&gt;: mov    ds:0x5ccc,eax
+   0x00001cca &lt;+14&gt;:    call   0x2a29 &lt;init_video&gt;
+   0x00001ccf &lt;+19&gt;:    mov    DWORD PTR [esp+0x4],0xb
+   0x00001cd7 &lt;+27&gt;:    mov    DWORD PTR [esp],0x4777
+   0x00001cde &lt;+34&gt;:    call   0x2a40 &lt;puts_color_str&gt;
+   0x00001ce3 &lt;+39&gt;:    mov    DWORD PTR [esp+0x4],0xa
+   0x00001ceb &lt;+47&gt;:    mov    DWORD PTR [esp],0x478d
+   0x00001cf2 &lt;+54&gt;:    call   0x2a40 &lt;puts_color_str&gt;
+   0x00001cf7 &lt;+59&gt;:    cli    
+   0x00001cf8 &lt;+60&gt;:    call   0x3876 &lt;time_init&gt;
+   0x00001cfd &lt;+65&gt;:    call   0xc13 &lt;gdt_init&gt;
+</code></pre></div>
+<p>要正确的看到反汇编最好设置好gdb里面的汇编指令集，对于Nasm设置&quot;set disassembly-flavor intel&quot;,在.gdbinit里面弄好就行。</p>
 
 <p>最后info registers查看cpu寄存器内容，info registers %eax只查看eax内容，而
 info all-registers会把cpu的所有寄存器内容显示出来，不过cr0,cr3这些貌似没有 :(。看看这里<a href="http://www.delorie.com/gnu/docs/gdb/gdb_50.html" title="GDB参考">GDB参考</a>。</p>
-
 
 
     <ul class="pager">
@@ -262,6 +248,10 @@ info all-registers会把cpu的所有寄存器内容显示出来，不过cr0,cr3�
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -315,10 +305,6 @@ info all-registers会把cpu的所有寄存器内容显示出来，不过cr0,cr3�
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

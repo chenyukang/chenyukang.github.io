@@ -116,16 +116,17 @@
   <div class="span8">
     <h1 class="title">lcc阅读记录</h1>
 
-    
-<p>之前看EOPL感觉收获挺大，最近又花业余时间看了看编译相关的东西，这是我看lcc的时候顺手记下的一些自己的理解。这本书<a href="http://book.douban.com/subject/1610344/">《A Retargetable C Compiler》</a>还挺大头的。lcc代码量不是特别大，更复杂的是tinyCC，tinyCC甚至可以直接运行C代码。</p>
+    <p>之前看EOPL感觉收获挺大，最近又花业余时间看了看编译相关的东西，这是我看lcc的时候顺手记下的一些自己的理解。这本书<a href="http://book.douban.com/subject/1610344/">《A Retargetable C Compiler》</a>还挺大头的。lcc代码量不是特别大，更复杂的是tinyCC，tinyCC甚至可以直接运行C代码。</p>
 
-<h2 id="allocc">alloc.c</h2>
+<h2>alloc.c</h2>
+
 <p>为了尽量的少调用系统调用，在alloc基础上封装了一下。</p>
 
-<h2 id="symc">sym.c</h2>
+<h2>sym.c</h2>
+
 <p>用来存储symbol，注意scope的表示方法。</p>
 
-<h2 id="inputc">input.c</h2>
+<h2>input.c</h2>
 
 <p>为了减少读取文件的开销，用一个buffer来缓存源文件内容。cp表示当前读取出来的字符位置，limit表示缓存的结尾字符位置，如果fillbuf一次以后仍然<code>cp == limit</code>则表示读取文件到EOF了。</p>
 
@@ -135,7 +136,7 @@
 
 <p>比较复杂的部分是处理resynch，input处理的内容是经过C语言预处理器的，这部分没有包含在这个编译器内。</p>
 
-<h2 id="lexc">lex.c</h2>
+<h2>lex.c</h2>
 
 <p>一个完全是手写的C语言Parser，虽然只是兼容C99，但手写还是比较复杂的。<code>码农约架比写Parser是个体现实力的比赛。</code></p>
 
@@ -149,13 +150,16 @@
 
 <p>Lexical analyzer基本理论是自动状态机，没一个token可以根据相应的正则表达式来表示。有一些工具可以用来自动生成这些繁琐的代码，比如LEX，更新一些的有Flex和re2c。</p>
 
-<h2 id="errorc">error.c</h2>
+<h2>error.c</h2>
+
 <p>终于来到Parser部分了，lcc使用的是recursive-descent，很多商业的编译器都是用的这种直观的算法，事实上对于大部分语言都足够了。recursive-descent是自上而下的递归的，依据当前的token匹配语法结构。一个重要的问题是如何在处理的过程中给出适当的错误信息。error.c里面的函数test和expect用来测试下一个token是否是预期的,expect可以打印出错误信息。</p>
 
-<h2 id="treec">tree.c</h2>
+<h2>tree.c</h2>
+
 <p>最重要的数据结构struct tree，AST中的基本节点，包含子节点，和operator类型(比如AND，OR，NOT等）。在构建AST的时候root函数经常被用到。</p>
 
-<h2 id="exprc-enodec">expr.c enode.c</h2>
+<h2>expr.c enode.c</h2>
+
 <p>parser的一部分，用来识别表达式。代码好复杂，和paresr有些类似，整个过程是构建AST。编译器的前端最重要的事情就是这了，后面的操作都是在这个基础上做的。为什么Scheme/Lisp的front部分比较简单，因为这货代码就和AST有些类似了，括号把一个一个的节点组合了起来。初看起来很难看，其实习惯了还好。</p>
 
 <p>上面说的是语法的识别，在构建AST的过程中另外一个事情就是语意的分析。包括类型检查，类型的转换，操作符优先级等，这些也在构建AST的时候顺便做了。比如在遇到expr1 ? expr2 : expr3的时候，expr1的值最后被cast成一个bool。指针之间的隐式转换也比较复杂。function call比较复杂，这里还做了函数参数的写法是否是老的风格，类型说明放在函数头的最后。assignments和binary operator的分析相对来说简单一些，需要做各种cast。</p>
@@ -173,7 +177,8 @@
 
 <p><code>fact(-5) will never return</code>。</p>
 
-<h2 id="stmtc">stmt.c</h2>
+<h2>stmt.c</h2>
+
 <p>codelist为双向列表，遇到新的执行块就加到这个列表上。在处理control-flow的过程中有的死代码块是可以被编译器发现的，只是我们平时都被忽略了。</p>
 
 <p>比如C代码:</p>
@@ -191,15 +196,18 @@
 
 <p>loop永远不会返回，Gcc选项<code>-Wsuggest-attribute=noreturn</code>可以报出一个warning。</p>
 
-<h2 id="declc">decl.c</h2>
+<h2>decl.c</h2>
+
 <p>声明是C语言中最难解析的部分，原因是声明涉及到变量和类型，而从C声明中弄出类型信息还是挺复杂的。另外声明还分局部，全局，其中还涉及到函数参数，结构体等。decl.c可能是最复杂的文件了，1100多行代码，里面的函数之间又相互调用。finalize()函数最后检查是否有重复定义的变量。</p>
 
-<h2 id="dagc">dag.c</h2>
+<h2>dag.c</h2>
+
 <p>lcc的intermediate code是用listnodes把前面parser的tree转换为DAG，最终整个程序会经过转换变成由多个DAG组合成的森林。listnodes还负责把一些公共的sub-expression简化。</p>
 
 <p>接口为gencode,emitcode。后面每一个代码生成的后端都是一个Interface结构，在function函数里面调用这两个函数生成汇编代码，其中还包含一个Xinterface成员，这是平台相关的接口。</p>
 
-<h2 id="section">小结</h2>
+<h2>小结</h2>
+
 <p>到现在我只是大概看了了前端和中间层，后面lcc跨平台的指令生成还没来得及研究，这本书的电子版不是很清晰，还是买个中文版来再稍微看看。总的来说，lcc是的Parsing和语义分析是同时进行的，就是所谓的one-pass方法。现在很多编译器所用的方法是先建立AST，后面可能要多次遍历整个AST进行分析，LLVM好像就是采用的这种方案。另外代码的优化是一个trade-off，作为教学用途的lcc没有过多做代码优化，这样lcc代码还是可以花不多的时间来一个大概的学习。</p>
 
 
@@ -268,6 +276,10 @@
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
         </li>
         
@@ -321,10 +333,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/06/28/scheme-go.html" title="A mini Scheme interpreter written in Go" rel="bookmark">A mini Scheme interpreter written in Go</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/06/22/go-dev.html" title="最近在用Go" rel="bookmark">最近在用Go</a>
         </li>
         
       </ul>

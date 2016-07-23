@@ -11,11 +11,11 @@
        <meta charset="UTF-8"/>
        <meta name="viewport" content="width=device-width,initial-scale=0.52">
        
-       <title>一些包管理命令 | Yukang's Page</title>
+       <title>Add syntax check for Capistrano | Yukang's Page</title>
        
 
        
-       <meta name="description" content="some useful apt usage">
+       <meta name="description" content="">
        
        <meta name="author" content="Yukang">
 
@@ -114,53 +114,48 @@
 
 <div class="row post">
   <div class="span8">
-    <h1 class="title">一些包管理命令</h1>
+    <h1 class="title">Add syntax check for Capistrano</h1>
 
-    <p>包管理器是Linux上一个经常用的东西，我觉得下面这几个命令是非常有用的，便于查询包的状态，或者搜索我该安装哪些包。</p>
+    <p>In an normal release, Rails app&#39;s unit testing will avoid most errors. But for the urgent code publishing, we have got several time of typo error. Code syntax error may cause server crash for a little while(Passenger web server and we using <code>./tmp/restart.txt</code> to restart). We use Capistrano to publish code, so I plan to add a syntax checking before publishing code.
+The method is writing a task to bundle exec rails runner, this will report most ruby syntax error(except the undef variables in some functions, runner will load .rb files). </p>
 
-<h2>apt-cache</h2>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">namespace</span> <span class="ss">:app</span> <span class="k">do</span>
+  <span class="n">desc</span> <span class="s2">&quot;check all the ruby code&quot;</span>
+  <span class="n">task</span> <span class="ss">:check</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="sb">`RAILS_ENV=</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="si">}</span><span class="sb">  bundle exec rails runner &quot;&quot; 2&gt;&amp;1`</span>
+    <span class="k">raise</span> <span class="n">res</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre></figure>
 
-<p>用来根据名字查询软件包，比如apt-cache search vim查询vim相关的。</p>
+<p>then add this in the deploy.rb (Capistrano 3.1):</p>
 
-<h2>apt-file</h2>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span>
 
-<p>用来根据某个文件查询软件包，这在编译程序的时候非常有用，可以通过所需要的头文件去查询要安装的东西，可以避免去Google了。注意使用之前需要安装并update。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-get install apt-file
-sudo apt-file update
-</code></pre></div>
-<p>比如我在编译某个软件的时候找不到<readline/readline.h>，使用下面的命令来查询一下：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">sudo apt-file readline.h
-</code></pre></div>
-<p>结果中有这么一行，那么我就知道继续安装libreadline5-dev库就行了。</p>
+  <span class="n">task</span> <span class="ss">:run_code_check</span> <span class="k">do</span>
+    <span class="n">on</span> <span class="n">roles</span><span class="p">(</span><span class="ss">:all</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">within</span> <span class="n">release_path</span> <span class="k">do</span>
+        <span class="n">with</span> <span class="ss">rails_env</span><span class="p">:</span> <span class="n">fetch</span><span class="p">(</span><span class="ss">:rails_env</span><span class="p">)</span> <span class="k">do</span>
+          <span class="n">execute</span> <span class="ss">:rake</span><span class="p">,</span> <span class="s1">&#39;app:check&#39;</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
 
-<h2>dpkg</h2>
+  <span class="n">before</span> <span class="s2">&quot;deploy:updated&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy:run_code_check&quot;</span>
+<span class="k">end</span></code></pre></figure>
 
-<p>apt是基于dpkg开发的，dpkg是更古老更底层的一套工具，Debian系统管理器的基础。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">dpkg -l 列出所有已经安装的包
-dpkg -s vim 列出包vim的状态
-dpkg -L vim 列出本地所有vim相关联系的文件
-dpkg -S vim 搜索所属包的内容
-</code></pre></div>
-<h2>brew</h2>
+<p>This is not a tricky part, but please pay attention to the line:</p>
 
-<p>Mac下推荐Brew来替代apt，大部分的开源包都有对应的地址源了。我没使用过MacPorts，无法比较这两套的差别。
-不过我个人很喜欢的一点是brew所有安装的东西都在<code>brew -prefix</code>/Cellar这个统一目录下，</p>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">res</span> <span class="o">=</span> <span class="sb">`RAILS_ENV=</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="si">}</span><span class="sb">  bundle exec rails runner &quot;&quot; 2&gt;&amp;1`</span></code></pre></figure>
 
-<p>brew相关的命令：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">brew list   — 列出已安装的软件
-brew update — 更新Homebrew
-brew home   — 用浏览器打开
-brew info   — 显示软件内容信息
-brew deps   - 显示包依赖
-</code></pre></div>
+<p>This line of code cost me some time, I forget the <code>2&gt;&amp;1</code>. so <code>res</code> will just got the stdout, not the stderr output, which causes the exception is not raised, and Capistrano flow is not stopped.</p>
+
 
     <ul class="pager">
       
-      <li class="next"><a href="/2013/04/11/xor_link_list.html" title="巧妙的XOR Link List">巧妙的XOR Link List&rarr;</a></li>
+      <li class="next"><a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ">刷刷算法和 OJ&rarr;</a></li>
       
 
-      
-      <li class="previous"><a href="/2013/05/09/git-command.html" title="迁移到Git">&larr; 迁移到Git</a></li>
       
     </ul>
 
@@ -191,7 +186,7 @@ brew deps   - 显示包依赖
 
   <div class="span4 sidebar">
     
-    <h4 class="date">日期：<span>17 April 2013</span></h4>
+    <h4 class="date">日期：<span>22 July 2016</span></h4>
     
 
     
@@ -203,7 +198,7 @@ brew deps   - 显示包依赖
 
   
      
-    	<li><a href="/tags.html#工具-ref">工具 <span>1</span></a></li>
+    	<li><a href="/tags.html#Rails-ref">Rails <span>2</span></a></li>
     
   
 
