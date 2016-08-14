@@ -11,9 +11,11 @@
        <meta charset="UTF-8"/>
        <meta name="viewport" content="width=device-width,initial-scale=0.52">
        
-       <title>从豆瓣FM下载喜欢的音乐 | Yukang's Page</title>
+       <title>菊与刀 | Yukang's Page</title>
        
 
+       
+       <meta name="description" content="">
        
        <meta name="author" content="Yukang">
 
@@ -112,41 +114,38 @@
 
 <div class="row post">
   <div class="span8">
-    <h1 class="title">从豆瓣FM下载喜欢的音乐</h1>
+    <h1 class="title">菊与刀</h1>
 
-    <p>
-我是豆瓣FM的忠实用户，用这个东西已经有一年多了吧，累计收听了不少歌曲(316首喜欢的,45首不再播放的,7352首播放过)。通过这个东西发现不少符合自己口味的音乐。这316首是我喜欢的类型，所以想把这个列表弄下来，然后把这些歌曲下载到电脑上。
-</p>
+    <p>前些天在家偶然翻到一部日本电影《黄昏的清兵卫》，看完后觉得非常符合个人口味。顺着同类型的电影又看了《隐剑鬼爪》。两部电影都是由山田洋次导演，主要故事都是围绕德川幕府末期的武士展开。剧情其实有些类似，一个武士，一个柔弱女主，甚至是同一个仆从，在“义务”和“义理”的冲突下来一场厮杀。武士爱着女主，却因为种种“理”而不能靠近。突出武士阶层的隐忍和不可避免的没落。   </p>
 
-<p>
-看了一下豆瓣是有自己开放的API的，不过还是够麻烦的。于是折腾了一个Python程序，输入你的豆瓣用户名和密码，模拟登录豆瓣并记录cookie，自动地到FM的页面去取下这个音乐列表。这个程序在处理HTML文件的时候有点笨拙，正则表达式不够强嗄。需要另一个库python-beautifulsoup。
-</p>
+<p>看完电影后，又顺着看了多人推荐的《菊与刀》。二战后美国急需了解日本，特别是日本人民的习俗和心理特征，因为日本在西方人看来太过特别，他们在战争中所体现的凶残程度也是前所未有的。《菊与刀》正是在这样的历史背景下由本尼迪克所写。据说作者本人并没有去过日本，而是通过书籍和调研来完成。这本书也许有的方面写得有所夸张。</p>
 
-<p>
-通过歌曲名，自动下载这个应该是已经有人做了的，于是发现这个getsong.py，是通过Baidu音乐自动下载的，使用了一下速度和成功率都不错，于是在这个上面做了一些修改，直接从上面的程序
-生成的列表中取歌曲名字，下载下来。如果网速可以一般能在500k左右的下载速度，挺不错的。这个程序有可能会抛出一些异常，我没做仔细的检查，如果一首歌下载不下来就pass掉。
-</p>
+<p>看完这本书后，对上面两部电影有了更深些的理解。日本崇尚秩序，上级对下级的命令是无法抗拒的。这也解释了为什么二战时日本士兵凶暴残忍得像禽兽一般，而当天皇下诏投降书后，日本人绝大部分立马放弃抵抗，站在街头服服贴贴迎接盟军。在《隐剑鬼爪》中，藩府上级要求片桐出卖朋友交出叛党名单，片桐出于“义”而拒绝。但藩府换成“命令”的时候，他还是会去执行。“义务”和“义理”发生冲突的题材是很多日本故事和电影的基础。剧中人为履行义务忍受了一切，无论不幸、遗弃、疾病还是死亡，都未能使他们偏离。他们认为。所谓强者恰恰在于敢于抛弃个人幸福而去履行义务。他们认为，“性格的坚强不是表现为反抗，而是表现为顺从”，“真正的尊严在于各安其分，不卑不亢，自王子以至农夫，皆可以此自许”。</p>
 
-<p>
-上面的程序都放在GitHub上了，Git/GitHub可个是真好东西。
-需要的朋友们从这个地址弄下代码:<a href="https://github.com/chenyukang/fmmusic">https://github.com/chenyukang/fmmusic</a>
-</p>
+<p>总的来说，日本呈现出了复杂的矛盾：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">  日本人好斗而又温和；黩武而又爱美；自尊自傲而又彬彬有礼；
+  顽固而又善变；驯服而又不愿  受人摆布；忠心而又易于叛变；
+  勇敢而又怯懦；保守而又欢迎革新。
+  他们十分介意别人对自己行为的看法，但当别人对其劣迹毫无所知时，又怡然自得。
+</code></pre></div>
+<p>关于个人欲望：日本人并不谴责满足私欲。他们不是清教徒。他们认为享乐是件好事，是值得培养的。他们追求享乐，尊重享乐，但享乐必须恰如其分，不能妨碍人生重大事务。</p>
 
+<p>日本是比较讲究专注精神修炼，在他们看来，培养“一心”和“无我”对任何事业都是有好处的。</p>
 
-使用方法：
-<pre class="example">1 修改fm_get_music.py，在里面填入自己的豆瓣用户名和密码。
-2 运行这个程序，会在当前目录生成一个歌曲列表：songlist.txt。
-3 运行getsong.py程序， python getsong.py -x，就是通过songlist.txt逐个通过百度搜索自动下载，存在当前目录。
-</pre>
+<p>这本书算是我看过的翻译书籍里面很流畅的一本，甚至基本看不出来是翻译的。这和《自私的基因》比起来好多了，后者的这个<a href="https://book.douban.com/subject/11445548/">版本</a>基本没法看。</p>
+
+<p>两部电影中，相对来说我更喜欢《隐剑鬼爪》。</p>
+
+<p>－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－</p>
+
+<p>最后，两部电影的女主角都挺好，<a href="https://movie.douban.com/celebrity/1121531/">宫泽理惠</a>和<a href="https://movie.douban.com/photos/photo/691073830">松隆子</a>。</p>
 
 
     <ul class="pager">
       
-      <li class="next"><a href="/2011/05/23/hexiethings.html" title="有些该知道的">有些该知道的&rarr;</a></li>
+      <li class="next"><a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano">Add syntax check for Capistrano&rarr;</a></li>
       
 
-      
-      <li class="previous"><a href="/2011/06/14/advanced-linux-porg-notes.html" title="《Advanced linux progamming》笔记">&larr; 《Advanced linux progamming》笔记</a></li>
       
     </ul>
 
@@ -177,31 +176,9 @@
 
   <div class="span4 sidebar">
     
-    <h4 class="date">日期：<span>07 June 2011</span></h4>
+    <h4 class="date">日期：<span>09 August 2016</span></h4>
     
 
-    
-    <h4>标签</h4>
-    <ul class="tag_box">
-      
-      
-
-
-  
-     
-    	<li><a href="/tags.html#mp3-ref">mp3 <span>1</span></a></li>
-     
-    	<li><a href="/tags.html#Programming-ref">Programming <span>48</span></a></li>
-     
-    	<li><a href="/tags.html#Python-ref">Python <span>5</span></a></li>
-     
-    	<li><a href="/tags.html#豆瓣-ref">豆瓣 <span>1</span></a></li>
-    
-  
-
-
-
-    </ul>
     
 
     <div class="violet-aside-post">
