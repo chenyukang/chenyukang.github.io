@@ -158,7 +158,7 @@ static int first_onebit(int x)
 所以就是一条指令完成了这个计算过程。</p>
 
 <p>这里真的会有多大的差别么，我们可以用程序来计算一下，测试如下:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">int main()
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>int main()
 {
     int x;
     for(x=0; x&lt;=1000000000; x++){
@@ -173,10 +173,10 @@ static int first_onebit(int x)
 
 <p>bitmap是一种常用的数据结构，在编程珠玑有详细介绍，应用也比较广泛比如可以用来做操作系统当中的<a href="http://wiki.osdev.org/Page_Frame_Allocation">地址索引查询</a>。
 对于bitmap中我们常常需要一个操作来找一个空位的bit来做set操作。既然我们知道了第一个1是如何快速查找的，第一0也就好办了，先取反，然后再找第一个1就行了。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">#define first_zerobit(x) (first_onebit(~(x)))
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>#define first_zerobit(x) (first_onebit(~(x)))
 </code></pre></div>
 <p>继续bitmap的first_empty就优化成这样了:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">u32 first_empty()
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>u32 first_empty()
 {
     u32 idx;
     for(idx=0; idx&lt;max_idx; idx++){
@@ -258,6 +258,10 @@ static int first_onebit(int x)
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
         </li>
         
@@ -311,10 +315,6 @@ static int first_onebit(int x)
         
         <li class="v-aside-li">
           <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
         </li>
         
       </ul>

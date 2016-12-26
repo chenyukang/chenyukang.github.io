@@ -132,7 +132,7 @@
 <p><a href="https://github.com/openresty/lua-resty-limit-traffic">代码和文档</a>。这个库分为limit_conn 和 limit_req模块，limit_req限制某个 ip 或者 server 的访问频率，limit_conn 限制连接数。lua-resty-limit-traffic 的原理是使用 Nginx 的 shared_dict，建立一个 hashtable，根据目前连接数或者访问请求记录相关信息。对于每一个Nginx请求都有<a href="https://moonbingbing.gitbooks.io/openresty-best-practices/content/ngx_lua/phase.html">一系列执行阶段</a>，每个阶段可以增加 hook，access_by_lua是处理前调用的hook, log_by_lua 是处理完成后调用的 hook。进入的时候通过 ip 作为 key 找到share_dict 里面的连接数，增加1。处理完之后找到连接数， 减去1。 通俗的理解就是顾客进入试衣间前持一个牌子，出来后归还牌子。当前的正在使用的牌子数目可以配置，以达到限流目的。</p>
 
 <p>依据系统状态动态改变限流的配置，可以考虑两种方案：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">a. limit_conn 和 limit_delay 存放在 Redis内，在 access_by_lua_block 的部分去取出当前限制，这个方案的弊端在于对每个 request 多了一次 redis 请求。
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>a. limit_conn 和 limit_delay 存放在 Redis内，在 access_by_lua_block 的部分去取出当前限制，这个方案的弊端在于对每个 request 多了一次 redis 请求。
 b. limit_conn存放在 Nginx 的 shared_dict内，通过 Nginx 的配置增加一个 location，专门用来请求来修改其值，任何一个 Nginx worker 修改成功后，其他 worker 都可见。
 </code></pre></div>
 <h2>3. 使用nginx-upsync-module</h2>
@@ -151,6 +151,8 @@ b. limit_conn存放在 Nginx 的 shared_dict内，通过 Nginx 的配置增加�
       <li class="next"><a href="/2016/08/09/dao-yu-ju.html" title="菊与刀">菊与刀&rarr;</a></li>
       
 
+      
+      <li class="previous"><a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》">&larr; 读《饥饿的盛世》</a></li>
       
     </ul>
 
@@ -189,6 +191,10 @@ b. limit_conn存放在 Nginx 的 shared_dict内，通过 Nginx 的配置增加�
     <div class="violet-aside-post">
       <h4 class="v-section-tit">最近</h4>
       <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+        </li>
         
         <li class="v-aside-li">
           <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
@@ -244,10 +250,6 @@ b. limit_conn存放在 Nginx 的 shared_dict内，通过 Nginx 的配置增加�
         
         <li class="v-aside-li">
           <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
         </li>
         
       </ul>

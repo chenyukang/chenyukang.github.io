@@ -126,7 +126,7 @@
 
 <p>其实对于C/C++和很多其他程序的编译都是一个道理，就是把一些源代码文件编译成目标文件，或者有的目标文件再编译到一个库里，然后再链接起来。所以Ninja的配置文件分为两个部分，rule和文件依赖关系。看个简单的例子:</p>
 
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh">    <span class="nv">cc</span><span class="o">=</span>gcc
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>    <span class="nv">cc</span><span class="o">=</span>gcc
     <span class="nv">cflags</span><span class="o">=</span> -g -c
     
     rule cc
@@ -151,8 +151,8 @@
 
 <p>使用Ninja的一个问题就是需要生成这个build.ninja文件，对于大型项目来说这样一条一条地写配置文件是不可能的。幸好我们可以使用Cmake来生成这个配置文件，Cmake对应的是automake这样的东西。在<a href="http://www.kitware.com/news/home/browse/CMake?2012_11_07&amp;CMake+2.8.10+Just+Released">Cmake的最新版本</a>中已经支持参数Camke -G Ninja，Cmake会根据用户给定的CMakeLists.txt来生成build.ninja文件。而CmakeLists文件相对来说要简单一些，只要写清楚编译的可执行文件的名字，和其依赖的包含main函数的源文件。把我的<a href="https://github.com/chenyukang/Maze">迷宫小项目</a>来举个例子,在项目文件夹下写配置文件CMakeLists.txt:</p>
 
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh">    
-cmake_minimum_required<span class="o">(</span>VERSION 2.8<span class="o">)</span>
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>    
+cmake_minimum_required<span class="o">(</span>VERSION <span class="m">2</span>.8<span class="o">)</span>
 project <span class="o">(</span>Maze<span class="o">)</span>
 
 add_library<span class="o">(</span>maze A_star.cpp Algorithm.cpp DFS_L.cpp DFS_R.cpp DisjSets.cpp Maze.cpp<span class="o">)</span>
@@ -232,6 +232,10 @@ target_link_libraries<span class="o">(</span>Maze.exe maze<span class="o">)</spa
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
         </li>
         
@@ -285,10 +289,6 @@ target_link_libraries<span class="o">(</span>Maze.exe maze<span class="o">)</spa
         
         <li class="v-aside-li">
           <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
         </li>
         
       </ul>

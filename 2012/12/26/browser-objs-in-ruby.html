@@ -118,7 +118,7 @@
 
     <p>Ruby里一切都是对象，如何能看到Ruby内建的对象模型呢。这里有个小程序来查看Ruby内部构建好的的对象和类。ObjectSpace可以迭代所有对象。</p>
 
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby">    <span class="n">set</span> <span class="o">=</span> <span class="no">Set</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span>    <span class="n">set</span> <span class="o">=</span> <span class="no">Set</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
     <span class="no">ObjectSpace</span><span class="o">.</span><span class="n">each_object</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span>
       <span class="n">set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">class</span><span class="p">)</span>
     <span class="k">end</span>
@@ -130,12 +130,12 @@
 
 <p>下面这段就能根据对象，取得class对象，建立起类的继承图。</p>
 
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby">  <span class="c1"># Creates or updates a klass_tree.</span>
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span>  <span class="c1"># Creates or updates a klass_tree.</span>
   <span class="c1"># When updating no classes or objects are removed</span>
   <span class="k">def</span> <span class="nf">object_browser</span><span class="p">(</span><span class="n">classtree</span> <span class="o">=</span> <span class="no">ClassTreeNode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kernel</span><span class="p">))</span>
     <span class="no">ObjectSpace</span><span class="o">.</span><span class="n">each_object</span> <span class="k">do</span> <span class="o">|</span> <span class="n">x</span> <span class="o">|</span>
       <span class="n">classnode</span> <span class="o">=</span> <span class="n">classtree</span>
-      <span class="n">x</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">ancestors</span><span class="o">.</span><span class="n">reverse</span><span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="p">\</span>
+      <span class="n">x</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">ancestors</span><span class="o">.</span><span class="n">reverse</span><span class="o">[</span><span class="mi">1</span><span class="o">..-</span><span class="mi">1</span><span class="o">]</span> <span class="p">\</span>
         <span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">classtree</span><span class="p">){</span> <span class="o">|</span> <span class="n">classnode</span><span class="p">,</span> <span class="n">klass</span> <span class="o">|</span>
         <span class="n">classnode</span><span class="o">.</span><span class="n">add_class</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span>
       <span class="p">}</span><span class="o">.</span><span class="n">add_object</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -217,6 +217,10 @@
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
         </li>
         
@@ -270,10 +274,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
         </li>
         
       </ul>

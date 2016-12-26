@@ -129,7 +129,7 @@
 
 <p>另外如Borland随机数生成器Random的实现:</p>
 
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">long</span> <span class="kt">long</span> <span class="n">RandSeed</span> <span class="o">=</span> <span class="err">####</span> <span class="p">;</span>
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="kt">long</span> <span class="kt">long</span> <span class="n">RandSeed</span> <span class="o">=</span> <span class="err">####</span> <span class="p">;</span>
 <span class="kt">unsigned</span> <span class="kt">long</span> <span class="nf">Random</span><span class="p">(</span><span class="kt">long</span> <span class="n">max</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">long</span> <span class="kt">long</span> <span class="n">x</span> <span class="p">;</span>
@@ -168,14 +168,14 @@
 <p><img src="/images/dicker.jpg" alt="dicker" class="img-center" /></p>
 
 <p>写一个对的洗牌程序看起来很容易，其实不然。Robert Sedgewick说过：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">&quot;That&#39;s a pretty tough thing to have happen if you&#39;re implementing online poker.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>&quot;That&#39;s a pretty tough thing to have happen if you&#39;re implementing online poker.
  You might want to make sure that if you&#39;re advertising that you&#39;re doing a random
  shuffle that you go ahead and do so.&quot;
   —Robert Sedgewick, Professor of Computer Science, Princeton
 </code></pre></div>
 <p>比如ASF Software在多年前写的一个流行的网上扑克游戏，其中的洗牌程序是这段Pascal代码：</p>
 
-<figure class="highlight"><pre><code class="language-pascal" data-lang="pascal"><span class="k">procedure</span> <span class="nc">TDeck</span><span class="o">.</span><span class="nf">Shuffle</span><span class="o">;</span>
+<figure class="highlight"><pre><code class="language-pascal" data-lang="pascal"><span></span><span class="k">procedure</span> <span class="nc">TDeck</span><span class="o">.</span><span class="nf">Shuffle</span><span class="o">;</span>
 <span class="k">var</span>
    <span class="n">ctr</span><span class="o">:</span> <span class="kt">Byte</span><span class="o">;</span>
    <span class="n">tmp</span><span class="o">:</span> <span class="kt">Byte</span><span class="o">;</span>
@@ -199,7 +199,7 @@
 
 <p>可以分析一下这里的好几处问题，这里的洗牌算法也有问题，52!个排列出现的概率不一样。拿三张牌来作为例子就明白了。</p>
 
-<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="n">is</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">N</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="n">is</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">N</span><span class="p">)</span>
     <span class="n">Swap</span> <span class="n">i</span> <span class="n">with</span> <span class="n">random</span> <span class="n">position</span> <span class="n">between</span> <span class="mi">1</span> <span class="n">and</span> <span class="n">N</span></code></pre></figure>
 
 <p><img src="/images/poker.gif" alt="dicker" class="img-center" />
@@ -207,7 +207,7 @@
 
 <p>正确的洗牌程序算法是：</p>
 
-<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="n">is</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">N</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="n">is</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">N</span><span class="p">)</span>
     <span class="n">Swap</span> <span class="n">i</span> <span class="n">with</span> <span class="n">random</span> <span class="n">position</span> <span class="n">between</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="n">and</span> <span class="n">N</span></code></pre></figure>
 
 <p>一个32位的数作为seed，对于伪随机长生器是有问题的，因为如果给定seed伪随机产生器的行为是可以预测的。
@@ -292,6 +292,10 @@
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
         </li>
         
@@ -345,10 +349,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
         </li>
         
       </ul>
