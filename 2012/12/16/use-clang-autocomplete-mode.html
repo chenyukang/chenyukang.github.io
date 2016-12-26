@@ -117,14 +117,14 @@
     <h1 class="title">Clang is Making Emacs Smarter</h1>
 
     <p>在Emacs下自动补全总是个问题，对于同一个buffer内的基于symbol补全auto-complete-mode做得非常好了，但是因为没有进行代码的分析，所以像结构体的成员变量或者类的成员函数的补全是不可能的。当然你可能试过这个号称最智能的<a href="http://cx4a.org/software/gccsense/">GCCSence</a>,但是我觉得这个东西够复杂的，在使用之前还需要用户手动运行一个命令来用Gcc处理一遍，它还会把一些东西放在sqlite数据库里面。这大概是因为Gcc不编译做静态分析工具造成的，在<a href="http://lwn.net/Articles/493599/">这里</a>、<a href="http://lwn.net/Articles/493627/">这里</a>、<a href="http://lwn.net/Articles/493630/">这里</a>有讨论，Google的一个静态分析的项目从Gcc迁移到LLVM，重点是这:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">The gcc version has been difficult to support and maintain, due mainly to the fact that the GIMPLE intermediate language was never designed for static analysis. The abstract syntax tree provided by Clang is an easier data structure to work with for front-end analyses of this kind.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>The gcc version has been difficult to support and maintain, due mainly to the fact that the GIMPLE intermediate language was never designed for static analysis. The abstract syntax tree provided by Clang is an easier data structure to work with for front-end analyses of this kind.
 </code></pre></div>
 <p>这个thread挺好玩的，后面变成了一大群人争论functional programming和Imperative Programming。这篇<a href="http://fpcomplete.com/the-downfall-of-imperative-programming/">The Downfall of Imperative Programming</a>再好好看看。</p>
 
 <p>回到正题，我最近切换到Mac下。因为在Mac OS X下编译器变成了Clang， Clang是基于LLVM的。LLVM对于分析代码是有比较方便的支持，所以基于LLVM有各种分析源程序的工具了，Xcode下的一些辅助开发的工具还是很舒服的。前些天突然想到那么会不会有个东西来作为Emacs的自动补全的后端，一搜果然有了这个<a href="https://github.com/mikeandmore/auto-complete-clang">auto-complete-clang</a>，使用了一下非常的方便。其实看看其代码是在后面调用Clang的，比如在main.cc源文件里面写一些代码:</p>
 
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp">    <span class="cp">#include &lt;string&gt;</span>
-    <span class="cp">#include &lt;vector&gt;</span>
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span>    <span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+    <span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
     <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
     
     <span class="k">class</span> <span class="nc">Demo</span><span class="p">{</span>
@@ -143,20 +143,20 @@
 
 <p>结果还是非常精准的，不想截图了。后端运行的命令其实是:</p>
 
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh">    cmd: clang -cc1 main.cc -fsyntax-only -code-completion-at main.cc:18:10</code></pre></figure>
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>    cmd: clang -cc1 main.cc -fsyntax-only -code-completion-at main.cc:18:10</code></pre></figure>
 
 <p>所得到的结果是:</p>
 
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh">    COMPLETION: Demo : Demo::
-    COMPLETION: <span class="nv">operator</span><span class="o">=</span> : <span class="o">[</span><span class="c">#Demo &amp;#]operator=(&lt;#const Demo &amp;#&gt;)</span>
-    COMPLETION: print : <span class="o">[</span><span class="c">#void#]print()</span>
-    COMPLETION: <span class="nb">test</span> : <span class="o">[</span><span class="c">#void#]test()</span>
-    COMPLETION: value : <span class="o">[</span><span class="c">#int#]value</span>
-    COMPLETION: ~Demo : <span class="o">[</span><span class="c">#void#]~Demo()</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>    COMPLETION: Demo : Demo::
+    COMPLETION: <span class="nv">operator</span><span class="o">=</span> : <span class="o">[</span><span class="c1">#Demo &amp;#]operator=(&lt;#const Demo &amp;#&gt;)</span>
+    COMPLETION: print : <span class="o">[</span><span class="c1">#void#]print()</span>
+    COMPLETION: <span class="nb">test</span> : <span class="o">[</span><span class="c1">#void#]test()</span>
+    COMPLETION: value : <span class="o">[</span><span class="c1">#int#]value</span>
+    COMPLETION: ~Demo : <span class="o">[</span><span class="c1">#void#]~Demo()</span></code></pre></figure>
 
 <p>auto-complete-clang做的事情就是把这个结果再展示出来，其实这条命令也做了语法检查的，所以加上一个语法检查的功能应该也是可以的。一搜果然还是有了，看这个<a href="http://duncan.mac-vicar.com/2011/08/30/realtime-syntax-checking-with-emacs/">Realtime syntax checking with emacs</a>，需要翻墙，不过代码在<a href="https://github.com/dmacvicar/duncan-emacs-setup/tree/master/site-lisp">Github上</a>。其实其后端运行的命令是：</p>
 
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh">   cmd: clang  -fsyntax-only -fno-exceptions main.cc</code></pre></figure>
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>   cmd: clang  -fsyntax-only -fno-exceptions main.cc</code></pre></figure>
 
 <p>最近用这个插件，基本代码都会是一遍编译通过啊，哈哈。Clang错误提示也人性化一点，比如在Xcode下会提示你想的是不是&quot;XXX&quot;之类的。</p>
 
@@ -228,6 +228,10 @@
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
         </li>
         
@@ -281,10 +285,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
         </li>
         
       </ul>

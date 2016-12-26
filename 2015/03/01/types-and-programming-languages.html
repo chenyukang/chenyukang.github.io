@@ -132,7 +132,7 @@
 <h2>An ML Implementation of the Lambda-Calculus</h2>
 
 <p>shifting和substitution的实现挺难看懂的，本质上是把context里面的变量用index来替换，处理变量查找的一种实现而已。eval部分是非常地简洁，我觉得ML系的语法看起来比Scheme都舒服紧凑。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Just because you’ve implemented something doesn’t mean you understand it.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>Just because you’ve implemented something doesn’t mean you understand it.
                                                     —Brian Cantwell Smith
 </code></pre></div>
 <p>说起来全是泪，用这种函数式的编程语言来解释自己确实比较简单，但现实往往不是这样。语言能比较容易地实现自己至少可以表明语言的内核挺小，一个语言能实现bootstrap是成熟的一个表现。Rust的实现最初是用Ocaml写的，然后编译出一个Rust的编译器，然后用上一版本的Rust再重新实现Rust编译器。</p>
@@ -140,7 +140,7 @@
 <h2>Typed Arithmetic Expressions</h2>
 
 <p>tyarith是最简单的带类型的解释器，有bool和Nat类型。</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Progress: A well-typed term is not stuck (either it is a value or it can take a step according to the evaluation rules).
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>Progress: A well-typed term is not stuck (either it is a value or it can take a step according to the evaluation rules).
 Preservation: If a well-typed term takes a step of evaluation, then the resulting term is also well typed
 </code></pre></div>
 <p>These properties together tell us that a well-typed term can never reach a stuck state during evaluation.</p>
@@ -148,7 +148,7 @@ Preservation: If a well-typed term takes a step of evaluation, then the resultin
 <p>Safety = Progress + Preservation</p>
 
 <h2>Simply Typed Lambda-Calculus</h2>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> In general, languages in which type annotations in terms are used to help guide the typechecker are called explicitly typed. Languages in which we ask the typechecker to infer or reconstruct this information are called implicitly typed.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span> In general, languages in which type annotations in terms are used to help guide the typechecker are called explicitly typed. Languages in which we ask the typechecker to infer or reconstruct this information are called implicitly typed.
 
  Well-typed programs cannot “go wrong.” —Robin Milner (1978)
 </code></pre></div>
@@ -156,7 +156,7 @@ Preservation: If a well-typed term takes a step of evaluation, then the resultin
 
 <p>simplebool是一个只有bool类型的解释器，但是加上了函数。typeof挺简单，主要是函数这里注意处理形参和实参:</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml">  <span class="o">|</span> <span class="nc">TmAbs</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">x</span><span class="o">,</span><span class="n">tyT1</span><span class="o">,</span><span class="n">t2</span><span class="o">)</span> <span class="o">-&gt;</span>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span>  <span class="o">|</span> <span class="nc">TmAbs</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">x</span><span class="o">,</span><span class="n">tyT1</span><span class="o">,</span><span class="n">t2</span><span class="o">)</span> <span class="o">-&gt;</span>
       <span class="k">let</span> <span class="n">ctx&#39;</span> <span class="o">=</span> <span class="n">addbinding</span> <span class="n">ctx</span> <span class="n">x</span> <span class="o">(</span><span class="nc">VarBind</span><span class="o">(</span><span class="n">tyT1</span><span class="o">))</span> <span class="k">in</span>
       <span class="k">let</span> <span class="n">tyT2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">ctx&#39;</span> <span class="n">t2</span> <span class="k">in</span>
       <span class="nc">TyArr</span><span class="o">(</span><span class="n">tyT1</span><span class="o">,</span> <span class="n">tyT2</span><span class="o">)</span>
@@ -171,7 +171,7 @@ Preservation: If a well-typed term takes a step of evaluation, then the resultin
 
 <p>if的判断部分必须为bool，而且两个分支必须为同一类型:</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml">  <span class="o">|</span> <span class="nc">TmIf</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">t1</span><span class="o">,</span><span class="n">t2</span><span class="o">,</span><span class="n">t3</span><span class="o">)</span> <span class="o">-&gt;</span>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span>  <span class="o">|</span> <span class="nc">TmIf</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">t1</span><span class="o">,</span><span class="n">t2</span><span class="o">,</span><span class="n">t3</span><span class="o">)</span> <span class="o">-&gt;</span>
      <span class="k">if</span> <span class="o">(=)</span> <span class="o">(</span><span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t1</span><span class="o">)</span> <span class="nc">TyBool</span> <span class="k">then</span>
        <span class="k">let</span> <span class="n">tyT2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t2</span> <span class="k">in</span>
        <span class="k">if</span> <span class="o">(=)</span> <span class="n">tyT2</span> <span class="o">(</span><span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t3</span><span class="o">)</span> <span class="k">then</span> <span class="n">tyT2</span>
@@ -199,7 +199,7 @@ Preservation: If a well-typed term takes a step of evaluation, then the resultin
 <p>因为加上了好多种类型，fullsimple这个解释器复杂多了。</p>
 
 <h4>Type Dynamic</h4>
-<div class="highlight"><pre><code class="language-text" data-lang="text"> Even in statically typed languages, there is often the need to deal with data whose type cannot be determined at compile time. This occurs in particular when the lifetime of the data spans multiple machines or many runs of the compiler—when, for example, the data is stored in an external file system or database, or communicated across a network. To handle such situations safely, many languages offer facilities for inspecting the types of values at run time.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span> Even in statically typed languages, there is often the need to deal with data whose type cannot be determined at compile time. This occurs in particular when the lifetime of the data spans multiple machines or many runs of the compiler—when, for example, the data is stored in an external file system or database, or communicated across a network. To handle such situations safely, many languages offer facilities for inspecting the types of values at run time.
 </code></pre></div>
 <h4>General Recursion</h4>
 
@@ -273,6 +273,10 @@ Preservation: If a well-typed term takes a step of evaluation, then the resultin
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
         </li>
         
@@ -326,10 +330,6 @@ Preservation: If a well-typed term takes a step of evaluation, then the resultin
         
         <li class="v-aside-li">
           <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
         </li>
         
       </ul>

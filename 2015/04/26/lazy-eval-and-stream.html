@@ -125,7 +125,7 @@
 <p>这种方式叫做call-by-name, 首先很明显这可能会造成一部分performance差异，如果一个表达式没有用到，那么计算出其结果是毫无意义的。而惰性求值是memoized的call-by-name, 叫做call-by-need。
 从技术实现上来说，一个表达式在计算其结果之前其状态是Deferred或者Delayed的，在计算之后将其结果存储下来并修改状态为Value，之后再取就没有必要重新去计算。用一些OCaml代码来说明：</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="o">#</span> <span class="k">let</span> <span class="n">v</span> <span class="o">=</span> <span class="k">lazy</span> <span class="o">(</span><span class="n">print_string</span> <span class="s2">&quot;performing lazy computation</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">;</span> <span class="n">sqrt</span> <span class="mi">16</span><span class="o">.);;</span>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">v</span> <span class="o">=</span> <span class="k">lazy</span> <span class="o">(</span><span class="n">print_string</span> <span class="s2">&quot;performing lazy computation</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">;</span> <span class="n">sqrt</span> <span class="mi">16</span><span class="o">.);;</span>
 <span class="k">val</span> <span class="n">v</span> <span class="o">:</span> <span class="kt">float</span> <span class="n">lazy_t</span> <span class="o">=</span> <span class="o">&lt;</span><span class="k">lazy</span><span class="o">&gt;</span>
 
 <span class="o">#</span> <span class="nn">Lazy</span><span class="p">.</span><span class="n">force</span> <span class="n">v</span><span class="o">;;</span>
@@ -138,7 +138,7 @@
 
 <p>为了更好的理解这个概念，我们可以实现一把Lazy。首先定义一个lazy_state:</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="o">#</span> <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">lazy_state</span> <span class="o">=</span>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="o">#</span> <span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">lazy_state</span> <span class="o">=</span>
 <span class="o">|</span> <span class="nc">Delayed</span> <span class="k">of</span> <span class="o">(</span><span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span><span class="o">)</span>
 <span class="o">|</span> <span class="nc">Value</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span>
 <span class="o">|</span> <span class="nc">Exn</span> <span class="k">of</span> <span class="n">exn</span>
@@ -150,11 +150,11 @@
 
 <p>上面例子就可以这样来写了:</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="o">#</span> <span class="k">let</span> <span class="n">v</span> <span class="o">=</span> <span class="n">create_lazy</span> <span class="o">(</span><span class="n">print_string</span> <span class="s2">&quot;performing lazy computation</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">;</span> <span class="n">sqrt</span> <span class="mi">16</span><span class="o">.);;</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">v</span> <span class="o">=</span> <span class="n">create_lazy</span> <span class="o">(</span><span class="n">print_string</span> <span class="s2">&quot;performing lazy computation</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">;</span> <span class="n">sqrt</span> <span class="mi">16</span><span class="o">.);;</span></code></pre></figure>
 
 <p>然后实现核心的force:</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="o">#</span> <span class="k">let</span> <span class="n">force</span> <span class="n">v</span> <span class="o">=</span> <span class="k">match</span> <span class="o">!</span><span class="n">v</span> <span class="k">with</span>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="o">#</span> <span class="k">let</span> <span class="n">force</span> <span class="n">v</span> <span class="o">=</span> <span class="k">match</span> <span class="o">!</span><span class="n">v</span> <span class="k">with</span>
     <span class="o">|</span> <span class="nc">Value</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">x</span>        <span class="c">(* 如果已经求值就直接返回value *)</span>
     <span class="o">|</span> <span class="nc">Exn</span> <span class="n">e</span> <span class="o">-&gt;</span> <span class="k">raise</span> <span class="n">e</span>    <span class="c">(* 如果发生错误，raise错误*)</span>
     <span class="o">|</span> <span class="nc">Delayed</span> <span class="n">f</span> <span class="o">-&gt;</span>
@@ -173,7 +173,7 @@
 
 <p>通过上面对laziness的解释，我们可以发现这个概念的核心思想类似算法设计里面的memoization，这样在计算过程中把重复计算的过程省略掉。比如这段代码有些好玩:</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="n">memoize</span> <span class="n">f</span> <span class="o">=</span>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="k">let</span> <span class="n">memoize</span> <span class="n">f</span> <span class="o">=</span>
     <span class="k">let</span> <span class="n">table</span> <span class="o">=</span> <span class="nn">Hashtbl</span><span class="p">.</span><span class="nn">Poly</span><span class="p">.</span><span class="n">create</span> <span class="bp">()</span>
     <span class="k">in</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span>
       <span class="k">match</span> <span class="nn">Hashtbl</span><span class="p">.</span><span class="n">find</span> <span class="n">table</span> <span class="n">x</span> <span class="k">with</span>
@@ -194,7 +194,7 @@
 
 <p>有了lazy的概念之后，我们可以在编程里面表示一些看起来很数学的概念，比如一个表示所有整数的流:</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stream_t</span> <span class="o">=</span> <span class="nc">Nil</span> <span class="o">|</span> <span class="nc">Cons</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="o">(</span><span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stream_t</span><span class="o">)</span>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="k">type</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stream_t</span> <span class="o">=</span> <span class="nc">Nil</span> <span class="o">|</span> <span class="nc">Cons</span> <span class="k">of</span> <span class="k">&#39;</span><span class="n">a</span> <span class="o">*</span> <span class="o">(</span><span class="kt">unit</span> <span class="o">-&gt;</span> <span class="k">&#39;</span><span class="n">a</span> <span class="n">stream_t</span><span class="o">)</span>
 
 <span class="k">let</span> <span class="k">rec</span> <span class="n">from</span> <span class="n">i</span> <span class="o">=</span> <span class="nc">Cons</span> <span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="k">fun</span><span class="bp">()</span> <span class="o">-&gt;</span> <span class="n">from</span> <span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">))</span>
 
@@ -214,7 +214,7 @@
 <p>Cons是把两个元素组成链表，递归函数from做的事情就是把i和一个匿名函数fun() -&gt; from(i+1)链起来，当然匿名函数又在做类似的事情。
 那么(from 1)就可以表示从1开始的所有整数了，hd是取一个流的头部，tl是取流的尾部(除头部剩下的)，take是从一个流里面取前n个元素。这可是非常的方便，还有更方便的：</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="k">let</span> <span class="k">rec</span> <span class="n">filter</span> <span class="n">f</span> <span class="o">=</span> <span class="k">function</span>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">filter</span> <span class="n">f</span> <span class="o">=</span> <span class="k">function</span>
     <span class="o">|</span> <span class="nc">Nil</span> <span class="o">-&gt;</span> <span class="nc">Nil</span>
     <span class="o">|</span> <span class="nc">Cons</span> <span class="o">(</span><span class="n">hd</span><span class="o">,</span> <span class="n">g</span><span class="o">)</span> <span class="o">-&gt;</span>
         <span class="k">if</span> <span class="n">f</span> <span class="n">hd</span> <span class="k">then</span> <span class="nc">Cons</span> <span class="o">(</span><span class="n">hd</span><span class="o">,</span> <span class="k">fun</span><span class="bp">()</span> <span class="o">-&gt;</span> <span class="n">filter</span> <span class="n">f</span> <span class="o">(</span><span class="n">g</span><span class="bp">()</span><span class="o">))</span>
@@ -222,7 +222,7 @@
 
 <p>我们虽然只知道有这么一个流，但还是可以加一个筛选条件给他，filter函数接收筛选函数f和一个流，返回的结果就是被筛选后的流！</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="c">(* delete multiples of p from a stream *)</span>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="c">(* delete multiples of p from a stream *)</span>
 <span class="k">let</span> <span class="n">sift</span> <span class="n">p</span> <span class="o">=</span> <span class="n">filter</span> <span class="o">(</span><span class="k">fun</span> <span class="n">n</span> <span class="o">-&gt;</span> <span class="n">n</span> <span class="ow">mod</span> <span class="n">p</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="o">)</span>
 
 <span class="c">(* sieve of Eratosthenes *)</span>
@@ -311,6 +311,10 @@
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
         </li>
         
@@ -364,10 +368,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
         </li>
         
       </ul>

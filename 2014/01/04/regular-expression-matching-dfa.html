@@ -119,7 +119,7 @@
     <p>正则表达式匹配是一个经典问题，这里有一个<a href="http://oj.leetcode.com/problems/regular-expression-matching/">问题</a>。
 实现isMatch，其中.表示任意一个字符，*表示0个或者任一个前面的字符：</p>
 
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh">isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>,<span class="s2">&quot;a&quot;</span><span class="o">)</span>       → <span class="nb">false</span>
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>,<span class="s2">&quot;a&quot;</span><span class="o">)</span>       → <span class="nb">false</span>
 isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>,<span class="s2">&quot;aa&quot;</span><span class="o">)</span>      → <span class="nb">true</span>
 isMatch<span class="o">(</span><span class="s2">&quot;aaa&quot;</span>,<span class="s2">&quot;aa&quot;</span><span class="o">)</span>     → <span class="nb">false</span>
 isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>, <span class="s2">&quot;a*&quot;</span><span class="o">)</span>     → <span class="nb">true</span>
@@ -148,7 +148,7 @@ isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span cl
 <p>对上面那个问题我尝试着实现了一个程序构建DFA来解决，提交上去完成439个测试用例只用了28ms，相对于递归版本的需要104ms。也可能LeetCode上面的测试数据太少，比较的意义不大。代码长度当然要比递归的长不少。
 定义State：</p>
 
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">enum</span> <span class="n">OpType</span> <span class="p">{</span>
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="k">enum</span> <span class="n">OpType</span> <span class="p">{</span>
     <span class="n">ZERO_PLUS_ONE</span><span class="p">,</span>
     <span class="n">ANY_ONE</span><span class="p">,</span>
     <span class="n">MUST_ONE</span>
@@ -178,7 +178,7 @@ isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span cl
 
 <p>构建DFA的过程如下，注释的部分需要注意：</p>
 
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">State</span><span class="o">*</span> <span class="nf">construct_dfa</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pattern</span><span class="p">)</span> <span class="p">{</span>
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="n">State</span><span class="o">*</span> <span class="nf">construct_dfa</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pattern</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="n">pattern</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
     <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">;</span>
     <span class="n">State</span><span class="o">*</span> <span class="n">start</span> <span class="o">=</span> <span class="k">new</span> <span class="n">State</span><span class="p">(</span><span class="n">ANY_ONE</span><span class="p">,</span> <span class="n">Num</span><span class="p">,</span> <span class="sc">&#39;.&#39;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
@@ -284,6 +284,10 @@ isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span cl
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
         </li>
         
@@ -337,10 +341,6 @@ isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span cl
         
         <li class="v-aside-li">
           <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
         </li>
         
       </ul>

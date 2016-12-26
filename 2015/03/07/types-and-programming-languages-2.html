@@ -119,11 +119,11 @@
     <h2>References</h2>
 
 <h3>Side effect</h3>
-<div class="highlight"><pre><code class="language-text" data-lang="text">In particular, besides just yielding results, evaluation of terms in these languages may assign to mutable variables (reference cells, arrays, mutable record fields, etc.), perform input and output to files, displays, or network connections, make non-local transfers of control via exceptions, jumps, or continuations, engage in inter-process synchronization and communication, and so on. In the literature on programming languages, such “side effects” of computation are more generally referred to as computational effects.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>In particular, besides just yielding results, evaluation of terms in these languages may assign to mutable variables (reference cells, arrays, mutable record fields, etc.), perform input and output to files, displays, or network connections, make non-local transfers of control via exceptions, jumps, or continuations, engage in inter-process synchronization and communication, and so on. In the literature on programming languages, such “side effects” of computation are more generally referred to as computational effects.
 </code></pre></div>
 <p>引用指向的对象可以是基本类型、组合类型，甚至是函数，把指向函数的ref放进对应的record，就变成一个简单的object，OOP的原型就出来了。</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="n">update</span> <span class="o">=</span> <span class="err">λ</span><span class="n">a</span><span class="o">:</span><span class="nn">NatArray</span><span class="p">.</span> <span class="err">λ</span><span class="n">m</span><span class="o">:</span><span class="nn">Nat</span><span class="p">.</span> <span class="err">λ</span><span class="n">v</span><span class="o">:</span><span class="nn">Nat</span><span class="p">.</span>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="n">update</span> <span class="o">=</span> <span class="err">λ</span><span class="n">a</span><span class="o">:</span><span class="nn">NatArray</span><span class="p">.</span> <span class="err">λ</span><span class="n">m</span><span class="o">:</span><span class="nn">Nat</span><span class="p">.</span> <span class="err">λ</span><span class="n">v</span><span class="o">:</span><span class="nn">Nat</span><span class="p">.</span>
      <span class="n">a</span> <span class="o">:=</span> <span class="o">(</span><span class="err">λ</span><span class="n">n</span><span class="o">:</span><span class="nn">Nat</span><span class="p">.</span> <span class="n">if</span> <span class="n">equal</span> <span class="n">m</span> <span class="n">n</span> <span class="k">then</span> <span class="n">v</span> <span class="k">else</span> <span class="o">(!</span><span class="n">a</span><span class="o">)</span> <span class="n">n</span><span class="o">);</span></code></pre></figure>
 
 <p>通过这个习题的例子可以看出ref引进的副作用。</p>
@@ -131,18 +131,18 @@
 <h2>Garbage Collection</h2>
 
 <h3>GC or not</h3>
-<div class="highlight"><pre><code class="language-text" data-lang="text">This is not just a question of taste in language design: it is extremely difficult to achieve type safety in the presence of an explicit deallocation operation.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>This is not just a question of taste in language design: it is extremely difficult to achieve type safety in the presence of an explicit deallocation operation.
 
  The reason for this is the familiar dangling reference problem: we allocate a cell holding a number, save a reference to it in some data structure, use it for a while, then deallocate it and allocate a new cell holding a boolean, possibly reusing the same storage. Now we can have two names for the same storage cell—one with type Ref Nat and the other with type Ref Bool.
 </code></pre></div>
 <h3>Pointer</h3>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Pointer arithmetic is occasionally very useful (especially for implementing low-level components of run-time systems, such as garbage collectors), it cannot be tracked by most type systems: knowing that location n in the store contains a Float doesn’t tell us anything useful about the type of location n + 4. In C, pointer arithmetic is a notorious source of type safety violations.
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>Pointer arithmetic is occasionally very useful (especially for implementing low-level components of run-time systems, such as garbage collectors), it cannot be tracked by most type systems: knowing that location n in the store contains a Float doesn’t tell us anything useful about the type of location n + 4. In C, pointer arithmetic is a notorious source of type safety violations.
 </code></pre></div>
 <p>Store typings: 引入引用后类型系统需要处理Cyclic reference structures，比如double linked list。Store typings就是一个locations到typings的映射。</p>
 
 <p>实现fullref： 引用部分的实现非常简单，</p>
 
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span class="o">|</span> <span class="nc">TmRef</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">t1</span><span class="o">)</span> <span class="o">-&gt;</span>
+<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="o">|</span> <span class="nc">TmRef</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">t1</span><span class="o">)</span> <span class="o">-&gt;</span>
     <span class="nc">TyRef</span><span class="o">(</span><span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t1</span><span class="o">)</span>
 <span class="o">|</span> <span class="nc">TmLoc</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">l</span><span class="o">)</span> <span class="o">-&gt;</span>
     <span class="n">error</span> <span class="n">fi</span> <span class="s2">&quot;locations are not supposed to occur in source programs!&quot;</span>
@@ -221,6 +221,10 @@
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
         </li>
         
@@ -274,10 +278,6 @@
         
         <li class="v-aside-li">
           <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
         </li>
         
       </ul>

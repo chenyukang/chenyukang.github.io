@@ -138,19 +138,19 @@
 <p>像写程序一样写日志，这对程序员吸引很大。
 我用这个小脚本来完成发布:</p>
 
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="c">#!/bin/sh</span>
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="ch">#!/bin/sh</span>
 do_commit<span class="o">()</span> <span class="o">{</span>
-    <span class="nv">cmd</span><span class="o">=</span><span class="s2">&quot;git commit -a -m\&quot;$log\&quot;&quot;</span>
+    <span class="nv">cmd</span><span class="o">=</span><span class="s2">&quot;git commit -a -m\&quot;</span><span class="nv">$log</span><span class="s2">\&quot;&quot;</span>
     <span class="nb">echo</span> <span class="nv">$cmd</span>
     git add .<span class="p">;</span>
-    git commit -a -m<span class="s2">&quot;$log&quot;</span>
+    git commit -a -m<span class="s2">&quot;</span><span class="nv">$log</span><span class="s2">&quot;</span>
     git push<span class="p">;</span>
 <span class="o">}</span>
 
-<span class="k">while</span> <span class="o">[</span> <span class="nv">$# </span>-gt <span class="m">0</span> <span class="o">]</span>
+<span class="k">while</span> <span class="o">[</span> <span class="nv">$#</span> -gt <span class="m">0</span> <span class="o">]</span>
 <span class="k">do</span>
   <span class="k">case</span> <span class="nv">$1</span> in
-    -commit <span class="p">|</span>-u<span class="o">)</span> <span class="nb">shift</span><span class="p">;</span> <span class="nv">log</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span> do_commit<span class="p">;</span> <span class="nb">exit </span>0<span class="p">;;</span>
+    -commit <span class="p">|</span>-u<span class="o">)</span> shift<span class="p">;</span> <span class="nv">log</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span> do_commit<span class="p">;</span> <span class="nb">exit</span> <span class="m">0</span><span class="p">;;</span>
   <span class="k">esac</span>
   <span class="nb">shift</span>
 <span class="k">done</span></code></pre></figure>
@@ -174,13 +174,13 @@ do_commit<span class="o">()</span> <span class="o">{</span>
 <li><p>安装Jekyll 在本地，可能会遇上ruby版本的问题，我的机子上是1.8.7，需要1.9.2，使用<a href="https://rvm.io//">rvm</a>来解决，具体参考<a href="http://lanvige.iteye.com/blog/857501">这里</a>。具体使用下面一些命令:</p></li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh">sudo apt-get install gems curl
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo apt-get install gems curl
 gem install rvm
 rvm get latest 
 rvm reload
-rvm install 1.9.2
-rvm use 1.9.2
-ruby -v <span class="c">#(use 1.9.2)</span>
+rvm install <span class="m">1</span>.9.2
+rvm use <span class="m">1</span>.9.2
+ruby -v <span class="c1">#(use 1.9.2)</span>
 gem install directory_watcher liquid open4 maruku classifier jekyll</code></pre></figure>
 
 <ul>
@@ -258,6 +258,10 @@ www的A记录到这个地址。这是我设置的时候出错了的地方。</p>
       <ul>
         
         <li class="v-aside-li">
+          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+        </li>
+        
+        <li class="v-aside-li">
           <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
         </li>
         
@@ -311,10 +315,6 @@ www的A记录到这个地址。这是我设置的时候出错了的地方。</p>
         
         <li class="v-aside-li">
           <a href="/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html" title="lcc阅读记录" rel="bookmark">lcc阅读记录</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2014/08/01/install-server.html" title="折腾服务器" rel="bookmark">折腾服务器</a>
         </li>
         
       </ul>
