@@ -4,13 +4,91 @@
  <title>Yukang's Page</title>
  <link href="http://cyukang.com/atom.xml" rel="self"/>
  <link href="http://cyukang.com"/>
- <updated>2016-12-27T01:01:27+08:00</updated>
+ <updated>2016-12-29T02:37:29+08:00</updated>
  <id>http://cyukang.com</id>
  <author>
    <name>Yukang</name>
    <email>moorekang@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Ruby 程序的静态分析: rubytt</title>
+   <link href="http://cyukang.com/2016/12/27/rubytt.html"/>
+   <updated>2016-12-27T00:00:00+08:00</updated>
+   <id>http://cyukang.com/2016/12/27/rubytt</id>
+   <content type="html">&lt;p&gt;&lt;a href=&quot;http://github.com/chenyukang/rubytt&quot;&gt;rubytt&lt;/a&gt;是一个 Ruby 程序的静态分析器，这个项目从16年年初一直到年底，断断续续持续了近一年。这里稍微总结一下自己的开发过程。&lt;/p&gt;
+
+&lt;h2&gt;0. 缘由&lt;/h2&gt;
+
+&lt;p&gt;14年开始，从我进入 DJI 之后开始接触 Rails 开发。Ruby 之前也接触过，不过都是写一些小脚本之类的东西。我们几乎用 Rails 写各种系统，开发的效率很快。对于经常变动的 Web 开发 rails 还是挺好的。在我经历过的一个对正确性要求很高的项目里，有一次系统出现一个致命的问题。我们6个开发人员在小黑屋里面足足找了一个下午。最后却发现不过是一个 type 错误引入的，导致后台任务一直执行错误。后来稍微多想了想，这样的类型错误应该是在开发阶段就及时发现的。 Rails 项目没有测试是不行的，所以我们后续补充了更多单元测试。另外我所使用过的静态语言几乎都能及早避免这样的错误，特别是在使用过 OCaml 这样的强类型语言后，我对类型有了更强的偏好。于是想我能不能做一个自动检测出类似 bug 的工具。据我所知&lt;a href=&quot;https://github.com/yinwang0/rubysonar&quot;&gt;王垠的rubysonar&lt;/a&gt;  可以做类型分析，于是我 checkout 出来看了看代码。Java代码不是特别复杂，也发现了两个问题并提交了 &lt;a href=&quot;https://github.com/yinwang0/rubysonar/pull/12&quot;&gt;PR&lt;/a&gt;。然后觉得这个东西还是比较好玩，干脆就自己另起一个项目来玩玩。&lt;/p&gt;
+
+&lt;h2&gt;1. rubytt 的开发&lt;/h2&gt;
+
+&lt;p&gt;首先得给这个坑起一个名字，想了想就 rubytt 吧，其实就是&amp;quot;ruby to type&amp;quot; 的意思吧。然后语言还是用了最近业余使用得比较多的 OCaml。这可能对后期其他开发参与进来不利，不过也无所谓了，业余的项目先依自己的偏好吧。&lt;/p&gt;
+
+&lt;h3&gt;parser&lt;/h3&gt;
+
+&lt;p&gt;首先面临的问题是 parser。rubysonar 的parser 也是依靠 Ruby 自己的&lt;a href=&quot;http://ruby-doc.org/stdlib-2.0.0/libdoc/ripper/rdoc/Ripper.html&quot;&gt;ripper&lt;/a&gt;。主要是 parser 太过繁琐，如果从头开始写整个坑估计是填不完了。所以我也就直接拿来了 rubysonar 的&lt;a href=&quot;https://github.com/yinwang0/rubysonar/blob/master/src/main/resources/org/yinwang/rubysonar/ruby/dump_ruby.rb&quot;&gt;dump_ruby.rb&lt;/a&gt;。 dump_ruby 把 ruby 源文件作为输入，输出一个 json 文件作为后端分析器的输入。这里我做了一些改动，rubysonar 里面是起来一个进程，把 dump_ruby 启动起来，用管道的方式一个个 parse 源程序。这样做的目的是避免 ruby 解释器频繁启动，避免整个速度会被拖慢。 我觉得还不如让dump_ruby 一次接收多个源程序，甚至可以是用 parallel 这个库来做并行。这样的结果是 parsing 的速度确实快了很多，一般大点的项目在10s 以内可以完成。这样项目的大概流程如下:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/rubytt.png&quot; alt=&quot;rubytt&quot; class=&quot;img-center&quot; style=&quot;width:520px;height:360px;&quot;/&gt;&lt;/p&gt;
+
+&lt;h3&gt;type annoation&lt;/h3&gt;
+
+&lt;p&gt;我想做自动的类型错误检查，所以需要类型分析。dump_ruby 出来的结果里面是带一些基本类型的，类型分析过程 rubysonar 里面有一个基本过程了。然后对于 Rails 项目来说，我们很多类型都可以在 db/schema.rb 里面可以分析出来，所以如果我把 schema.rb 文件也扫描分析一边，就可以为这些 model 加上不少类型。结果做出来还可以，至少目前可以分析出来很多 rubysonar 没有的类型。运行&lt;code&gt;rubytt -s source_dir -t type -o res&lt;/code&gt;把结果输出到 res 目录。这里还有不少东西未做，比如函数的分析还是很复杂，目前做了一个初步。类型错误报出可以做一些了，但是还未来得及实现。因为我突然想到另外一个有趣的东西。&lt;/p&gt;
+
+&lt;h3&gt;visualize rails project&lt;/h3&gt;
+
+&lt;p&gt;我既在 traverse 整个 AST，可以做很多好玩的事啊。比如把类之间的继承关系找出来，做一个类的继承关系图。于是就有了&lt;a href=&quot;/images/rubytt_class.png&quot;&gt;类似这样的结果(看大图)&lt;/a&gt;：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/rubytt_class.png&quot; alt=&quot;rubytt_class&quot; class=&quot;img-center&quot; style=&quot;width:320px;height:300px;&quot;/&gt;&lt;/p&gt;
+
+&lt;p&gt;既然我能解析 schema.rb，也可以把数据模型给展示出来，然后再通过 model 文件里面分析模型之间的关系(has_one, has_many 等)， 于是就有了&lt;a href=&quot;/images/rubytt_db.png&quot;&gt;这样的结果&lt;/a&gt;：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/rubytt_db.png&quot; alt=&quot;rubytt_db&quot; class=&quot;img-center&quot; style=&quot;width:320px;height:300px;&quot;/&gt;&lt;/p&gt;
+
+&lt;p&gt;不过做了一些之后我发现这两个 feature 有点鸡肋。特别是第一个，要找出 ruby 程序内部对象之间的继承关系其实很简单，比如我之前写过的&lt;a href=&quot;http://cyukang.com/2012/12/26/browser-objs-in-ruby.html&quot;&gt;一篇文章&lt;/a&gt;。第二个模型的关系图还好，不过项目稍微大一些的时候这些图看起来很复杂。&lt;/p&gt;
+
+&lt;h3&gt;variable bug finder&lt;/h3&gt;
+
+&lt;p&gt;在做完上面两个蛋疼的 feature 之后，碰巧碰到了项目里面另外一个 bug。是因为重构的时候不小心引入了一个 copy &amp;amp; paste  bug。类似代码如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;order&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;success&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;success&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;fail&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;Job&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Worker&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;order_id&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;order&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;event&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;success&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;可以看到这个 event 本来应该使用的，结果却因为重构的时候 copy 了代码忘记把&lt;code&gt;&amp;#39;event&amp;#39; =&amp;gt; &amp;#39;success&amp;#39;&lt;/code&gt;改成&lt;code&gt;&amp;#39;event&amp;#39; =&amp;gt; event&lt;/code&gt;。event这个变量是未使用的变量，对于编译型语言来说这样的问题是可以在编译的时候发出报警的。因为一个变量未使用必然意味这要么是冗余代码，要么是 bug。那我可否通过 rubytt 给出类似报警？然后我就继续写了这么一个 checker，去检查ruby 程序中各种没使用的变量。最后还真能找出项目中一些其他的类似问题，比如：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;trans&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transactions&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;blah&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;trans&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tran&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:amount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trans&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount_cent&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;&amp;lt;-------&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;bug&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`trans`&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;typo&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;tran&amp;#39;&lt;/span&gt;
+   &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;blah&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;当然还是能找到函数中未使用的参数等问题。修复的办法是如果确定这些变量是不被使用的，就在前面加&lt;code&gt;_&lt;/code&gt;，这样rubytt 这样的 lint 类检查工具就跳过。后续我也正在做未定义变量的检查。&lt;/p&gt;
+
+&lt;h2&gt;2. OCaml的程序发布&lt;/h2&gt;
+
+&lt;p&gt;在做完上面的几个 feature 之后，我觉得可以尝试着把这个项目推广一下给同事们玩玩。如果让从来没接触过 OCaml 的朋友从头开始编译安装会显得很麻烦。所以我就尝试着把 rubytt 合并到 OCaml 的包管理仓库。于是在经过几次和 travis CI 的斗争后，终于发布了&lt;a href=&quot;https://opam.ocaml.org/packages/rubytt/rubytt.0.1/&quot;&gt;rubytt.0.1&lt;/a&gt; 。&lt;/p&gt;
+
+&lt;p&gt;安装方法如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;&lt;/span&gt;gem install parallel ruby-progressbar
+sudo apt-get install --force-yes ocaml ocaml-native-compilers camlp4-extra opam
+// brew install opam   &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;MacOS&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;opam config env&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+opam install rubytt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;OCaml 的圈子比较小众，不过其实很多工具还是挺好用的，比如这个 OPAM 包管理器。&lt;/p&gt;
+
+&lt;h2&gt;3. 其他心得&lt;/h2&gt;
+
+&lt;p&gt;做这个程序这么久，除了好玩还是收获不少。&lt;/p&gt;
+
+&lt;p&gt;OOP 和 FP 哪个好？通过这个项目的实践，我好好体会了一把 FP 写稍微大些的程序的感觉。说不上哪个好，我倒认为 type 确实很重要，rubytt 的过程中自动类型推导帮我发现了好多代码错误。编程语言应该让程序员能够精确无误地表达自己，尽量地避免人为引入的错误。&lt;/p&gt;
+
+&lt;p&gt;构建测试脚手架，这也是第一份工作带给我的习惯。把每一个 feature 或者 bug 都写测试来覆盖。每次提交的时候都 review 一下测试用例的改动，这样才能不断保持质量。&lt;/p&gt;
+
+&lt;p&gt;希望来年能继续保持对这个程序的热情。&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>读《饥饿的盛世》</title>
