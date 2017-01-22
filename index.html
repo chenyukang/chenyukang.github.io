@@ -1,7 +1,8 @@
 
 <!DOCTYPE html>
 <html>
-    <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" media="screen and (min-device-width: 700px)"/>
+   <meta name="viewport" content="width=device-width, initial-scale=0.92, maximum-scale=1">
+   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" media="screen and (min-device-width: 700px)"/>
    <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
    <link rel="stylesheet" href="/assets/themes//css/style.css" media="screen"/>
    <link rel="stylesheet" href="/assets/themes//css/mobile.css" media="handheld"/>
@@ -9,7 +10,7 @@
    <header>
        <meta charset="utf-8">
        <meta charset="UTF-8"/>
-       <meta name="viewport" content="width=device-width,initial-scale=0.52">
+       
        
        <title>Yukang's Page</title>
        
@@ -129,7 +130,7 @@
 
 <p>首先面临的问题是 parser。rubysonar 的parser 也是依靠 Ruby 自己的<a href="http://ruby-doc.org/stdlib-2.0.0/libdoc/ripper/rdoc/Ripper.html">ripper</a>。主要是 parser 太过繁琐，如果从头开始写整个坑估计是填不完了。所以我也就直接拿来了 rubysonar 的<a href="https://github.com/yinwang0/rubysonar/blob/master/src/main/resources/org/yinwang/rubysonar/ruby/dump_ruby.rb">dump_ruby.rb</a>。 dump_ruby 把 ruby 源文件作为输入，输出一个 json 文件作为后端分析器的输入。这里我做了一些改动，rubysonar 里面是起来一个进程，把 dump_ruby 启动起来，用管道的方式一个个 parse 源程序。这样做的目的是避免 ruby 解释器频繁启动，避免整个速度会被拖慢。 我觉得还不如让dump_ruby 一次接收多个源程序，甚至可以是用 parallel 这个库来做并行。这样的结果是 parsing 的速度确实快了很多，一般大点的项目在10s 以内可以完成。这样项目的大概流程如下:</p>
 
-<p><img src="/images/rubytt.png" alt="rubytt" class="img-center" style="width:520px;height:360px;"/></p>
+<p><img src="/images/rubytt.png" alt="rubytt" class="img-center" style="width:320px;height:310px;"/></p>
 
 <h3>type annoation</h3>
 
