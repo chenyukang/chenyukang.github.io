@@ -153,7 +153,18 @@ memcached.c：主程序，分析设置参数默认值，分析参数根据参数
 当请求来临的时候对于每一个连接，增加一个事件来调用处理函数event_handler。每个连接的处理过程是一个状态机，drive_machine(conn* c)来处理，由even_handler来调用，状态转移这部分代码比较复杂，conn_listening —&gt; conn_new_cmd —&gt; conn_parse_cmd —&gt; conn_mwrite —&gt; conn_closing。process_command来处理各种命令。
 </p>
 
-
+    
+    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+    </button>
+    <div id="QR" style="display: none;">      
+    <div id="wechat" style="display: inline-block">
+    <a href="/images/yukang_wechat.jpg" rel="group" ><img id="wechat_qr" src="/images/yukang_wechat.jpg" style="width: 255px;height:235px;"  alt="Yukang WeChat Pay"></a>
+    </div>
+    </div>
+    </div>
+    
     <ul class="pager">
       
       <li class="next"><a href="/2011/05/06/valgrind.html" title="valgrind">valgrind&rarr;</a></li>
