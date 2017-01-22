@@ -4,7 +4,7 @@
  <title>Yukang's Page</title>
  <link href="http://cyukang.com/atom.xml" rel="self"/>
  <link href="http://cyukang.com"/>
- <updated>2017-01-23T01:02:47+08:00</updated>
+ <updated>2017-01-23T01:59:44+08:00</updated>
  <id>http://cyukang.com</id>
  <author>
    <name>Yukang</name>
@@ -31,7 +31,7 @@
 
 &lt;p&gt;首先面临的问题是 parser。rubysonar 的parser 也是依靠 Ruby 自己的&lt;a href=&quot;http://ruby-doc.org/stdlib-2.0.0/libdoc/ripper/rdoc/Ripper.html&quot;&gt;ripper&lt;/a&gt;。主要是 parser 太过繁琐，如果从头开始写整个坑估计是填不完了。所以我也就直接拿来了 rubysonar 的&lt;a href=&quot;https://github.com/yinwang0/rubysonar/blob/master/src/main/resources/org/yinwang/rubysonar/ruby/dump_ruby.rb&quot;&gt;dump_ruby.rb&lt;/a&gt;。 dump_ruby 把 ruby 源文件作为输入，输出一个 json 文件作为后端分析器的输入。这里我做了一些改动，rubysonar 里面是起来一个进程，把 dump_ruby 启动起来，用管道的方式一个个 parse 源程序。这样做的目的是避免 ruby 解释器频繁启动，避免整个速度会被拖慢。 我觉得还不如让dump_ruby 一次接收多个源程序，甚至可以是用 parallel 这个库来做并行。这样的结果是 parsing 的速度确实快了很多，一般大点的项目在10s 以内可以完成。这样项目的大概流程如下:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/images/rubytt.png&quot; alt=&quot;rubytt&quot; class=&quot;img-center&quot; style=&quot;width:520px;height:360px;&quot;/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/rubytt.png&quot; alt=&quot;rubytt&quot; class=&quot;img-center&quot; style=&quot;width:320px;height:310px;&quot;/&gt;&lt;/p&gt;
 
 &lt;h3&gt;type annoation&lt;/h3&gt;
 
