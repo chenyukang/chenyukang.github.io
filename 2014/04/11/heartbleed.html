@@ -164,7 +164,18 @@
 <p>对于程序员来说，如何避免这样的Bug? Redis的开发者Antirez的这篇文章<a href="http://antirez.com/news/76">Using Heartbleed as a starting point
 </a>写得挺不错，公司应该投入更多的资金在这种关键的涉及到安全的代码上，<a href="http://www.solidot.org/story?sid=39112">OpenSSL每年接收到的资助为2000美金</a>。系统程序员和测试人员应该使用一些静态代码分析器，另外动态检测器(比如Valgrind)也很有帮助。因为C是一个贴近硬件的语言，可以在C上再增加一个抽象层来保护关键信息。Random测试有可能发现很多软件中潜在的问题，单元测试有可能测不到这种情况。我现在工作的公司对于测试这块还是做得挺不错(这也与我的产品特性有关，测试相对容易一些)，我们每天晚上除了跑单元测试，还需要跑Valgrind来检测内存问题，还有大量极端的random case可以发现很多Bug。</p>
 
-
+    
+    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+    </button>
+    <div id="QR" style="display: none;">      
+    <div id="wechat" style="display: inline-block">
+    <a href="/images/yukang_wechat.jpg" rel="group" ><img id="wechat_qr" src="/images/yukang_wechat.jpg" style="width: 255px;height:235px;"  alt="Yukang WeChat Pay"></a>
+    </div>
+    </div>
+    </div>
+    
     <ul class="pager">
       
       <li class="next"><a href="/2014/03/29/eopl.html" title="另一本魔法书: EOPL">另一本魔法书: EOPL&rarr;</a></li>
