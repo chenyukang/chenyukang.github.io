@@ -5,12 +5,17 @@ function is_mobile() {
     return check;
 };
 
-
-function change_link() {
+function change_for_mobile() {
     if(is_mobile()) {
+        var imgs = document.getElementsByTagName("img");
+        for (var i = 0; i < imgs.length; i++) {
+            imgs[i].width = 320;
+            imgs[i].height = 320;
+        };
         document.getElementById("brand").href="/archive";
         document.getElementById("footer").style.display = "none";
         document.getElementById("page-nav").style.display = "none";
-    }
+    };
 };
 
+change_for_mobile();

@@ -109,16 +109,16 @@
     </div>
   </header>
 
-  <body onload="change_link();">
-    <div class="container">
-      <div class="content">
+  <body>
+      <div class="container">
+      <div class="content" >
         
 
 <div class="row post">
-  <div class="span8">
-    <h1 class="title">获取挂掉程序的栈信息</h1>
+    <div class="span8">
+        <h1 class="title">获取挂掉程序的栈信息</h1>
 
-    <p>在程序挂掉的时候最好还是留点有用的遗言，特别是对于一些比较难重现的Bug，也许这些信息会成为解决问题的关键。</p>
+            <p>在程序挂掉的时候最好还是留点有用的遗言，特别是对于一些比较难重现的Bug，也许这些信息会成为解决问题的关键。</p>
 
 <p>下面这个技巧可以让程挂掉的时候打印出来栈信息。这个办法来自<a href="http://neugierig.org/software/blog/2012/06/backtraces.html">这里</a>, 我觉得把SIGABRT、SIGBUS信号加进去也挺好的，在此做了点修改。曾经尝也试过glibc的backtrace函数，，但是给的信息不全(没有行号)，对此做得最好的还是gdb。 在终端可以用gdb获取某个进程的当前栈：</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>$ gdb -p 5595 -batch -ex bt
@@ -199,59 +199,59 @@ Reddit上的一个得分最高的回复：</p>
  I don&#39;t think I have ever seen him use a debugger, 
  even on the most complex of problems.
 </code></pre></div>
-    
-    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>打赏</span>
-    </button>
-    <div id="QR" style="display: none;">      
-    <div id="wechat" style="display: inline-block">
-    <a href="/images/yukang_wechat.jpg" rel="group" ><img id="wechat_qr" src="/images/yukang_wechat.jpg" style="width: 255px;height:235px;"  alt="Yukang WeChat Pay"></a>
-    </div>
-    </div>
-    </div>
-    
-    <ul class="pager" id="page-nav">
-      
-      <li class="next"><a href="/2012/12/26/browser-objs-in-ruby.html" title="Browser objs and class hierarchy  in Ruby">Browser objs and class hierarchy  in Ruby&rarr;</a></li>
-      
+            
+            <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
+                <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+                    <span>打赏</span>
+                </button>
+                <div id="QR" style="display: none;">      
+                    <div id="wechat" style="display: inline-block">
+                        <a href="/images/yukang_wechat.jpg" rel="group" ><img id="wechat_qr" src="/images/yukang_wechat.jpg" style="width: 255px;height:235px;"  alt="Yukang WeChat Pay"></a>
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="pager" id="page-nav">
+                
+                <li class="next"><a href="/2012/12/26/browser-objs-in-ruby.html" title="Browser objs and class hierarchy  in Ruby">Browser objs and class hierarchy  in Ruby&rarr;</a></li>
+                
 
-      
-      <li class="previous"><a href="/2013/01/22/poj-500.html" title="迟到的POJ 500">&larr; 迟到的POJ 500</a></li>
-      
-    </ul>
+                
+                <li class="previous"><a href="/2013/01/22/poj-500.html" title="迟到的POJ 500">&larr; 迟到的POJ 500</a></li>
+                
+            </ul>
 
-    <!--*********************************************************-->
-    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
-    <!--*********************************************************-->
-    <div id="comment_thread"></div>
-    <div class="ds-thread" data-thread-key="/2013/01/04/print-stack-before-exiting.html" data-title="获取挂掉程序的栈信息" data-url="/2013/01/04/print-stack-before-exiting.html"></div>
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:"cyukang"};
-    (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-    </script>
-    <!--*********************************************************-->
+            <!--*********************************************************-->
+            <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+            <!--*********************************************************-->
+            <div id="comment_thread"></div>
+            <div class="ds-thread" data-thread-key="/2013/01/04/print-stack-before-exiting.html" data-title="获取挂掉程序的栈信息" data-url="/2013/01/04/print-stack-before-exiting.html"></div>
+            <script type="text/javascript">
+                var duoshuoQuery = {short_name:"cyukang"};
+                (function() {
+                    var ds = document.createElement('script');
+                    ds.type = 'text/javascript';ds.async = true;
+                    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+                    ds.charset = 'UTF-8';
+                    (document.getElementsByTagName('head')[0] 
+                     || document.getElementsByTagName('body')[0]).appendChild(ds);
+                })();
+            </script>
+            <!--*********************************************************-->
 
-  </div>
+        </div>
 
 
-  <div class="span4 sidebar">
-    
-    <h4 class="date">日期：<span>04 January 2013</span></h4>
-    
+        <div class="span4 sidebar">
+            
+            <h4 class="date">日期：<span>04 January 2013</span></h4>
+            
 
-    
-    <h4>标签</h4>
-    <ul class="tag_box">
-      
-      
+            
+            <h4>标签</h4>
+            <ul class="tag_box">
+                
+                
 
 
   
@@ -264,90 +264,89 @@ Reddit上的一个得分最高的回复：</p>
 
 
 
-    </ul>
-    
+            </ul>
+            
 
-    <div class="violet-aside-post">
-      <h4 class="v-section-tit">最近</h4>
-      <ul>
-        
-        <li class="v-aside-li">
-          <a href="/2016/12/27/rubytt.html" title="Ruby 程序的静态分析: rubytt" rel="bookmark">Ruby 程序的静态分析: rubytt</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/08/09/dao-yu-ju.html" title="菊与刀" rel="bookmark">菊与刀</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
-        </li>
-        
-      </ul>
-    </div>
+            <div class="violet-aside-post">
+                <h4 class="v-section-tit">最近</h4>
+                <ul>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/12/27/rubytt.html" title="Ruby 程序的静态分析: rubytt" rel="bookmark">Ruby 程序的静态分析: rubytt</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/08/09/dao-yu-ju.html" title="菊与刀" rel="bookmark">菊与刀</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+                    </li>
+                    
+                </ul>
+            </div>
 
-    <div class="violet-aside-post">
-      <h4 class="v-section-tit">页面</h4>
-      <nav class="nav">
-        <ul>
-          <li><a href="/archive.html" >归档</a></li>
-          <li><a href="/tags.html">标签</a></li>
-          <li><a href="/links.html" >链接</a></li>
-          <li><a href="/about.html" >关于</a></li>
-          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
-        </ul>
-      </nav>
-    </div>
-
-  </div>
+            <div class="violet-aside-post">
+                <h4 class="v-section-tit">页面</h4>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="/archive.html" >归档</a></li>
+                        <li><a href="/tags.html">标签</a></li>
+                        <li><a href="/links.html" >链接</a></li>
+                        <li><a href="/about.html" >关于</a></li>
+                        <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
 </div>
 
 
@@ -388,6 +387,6 @@ Reddit上的一个得分最高的回复：</p>
     <!--*********************************************************-->
 
   </body>
-
+  
 </html>
 
