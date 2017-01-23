@@ -10,6 +10,7 @@ function change_link() {
     if(is_mobile()) {
         document.getElementById("brand").href="/archive";
         document.getElementById("footer").style.display = "none";
+        document.getElementById("page-nav").style.display = "none";
     }
 };
 
