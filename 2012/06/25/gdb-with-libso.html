@@ -109,16 +109,16 @@
     </div>
   </header>
 
-  <body onload="change_link();">
-    <div class="container">
-      <div class="content">
+  <body>
+      <div class="container">
+      <div class="content" >
         
 
 <div class="row post">
-  <div class="span8">
-    <h1 class="title">GDB调试动态链接库</h1>
+    <div class="span8">
+        <h1 class="title">GDB调试动态链接库</h1>
 
-    <p>今天解决了一个长期会碰到的问题，就是用GDB如何来调试动态链接库。我这个问题的难点是我的需要调试代码是在动态链接库里面，但是启动的不是普通的可以调试的二进制文件，换句话说这不是我所能控制的代码所编译出来的，甚至可能是由脚本程序来控制启动的。这个问题时不时地困扰着我，总结一下尝试过几种调试方式：</p>
+            <p>今天解决了一个长期会碰到的问题，就是用GDB如何来调试动态链接库。我这个问题的难点是我的需要调试代码是在动态链接库里面，但是启动的不是普通的可以调试的二进制文件，换句话说这不是我所能控制的代码所编译出来的，甚至可能是由脚本程序来控制启动的。这个问题时不时地困扰着我，总结一下尝试过几种调试方式：</p>
 
 <p>1 使用print来打印log，有时候有用，不好的地方是有时候定位出问题的代码位置还是稍显麻烦。很常用的会定义一对宏，进入函数和退出某个函数的时候都相应调用。</p>
 
@@ -176,59 +176,59 @@ enable and disable:  Enable/disable breakpoints
 set logging on:      Log debugging session to show to others for support
 </code></pre>
 
-    
-    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>打赏</span>
-    </button>
-    <div id="QR" style="display: none;">      
-    <div id="wechat" style="display: inline-block">
-    <a href="/images/yukang_wechat.jpg" rel="group" ><img id="wechat_qr" src="/images/yukang_wechat.jpg" style="width: 255px;height:235px;"  alt="Yukang WeChat Pay"></a>
-    </div>
-    </div>
-    </div>
-    
-    <ul class="pager" id="page-nav">
-      
-      <li class="next"><a href="/2012/06/20/bsfl-bitmap.html" title="bsfl指令和Bitmap的一个优化">bsfl指令和Bitmap的一个优化&rarr;</a></li>
-      
+            
+            <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
+                <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+                    <span>打赏</span>
+                </button>
+                <div id="QR" style="display: none;">      
+                    <div id="wechat" style="display: inline-block">
+                        <a href="/images/yukang_wechat.jpg" rel="group" ><img id="wechat_qr" src="/images/yukang_wechat.jpg" style="width: 255px;height:235px;"  alt="Yukang WeChat Pay"></a>
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="pager" id="page-nav">
+                
+                <li class="next"><a href="/2012/06/20/bsfl-bitmap.html" title="bsfl指令和Bitmap的一个优化">bsfl指令和Bitmap的一个优化&rarr;</a></li>
+                
 
-      
-      <li class="previous"><a href="/2012/07/11/branch_prediction.html" title="分支预测优化">&larr; 分支预测优化</a></li>
-      
-    </ul>
+                
+                <li class="previous"><a href="/2012/07/11/branch_prediction.html" title="分支预测优化">&larr; 分支预测优化</a></li>
+                
+            </ul>
 
-    <!--*********************************************************-->
-    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
-    <!--*********************************************************-->
-    <div id="comment_thread"></div>
-    <div class="ds-thread" data-thread-key="/2012/06/25/gdb-with-libso.html" data-title="GDB调试动态链接库" data-url="/2012/06/25/gdb-with-libso.html"></div>
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:"cyukang"};
-    (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-    </script>
-    <!--*********************************************************-->
+            <!--*********************************************************-->
+            <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+            <!--*********************************************************-->
+            <div id="comment_thread"></div>
+            <div class="ds-thread" data-thread-key="/2012/06/25/gdb-with-libso.html" data-title="GDB调试动态链接库" data-url="/2012/06/25/gdb-with-libso.html"></div>
+            <script type="text/javascript">
+                var duoshuoQuery = {short_name:"cyukang"};
+                (function() {
+                    var ds = document.createElement('script');
+                    ds.type = 'text/javascript';ds.async = true;
+                    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+                    ds.charset = 'UTF-8';
+                    (document.getElementsByTagName('head')[0] 
+                     || document.getElementsByTagName('body')[0]).appendChild(ds);
+                })();
+            </script>
+            <!--*********************************************************-->
 
-  </div>
+        </div>
 
 
-  <div class="span4 sidebar">
-    
-    <h4 class="date">日期：<span>25 June 2012</span></h4>
-    
+        <div class="span4 sidebar">
+            
+            <h4 class="date">日期：<span>25 June 2012</span></h4>
+            
 
-    
-    <h4>标签</h4>
-    <ul class="tag_box">
-      
-      
+            
+            <h4>标签</h4>
+            <ul class="tag_box">
+                
+                
 
 
   
@@ -243,90 +243,89 @@ set logging on:      Log debugging session to show to others for support
 
 
 
-    </ul>
-    
+            </ul>
+            
 
-    <div class="violet-aside-post">
-      <h4 class="v-section-tit">最近</h4>
-      <ul>
-        
-        <li class="v-aside-li">
-          <a href="/2016/12/27/rubytt.html" title="Ruby 程序的静态分析: rubytt" rel="bookmark">Ruby 程序的静态分析: rubytt</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/08/09/dao-yu-ju.html" title="菊与刀" rel="bookmark">菊与刀</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
-        </li>
-        
-      </ul>
-    </div>
+            <div class="violet-aside-post">
+                <h4 class="v-section-tit">最近</h4>
+                <ul>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/12/27/rubytt.html" title="Ruby 程序的静态分析: rubytt" rel="bookmark">Ruby 程序的静态分析: rubytt</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/08/09/dao-yu-ju.html" title="菊与刀" rel="bookmark">菊与刀</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+                    </li>
+                    
+                </ul>
+            </div>
 
-    <div class="violet-aside-post">
-      <h4 class="v-section-tit">页面</h4>
-      <nav class="nav">
-        <ul>
-          <li><a href="/archive.html" >归档</a></li>
-          <li><a href="/tags.html">标签</a></li>
-          <li><a href="/links.html" >链接</a></li>
-          <li><a href="/about.html" >关于</a></li>
-          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
-        </ul>
-      </nav>
-    </div>
-
-  </div>
+            <div class="violet-aside-post">
+                <h4 class="v-section-tit">页面</h4>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="/archive.html" >归档</a></li>
+                        <li><a href="/tags.html">标签</a></li>
+                        <li><a href="/links.html" >链接</a></li>
+                        <li><a href="/about.html" >关于</a></li>
+                        <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
 </div>
 
 
@@ -367,6 +366,6 @@ set logging on:      Log debugging session to show to others for support
     <!--*********************************************************-->
 
   </body>
-
+  
 </html>
 

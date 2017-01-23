@@ -107,16 +107,16 @@
     </div>
   </header>
 
-  <body onload="change_link();">
-    <div class="container">
-      <div class="content">
+  <body>
+      <div class="container">
+      <div class="content" >
         
 
 <div class="row post">
-  <div class="span8">
-    <h1 class="title">C的面向对象风格代码</h1>
+    <div class="span8">
+        <h1 class="title">C的面向对象风格代码</h1>
 
-    <span class="Apple-style-span" style="font-size: 13px; font-weight: normal;">OO是一种编程范型，而不只是特定语言的特定支持，所以用C来实现也是可行的。最近碰到的一部分代码都是用C实现的面向对象风格，可能是参考了Python里面的实现，Python内部实现的基本对象这块也全是这样的代码。在这里做一个小小的总结。</span>
+            <span class="Apple-style-span" style="font-size: 13px; font-weight: normal;">OO是一种编程范型，而不只是特定语言的特定支持，所以用C来实现也是可行的。最近碰到的一部分代码都是用C实现的面向对象风格，可能是参考了Python里面的实现，Python内部实现的基本对象这块也全是这样的代码。在这里做一个小小的总结。</span>
 
 C语言里面没有语言层面的面向对象支持，那OO中的三个基本要素封装、继承、多态如何实现？C里面最强大的东西是指针，指针中最神奇的是void指针，这是一切的基本。首先来看封装，如何通过实例来调用方法，而对内部数据进行隐藏。完全可以写一些struct，然后写对应的函数来针对这个struct来操作，我们需要更进一步，把数据和方法绑定起来。这样写初看起来并没什么好处，后面会发现，通过函数指针去找对应的函数是多态的关键。
 <pre class="src"><span style="color: #ff4500;">//</span><span style="color: #ff4500;">object.h </span>
@@ -203,59 +203,59 @@ C语言里面没有语言层面的面向对象支持，那OO中的三个基本�
 
 上面的代码在这里下载：<a href="https://github.com/chenyukang/ooc" target="_blank">https://github.com/chenyukang/ooc</a>。
 
-    
-    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>打赏</span>
-    </button>
-    <div id="QR" style="display: none;">      
-    <div id="wechat" style="display: inline-block">
-    <a href="/images/yukang_wechat.jpg" rel="group" ><img id="wechat_qr" src="/images/yukang_wechat.jpg" style="width: 255px;height:235px;"  alt="Yukang WeChat Pay"></a>
-    </div>
-    </div>
-    </div>
-    
-    <ul class="pager" id="page-nav">
-      
-      <li class="next"><a href="/2011/07/30/fastsearch-in-python2.html" title="一种更快的字符串匹配算法-源自Python2.5">一种更快的字符串匹配算法-源自Python2.5&rarr;</a></li>
-      
+            
+            <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
+                <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+                    <span>打赏</span>
+                </button>
+                <div id="QR" style="display: none;">      
+                    <div id="wechat" style="display: inline-block">
+                        <a href="/images/yukang_wechat.jpg" rel="group" ><img id="wechat_qr" src="/images/yukang_wechat.jpg" style="width: 255px;height:235px;"  alt="Yukang WeChat Pay"></a>
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="pager" id="page-nav">
+                
+                <li class="next"><a href="/2011/07/30/fastsearch-in-python2.html" title="一种更快的字符串匹配算法-源自Python2.5">一种更快的字符串匹配算法-源自Python2.5&rarr;</a></li>
+                
 
-      
-      <li class="previous"><a href="/2011/08/18/life_in_shangha.html" title="在外漂着">&larr; 在外漂着</a></li>
-      
-    </ul>
+                
+                <li class="previous"><a href="/2011/08/18/life_in_shangha.html" title="在外漂着">&larr; 在外漂着</a></li>
+                
+            </ul>
 
-    <!--*********************************************************-->
-    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
-    <!--*********************************************************-->
-    <div id="comment_thread"></div>
-    <div class="ds-thread" data-thread-key="/2011/08/16/ooc_in_python.html" data-title="C的面向对象风格代码" data-url="/2011/08/16/ooc_in_python.html"></div>
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:"cyukang"};
-    (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-    </script>
-    <!--*********************************************************-->
+            <!--*********************************************************-->
+            <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+            <!--*********************************************************-->
+            <div id="comment_thread"></div>
+            <div class="ds-thread" data-thread-key="/2011/08/16/ooc_in_python.html" data-title="C的面向对象风格代码" data-url="/2011/08/16/ooc_in_python.html"></div>
+            <script type="text/javascript">
+                var duoshuoQuery = {short_name:"cyukang"};
+                (function() {
+                    var ds = document.createElement('script');
+                    ds.type = 'text/javascript';ds.async = true;
+                    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+                    ds.charset = 'UTF-8';
+                    (document.getElementsByTagName('head')[0] 
+                     || document.getElementsByTagName('body')[0]).appendChild(ds);
+                })();
+            </script>
+            <!--*********************************************************-->
 
-  </div>
+        </div>
 
 
-  <div class="span4 sidebar">
-    
-    <h4 class="date">日期：<span>16 August 2011</span></h4>
-    
+        <div class="span4 sidebar">
+            
+            <h4 class="date">日期：<span>16 August 2011</span></h4>
+            
 
-    
-    <h4>标签</h4>
-    <ul class="tag_box">
-      
-      
+            
+            <h4>标签</h4>
+            <ul class="tag_box">
+                
+                
 
 
   
@@ -268,90 +268,89 @@ C语言里面没有语言层面的面向对象支持，那OO中的三个基本�
 
 
 
-    </ul>
-    
+            </ul>
+            
 
-    <div class="violet-aside-post">
-      <h4 class="v-section-tit">最近</h4>
-      <ul>
-        
-        <li class="v-aside-li">
-          <a href="/2016/12/27/rubytt.html" title="Ruby 程序的静态分析: rubytt" rel="bookmark">Ruby 程序的静态分析: rubytt</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/08/09/dao-yu-ju.html" title="菊与刀" rel="bookmark">菊与刀</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
-        </li>
-        
-      </ul>
-    </div>
+            <div class="violet-aside-post">
+                <h4 class="v-section-tit">最近</h4>
+                <ul>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/12/27/rubytt.html" title="Ruby 程序的静态分析: rubytt" rel="bookmark">Ruby 程序的静态分析: rubytt</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/08/09/dao-yu-ju.html" title="菊与刀" rel="bookmark">菊与刀</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+                    </li>
+                    
+                </ul>
+            </div>
 
-    <div class="violet-aside-post">
-      <h4 class="v-section-tit">页面</h4>
-      <nav class="nav">
-        <ul>
-          <li><a href="/archive.html" >归档</a></li>
-          <li><a href="/tags.html">标签</a></li>
-          <li><a href="/links.html" >链接</a></li>
-          <li><a href="/about.html" >关于</a></li>
-          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
-        </ul>
-      </nav>
-    </div>
-
-  </div>
+            <div class="violet-aside-post">
+                <h4 class="v-section-tit">页面</h4>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="/archive.html" >归档</a></li>
+                        <li><a href="/tags.html">标签</a></li>
+                        <li><a href="/links.html" >链接</a></li>
+                        <li><a href="/about.html" >关于</a></li>
+                        <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
 </div>
 
 
@@ -392,6 +391,6 @@ C语言里面没有语言层面的面向对象支持，那OO中的三个基本�
     <!--*********************************************************-->
 
   </body>
-
+  
 </html>
 

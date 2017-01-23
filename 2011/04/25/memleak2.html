@@ -107,16 +107,16 @@
     </div>
   </header>
 
-  <body onload="change_link();">
-    <div class="container">
-      <div class="content">
+  <body>
+      <div class="container">
+      <div class="content" >
         
 
 <div class="row post">
-  <div class="span8">
-    <h1 class="title">内存又泄漏:(</h1>
+    <div class="span8">
+        <h1 class="title">内存又泄漏:(</h1>
 
-    <h3>内存泄漏</h3>
+            <h3>内存泄漏</h3>
 <p class="first">上一次以为内存泄露查完了，发现服务器跑了比较长时间后又占用太多内存。刚好这段时间加了一些新的模块，又该查查了。整个服务器模块分的还行，但是中间经过几个人一起写，所以看起来就麻烦了。要解决问题还是必须找到泄露的代码段。在C/C++中，只要用了指针这东西，很多逻辑上的问题也会产生内存泄露。在线下用上次封装malloc和free的方法测试，找不到产生内存泄露的样例，grep了一下没有用原来的malloc之类的东西啊，那就应该是测试数量太少的问题。没法，从线上的log中导入一些天的访问记录，其中包含了一天的访问url。试着用Python写个小程序把一天中所有的url依次往线下的服务器发送，这应该有几万条数据了。Python中这相关的库够多的,可以用的httplib,或者webbrowser模块中的webbrowser.open("url_address",1),不过这得打开系统的默认的浏览器，并且好像还没关掉一个tab的接口。最合适这个简单任务的是urllib这个模块，下面这样就行了，往线下的服务器狂发请求吧:</p>
 
 <pre class="src">    <span style="color: #00bfff; font-weight: bold;">for</span> rec <span style="color: #00bfff; font-weight: bold;">in</span> alllogs:
@@ -145,59 +145,59 @@
 <pre class="src"> grep debug_str -rl ./*.c | xargs sed -i <span style="color: #deb887;">"s/debug_str/substr/g"</span></pre>
 </p>
 
-    
-    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>打赏</span>
-    </button>
-    <div id="QR" style="display: none;">      
-    <div id="wechat" style="display: inline-block">
-    <a href="/images/yukang_wechat.jpg" rel="group" ><img id="wechat_qr" src="/images/yukang_wechat.jpg" style="width: 255px;height:235px;"  alt="Yukang WeChat Pay"></a>
-    </div>
-    </div>
-    </div>
-    
-    <ul class="pager" id="page-nav">
-      
-      <li class="next"><a href="/2011/03/27/guitar.html" title="近期">近期&rarr;</a></li>
-      
+            
+            <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
+                <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+                    <span>打赏</span>
+                </button>
+                <div id="QR" style="display: none;">      
+                    <div id="wechat" style="display: inline-block">
+                        <a href="/images/yukang_wechat.jpg" rel="group" ><img id="wechat_qr" src="/images/yukang_wechat.jpg" style="width: 255px;height:235px;"  alt="Yukang WeChat Pay"></a>
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="pager" id="page-nav">
+                
+                <li class="next"><a href="/2011/03/27/guitar.html" title="近期">近期&rarr;</a></li>
+                
 
-      
-      <li class="previous"><a href="/2011/05/06/valgrind.html" title="valgrind">&larr; valgrind</a></li>
-      
-    </ul>
+                
+                <li class="previous"><a href="/2011/05/06/valgrind.html" title="valgrind">&larr; valgrind</a></li>
+                
+            </ul>
 
-    <!--*********************************************************-->
-    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
-    <!--*********************************************************-->
-    <div id="comment_thread"></div>
-    <div class="ds-thread" data-thread-key="/2011/04/25/memleak2.html" data-title="内存又泄漏:(" data-url="/2011/04/25/memleak2.html"></div>
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:"cyukang"};
-    (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-    </script>
-    <!--*********************************************************-->
+            <!--*********************************************************-->
+            <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
+            <!--*********************************************************-->
+            <div id="comment_thread"></div>
+            <div class="ds-thread" data-thread-key="/2011/04/25/memleak2.html" data-title="内存又泄漏:(" data-url="/2011/04/25/memleak2.html"></div>
+            <script type="text/javascript">
+                var duoshuoQuery = {short_name:"cyukang"};
+                (function() {
+                    var ds = document.createElement('script');
+                    ds.type = 'text/javascript';ds.async = true;
+                    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+                    ds.charset = 'UTF-8';
+                    (document.getElementsByTagName('head')[0] 
+                     || document.getElementsByTagName('body')[0]).appendChild(ds);
+                })();
+            </script>
+            <!--*********************************************************-->
 
-  </div>
+        </div>
 
 
-  <div class="span4 sidebar">
-    
-    <h4 class="date">日期：<span>25 April 2011</span></h4>
-    
+        <div class="span4 sidebar">
+            
+            <h4 class="date">日期：<span>25 April 2011</span></h4>
+            
 
-    
-    <h4>标签</h4>
-    <ul class="tag_box">
-      
-      
+            
+            <h4>标签</h4>
+            <ul class="tag_box">
+                
+                
 
 
   
@@ -212,90 +212,89 @@
 
 
 
-    </ul>
-    
+            </ul>
+            
 
-    <div class="violet-aside-post">
-      <h4 class="v-section-tit">最近</h4>
-      <ul>
-        
-        <li class="v-aside-li">
-          <a href="/2016/12/27/rubytt.html" title="Ruby 程序的静态分析: rubytt" rel="bookmark">Ruby 程序的静态分析: rubytt</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/08/09/dao-yu-ju.html" title="菊与刀" rel="bookmark">菊与刀</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
-        </li>
-        
-      </ul>
-    </div>
+            <div class="violet-aside-post">
+                <h4 class="v-section-tit">最近</h4>
+                <ul>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/12/27/rubytt.html" title="Ruby 程序的静态分析: rubytt" rel="bookmark">Ruby 程序的静态分析: rubytt</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/08/09/dao-yu-ju.html" title="菊与刀" rel="bookmark">菊与刀</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/09/29/programming-language-and-interpreters.html" title="Tiny Interpreters" rel="bookmark">Tiny Interpreters</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/08/09/reading-notes.html" title="最近读的一些杂书" rel="bookmark">最近读的一些杂书</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/04/26/lazy-eval-and-stream.html" title="惰性求值和流" rel="bookmark">惰性求值和流</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/03/01/types-and-programming-languages.html" title="Types and Programming Languages (1)" rel="bookmark">Types and Programming Languages (1)</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/02/10/understanding-computation.html" title="Understanding Computation" rel="bookmark">Understanding Computation</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
+                        <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
+                    </li>
+                    
+                </ul>
+            </div>
 
-    <div class="violet-aside-post">
-      <h4 class="v-section-tit">页面</h4>
-      <nav class="nav">
-        <ul>
-          <li><a href="/archive.html" >归档</a></li>
-          <li><a href="/tags.html">标签</a></li>
-          <li><a href="/links.html" >链接</a></li>
-          <li><a href="/about.html" >关于</a></li>
-          <li><a href="/atom.xml" target="_blank" >RSS</a></li>
-        </ul>
-      </nav>
-    </div>
-
-  </div>
+            <div class="violet-aside-post">
+                <h4 class="v-section-tit">页面</h4>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="/archive.html" >归档</a></li>
+                        <li><a href="/tags.html">标签</a></li>
+                        <li><a href="/links.html" >链接</a></li>
+                        <li><a href="/about.html" >关于</a></li>
+                        <li><a href="/atom.xml" target="_blank" >RSS</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
 </div>
 
 
@@ -336,6 +335,6 @@
     <!--*********************************************************-->
 
   </body>
-
+  
 </html>
 
