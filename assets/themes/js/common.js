@@ -8,7 +8,8 @@ function is_mobile() {
 
 function change_link() {
     if(is_mobile()) {
-        document.getElementById("brand").href="/archive"
+        document.getElementById("brand").href="/archive";
+        document.getElementById("footer").style.display = "none";
     }
 };
 
