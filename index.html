@@ -115,78 +115,27 @@
 
 <div class="row post">
   <div class="span8">
-      <h1 class="title"><a href="/2016/12/27/rubytt.html" title="Ruby 程序的静态分析: rubytt">Ruby 程序的静态分析: rubytt</a></h1>
+      <h1 class="title"><a href="/2017/01/24/disease-of-programmer.html" title="程序员病">程序员病</a></h1>
 
-      <p><a href="http://github.com/chenyukang/rubytt">rubytt</a>是一个 Ruby 程序的静态分析器，这个项目从16年年初一直到年底，断断续续持续了近一年。这里稍微总结一下自己的开发过程。</p>
+      <p>最近看费曼的书《发现的乐趣》，里面有一段描述非常好玩:</p>
 
-<h2>0. 缘由</h2>
+<blockquote>
+<p>好，弗兰克先生开始实施他的计划了，与此同时，他也得了一种病——『计算机病』。现在每个使用计算机的人都知道这个毛病，那种病非常厉害，会干扰整个工作。这是我们面临的一个严重问题。所谓『计算机病』就是你一『玩』上计算机，就会上瘾。计算机真的非常奇妙，你手上操作着那些 x 转换开关，这样弄得到某个偶数，那样弄得到某个奇数。如果你够聪明，很快你就能在一台机器上做越来越复杂的计算。只不过，没多久，整个系统就瘫痪了。</p>
 
-<p>14年开始，从我进入 DJI 之后开始接触 Rails 开发。Ruby 之前也接触过，不过都是写一些小脚本之类的东西。我们几乎用 Rails 写各种系统，开发的效率很快。对于经常变动的 Web 开发 rails 还是挺好的。在我经历过的一个对正确性要求很高的项目里，有一次系统出现一个致命的问题。我们6个开发人员在小黑屋里面足足找了一个下午。最后却发现不过是一个 type 错误引入的，导致后台任务一直执行错误。后来稍微多想了想，这样的类型错误应该是在开发阶段就及时发现的。 Rails 项目没有测试是不行的，所以我们后续补充了更多单元测试。另外我所使用过的静态语言几乎都能及早避免这样的错误，特别是在使用过 OCaml 这样的强类型语言后，我对类型有了更强的偏好。于是想我能不能做一个自动检测出类似 bug 的工具。据我所知<a href="https://github.com/yinwang0/rubysonar">王垠的rubysonar</a>  可以做类型分析，于是我 checkout 出来看了看代码。Java代码不是特别复杂，也发现了两个问题并提交了 <a href="https://github.com/yinwang0/rubysonar/pull/12">PR</a>。然后觉得这个东西还是比较好玩，干脆就自己另起一个项目来玩玩。</p>
+<p>他对工作不再上心了，也不再管理手下，整个系统运转得很慢很慢。但是，真正麻烦的是，他一直坐在一间办公室里，琢磨怎么让制表机自动打印出反正切值，然后机器就开始打印，成排成排地打印，扑哧，扑哧，扑哧，一边打印一边还自动用积分计算反正切值，整张表都是方正切值计算结果。</p>
 
-<h2>1. rubytt 的开发</h2>
+<p>其实，这毫无意义，因为我们人手一份反正切表。不过，如果你用过计算机，你就会理解他为什么得这种病。计算机能让你知道自己究竟能做多少事情，这也是一种乐趣。他第一次接触这机器，就染上了这种病，这个可怜的家伙——整个项目都是他发起的，可他却得了这种病。</p>
+</blockquote>
 
-<p>首先得给这个坑起一个名字，想了想就 rubytt 吧，其实就是&quot;ruby to type&quot; 的意思吧。然后语言还是用了最近业余使用得比较多的 OCaml。这可能对后期其他开发参与进来不利，不过也无所谓了，业余的项目先依自己的偏好吧。</p>
+<p>其实很多程序员都有这种病，可以概括为一句话『沉迷于工具』，计算机也是工具，这位弗兰克先生还未解决眼前的问题时就丢掉了方向。好奇心是程序员必不可少的东西，而如果管不住自己的好奇心就会耽误事。对于非程序员来说，这件事情看起来就是『某个杀猪佬，拿到了一把新刀，他觉得这么刀真他妈锋利，然后磨磨刀，再磨磨刀，反正猪是不会杀的』。</p>
 
-<h3>parser</h3>
+<p>程序员经常会『磨刀』，学习算法，是磨练自己的头脑和思维。学习语言，是为了多拥有一个工具或者也可说是锻炼自己的思维(不改变自己思维习惯的语言不足以学之?)。学习操作系统的原理和细节，也可以理解为加深对工具的认识和理解。在学校的学习方法大多数从基本原理和经典书籍学起，顺便找一些小项目练练手。在步职业阶段后，从实用的角度，我们是否应该直面问题，带着问题找工具，学用工具，理解工具，这个过程中更可以锻炼自己的能力。从个人体验来说，这种方式优于『先锻炼自己的能力，先学会某个工具，然后再找个问题来解决』。举例来说，其实做一些 ACM 之类的题也挺有乐趣的，但我理解为刷题也是在『磨刀』。更让自己有成就感的是，在工作中碰到一个解决不了的算法问题，通过学习和思考相关的东西解决了，这样的方式理解更深。其实如果是步入职场，很多程序员也没多少时间来广泛学习，带着问题来『磨刀』也是必然且更有效的选择。</p>
 
-<p>首先面临的问题是 parser。rubysonar 的parser 也是依靠 Ruby 自己的<a href="http://ruby-doc.org/stdlib-2.0.0/libdoc/ripper/rdoc/Ripper.html">ripper</a>。主要是 parser 太过繁琐，如果从头开始写整个坑估计是填不完了。所以我也就直接拿来了 rubysonar 的<a href="https://github.com/yinwang0/rubysonar/blob/master/src/main/resources/org/yinwang/rubysonar/ruby/dump_ruby.rb">dump_ruby.rb</a>。 dump_ruby 把 ruby 源文件作为输入，输出一个 json 文件作为后端分析器的输入。这里我做了一些改动，rubysonar 里面是起来一个进程，把 dump_ruby 启动起来，用管道的方式一个个 parse 源程序。这样做的目的是避免 ruby 解释器频繁启动，避免整个速度会被拖慢。 我觉得还不如让dump_ruby 一次接收多个源程序，甚至可以是用 parallel 这个库来做并行。这样的结果是 parsing 的速度确实快了很多，一般大点的项目在10s 以内可以完成。这样项目的大概流程如下:</p>
+<p>再多扯一点，不少程序员有一些类似于强迫症的症状(在很多情况下这是一个好的特点)。而在计算机这个领域里有太多东西容易沉溺，比如编辑器，编程语言，操作系统，框架， 范式等。这类工具都有可能让程序员走向某个极端，形成『偏见』。我也有类似的体验，只是现在回想起来觉得挺傻缺、傻气的。大多数程序员都不够拥有开阔的心态来面对这些工具，我们会觉得自己的选择是更好的，能解决一切问题的银弹。<a href="http://coolshell.cn/articles/1992.html">这副图能说明这个道理</a>。</p>
 
-<p><img src="/images/rubytt.png" alt="rubytt" class="img-center" style="width:320px;height:310px;"/></p>
+<p>我现在会注意避免自己陷入这些『疾病』中。比如一个工具，不管是框架也好，语言也好，不要在还没摸清楚门路的时候，花大片时间去学习。而是最好带着一个需要解决的问题，边做边摸索。</p>
 
-<h3>type annoation</h3>
-
-<p>我想做自动的类型错误检查，所以需要类型分析。dump_ruby 出来的结果里面是带一些基本类型的，类型分析过程 rubysonar 里面有一个基本过程了。然后对于 Rails 项目来说，我们很多类型都可以在 db/schema.rb 里面可以分析出来，所以如果我把 schema.rb 文件也扫描分析一边，就可以为这些 model 加上不少类型。结果做出来还可以，至少目前可以分析出来很多 rubysonar 没有的类型。运行<code>rubytt -s source_dir -t type -o res</code>把结果输出到 res 目录。这里还有不少东西未做，比如函数的分析还是很复杂，目前做了一个初步。类型错误报出可以做一些了，但是还未来得及实现。因为我突然想到另外一个有趣的东西。</p>
-
-<h3>visualize rails project</h3>
-
-<p>我既在 traverse 整个 AST，可以做很多好玩的事啊。比如把类之间的继承关系找出来，做一个类的继承关系图。于是就有了<a href="/images/rubytt_class.png">类似这样的结果(看大图)</a>：</p>
-
-<p><img src="/images/rubytt_class.png" alt="rubytt_class" class="img-center" style="width:320px;height:300px;"/></p>
-
-<p>既然我能解析 schema.rb，也可以把数据模型给展示出来，然后再通过 model 文件里面分析模型之间的关系(has_one, has_many 等)， 于是就有了<a href="/images/rubytt_db.png">这样的结果</a>：</p>
-
-<p><img src="/images/rubytt_db.png" alt="rubytt_db" class="img-center" style="width:320px;height:300px;"/></p>
-
-<p>不过做了一些之后我发现这两个 feature 有点鸡肋。特别是第一个，要找出 ruby 程序内部对象之间的继承关系其实很简单，比如我之前写过的<a href="http://cyukang.com/2012/12/26/browser-objs-in-ruby.html">一篇文章</a>。第二个模型的关系图还好，不过项目稍微大一些的时候这些图看起来很复杂。</p>
-
-<h3>variable bug finder</h3>
-
-<p>在做完上面两个蛋疼的 feature 之后，碰巧碰到了项目里面另外一个 bug。是因为重构的时候不小心引入了一个 copy &amp; paste  bug。类似代码如下：</p>
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span><span class="n">event</span> <span class="o">=</span> <span class="p">(</span><span class="n">order</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span> <span class="p">?</span> <span class="s1">&#39;success&#39;</span> <span class="p">:</span> <span class="s1">&#39;fail&#39;</span>
-<span class="no">Job</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="o">[</span><span class="s1">&#39;Worker&#39;</span><span class="o">]</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;order_id&#39;</span> <span class="o">=&gt;</span> <span class="n">order</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s1">&#39;event&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;success&#39;</span><span class="p">})</span>
-</code></pre></div>
-<p>可以看到这个 event 本来应该使用的，结果却因为重构的时候 copy 了代码忘记把<code>&#39;event&#39; =&gt; &#39;success&#39;</code>改成<code>&#39;event&#39; =&gt; event</code>。event这个变量是未使用的变量，对于编译型语言来说这样的问题是可以在编译的时候发出报警的。因为一个变量未使用必然意味这要么是冗余代码，要么是 bug。那我可否通过 rubytt 给出类似报警？然后我就继续写了这么一个 checker，去检查ruby 程序中各种没使用的变量。最后还真能找出项目中一些其他的类似问题，比如：</p>
-<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span><span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">trans</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">transactions</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">..</span><span class="n">blah</span><span class="o">...</span><span class="p">)</span>
-<span class="n">trans</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">tran</span><span class="o">|</span>
-   <span class="n">result</span><span class="o">[</span><span class="ss">:amount</span><span class="o">]</span> <span class="o">=</span> <span class="n">trans</span><span class="o">.</span><span class="n">amount_cent</span>  <span class="o">&lt;-------</span> <span class="ss">bug</span><span class="p">:</span> <span class="sb">`trans`</span> <span class="n">is</span> <span class="n">typo</span> <span class="n">of</span> <span class="s1">&#39;tran&#39;</span>
-   <span class="o">...</span><span class="n">blah</span><span class="o">...</span>
-<span class="k">end</span>
-</code></pre></div>
-<p>当然还是能找到函数中未使用的参数等问题。修复的办法是如果确定这些变量是不被使用的，就在前面加<code>_</code>，这样rubytt 这样的 lint 类检查工具就跳过。后续我也正在做未定义变量的检查。</p>
-
-<h2>2. OCaml的程序发布</h2>
-
-<p>在做完上面的几个 feature 之后，我觉得可以尝试着把这个项目推广一下给同事们玩玩。如果让从来没接触过 OCaml 的朋友从头开始编译安装会显得很麻烦。所以我就尝试着把 rubytt 合并到 OCaml 的包管理仓库。于是在经过几次和 travis CI 的斗争后，终于发布了<a href="https://opam.ocaml.org/packages/rubytt/rubytt.0.1/">rubytt.0.1</a> 。</p>
-
-<p>安装方法如下：</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>gem install parallel ruby-progressbar
-sudo apt-get install --force-yes ocaml ocaml-native-compilers camlp4-extra opam
-// brew install opam   <span class="o">(</span>MacOS<span class="o">)</span>
-<span class="nb">eval</span> <span class="sb">`</span>opam config env<span class="sb">`</span>
-opam install rubytt
-</code></pre></div>
-<p>OCaml 的圈子比较小众，不过其实很多工具还是挺好用的，比如这个 OPAM 包管理器。</p>
-
-<h2>3. 其他心得</h2>
-
-<p>做这个程序这么久，除了好玩还是收获不少。</p>
-
-<p>OOP 和 FP 哪个好？通过这个项目的实践，我好好体会了一把 FP 写稍微大些的程序的感觉。说不上哪个好，我倒认为 type 确实很重要，rubytt 的过程中自动类型推导帮我发现了好多代码错误。编程语言应该让程序员能够精确无误地表达自己，尽量地避免人为引入的错误。</p>
-
-<p>构建测试脚手架，这也是第一份工作带给我的习惯。把每一个 feature 或者 bug 都写测试来覆盖。每次提交的时候都 review 一下测试用例的改动，这样才能不断保持质量。</p>
-
-<p>希望来年能继续保持对这个程序的热情。</p>
+<p>发现自己的傻缺，就是成长，对吧！</p>
 
 
       <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
@@ -202,7 +151,7 @@ opam install rubytt
 
 
     <ul class="pager">
-        <li class="previous"><a href="#comment_thread" title="Ruby 程序的静态分析: rubytt">评论&darr;</a></li>
+        <li class="previous"><a href="#comment_thread" title="程序员病">评论&darr;</a></li>
       <li class="next"><a href="/archive.html" title="所有文章">查看所有文章 &rarr;</a></li>
     </ul>
 
@@ -211,7 +160,7 @@ opam install rubytt
     <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
     <!--*********************************************************-->
     <div id="comment_thread"></div>
-    <div class="ds-thread" data-thread-key="/2016/12/27/rubytt.html" data-title="Ruby 程序的静态分析: rubytt" data-url="/2016/12/27/rubytt.html"></div>
+    <div class="ds-thread" data-thread-key="/2017/01/24/disease-of-programmer.html" data-title="程序员病" data-url="/2017/01/24/disease-of-programmer.html"></div>
     <script type="text/javascript">
     var duoshuoQuery = {short_name:"cyukang"};
     (function() {
@@ -228,7 +177,7 @@ opam install rubytt
   </div>
 
   <div class="span4 sidebar">
-    <h4 class="date">日期：<span>27 December 2016</span></h4>
+    <h4 class="date">日期：<span>24 January 2017</span></h4>
     
     <h4>标签</h4>
     <ul class="tag_box">
@@ -238,11 +187,7 @@ opam install rubytt
 
   
      
-    	<li><a href="/tags.html#Ruby-ref">Ruby <span>6</span></a></li>
-     
-    	<li><a href="/tags.html#Programming-ref">Programming <span>50</span></a></li>
-     
-    	<li><a href="/tags.html#OCaml-ref">OCaml <span>5</span></a></li>
+    	<li><a href="/tags.html#Books-ref">Books <span>8</span></a></li>
     
   
 
@@ -254,6 +199,10 @@ opam install rubytt
     <div class="violet-aside-post">
       <h4 class="v-section-tit">最近</h4>
       <ul>
+        
+        <li class="v-aside-li">
+          <a href="/2017/01/24/disease-of-programmer.html" title="程序员病" rel="bookmark">程序员病</a>
+        </li>
         
         <li class="v-aside-li">
           <a href="/2016/12/27/rubytt.html" title="Ruby 程序的静态分析: rubytt" rel="bookmark">Ruby 程序的静态分析: rubytt</a>
@@ -309,10 +258,6 @@ opam install rubytt
         
         <li class="v-aside-li">
           <a href="/2015/01/19/refer.html" title="广告" rel="bookmark">广告</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0" rel="bookmark">Rust coming to 1.0</a>
         </li>
         
       </ul>
