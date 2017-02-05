@@ -7,15 +7,29 @@ function is_mobile() {
 
 function change_for_mobile() {
     if(is_mobile()) {
+        nav = document.getElementById("navbar-inner")
+        if(nav != null) { 
+            nav.parentNode.removeChild(nav);
+        }
+        
         var imgs = document.getElementsByTagName("img");
         for (var i = 0; i < imgs.length; i++) {
             imgs[i].width = 320;
             imgs[i].height = 320;
         };
+        
         document.getElementById("brand").href="/archive";
-        document.getElementById("footer").style.display = "none";
-        document.getElementById("page-nav").style.display = "none";
+        var elem = document.getElementById("footer");
+        if (elem != null) {
+            elem.style.display = "none";
+        }
+        var elem = document.getElementById("page-nav");
+        if (elem != null) { 
+            elem.style.display = "none";
+        }
     };
 };
 
 change_for_mobile();
+
+
