@@ -13,11 +13,11 @@
        <meta charset="UTF-8"/>
        
        
-       <title>LeetCode: anagrams | Yukang's Page</title>
+       <title>rubytt 续 | Yukang's Page</title>
        
 
        
-       <meta name="description" content="a simple solution for anagrams in leetcode">
+       <meta name="description" content="">
        
        <meta name="author" content="Yukang">
 
@@ -116,42 +116,15 @@
 
 <div class="row post">
     <div class="span8">
-        <h1 class="title">LeetCode: anagrams</h1>
+        <h1 class="title">rubytt 续</h1>
 
-            <p><a href="http://oj.leetcode.com/problems/anagrams/">LeetCode这个题目</a>想出来一个好办法，题目的意思是输入一组字符串，把他们按照Anagrams归组出来，
-Anagrams的意思是字母相同，排列不同的两个字符串。</p>
+            <p>前段时间继续做了 <a href="http://github.com/chenyukang/rubytt">rubytt</a> 这个小项目，遇到一些问题。</p>
 
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>比如：
-aabc
-baac
-cbaa</code></pre></figure>
+<p>我想做一个自动检测未定义变量的功能，发现如果只是做静态分析，是很难做出来的。还有涉及到各种 gem 包的分析，这些工作量较大。可以看出在这个<a href="https://github.com/chenyukang/rubytt/pull/21/files">PR</a>里我甚至用上了一些硬编码。</p>
 
-<p>这些都是anagrams的。如果两个字符串是满足这种关系的，那么把字符串排序后的结果一定相同。因此想到用一个map去存来。</p>
+<p>然后我想做一个自动分析代码复杂度的功能，比如某些函数太长，或者逻辑太多之类的。这个我实现起来很快，也是比较简单的遍历语法树，递归统计逻辑操作和幅值操作的总数之类的。不过这些在 rubocop 里面都实现了，其中<a href="https://en.wikipedia.org/wiki/Cyclomatic_complexity">Cyclomatic complexity</a>可用来衡量代码的复杂度。我仔细看了看 rubocop 的内容，这个项目里面做的检查还挺全的，不过很多都是风格类的检查。在我下一个项目一开始我就引入了 rubocop ，对于保证代码质量还是挺有帮助的。对于之前老的项目，如果不是一开始就保持代码风格和静态分析的检查，后面要追加就非常耗时了，往往大家也没有时间来做各种重构。</p>
 
-<figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span></span><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">anagrams</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">strs</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">typedef</span> <span class="n">map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">Dict</span><span class="p">;</span>
-        <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">res</span><span class="p">;</span>
-        <span class="n">Dict</span> <span class="n">S</span><span class="p">;</span>
-        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">strs</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">string</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">strs</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-            <span class="n">sort</span><span class="p">(</span><span class="n">tmp</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">tmp</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">S</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">==</span> <span class="n">S</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
-                <span class="n">S</span><span class="p">[</span><span class="n">tmp</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">strs</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="n">S</span><span class="p">[</span><span class="n">tmp</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">strs</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-
-        <span class="k">for</span><span class="p">(</span><span class="n">Dict</span><span class="o">::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">S</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">S</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;&amp;</span> <span class="n">vec</span> <span class="o">=</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
-            <span class="k">if</span><span class="p">(</span><span class="n">vec</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
-            <span class="n">res</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">res</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vec</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">};</span></code></pre></figure>
+<p>rubytt 暂时告一段落，作为一个业余项目还是花费了些时间，造轮子的过程中收获不少。</p>
 
             
             <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
@@ -167,11 +140,9 @@ cbaa</code></pre></figure>
             
             <ul class="pager" id="page-nav">
                 
-                <li class="next"><a href="/2014/01/04/regular-expression-matching-dfa.html" title="正则表达式匹配和NFA/DFA">正则表达式匹配和NFA/DFA&rarr;</a></li>
+                <li class="next"><a href="/2017/01/24/disease-of-programmer.html" title="程序员病">程序员病&rarr;</a></li>
                 
 
-                
-                <li class="previous"><a href="/2014/03/06/random-number.html" title="关于随机数">&larr; 关于随机数</a></li>
                 
             </ul>
 
@@ -204,27 +175,9 @@ cbaa</code></pre></figure>
 
         <div class="span4 sidebar">
             
-            <h4 class="date">日期：<span>14 January 2014</span></h4>
+            <h4 class="date">日期：<span>09 April 2017</span></h4>
             
 
-            
-            <h4>标签</h4>
-            <ul class="tag_box">
-                
-                
-
-
-  
-     
-    	<li><a href="/tags.html#Programming-ref">Programming <span>50</span></a></li>
-     
-    	<li><a href="/tags.html#Algorithms-ref">Algorithms <span>8</span></a></li>
-    
-  
-
-
-
-            </ul>
             
 
             <div class="violet-aside-post">
