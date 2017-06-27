@@ -4,13 +4,82 @@
  <title>Yukang's Page</title>
  <link href="http://cyukang.com/atom.xml" rel="self"/>
  <link href="http://cyukang.com"/>
- <updated>2017-04-14T00:10:59+08:00</updated>
+ <updated>2017-06-27T23:49:56+08:00</updated>
  <id>http://cyukang.com</id>
  <author>
    <name>Yukang</name>
    <email>moorekang@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>OpenResty使用总结</title>
+   <link href="http://cyukang.com/2017/05/22/try-on-openresty.html"/>
+   <updated>2017-05-22T00:00:00+08:00</updated>
+   <id>http://cyukang.com/2017/05/22/try-on-openresty</id>
+   <content type="html">&lt;h2&gt;OpenResty&lt;/h2&gt;
+
+&lt;p&gt;最近用OpenResty比较多，除了一些业务逻辑的实现也做了AB组灰度相关的实现。OpenResty是在Nginx基础上做的扩展，应该算是国人开源项目中很成功的一个。在做的过程中写了不少Lua代码，写Lua代码的体验就是库好少，语言好简单。&lt;/p&gt;
+
+&lt;h2&gt;OpenResty lua编程相关参考&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://moonbingbing.gitbooks.io/openresty-best-practices/lua/main.html&quot;&gt;OpenResty最佳实践&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/openresty/lua-nginx-module#name&quot;&gt;OpenResty Readme&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;其中Readme要看完，大概会有一个全局的了解。最佳实践辅助看看。
+理解Nginx处理的几个阶段： &lt;a href=&quot;http://www.nginxguts.com/2011/01/phases/&quot;&gt;http://www.nginxguts.com/2011/01/phases/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;处理Response Body&lt;/h2&gt;
+
+&lt;p&gt;在我们的实现中有一步需要给后端返回的结果里面加一段水印(也就是一段JS代码)，这步可以在body_filter这个里面做。不过需要注意body_filter是按流式方式处理的，需要把各个buffer存下来然后拼接起来。
+而且后端返回的结果可能是zip压缩过的，&lt;a href=&quot;https://groups.google.com/forum/#!topic/openresty-en/q-dcQNxpwTA&quot;&gt;所以需要解压，然后才能做替换或者拼接的操作&lt;/a&gt;。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chunk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eof&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; 
+&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffered&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffered&lt;/span&gt; 
+&lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffered&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;then&lt;/span&gt; 
+   &lt;span class=&quot;n&quot;&gt;buffered&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;-- XXX we can use table.new here &lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffered&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffered&lt;/span&gt; 
+&lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chunk&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;then&lt;/span&gt; 
+   &lt;span class=&quot;n&quot;&gt;buffered&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffered&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chunk&lt;/span&gt; 
+   &lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; 
+&lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eof&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;then&lt;/span&gt; 
+   &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;whole&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;table.concat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffered&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+   &lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffered&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;
+
+   &lt;span class=&quot;c1&quot;&gt;-- try to unzip&lt;/span&gt;
+   &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;debody&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;pcall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;whole&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+   
+   &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;whole&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;debody&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;-- try to add or replace response body&lt;/span&gt;
+   &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;js_code&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;....&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;whole&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;whole&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;..&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;js_code&lt;/span&gt;
+   
+   &lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;whole&lt;/span&gt; 
+&lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+   
+
+&lt;p&gt;最后因为修改了response body，所以需要修改header filter里面的部分:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content_length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;content_encoding&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2&gt;容易出现的bug&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;尽量使用local变量： &lt;a href=&quot;https://moonbingbing.gitbooks.io/openresty-best-practices/lua/local.html&quot;&gt;具体的解释&lt;/a&gt;，我在实践的过程中出现过变量乱窜的情况，结果发现是没有是用local。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;ngx.ctx 比 ngx.var 性能要好很多，但是在执行了ngx.exec后在子请求里ctx不一样，在我们的项目里大部分是用的是ngx.var。使用ngx.var需要注意的是需要在Nginx配置文件里面提前声明。另外&lt;a href=&quot;https://groups.google.com/forum/#!topic/openresty/uv5zhqEdxCY&quot;&gt;ngx.ctx在使用的时候也有需要注意的地方&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://moonbingbing.gitbooks.io/openresty-best-practices/openresty/share_var.html&quot;&gt;不同阶段共享变量&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;不要使用错误码来做内部跳转，使用ngx.exec很方便。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://moonbingbing.gitbooks.io/openresty-best-practices/lua/not_use_module.html&quot;&gt;是用推荐的方法来实现module&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+ </entry>
  
  <entry>
    <title>rubytt 续</title>
