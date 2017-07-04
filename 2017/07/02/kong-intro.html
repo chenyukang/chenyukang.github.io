@@ -13,9 +13,11 @@
        <meta charset="UTF-8"/>
        
        
-       <title>A Basket-Ball Demo | Yukang's Page</title>
+       <title>Kong原理分析 | Yukang's Page</title>
        
 
+       
+       <meta name="description" content="">
        
        <meta name="author" content="Yukang">
 
@@ -114,27 +116,42 @@
 
 <div class="row post">
     <div class="span8">
-        <h1 class="title">A Basket-Ball Demo</h1>
+        <h1 class="title">Kong原理分析</h1>
 
-            <p>
-最近闲暇时间用C++写了个小Demo，一个小小的篮球模拟。在学校的时候看过《人工智能编程精粹》，里面有个足球模拟，看起来还比较逼真。我这个篮球模拟是比较类似的，主要好玩的地方是在于状态机。图形方面做得很简单，还是用OpenGL来实现的，另外用了一个库glui，这个东西很好，把GUI方面琐碎的事情就简化了。整个效果图如下，这可是湖人对火箭噢。
-</p>
+            <h3>缘由</h3>
 
-<a href="/images/2011-10-20-010256_1306x730_scrot.png"><img src="/images/2011-10-20-010256_1306x730_scrot.png" alt="" title="BasketBall" width="780" height="438" class="aligncenter size-full wp-image-717" /></a>
+<p>最近在工作上接触了<a href="">Kong</a>这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一些涉及各个系统的功能就很困难。比如我们前段时间实现的灰度系统就把人折腾得很惨。因为我们的设计中有一些http header 需要在各个系统之间传递。每个项目的 Nginx 里面都用了 Lua 写一些授权逻辑，最终这些逻辑分散在各个项目的 Nginx 层，维护困难。除了灰度，其他的一些比较基础的Nginx层功能也是各自为政。所以我们的教训是: 在做微服务化之前，需要统一的、可扩张的API网关。我们希望网关性能好，并且扩张性足够好。使用OpenResty是很自然的选择，我们希望有一层 Nginx 是所有请求都会经过的，这层 Nginx 会负责做一些基础操作，当然最重要的是做流量转发。</p>
 
-<p>
-调试状态机是个很有趣的过程，每一个球队有自己的状态机，分为进攻状态、防守状态、准备发球状态，每个球员也有自己的状态机，如下图所示。这里使用的是状态模式，把复杂的转移逻辑分散到各个状态节点，这正是状态模式的精华啊。现在这个还只是个粗糙的版本，虽然看得出来有那么点意思，规则都出来了，但是每个球员的跑位不逼真，没有多少智能的感觉。当篮球碰到边界的时候自动反弹，这点有点假，不过这也简化了不少比较繁琐的捡球和发球动作。当然现在的规则都比较简单，连三分和两分都没有分出来，罚球也没有，哈哈。现在的状态机看起来大部分时间还可以，很少的时候会出现一些比较反常规的现象。把每个状态转移过程在画面中显示出来能比较直观的去调试。
-</p>
-<p>
+<p>调研了一阵子之后，我们所面临的是两条路，一是自己写一个类似于<a href="http://www.infoq.com/cn/articles/JD-Nignx-JEN">京东JEN</a>的系统，在调研一圈之后我们发现 Kong 是比较适合自身业务需求的。二是在 Kong 的基础上做一些插件开发，然后集群部署Kong即可。</p>
 
-下面这个是球员的状态转移图，也就是FieldPlayerStates.cpp实现的。球队的状态机要简单一些，只有三个。
-</p>
+<p>我之前稍微看了一下介绍，认为 Kong 可能对我们来说太重了些。后来又仔细看了一阵源码，自己认为代码质量挺好，而且模块化和可扩张性做得很好，因此决定采用。</p>
 
-<p>
-<a href="/images/statemachine.png"><img class="aligncenter size-large wp-image-706" title="statemachine" src="/images/statemachine-1024x268.png" alt="" width="768" height="200" /></a>
+<h3>Kong简介</h3>
 
-程序在这里<a href="https://github.com/chenyukang/Basketball_demo">GitHub:BasketBall</a>，感兴趣的可以看一下，也有7000行的代码了，也有点乱:). 后面有时间再调试一下，慢慢细化，球员的站位和防守动作做到更智能些。
-</p>
+<p>Kong 项目的目的是这样一幅图<a href="/images/kong-intro.png">kong-intro</a>：</p>
+
+<p><img src="/images/kong-intro.png" alt="kong-intro" class="img-center" style="width:320px;height:300px;"/></p>
+
+<p>可以看到这正是我们要做的事情。使用Kong的优势在于：</p>
+
+<ol>
+<li>可扩展性，Kong依赖一个数据库来实现配置存储，依赖 <a href="https://www.serf.io">serf</a> 来实现 instance 之间的通信。任何一个节点修改了其他节点会收到通知并重新reload配置。</li>
+<li>模块化，Kong 可以方便地增加新的插件，并且插件可以通过 Restful API 进行管理</li>
+</ol>
+
+<h3>主要代码模块</h3>
+
+<p>Kong的使用方法这里不做介绍，<a href="https://getkong.org/docs/">这里</a>有非常详细的文档和示例。我主要分析一下其<a href="https://github.com/Mashape/kong">源码</a>和原理。</p>
+
+<ol>
+<li>core目录里面是一些基础框架代码，包括hooks，事件，插件基础</li>
+<li>plugins目录包括所有kong自带的插件，kong的插件扩展有一套自己的规范，按照规范来非常容易地就能扩展kong</li>
+<li>dao是数据库抽象层，目前kong自带支持数据库postgresql和cassandra。</li>
+<li>tools为一些工具函数，需要注意的是cache。因为所有配置（包括插件的配置）都会是用cache来缓存，为了减少读取数据库次数。</li>
+<li>api Kong会提供一个系列接口来更新配置</li>
+</ol>
+
+<p>后续我会陆续继续写一些Kong相关原理分析。主要涉及到Kong的初始化部分、缓存如何更新、插件机制如何实现等。主要是觉得Kong的代码质量很好，另外依照带着问题来学习新东西感觉非常有收获，这几个部分我都是从一个主题问题逐个分析，这几问题解决了之后自然对代码就熟悉了很多，并且有信心在生产环境使用。</p>
 
             
             <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
@@ -150,11 +167,9 @@
             
             <ul class="pager" id="page-nav">
                 
-                <li class="next"><a href="/2011/09/25/xingshi.html" title="姓氏的消失">姓氏的消失&rarr;</a></li>
+                <li class="next"><a href="/2017/06/27/recent-reading-list.html" title="小说推荐">小说推荐&rarr;</a></li>
                 
 
-                
-                <li class="previous"><a href="/2011/12/21/a-emacs-func.html" title="A Emacs func">&larr; A Emacs func</a></li>
                 
             </ul>
 
@@ -187,29 +202,9 @@
 
         <div class="span4 sidebar">
             
-            <h4 class="date">日期：<span>20 October 2011</span></h4>
+            <h4 class="date">日期：<span>02 July 2017</span></h4>
             
 
-            
-            <h4>标签</h4>
-            <ul class="tag_box">
-                
-                
-
-
-  
-     
-    	<li><a href="/tags.html#C-ref">C <span>8</span></a></li>
-     
-    	<li><a href="/tags.html#Game-ref">Game <span>1</span></a></li>
-     
-    	<li><a href="/tags.html#Programming-ref">Programming <span>50</span></a></li>
-    
-  
-
-
-
-            </ul>
             
 
             <div class="violet-aside-post">
