@@ -168,8 +168,8 @@ branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
 <p>在Linux kernel里面会看到类似likely和unlikely这样的代码，从其名字就很直观的解释了其意义。看其定义为两个宏。
 <pre><code>
 include/linux/compiler.h
- #define likely(x) _<em>builtin_expect   (!!(x), 1)
- #define unlikely(x) _</em>builtin_expect (!!(x), 0)
+ #define likely(x) __builtin_expect   (!!(x), 1)
+ #define unlikely(x) __builtin_expect (!!(x), 0)
 </code></pre></p>
 
 <p>Linux内核开发者使用这两个宏来通过编译器提示cpu：某一段代码很可能会执行，应该被预测，而有的情况出现的概率比较小，不必预测。类似这样的代码：</p>
@@ -184,7 +184,7 @@ if (unlikely(some_cond)) { //this is rare!
 }
 </code></pre>
 
-<p>关于这个方面，在这篇论文<a href="http://www.akkadia.org/drepper/cpumemory.pdf">What every Programmer should know about Memory</a>里面有更详细的讲述。分支预测在现代cpu上如此通用，竟然还有人利用这个来尝试破解RSA的，看这个<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.80.1438&amp;rep=rep1&amp;type=pdf">On the Power of Simple Branch Prediction Analysis</a>。</p>
+<p>关于这个方面，在这篇论文<a href="http://www.akkadia.org/drepper/cpumemory.pdf">What every Programmer should know about Memory</a>里面有更详细的讲述。分支预测在现代cpu上如此通用，竟然还有人利用这个来尝试破解RSA的，看这个<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.80.1438&rep=rep1&type=pdf">On the Power of Simple Branch Prediction Analysis</a>。</p>
 
             
             <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
@@ -267,6 +267,10 @@ if (unlikely(some_cond)) { //this is rare!
                 <ul>
                     
                     <li class="v-aside-li">
+                        <a href="/2017/07/02/kong-intro.html" title="Kong原理分析" rel="bookmark">Kong原理分析</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
                         <a href="/2017/06/27/recent-reading-list.html" title="小说推荐" rel="bookmark">小说推荐</a>
                     </li>
                     
@@ -320,10 +324,6 @@ if (unlikely(some_cond)) { //this is rare!
                     
                     <li class="v-aside-li">
                         <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
-                    </li>
-                    
-                    <li class="v-aside-li">
-                        <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
                     </li>
                     
                 </ul>

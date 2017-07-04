@@ -151,7 +151,7 @@
 
 <p>非常易懂，编译的可执行未见叫做app.exe, 其中有三条rule: cc, link, cleanup。看看这个官方的试用手册，还有一些附加参数可以加在rule的下面，比如description用来在编译的时候显示出来。Ninja还有个比较好玩的功能就是Ninja -t graph all命令，这可以用来生成编译时候的依赖关系，可以用dot来生成图片等。Ninja的实现也可以大概推测到，根据用户给的依赖关系图，<em>并行</em> 地编译各个文件。</p>
 
-<p>使用Ninja的一个问题就是需要生成这个build.ninja文件，对于大型项目来说这样一条一条地写配置文件是不可能的。幸好我们可以使用Cmake来生成这个配置文件，Cmake对应的是automake这样的东西。在<a href="http://www.kitware.com/news/home/browse/CMake?2012_11_07&amp;CMake+2.8.10+Just+Released">Cmake的最新版本</a>中已经支持参数Camke -G Ninja，Cmake会根据用户给定的CMakeLists.txt来生成build.ninja文件。而CmakeLists文件相对来说要简单一些，只要写清楚编译的可执行文件的名字，和其依赖的包含main函数的源文件。把我的<a href="https://github.com/chenyukang/Maze">迷宫小项目</a>来举个例子,在项目文件夹下写配置文件CMakeLists.txt:</p>
+<p>使用Ninja的一个问题就是需要生成这个build.ninja文件，对于大型项目来说这样一条一条地写配置文件是不可能的。幸好我们可以使用Cmake来生成这个配置文件，Cmake对应的是automake这样的东西。在<a href="http://www.kitware.com/news/home/browse/CMake?2012_11_07&CMake+2.8.10+Just+Released">Cmake的最新版本</a>中已经支持参数Camke -G Ninja，Cmake会根据用户给定的CMakeLists.txt来生成build.ninja文件。而CmakeLists文件相对来说要简单一些，只要写清楚编译的可执行文件的名字，和其依赖的包含main函数的源文件。把我的<a href="https://github.com/chenyukang/Maze">迷宫小项目</a>来举个例子,在项目文件夹下写配置文件CMakeLists.txt:</p>
 
 <figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>    
 cmake_minimum_required<span class="o">(</span>VERSION <span class="m">2</span>.8<span class="o">)</span>
@@ -247,6 +247,10 @@ target_link_libraries<span class="o">(</span>Maze.exe maze<span class="o">)</spa
                 <ul>
                     
                     <li class="v-aside-li">
+                        <a href="/2017/07/02/kong-intro.html" title="Kong原理分析" rel="bookmark">Kong原理分析</a>
+                    </li>
+                    
+                    <li class="v-aside-li">
                         <a href="/2017/06/27/recent-reading-list.html" title="小说推荐" rel="bookmark">小说推荐</a>
                     </li>
                     
@@ -300,10 +304,6 @@ target_link_libraries<span class="o">(</span>Maze.exe maze<span class="o">)</spa
                     
                     <li class="v-aside-li">
                         <a href="/2015/03/07/types-and-programming-languages-3.html" title="Types and Programming Languages (3)" rel="bookmark">Types and Programming Languages (3)</a>
-                    </li>
-                    
-                    <li class="v-aside-li">
-                        <a href="/2015/03/07/types-and-programming-languages-2.html" title="Types and Programming Languages (2)" rel="bookmark">Types and Programming Languages (2)</a>
                     </li>
                     
                 </ul>

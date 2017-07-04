@@ -4,13 +4,55 @@
  <title>Yukang's Page</title>
  <link href="http://cyukang.com/atom.xml" rel="self"/>
  <link href="http://cyukang.com"/>
- <updated>2017-07-02T10:43:10+08:00</updated>
+ <updated>2017-07-04T19:55:54+08:00</updated>
  <id>http://cyukang.com</id>
  <author>
    <name>Yukang</name>
    <email>moorekang@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Kong原理分析</title>
+   <link href="http://cyukang.com/2017/07/02/kong-intro.html"/>
+   <updated>2017-07-02T00:00:00+08:00</updated>
+   <id>http://cyukang.com/2017/07/02/kong-intro</id>
+   <content type="html">&lt;h3&gt;缘由&lt;/h3&gt;
+
+&lt;p&gt;最近在工作上接触了&lt;a href=&quot;&quot;&gt;Kong&lt;/a&gt;这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一些涉及各个系统的功能就很困难。比如我们前段时间实现的灰度系统就把人折腾得很惨。因为我们的设计中有一些http header 需要在各个系统之间传递。每个项目的 Nginx 里面都用了 Lua 写一些授权逻辑，最终这些逻辑分散在各个项目的 Nginx 层，维护困难。除了灰度，其他的一些比较基础的Nginx层功能也是各自为政。所以我们的教训是: 在做微服务化之前，需要统一的、可扩张的API网关。我们希望网关性能好，并且扩张性足够好。使用OpenResty是很自然的选择，我们希望有一层 Nginx 是所有请求都会经过的，这层 Nginx 会负责做一些基础操作，当然最重要的是做流量转发。&lt;/p&gt;
+
+&lt;p&gt;调研了一阵子之后，我们所面临的是两条路，一是自己写一个类似于&lt;a href=&quot;http://www.infoq.com/cn/articles/JD-Nignx-JEN&quot;&gt;京东JEN&lt;/a&gt;的系统，在调研一圈之后我们发现 Kong 是比较适合自身业务需求的。二是在 Kong 的基础上做一些插件开发，然后集群部署Kong即可。&lt;/p&gt;
+
+&lt;p&gt;我之前稍微看了一下介绍，认为 Kong 可能对我们来说太重了些。后来又仔细看了一阵源码，自己认为代码质量挺好，而且模块化和可扩张性做得很好，因此决定采用。&lt;/p&gt;
+
+&lt;h3&gt;Kong简介&lt;/h3&gt;
+
+&lt;p&gt;Kong 项目的目的是这样一幅图&lt;a href=&quot;/images/kong-intro.png&quot;&gt;kong-intro&lt;/a&gt;：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/kong-intro.png&quot; alt=&quot;kong-intro&quot; class=&quot;img-center&quot; style=&quot;width:320px;height:300px;&quot;/&gt;&lt;/p&gt;
+
+&lt;p&gt;可以看到这正是我们要做的事情。使用Kong的优势在于：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;可扩展性，Kong依赖一个数据库来实现配置存储，依赖 &lt;a href=&quot;https://www.serf.io&quot;&gt;serf&lt;/a&gt; 来实现 instance 之间的通信。任何一个节点修改了其他节点会收到通知并重新reload配置。&lt;/li&gt;
+&lt;li&gt;模块化，Kong 可以方便地增加新的插件，并且插件可以通过 Restful API 进行管理&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;主要代码模块&lt;/h3&gt;
+
+&lt;p&gt;Kong的使用方法这里不做介绍，&lt;a href=&quot;https://getkong.org/docs/&quot;&gt;这里&lt;/a&gt;有非常详细的文档和示例。我主要分析一下其&lt;a href=&quot;https://github.com/Mashape/kong&quot;&gt;源码&lt;/a&gt;和原理。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;core目录里面是一些基础框架代码，包括hooks，事件，插件基础&lt;/li&gt;
+&lt;li&gt;plugins目录包括所有kong自带的插件，kong的插件扩展有一套自己的规范，按照规范来非常容易地就能扩展kong&lt;/li&gt;
+&lt;li&gt;dao是数据库抽象层，目前kong自带支持数据库postgresql和cassandra。&lt;/li&gt;
+&lt;li&gt;tools为一些工具函数，需要注意的是cache。因为所有配置（包括插件的配置）都会是用cache来缓存，为了减少读取数据库次数。&lt;/li&gt;
+&lt;li&gt;api Kong会提供一个系列接口来更新配置&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;后续我会陆续继续写一些Kong相关原理分析。主要涉及到Kong的初始化部分、缓存如何更新、插件机制如何实现等。主要是觉得Kong的代码质量很好，另外依照带着问题来学习新东西感觉非常有收获，这几个部分我都是从一个主题问题逐个分析，这几问题解决了之后自然对代码就熟悉了很多，并且有信心在生产环境使用。&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>小说推荐</title>
@@ -857,7 +899,7 @@ Preservation: If a well-typed term takes a step of evaluation, then the resultin
    <id>http://cyukang.com/2015/01/19/refer</id>
    <content type="html">&lt;p&gt;我到了一个做无人机的公司工作，叫做大疆创新(&lt;a href=&quot;http://www.dji.com&quot;&gt;DJI&lt;/a&gt;)。最近内部有一些推广活动，有感兴趣的朋友了解一下。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://t.cn/RZMCKFq?u=2197040790&amp;amp;m=3796713691370166&amp;amp;cu=2197040790&quot;&gt;大疆精灵&lt;/a&gt; 这页面我隔壁小伙子做的，看起来还不错 :)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://t.cn/RZMCKFq?u=2197040790&amp;m=3796713691370166&amp;cu=2197040790&quot;&gt;大疆精灵&lt;/a&gt; 这页面我隔壁小伙子做的，看起来还不错 :)&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/phantom.jpg&quot; alt=&quot;phantom&quot; class=&quot;img-center&quot; /&gt;&lt;/p&gt;
 
@@ -2823,7 +2865,7 @@ Reddit上的一个得分最高的回复：&lt;/p&gt;
 
 &lt;p&gt;非常易懂，编译的可执行未见叫做app.exe, 其中有三条rule: cc, link, cleanup。看看这个官方的试用手册，还有一些附加参数可以加在rule的下面，比如description用来在编译的时候显示出来。Ninja还有个比较好玩的功能就是Ninja -t graph all命令，这可以用来生成编译时候的依赖关系，可以用dot来生成图片等。Ninja的实现也可以大概推测到，根据用户给的依赖关系图，&lt;em&gt;并行&lt;/em&gt; 地编译各个文件。&lt;/p&gt;
 
-&lt;p&gt;使用Ninja的一个问题就是需要生成这个build.ninja文件，对于大型项目来说这样一条一条地写配置文件是不可能的。幸好我们可以使用Cmake来生成这个配置文件，Cmake对应的是automake这样的东西。在&lt;a href=&quot;http://www.kitware.com/news/home/browse/CMake?2012_11_07&amp;amp;CMake+2.8.10+Just+Released&quot;&gt;Cmake的最新版本&lt;/a&gt;中已经支持参数Camke -G Ninja，Cmake会根据用户给定的CMakeLists.txt来生成build.ninja文件。而CmakeLists文件相对来说要简单一些，只要写清楚编译的可执行文件的名字，和其依赖的包含main函数的源文件。把我的&lt;a href=&quot;https://github.com/chenyukang/Maze&quot;&gt;迷宫小项目&lt;/a&gt;来举个例子,在项目文件夹下写配置文件CMakeLists.txt:&lt;/p&gt;
+&lt;p&gt;使用Ninja的一个问题就是需要生成这个build.ninja文件，对于大型项目来说这样一条一条地写配置文件是不可能的。幸好我们可以使用Cmake来生成这个配置文件，Cmake对应的是automake这样的东西。在&lt;a href=&quot;http://www.kitware.com/news/home/browse/CMake?2012_11_07&amp;CMake+2.8.10+Just+Released&quot;&gt;Cmake的最新版本&lt;/a&gt;中已经支持参数Camke -G Ninja，Cmake会根据用户给定的CMakeLists.txt来生成build.ninja文件。而CmakeLists文件相对来说要简单一些，只要写清楚编译的可执行文件的名字，和其依赖的包含main函数的源文件。把我的&lt;a href=&quot;https://github.com/chenyukang/Maze&quot;&gt;迷宫小项目&lt;/a&gt;来举个例子,在项目文件夹下写配置文件CMakeLists.txt:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span&gt;&lt;/span&gt;    
 cmake_minimum_required&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;VERSION &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;.8&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
@@ -3535,8 +3577,8 @@ branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
 &lt;p&gt;在Linux kernel里面会看到类似likely和unlikely这样的代码，从其名字就很直观的解释了其意义。看其定义为两个宏。
 &lt;pre&gt;&lt;code&gt;
 include/linux/compiler.h
- #define likely(x) _&lt;em&gt;builtin_expect   (!!(x), 1)
- #define unlikely(x) _&lt;/em&gt;builtin_expect (!!(x), 0)
+ #define likely(x) __builtin_expect   (!!(x), 1)
+ #define unlikely(x) __builtin_expect (!!(x), 0)
 &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
 
 &lt;p&gt;Linux内核开发者使用这两个宏来通过编译器提示cpu：某一段代码很可能会执行，应该被预测，而有的情况出现的概率比较小，不必预测。类似这样的代码：&lt;/p&gt;
@@ -3551,7 +3593,7 @@ if (unlikely(some_cond)) { //this is rare!
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;关于这个方面，在这篇论文&lt;a href=&quot;http://www.akkadia.org/drepper/cpumemory.pdf&quot;&gt;What every Programmer should know about Memory&lt;/a&gt;里面有更详细的讲述。分支预测在现代cpu上如此通用，竟然还有人利用这个来尝试破解RSA的，看这个&lt;a href=&quot;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.80.1438&amp;amp;rep=rep1&amp;amp;type=pdf&quot;&gt;On the Power of Simple Branch Prediction Analysis&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;关于这个方面，在这篇论文&lt;a href=&quot;http://www.akkadia.org/drepper/cpumemory.pdf&quot;&gt;What every Programmer should know about Memory&lt;/a&gt;里面有更详细的讲述。分支预测在现代cpu上如此通用，竟然还有人利用这个来尝试破解RSA的，看这个&lt;a href=&quot;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.80.1438&amp;rep=rep1&amp;type=pdf&quot;&gt;On the Power of Simple Branch Prediction Analysis&lt;/a&gt;。&lt;/p&gt;
 </content>
  </entry>
  
