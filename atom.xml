@@ -4,13 +4,117 @@
  <title>Yukang's Page</title>
  <link href="http://cyukang.com/atom.xml" rel="self"/>
  <link href="http://cyukang.com"/>
- <updated>2017-07-04T19:55:54+08:00</updated>
+ <updated>2017-07-10T22:32:59+08:00</updated>
  <id>http://cyukang.com</id>
  <author>
    <name>Yukang</name>
    <email>moorekang@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Kong原理分析: 启动</title>
+   <link href="http://cyukang.com/2017/07/07/kong-intro-2.html"/>
+   <updated>2017-07-07T00:00:00+08:00</updated>
+   <id>http://cyukang.com/2017/07/07/kong-intro-2</id>
+   <content type="html">&lt;h3&gt;Kong的初始化过程&lt;/h3&gt;
+
+&lt;p&gt;安装好Kong之后我们是用命令&lt;code&gt;sudo ./bin/kong start -c kong.conf -vv&lt;/code&gt;来启动。其中kong.conf为配置文件，&lt;code&gt;-vv&lt;/code&gt;选项打印出一些重要信息展示出来，方便发现问题。&lt;/p&gt;
+
+&lt;p&gt;可以看到&lt;code&gt;./bin/kong&lt;/code&gt;是一个脚本，是用的&lt;code&gt;#!/usr/local/openresty/bin/resty&lt;/code&gt;程序来执行，而resty是OpenResty的一个perl可执行脚本。kong的内容很简单，就是一个入口函数调用： 
+&lt;code&gt;require(&amp;quot;kong.cmd.init&amp;quot;)(arg)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;所以我们可以从cmd/init.lua这个文件开始入手看启动过程。一翻开init.lua这个文件，发现其实不过是个wrapper，解析了args之后就是调用start，stop，quit等命令。然后我们顺藤摸瓜找cmd/start.lua文件，整个启动过程就在这里了：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conf_loader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;prefix&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prefix&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}))&lt;/span&gt;
+  
+  &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dao&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DAOFactory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;xpcall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prefix_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prepare_prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nginx_conf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dao&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run_migrations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;serf_signals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dao&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nginx_signals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Kong started&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;-- cannot throw from this function&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;从代码上来看很直观，首先conf_loader载入配置文件，DAOFactory构建数据库连接层，prefix_handler.prepare_prefix是准备一些由程序生成的配置文件。dao:run_migrations是可能有的启动时数据库改动。serf_signals是启动serf程序，nginx_signals是启动nginx进程。&lt;/p&gt;
+
+&lt;h3&gt;读取配置文件conf_loader&lt;/h3&gt;
+
+&lt;p&gt;conf_loader读取的当然是命令行里面传入的kong.conf文件，打开conf_loader.lua看了看，是是用一个lua第三方库来做文件解析的。&lt;code&gt;local pl_config = require &amp;quot;pl.config&amp;quot;&lt;/code&gt;，最开始不太知道这个pl是什么，经过搜索后才知道是这里&lt;a href=&quot;https://github.com/stevedonovan/Penlight/tree/master/lua/pl&quot;&gt;定义的&lt;/a&gt;，在kong.rockspec里面有定义了该库的依赖&lt;code&gt;&amp;quot;penlight == 1.4.1&amp;quot;&lt;/code&gt;。读取配置的整个过程比较琐碎，最后回构建一个解析好的conf表。这里学到了Lua里面的setmetatable设置元表的方法，table作为Lua里面的最基本数据结构，setmetatable可以方便的绑定一个key和其对应的方法。看起来也像是面向对象的风格，在conf_loader的最后部分是:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;setmetatable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;add_default_path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;DEFAULT_PATHS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DEFAULT_PATHS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;......&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;__call&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...)&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(...)&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这样其他地方调用的时候&lt;code&gt;local conf, err, errors = conf_loader(args.conf)&lt;/code&gt;自然就把args.conf传入load，返回解析后的结果。&lt;/p&gt;
+
+&lt;h3&gt;prepare_prefix动态生成Nginx和serf的配置&lt;/h3&gt;
+
+&lt;p&gt;prefix_handler.lua这个文件主要在准备一些Nginx的配置文件和serf的配置文件。prepare_prefix函数前半部分在创建各个子目录，logs、serf、pids、以及各个日志文件。关于Kong的config部分需要参考一下&lt;a href=&quot;https://getkong.org/docs/0.10.x/configuration/&quot;&gt;这里&lt;/a&gt;。这个函数比较长，重要的部分是生成Nginx的配置文件。
+可以看到compile_kong_conf函数其实是是用kong/templates目录下的nginx_kong.lua和nginx.lua分别生成两个文件，其中nginx_kong.lua里面包含了嵌入Kong的Lua代码的逻辑。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init_by_lua_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;luarocks.loader&amp;#39;&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;resty.core&amp;#39;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;kong&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;kong&amp;#39;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;kong&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; 
+  &lt;span class=&quot;n&quot;&gt;rewrite_by_lua_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;kong&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rewrite&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;access_by_lua_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;kong&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;access&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;header_filter_by_lua_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;kong&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header_filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;body_filter_by_lua_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;kong&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body_filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;log_by_lua_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;kong&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;因此我们可以知道Kong每次reload或者启动的时候会生成新的Nginx配置文件，所以我们如果要加入自己的配置可以直接修改nginx_kong.lua文件。另外我在使用的时候发现一个小问题，Kong把serf的node_id存在一个文件里，如果我们把之前跑过Kong的机器做了镜像，然后再启动一个新的实例时，这个node_id文件既然存在则没有重新生成，最终导致两台kong实例并没有相互通信形成一个集群。我认为这里其实可以再检查一下node_id的文件和本机的ip是否一致，如果不一致则重新生成。&lt;/p&gt;
+
+&lt;h3&gt;dao:run_migrations()&lt;/h3&gt;
+
+&lt;p&gt;初始化过程的下一步则是执行数据库操作，Kong目前只支持cassandra和Postgres，个人认为应该增加Redis的支持。&lt;/p&gt;
+
+&lt;h3&gt;serf_signals.start&lt;/h3&gt;
+
+&lt;p&gt;之前提到过serf是用来保证kong instance之间的通信的，启动的时候的一个很重要参数是&lt;code&gt;--event-handler&lt;/code&gt;，参数的内容是一个可执行脚本(通常叫做serf_event.sh)，文件的内容是前面生成配置文件的时候写入的。默认情况下serf会监听在7946端口，如果多台server需要形成一个集群，这个端口之间需要能相互通信。这里就有一个问题，在一个新的server刚启动的时候，该server是如何发现其他节点的呢？我们可以看到serf_signals.lua里的start函数调用了serf:autojoin()函数，跟踪到autojoin里面看代码，其实是从数据库里读取出其他nodes的信息，然后依次告诉对方新同志加入了，然后把自己的节点信息写入到数据库里。自然如果要退出也需要把自己的信息从数据库里删掉。&lt;/p&gt;
+
+&lt;h3&gt;nginx_signals.start&lt;/h3&gt;
+
+&lt;p&gt;启动的最后一步即是Nginx的启动，其实最终执行的命令就是&lt;code&gt;/usr/local/openresty/nginx/sbin/nginx -p /usr/local/kong -c nginx.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3&gt;总结&lt;/h3&gt;
+
+&lt;p&gt;通过上面的分析，可以总结Kong的启动过程即是：解析输入参数，验证参数合法性并生成必要的目录和配置文件，执行数据库操作，启动serf，启动Nginx。最终其实就是一个OpenResty启动过程，嵌入Kong里面的core部分的Lua代码。后面继续分析其可扩展的插件机制。&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Kong原理分析</title>
@@ -50,7 +154,7 @@
 &lt;li&gt;api Kong会提供一个系列接口来更新配置&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;后续我会陆续继续写一些Kong相关原理分析。主要涉及到Kong的初始化部分、缓存如何更新、插件机制如何实现等。主要是觉得Kong的代码质量很好，另外依照带着问题来学习新东西感觉非常有收获，这几个部分我都是从一个主题问题逐个分析，这几问题解决了之后自然对代码就熟悉了很多，并且有信心在生产环境使用。&lt;/p&gt;
+&lt;p&gt;我觉得Kong的代码质量很好，另外依照带着问题来学习新东西感觉非常有收获，这几个部分我都是从一个主题问题逐个分析，这几个问题解决了之后自然对代码就熟悉了很多，并且有信心在生产环境使用。后续我会陆续继续写一些Kong相关原理分析，顺便更深入熟悉一下Lua。主要涉及到Kong的初始化部分、缓存如何更新、插件机制如何实现等。&lt;/p&gt;
 </content>
  </entry>
  
