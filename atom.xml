@@ -4,7 +4,7 @@
  <title>Yukang's Page</title>
  <link href="http://cyukang.com/atom.xml" rel="self"/>
  <link href="http://cyukang.com"/>
- <updated>2017-07-17T18:55:20+08:00</updated>
+ <updated>2017-07-22T23:22:27+08:00</updated>
  <id>http://cyukang.com</id>
  <author>
    <name>Yukang</name>
@@ -13,7 +13,205 @@
 
  
  <entry>
-   <title>Kong原理分析: 插件</title>
+   <title>Kong源码分析: 事件</title>
+   <link href="http://cyukang.com/2017/07/22/kong-intro-5.html"/>
+   <updated>2017-07-22T00:00:00+08:00</updated>
+   <id>http://cyukang.com/2017/07/22/kong-intro-5</id>
+   <content type="html">&lt;p&gt;Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。&lt;/p&gt;
+
+&lt;h3&gt;worker模型&lt;/h3&gt;
+
+&lt;p&gt;假设我们对Kong做了一个更改的请求，这个请求通常是通过admin_api这个路由处理的。也就是说最终执行数据库操作的动作是在一个Nginx worker进程里。因为操作了数据库所以我们需要刷新这个Kong节点的所有worker的缓存，而且要把事件分发给其他Kong节点，让其他Kong节点刷新所有worker的缓存。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/kong-message.png&quot; alt=&quot;kong-message&quot; class=&quot;img-center&quot;/&gt;&lt;/p&gt;
+
+&lt;p&gt;这就涉及到两部分:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Kong节点之间的消息通信, 这是使用&lt;a href=&quot;https://www.serf.io/&quot;&gt;serf&lt;/a&gt;来实现的&lt;/li&gt;
+&lt;li&gt;Kong每个节点内部，也就是Nginx worker之间的通信，这是使用&lt;a href=&quot;https://github.com/Mashape/lua-resty-worker-events&quot;&gt;lua-resty-worker-events&lt;/a&gt;来进行。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;发布订阅模式&lt;/h3&gt;
+
+&lt;p&gt;发布订阅是实现事件的一种经典设计模式，主要需要有两类操作：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;发布消息&lt;/li&gt;
+&lt;li&gt;订阅消息，收到消息后触发指定的函数。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Kong使用的是一个&lt;a href=&quot;https://github.com/Olivine-Labs/mediator_lua&quot;&gt;叫作mediator_lua&lt;/a&gt;，mediator中文意思为&amp;quot;中间人&amp;quot;，很符合项目的意思。可以看到kong/core/events.lua里面实现如下：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Events&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_mediator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;-- Required to tell mediator to continue processing other events&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Events&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;publish&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event_name&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_mediator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;publish&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;string.upper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)},&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Kong.init初始化的时候会调用一个叫做attach_hooks的函数:
+&lt;code&gt;
+attach_hooks(events, require &amp;quot;kong.core.hooks&amp;quot;)
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;在load插件的时候也会把插件对应hooks绑定上：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;-- Attaching hooks&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hooks&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;utils&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load_module_if_exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;kong.plugins.&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;..&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plugin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;..&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;.hooks&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;then&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;attach_hooks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;events&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hooks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3&gt;事件的来源&lt;/h3&gt;
+
+&lt;p&gt;上面说过，Kong节点之间通信是通过&lt;a href=&quot;https://www.serf.io/&quot;&gt;serf&lt;/a&gt;发送的。我们来看看事件是如何触发发出通知的。
+事件来于源数据库的修改，那就应该在数据库代码部分有触发事件的代码，查看dao/dao.lua这个文件里的代码，我们可以看到在insert、update、insert执行的时候都调用了一行代码&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event_types&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ENTITY_DELETED&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;schema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;entity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这个函数的实现如下，这里做了数据的序列化，然后发布了一种叫做CLUSTER_PROGATE类型的消息：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;schema&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;events_handler&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;then&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&lt;/span&gt;  &lt;span class=&quot;err&quot;&gt;执行数据序列化&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;events_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;publish&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;events_handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TYPES&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CLUSTER_PROPAGATE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;在core/hooks.lua接受消息部分，events.TYPES.CLUSTER_PROPAGATE对应的处理部分是singletons.serf:event(message_t)，所以我们看serf.lua这个源文件，最终event调用了invoke_signal，这个函数会运行一个serf命令，类似于这样：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;serf&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coalesce&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rpc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;127.0.0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7373&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;kong&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;{&amp;quot;type&amp;quot;:&amp;quot;ENTITY_UPDATED&amp;quot;,&amp;quot;primary_key&amp;quot;:[&amp;quot;id&amp;quot;],&amp;quot;collection&amp;quot;:&amp;quot;apis&amp;quot;,&amp;quot;entity&amp;quot;:{&amp;quot;id&amp;quot;:&amp;quot;94acca76-d61a-429e-86a9-5abf2c61ee31&amp;quot;}}&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这就出发了一个serf event，其他Kong节点会收到此消息。&lt;/p&gt;
+
+&lt;h3&gt;serf: Kong节点之间通信&lt;/h3&gt;
+
+&lt;p&gt;那么Kong节点收到消息之后是如何处理的呢？Kong在启动的时候会在后台执行一个serf进程，类似这样：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;&lt;/span&gt;serf agent -profile wan -bind &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;.0.0.0:7946 -log-level err -rpc-addr &lt;span class=&quot;m&quot;&gt;127&lt;/span&gt;.0.0.1:7373 -event-handler member-join,member-leave,member-failed,member-update,member-reap,user:kong&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/kong/serf/serf_event.sh -node Kang.local_0.0.0.0:7946_be3b9352808e4839a272f30ca6025650
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;可以看看serf_event.sh这个脚本，内容如下：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PAYLOAD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cat&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Read&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stdin&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;$SERF_EVENT&amp;quot;&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;user&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;];&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;then&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;PAYLOAD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;{&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&amp;quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&amp;quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&amp;quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;${SERF_EVENT}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&amp;quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&amp;quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;entity&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&amp;quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;: &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&amp;quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;${PAYLOAD}&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&amp;quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;}&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fi&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;CMD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;local http = require &amp;#39;resty.http&amp;#39; &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;local client = http.new() &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;client:set_timeout(5000) &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;client:connect(&amp;#39;127.0.0.1&amp;#39;, 8001) &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;client:request { &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;  method = &amp;#39;POST&amp;#39;, &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;  path = &amp;#39;/cluster/events/&amp;#39;, &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;  body = [=[${PAYLOAD}]=], &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;  headers = { &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;    [&amp;#39;content-type&amp;#39;] = &amp;#39;application/json&amp;#39; &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;  } &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;}&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;openresty&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resty&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;$CMD&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;可以看到serf收到消息后会触发这个脚本，然后把消息发送到本节点的/cluster/events这个路由。api/routes/cluster.lua这个文件里有收到消息后的处理代码，其中最关键的是：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;-- Trigger event in the node&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ev&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constants&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CACHE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CLUSTER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;就是通过resty.worker.events publish出收到的消息，本节点的worker会处理这些消息。&lt;/p&gt;
+
+&lt;h3&gt;worker刷新缓存&lt;/h3&gt;
+
+&lt;p&gt;假设当前Kong节点收到一个消息，这个消息是如何分发给各个worker的？从代码看出，在Kong初始化的时候有调用一个叫做kong.lua里面的Kong.init_worker()函数，其中有一段代码注册了event handler:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;worker_events&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;resty.worker.events&amp;quot;&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  
+    &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;apis&amp;quot;&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;then&lt;/span&gt;    
+      &lt;span class=&quot;nb&quot;&gt;assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;core&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;build_router&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+
+    &lt;span class=&quot;kr&quot;&gt;elseif&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;constants&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CACHE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CLUSTER&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;then&lt;/span&gt;    
+      &lt;span class=&quot;n&quot;&gt;singletons&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;events&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;publish&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;worker_events&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;register&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;可以从上面的handler代码看到，一个worker接收到消息之后执行的是：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;singletons&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;events&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;publish&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;也就是通过mediator_lua再把消息publish。之前初始化的时候已经attach_hooks了各种handler，这时候那些注册的函数才会被最终执行，比如核心的刷新缓存部分代码在core/hooks.lua的invalidate函数里面。&lt;/p&gt;
+
+&lt;h3&gt;回顾&lt;/h3&gt;
+
+&lt;p&gt;总的来说Kong事件部分的代码相当精妙，也很统一。比如当前worker做了修改，这个事件会发送给各个节点，包括当前自己所在的节点。通过发布订阅模式，写代码的时候只需关心消息发送、接受消息索要处理的逻辑。&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Kong源码分析: 缓存</title>
+   <link href="http://cyukang.com/2017/07/22/kong-intro-4.html"/>
+   <updated>2017-07-22T00:00:00+08:00</updated>
+   <id>http://cyukang.com/2017/07/22/kong-intro-4</id>
+   <content type="html">&lt;h3&gt;Nginx里的缓存使用&lt;/h3&gt;
+
+&lt;p&gt;在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是插件相关的配置，缓存之后就存储在内存中。&lt;/p&gt;
+
+&lt;p&gt;Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又分两种类型的缓存，一种是&lt;a href=&quot;https://github.com/openresty/lua-nginx-module#ngxshareddict&quot;&gt;shared dict&lt;/a&gt;, 一种是使用
+&lt;a href=&quot;https://github.com/openresty/lua-resty-lrucache&quot;&gt;lua-resty-lrucache&lt;/a&gt;。这两者之间是有区别的: shared dict如同其名字一样是Nginx worker之间共享的，而lrucache是worker级别的，内存空间在Lua VM里由GC管理，不能在进程之间共享，自然也不会在Nginx worker之间共享。&lt;/p&gt;
+
+&lt;p&gt;具体我们开发中使用哪一种由具体场景分析，比如在Kong的插件rate-limiting里就使用了共享缓存，因为我们需要针对一个Nginx所有的worker做请求数统计。&lt;/p&gt;
+
+&lt;p&gt;share dict最常规的使用方法是:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span&gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;n&quot;&gt;lua_shared_dict&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dogs&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+         &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+             &lt;span class=&quot;n&quot;&gt;content_by_lua_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                 &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dogs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shared&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dogs&lt;/span&gt;
+                 &lt;span class=&quot;n&quot;&gt;dogs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Jim&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                 &lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;say&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;STORED&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+         &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+             &lt;span class=&quot;n&quot;&gt;content_by_lua_block&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                 &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dogs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shared&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dogs&lt;/span&gt;
+                 &lt;span class=&quot;n&quot;&gt;ngx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;say&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dogs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Jim&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;lrucache的使用方法如&lt;a href=&quot;https://github.com/openresty/lua-resty-lrucache&quot;&gt;文档所示&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h3&gt;Kong里的多级缓存实现&lt;/h3&gt;
+
+&lt;p&gt;有了上面的了解，看database_cache.lua这个文件就比较直观了，这里Kong会分多类缓存: apis, consumers, plugins等。具体这样分是因为如果我们对配置做了修改，需要发出serf消息来指名这次改动涉及到哪些，其他Kong节点收到消息后自然只更新对应的缓存部分。所以Kong里申明了一个列表CACHE_KEYS来存要缓存的数据类别，同时写了不少生成缓存key的方法，比如: api_key，plugin_key等。&lt;/p&gt;
+
+&lt;p&gt;仔细查看database_cache.lua，我们发现其实这里是做了两级缓存。Kong要从缓存里取出一个key/value，首先从lrucache里取，如果有则返回。如果没有则从share dict里去取，如果取到则deserialize然后存储在lrucache里，然后返回。如果shared dict里也没有，则返回nil。标准的两级缓存流程，这样做的好处在于减少deserialize的次数，而且shared dict可能被多个worker同时修改，要修改的时候需要加互斥锁。&lt;/p&gt;
+
+&lt;p&gt;这里最常用的方法是get_or_set，尝试获取一个key的值，如果没有就执行对应的callback，返回结果当做value设置到缓存里，并把value作为最后的返回结果。这里的callback函数通常做的当然是从数据库里读取内容。&lt;/p&gt;
+
+&lt;h3&gt;如何避免缓存失效风暴&lt;/h3&gt;
+
+&lt;p&gt;我们在实现缓存的时候&lt;a href=&quot;http://www.sobstel.org/blog/preventing-dogpile-effect/&quot;&gt;缓存失效风暴问题&lt;/a&gt;需要谨慎考虑。agentzh在这里详细描述了&lt;a href=&quot;https://github.com/openresty/lua-resty-lock&quot;&gt;加锁解决的策略&lt;/a&gt;，&lt;a href=&quot;https://github.com/mtourne/ngx.shcache&quot;&gt;ngx.shcache&lt;/a&gt;这里也使用了相同的方法，具体可以好好研究一下那个图。&lt;/p&gt;
+
+&lt;p&gt;主要注意的是在加锁后，再尝试去读取一次key，因为可能在加锁之前其他worker刚好把数据更新到了缓存里。&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Kong源码分析: 插件</title>
    <link href="http://cyukang.com/2017/07/16/kong-intro-3.html"/>
    <updated>2017-07-16T00:00:00+08:00</updated>
    <id>http://cyukang.com/2017/07/16/kong-intro-3</id>
@@ -26,7 +224,9 @@
 
 灵活、组合: OpenResty 的一些处理部分有限制，比如 access_by_lua 在同一个 location 能调用一次， 当然我们可以把多个处理逻辑都放在这里，这又涉及到代码改动。 而 Kong 可以依次调用各个插件对应的 phase，并且通过引入优先级来解决前后顺序问题。
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;对于插件这块我们的疑问在于这套机制如何运行的？如何找到站点对应的插件？如此多的插件是否会有性能问题？&lt;/p&gt;
+&lt;p&gt;插件开发的原则是提供机制，而非实现，在做插件开发的时候一定需要考虑这个插件能否满足一类相似的需求，这样我们只需要做一下参数的配置就能把插件启动在另外一个站点上。&lt;/p&gt;
+
+&lt;p&gt;对于插件这块我的疑问在于这套机制如何运行的？如何找到站点对应的插件？如此多的插件是否会有性能问题？&lt;/p&gt;
 
 &lt;h3&gt;Kong插件的运行机制&lt;/h3&gt;
 
@@ -106,7 +306,7 @@
  </entry>
  
  <entry>
-   <title>Kong原理分析: 启动</title>
+   <title>Kong源码分析: 启动</title>
    <link href="http://cyukang.com/2017/07/07/kong-intro-2.html"/>
    <updated>2017-07-07T00:00:00+08:00</updated>
    <id>http://cyukang.com/2017/07/07/kong-intro-2</id>
@@ -212,7 +412,7 @@
  </entry>
  
  <entry>
-   <title>Kong原理分析</title>
+   <title>Kong源码分析</title>
    <link href="http://cyukang.com/2017/07/02/kong-intro.html"/>
    <updated>2017-07-02T00:00:00+08:00</updated>
    <id>http://cyukang.com/2017/07/02/kong-intro</id>
