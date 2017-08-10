@@ -4,7 +4,7 @@
  <title>Yukang's Page</title>
  <link href="http://cyukang.com/atom.xml" rel="self"/>
  <link href="http://cyukang.com"/>
- <updated>2017-07-22T23:22:27+08:00</updated>
+ <updated>2017-08-10T23:22:19+08:00</updated>
  <id>http://cyukang.com</id>
  <author>
    <name>Yukang</name>
@@ -314,7 +314,7 @@ attach_hooks(events, require &amp;quot;kong.core.hooks&amp;quot;)
 
 &lt;p&gt;安装好Kong之后我们是用命令&lt;code&gt;sudo ./bin/kong start -c kong.conf -vv&lt;/code&gt;来启动。其中kong.conf为配置文件，&lt;code&gt;-vv&lt;/code&gt;选项打印出一些重要信息展示出来，方便发现问题。&lt;/p&gt;
 
-&lt;p&gt;可以看到&lt;code&gt;./bin/kong&lt;/code&gt;是一个脚本，是用的&lt;code&gt;#!/usr/local/openresty/bin/resty&lt;/code&gt;程序来执行，而resty是OpenResty的一个perl可执行脚本。kong的内容很简单，就是一个入口函数调用： 
+&lt;p&gt;可以看到&lt;code&gt;./bin/kong&lt;/code&gt;是一个脚本，是用的&lt;code&gt;#!/usr/local/openresty/bin/resty&lt;/code&gt;程序来执行，而resty是OpenResty的一个perl可执行脚本。kong的内容很简单，就是一个入口函数调用： 
 &lt;code&gt;require(&amp;quot;kong.cmd.init&amp;quot;)(arg)&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;所以我们可以从cmd/init.lua这个文件开始入手看启动过程。一翻开init.lua这个文件，发现其实不过是个wrapper，解析了args之后就是调用start，stop，quit等命令。然后我们顺藤摸瓜找cmd/start.lua文件，整个启动过程就在这里了：&lt;/p&gt;
@@ -1298,7 +1298,7 @@ Preservation: If a well-typed term takes a step of evaluation, then the resultin
    <id>http://cyukang.com/2015/01/19/refer</id>
    <content type="html">&lt;p&gt;我到了一个做无人机的公司工作，叫做大疆创新(&lt;a href=&quot;http://www.dji.com&quot;&gt;DJI&lt;/a&gt;)。最近内部有一些推广活动，有感兴趣的朋友了解一下。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://t.cn/RZMCKFq?u=2197040790&amp;m=3796713691370166&amp;cu=2197040790&quot;&gt;大疆精灵&lt;/a&gt; 这页面我隔壁小伙子做的，看起来还不错 :)&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://t.cn/RZMCKFq?u=2197040790&amp;amp;m=3796713691370166&amp;amp;cu=2197040790&quot;&gt;大疆精灵&lt;/a&gt; 这页面我隔壁小伙子做的，看起来还不错 :)&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/phantom.jpg&quot; alt=&quot;phantom&quot; class=&quot;img-center&quot; /&gt;&lt;/p&gt;
 
@@ -3264,7 +3264,7 @@ Reddit上的一个得分最高的回复：&lt;/p&gt;
 
 &lt;p&gt;非常易懂，编译的可执行未见叫做app.exe, 其中有三条rule: cc, link, cleanup。看看这个官方的试用手册，还有一些附加参数可以加在rule的下面，比如description用来在编译的时候显示出来。Ninja还有个比较好玩的功能就是Ninja -t graph all命令，这可以用来生成编译时候的依赖关系，可以用dot来生成图片等。Ninja的实现也可以大概推测到，根据用户给的依赖关系图，&lt;em&gt;并行&lt;/em&gt; 地编译各个文件。&lt;/p&gt;
 
-&lt;p&gt;使用Ninja的一个问题就是需要生成这个build.ninja文件，对于大型项目来说这样一条一条地写配置文件是不可能的。幸好我们可以使用Cmake来生成这个配置文件，Cmake对应的是automake这样的东西。在&lt;a href=&quot;http://www.kitware.com/news/home/browse/CMake?2012_11_07&amp;CMake+2.8.10+Just+Released&quot;&gt;Cmake的最新版本&lt;/a&gt;中已经支持参数Camke -G Ninja，Cmake会根据用户给定的CMakeLists.txt来生成build.ninja文件。而CmakeLists文件相对来说要简单一些，只要写清楚编译的可执行文件的名字，和其依赖的包含main函数的源文件。把我的&lt;a href=&quot;https://github.com/chenyukang/Maze&quot;&gt;迷宫小项目&lt;/a&gt;来举个例子,在项目文件夹下写配置文件CMakeLists.txt:&lt;/p&gt;
+&lt;p&gt;使用Ninja的一个问题就是需要生成这个build.ninja文件，对于大型项目来说这样一条一条地写配置文件是不可能的。幸好我们可以使用Cmake来生成这个配置文件，Cmake对应的是automake这样的东西。在&lt;a href=&quot;http://www.kitware.com/news/home/browse/CMake?2012_11_07&amp;amp;CMake+2.8.10+Just+Released&quot;&gt;Cmake的最新版本&lt;/a&gt;中已经支持参数Camke -G Ninja，Cmake会根据用户给定的CMakeLists.txt来生成build.ninja文件。而CmakeLists文件相对来说要简单一些，只要写清楚编译的可执行文件的名字，和其依赖的包含main函数的源文件。把我的&lt;a href=&quot;https://github.com/chenyukang/Maze&quot;&gt;迷宫小项目&lt;/a&gt;来举个例子,在项目文件夹下写配置文件CMakeLists.txt:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span&gt;&lt;/span&gt;    
 cmake_minimum_required&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;VERSION &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;.8&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
@@ -3975,10 +3975,13 @@ branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
 
 &lt;p&gt;在Linux kernel里面会看到类似likely和unlikely这样的代码，从其名字就很直观的解释了其意义。看其定义为两个宏。
 &lt;pre&gt;&lt;code&gt;
-include/linux/compiler.h
- #define likely(x) __builtin_expect   (!!(x), 1)
- #define unlikely(x) __builtin_expect (!!(x), 0)
-&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+include/linux/compiler.h&lt;/p&gt;
+
+&lt;h1&gt;define likely(x) __builtin_expect   (!!(x), 1)&lt;/h1&gt;
+
+&lt;h1&gt;define unlikely(x) __builtin_expect (!!(x), 0)&lt;/h1&gt;
+
+&lt;p&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
 
 &lt;p&gt;Linux内核开发者使用这两个宏来通过编译器提示cpu：某一段代码很可能会执行，应该被预测，而有的情况出现的概率比较小，不必预测。类似这样的代码：&lt;/p&gt;
 
@@ -3992,7 +3995,7 @@ if (unlikely(some_cond)) { //this is rare!
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;关于这个方面，在这篇论文&lt;a href=&quot;http://www.akkadia.org/drepper/cpumemory.pdf&quot;&gt;What every Programmer should know about Memory&lt;/a&gt;里面有更详细的讲述。分支预测在现代cpu上如此通用，竟然还有人利用这个来尝试破解RSA的，看这个&lt;a href=&quot;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.80.1438&amp;rep=rep1&amp;type=pdf&quot;&gt;On the Power of Simple Branch Prediction Analysis&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;关于这个方面，在这篇论文&lt;a href=&quot;http://www.akkadia.org/drepper/cpumemory.pdf&quot;&gt;What every Programmer should know about Memory&lt;/a&gt;里面有更详细的讲述。分支预测在现代cpu上如此通用，竟然还有人利用这个来尝试破解RSA的，看这个&lt;a href=&quot;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.80.1438&amp;amp;rep=rep1&amp;amp;type=pdf&quot;&gt;On the Power of Simple Branch Prediction Analysis&lt;/a&gt;。&lt;/p&gt;
 </content>
  </entry>
  
