@@ -122,7 +122,7 @@
 
 <p>安装好Kong之后我们是用命令<code>sudo ./bin/kong start -c kong.conf -vv</code>来启动。其中kong.conf为配置文件，<code>-vv</code>选项打印出一些重要信息展示出来，方便发现问题。</p>
 
-<p>可以看到<code>./bin/kong</code>是一个脚本，是用的<code>#!/usr/local/openresty/bin/resty</code>程序来执行，而resty是OpenResty的一个perl可执行脚本。kong的内容很简单，就是一个入口函数调用： 
+<p>可以看到<code>./bin/kong</code>是一个脚本，是用的<code>#!/usr/local/openresty/bin/resty</code>程序来执行，而resty是OpenResty的一个perl可执行脚本。kong的内容很简单，就是一个入口函数调用： 
 <code>require(&quot;kong.cmd.init&quot;)(arg)</code></p>
 
 <p>所以我们可以从cmd/init.lua这个文件开始入手看启动过程。一翻开init.lua这个文件，发现其实不过是个wrapper，解析了args之后就是调用start，stop，quit等命令。然后我们顺藤摸瓜找cmd/start.lua文件，整个启动过程就在这里了：</p>
