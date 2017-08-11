@@ -1,424 +1,357 @@
-
 <!DOCTYPE html>
 <html>
-    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=0">
-   <link rel="stylesheet" href="/assets/themes//css/bootstrap.min.css" media="screen and (min-device-width: 700px)"/>
-   <link rel="stylesheet" href="/assets/themes//css/pygments.css" />
-   <link rel="stylesheet" href="/assets/themes//css/style.css" media="screen"/>
-   <link rel="stylesheet" href="/assets/themes//css/mobile.css" media="handheld"/>
-   <script type="text/javascript" charset="utf-8" async="" src="/assets/themes//js/common.js"></script>
-
-   <header>
-       <meta charset="utf-8">
-       <meta charset="UTF-8"/>
-       
-       
-       <title>Yukang's Page</title>
-       
-
-       
-       <meta name="author" content="Yukang">
-
-       <script type="text/javascript"
-               href="/assets/themes/twitter/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-       </script>
-
-       <!-- Le fav and touch icons -->
-       <link rel="shortcut icon" href="/images/favicon.ico">
-       <div class="navbar" id="navbar">
-           <div class="navbar-inner">
-        <div class="container">
-          <a class="brand" id="brand" href="/">Yukang's Page</a>
-          <ul class="nav" id="navbar-inner">
-            
-            
-            
-
-
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="yanm1ng&#39;s blog">
+  <meta name="keyword" content="hexo-theme, vuejs">
   
-    
-      
-    
+    <link rel="shortcut icon" href="/css/images/logo.png">
   
+  <title>
     
-      
+      Yukang&#39;s Page
     
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/archive">归档</a></li>
-      	
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/tags">标签</a></li>
-      	
-      
-    
-  
-
-
-
-
-            <li class="divider-vertical"></li>
-            <li><a href="/about.html">关于</a></li>
-            <li><a href="/links.html">链接</a></li>
-            <li><a href="/atom.xml">订阅</a></li>
-          </ul>
-          <span class="pull-right slogan"> Don't Panic </span>
-        </div>
-      </div>
-    </div>
-  </header>
-
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
   <body>
-      <div class="container">
-      <div class="content" >
-        
-
-
-<div class="row post">
-  <div class="span8">
-      <h1 class="title"><a href="/2017/07/22/kong-intro-5.html" title="Kong源码分析: 事件">Kong源码分析: 事件</a></h1>
-
-      <p>Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。</p>
-
-<h3>worker模型</h3>
-
-<p>假设我们对Kong做了一个更改的请求，这个请求通常是通过admin_api这个路由处理的。也就是说最终执行数据库操作的动作是在一个Nginx worker进程里。因为操作了数据库所以我们需要刷新这个Kong节点的所有worker的缓存，而且要把事件分发给其他Kong节点，让其他Kong节点刷新所有worker的缓存。</p>
-
-<p><img src="/images/kong-message.png" alt="kong-message" class="img-center"></p>
-
-<p>这就涉及到两部分:</p>
-
-<ol>
-<li>Kong节点之间的消息通信, 这是使用<a href="https://www.serf.io/">serf</a>来实现的</li>
-<li>Kong每个节点内部，也就是Nginx worker之间的通信，这是使用<a href="https://github.com/Mashape/lua-resty-worker-events">lua-resty-worker-events</a>来进行。</li>
-</ol>
-
-<h3>发布订阅模式</h3>
-
-<p>发布订阅是实现事件的一种经典设计模式，主要需要有两类操作：</p>
-
-<ol>
-<li>发布消息</li>
-<li>订阅消息，收到消息后触发指定的函数。</li>
-</ol>
-
-<p>Kong使用的是一个<a href="https://github.com/Olivine-Labs/mediator_lua">叫作mediator_lua</a>，mediator中文意思为&quot;中间人&quot;，很符合项目的意思。可以看到kong/core/events.lua里面实现如下：</p>
-<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kr">function</span> <span class="nc">Events</span><span class="p">:</span><span class="nf">subscribe</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
-  <span class="kr">if</span> <span class="n">fn</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_mediator</span><span class="p">:</span><span class="n">subscribe</span><span class="p">({</span><span class="n">event_name</span><span class="p">},</span> <span class="kr">function</span><span class="p">(</span><span class="n">message_t</span><span class="p">)</span>
-      <span class="n">fn</span><span class="p">(</span><span class="n">message_t</span><span class="p">)</span>
-      <span class="kr">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">true</span> <span class="c1">-- Required to tell mediator to continue processing other events</span>
-    <span class="kr">end</span><span class="p">)</span>
-  <span class="kr">end</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span> <span class="nc">Events</span><span class="p">:</span><span class="nf">publish</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">message_t</span><span class="p">)</span>
-  <span class="kr">if</span> <span class="n">event_name</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_mediator</span><span class="p">:</span><span class="n">publish</span><span class="p">({</span><span class="nb">string.upper</span><span class="p">(</span><span class="n">event_name</span><span class="p">)},</span> <span class="n">message_t</span><span class="p">)</span>
-  <span class="kr">end</span>
-<span class="kr">end</span>
-</code></pre></div>
-<p>Kong.init初始化的时候会调用一个叫做attach_hooks的函数:
-<code>
-attach_hooks(events, require &quot;kong.core.hooks&quot;)
-</code></p>
-
-<p>在load插件的时候也会把插件对应hooks绑定上：</p>
-<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span>    <span class="c1">-- Attaching hooks</span>
-    <span class="kd">local</span> <span class="n">ok</span><span class="p">,</span> <span class="n">hooks</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">load_module_if_exists</span><span class="p">(</span><span class="s2">&quot;kong.plugins.&quot;</span> <span class="o">..</span> <span class="n">plugin</span> <span class="o">..</span> <span class="s2">&quot;.hooks&quot;</span><span class="p">)</span>
-    <span class="kr">if</span> <span class="n">ok</span> <span class="kr">then</span>
-      <span class="n">attach_hooks</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">hooks</span><span class="p">)</span>
-    <span class="kr">end</span>
-</code></pre></div>
-<h3>事件的来源</h3>
-
-<p>上面说过，Kong节点之间通信是通过<a href="https://www.serf.io/">serf</a>发送的。我们来看看事件是如何触发发出通知的。
-事件来于源数据库的修改，那就应该在数据库代码部分有触发事件的代码，查看dao/dao.lua这个文件里的代码，我们可以看到在insert、update、insert执行的时候都调用了一行代码</p>
-<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">event</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">event_types</span><span class="p">.</span><span class="n">ENTITY_DELETED</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">schema</span><span class="p">,</span> <span class="n">entity</span><span class="p">)</span>
-</code></pre></div>
-<p>这个函数的实现如下，这里做了数据的序列化，然后发布了一种叫做CLUSTER_PROGATE类型的消息：</p>
-<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">event</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">data_t</span><span class="p">)</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">events_handler</span> <span class="kr">then</span>
-    <span class="p">...</span><span class="o">..</span>  <span class="err">执行数据序列化</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">events_handler</span><span class="p">:</span><span class="n">publish</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">events_handler</span><span class="p">.</span><span class="n">TYPES</span><span class="p">.</span><span class="n">CLUSTER_PROPAGATE</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
-  <span class="kr">end</span>
-<span class="kr">end</span>
-</code></pre></div>
-<p>在core/hooks.lua接受消息部分，events.TYPES.CLUSTER_PROPAGATE对应的处理部分是singletons.serf:event(message_t)，所以我们看serf.lua这个源文件，最终event调用了invoke_signal，这个函数会运行一个serf命令，类似于这样：</p>
-<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">serf</span> <span class="n">event</span> <span class="o">-</span><span class="n">coalesce</span><span class="o">=</span><span class="kc">false</span> <span class="o">-</span><span class="n">rpc</span><span class="o">-</span><span class="n">addr</span><span class="o">=</span><span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">7373</span>  <span class="n">kong</span> <span class="s1">&#39;{&quot;type&quot;:&quot;ENTITY_UPDATED&quot;,&quot;primary_key&quot;:[&quot;id&quot;],&quot;collection&quot;:&quot;apis&quot;,&quot;entity&quot;:{&quot;id&quot;:&quot;94acca76-d61a-429e-86a9-5abf2c61ee31&quot;}}&#39;</span>
-</code></pre></div>
-<p>这就出发了一个serf event，其他Kong节点会收到此消息。</p>
-
-<h3>serf: Kong节点之间通信</h3>
-
-<p>那么Kong节点收到消息之后是如何处理的呢？Kong在启动的时候会在后台执行一个serf进程，类似这样：</p>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>serf agent -profile wan -bind <span class="m">0</span>.0.0.0:7946 -log-level err -rpc-addr <span class="m">127</span>.0.0.1:7373 -event-handler member-join,member-leave,member-failed,member-update,member-reap,user:kong<span class="o">=</span>/usr/local/kong/serf/serf_event.sh -node Kang.local_0.0.0.0:7946_be3b9352808e4839a272f30ca6025650
-</code></pre></div>
-<p>可以看看serf_event.sh这个脚本，内容如下：</p>
-<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">PAYLOAD</span><span class="o">=</span><span class="err">`</span><span class="n">cat</span><span class="err">`</span> <span class="o">#</span> <span class="n">Read</span> <span class="n">from</span> <span class="n">stdin</span>
-<span class="kr">if</span> <span class="p">[</span> <span class="s2">&quot;$SERF_EVENT&quot;</span> <span class="err">!</span><span class="o">=</span> <span class="s2">&quot;user&quot;</span> <span class="p">];</span> <span class="kr">then</span>
-  <span class="n">PAYLOAD</span><span class="o">=</span><span class="s2">&quot;{</span><span class="se">\&quot;</span><span class="s2">type</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">${SERF_EVENT}</span><span class="se">\&quot;</span><span class="s2">,</span><span class="se">\&quot;</span><span class="s2">entity</span><span class="se">\&quot;</span><span class="s2">: </span><span class="se">\&quot;</span><span class="s2">${PAYLOAD}</span><span class="se">\&quot;</span><span class="s2">}&quot;</span>
-<span class="n">fi</span>
-
-<span class="n">CMD</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\</span>
-<span class="s2">local http = require &#39;resty.http&#39; </span><span class="se">\</span>
-<span class="s2">local client = http.new() </span><span class="se">\</span>
-<span class="s2">client:set_timeout(5000) </span><span class="se">\</span>
-<span class="s2">client:connect(&#39;127.0.0.1&#39;, 8001) </span><span class="se">\</span>
-<span class="s2">client:request { </span><span class="se">\</span>
-<span class="s2">  method = &#39;POST&#39;, </span><span class="se">\</span>
-<span class="s2">  path = &#39;/cluster/events/&#39;, </span><span class="se">\</span>
-<span class="s2">  body = [=[${PAYLOAD}]=], </span><span class="se">\</span>
-<span class="s2">  headers = { </span><span class="se">\</span>
-<span class="s2">    [&#39;content-type&#39;] = &#39;application/json&#39; </span><span class="se">\</span>
-<span class="s2">  } </span><span class="se">\</span>
-<span class="s2">}&quot;</span>
-
-<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="kd">local</span><span class="o">/</span><span class="n">openresty</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">resty</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;$CMD&quot;</span>
-</code></pre></div>
-<p>可以看到serf收到消息后会触发这个脚本，然后把消息发送到本节点的/cluster/events这个路由。api/routes/cluster.lua这个文件里有收到消息后的处理代码，其中最关键的是：</p>
-<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="c1">-- Trigger event in the node</span>
-<span class="n">ev</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="n">constants</span><span class="p">.</span><span class="n">CACHE</span><span class="p">.</span><span class="n">CLUSTER</span><span class="p">,</span> <span class="n">message_t</span><span class="p">.</span><span class="n">type</span><span class="p">,</span> <span class="n">message_t</span><span class="p">)</span>
-</code></pre></div>
-<p>就是通过resty.worker.events publish出收到的消息，本节点的worker会处理这些消息。</p>
-
-<h3>worker刷新缓存</h3>
-
-<p>假设当前Kong节点收到一个消息，这个消息是如何分发给各个worker的？从代码看出，在Kong初始化的时候有调用一个叫做kong.lua里面的Kong.init_worker()函数，其中有一段代码注册了event handler:
-```lua
-  local worker_events = require &quot;resty.worker.events&quot;</p>
-
-<p>local handler = function(data, event, source, pid)<br>
-    if data and data.collection == &quot;apis&quot; then<br>
-      assert(core.build_router())</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>elseif source and source == constants.CACHE.CLUSTER then    
-  singletons.events:publish(event, data)
-end
-</code></pre></div>
-<p>end</p>
-
-<p>worker_events.register(handler)</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>可以从上面的handler代码看到，一个worker接收到消息之后执行的是：
-
-```lua
-singletons.events:publish(event, data)
-</code></pre></div>
-<p>也就是通过mediator_lua再把消息publish。之前初始化的时候已经attach_hooks了各种handler，这时候那些注册的函数才会被最终执行，比如核心的刷新缓存部分代码在core/hooks.lua的invalidate函数里面。</p>
-
-<h3>回顾</h3>
-
-<p>总的来说Kong事件部分的代码相当精妙，也很统一。比如当前worker做了修改，这个事件会发送给各个节点，包括当前自己所在的节点。通过发布订阅模式，写代码的时候只需关心消息发送、接受消息索要处理的逻辑。</p>
-
-
-      <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
-      <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-      <span>打赏</span>
-      </button>
-      <div id="QR" style="display: none;">      
-      <div id="wechat" style="display: inline-block">
-      <a href="/images/yukang_wechat.jpg" rel="group" ><img id="wechat_qr" src="/images/yukang_wechat.jpg" style="width: 255px;height:235px;"  alt="Yukang WeChat Pay"></a>
-      </div>
-      </div>
-      </div>
-
-
-    <ul class="pager">
-        <li class="previous"><a href="#comment_thread" title="Kong源码分析: 事件">评论&darr;</a></li>
-      <li class="next"><a href="/archive.html" title="所有文章">查看所有文章 &rarr;</a></li>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link active">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
     </ul>
-
-
-    <!--*********************************************************-->
-    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
-    <!--*********************************************************-->
-    <div id="disqus_thread"></div>
-    <script>
-
-    /**
-    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-    /*
-    var disqus_config = function () {
-    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-    };
-    */
-    (function() { // DON'T EDIT BELOW THIS LINE
-    var d = document, s = d.createElement('script');
-    s.src = 'https://yukang.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    
-    <!--*********************************************************-->
-    
-  </div>
-
-  <div class="span4 sidebar">
-    <h4 class="date">日期：<span>22 July 2017</span></h4>
-    
-
-    <div class="violet-aside-post">
-      <h4 class="v-section-tit">最近</h4>
-      <ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
         
-        <li class="v-aside-li">
-          <a href="/2017/07/22/kong-intro-5.html" title="Kong源码分析: 事件" rel="bookmark">Kong源码分析: 事件</a>
-        </li>
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">Home</a>
+            
+          </li>
         
-        <li class="v-aside-li">
-          <a href="/2017/07/22/kong-intro-4.html" title="Kong源码分析: 缓存" rel="bookmark">Kong源码分析: 缓存</a>
-        </li>
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
         
-        <li class="v-aside-li">
-          <a href="/2017/07/16/kong-intro-3.html" title="Kong源码分析: 插件" rel="bookmark">Kong源码分析: 插件</a>
-        </li>
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
         
-        <li class="v-aside-li">
-          <a href="/2017/07/07/kong-intro-2.html" title="Kong源码分析: 启动" rel="bookmark">Kong源码分析: 启动</a>
-        </li>
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
         
-        <li class="v-aside-li">
-          <a href="/2017/07/02/kong-intro.html" title="Kong源码分析" rel="bookmark">Kong源码分析</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2017/06/27/recent-reading-list.html" title="小说推荐" rel="bookmark">小说推荐</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2017/05/22/try-on-openresty.html" title="OpenResty使用总结" rel="bookmark">OpenResty使用总结</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2017/04/09/rubytt-cont.html" title="rubytt 续" rel="bookmark">rubytt 续</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2017/01/24/disease-of-programmer.html" title="程序员病" rel="bookmark">程序员病</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/12/27/rubytt.html" title="Ruby 程序的静态分析: rubytt" rel="bookmark">Ruby 程序的静态分析: rubytt</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/12/11/qianlong-history.html" title="读《饥饿的盛世》" rel="bookmark">读《饥饿的盛世》</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/11/30/nginx-traffic-limit.html" title="Nginx限流" rel="bookmark">Nginx限流</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/08/09/dao-yu-ju.html" title="菊与刀" rel="bookmark">菊与刀</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/07/22/capistrano-syntax-check-for-rails.html" title="Add syntax check for Capistrano" rel="bookmark">Add syntax check for Capistrano</a>
-        </li>
-        
-        <li class="v-aside-li">
-          <a href="/2016/07/08/fun-on-hackerrank.html" title="刷刷算法和 OJ" rel="bookmark">刷刷算法和 OJ</a>
-        </li>
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
         
       </ul>
     </div>
-
-    <div class="violet-aside-post">
-      <h4 class="v-section-tit">页面</h4>
-    <nav class="nav">
-      <ul>
-        <li><a href="/archive.html" >归档</a></li>
-        <li><a href="/tags.html">标签</a></li>
-        <li><a href="/links.html" >链接</a></li>
-        <li><a href="/about.html" >关于</a></li>
-        <li><a href="/atom.xml" target="_blank" >RSS</a></li>
-      </ul>
-    </nav>
-    </div>
-
   </div>
-</div>
+</header>
 
-
-
-      </div>
-
-      <footer id="footer">
-        <p>&copy; <a href="mailto:moorekang@gmail.com">Yukang</a> 2016.
-          Proudly powered by <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll</a>
-        </p>
-
-      </footer>
-    </div> <!-- /container -->
-
-    <!--*********************************************************-->
-    <!--****** 看见这个时候，删掉下面的统计代码啊~ ******-->
-    <!--*********************************************************-->
-    
-    <script>
-     var _hmt = _hmt || [];
-     (function() {
-         var hm = document.createElement("script");
-         hm.src = "//hm.baidu.com/hm.js?ba1315646a61cc7bd6f574a6b5221640";
-         var s = document.getElementsByTagName("script")[0]; 
-         s.parentNode.insertBefore(hm, s);
-     })();
-
-     (function() {
-         var width = document.body.offsetWidth;
-         if(width < 701) {
-             var nav = document.getElementById("navbar-inner");
-             nav.remove();
-         };
-     })();
-    </script>
-
-    <!--*********************************************************-->
-
-  </body>
+    <main class="app-body">
   
-</html>
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/07/22/kong-intro-5/">Kong源码分析: 事件</a>
+      </h2>
+      <p class="article-date">July 22, 2017</p>
+      
+      <div class="article-summary">
+        
+          Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。
+worker模型假设我们对Kong做了一个更改的请求，这个请求通常是通过admin_api这个路由处理的。也就是说最终执行数据库操作的动作是在一个Nginx worker进程里。因为操作了数据库所以我们需 ...
+        
+      </div>
+      <a class="more" href="/2017/07/22/kong-intro-5/">More</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/07/22/kong-intro-4/">Kong源码分析: 缓存</a>
+      </h2>
+      <p class="article-date">July 22, 2017</p>
+      
+      <div class="article-summary">
+        
+          Nginx里的缓存使用在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是插件相关的配置，缓存之后就存储在内存中。
+Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又分两种类型的缓存，一种是shared dict, 一种是使用lua-r ...
+        
+      </div>
+      <a class="more" href="/2017/07/22/kong-intro-4/">More</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/07/16/kong-intro-3/">Kong源码分析: 插件</a>
+      </h2>
+      <p class="article-date">July 16, 2017</p>
+      
+      <div class="article-summary">
+        
+          插件的强大之处在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提供了提供模块开发机制，但是相对来说更底层一些，并且需要使用 C/C++ 来开发，对于很多开发人员来说 Nginx 仍为一个黑盒。OpenResty 集成了很多好用插件，并提供了通 ...
+        
+      </div>
+      <a class="more" href="/2017/07/16/kong-intro-3/">More</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/07/07/kong-intro-2/">Kong源码分析: 启动</a>
+      </h2>
+      <p class="article-date">July 7, 2017</p>
+      
+      <div class="article-summary">
+        
+          Kong的初始化过程安装好Kong之后我们是用命令sudo ./bin/kong start -c kong.conf -vv来启动。其中kong.conf为配置文件，-vv选项打印出一些重要信息展示出来，方便发现问题。
+可以看到./bin/kong是一个脚本，是用的#!/usr/local ...
+        
+      </div>
+      <a class="more" href="/2017/07/07/kong-intro-2/">More</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/07/02/kong-intro/">Kong源码分析</a>
+      </h2>
+      <p class="article-date">July 2, 2017</p>
+      
+      <div class="article-summary">
+        
+          缘由最近在工作上接触了Kong这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一些涉及各个系统的功能就很困难。比如我们前段时间实现的灰度系统就把人折腾得很惨。因为我们的设计中有一些http header 需要在各个系统之间传递。每个项目的 Nginx 里面都 ...
+        
+      </div>
+      <a class="more" href="/2017/07/02/kong-intro/">More</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/06/27/recent-reading-list/">小说推荐</a>
+      </h2>
+      <p class="article-date">June 27, 2017</p>
+      
+      <div class="article-summary">
+        
+           之前我用过一段时间 Kindle，因为没有使用保护套导致在书包里面被压坏。而后一两年用 IPad 看了一些电子书，始终觉得稍微有些笨重，而且看久了眼睛不舒服。前段时间在 z.cn 上瞎逛又有了买个 Kindle 的欲望，拿到手后又好好找了一些电子书比较多的网站。目前使用最舒服的还是 htt ...
+        
+      </div>
+      <a class="more" href="/2017/06/27/recent-reading-list/">More</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/05/22/try-on-openresty/">OpenResty使用总结</a>
+      </h2>
+      <p class="article-date">May 22, 2017</p>
+      
+      <div class="article-summary">
+        
+          OpenResty最近用OpenResty比较多，除了一些业务逻辑的实现也做了AB组灰度相关的实现。OpenResty是在Nginx基础上做的扩展，应该算是国人开源项目中很成功的一个。在做的过程中写了不少Lua代码，写Lua代码的体验就是库好少，语言好简单。
+OpenResty lua编程相 ...
+        
+      </div>
+      <a class="more" href="/2017/05/22/try-on-openresty/">More</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/04/09/rubytt-cont/">rubytt 续</a>
+      </h2>
+      <p class="article-date">April 9, 2017</p>
+      
+      <div class="article-summary">
+        
+          前段时间继续做了 rubytt 这个小项目，遇到一些问题。
+我想做一个自动检测未定义变量的功能，发现如果只是做静态分析，是很难做出来的。还有涉及到各种 gem 包的分析，这些工作量较大。可以看出在这个PR里我甚至用上了一些硬编码。
+然后我想做一个自动分析代码复杂度的功能，比如某些函数太长，或 ...
+        
+      </div>
+      <a class="more" href="/2017/04/09/rubytt-cont/">More</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2017/01/24/disease-of-programmer/">程序员病</a>
+      </h2>
+      <p class="article-date">January 24, 2017</p>
+      
+        
+  <a href="/tags#Books" >
+    <span class="tag-code">Books</span>
+  </a>
 
+      
+      <div class="article-summary">
+        
+          最近看费曼的书《发现的乐趣》，里面有一段描述非常好玩:
+
+好，弗兰克先生开始实施他的计划了，与此同时，他也得了一种病——『计算机病』。现在每个使用计算机的人都知道这个毛病，那种病非常厉害，会干扰整个工作。这是我们面临的一个严重问题。所谓『计算机病』就是你一『玩』上计算机，就会上瘾。计算机真的 ...
+        
+      </div>
+      <a class="more" href="/2017/01/24/disease-of-programmer/">More</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/2016/12/27/rubytt/">Ruby 程序的静态分析: rubytt</a>
+      </h2>
+      <p class="article-date">December 27, 2016</p>
+      
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Ruby" >
+    <span class="tag-code">Ruby</span>
+  </a>
+
+  <a href="/tags#OCaml" >
+    <span class="tag-code">OCaml</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          rubytt是一个 Ruby 程序的静态分析器，这个项目从16年年初一直到年底，断断续续持续了近一年。这里稍微总结一下自己的开发过程。
+0. 缘由14年开始，从我进入 DJI 之后开始接触 Rails 开发。Ruby 之前也接触过，不过都是写一些小脚本之类的东西。我们几乎用 Rails 写各 ...
+        
+      </div>
+      <a class="more" href="/2016/12/27/rubytt/">More</a>
+    </article>
+  
+
+  
+    <div class="guide-pager">
+  
+    <a class="unvisible" href="/"><span class="page-arrow">←</span> Prev</a>
+  
+  
+    <a href="/page/2/">Next<span class="page-arrow"> →</span></a>
+  
+</div>
+  
+</main>
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+  </body>
+</html>
