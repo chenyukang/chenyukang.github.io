@@ -119,6 +119,7 @@
             <p>
 纪念一下跑测试跑了几天才找出的一个内存泄漏，这个函数源于UNP，还以为UNP有bug呢，找到原书当getaddreinfo失败或者res==NULL的时候直接退出了。但是写这个代码的同学当然不想连接不上直接退出，于是忘记了freeaddrinfo调用直接返回，那个struct addrinfo就没释放。很多错误都是这种，涉及到库函数的时候更加难查。
 </p>
+
 <pre class="src"><span style="color: #98f5ff;">int</span> <span style="color: #daa520; font-weight: bold;">tcp_connect</span>(<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">char</span> *<span style="color: #4eee94;">host</span>, <span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">char</span> *<span style="color: #4eee94;">serv</span>)
 {
         <span style="color: #98f5ff;">int</span>    <span style="color: #4eee94;">sockfd</span>, <span style="color: #4eee94;">n</span>;
@@ -156,13 +157,14 @@
         freeaddrinfo(ressave);
         <span style="color: #00bfff; font-weight: bold;">return</span>(sockfd);
 }</pre>
+
 <p>
 上一篇博文中说到自己包装的内存检测方法，这还有个问题当时没发现，就是那个包装malloc之类的方法对于库函数中的内存申请调用没法记录，所以是不会发现上面这个bug的。这个Memwatch倒是把原生的malloc都重定义了，但是最好的Linux下检测内存泄漏的工具还是valgrind，这真是个神器，在代码上不用做一点修改，这东西甚至能测试程序的cache命中率。看了一下valgrind的相关论文，对于检测方法都是一种称之为shadow value的方法，也就是用信息来记录每一个byte内存的使用情况。这种方式的一个缺点都是会拖慢速度，前面提到的那种稍微包装了一下的方式可能还好(因为使用的是静态数组), Memwatch里面使用了不少链表也会拖慢速度。再看看valgrind的实现，以后工作可能会碰上类似的。
 </p>
 
-<a href="http://valgrind.org/docs/pubs.html">更多valgrind</a>
+<p><a href="http://valgrind.org/docs/pubs.html">更多valgrind</a></p>
 
-<a href="http://hi.baidu.com/sgj_22/blog/item/c437bc10c21be00a203f2e89.html">更多Memwatch</a>
+<p><a href="http://hi.baidu.com/sgj_22/blog/item/c437bc10c21be00a203f2e89.html">更多Memwatch</a></p>
 
             
             <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          

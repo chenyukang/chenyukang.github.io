@@ -129,27 +129,27 @@
 
 <p>伪随机数生成器(PRNG)，顾名思义产生的不是严格意义上的随机数，一般是通过一些数学公式(或者计算好的表)来产生。比如简单的<a href="http://en.wikipedia.org/wiki/Linear_congruential_generator">Linear congruential generator</a>，可以用来产生伪随机数。伪随机数的行为是可被预测的，但是在统计意义上来说是随机的。因为这个特点其所以使用范围有限，比如一些模拟程序。而且伪随机数有可能出现固定的周期，比如下面<a href="http://www.random.org/analysis/#visual">这两幅图</a>分别是通过真正的随机数产生器和Windows下面的PHP的伪随机数生成器产生的Bitmap，可以清楚地看到右边的那副图有规律可循。</p>
 
-<p>另外如Borland随机数生成器Random的实现:</p>
+<p>另外如Borland随机数生成器Random的实现:
+```cpp
+long long RandSeed = #### ;
+unsigned long Random(long max)
+{
+    long long x ;
+    double i ;
+    unsigned long final ;
+    x = 0xffffffff;
+    x += 1 ;</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>RandSeed *= ((long long)134775813);
+RandSeed += 1 ;
+RandSeed = RandSeed % x ;
+i = ((double)RandSeed) / (double)0xffffffff ;
+final = (long) (max * i) ;
 
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="kt">long</span> <span class="kt">long</span> <span class="n">RandSeed</span> <span class="o">=</span> <span class="err">####</span> <span class="p">;</span>
-<span class="kt">unsigned</span> <span class="kt">long</span> <span class="nf">Random</span><span class="p">(</span><span class="kt">long</span> <span class="n">max</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="kt">long</span> <span class="kt">long</span> <span class="n">x</span> <span class="p">;</span>
-    <span class="kt">double</span> <span class="n">i</span> <span class="p">;</span>
-    <span class="kt">unsigned</span> <span class="kt">long</span> <span class="k">final</span> <span class="p">;</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="mh">0xffffffff</span><span class="p">;</span>
-    <span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span>
-
-    <span class="n">RandSeed</span> <span class="o">*=</span> <span class="p">((</span><span class="kt">long</span> <span class="kt">long</span><span class="p">)</span><span class="mi">134775813</span><span class="p">);</span>
-    <span class="n">RandSeed</span> <span class="o">+=</span> <span class="mi">1</span> <span class="p">;</span>
-    <span class="n">RandSeed</span> <span class="o">=</span> <span class="n">RandSeed</span> <span class="o">%</span> <span class="n">x</span> <span class="p">;</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">RandSeed</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="mh">0xffffffff</span> <span class="p">;</span>
-    <span class="k">final</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">max</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="p">;</span>
-
-    <span class="k">return</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="k">final</span><span class="p">;</span>
-<span class="p">}</span></code></pre></figure>
-
-<p>可以看到Random的最初一个随机数依赖于seed，后一个随机数依赖前一个随机数。</p>
+return (unsigned long)final;
+</code></pre></div>
+<p>}
+```
+可以看到Random的最初一个随机数依赖于seed，后一个随机数依赖前一个随机数。</p>
 
 <p>真随机数生成器(RNG)，通过向计算机中引入一些不可预测的物理信息，比如键盘敲击和鼠标移动等。所以真随机数才是很难预测的或者根本来说不可预测。每个操作系统的实现有各自的区别，
 比如Linux中产生随机数引入了物理噪音作为输入，比如mac地址可以用来初始化entropy pool，随机源可以加入中断时间，硬盘的寻址时间等等。
@@ -176,8 +176,7 @@
   —Robert Sedgewick, Professor of Computer Science, Princeton
 </code></pre></div>
 <p>比如ASF Software在多年前写的一个流行的网上扑克游戏，其中的洗牌程序是这段Pascal代码：</p>
-
-<figure class="highlight"><pre><code class="language-pascal" data-lang="pascal"><span></span><span class="k">procedure</span> <span class="nc">TDeck</span><span class="o">.</span><span class="nf">Shuffle</span><span class="o">;</span>
+<div class="highlight"><pre><code class="language-pascal" data-lang="pascal"><span></span><span class="k">procedure</span> <span class="nc">TDeck</span><span class="o">.</span><span class="nf">Shuffle</span><span class="o">;</span>
 <span class="k">var</span>
    <span class="n">ctr</span><span class="o">:</span> <span class="kt">Byte</span><span class="o">;</span>
    <span class="n">tmp</span><span class="o">:</span> <span class="kt">Byte</span><span class="o">;</span>
@@ -197,21 +196,19 @@
    <span class="k">end</span><span class="o">;</span>
    <span class="n">CurrentCard</span> <span class="o">:=</span> <span class="mi">1</span><span class="o">;</span>
    <span class="n">JustShuffled</span> <span class="o">:=</span> <span class="k">True</span><span class="o">;</span>
-<span class="k">end</span><span class="o">;</span></code></pre></figure>
-
+<span class="k">end</span><span class="o">;</span>
+</code></pre></div>
 <p>可以分析一下这里的好几处问题，这里的洗牌算法也有问题，52!个排列出现的概率不一样。拿三张牌来作为例子就明白了。</p>
-
-<figure class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="n">is</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">N</span><span class="p">)</span>
-    <span class="n">Swap</span> <span class="n">i</span> <span class="n">with</span> <span class="n">random</span> <span class="n">position</span> <span class="n">between</span> <span class="mi">1</span> <span class="n">and</span> <span class="n">N</span></code></pre></figure>
-
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="n">is</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">N</span><span class="p">)</span>
+    <span class="n">Swap</span> <span class="n">i</span> <span class="n">with</span> <span class="n">random</span> <span class="n">position</span> <span class="n">between</span> <span class="mi">1</span> <span class="n">and</span> <span class="n">N</span>
+</code></pre></div>
 <p><img src="/images/poker.gif" alt="dicker" class="img-center" />
 可以看出231, 213, 132出现的次数要多一些，因此相对应的概率也大。</p>
 
 <p>正确的洗牌程序算法是：</p>
-
-<figure class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="n">is</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">N</span><span class="p">)</span>
-    <span class="n">Swap</span> <span class="n">i</span> <span class="n">with</span> <span class="n">random</span> <span class="n">position</span> <span class="n">between</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="n">and</span> <span class="n">N</span></code></pre></figure>
-
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span></span><span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="n">is</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">N</span><span class="p">)</span>
+    <span class="n">Swap</span> <span class="n">i</span> <span class="n">with</span> <span class="n">random</span> <span class="n">position</span> <span class="n">between</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="n">and</span> <span class="n">N</span>
+</code></pre></div>
 <p>一个32位的数作为seed，对于伪随机长生器是有问题的，因为如果给定seed伪随机产生器的行为是可以预测的。
 32的seed的所有可能值的个数为2^32个，这相比52!(8.0658 * 10 ^ 67)小得很多。所以对于32位的seed，甚至可以用蛮力法来攻破。</p>
 

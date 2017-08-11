@@ -116,11 +116,11 @@
     <div class="span8">
         <h1 class="title">using automake</h1>
 
-            以前都是手写makefile,没使用automake之类的工具,今天看了一些相关资料,简单地总结一下，留个备份。
+            <p>以前都是手写makefile,没使用automake之类的工具,今天看了一些相关资料,简单地总结一下，留个备份。
 <h4>使用Makefile</h4>
 <p class="first">unix/linux下面使用相当广泛,对于简单一些的程序,手写makefile还是比较容易的,只要指定清目标文件,
 最后可执行文件的依赖关系。使用一些高级一点的功能更方便,比如下面这个就比较好用,稍微编辑一下就可以用于常用的小工程。
-这个Makefile把所有.cpp的文件编译成相应的.o文件,然后链接为Targetfile文件。</p>
+这个Makefile把所有.cpp的文件编译成相应的.o文件,然后链接为Targetfile文件。</p></p>
 
 <blockquote>
 <pre class="src">CC = g++  -O2
@@ -138,7 +138,9 @@ Targetfile:$(OBJS)
 clean:
         @/bin/rm *.o</pre>
 </blockquote>
+
 <h4>使用automake等工具</h4>
+
 <p class="first">1. 首先运行autoscan,这之后会生成一个configure.scan文件,修改为configure.in，并编辑。典型的一个文件如下,
 AC_CONFIG_SRCDIR,AC_CONFIG_HEADER这两项还不知道干什么用的,如果不注释掉后面automake会出现错误,那就先注释掉吧。
 重点修改AC_INIT，AC_INIT_AUTOMAKE。AC_CHECK那些不用管,后面提示-lglui提示要注意,这是需要链接的库文件，这里链接glui这个库。</p>
@@ -180,7 +182,9 @@ AC_C_INLINE
 <span style="color: #ffd700;">#AC_CONFIG_FILES</span>([makefile])
 AC_OUTPUT(Makefile)</pre>
 </blockquote>
-2. 编写Makefile.am,如下面这样。和makefile一样,写上可执行文件依赖于的源文件,_LDADD是要链接的库文件名。
+
+<ol>
+<li>编写Makefile.am,如下面这样。和makefile一样,写上可执行文件依赖于的源文件,_LDADD是要链接的库文件名。
 <blockquote>
 <pre class="src">AUTOMAKE_OPTIONS=foreign
 bin_PROGRAMS=TSPdemo
@@ -189,11 +193,12 @@ Elastic_Alg.h    MyMap.h      mathlib.h \
 LaoMan.cpp       SOM.cpp        pointdef.h \
 LaoMan.h         SOM.h      main.cpp
 TSPdemo_LDADD = -lglut</pre>
-</blockquote>
-3. 然后执行aclocal,和autoconf，最后automake —add-missing 生成configure文件。这就完成了,下面就是unix下编译安装软件的三个步骤了,
-./configure，make,makeinstall等。
+</blockquote></li>
+<li>然后执行aclocal,和autoconf，最后automake —add-missing 生成configure文件。这就完成了,下面就是unix下编译安装软件的三个步骤了,
+./configure，make,makeinstall等。</li>
+</ol>
 
-写得比较粗略,详细查看<a href="http://wenku.baidu.com/view/b01bed02de80d4d8d15a4f4e.html">这个文档</a>。
+<p>写得比较粗略,详细查看<a href="http://wenku.baidu.com/view/b01bed02de80d4d8d15a4f4e.html">这个文档</a>。</p>
 
 <!-- Page published by Emacs Muse ends here -->
 
@@ -260,7 +265,7 @@ TSPdemo_LDADD = -lglut</pre>
 
   
      
-    	<li><a href="/tags.html#Backup-ref">Backup <span>13</span></a></li>
+    	<li><a href="/tags.html#Backup-ref">Backup <span>12</span></a></li>
      
     	<li><a href="/tags.html#Linux-ref">Linux <span>8</span></a></li>
      

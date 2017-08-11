@@ -119,6 +119,7 @@
         <h1 class="title">《Advanced linux progamming》笔记</h1>
 
             <p><strong><em>Advanced linux progamming</em></strong></p>
+
 <div class="contents">
 <dl>
 <dt>
@@ -247,7 +248,6 @@
 </dl>
 </div>
 
-
 <h2><a name="sec1" id="sec1"></a>
 Writing and using Libraries</h2>
 
@@ -261,12 +261,12 @@ Archives</h3>
 <pre class="example">
 % ar cr libtest.a test1.o test2.o
 </pre>
-创建库文件libtest.a(类似windows下test.lib)，当linker处理archive文件的时候，将在库文件中查找当前已经处理但是还没定义的symbols。所以库文件应该出现在命令的最后。
+
+<p>创建库文件libtest.a(类似windows下test.lib)，当linker处理archive文件的时候，将在库文件中查找当前已经处理但是还没定义的symbols。所以库文件应该出现在命令的最后。</p>
 
 <pre class="example">
 % gcc -o app app.o -L. -ltest
 </pre>
-
 
 <h3><a name="sec3" id="sec3"></a>
 Shared Library</h3>
@@ -277,7 +277,8 @@ Shared Library</h3>
 % gcc -c -fPIC test1.c
 % gcc -shared - fPIC libtest.so test1.o test2.o
 </pre>
--fPIC选项指编译为位置独立的执行代码，这样可以动态加载，产生libtest.so文件。
+
+<p>-fPIC选项指编译为位置独立的执行代码，这样可以动态加载，产生libtest.so文件。</p>
 
 <p>默认的库文件寻找路径变量：LD_LIBRARY_PATH
 库文件之间的依赖关系：如果是动态链接，链接库会自动寻找到自己所依赖的其他库文件，如果是静态链接，必须为linker提供所有依赖的库文件名称。</p>
@@ -629,7 +630,6 @@ sysinfo:获取系统统计信息。<br>
 uname:获取系统版本信息和硬件信息。<br>
 </p>
 
-
 <h2><a name="sec25" id="sec25"></a>
 Inline Assembly Code</h2>
 
@@ -658,7 +658,6 @@ Real and Effective ID::EID代表进程所具有的系统权限，如果是非roo
 su命令：是一个setuid程序，当程序执行的时候其EID是文件的拥有者，而不是启动程序的用户号。chmod a+s使得文件有这个属性。<br>
 </p>
 
-
 <h3><a name="sec28" id="sec28"></a>
 
 缓冲区漏洞</h3>
@@ -675,8 +674,8 @@ printf (&#8220;Enter your username: &#8220;);
 gets (username);
 <span style="color: #ff7f24;">/* </span><span style="color: #ff7f24;">Do other things here... </span><span style="color: #ff7f24;">*/</span>
 </pre>
-攻击者可以故意使得缓冲区读满，然后在超出的区域植入想执行的代码段，获得控制权。
 
+<p>攻击者可以故意使得缓冲区读满，然后在超出的区域植入想执行的代码段，获得控制权。</p>
 
 <h3><a name="sec29" id="sec29"></a>
 Race Conditions in /tmp</h3>
@@ -685,11 +684,11 @@ Race Conditions in /tmp</h3>
 解决方法：在文件名称内使用Random，open函数使用O_EXCL参数，如果文件存在则失败，打开一个文件后用lstat查看是否是链接文件，检查文件的所有者是否和进程所有者一样。
 /tmp文件不能挂载在NFS下，因为O_EXCL不能在NFS文件系统下使用。</p>
 
-
 <h3><a name="sec30" id="sec30"></a>
 system ,popen函数的危险</h3>
 
 <p class="first">替代使用exec族函数。</p>
+
 <!-- Page published by Emacs Muse ends here -->
 
             

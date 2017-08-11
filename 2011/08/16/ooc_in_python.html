@@ -116,25 +116,25 @@
     <div class="span8">
         <h1 class="title">C的面向对象风格代码</h1>
 
-            <span class="Apple-style-span" style="font-size: 13px; font-weight: normal;">OO是一种编程范型，而不只是特定语言的特定支持，所以用C来实现也是可行的。最近碰到的一部分代码都是用C实现的面向对象风格，可能是参考了Python里面的实现，Python内部实现的基本对象这块也全是这样的代码。在这里做一个小小的总结。</span>
+            <p><span class="Apple-style-span" style="font-size: 13px; font-weight: normal;">OO是一种编程范型，而不只是特定语言的特定支持，所以用C来实现也是可行的。最近碰到的一部分代码都是用C实现的面向对象风格，可能是参考了Python里面的实现，Python内部实现的基本对象这块也全是这样的代码。在这里做一个小小的总结。</span></p>
 
-C语言里面没有语言层面的面向对象支持，那OO中的三个基本要素封装、继承、多态如何实现？C里面最强大的东西是指针，指针中最神奇的是void指针，这是一切的基本。首先来看封装，如何通过实例来调用方法，而对内部数据进行隐藏。完全可以写一些struct，然后写对应的函数来针对这个struct来操作，我们需要更进一步，把数据和方法绑定起来。这样写初看起来并没什么好处，后面会发现，通过函数指针去找对应的函数是多态的关键。
+<p>C语言里面没有语言层面的面向对象支持，那OO中的三个基本要素封装、继承、多态如何实现？C里面最强大的东西是指针，指针中最神奇的是void指针，这是一切的基本。首先来看封装，如何通过实例来调用方法，而对内部数据进行隐藏。完全可以写一些struct，然后写对应的函数来针对这个struct来操作，我们需要更进一步，把数据和方法绑定起来。这样写初看起来并没什么好处，后面会发现，通过函数指针去找对应的函数是多态的关键。
 <pre class="src"><span style="color: #ff4500;">//</span><span style="color: #ff4500;">object.h </span>
 <span style="color: #00ffff;">typedef</span> <span style="color: #00ffff;">struct</span> <span style="color: #98fb98;">_obj</span>{
     <span style="color: #98fb98;">char</span> <span style="color: #eedd82;">name</span>[MAXLEN];
     <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">ref_cnt</span>;
     <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">value</span>;
-    <span style="color: #98fb98;">void</span> (*<span style="color: #87cefa;">destructor</span>) (<span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>);
-    <span style="color: #98fb98;">void</span> (*<span style="color: #87cefa;">print</span>) (<span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>);
-    <span style="color: #98fb98;">int</span> (*<span style="color: #87cefa;">equal</span>) (<span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>, <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">other</span>);
-}<span style="color: #eedd82;">Obj</span>;
+    <span style="color: #98fb98;">void</span> (<em><span style="color: #87cefa;">destructor</span>) (<span style="color: #98fb98;">void</span></em> <span style="color: #eedd82;">thiz</span>);
+    <span style="color: #98fb98;">void</span> (<em><span style="color: #87cefa;">print</span>) (<span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span></em> <span style="color: #eedd82;">thiz</span>);
+    <span style="color: #98fb98;">int</span> (<em><span style="color: #87cefa;">equal</span>) (<span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span></em> <span style="color: #eedd82;">thiz</span>, <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">other</span>);
+}<span style="color: #eedd82;">Obj</span>;</p>
 
-<span style="color: #ff4500;">//</span><span style="color: #ff4500;">object.c destruct,print,equal定义为static </span>
+<p><span style="color: #ff4500;">//</span><span style="color: #ff4500;">object.c destruct,print,equal定义为static </span></p>
 
-<span style="color: #98fb98;">Obj</span>* <span style="color: #87cefa;">Obj_new</span>(<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">value</span>)
+<p><span style="color: #98fb98;">Obj</span>* <span style="color: #87cefa;">Obj_new</span>(<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">value</span>)
 {
     <span style="color: #98fb98;">Obj</span>* <span style="color: #eedd82;">o</span> = <span style="color: #ffa500;">malloc</span>(<span style="color: #00ffff;">sizeof</span>(Obj));
-    <span style="color: #ffa500;">strcpy</span>(o-&gt;name,<span style="color: #ffa07a;">"baseobj"</span>);
+    <span style="color: #ffa500;">strcpy</span>(o-&gt;name,<span style="color: #ffa07a;">&quot;baseobj&quot;</span>);
     o-&gt;ref_cnt    = 1;
     o-&gt;value      = value;
     o-&gt;destructor = &amp;destruct;
@@ -142,20 +142,20 @@ C语言里面没有语言层面的面向对象支持，那OO中的三个基本�
     o-&gt;equal      = &amp;equal;
     <span style="color: #ffa500;">assert</span>(o);
     <span style="color: #00ffff;">return</span> o;
-}
+}</p>
 
-<span style="color: #ff4500;">//</span><span style="color: #ff4500;">使用方法 </span>
+<p><span style="color: #ff4500;">//</span><span style="color: #ff4500;">使用方法 </span>
 {
     <span style="color: #98fb98;">Obj</span>* <span style="color: #eedd82;">first</span> = <span style="color: #ffa500;">Obj_new</span>(1);
-    <span style="color: #98fb98;">Obj</span>* <span style="color: #eedd82;">other</span> = <span style="color: #ffa500;">Obj_new</span>(2);
-
-    first-&gt;<span style="color: #ffa500;">print</span>(first);
-    other-&gt;<span style="color: #ffa500;">print</span>(other);
-    <span style="color: #ffa500;">assert</span>(!first-&gt;<span style="color: #ffa500;">equal</span>(first,other));
-    <span style="color: #ffa500;">Obj_drop</span>(first);
-    <span style="color: #ffa500;">Obj_drop</span>(other);
-    <span style="color: #00ffff;">return</span> 0;
-}</pre>
+    <span style="color: #98fb98;">Obj</span>* <span style="color: #eedd82;">other</span> = <span style="color: #ffa500;">Obj_new</span>(2);</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>first-&amp;gt;&lt;span style=&quot;color: #ffa500;&quot;&gt;print&lt;/span&gt;(first);
+other-&amp;gt;&lt;span style=&quot;color: #ffa500;&quot;&gt;print&lt;/span&gt;(other);
+&lt;span style=&quot;color: #ffa500;&quot;&gt;assert&lt;/span&gt;(!first-&amp;gt;&lt;span style=&quot;color: #ffa500;&quot;&gt;equal&lt;/span&gt;(first,other));
+&lt;span style=&quot;color: #ffa500;&quot;&gt;Obj_drop&lt;/span&gt;(first);
+&lt;span style=&quot;color: #ffa500;&quot;&gt;Obj_drop&lt;/span&gt;(other);
+&lt;span style=&quot;color: #00ffff;&quot;&gt;return&lt;/span&gt; 0;
+</code></pre></div>
+<p>}</pre>
 对于继承C当然也没原生的支持，可以在子类的定义中写入父类中的成员变量和成员函数，这里如果父类中定义的时候就是宏，直接拿过来就是。所以把父类的定义重新改写一下，分为DATA类型和TYPE类型，在Python里面就是这样，PyObject和PyVarObject是一切其他对象都包含有的。下面是一个例子People继承Object,Student继承People。
 <pre class="src"><span style="color: #7fffd4;">#define</span> <span style="color: #eedd82;">PEOPLE_DATA</span> \
     OBJ_DATA \
@@ -164,33 +164,33 @@ C语言里面没有语言层面的面向对象支持，那OO中的三个基本�
 <span style="color: #ff4500;">//</span><span style="color: #ff4500;">OBJ_DATA必须放在子类新的数据成员前面，只有这样才能把子类的指针强制转换成父类指针 </span><span style="color: #ff4500;">或者转化为Object指针 </span>
 <span style="color: #7fffd4;">#define</span> <span style="color: #eedd82;">PEOPLE_TYPE</span> \
     OBJ_TYPE \
-    <span style="color: #98fb98;">void</span> (*sleep)(<span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>);
+    <span style="color: #98fb98;">void</span> (<em>sleep)(<span style="color: #98fb98;">void</span></em> <span style="color: #eedd82;">thiz</span>);</p>
 
-<span style="color: #00ffff;">typedef</span> <span style="color: #00ffff;">struct</span> <span style="color: #98fb98;">_People_Type</span>{
+<p><span style="color: #00ffff;">typedef</span> <span style="color: #00ffff;">struct</span> <span style="color: #98fb98;">_People_Type</span>{
     PEOPLE_TYPE
-}<span style="color: #eedd82;">People_Type</span>;
+}<span style="color: #eedd82;">People_Type</span>;</p>
 
-<span style="color: #00ffff;">extern</span> <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">Object_Type</span> <span style="color: #eedd82;">Object_type</span>;
-<span style="color: #00ffff;">extern</span> <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">People_Type</span> <span style="color: #eedd82;">People_type</span>;
+<p><span style="color: #00ffff;">extern</span> <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">Object_Type</span> <span style="color: #eedd82;">Object_type</span>;
+<span style="color: #00ffff;">extern</span> <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">People_Type</span> <span style="color: #eedd82;">People_type</span>;</p>
 
-<span style="color: #00ffff;">typedef</span> <span style="color: #00ffff;">struct</span> <span style="color: #98fb98;">_People</span>{
+<p><span style="color: #00ffff;">typedef</span> <span style="color: #00ffff;">struct</span> <span style="color: #98fb98;">_People</span>{
     <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">People_Type</span>* <span style="color: #eedd82;">methods</span>;
     PEOPLE_DATA
 }<span style="color: #eedd82;">People</span>;</pre>
-这里sleep为新增加的子类方法，fullname为新增加的成员变量。注释部分为特别注意的，只有在保证内存的里面数据的分布前面部分都是一样的(一个methods指针和obj_data部分)才能进行指针之间的强制转换时候不出问题。例子里面的Student类也是类似的继承People类，这里可以看到sleep这个方法不好弄，因为在People那里申明为static了，这里想复用就麻烦，所以只有再自己写一个(即使实现是一样的)，这也是C++内部帮用户做好的。可以看到通过type里面的函数指针的不同，不同对象相同的方法实现就不同了，因此实现了多态。
+这里sleep为新增加的子类方法，fullname为新增加的成员变量。注释部分为特别注意的，只有在保证内存的里面数据的分布前面部分都是一样的(一个methods指针和obj_data部分)才能进行指针之间的强制转换时候不出问题。例子里面的Student类也是类似的继承People类，这里可以看到sleep这个方法不好弄，因为在People那里申明为static了，这里想复用就麻烦，所以只有再自己写一个(即使实现是一样的)，这也是C++内部帮用户做好的。可以看到通过type里面的函数指针的不同，不同对象相同的方法实现就不同了，因此实现了多态。</p>
 
-最后我们可以写一个基于计数的指针管理，在持有一个指针的时候调用Obj_pick,用完以后执行Obj_drop。
+<p>最后我们可以写一个基于计数的指针管理，在持有一个指针的时候调用Obj_pick,用完以后执行Obj_drop。
 <pre class="src"><span style="color: #98fb98;">void</span> <span style="color: #87cefa;">Obj_pick</span>(<span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>)
 {
     <span style="color: #ffa500;">assert</span>(thiz);
     <span style="color: #98fb98;">Object</span>* <span style="color: #eedd82;">o</span> = (<span style="color: #98fb98;">Object</span>*)thiz;
     o-&gt;ref_cnt++;
-}
+}</p>
 
-<span style="color: #98fb98;">void</span> <span style="color: #87cefa;">Obj_drop</span>(<span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>)
+<p><span style="color: #98fb98;">void</span> <span style="color: #87cefa;">Obj_drop</span>(<span style="color: #00ffff;">const</span> <span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">thiz</span>)
 {
-    <span style="color: #98fb98;">Object</span>* <span style="color: #eedd82;">o</span> = (<span style="color: #98fb98;">Object</span>*)thiz;
-    <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">Object_Type</span>* <span style="color: #eedd82;">p</span>;
+    <span style="color: #98fb98;">Object</span>* <span style="color: #eedd82;">o</span> = (<span style="color: #98fb98;">Object</span><em>)thiz;
+    <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">Object_Type</span></em> <span style="color: #eedd82;">p</span>;
     <span style="color: #00ffff;">if</span>( --o-&gt;ref_cnt &lt;= 0){
         <span style="color: #00ffff;">for</span>( p = o-&gt;methods; p; p=p-&gt;father){
             <span style="color: #00ffff;">if</span>(p-&gt;destructor)
@@ -199,9 +199,9 @@ C语言里面没有语言层面的面向对象支持，那OO中的三个基本�
     }
     <span style="color: #ffa500;">free</span>(o);
 }</pre>
-按照这种OO的风格的C代码感觉要清晰一些，至少我习惯了。不过还是看个人品位吧，这样的代码风格是我另外一个同事所鄙视的。关于用C实现OO风格，还有一本比较好的书叫做<a href="http://www.cs.rit.edu/~ats/books/ooc.pdf">Object-oriented Programming with ANSI-C</a>，感兴趣可以看看。
+按照这种OO的风格的C代码感觉要清晰一些，至少我习惯了。不过还是看个人品位吧，这样的代码风格是我另外一个同事所鄙视的。关于用C实现OO风格，还有一本比较好的书叫做<a href="http://www.cs.rit.edu/~ats/books/ooc.pdf">Object-oriented Programming with ANSI-C</a>，感兴趣可以看看。</p>
 
-上面的代码在这里下载：<a href="https://github.com/chenyukang/ooc" target="_blank">https://github.com/chenyukang/ooc</a>。
+<p>上面的代码在这里下载：<a href="https://github.com/chenyukang/ooc" target="_blank"><a href="https://github.com/chenyukang/ooc">https://github.com/chenyukang/ooc</a></a>。</p>
 
             
             <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
@@ -266,7 +266,7 @@ C语言里面没有语言层面的面向对象支持，那OO中的三个基本�
 
   
      
-    	<li><a href="/tags.html#Backup-ref">Backup <span>13</span></a></li>
+    	<li><a href="/tags.html#Backup-ref">Backup <span>12</span></a></li>
      
     	<li><a href="/tags.html#Programming-ref">Programming <span>50</span></a></li>
     

@@ -152,8 +152,7 @@
 
 <p>好好的研读了crit-bit的实现和这篇文章，里面技巧挺多的。
 critbit的结构很简单:</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="k">typedef</span> <span class="k">struct</span><span class="p">{</span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="k">typedef</span> <span class="k">struct</span><span class="p">{</span>
     <span class="kt">void</span><span class="o">*</span> <span class="n">child</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
     <span class="n">uint32</span> <span class="n">byte</span><span class="p">;</span>
     <span class="n">uint8</span> <span class="n">otherbits</span><span class="p">;</span>
@@ -161,8 +160,8 @@ critbit的结构很简单:</p>
 
 <span class="k">typedef</span> <span class="k">struct</span><span class="p">{</span>
     <span class="kt">void</span><span class="o">*</span> <span class="n">root</span><span class="p">;</span>
-<span class="p">}</span><span class="n">critbit0_tree</span><span class="p">;</span></code></pre></figure>
-
+<span class="p">}</span><span class="n">critbit0_tree</span><span class="p">;</span>
+</code></pre></div>
 <p>其中child是void*指针，对于树的内部节点其指向的是子节点，对于叶子节点其指向的是字符串。
 byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用来快速的取得不同最高位，在查询的过程中用这个来做branch。</p>
 
@@ -186,8 +185,7 @@ byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用
 <p>posix_memalign在这里用的是sizeof(void*)，其实就和malloc一样了，因为一般Linux上编译器和C库已经处理了对齐问题。</p>
 
 <p>因此在查找的这段代码里是这样的：</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="kt">int</span> <span class="nf">critbit0_contains</span><span class="p">(</span><span class="n">critbit0_tree</span><span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">u</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="kt">int</span> <span class="nf">critbit0_contains</span><span class="p">(</span><span class="n">critbit0_tree</span><span class="o">*</span><span class="n">t</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">u</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">const</span> <span class="n">uint8</span><span class="o">*</span> <span class="n">ubytes</span><span class="o">=</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">u</span><span class="p">;</span>
     <span class="k">const</span> <span class="kt">size_t</span> <span class="n">ulen</span><span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
     <span class="n">uint8</span><span class="o">*</span> <span class="n">p</span><span class="o">=</span> <span class="n">t</span><span class="o">-&gt;</span><span class="n">root</span><span class="p">;</span>
@@ -201,8 +199,8 @@ byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用
     <span class="p">}</span>
     <span class="c1">//叶子节点</span>
     <span class="k">return</span> <span class="mi">0</span> <span class="o">==</span> <span class="n">strcmp</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">p</span><span class="p">);</span>
-<span class="p">}</span></code></pre></figure>
-
+<span class="p">}</span>
+</code></pre></div>
 <h4>取最高位的非0bit</h4>
 
 <p>在插入过程中计算最高位的不同位。</p>
@@ -210,11 +208,10 @@ byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用
 <p><code>newotherbits = p[newbyte]^ubytes[newbyte];</code></p>
 
 <p>其实也可以用一个for循环来计算，不过这里是这样实现的:</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="n">newotherbits</span> <span class="o">|=</span> <span class="n">newotherbits</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="n">newotherbits</span> <span class="o">|=</span> <span class="n">newotherbits</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">;</span>
 <span class="n">newotherbits</span> <span class="o">|=</span> <span class="n">newotherbits</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">;</span>
-<span class="n">newotherbits</span> <span class="o">|=</span> <span class="n">newotherbits</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">;</span></code></pre></figure>
-
+<span class="n">newotherbits</span> <span class="o">|=</span> <span class="n">newotherbits</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">;</span>
+</code></pre></div>
 <p>这相当于是计算不小于它的2的整数次幂，对于32bit的代码可以看看<a href="http://blog.codingnow.com/cloud/CodeCollection">这里</a>的<code>next_pow_of_2</code>。</p>
 
 <hr>

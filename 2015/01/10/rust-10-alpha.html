@@ -136,35 +136,35 @@ By the way, the error hints from compiler is very helpful, this is not like C++(
 <h3>High level abstraction for system programming</h3>
 
 <p>As a modern system programming, Rust is surprisingly expressive. I like the Ruby syntax, Rust has the same similarly mind-blowing effect. Rust carry some functional programming concepts, these make code looks just simple and elegant. Let&#39;s have some trivial code snippet:</p>
-
-<figure class="highlight"><pre><code class="language-rust" data-lang="rust"><span></span><span class="c1">// construct array with 0 3 6 ...</span>
+<div class="highlight"><pre><code class="language-rust" data-lang="rust"><span></span><span class="c1">// construct array with 0 3 6 ...</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">..</span><span class="mi">10</span><span class="n">us</span><span class="p">).</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="p">).</span><span class="n">collect</span><span class="o">::&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">_</span><span class="o">&gt;&gt;</span><span class="p">();</span><span class="w"></span>
-<span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">into_iter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span><span class="w"> </span><span class="p">}</span><span class="w"></span></code></pre></figure>
-
-<figure class="highlight"><pre><code class="language-rust" data-lang="rust"><span></span><span class="c1">// construct array with random values</span>
+<span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">into_iter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
+</code></pre></div><div class="highlight"><pre><code class="language-rust" data-lang="rust"><span></span><span class="c1">// construct array with random values</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">rand</span><span class="p">;</span><span class="w"></span>
-<span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="o">::</span><span class="n">from_fn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="w"> </span><span class="n">rand</span><span class="o">::</span><span class="n">random</span><span class="o">::&lt;</span><span class="n">uint</span><span class="o">&gt;</span><span class="p">());</span><span class="w"></span></code></pre></figure>
+<span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="o">::</span><span class="n">from_fn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="w"> </span><span class="n">rand</span><span class="o">::</span><span class="n">random</span><span class="o">::&lt;</span><span class="n">uint</span><span class="o">&gt;</span><span class="p">());</span><span class="w"></span>
+</code></pre></div>
+<p>Pattern match is so elegant:
+<code>rust
+match number {
+        1 =&gt; println!(&quot;One!&quot;),
+        2 | 3 | 5 | 7 | 11 =&gt; println!(&quot;This is a prime&quot;),
+        13...19 =&gt; println!(&quot;A teen&quot;),
+        _ =&gt; println!(&quot;Ain&#39;t special&quot;),
+    }
+</code></p>
 
-<p>Pattern match is so elegant:</p>
-
-<figure class="highlight"><pre><code class="language-rust" data-lang="rust"><span></span><span class="k">match</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;One!&quot;</span><span class="p">),</span><span class="w"></span>
-<span class="w">        </span><span class="mi">2</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="mi">11</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;This is a prime&quot;</span><span class="p">),</span><span class="w"></span>
-<span class="w">        </span><span class="mi">13</span><span class="p">...</span><span class="mi">19</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;A teen&quot;</span><span class="p">),</span><span class="w"></span>
-<span class="w">        </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;Ain&#39;t special&quot;</span><span class="p">),</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span></code></pre></figure>
-
-<p>Colsures, reminds me with Ruby&#39;s block:</p>
-
-<figure class="highlight"><pre><code class="language-rust" data-lang="rust"><span></span><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">captured_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="n">u</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">closure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|&amp;:</span><span class="n">argument</span><span class="o">|</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;I captured this: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">captured_value</span><span class="p">);</span><span class="w"></span>
-<span class="w">        </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;Argument passed was: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">argument</span><span class="p">);</span><span class="w"></span>
-<span class="w">        </span><span class="kc">true</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
-<span class="w">    </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&quot;Closure returned: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">closure</span><span class="p">(</span><span class="s">&quot;a string&quot;</span><span class="p">));</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span></code></pre></figure>
+<p>Colsures, reminds me with Ruby&#39;s block:
+<code>rust
+fn main() {
+    let captured_value = 7u;
+    let closure = |&amp;:argument| {
+        println!(&quot;I captured this: {}&quot;, captured_value);
+        println!(&quot;Argument passed was: {}&quot;, argument);
+        true
+    };
+    println!(&quot;Closure returned: {}&quot;, closure(&quot;a string&quot;));
+}
+</code></p>
 
 <p>Almost every statement is an expression, this means that the statement returns a value. Blocks are also expression. This is good thing, we may write less &quot;return&quot;! Mixing with pattern match ends with a better sugar.</p>
 

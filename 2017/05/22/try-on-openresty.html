@@ -136,8 +136,7 @@
 
 <p>在我们的实现中有一步需要给后端返回的结果里面加一段水印(也就是一段JS代码)，这步可以在body_filter这个里面做。不过需要注意body_filter是按流式方式处理的，需要把各个buffer存下来然后拼接起来。
 而且后端返回的结果可能是zip压缩过的，<a href="https://groups.google.com/forum/#!topic/openresty-en/q-dcQNxpwTA">所以需要解压，然后才能做替换或者拼接的操作</a>。</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kd">local</span> <span class="n">chunk</span><span class="p">,</span> <span class="n">eof</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ngx</span><span class="p">.</span><span class="n">arg</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> 
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kd">local</span> <span class="n">chunk</span><span class="p">,</span> <span class="n">eof</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ngx</span><span class="p">.</span><span class="n">arg</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> 
 <span class="kd">local</span> <span class="n">buffered</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">ctx</span><span class="p">.</span><span class="n">buffered</span> 
 <span class="kr">if</span> <span class="ow">not</span> <span class="n">buffered</span> <span class="kr">then</span> 
    <span class="n">buffered</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1">-- XXX we can use table.new here </span>
@@ -155,20 +154,20 @@
 
    <span class="c1">-- try to unzip</span>
    <span class="kd">local</span> <span class="n">status</span><span class="p">,</span> <span class="n">debody</span> <span class="o">=</span> <span class="nb">pcall</span><span class="p">(</span><span class="n">com</span><span class="p">.</span><span class="n">decode</span><span class="p">,</span> <span class="n">whole</span><span class="p">)</span>
-   
+
    <span class="kr">if</span> <span class="n">status</span> <span class="kr">then</span> <span class="n">whole</span> <span class="o">=</span> <span class="n">debody</span> <span class="kr">end</span>
    <span class="c1">-- try to add or replace response body</span>
    <span class="kd">local</span> <span class="n">js_code</span> <span class="o">=</span> <span class="p">....</span>
    <span class="n">whole</span> <span class="o">=</span> <span class="n">whole</span> <span class="o">..</span> <span class="n">js_code</span>
-   
+
    <span class="n">ngx</span><span class="p">.</span><span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">whole</span> 
-<span class="kr">end</span></code></pre></figure>
-   
-
-<p>最后因为修改了response body，所以需要修改header filter里面的部分:</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">ngx</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">content_length</span> <span class="o">=</span> <span class="kc">nil</span>
-<span class="n">ngx</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">content_encoding</span> <span class="o">=</span> <span class="kc">nil</span></code></pre></figure>
+<span class="kr">end</span>
+</code></pre></div>
+<p>最后因为修改了response body，所以需要修改header filter里面的部分:
+<code>lua
+ngx.header.content_length = nil
+ngx.header.content_encoding = nil
+</code></p>
 
 <h2>容易出现的bug</h2>
 

@@ -119,8 +119,7 @@
         <h1 class="title">Browser objs and class hierarchy  in Ruby</h1>
 
             <p>Ruby里一切都是对象，如何能看到Ruby内建的对象模型呢。这里有个小程序来查看Ruby内部构建好的的对象和类。ObjectSpace可以迭代所有对象。</p>
-
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span>    <span class="n">set</span> <span class="o">=</span> <span class="no">Set</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span>    <span class="n">set</span> <span class="o">=</span> <span class="no">Set</span><span class="o">.</span><span class="n">new</span><span class="p">()</span>
     <span class="no">ObjectSpace</span><span class="o">.</span><span class="n">each_object</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span>
       <span class="n">set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">class</span><span class="p">)</span>
     <span class="k">end</span>
@@ -128,11 +127,9 @@
    <span class="n">set</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span>
      <span class="nb">puts</span> <span class="n">x</span>
    <span class="k">end</span>
-   </code></pre></figure>
-
+</code></pre></div>
 <p>下面这段就能根据对象，取得class对象，建立起类的继承图。</p>
-
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span>  <span class="c1"># Creates or updates a klass_tree.</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span>  <span class="c1"># Creates or updates a klass_tree.</span>
   <span class="c1"># When updating no classes or objects are removed</span>
   <span class="k">def</span> <span class="nf">object_browser</span><span class="p">(</span><span class="n">classtree</span> <span class="o">=</span> <span class="no">ClassTreeNode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kernel</span><span class="p">))</span>
     <span class="no">ObjectSpace</span><span class="o">.</span><span class="n">each_object</span> <span class="k">do</span> <span class="o">|</span> <span class="n">x</span> <span class="o">|</span>
@@ -143,8 +140,8 @@
       <span class="p">}</span><span class="o">.</span><span class="n">add_object</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">end</span>
     <span class="n">classtree</span>
-  <span class="k">end</span></code></pre></figure>
-
+  <span class="k">end</span>
+</code></pre></div>
 <p>use this command to get image:</p>
 
 <p>$ruby prog.rb &gt; class.dot; dot -Tpng class.dot -o class.png</p>

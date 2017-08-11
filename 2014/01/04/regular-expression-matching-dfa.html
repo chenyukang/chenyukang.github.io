@@ -120,15 +120,14 @@
 
             <p>正则表达式匹配是一个经典问题，这里有一个<a href="http://oj.leetcode.com/problems/regular-expression-matching/">问题</a>。
 实现isMatch，其中.表示任意一个字符，*表示0个或者任一个前面的字符：</p>
-
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>,<span class="s2">&quot;a&quot;</span><span class="o">)</span>       → <span class="nb">false</span>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>,<span class="s2">&quot;a&quot;</span><span class="o">)</span>       → <span class="nb">false</span>
 isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>,<span class="s2">&quot;aa&quot;</span><span class="o">)</span>      → <span class="nb">true</span>
 isMatch<span class="o">(</span><span class="s2">&quot;aaa&quot;</span>,<span class="s2">&quot;aa&quot;</span><span class="o">)</span>     → <span class="nb">false</span>
 isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>, <span class="s2">&quot;a*&quot;</span><span class="o">)</span>     → <span class="nb">true</span>
 isMatch<span class="o">(</span><span class="s2">&quot;aa&quot;</span>, <span class="s2">&quot;.*&quot;</span><span class="o">)</span>     → <span class="nb">true</span>
 isMatch<span class="o">(</span><span class="s2">&quot;ab&quot;</span>, <span class="s2">&quot;.*&quot;</span><span class="o">)</span>     → <span class="nb">true</span>
-isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span class="s2">&quot;c*a*b&quot;</span><span class="o">)</span> → <span class="nb">true</span></code></pre></figure>
-
+isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span class="s2">&quot;c*a*b&quot;</span><span class="o">)</span> → <span class="nb">true</span>
+</code></pre></div>
 <p>这是一个正则表达式问题的简化版本只有<code>.</code>和<code>*</code>，可以用递归来解决。正则表达式涉及到自动机理论，顺便再复习一下当年没好好学的东西。查找一番后发现了这篇Russ Cox写的文章非常好(这家伙写了不少文章，xv6里也有他的代码，现在在为Go项目工作)。于是我也尝试着用DFA来解决这个问题。</p>
 
 <h2>DFA和NFA的概念</h2>
@@ -149,8 +148,7 @@ isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span cl
 
 <p>对上面那个问题我尝试着实现了一个程序构建DFA来解决，提交上去完成439个测试用例只用了28ms，相对于递归版本的需要104ms。也可能LeetCode上面的测试数据太少，比较的意义不大。代码长度当然要比递归的长不少。
 定义State：</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="k">enum</span> <span class="n">OpType</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="k">enum</span> <span class="n">OpType</span> <span class="p">{</span>
     <span class="n">ZERO_PLUS_ONE</span><span class="p">,</span>
     <span class="n">ANY_ONE</span><span class="p">,</span>
     <span class="n">MUST_ONE</span>
@@ -176,11 +174,10 @@ isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span cl
         <span class="k">if</span><span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="n">ZERO_PLUS_ONE</span> <span class="o">&amp;&amp;</span> <span class="n">prev</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="c1">//匹配任意，前驱加上当前需要添加的状态</span>
             <span class="n">prev</span><span class="o">-&gt;</span><span class="n">add</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">};</span></code></pre></figure>
-
+<span class="p">};</span>
+</code></pre></div>
 <p>构建DFA的过程如下，注释的部分需要注意：</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="n">State</span><span class="o">*</span> <span class="nf">construct_dfa</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pattern</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="n">State</span><span class="o">*</span> <span class="nf">construct_dfa</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pattern</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span><span class="p">(</span><span class="n">pattern</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
     <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">;</span>
     <span class="n">State</span><span class="o">*</span> <span class="n">start</span> <span class="o">=</span> <span class="k">new</span> <span class="n">State</span><span class="p">(</span><span class="n">ANY_ONE</span><span class="p">,</span> <span class="n">Num</span><span class="p">,</span> <span class="sc">&#39;.&#39;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
@@ -216,8 +213,8 @@ isMatch<span class="o">(</span><span class="s2">&quot;aab&quot;</span>, <span cl
         <span class="n">cur</span><span class="o">-&gt;</span><span class="n">end</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">start</span><span class="p">;</span>
-<span class="p">}</span></code></pre></figure>
-
+<span class="p">}</span>
+</code></pre></div>
 <p>匹配的过程就是一个搜索的过程，需要注意避免重复访问，另外如果下一层要访问的为空就可以退出整个搜索过程了，整个代码看这个<a href="https://gist.github.com/chenyukang/8265615">Gist</a>。</p>
 
             

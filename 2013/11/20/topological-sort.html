@@ -132,8 +132,7 @@
 
 <p>拓扑排序的基本算法是用DFS，我们希望把有出度的点尽量排在前面，所以这里需要注意和DFS的区别。比如上面图中的一个DFS访问顺序是: 5 2 3 1 0 4, 但是这不是一个拓扑排序，4需要排在0的前面，5, 4, 0, 2, 3, 1。
 拓扑排序中需要等迭代完节点的连接邻点后再把当前点压入栈。</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;list&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;stack&gt;</span><span class="cp"></span>
@@ -202,8 +201,8 @@
     <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Following is topological sort result: </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
     <span class="n">g</span><span class="p">.</span><span class="n">Topological_sort</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span></code></pre></figure>
-
+<span class="p">}</span>
+</code></pre></div>
 <h2>唯一性</h2>
 
 <p>如果一个DAG的拓扑排序中任意连续的两点都是可连通的，那么这个序列也就是DAG的Hamiltonian路径，而且如果DAG图的Hamiltonian路径存在，那么拓扑排序就是唯一的。否则如果一个拓扑排序结果不是Hamiltonian路径，那么就存在多个拓扑排序结果。</p>

@@ -134,8 +134,7 @@
 <h3>Kong插件的运行机制</h3>
 
 <p>在上一文 Kong 初始化分析中，我们看到 nginx_kong.lua 模板文件里面有这么一段代码：</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">location</span> <span class="o">/</span> <span class="p">{</span> 
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">location</span> <span class="o">/</span> <span class="p">{</span> 
   <span class="n">rewrite_by_lua_block</span> <span class="p">{</span>
       <span class="n">kong</span><span class="p">.</span><span class="n">rewrite</span><span class="p">()</span>
   <span class="p">}</span>
@@ -155,11 +154,10 @@
   <span class="n">log_by_lua_block</span> <span class="p">{</span>
       <span class="n">kong</span><span class="p">.</span><span class="n">log</span><span class="p">()</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre></figure>
-
+<span class="p">}</span>
+</code></pre></div>
 <p>在 kong.lua 文件里面， kong.access 的实现是这样的:</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kr">function</span> <span class="nc">Kong</span><span class="p">.</span><span class="nf">access</span><span class="p">()</span>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kr">function</span> <span class="nc">Kong</span><span class="p">.</span><span class="nf">access</span><span class="p">()</span>
   <span class="n">core</span><span class="p">.</span><span class="n">access</span><span class="p">.</span><span class="n">before</span><span class="p">()</span>
 
   <span class="kr">for</span> <span class="n">plugin</span><span class="p">,</span> <span class="n">plugin_conf</span> <span class="kr">in</span> 
@@ -168,16 +166,15 @@
   <span class="kr">end</span>
 
   <span class="n">core</span><span class="p">.</span><span class="n">access</span><span class="p">.</span><span class="n">after</span><span class="p">()</span>
-<span class="kr">end</span></code></pre></figure>
-
+<span class="kr">end</span>
+</code></pre></div>
 <p>从这里可以看出 Kong 的插件运行机制就是从 loaded_plugins 里面依次执行。 学习 Kong 插件开发的方法是参考现有的一些插件实现，学着写几个就会了。用户自己定义的插件是在 base_plugin 基类上继承而来。Kong 里面使用的了<a href="https://github.com/rxi/classic"> 这套 class 机制</a>，可以看到使用 Lua 实现面向对象还是很简单的。</p>
 
 <h3>singletons.loaded_plugins</h3>
 
 <p><a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L156">singletons.loaded_plugins</a>在这里初始化的，在具体<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L70">实现过程中</a>就是从数据库里面把插件配置读出，</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kd">local</span> <span class="n">ok</span><span class="p">,</span> <span class="n">handler</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">load_module_if_exists</span><span class="p">(</span><span class="s2">&quot;kong.plugins.&quot;</span> <span class="o">..</span> <span class="n">plugin</span> <span class="o">..</span> <span class="s2">&quot;.handler&quot;</span><span class="p">)</span></code></pre></figure>
-
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kd">local</span> <span class="n">ok</span><span class="p">,</span> <span class="n">handler</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">load_module_if_exists</span><span class="p">(</span><span class="s2">&quot;kong.plugins.&quot;</span> <span class="o">..</span> <span class="n">plugin</span> <span class="o">..</span> <span class="s2">&quot;.handler&quot;</span><span class="p">)</span>
+</code></pre></div>
 <p>在每一个插件在 handler.lua 的最后都是 return XXXXHandler，所以在调用 <a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L105">handler()</a>后我们在内存中导入了插件的对象。另外在初始化后需要<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L116">按照优先级来排序</a>，以此来保证各个插件之间的执行顺序。</p>
 
 <p>从上面的分析上看出，插件导入后都会在内存中的全局对象中存储，后面的开销在于依次迭代插件。</p>
@@ -187,11 +184,10 @@
 <p>我们再来看看某个站点是否启用某个插件是如何处理的，最主要的实现在于 plugins_iterator 这个函数。首先我们得理解如何确定当前 request 对应的唯一标识符， 在<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/core/handler.lua#L128">core.handler.access</a>的过程中保存了经过路由后的 api在ngx.ctx 里，这个 ngx.ctx 会在整个request 处理过程中反复被使用。再回到 plugins_interator 函数，这个函数的参数有两个，后一个叫access_or_cert_ctx， 因为对于一个 request处理中 plugins_iterator 会调用多次，这个参数的作用在于判断是否是第一个调用这个函数。第一次调用可能发生在<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L219">ssl_certificate</a>或者<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L297">access</a> 阶段， 因为在 ctx 里面 Kong 还是初始化了一个叫做<code>ctx.plugins_for_request</code>的变量来存储当前 request 启用的插件，这样后续 iterator 阶段就完全不会去重复 load 插件配置，这样做当然是为了性能上的考虑。</p>
 
 <p>读取插件配置的函数调用是： </p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kr">if</span> <span class="n">api</span> <span class="kr">then</span>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kr">if</span> <span class="n">api</span> <span class="kr">then</span>
    <span class="n">plugin_configuration</span> <span class="o">=</span> <span class="n">load_plugin_configuration</span><span class="p">(</span><span class="n">api</span><span class="p">.</span><span class="n">id</span><span class="p">,</span> <span class="n">consumer_id</span><span class="p">,</span> <span class="n">plugin</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
-<span class="kr">end</span></code></pre></figure>
-
+<span class="kr">end</span>
+</code></pre></div>
 <p><a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/core/plugins_iterator.lua#L38">load_plugin_configuration</a>也会首先尝试从内存缓存中取，如果取不到再从数据库中取出，然后存储在缓存中。</p>
 
 <p>从上面的分析看出，插件相关的读取和执行在大部分时间里是完全不会去读数据库的，所以性能损失并不会大。</p>

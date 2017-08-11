@@ -128,13 +128,11 @@
 在网络传输中有一个叫做心跳的概念，简单来讲就是客户端发送一个简单的心跳包给服务端，服务端又返回给客户端，然后客户端检查传回来的内容是否是预期，这样就知道了当前的TLS通信是否正常。这个Bug不是协议的问题，而是具体实现的时候的遗漏了相关的逻辑。</p>
 
 <p>这个函数dtls1_process_heartbeat就是处理这块代码的，先读出长度和包类型，然后申请一段内存空间做一个memcpy，其中长度为write_length, 而这里遗漏的就是这个长度的合法性检查。</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cm">/* Read type and payload length first */</span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cm">/* Read type and payload length first */</span>
       <span class="n">hbtype</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="o">++</span><span class="p">;</span>
       <span class="n">n2s</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">payload</span><span class="p">);</span>
-      <span class="n">pl</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span></code></pre></figure>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span>   <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">buffer</span><span class="p">,</span> <span class="o">*</span><span class="n">bp</span><span class="p">;</span>
+      <span class="n">pl</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+</code></pre></div><div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span>   <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">buffer</span><span class="p">,</span> <span class="o">*</span><span class="n">bp</span><span class="p">;</span>
    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">write_length</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">payload</span> <span class="o">+</span> <span class="n">padding</span><span class="p">;</span>
    <span class="n">buffer</span> <span class="o">=</span> <span class="n">OPENSSL_malloc</span><span class="p">(</span><span class="n">write_length</span><span class="p">);</span>
    <span class="n">bp</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">;</span>
@@ -148,8 +146,8 @@
    <span class="cm">/* Random padding */</span>
    <span class="n">RAND_pseudo_bytes</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span> <span class="n">padding</span><span class="p">);</span>
 
-   <span class="n">r</span> <span class="o">=</span> <span class="n">dtls1_write_bytes</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">TLS1_RT_HEARTBEAT</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">write_length</span><span class="p">);</span></code></pre></figure>
-
+   <span class="n">r</span> <span class="o">=</span> <span class="n">dtls1_write_bytes</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">TLS1_RT_HEARTBEAT</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">write_length</span><span class="p">);</span>
+</code></pre></div>
 <p>可以想象如果客户端发送一个长度为很大的数，而实际给的内容还是在符合范围内的长度，而memcpy仍旧拷贝了一个比较大范围的内存空间(因为申明的包长度类型这里最大为64K)。
 而这个临近的内存空间存的是些什么东西就不确定了，偶尔可能包含一些敏感信息，比如用户密码等等，这些数据有一定特征，是可以通过一定手段检测出来的。这个Bug的名字很形象，就像是血从服务器这个身体里慢慢渗出来一样。</p>
 

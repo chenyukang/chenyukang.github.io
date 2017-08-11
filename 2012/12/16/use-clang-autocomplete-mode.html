@@ -124,11 +124,10 @@
 <p>这个thread挺好玩的，后面变成了一大群人争论functional programming和Imperative Programming。这篇<a href="http://fpcomplete.com/the-downfall-of-imperative-programming/">The Downfall of Imperative Programming</a>再好好看看。</p>
 
 <p>回到正题，我最近切换到Mac下。因为在Mac OS X下编译器变成了Clang， Clang是基于LLVM的。LLVM对于分析代码是有比较方便的支持，所以基于LLVM有各种分析源程序的工具了，Xcode下的一些辅助开发的工具还是很舒服的。前些天突然想到那么会不会有个东西来作为Emacs的自动补全的后端，一搜果然有了这个<a href="https://github.com/mikeandmore/auto-complete-clang">auto-complete-clang</a>，使用了一下非常的方便。其实看看其代码是在后面调用Clang的，比如在main.cc源文件里面写一些代码:</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span>    <span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span>    <span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
     <span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
     <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-    
+
     <span class="k">class</span> <span class="nc">Demo</span><span class="p">{</span>
     <span class="k">public</span><span class="o">:</span>
         <span class="kt">void</span> <span class="n">print</span><span class="p">();</span>
@@ -136,30 +135,31 @@
     <span class="k">private</span><span class="o">:</span>
         <span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
     <span class="p">};</span>
-    
+
     <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">s</span><span class="p">;</span>
         <span class="n">Demo</span> <span class="n">demo</span><span class="p">;</span>
         <span class="n">demo</span><span class="p">.</span>
-    <span class="p">}</span></code></pre></figure>
+    <span class="p">}</span>
+</code></pre></div>
+<p>结果还是非常精准的，不想截图了。后端运行的命令其实是:
+<code>sh
+    cmd: clang -cc1 main.cc -fsyntax-only -code-completion-at main.cc:18:10
+</code></p>
 
-<p>结果还是非常精准的，不想截图了。后端运行的命令其实是:</p>
-
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>    cmd: clang -cc1 main.cc -fsyntax-only -code-completion-at main.cc:18:10</code></pre></figure>
-
-<p>所得到的结果是:</p>
-
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>    COMPLETION: Demo : Demo::
-    COMPLETION: <span class="nv">operator</span><span class="o">=</span> : <span class="o">[</span><span class="c1">#Demo &amp;#]operator=(&lt;#const Demo &amp;#&gt;)</span>
-    COMPLETION: print : <span class="o">[</span><span class="c1">#void#]print()</span>
-    COMPLETION: <span class="nb">test</span> : <span class="o">[</span><span class="c1">#void#]test()</span>
-    COMPLETION: value : <span class="o">[</span><span class="c1">#int#]value</span>
-    COMPLETION: ~Demo : <span class="o">[</span><span class="c1">#void#]~Demo()</span></code></pre></figure>
+<p>所得到的结果是:
+<code>sh
+    COMPLETION: Demo : Demo::
+    COMPLETION: operator= : [#Demo &amp;#]operator=(&lt;#const Demo &amp;#&gt;)
+    COMPLETION: print : [#void#]print()
+    COMPLETION: test : [#void#]test()
+    COMPLETION: value : [#int#]value
+    COMPLETION: ~Demo : [#void#]~Demo()
+</code></p>
 
 <p>auto-complete-clang做的事情就是把这个结果再展示出来，其实这条命令也做了语法检查的，所以加上一个语法检查的功能应该也是可以的。一搜果然还是有了，看这个<a href="http://duncan.mac-vicar.com/2011/08/30/realtime-syntax-checking-with-emacs/">Realtime syntax checking with emacs</a>，需要翻墙，不过代码在<a href="https://github.com/dmacvicar/duncan-emacs-setup/tree/master/site-lisp">Github上</a>。其实其后端运行的命令是：</p>
-
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>   cmd: clang  -fsyntax-only -fno-exceptions main.cc</code></pre></figure>
-
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>   cmd: clang  -fsyntax-only -fno-exceptions main.cc
+</code></pre></div>
 <p>最近用这个插件，基本代码都会是一遍编译通过啊，哈哈。Clang错误提示也人性化一点，比如在Xcode下会提示你想的是不是&quot;XXX&quot;之类的。</p>
 
             

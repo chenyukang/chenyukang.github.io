@@ -139,8 +139,7 @@
 
 <p>像写程序一样写日志，这对程序员吸引很大。
 我用这个小脚本来完成发布:</p>
-
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="ch">#!/bin/sh</span>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span><span class="ch">#!/bin/sh</span>
 do_commit<span class="o">()</span> <span class="o">{</span>
     <span class="nv">cmd</span><span class="o">=</span><span class="s2">&quot;git commit -a -m\&quot;</span><span class="nv">$log</span><span class="s2">\&quot;&quot;</span>
     <span class="nb">echo</span> <span class="nv">$cmd</span>
@@ -155,8 +154,8 @@ do_commit<span class="o">()</span> <span class="o">{</span>
     -commit <span class="p">|</span>-u<span class="o">)</span> shift<span class="p">;</span> <span class="nv">log</span><span class="o">=</span><span class="nv">$1</span><span class="p">;</span> do_commit<span class="p">;</span> <span class="nb">exit</span> <span class="m">0</span><span class="p">;;</span>
   <span class="k">esac</span>
   <span class="nb">shift</span>
-<span class="k">done</span></code></pre></figure>
-
+<span class="k">done</span>
+</code></pre></div>
 <ul>
 <li><strong>简洁</strong></li>
 </ul>
@@ -175,16 +174,15 @@ do_commit<span class="o">()</span> <span class="o">{</span>
 <li><p>申请GitHub，这个不少程序员有，直接跳过。</p></li>
 <li><p>安装Jekyll 在本地，可能会遇上ruby版本的问题，我的机子上是1.8.7，需要1.9.2，使用<a href="https://rvm.io//">rvm</a>来解决，具体参考<a href="http://lanvige.iteye.com/blog/857501">这里</a>。具体使用下面一些命令:</p></li>
 </ul>
-
-<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo apt-get install gems curl
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>sudo apt-get install gems curl
 gem install rvm
 rvm get latest 
 rvm reload
 rvm install <span class="m">1</span>.9.2
 rvm use <span class="m">1</span>.9.2
 ruby -v <span class="c1">#(use 1.9.2)</span>
-gem install directory_watcher liquid open4 maruku classifier jekyll</code></pre></figure>
-
+gem install directory_watcher liquid open4 maruku classifier jekyll
+</code></pre></div>
 <ul>
 <li><p>再建立yourname.github.com项目，git clone <a href="https://github.com/plusjade/jekyll-bootstrap.git">jekyll bootstrap</a>到自己的代码库。</p></li>
 <li><p>从wordpress迁徙，我使用wordpress.xml这个方法，最后修改域名解析就大功告成了。

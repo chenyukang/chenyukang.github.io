@@ -124,7 +124,7 @@
 
 <p>假设我们对Kong做了一个更改的请求，这个请求通常是通过admin_api这个路由处理的。也就是说最终执行数据库操作的动作是在一个Nginx worker进程里。因为操作了数据库所以我们需要刷新这个Kong节点的所有worker的缓存，而且要把事件分发给其他Kong节点，让其他Kong节点刷新所有worker的缓存。</p>
 
-<p><img src="/images/kong-message.png" alt="kong-message" class="img-center"/></p>
+<p><img src="/images/kong-message.png" alt="kong-message" class="img-center"></p>
 
 <p>这就涉及到两部分:</p>
 
@@ -143,8 +143,7 @@
 </ol>
 
 <p>Kong使用的是一个<a href="https://github.com/Olivine-Labs/mediator_lua">叫作mediator_lua</a>，mediator中文意思为&quot;中间人&quot;，很符合项目的意思。可以看到kong/core/events.lua里面实现如下：</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kr">function</span> <span class="nc">Events</span><span class="p">:</span><span class="nf">subscribe</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kr">function</span> <span class="nc">Events</span><span class="p">:</span><span class="nf">subscribe</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
   <span class="kr">if</span> <span class="n">fn</span> <span class="kr">then</span>
     <span class="n">self</span><span class="p">.</span><span class="n">_mediator</span><span class="p">:</span><span class="n">subscribe</span><span class="p">({</span><span class="n">event_name</span><span class="p">},</span> <span class="kr">function</span><span class="p">(</span><span class="n">message_t</span><span class="p">)</span>
       <span class="n">fn</span><span class="p">(</span><span class="n">message_t</span><span class="p">)</span>
@@ -157,41 +156,37 @@
   <span class="kr">if</span> <span class="n">event_name</span> <span class="kr">then</span>
     <span class="n">self</span><span class="p">.</span><span class="n">_mediator</span><span class="p">:</span><span class="n">publish</span><span class="p">({</span><span class="nb">string.upper</span><span class="p">(</span><span class="n">event_name</span><span class="p">)},</span> <span class="n">message_t</span><span class="p">)</span>
   <span class="kr">end</span>
-<span class="kr">end</span></code></pre></figure>
-
+<span class="kr">end</span>
+</code></pre></div>
 <p>Kong.init初始化的时候会调用一个叫做attach_hooks的函数:
 <code>
 attach_hooks(events, require &quot;kong.core.hooks&quot;)
 </code></p>
 
 <p>在load插件的时候也会把插件对应hooks绑定上：</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span>    <span class="c1">-- Attaching hooks</span>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span>    <span class="c1">-- Attaching hooks</span>
     <span class="kd">local</span> <span class="n">ok</span><span class="p">,</span> <span class="n">hooks</span> <span class="o">=</span> <span class="n">utils</span><span class="p">.</span><span class="n">load_module_if_exists</span><span class="p">(</span><span class="s2">&quot;kong.plugins.&quot;</span> <span class="o">..</span> <span class="n">plugin</span> <span class="o">..</span> <span class="s2">&quot;.hooks&quot;</span><span class="p">)</span>
     <span class="kr">if</span> <span class="n">ok</span> <span class="kr">then</span>
       <span class="n">attach_hooks</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">hooks</span><span class="p">)</span>
-    <span class="kr">end</span></code></pre></figure>
-
+    <span class="kr">end</span>
+</code></pre></div>
 <h3>事件的来源</h3>
 
 <p>上面说过，Kong节点之间通信是通过<a href="https://www.serf.io/">serf</a>发送的。我们来看看事件是如何触发发出通知的。
 事件来于源数据库的修改，那就应该在数据库代码部分有触发事件的代码，查看dao/dao.lua这个文件里的代码，我们可以看到在insert、update、insert执行的时候都调用了一行代码</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">event</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">event_types</span><span class="p">.</span><span class="n">ENTITY_DELETED</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">schema</span><span class="p">,</span> <span class="n">entity</span><span class="p">)</span></code></pre></figure>
-
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">event</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">event_types</span><span class="p">.</span><span class="n">ENTITY_DELETED</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">schema</span><span class="p">,</span> <span class="n">entity</span><span class="p">)</span>
+</code></pre></div>
 <p>这个函数的实现如下，这里做了数据的序列化，然后发布了一种叫做CLUSTER_PROGATE类型的消息：</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">event</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">data_t</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">event</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">data_t</span><span class="p">)</span>
   <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">events_handler</span> <span class="kr">then</span>
     <span class="p">...</span><span class="o">..</span>  <span class="err">执行数据序列化</span>
     <span class="n">self</span><span class="p">.</span><span class="n">events_handler</span><span class="p">:</span><span class="n">publish</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">events_handler</span><span class="p">.</span><span class="n">TYPES</span><span class="p">.</span><span class="n">CLUSTER_PROPAGATE</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
   <span class="kr">end</span>
-<span class="kr">end</span></code></pre></figure>
-
+<span class="kr">end</span>
+</code></pre></div>
 <p>在core/hooks.lua接受消息部分，events.TYPES.CLUSTER_PROPAGATE对应的处理部分是singletons.serf:event(message_t)，所以我们看serf.lua这个源文件，最终event调用了invoke_signal，这个函数会运行一个serf命令，类似于这样：</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">serf</span> <span class="n">event</span> <span class="o">-</span><span class="n">coalesce</span><span class="o">=</span><span class="kc">false</span> <span class="o">-</span><span class="n">rpc</span><span class="o">-</span><span class="n">addr</span><span class="o">=</span><span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">7373</span>  <span class="n">kong</span> <span class="s1">&#39;{&quot;type&quot;:&quot;ENTITY_UPDATED&quot;,&quot;primary_key&quot;:[&quot;id&quot;],&quot;collection&quot;:&quot;apis&quot;,&quot;entity&quot;:{&quot;id&quot;:&quot;94acca76-d61a-429e-86a9-5abf2c61ee31&quot;}}&#39;</span></code></pre></figure>
-
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">serf</span> <span class="n">event</span> <span class="o">-</span><span class="n">coalesce</span><span class="o">=</span><span class="kc">false</span> <span class="o">-</span><span class="n">rpc</span><span class="o">-</span><span class="n">addr</span><span class="o">=</span><span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">7373</span>  <span class="n">kong</span> <span class="s1">&#39;{&quot;type&quot;:&quot;ENTITY_UPDATED&quot;,&quot;primary_key&quot;:[&quot;id&quot;],&quot;collection&quot;:&quot;apis&quot;,&quot;entity&quot;:{&quot;id&quot;:&quot;94acca76-d61a-429e-86a9-5abf2c61ee31&quot;}}&#39;</span>
+</code></pre></div>
 <p>这就出发了一个serf event，其他Kong节点会收到此消息。</p>
 
 <h3>serf: Kong节点之间通信</h3>
@@ -200,8 +195,7 @@ attach_hooks(events, require &quot;kong.core.hooks&quot;)
 <div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>serf agent -profile wan -bind <span class="m">0</span>.0.0.0:7946 -log-level err -rpc-addr <span class="m">127</span>.0.0.1:7373 -event-handler member-join,member-leave,member-failed,member-update,member-reap,user:kong<span class="o">=</span>/usr/local/kong/serf/serf_event.sh -node Kang.local_0.0.0.0:7946_be3b9352808e4839a272f30ca6025650
 </code></pre></div>
 <p>可以看看serf_event.sh这个脚本，内容如下：</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">PAYLOAD</span><span class="o">=</span><span class="err">`</span><span class="n">cat</span><span class="err">`</span> <span class="o">#</span> <span class="n">Read</span> <span class="n">from</span> <span class="n">stdin</span>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">PAYLOAD</span><span class="o">=</span><span class="err">`</span><span class="n">cat</span><span class="err">`</span> <span class="o">#</span> <span class="n">Read</span> <span class="n">from</span> <span class="n">stdin</span>
 <span class="kr">if</span> <span class="p">[</span> <span class="s2">&quot;$SERF_EVENT&quot;</span> <span class="err">!</span><span class="o">=</span> <span class="s2">&quot;user&quot;</span> <span class="p">];</span> <span class="kr">then</span>
   <span class="n">PAYLOAD</span><span class="o">=</span><span class="s2">&quot;{</span><span class="se">\&quot;</span><span class="s2">type</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">${SERF_EVENT}</span><span class="se">\&quot;</span><span class="s2">,</span><span class="se">\&quot;</span><span class="s2">entity</span><span class="se">\&quot;</span><span class="s2">: </span><span class="se">\&quot;</span><span class="s2">${PAYLOAD}</span><span class="se">\&quot;</span><span class="s2">}&quot;</span>
 <span class="n">fi</span>
@@ -220,36 +214,35 @@ attach_hooks(events, require &quot;kong.core.hooks&quot;)
 <span class="s2">  } </span><span class="se">\</span>
 <span class="s2">}&quot;</span>
 
-<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="kd">local</span><span class="o">/</span><span class="n">openresty</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">resty</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;$CMD&quot;</span></code></pre></figure>
-
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="kd">local</span><span class="o">/</span><span class="n">openresty</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">resty</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;$CMD&quot;</span>
+</code></pre></div>
 <p>可以看到serf收到消息后会触发这个脚本，然后把消息发送到本节点的/cluster/events这个路由。api/routes/cluster.lua这个文件里有收到消息后的处理代码，其中最关键的是：</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="c1">-- Trigger event in the node</span>
-<span class="n">ev</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="n">constants</span><span class="p">.</span><span class="n">CACHE</span><span class="p">.</span><span class="n">CLUSTER</span><span class="p">,</span> <span class="n">message_t</span><span class="p">.</span><span class="n">type</span><span class="p">,</span> <span class="n">message_t</span><span class="p">)</span></code></pre></figure>
-
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="c1">-- Trigger event in the node</span>
+<span class="n">ev</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="n">constants</span><span class="p">.</span><span class="n">CACHE</span><span class="p">.</span><span class="n">CLUSTER</span><span class="p">,</span> <span class="n">message_t</span><span class="p">.</span><span class="n">type</span><span class="p">,</span> <span class="n">message_t</span><span class="p">)</span>
+</code></pre></div>
 <p>就是通过resty.worker.events publish出收到的消息，本节点的worker会处理这些消息。</p>
 
 <h3>worker刷新缓存</h3>
 
-<p>假设当前Kong节点收到一个消息，这个消息是如何分发给各个worker的？从代码看出，在Kong初始化的时候有调用一个叫做kong.lua里面的Kong.init_worker()函数，其中有一段代码注册了event handler:</p>
+<p>假设当前Kong节点收到一个消息，这个消息是如何分发给各个worker的？从代码看出，在Kong初始化的时候有调用一个叫做kong.lua里面的Kong.init_worker()函数，其中有一段代码注册了event handler:
+```lua
+  local worker_events = require &quot;resty.worker.events&quot;</p>
 
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span>  <span class="kd">local</span> <span class="n">worker_events</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;resty.worker.events&quot;</span>
+<p>local handler = function(data, event, source, pid)<br>
+    if data and data.collection == &quot;apis&quot; then<br>
+      assert(core.build_router())</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>elseif source and source == constants.CACHE.CLUSTER then    
+  singletons.events:publish(event, data)
+end
+</code></pre></div>
+<p>end</p>
 
-  <span class="kd">local</span> <span class="n">handler</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span>  
-    <span class="kr">if</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">data</span><span class="p">.</span><span class="n">collection</span> <span class="o">==</span> <span class="s2">&quot;apis&quot;</span> <span class="kr">then</span>    
-      <span class="nb">assert</span><span class="p">(</span><span class="n">core</span><span class="p">.</span><span class="n">build_router</span><span class="p">())</span>
+<p>worker_events.register(handler)</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>可以从上面的handler代码看到，一个worker接收到消息之后执行的是：
 
-    <span class="kr">elseif</span> <span class="n">source</span> <span class="ow">and</span> <span class="n">source</span> <span class="o">==</span> <span class="n">constants</span><span class="p">.</span><span class="n">CACHE</span><span class="p">.</span><span class="n">CLUSTER</span> <span class="kr">then</span>    
-      <span class="n">singletons</span><span class="p">.</span><span class="n">events</span><span class="p">:</span><span class="n">publish</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-    <span class="kr">end</span>
-  <span class="kr">end</span>
-
-  <span class="n">worker_events</span><span class="p">.</span><span class="n">register</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span></code></pre></figure>
-
-<p>可以从上面的handler代码看到，一个worker接收到消息之后执行的是：</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">singletons</span><span class="p">.</span><span class="n">events</span><span class="p">:</span><span class="n">publish</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></code></pre></figure>
-
+```lua
+singletons.events:publish(event, data)
+</code></pre></div>
 <p>也就是通过mediator_lua再把消息publish。之前初始化的时候已经attach_hooks了各种handler，这时候那些注册的函数才会被最终执行，比如核心的刷新缓存部分代码在core/hooks.lua的invalidate函数里面。</p>
 
 <h3>回顾</h3>

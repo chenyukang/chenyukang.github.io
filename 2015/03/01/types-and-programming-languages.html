@@ -157,8 +157,7 @@ Preservation: If a well-typed term takes a step of evaluation, then the resultin
 <h2>An ML Implementation of Simple Types</h2>
 
 <p>simplebool是一个只有bool类型的解释器，但是加上了函数。typeof挺简单，主要是函数这里注意处理形参和实参:</p>
-
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span>  <span class="o">|</span> <span class="nc">TmAbs</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">x</span><span class="o">,</span><span class="n">tyT1</span><span class="o">,</span><span class="n">t2</span><span class="o">)</span> <span class="o">-&gt;</span>
+<div class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span>  <span class="o">|</span> <span class="nc">TmAbs</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">x</span><span class="o">,</span><span class="n">tyT1</span><span class="o">,</span><span class="n">t2</span><span class="o">)</span> <span class="o">-&gt;</span>
       <span class="k">let</span> <span class="n">ctx&#39;</span> <span class="o">=</span> <span class="n">addbinding</span> <span class="n">ctx</span> <span class="n">x</span> <span class="o">(</span><span class="nc">VarBind</span><span class="o">(</span><span class="n">tyT1</span><span class="o">))</span> <span class="k">in</span>
       <span class="k">let</span> <span class="n">tyT2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">ctx&#39;</span> <span class="n">t2</span> <span class="k">in</span>
       <span class="nc">TyArr</span><span class="o">(</span><span class="n">tyT1</span><span class="o">,</span> <span class="n">tyT2</span><span class="o">)</span>
@@ -169,17 +168,16 @@ Preservation: If a well-typed term takes a step of evaluation, then the resultin
           <span class="nc">TyArr</span><span class="o">(</span><span class="n">tyT11</span><span class="o">,</span> <span class="n">tyT12</span><span class="o">)</span> <span class="o">-&gt;</span>
             <span class="k">if</span> <span class="o">(=)</span> <span class="n">tyT2</span> <span class="n">tyT11</span> <span class="k">then</span> <span class="n">tyT12</span>
             <span class="k">else</span> <span class="n">error</span> <span class="n">fi</span> <span class="s2">&quot;parameter type mismatch&quot;</span>
-        <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">error</span> <span class="n">fi</span> <span class="s2">&quot;arrow type expected&quot;</span><span class="o">)</span></code></pre></figure>
-
+        <span class="o">|</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">error</span> <span class="n">fi</span> <span class="s2">&quot;arrow type expected&quot;</span><span class="o">)</span>
+</code></pre></div>
 <p>if的判断部分必须为bool，而且两个分支必须为同一类型:</p>
-
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span>  <span class="o">|</span> <span class="nc">TmIf</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">t1</span><span class="o">,</span><span class="n">t2</span><span class="o">,</span><span class="n">t3</span><span class="o">)</span> <span class="o">-&gt;</span>
+<div class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span>  <span class="o">|</span> <span class="nc">TmIf</span><span class="o">(</span><span class="n">fi</span><span class="o">,</span><span class="n">t1</span><span class="o">,</span><span class="n">t2</span><span class="o">,</span><span class="n">t3</span><span class="o">)</span> <span class="o">-&gt;</span>
      <span class="k">if</span> <span class="o">(=)</span> <span class="o">(</span><span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t1</span><span class="o">)</span> <span class="nc">TyBool</span> <span class="k">then</span>
        <span class="k">let</span> <span class="n">tyT2</span> <span class="o">=</span> <span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t2</span> <span class="k">in</span>
        <span class="k">if</span> <span class="o">(=)</span> <span class="n">tyT2</span> <span class="o">(</span><span class="n">typeof</span> <span class="n">ctx</span> <span class="n">t3</span><span class="o">)</span> <span class="k">then</span> <span class="n">tyT2</span>
        <span class="k">else</span> <span class="n">error</span> <span class="n">fi</span> <span class="s2">&quot;arms of conditional have different types&quot;</span>
-       <span class="k">else</span> <span class="n">error</span> <span class="n">fi</span> <span class="s2">&quot;guard of conditional not a boolean&quot;</span></code></pre></figure>
-
+       <span class="k">else</span> <span class="n">error</span> <span class="n">fi</span> <span class="s2">&quot;guard of conditional not a boolean&quot;</span>
+</code></pre></div>
 <h2>Simple Extensions</h2>
 
 <p>在上一章的基础上，加上各种Drived Form。</p>

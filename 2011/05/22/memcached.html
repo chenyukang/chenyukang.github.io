@@ -119,6 +119,7 @@
             <p>
 最近在看memcached的源代码，边看边随手记录了一下。
 </p>
+
 <p>
 assoc.c: 记录一个item是否存在于缓存中，这里使用了power 2扩展，primary_hashtable,和old_hashtable分别存新申请的hashtable和旧的hashtable。这里起了个线程来做拷贝的工作，当需要扩展hashtable的时候就触发assoc_expand函数，但是这个函数做的工作是备份primary_hashtable，即old_hashtable=primary_hashtable；然后申请新的空间，标识expanding为true，如果申请空间失败则交换回来。通过条件信号量，assoc_maintenance_thread把old_hashtable的数据逐步拷贝到新的hashtable中，当拷贝完了后释放old_hashtable的空间。耗时的操作用另外一个线程逐步来处理，不过查询和插入都要注意是否是在扩展状态，判断是去old还是primary里面去操作。
 </p>
@@ -126,14 +127,17 @@ assoc.c: 记录一个item是否存在于缓存中，这里使用了power 2扩展
 <p>
 cache.c: 在malloc和free的基础上封装了一层，多线程安全的。维持了一个指针列表，释放的时候并没有一下就把内存还给系统，而是在列表中保存了下来，申请时如果列表中有没用的指针就直接返回给出来。能这么因为这个cache模块只是负责申请和释放size相同的内存块。
 </p>
+
 <p>
 
 thread.c: 维持连接列表相关的内容。为一个队列，cq_push、cq_pop，维持一个LRU机制。cqi_new函数返回一个新的CQ_ITEM指针，同样维持了一个cqi_freelist，当有空闲指针的时候直接返回，当没有空闲的时候申请一个列表，从第二个开始连结成链表形式，返回第一个元素的指针。create_worker，创建一个处理线程。Item为memcached中处理的主要对象，item_alloc、item_get、item_link、item_unlink、item_remove方法，处理的时候都要锁住cache_lock。threadlocal_stats_reset、threadlocal_stats_aggregate：统计信息相关。slab_stats_aggregate：统计一个线程使用的slab信息。threadlocal_stats_reset：清空统计信息。
 </p>
+
 <p>
 
 thread_init：主程序中调用的创建多线程函数，包括初始化互斥锁(cache_lock,stats_lock)，条件锁，空闲连接列表等。nthreads为初始化的线程数目，继续调用setup_thread启动每一个线程，调用create_worker创建处理线程。
 </p>
+
 <p>
 stats.c:负责统计信息，记录get、set、delete、hits的数目。以前缀作为key。
 </p>
@@ -150,6 +154,7 @@ memcached.c：主程序，分析设置参数默认值，分析参数根据参数
     }</pre>
 每个线程进入自己的event_loop。
 </p>
+
 <p>
 
 当请求来临的时候对于每一个连接，增加一个事件来调用处理函数event_handler。每个连接的处理过程是一个状态机，drive_machine(conn* c)来处理，由even_handler来调用，状态转移这部分代码比较复杂，conn_listening —&gt; conn_new_cmd —&gt; conn_parse_cmd —&gt; conn_mwrite —&gt; conn_closing。process_command来处理各种命令。
@@ -218,7 +223,7 @@ memcached.c：主程序，分析设置参数默认值，分析参数根据参数
 
   
      
-    	<li><a href="/tags.html#Backup-ref">Backup <span>13</span></a></li>
+    	<li><a href="/tags.html#Backup-ref">Backup <span>12</span></a></li>
      
     	<li><a href="/tags.html#C-ref">C <span>8</span></a></li>
      

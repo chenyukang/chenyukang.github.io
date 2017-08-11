@@ -129,8 +129,7 @@
 #3  0x0804874f in main () at print_stack.cc:64
 </code></pre></div>
 <p>那么一个好的办法就是在程序开始的时候设置好信号，绑定SIGSEGV和SIGABRT到DumpBackTrace()函数，DumpBackTrace函数fork出来一个新进程，运行上面的命令来获取调用栈。</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;signal.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;sys/types.h&gt;</span><span class="cp"></span>
@@ -176,8 +175,8 @@
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">BacktraceOnSegv</span><span class="p">();</span>
     <span class="n">test</span><span class="p">();</span>
-<span class="p">}</span></code></pre></figure>
-
+<span class="p">}</span>
+</code></pre></div>
 <p>另外前段时间看到这篇文章<a href="http://www.runswift.ly/solving-bugs.html">Solving vs. Fixing</a>写得不错，在面对一个bug的时候，先不要急于立马上gdb调试，根据现有的信息好好思考为什么会出现这个情况。
 Reddit上的一个得分最高的回复：</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text"><span></span> The ability to reason about code is probably the most important skill. 

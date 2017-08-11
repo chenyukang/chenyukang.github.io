@@ -131,31 +131,25 @@
 <p><code>(B ^ A) ^ B = A</code></p>
 
 <p>注意最后两条，这是XOR Link List的关键，这也是通过xor操作来实现swap的关键。</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="kt">void</span> <span class="nf">xorSwap</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="kt">void</span> <span class="nf">xorSwap</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">y</span><span class="p">)</span> <span class="p">{</span>
      <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
          <span class="o">*</span><span class="n">x</span> <span class="o">^=</span> <span class="o">*</span><span class="n">y</span><span class="p">;</span>
          <span class="o">*</span><span class="n">y</span> <span class="o">^=</span> <span class="o">*</span><span class="n">x</span><span class="p">;</span>
          <span class="o">*</span><span class="n">x</span> <span class="o">^=</span> <span class="o">*</span><span class="n">y</span><span class="p">;</span>
      <span class="p">}</span>
  <span class="p">}</span>
- </code></pre></figure>
-
+</code></pre></div>
 <p>这里注意需要判断x!=y，否则如果传入的是相同的指针，最后所指向的变量被设置为0了。</p>
 
 <p>通过最后两条联想到双向链表中的两个指针的实现，一般如下图所示：</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span>      <span class="p">...</span>  <span class="n">A</span>       <span class="n">B</span>         <span class="n">C</span>         <span class="n">D</span>         <span class="n">E</span>  <span class="p">...</span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span>      <span class="p">...</span>  <span class="n">A</span>       <span class="n">B</span>         <span class="n">C</span>         <span class="n">D</span>         <span class="n">E</span>  <span class="p">...</span>
                <span class="err">–</span><span class="o">&gt;</span>  <span class="n">next</span> <span class="err">–</span><span class="o">&gt;</span>  <span class="n">next</span>  <span class="err">–</span><span class="o">&gt;</span>  <span class="n">next</span>  <span class="err">–</span><span class="o">&gt;</span>
                <span class="o">&lt;</span><span class="err">–</span>  <span class="n">prev</span> <span class="o">&lt;</span><span class="err">–</span>  <span class="n">prev</span>  <span class="o">&lt;</span><span class="err">–</span>  <span class="n">prev</span>  <span class="o">&lt;</span><span class="err">–</span>
- </code></pre></figure>
-
+</code></pre></div>
 <p>如果把next和prev用一个变量替换还能实现前向和后向遍历，那就节省了一个变量的空间。</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="p">...</span>  <span class="n">A</span>        <span class="n">B</span>         <span class="n">C</span>         <span class="n">D</span>         <span class="n">E</span>  <span class="p">...</span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="p">...</span>  <span class="n">A</span>        <span class="n">B</span>         <span class="n">C</span>         <span class="n">D</span>         <span class="n">E</span>  <span class="p">...</span>
         <span class="o">&lt;</span><span class="err">–</span><span class="o">&gt;</span>  <span class="n">A</span><span class="err">⊕</span><span class="n">C</span>  <span class="o">&lt;-&gt;</span>  <span class="n">B</span><span class="err">⊕</span><span class="n">D</span>  <span class="o">&lt;-&gt;</span>  <span class="n">C</span><span class="err">⊕</span><span class="n">E</span>  <span class="o">&lt;-&gt;</span>
- </code></pre></figure>
-
+</code></pre></div>
 <p>比如当前在B节点，其pointer变量为A⊕C，如果前面的A地址保存下来然后做运算(A⊕C)⊕A -&gt; C，这样就得到下一个节点指针，反向遍历同样如此。当然其缺点是逻辑复杂了，删除其中的某一个节点也不方便(删除头和尾要好点)，遍历的时候需要保存上一个节点。这样看来为了省一点点空间这样实现似乎有点不值，在大部分情况下这样的一个pointer的节省并没什么用，不过这其中的细节有趣、巧妙。</p>
 
 <p>同样上面的xorSwap<a href="http://stackoverflow.com/questions/249423/how-does-xor-variable-swapping-work">对于现代的CPU来说也没什么优化</a>，这样的代码只是更加不便于编译器来实现指令级别的优化。这种类型trick的东西还是要避免使用才好。</p>

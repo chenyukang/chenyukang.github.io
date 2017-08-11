@@ -117,88 +117,90 @@
         <h1 class="title">《C深度探索》笔记</h1>
 
             <h3>最名不副实的关键字 static</h3>
-这个关键字在C语言里面有两个作用，C++对这个关键词进行了扩展。
 
-1：修饰变量，又分为局部变量和全局变量，被修饰的变量都存储在静态的内存区域。 修饰静态变量，那么只有在这个文件内可以引用它，在其他文件里面即使使用extern也不能进行访问。所以一般是放在文件头部分。 修饰局部变量，只有在定义的函数内访问，函数外不能访问，即使是在同文件内。
+<p>这个关键字在C语言里面有两个作用，C++对这个关键词进行了扩展。</p>
 
-2：修饰函数，在函数前面添加static，那么这个函数只能在该文件内使用。这样，不同人编写的函数，如果不在同文件内，可以不用担心函数名字 相同。
-<pre>main.c
+<p>1：修饰变量，又分为局部变量和全局变量，被修饰的变量都存储在静态的内存区域。 修饰静态变量，那么只有在这个文件内可以引用它，在其他文件里面即使使用extern也不能进行访问。所以一般是放在文件头部分。 修饰局部变量，只有在定义的函数内访问，函数外不能访问，即使是在同文件内。</p>
 
-int main()
+<p>2：修饰函数，在函数前面添加static，那么这个函数只能在该文件内使用。这样，不同人编写的函数，如果不在同文件内，可以不用担心函数名字 相同。
+<pre>main.c</p>
+
+<p>int main()
 {
    Func();
    reutrn 0;
-}
+}</p>
 
-Def.c
+<p>Def.c</p>
 
-static void Func()
+<p>static void Func()
 {
-  printf("Func called\n");
-}
+  printf(&quot;Func called\n&quot;);
+}</p>
 
-编译: gcc main.c Def.c -o main 链接错误</pre>
+<p>编译: gcc main.c Def.c -o main 链接错误</pre>
 <h3><a id="sec2" name="sec2"></a>变量的命名</h3>
-min-length&amp;&amp;max-information
+min-length&amp;&amp;max-information</p>
 
-低精度数据向高精度数据扩展。
+<p>低精度数据向高精度数据扩展。</p>
 
-<strong>被冤枉的关键字 sizeof 用法：sizeof(int), sizeof(i), sizeof i;</strong>
+<p><strong>被冤枉的关键字 sizeof 用法：sizeof(int), sizeof(i), sizeof i;</strong></p>
 
-<strong></strong>if ,else float类型值与0值比较，定义一个很小的数，在某个范围内。同时不要在一个很大的浮点数和很小的浮点数之间进行运算。
+<p><strong></strong>if ,else float类型值与0值比较，定义一个很小的数，在某个范围内。同时不要在一个很大的浮点数和很小的浮点数之间进行运算。
 <h3><a id="sec3" name="sec3"></a>循环注意点</h3>
 嵌套循环中，长循环放在内，短循环放在外面，这样可以减少cpu跨切循环层的次数，利用cpu cache。 循环里面的代码尽量短，一般不超过20行。如果不行就改为循环调用函数。
 <h3><a id="sec4" name="sec4"></a>void</h3>
 主要作用在于对函数参数的限定和函数返回值的限定。不能对void进行算法操作。
 <h3><a id="sec5" name="sec5"></a>const</h3>
-修饰指针的时候的记法，就近原则。 const int *p ; p可变，指向的对象不可变 int const *p ; p可变，指向的对象不可变 int* const p; p不可变，指向的对象可变
+修饰指针的时候的记法，就近原则。 const int <em>p ; p可变，指向的对象不可变 int const *p ; p可变，指向的对象不可变 int</em> const p; p不可变，指向的对象可变
 <h3><a id="sec6" name="sec6"></a>struct 和class的区别</h3>
 在C++中struct关键字与class一般可以通用，一个区别就是struct的成员默认情况下是public的，而class的是private的。
 <h3><a id="sec7" name="sec7"></a>union</h3>
-一个union只配置一个足够大的空间来容纳最大的数据成员，union的作用在于压缩空间。
+一个union只配置一个足够大的空间来容纳最大的数据成员，union的作用在于压缩空间。</p>
 
-存储的大小端：
+<p>存储的大小端：
 <pre>union
 {
   int i;
   char a[2];
-}*p,u;
+}*p,u;</p>
 
-int main()
+<p>int main()
 {
   p=&amp;u;
   p-&gt;a[0]=0x39;
   p-&gt;a[1]=0x38;
-  printf("%d\n",p-&gt;i);
+  printf(&quot;%d\n&quot;,p-&gt;i);
   PrintBinary(14393);
   PrintBinary(56);
   PrintBinary(57);
   if(CheckSystem()==1)
-    printf("Little endian\n");
+    printf(&quot;Little endian\n&quot;);
   else
-    printf("Big endian\n");
+    printf(&quot;Big endian\n&quot;);</p>
 
-  return 0;
-}
+<p>return 0;
+}</p>
 
-11100000111001
+<p>11100000111001
 111000
 111001
 Little endian  低字节存储在低地址</pre>
 <h3><a id="sec8" name="sec8"></a>指针，访问内存的钥匙</h3>
 前段时间听过一个面试题，就是如何读写某人地址，答案就是指针？
-<pre>#include &lt;stdlib.h&gt;
-#include &lt;stdio.h&gt;
+<pre>#include &lt;stdlib.h&gt;</p>
 
-int main()
+<h1>include &lt;stdio.h&gt;</h1>
+
+<p>int main()
 {
     int i=0;
     int* pp=&amp;i;
-    printf("%x\n",pp);
+    printf(&quot;%x\n&quot;,pp);
     int* p=(int*)0x12ff60;
-    printf("%x\n",p);
-    *p=1;
-    printf("%d\n",i);
+    printf(&quot;%x\n&quot;,p);
+    <em>p=1;
+    printf(&quot;%d\n&quot;,i);
     getchar();
     return 0;
 }</pre>
@@ -207,11 +209,11 @@ int main()
 <pre>int main()
 {
   int a[5]={1,2,3,4,5};
-  int* ptr=(int*)(&amp;a+1);
+  int</em> ptr=(int*)(&amp;a+1);
   int* p=(int*)(&amp;a);
-  printf("%x\n",ptr);
-  printf("%x\n",p);
-  printf("%d,%d\n",*(a+1),*(ptr-1));
+  printf(&quot;%x\n&quot;,ptr);
+  printf(&quot;%x\n&quot;,p);
+  printf(&quot;%d,%d\n&quot;,<em>(a+1),</em>(ptr-1));
   return 0;
 }</pre>
 bfeae860 bfeae84c 2,5 说明ptr和a的地址相差5*4=20个byte。 定义数组int a<sup><a name="fnr.5" href="file:///home/heipang/document/wiki/Home_Page/Computer/%E6%B7%B1%E5%BA%A6%E6%8E%A2%E7%B4%A2C.html#fn.5">5</a></sup>; a表示的是数组中首元素的地址，&amp;a才是数组的首地址，两者的值是一样的，但是意义却不同。
@@ -220,22 +222,22 @@ bfeae860 bfeae84c 2,5 说明ptr和a的地址相差5*4=20个byte。 定义数组i
 <pre>void func(char* p)
 {
   char c=p[3];
-  *(p+3)='X';
-  printf("%c\n",c);
-}
+  *(p+3)=&#39;X&#39;;
+  printf(&quot;%c\n&quot;,c);
+}</p>
 
-int main()
+<p>int main()
 {
-  //char* p="abcdef";
-  char p[]="abcdefg";
+  //char* p=&quot;abcdef&quot;;
+  char p[]=&quot;abcdefg&quot;;
   func(p);
-  printf("%s\n",p);
-  return 0;
+  printf(&quot;%s\n&quot;,p);
+  return 0;</p>
 
-}</pre>
-注意上面的区别，如果是char* p="abcdef"，那么p为main函数的局部变量，"abcdef"的存储空间在静态内存中，func函数中可以通过指针p去访问其内容， 但如果改变其内容会发生访问越界。而char p[]="abcdefg"，其数组的内容是在栈上。
+<p>}</pre>
+注意上面的区别，如果是char* p=&quot;abcdef&quot;，那么p为main函数的局部变量，&quot;abcdef&quot;的存储空间在静态内存中，func函数中可以通过指针p去访问其内容， 但如果改变其内容会发生访问越界。而char p[]=&quot;abcdefg&quot;，其数组的内容是在栈上。
 <h3><a id="sec11" name="sec11"></a>内存管理</h3>
-静态区:保存自动全局变量和 static 变量(包括 static 全局和局部变量)。静态区的内容 在总个程序的生命周期内都存在,由编译器在编译的时候分配。 栈(堆栈):保存局部变量。栈上的内容只在函数的范围内存在,当函数运行结束,这些内容 也会自动被销毁。其特点是效率高,但空间大小有限。 堆:由 malloc 系列函数或 new 操作符分配的内存。其生命周期由 free 或 delete 决定。 在没有释放之前一直存在,直到程序结束。其特点是使用灵活,空间比较大,但容易出错。
+静态区:保存自动全局变量和 static 变量(包括 static 全局和局部变量)。静态区的内容 在总个程序的生命周期内都存在,由编译器在编译的时候分配。 栈(堆栈):保存局部变量。栈上的内容只在函数的范围内存在,当函数运行结束,这些内容 也会自动被销毁。其特点是效率高,但空间大小有限。 堆:由 malloc 系列函数或 new 操作符分配的内存。其生命周期由 free 或 delete 决定。 在没有释放之前一直存在,直到程序结束。其特点是使用灵活,空间比较大,但容易出错。</p>
 
             
             <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          

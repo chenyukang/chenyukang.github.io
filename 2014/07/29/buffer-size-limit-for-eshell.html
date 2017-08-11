@@ -123,8 +123,7 @@
 <p>I will always run eshell for shell tasks, because this is really like the normal buffer in Emacs, so all the command for Emacs will keep working for this buffer. This is convenient for some actions.</p>
 
 <p>The problem annoying me is that if the size of buffer for eshell is too big, Emacs will gets more and more slow. Emacs essentially is a sole process program. So I have some digg and written a trivial elisp code like this solved the problem.</p>
-
-<figure class="highlight"><pre><code class="language-lisp" data-lang="lisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">clear-and-send-input</span><span class="p">()</span>
+<div class="highlight"><pre><code class="language-lisp" data-lang="lisp"><span></span><span class="p">(</span><span class="nb">defun</span> <span class="nv">clear-and-send-input</span><span class="p">()</span>
   <span class="p">(</span><span class="nv">interactive</span><span class="p">)</span>
   <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">&gt;</span> <span class="p">(</span><span class="nv">count-lines</span> <span class="mi">1</span> <span class="p">(</span><span class="nv">point</span><span class="p">))</span> <span class="mi">800</span><span class="p">)</span>
       <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">inhibit-read-only</span> <span class="no">t</span><span class="p">))</span>
@@ -134,8 +133,8 @@
 
 <span class="p">(</span><span class="nv">add-hook</span> <span class="ss">&#39;eshell-mode-hook</span>
       <span class="p">(</span><span class="k">lambda</span> <span class="p">()</span>
-      <span class="p">(</span><span class="nv">local-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;return&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;clear-and-send-input</span><span class="p">)))</span></code></pre></figure>
-
+      <span class="p">(</span><span class="nv">local-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&quot;&lt;return&gt;&quot;</span><span class="p">)</span> <span class="ss">&#39;clear-and-send-input</span><span class="p">)))</span>
+</code></pre></div>
 <p>clear-and-send-input is a wrapper for eshell-send-input, I set the maximal number of eshell buffer to 800, and I bind this function to <return>, so every time if the buffer size is too big, this wrapper will automatically clean up the buffer.</p>
 
 <p>And yesterday I found this article <a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide">Mastering Emacs in one year guide</a>is really thought-provoking, Hope this may help you.</p>

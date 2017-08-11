@@ -119,7 +119,9 @@
             <p>
 编程珠玑里面代码优化这一章。
 </p>
+
 <h4>问题1 函数,宏，内联代码</h4>
+
 <pre class="src"><span style="color: #ffd700;">#define</span> <span style="color: #daa520; font-weight: bold;">max</span>(<span style="color: #4eee94;">a</span>,<span style="color: #4eee94;">b</span>) ((a)&gt;(b)? (a):(b))
 
 <span style="color: #98f5ff;">float</span> <span style="color: #daa520; font-weight: bold;">max</span>(<span style="color: #98f5ff;">float</span> <span style="color: #4eee94;">a</span>,<span style="color: #98f5ff;">float</span> <span style="color: #4eee94;">b</span>)
@@ -131,6 +133,7 @@
     <span style="color: #00bfff; font-weight: bold;">return</span> a&gt;b? a:b;
 }
 </pre>
+
 <p>
 上面这个函数到底哪一个快一些？测试了一下。宏效率是高一点，但是对于加上编译器优化以后基本没什么区别了。
 </p>
@@ -140,6 +143,7 @@
 </p>
 
 <h4>问题2 顺寻搜索</h4>
+
 <pre class="src"><span style="color: #98f5ff;">int</span> <span style="color: #daa520; font-weight: bold;">search1</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">v</span>)
 {
     <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=0;i&lt;N;i++)
@@ -179,17 +183,18 @@
         <span style="color: #00bfff; font-weight: bold;">return</span> -1;
     <span style="color: #00bfff; font-weight: bold;">return</span> i;
 }</pre>
+
 <p>
 这三个函数哪一个效率最好？据说第二个提高5%，第三个会提高10%~20%(对于老实计算机)。在我的机子上测试了一下，N=10000000。并不如书上说的能提高多少， 反而最原始的写法在优化后效率更高，确实是这样的数据。
 </p>
 
-<a style="text-decoration: none;" href="/images/static2.jpg"><img class="img-center size-full wp-image-110" title="static2" src="/images/static2.jpg" alt="" width="215" height="121" /></a>
+<p><a style="text-decoration: none;" href="/images/static2.jpg"><img class="img-center size-full wp-image-110" title="static2" src="/images/static2.jpg" alt="" width="215" height="121" /></a>
 <h4>问题三 二分查找</h4>
 <p>
 数组大小为1000。 单位ms。
-</p>
+</p></p>
 
-<a style="text-decoration: none;" href="/images/static3.jpg"><img class="img-center size-full wp-image-111" title="static3" src="/images/static3.jpg" alt="" width="317" height="148" /></a>
+<p><a style="text-decoration: none;" href="/images/static3.jpg"><img class="img-center size-full wp-image-111" title="static3" src="/images/static3.jpg" alt="" width="317" height="148" /></a></p>
 
 <p>
 确实第二个版本提高了一些，第四个版本甚至提高了一半的效率。
