@@ -13,7 +13,7 @@
        <meta charset="UTF-8"/>
        
        
-       <title>广告 | Yukang's Page</title>
+       <title>Have a try on Ninja | Yukang's Page</title>
        
 
        
@@ -116,40 +116,53 @@
 
 <div class="row post">
     <div class="span8">
-        <h1 class="title">广告</h1>
+        <h1 class="title">Have a try on Ninja</h1>
 
-            <p>我到了一个做无人机的公司工作，叫做大疆创新(<a href="http://www.dji.com">DJI</a>)。最近内部有一些推广活动，有感兴趣的朋友了解一下。</p>
+            <p><img src="/images/compiling.png" alt="My code is compiling" class="img-center" /></p>
 
-<p><a href="http://t.cn/RZMCKFq?u=2197040790&m=3796713691370166&cu=2197040790">大疆精灵</a> 这页面我隔壁小伙子做的，看起来还不错 :)</p>
+<h2>什么是Ninja</h2>
 
-<p><img src="/images/phantom.jpg" alt="phantom" class="img-center" /></p>
+<p>在Unix/Linux下通常使用Makefile来控制代码的编译，但是Makefile对于比较大的项目有时候会比较慢，看看上面那副漫画，代码在编译都变成了程序员放松的借口了。所以这个Google的程序员在开发Chrome的时候因为忍受不了Makefile的速度，自己重新开发出来一套新的控制编译的工具叫作<a href="https://github.com/martine/ninja">Ninja</a>，Ninja相对于Makefile这套工具更注重于编译速度。除了Chrome现在还有一些其他的比较大的项目也在开始使用Ninja，比如LLVM。我试用了一下感觉还是不错，比如编译Cmake时间大概是原来的1/4。Ninja试用C++实现，<a href="http://martine.github.com/ninja/manual.html">其支持的语法非常简单</a>，作者在这里说明了为了控制复杂度。</p>
 
-<p>Phantom系列是公司卖得最好的一款产品，市场主要在欧美。</p>
+<h2>代码如何编译</h2>
 
-<p>这个东西挺好，比如能拍出这样的照片：<a href="https://www.skypixel.com/#/photos/stacy-s-breathless-moment">stacy-s-breathless-moment</a>。</p>
+<p>其实对于C/C++和很多其他程序的编译都是一个道理，就是把一些源代码文件编译成目标文件，或者有的目标文件再编译到一个库里，然后再链接起来。所以Ninja的配置文件分为两个部分，rule和文件依赖关系。看个简单的例子:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>    <span class="nv">cc</span><span class="o">=</span>gcc
+    <span class="nv">cflags</span><span class="o">=</span> -g -c
 
-<p><a href="https://www.skypixel.com/#/photos">https://www.skypixel.com/#/photos</a>这里是大量用户上传的航拍照片。从不同的视角来欣赏地球，自有另一番风景。</p>
+    rule cc
+         <span class="nb">command</span> <span class="o">=</span>  <span class="nv">$cc</span> <span class="nv">$cflags</span> <span class="nv">$in</span> -o <span class="nv">$out</span>
 
-<p>当然如果以后还能做得更好，或许可以这样自拍了: <a href="http://v.qq.com/page/p/f/b/b041393grc3.html">DJI 云拍</a></p>
+    rule link
+         <span class="nb">command</span> <span class="o">=</span> <span class="nv">$cc</span> <span class="nv">$in</span> -o <span class="nv">$out</span>
 
-<hr>
+    rule cleanup
+         <span class="nb">command</span> <span class="o">=</span> rm -rf *.exe *.o
 
-<p><img src="/images/dji-inspire-1.jpg" alt="inspire" class="img-center" /></p>
+    build func.o           : cc func.c
+    build main.o           : cc main.c
 
-<p>Inspire是下半年出的产品，这个还是挺惊艳的。设计很前卫，4k镜头，操作灵敏且稳定性极佳。不过价格也不便宜，接近2w了。</p>
+    build app.exe            : link main.o func.o
 
-<p><a href="http://v.qq.com/boke/page/a/0/a/a0144z1iyra.html">&quot;悟&quot; INSPIRE PHILIP BLOOM</a></p>
+    build all:  phony <span class="o">||</span> app.exe
+    build clean: cleanup 
+</code></pre></div>
+<p>非常易懂，编译的可执行未见叫做app.exe, 其中有三条rule: cc, link, cleanup。看看这个官方的试用手册，还有一些附加参数可以加在rule的下面，比如description用来在编译的时候显示出来。Ninja还有个比较好玩的功能就是Ninja -t graph all命令，这可以用来生成编译时候的依赖关系，可以用dot来生成图片等。Ninja的实现也可以大概推测到，根据用户给的依赖关系图，<em>并行</em> 地编译各个文件。</p>
 
-<p><a href="https://www.youtube.com/watch?v=zaHfCHuCedk">DJI Inspire 1 – “Soar”</a></p>
+<p>使用Ninja的一个问题就是需要生成这个build.ninja文件，对于大型项目来说这样一条一条地写配置文件是不可能的。幸好我们可以使用Cmake来生成这个配置文件，Cmake对应的是automake这样的东西。在<a href="http://www.kitware.com/news/home/browse/CMake?2012_11_07&CMake+2.8.10+Just+Released">Cmake的最新版本</a>中已经支持参数Camke -G Ninja，Cmake会根据用户给定的CMakeLists.txt来生成build.ninja文件。而CmakeLists文件相对来说要简单一些，只要写清楚编译的可执行文件的名字，和其依赖的包含main函数的源文件。把我的<a href="https://github.com/chenyukang/Maze">迷宫小项目</a>来举个例子,在项目文件夹下写配置文件CMakeLists.txt:</p>
+<div class="highlight"><pre><code class="language-sh" data-lang="sh"><span></span>cmake_minimum_required<span class="o">(</span>VERSION <span class="m">2</span>.8<span class="o">)</span>
+project <span class="o">(</span>Maze<span class="o">)</span>
 
-<p><a href="https://www.youtube.com/watch?v=XdlmoLAbbiQ">This is the most amazing drone we&#39;ve seen yet</a></p>
+add_library<span class="o">(</span>maze A_star.cpp Algorithm.cpp DFS_L.cpp DFS_R.cpp DisjSets.cpp Maze.cpp<span class="o">)</span>
 
-<hr>
+add_executable<span class="o">(</span>Maze.exe main.cpp<span class="o">)</span>
+target_link_libraries<span class="o">(</span>Maze.exe maze<span class="o">)</span>
+</code></pre></div>
+<p>add_library写明了生成一个叫做maze.a的库文件，然后和main.cpp编译出来的main.o生成可执行文件，写好CmakeList.txt后运行Cmake -G Ninja, 然后运行ninja all就能编译这个工程。具体的Cmake语法参考<a href="http://www.cmake.org/cmake/help/cmake_tutorial.html">这里</a>，对于不少项目来说Cmake已经足够使用，只是我觉得Cmake还是稍微复杂了一点。</p>
 
-<p>顺便，再分享一个好东西给大家。
-大家都知道我们外面有个墙，红杏出墙就是个梯子。</p>
+<h2>我这样来使用</h2>
 
-<p>我用了一段时间了，挺方便的。 所以在这里推荐一下，可以用这个<a href="http://honx.in/i/VKY-is6vD1De7Ovd">链接注册</a>。</p>
+<p>整个Ninja是使用C++写的开源项目，如果我们想增加一些自己的feature可以hack一下，不过作者估计不会接受增加语法支持的patch。我准备做一个小的hack来自动分析我当前的源码，自动生成build.ninja文件，不要求处理所有的复杂情况，只是分析.cc和.c，自动检测main函数文件。最后用户只用配置链接参数就可以了。我觉得这样用起来就非常方便了，待完成中，顺便看看Ninja的内部实现。</p>
 
             
             <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
@@ -165,11 +178,11 @@
             
             <ul class="pager" id="page-nav">
                 
-                <li class="next"><a href="/2015/01/10/rust-10-alpha.html" title="Rust coming to 1.0">Rust coming to 1.0&rarr;</a></li>
+                <li class="next"><a href="/2012/11/22/ruby-robot-ai.html" title="Ruby Robot AI">Ruby Robot AI&rarr;</a></li>
                 
 
                 
-                <li class="previous"><a href="/2015/02/10/understanding-computation.html" title="Understanding Computation">&larr; Understanding Computation</a></li>
+                <li class="previous"><a href="/2012/12/16/use-clang-autocomplete-mode.html" title="Clang is Making Emacs Smarter">&larr; Clang is Making Emacs Smarter</a></li>
                 
             </ul>
 
@@ -202,7 +215,7 @@
 
         <div class="span4 sidebar">
             
-            <h4 class="date">日期：<span>19 January 2015</span></h4>
+            <h4 class="date">日期：<span>13 December 2012</span></h4>
             
 
             
@@ -214,7 +227,9 @@
 
   
      
-    	<li><a href="/tags.html#DJI-ref">DJI <span>1</span></a></li>
+    	<li><a href="/tags.html#Ninja-ref">Ninja <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#makefile-ref">makefile <span>2</span></a></li>
     
   
 
