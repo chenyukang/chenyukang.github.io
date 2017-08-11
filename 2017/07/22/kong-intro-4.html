@@ -128,8 +128,7 @@
 <p>具体我们开发中使用哪一种由具体场景分析，比如在Kong的插件rate-limiting里就使用了共享缓存，因为我们需要针对一个Nginx所有的worker做请求数统计。</p>
 
 <p>share dict最常规的使用方法是:</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span> <span class="n">http</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span> <span class="n">http</span> <span class="p">{</span>
      <span class="n">lua_shared_dict</span> <span class="n">dogs</span> <span class="mi">10</span><span class="n">m</span><span class="p">;</span>
      <span class="n">server</span> <span class="p">{</span>
          <span class="n">location</span> <span class="o">/</span><span class="n">set</span> <span class="p">{</span>
@@ -146,8 +145,8 @@
              <span class="p">}</span>
          <span class="p">}</span>
      <span class="p">}</span>
- <span class="p">}</span></code></pre></figure>
-
+ <span class="p">}</span>
+</code></pre></div>
 <p>lrucache的使用方法如<a href="https://github.com/openresty/lua-resty-lrucache">文档所示</a>。</p>
 
 <h3>Kong里的多级缓存实现</h3>

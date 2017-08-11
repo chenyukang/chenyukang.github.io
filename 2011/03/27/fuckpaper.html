@@ -116,10 +116,10 @@
     <div class="span8">
         <h1 class="title">论文吐槽</h1>
 
-            前些天在写毕业论文，开题弄了个什么神经网络什么数据融合，至今没搞懂过，真是没话说，但是又不得不硬着头皮写，废话连篇，说来说去就那么几句。做的东西本来挺简单的，没用到那么高深的理论，不过为了装装深度，硬要往上面套，希望最好别出什么问题吧。写论文的时候我就想嗄，写代码好玩多了，异常怀念那段天天在poj上写程序的日子。这两天交完初稿，继续做做题，一是玩玩，二是为了原来定下的一个小目标：毕业前水到500题，还差20。两个比较好玩也折腾得比较久的题目。
+            <p>前些天在写毕业论文，开题弄了个什么神经网络什么数据融合，至今没搞懂过，真是没话说，但是又不得不硬着头皮写，废话连篇，说来说去就那么几句。做的东西本来挺简单的，没用到那么高深的理论，不过为了装装深度，硬要往上面套，希望最好别出什么问题吧。写论文的时候我就想嗄，写代码好玩多了，异常怀念那段天天在poj上写程序的日子。这两天交完初稿，继续做做题，一是玩玩，二是为了原来定下的一个小目标：毕业前水到500题，还差20。两个比较好玩也折腾得比较久的题目。
 <h4>poj 2050</h4>
 <p class="first">这题折腾了很久很久，刚开始误以为每个文件的最大行数为1500，最后因为输出格式问题。代码也比较长330行，954ms。
-使用数组作为hash，使用位图记录文件中存在的单词，idx为由单词转化得到的该单词在hash表中的index。</p>
+使用数组作为hash，使用位图记录文件中存在的单词，idx为由单词转化得到的该单词在hash表中的index。</p></p>
 
 <pre class="src"><span style="color: #98f5ff;">unsigned</span> <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">docs_flag</span>[MAXDOC][(MAXWORDS+31)/32]; <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">记录某个文件中是否存在某个单词
 </span><span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">set_docflag</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">doc</span>[], <span style="color: #98f5ff;">unsigned</span> <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">idx</span>)
@@ -131,7 +131,9 @@
 {
         <span style="color: #00bfff; font-weight: bold;">return</span> doc[idx&gt;&gt;5] &amp; (1&lt;&lt;(idx&amp;0x1f));
 }</pre>
+
 <h4>poj 2518</h4>
+
 <p class="first">这个好玩，一个4*4的方格，里面分别放四个A,B,C,D，初始状态从输入获取，先随便选取一个字母，然后能进行很多次操作。
 每次能交换两个相邻的方格，到任何一个小的2*2的方格中全部都是所选的字母就获胜。对于每一个输入，求最少多少次交换就能达到胜利状态，
 以及有多少方案可以达到这个目的。</p>
@@ -154,6 +156,7 @@ DCBC          output ==&gt; 4 96</pre>
 ABAB
 CDCD
 CCDD            state ==&gt; 1100 1010 0000 0000</pre>
+
 <p>
 胜利的状态有9个，可以先枚举出来，1100110000000000等等。胜利状态比较多，照一般的BFS写下去代码肯定比较复杂，时间和空间肯定也都要求比较多。考虑可以从胜利状态反着向初始状态搜，先把9个胜利状态放入数组，求到初始状态最少的步数，同时可以算出有多少种走法。这样做了还是超时，看有人说线上输入有很多组数据。
 </p>
@@ -236,7 +239,7 @@ CCDD            state ==&gt; 1100 1010 0000 0000</pre>
      
     	<li><a href="/tags.html#ACM-ref">ACM <span>1</span></a></li>
      
-    	<li><a href="/tags.html#Backup-ref">Backup <span>13</span></a></li>
+    	<li><a href="/tags.html#Backup-ref">Backup <span>12</span></a></li>
      
     	<li><a href="/tags.html#POJ-ref">POJ <span>2</span></a></li>
     

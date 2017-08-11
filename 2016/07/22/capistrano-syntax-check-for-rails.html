@@ -120,18 +120,16 @@
 
             <p>In an normal release, Rails app&#39;s unit testing will avoid most errors. But for the urgent code publishing, we have got several time of typo error. Code syntax error may cause server crash for a little while(Passenger web server and we using <code>./tmp/restart.txt</code> to restart). We use Capistrano to publish code, so I plan to add a syntax checking before publishing code.
 The method is writing a task to bundle exec rails runner, this will report most ruby syntax error(except the undef variables in some functions, runner will load .rb files). </p>
-
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span><span class="n">namespace</span> <span class="ss">:app</span> <span class="k">do</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span><span class="n">namespace</span> <span class="ss">:app</span> <span class="k">do</span>
   <span class="n">desc</span> <span class="s2">&quot;check all the ruby code&quot;</span>
   <span class="n">task</span> <span class="ss">:check</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
     <span class="n">res</span> <span class="o">=</span> <span class="sb">`RAILS_ENV=</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="si">}</span><span class="sb">  bundle exec rails runner &quot;&quot; 2&gt;&amp;1`</span>
     <span class="k">raise</span> <span class="n">res</span> <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span>
   <span class="k">end</span>
-<span class="k">end</span></code></pre></figure>
-
+<span class="k">end</span>
+</code></pre></div>
 <p>then add this in the deploy.rb (Capistrano 3.1):</p>
-
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span><span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span><span class="n">namespace</span> <span class="ss">:deploy</span> <span class="k">do</span>
 
   <span class="n">task</span> <span class="ss">:run_code_check</span> <span class="k">do</span>
     <span class="n">on</span> <span class="n">roles</span><span class="p">(</span><span class="ss">:all</span><span class="p">)</span> <span class="k">do</span>
@@ -144,12 +142,11 @@ The method is writing a task to bundle exec rails runner, this will report most 
   <span class="k">end</span>
 
   <span class="n">before</span> <span class="s2">&quot;deploy:updated&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy:run_code_check&quot;</span>
-<span class="k">end</span></code></pre></figure>
-
+<span class="k">end</span>
+</code></pre></div>
 <p>This is not a tricky part, but please pay attention to the line:</p>
-
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span><span class="n">res</span> <span class="o">=</span> <span class="sb">`RAILS_ENV=</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="si">}</span><span class="sb">  bundle exec rails runner &quot;&quot; 2&gt;&amp;1`</span></code></pre></figure>
-
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span></span><span class="n">res</span> <span class="o">=</span> <span class="sb">`RAILS_ENV=</span><span class="si">#{</span><span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="si">}</span><span class="sb">  bundle exec rails runner &quot;&quot; 2&gt;&amp;1`</span>
+</code></pre></div>
 <p>This line of code cost me some time, I forget the <code>2&gt;&amp;1</code>. so <code>res</code> will just got the stdout, not the stderr output, which causes the exception is not raised, and Capistrano flow is not stopped.</p>
 
             

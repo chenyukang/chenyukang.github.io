@@ -132,16 +132,15 @@
 注意start-process会fork出来一个子进程来执行命令，在书写过程中最好还是使用start-process来调用命令，因为say可能要待个一两秒才返回，如果使用shell-command来调用会造成输入有迟钝的感觉。</p>
 
 <p>绑定的快捷键有这些，其中eamcsay-say-buffer是用来朗读当前的整个buffer，如果你想在其中中断朗读使用emacsay-say-stop。</p>
-
-<figure class="highlight"><pre><code class="language-cl" data-lang="cl"><span></span><span class="p">(</span><span class="nb">defvar</span> <span class="nv">emacsay-mode-map</span> <span class="no">nil</span>
+<div class="highlight"><pre><code class="language-cl" data-lang="cl"><span></span><span class="p">(</span><span class="nb">defvar</span> <span class="nv">emacsay-mode-map</span> <span class="no">nil</span>
   <span class="s">&quot;Keymap for emacsay minor mode&quot;</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">unless</span> <span class="nv">emacsay-mode-map</span>
   <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nb">map</span> <span class="p">(</span><span class="nv">make-sparse-keymap</span><span class="p">)))</span>
     <span class="p">(</span><span class="nv">define-key</span> <span class="nb">map</span> <span class="s">&quot;\C-cs&quot;</span> <span class="ss">&#39;emacsay-say-current-string</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">define-key</span> <span class="nb">map</span> <span class="s">&quot;\C-cp&quot;</span> <span class="ss">&#39;emacsay-say-buffer</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">define-key</span> <span class="nb">map</span> <span class="s">&quot;\C-ct&quot;</span> <span class="ss">&#39;emacsay-say-stop</span><span class="p">)</span>
-    <span class="p">(</span><span class="k">setq</span> <span class="nv">emacsay-mode-map</span> <span class="nb">map</span><span class="p">)))</span></code></pre></figure>
-
+    <span class="p">(</span><span class="k">setq</span> <span class="nv">emacsay-mode-map</span> <span class="nb">map</span><span class="p">)))</span>
+</code></pre></div>
 <p>还可以有一些小的改进，比如阅读时候闪烁单词，或者say声音的选择等等。</p>
 
 <p>所有代码在GitHub: <a href="https://github.com/chenyukang/emacSay">emacSay-mode</a>。 </p>

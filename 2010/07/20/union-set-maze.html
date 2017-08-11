@@ -128,33 +128,34 @@
 可能一般的大学教材上面没有说这个数据结构，这是个很有趣的东西。《算法导论》上面用这个来作为均摊分析的例子吧。在ACM/ICPC中这个数据结构经常出现，有可能是一个小题 （难点的就是要维护节点之间关系的那种），或者是有的图论算法中实现要用,比如实现Kruskar算法求最小生成树。
 并查集本身比较简单，主要是用来操作元素集合，支持的操作有：
 </p>
-</p>
+
+<p></p></p>
 
 <p>
 <ol>
 <p>
-	<li>UnionSets(int root1,int root2),用来合并两个根节点。</li>
-	<li>FindSet(int x) ,用来查找x所属的根节点。 一并一查，所以叫作并查集。实现时候可以通过按秩合并(union by rank)，和路径压缩(path compression)来增加效率，可以获得几乎与总操作数m成线性关系的运行时间。</li>
+    <li>UnionSets(int root1,int root2),用来合并两个根节点。</li>
+    <li>FindSet(int x) ,用来查找x所属的根节点。 一并一查，所以叫作并查集。实现时候可以通过按秩合并(union by rank)，和路径压缩(path compression)来增加效率，可以获得几乎与总操作数m成线性关系的运行时间。</li>
 </p>
 
-</p>
+<p></p></p>
 
-</ol>
+<p></ol>
 <pre class="src"><span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">rank</span>[MAXSIZE];    <span style="color: #5f9ea0; font-style: italic;">// </span><span style="color: #5f9ea0; font-style: italic;">节点高度的上界
 </span><span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">parent</span>[MAXSIZE]; <span style="color: #5f9ea0; font-style: italic;">// </span><span style="color: #5f9ea0; font-style: italic;">根节点
 </span><span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">Init</span>(<span style="color: #98f5ff;">void</span>){
      memset(rank, 0, <span style="color: #00bfff; font-weight: bold;">sizeof</span>(rank));
      <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=0; i &lt; MAXSIZE; ++i )
          parent[i] = i;
-}
+}</p>
 
-<span style="color: #98f5ff;">int</span> <span style="color: #daa520; font-weight: bold;">FindSet</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">x</span>){<span style="color: #5f9ea0; font-style: italic;">// </span><span style="color: #5f9ea0; font-style: italic;">查找+递归的路径压缩
+<p><span style="color: #98f5ff;">int</span> <span style="color: #daa520; font-weight: bold;">FindSet</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">x</span>){<span style="color: #5f9ea0; font-style: italic;">// </span><span style="color: #5f9ea0; font-style: italic;">查找+递归的路径压缩
 </span>    <span style="color: #00bfff; font-weight: bold;">if</span>( x != parent[x] )
          parent[x] = FindSet(parent[x]);
      <span style="color: #00bfff; font-weight: bold;">return</span> parent[x];
-}
-     
-<span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">UnionSet</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">root1</span>, <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">root2</span>){
+}</p>
+
+<p><span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">UnionSet</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">root1</span>, <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">root2</span>){
      <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">x</span> = FindSet(root1), <span style="color: #4eee94;">y</span> = FindSet(root2);
      <span style="color: #00bfff; font-weight: bold;">if</span>( x == y ) <span style="color: #00bfff; font-weight: bold;">return</span> ;
      <span style="color: #00bfff; font-weight: bold;">if</span>( rank[x] &gt; rank[y] ) parent[y] = x;
@@ -166,15 +167,14 @@
 <h3>迷宫的实现</h3>
 <p>
 上面那本书上的习题上给了提示，比如首先所有的墙都没有去掉，那么是一个一个的方格，每一个方格为并查集合的一个元素，已经连通的元素是在并查集的一个集合中，有相同的根节点。 随机的选择一个墙，在并查集中查询这两个元素是否已经连通，如果已经连通则另选一个墙，如果不连通，union两个节点的根节点，这样操作以后这两个方格已经连通。继续上面的操作， 直到入口和出口连通位置，那么这就形成了一个只有一条合法路径的迷宫，称为单迷宫。如下图所示。
-</p>
+</p></p>
 
-左上角起点 右下角终点
+<p>左上角起点 右下角终点
 <p>
 <p><a href="/images/maze.png"><img class="size-full wp-image-34" title="maze" src="/images/maze.png" alt="" width="579" height="438" align="center"></a></p>
 <p style="text-align: center;"></p>
 <p style="text-align: center;"></p>
-</p>
-
+</p></p>
 
             
             <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          

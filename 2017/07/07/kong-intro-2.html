@@ -126,11 +126,10 @@
 <code>require(&quot;kong.cmd.init&quot;)(arg)</code></p>
 
 <p>所以我们可以从cmd/init.lua这个文件开始入手看启动过程。一翻开init.lua这个文件，发现其实不过是个wrapper，解析了args之后就是调用start，stop，quit等命令。然后我们顺藤摸瓜找cmd/start.lua文件，整个启动过程就在这里了：</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span>  <span class="kd">local</span> <span class="n">conf</span> <span class="o">=</span> <span class="nb">assert</span><span class="p">(</span><span class="n">conf_loader</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">conf</span><span class="p">,</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span>  <span class="kd">local</span> <span class="n">conf</span> <span class="o">=</span> <span class="nb">assert</span><span class="p">(</span><span class="n">conf_loader</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">conf</span><span class="p">,</span> <span class="p">{</span>
     <span class="n">prefix</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">prefix</span>
   <span class="p">}))</span>
-  
+
   <span class="kd">local</span> <span class="n">err</span>
   <span class="kd">local</span> <span class="n">dao</span> <span class="o">=</span> <span class="nb">assert</span><span class="p">(</span><span class="n">DAOFactory</span><span class="p">.</span><span class="n">new</span><span class="p">(</span><span class="n">conf</span><span class="p">))</span>
   <span class="nb">xpcall</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
@@ -141,15 +140,14 @@
     <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Kong started&quot;</span><span class="p">)</span>
   <span class="kr">end</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
     <span class="n">err</span> <span class="o">=</span> <span class="n">e</span> <span class="c1">-- cannot throw from this function</span>
-  <span class="kr">end</span><span class="p">)</span>  </code></pre></figure>
-
+  <span class="kr">end</span><span class="p">)</span>  
+</code></pre></div>
 <p>从代码上来看很直观，首先conf_loader载入配置文件，DAOFactory构建数据库连接层，prefix_handler.prepare_prefix是准备一些由程序生成的配置文件。dao:run_migrations是可能有的启动时数据库改动。serf_signals是启动serf程序，nginx_signals是启动nginx进程。</p>
 
 <h3>读取配置文件conf_loader</h3>
 
 <p>conf_loader读取的当然是命令行里面传入的kong.conf文件，打开conf_loader.lua看了看，是是用一个lua第三方库来做文件解析的。<code>local pl_config = require &quot;pl.config&quot;</code>，最开始不太知道这个pl是什么，经过搜索后才知道是这里<a href="https://github.com/stevedonovan/Penlight/tree/master/lua/pl">定义的</a>，在kong.rockspec里面有定义了该库的依赖<code>&quot;penlight == 1.4.1&quot;</code>。读取配置的整个过程比较琐碎，最后回构建一个解析好的conf表。这里学到了Lua里面的setmetatable设置元表的方法，table作为Lua里面的最基本数据结构，setmetatable可以方便的绑定一个key和其对应的方法。看起来也像是面向对象的风格，在conf_loader的最后部分是:</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kr">return</span> <span class="nb">setmetatable</span><span class="p">({</span>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="kr">return</span> <span class="nb">setmetatable</span><span class="p">({</span>
   <span class="nb">load</span> <span class="o">=</span> <span class="nb">load</span><span class="p">,</span>
   <span class="n">add_default_path</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="n">DEFAULT_PATHS</span><span class="p">[</span><span class="o">#</span><span class="n">DEFAULT_PATHS</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
@@ -159,16 +157,15 @@
   <span class="n">__call</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="p">...)</span>
     <span class="kr">return</span> <span class="nb">load</span><span class="p">(...)</span>
   <span class="kr">end</span>
-<span class="p">})</span></code></pre></figure>
-
+<span class="p">})</span>
+</code></pre></div>
 <p>这样其他地方调用的时候<code>local conf, err, errors = conf_loader(args.conf)</code>自然就把args.conf传入load，返回解析后的结果。</p>
 
 <h3>prepare_prefix动态生成Nginx和serf的配置</h3>
 
 <p>prefix_handler.lua这个文件主要在准备一些Nginx的配置文件和serf的配置文件。prepare_prefix函数前半部分在创建各个子目录，logs、serf、pids、以及各个日志文件。关于Kong的config部分需要参考一下<a href="https://getkong.org/docs/0.10.x/configuration/">这里</a>。这个函数比较长，重要的部分是生成Nginx的配置文件。
 可以看到compile_kong_conf函数其实是是用kong/templates目录下的nginx_kong.lua和nginx.lua分别生成两个文件，其中nginx_kong.lua里面包含了嵌入Kong的Lua代码的逻辑。</p>
-
-<figure class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">init_by_lua_block</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span></span><span class="n">init_by_lua_block</span> <span class="p">{</span>
     <span class="nb">require</span> <span class="s1">&#39;luarocks.loader&#39;</span>
     <span class="nb">require</span> <span class="s1">&#39;resty.core&#39;</span>
     <span class="n">kong</span> <span class="o">=</span> <span class="nb">require</span> <span class="s1">&#39;kong&#39;</span>
@@ -195,8 +192,8 @@
   <span class="n">log_by_lua_block</span> <span class="p">{</span>
       <span class="n">kong</span><span class="p">.</span><span class="n">log</span><span class="p">()</span>
   <span class="p">}</span>
-<span class="p">}</span></code></pre></figure>
-
+<span class="p">}</span>
+</code></pre></div>
 <p>因此我们可以知道Kong每次reload或者启动的时候会生成新的Nginx配置文件，所以我们如果要加入自己的配置可以直接修改nginx_kong.lua文件。另外我在使用的时候发现一个小问题，Kong把serf的node_id存在一个文件里，如果我们把之前跑过Kong的机器做了镜像，然后再启动一个新的实例时，这个node_id文件既然存在则没有重新生成，最终导致两台kong实例并没有相互通信形成一个集群。我认为这里其实可以再检查一下node_id的文件和本机的ip是否一致，如果不一致则重新生成。</p>
 
 <h3>dao:run_migrations()</h3>
@@ -210,9 +207,8 @@
 <h3>nginx_signals.start</h3>
 
 <p>启动的最后一步即是Nginx的启动，其实最终执行的命令就是:</p>
-
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>/usr/local/openresty/nginx/sbin/nginx -p /usr/local/kong -c nginx.conf</code></pre></figure>
-
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span></span>/usr/local/openresty/nginx/sbin/nginx -p /usr/local/kong -c nginx.conf
+</code></pre></div>
 <h3>总结</h3>
 
 <p>通过上面的分析，可以总结Kong的启动过程即是：解析输入参数，验证参数合法性并生成必要的目录和配置文件，执行数据库操作，启动serf，启动Nginx。最终其实就是一个OpenResty启动过程，嵌入Kong里面的core部分的Lua代码。后面继续分析其可扩展的插件机制。</p>

@@ -117,11 +117,13 @@
         <h1 class="title">折腾记录</h1>
 
             <h4>centos 环境变量</h4>
+
 <p class="first">在配服务器web环境的时候，因为这个问题花费了不少时间。tomcat找不到java的其他开发包，开始以为是服务器是64位的问题。
 最后因为在/etc/profile文件里面设置为export CLASSPATH=...,这个export貌似不能少。
 或者是因为命令prelink -a的作用起了效果，这个命令好像只是起到加速到作用。orz，我是被ubuntu宠坏了，什么linux命令都没怎么用咯。</p>
 
 <h4>mysql</h4>
+
 <p class="first">mysql配置局域网内都能访问。</p>
 
 <pre class="src">1 mysql -h localhost -u root
@@ -130,15 +132,19 @@
 4 mysql&gt;EXIT
 
 这样就可以在其它任何的主机上以root登录，其他用户类似。但是连上以后速度比较慢，在my.cnf文件里面配置一下啊，</pre>
+
 <pre class="src">把缓存那些改大一些，加上这么一行：skip-name-resolve。</pre>
+
 <h4>centos 双网卡路由问题</h4>
+
 <p class="first">centos能ping通局域网，但是不能上外网，最后查处是因为双网卡到问题，添加一个默认的网关就可以了。
 使用命令：</p>
 
 <pre class="src">route add <span style="color: #98f5ff;">defualt</span> <span style="color: #4eee94;">gw</span> 192.168.1.1</pre>
-netstat -nr 查看内核iP路由表。
+
+<p>netstat -nr 查看内核iP路由表。
 <h4>two or more data types in declaration specifiers</h4>
-<p class="first">C编译器这个错误指向到行会不准确，有一种情况最容易出现这样的错误，那就是在你的程序里少了个";"号，有可能在你的头文件里，也有可能在本文件中。</p>
+<p class="first">C编译器这个错误指向到行会不准确，有一种情况最容易出现这样的错误，那就是在你的程序里少了个&quot;;&quot;号，有可能在你的头文件里，也有可能在本文件中。</p></p>
 
             
             <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          
@@ -203,7 +209,7 @@ netstat -nr 查看内核iP路由表。
 
   
      
-    	<li><a href="/tags.html#Backup-ref">Backup <span>13</span></a></li>
+    	<li><a href="/tags.html#Backup-ref">Backup <span>12</span></a></li>
      
     	<li><a href="/tags.html#Linux-ref">Linux <span>8</span></a></li>
     

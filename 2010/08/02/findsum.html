@@ -116,7 +116,7 @@
     <div class="span8">
         <h1 class="title">一个小题目</h1>
 
-            前些天在班级群里看到一个笔试题：
+            <p>前些天在班级群里看到一个笔试题：
 <blockquote>
 <p class="quoted">从1到100000中任意拿掉两个数字，把剩下的99998个数顺序打乱，并且放入数组A中。要求只扫描一遍，把这两个数找出来；可以使用最多不超过5个局部变量，不能使用数组变量，并且不能改变原数组的值。</p>
 </blockquote>
@@ -124,19 +124,19 @@
 <div id="_mcePaste" style="overflow: hidden; position: absolute; left: -10000px; top: 0px; width: 1px; height: 1px;">file:///home/heipang/document/wiki/Home_Page/Computer/笔试题.html</div>
 <pre class="src"><span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">1到100 000
 </span><span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;iostream&gt;</span>
-<span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;math.h&gt;</span>
+<span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;math.h&gt;</span></p>
 
-<span style="color: #00bfff; font-weight: bold;">using</span> <span style="color: #00bfff; font-weight: bold;">namespace</span> <span style="color: #ffd700;">std</span>;
+<p><span style="color: #00bfff; font-weight: bold;">using</span> <span style="color: #00bfff; font-weight: bold;">namespace</span> <span style="color: #ffd700;">std</span>;
 <span style="color: #ffd700;">#define</span> <span style="color: #4eee94;">N</span> 100000
-<span style="color: #00bfff; font-weight: bold;">typedef</span> <span style="color: #98f5ff;">long</span> <span style="color: #98f5ff;">long</span> <span style="color: #98f5ff;">LL</span>;
+<span style="color: #00bfff; font-weight: bold;">typedef</span> <span style="color: #98f5ff;">long</span> <span style="color: #98f5ff;">long</span> <span style="color: #98f5ff;">LL</span>;</p>
 
-<span style="color: #98f5ff;">LL</span> <span style="color: #4eee94;">a</span>;
+<p><span style="color: #98f5ff;">LL</span> <span style="color: #4eee94;">a</span>;
 <span style="color: #98f5ff;">LL</span> <span style="color: #4eee94;">b</span>;
 <span style="color: #98f5ff;">LL</span> <span style="color: #4eee94;">vec</span>[N];
 <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">cnt</span>;
-<span style="color: #98f5ff;">LL</span>  <span style="color: #4eee94;">MAX_MUL</span>;
+<span style="color: #98f5ff;">LL</span>  <span style="color: #4eee94;">MAX_MUL</span>;</p>
 
-<span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">Find</span>(<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">LL</span>* <span style="color: #4eee94;">vec</span>)
+<p><span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">Find</span>(<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">LL</span>* <span style="color: #4eee94;">vec</span>)
 {
     <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">sum</span>=0;
     <span style="color: #98f5ff;">LL</span>  <span style="color: #4eee94;">mul</span>=1;
@@ -151,12 +151,12 @@
 <span style="color: #00bfff; font-weight: bold;">    while</span>(Now&lt;100000)
          mul*=(++Now);
     <span style="color: #98f5ff;">LL</span> <span style="color: #4eee94;">diff</span>=((1+N)*N)/2-sum;
-    cout&lt;&lt;diff&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;mul&lt;&lt;endl;
+    cout&lt;&lt;diff&lt;&lt;<span style="color: #deb887;">&quot; &quot;</span>&lt;&lt;mul&lt;&lt;endl;
     <span style="color: #98f5ff;">LL</span> <span style="color: #4eee94;">a</span>=(diff+sqrt(diff*diff-4*mul))/2;
-    cout&lt;&lt;a&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;diff-a&lt;&lt;endl;
-}
+    cout&lt;&lt;a&lt;&lt;<span style="color: #deb887;">&quot; &quot;</span>&lt;&lt;diff-a&lt;&lt;endl;
+}</p>
 
-<span style="color: #98f5ff;">int</span> <span style="color: #daa520; font-weight: bold;">main</span>()
+<p><span style="color: #98f5ff;">int</span> <span style="color: #daa520; font-weight: bold;">main</span>()
 {
     srand(time(<span style="color: #ffd700;">NULL</span>));
     a=(rand()%100000)+1;
@@ -167,13 +167,14 @@
         <span style="color: #00bfff; font-weight: bold;">if</span>(i!=a&amp;&amp;i!=b)
             vec[cnt++]=i;
     }
-    cout&lt;&lt;a&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;b&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;endl;
-    cout&lt;&lt;a+b&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;a*b&lt;&lt;endl;
+    cout&lt;&lt;a&lt;&lt;<span style="color: #deb887;">&quot; &quot;</span>&lt;&lt;b&lt;&lt;<span style="color: #deb887;">&quot; &quot;</span>&lt;&lt;endl;
+    cout&lt;&lt;a+b&lt;&lt;<span style="color: #deb887;">&quot; &quot;</span>&lt;&lt;a*b&lt;&lt;endl;
     Find(vec);
-}
-</pre>
-----------------------------------------------------------
-经熊师兄指点，上面的解法还是不对，如果vec前面刚好为比较大的素数，mul就溢出了。正确的解法应该为求x+y=B, x^2+y^2=A, 1-100000的平方和可以用double存下来，然后减去vec里面的平方和就得到x^2+y^2的值。
+}</p>
+
+<h2></pre></h2>
+
+<p>经熊师兄指点，上面的解法还是不对，如果vec前面刚好为比较大的素数，mul就溢出了。正确的解法应该为求x+y=B, x^2+y^2=A, 1-100000的平方和可以用double存下来，然后减去vec里面的平方和就得到x^2+y^2的值。
 <pre class="src"><span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">Find</span>(<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">LL</span>* <span style="color: #4eee94;">vec</span>)
 {
     <span style="color: #98f5ff;">double</span> <span style="color: #4eee94;">sum</span>=0;
@@ -181,18 +182,17 @@
     <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=0;i&lt;cnt;i++)
     {
         sum+=vec[i];
-        square_sum+=(vec[i]*vec[i]);
+        square_sum+=(vec[i]<em>vec[i]);
     }
     <span style="color: #98f5ff;">double</span> <span style="color: #4eee94;">diff</span>=((1+N)*N)/2-sum;
     <span style="color: #98f5ff;">double</span> <span style="color: #4eee94;">square_sum_diff</span>=
-        ((<span style="color: #98f5ff;">double</span>)N*(N+1)*(2*(<span style="color: #98f5ff;">double</span>)N+1))/6 - square_sum;
-    cout&lt;&lt;diff&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;square_sum_diff&lt;&lt;endl;
+        ((<span style="color: #98f5ff;">double</span>)N</em>(N+1)<em>(2</em>(<span style="color: #98f5ff;">double</span>)N+1))/6 - square_sum;
+    cout&lt;&lt;diff&lt;&lt;<span style="color: #deb887;">&quot; &quot;</span>&lt;&lt;square_sum_diff&lt;&lt;endl;
     a=(2*(diff)+sqrt(8*square_sum_diff-4*diff*diff))/4;
-    cout&lt;&lt;a&lt;&lt;<span style="color: #deb887;">" "</span>&lt;&lt;diff-a&lt;&lt;endl;
-}
+    cout&lt;&lt;a&lt;&lt;<span style="color: #deb887;">&quot; &quot;</span>&lt;&lt;diff-a&lt;&lt;endl;
+}</p>
 
-
-</pre>
+<p></pre></p>
 
             
             <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          

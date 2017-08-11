@@ -116,33 +116,33 @@
     <div class="span8">
         <h1 class="title">让Emacs提醒睡觉</h1>
 
-            最近都睡的比较晚，对身体不好啊。写了几行恶趣味的elisp，晚上10点40开始提醒提醒我准备睡觉，如果10点50还没动，我的上下移动键就不能用了，下面会有一条提示：太晚了，该睡觉了。不过这时可以用方向键盘来移动。但过十分钟后快捷键又恢复正常，因为过了11点表示我确实要再待晚点，下个小时40分钟继续提醒，50分锁死快捷键盘。12点过后emacs彻底对我无语了。真是egg hurt...
+            <p>最近都睡的比较晚，对身体不好啊。写了几行恶趣味的elisp，晚上10点40开始提醒提醒我准备睡觉，如果10点50还没动，我的上下移动键就不能用了，下面会有一条提示：太晚了，该睡觉了。不过这时可以用方向键盘来移动。但过十分钟后快捷键又恢复正常，因为过了11点表示我确实要再待晚点，下个小时40分钟继续提醒，50分锁死快捷键盘。12点过后emacs彻底对我无语了。真是egg hurt...
 <pre class="src">
 (<span style="color: #00ffff; font-weight: bold;">defun</span> <span style="color: #87cefa; font-weight: bold;">is-late-now</span>()
-  <span style="color: #ffa07a;">"Check if it is now late, emmm, go to sleep"</span>
+  <span style="color: #ffa07a;">&quot;Check if it is now late, emmm, go to sleep&quot;</span>
   (<span style="color: #00ffff; font-weight: bold;">let</span> ((hr (nth 2 (decode-time (current-time))))
         (minute (nth 1 (decode-time (current-time)))))
     (and (and (&gt;= hr 22)
               (&gt;= minute 40)
-              (message <span style="color: #ffa07a;">"prepare sleep now...."</span>))
-         (&gt;= minute 50))))
+              (message <span style="color: #ffa07a;">&quot;prepare sleep now....&quot;</span>))
+         (&gt;= minute 50))))</p>
 
-(<span style="color: #00ffff; font-weight: bold;">defun</span> <span style="color: #87cefa; font-weight: bold;">my-next-line</span>()
+<p>(<span style="color: #00ffff; font-weight: bold;">defun</span> <span style="color: #87cefa; font-weight: bold;">my-next-line</span>()
   (interactive)
   (<span style="color: #00ffff; font-weight: bold;">if</span> (is-late-now)
-      (message <span style="color: #ffa07a;">"late now, go to sleep ... baby!"</span>)
-    (next-line)))
+      (message <span style="color: #ffa07a;">&quot;late now, go to sleep ... baby!&quot;</span>)
+    (next-line)))</p>
 
-(<span style="color: #00ffff; font-weight: bold;">defun</span> <span style="color: #87cefa; font-weight: bold;">my-prev-line</span>()
+<p>(<span style="color: #00ffff; font-weight: bold;">defun</span> <span style="color: #87cefa; font-weight: bold;">my-prev-line</span>()
   (interactive)
   (<span style="color: #00ffff; font-weight: bold;">if</span> (is-late-now)
-      (message <span style="color: #ffa07a;">"late now, go to sleep ... baby!"</span>)
-    (previous-line)))
+      (message <span style="color: #ffa07a;">&quot;late now, go to sleep ... baby!&quot;</span>)
+    (previous-line)))</p>
 
-(global-set-key (kbd <span style="color: #ffa07a;">"C-n"</span>) 'my-next-line)
-(global-set-key (kbd <span style="color: #ffa07a;">"C-p"</span>) 'my-prev-line)</pre>
+<p>(global-set-key (kbd <span style="color: #ffa07a;">&quot;C-n&quot;</span>) &#39;my-next-line)
+(global-set-key (kbd <span style="color: #ffa07a;">&quot;C-p&quot;</span>) &#39;my-prev-line)</pre></p>
 
-这样写不好看，更好的办法是用defadvice，那就不用重新绑定C-n和C-p了，defadvice可以直接在运行next-line和previous-line之前检查一下。
+<p>这样写不好看，更好的办法是用defadvice，那就不用重新绑定C-n和C-p了，defadvice可以直接在运行next-line和previous-line之前检查一下。</p>
 
 <pre class="src">
 (<span style="color: #00ffff; font-weight: bold;">defadvice</span> <span style="color: #87cefa; font-weight: bold;">previous-line</span> (before check-is-later)
@@ -153,7 +153,8 @@
 
 (ad-activate 'previous-line)
 </pre>
-这样后只要执行previous-line这个函数之前都会执行我这个defadvice定义的代码，但是这样连方向键也不能移动了，因为向上这个按钮是绑定的previous-line这个函数。
+
+<p>这样后只要执行previous-line这个函数之前都会执行我这个defadvice定义的代码，但是这样连方向键也不能移动了，因为向上这个按钮是绑定的previous-line这个函数。</p>
 
             
             <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">          

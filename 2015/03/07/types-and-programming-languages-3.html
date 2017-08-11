@@ -128,9 +128,8 @@
 <p>对于函数类型来说，如果<code>S1-&gt;S2</code>, <code>T1-&gt;T2</code>, S1是T1的子类型，S2是T2的子类行，那么<code>S1-&gt;S2</code>是<code>T1-&gt;T2</code>的子类型。</p>
 
 <p>引入Top类型，是所有类型的父类，对应很多编程语言里面的Object(OOP里面常见的伎俩)，Go里面我就这样定义：</p>
-
-<figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">Object</span> <span class="kd">interface</span><span class="p">{}</span></code></pre></figure>
-
+<div class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">Object</span> <span class="kd">interface</span><span class="p">{}</span>
+</code></pre></div>
 <p>引入Bottom类型似乎就没什么大用处了，还增加了typecheker的复杂度。</p>
 
 <h2>Ascription and Casting</h2>
@@ -138,17 +137,15 @@
 <p>类型的强制转换，分为up-cast和down-cast。up-cast对于类型检查来说要简单一些，比如类型<code>Animal -&gt; Dog</code>, <code>Animal -&gt; Cat</code>，由<code>Cat</code>到<code>Animal</code>的类型转换为up-cast。在很多语言里面是当做一种抽象方法。</p>
 
 <p>down-cast要复杂一些，而且也可能会导致类型系统的不安全，比如：</p>
-
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="n">f</span> <span class="o">=</span> <span class="err">λ</span><span class="o">(</span><span class="n">x</span><span class="o">:</span><span class="nc">Top</span><span class="o">)</span> <span class="o">(</span><span class="n">x</span> <span class="k">as</span> <span class="o">{</span><span class="n">a</span><span class="o">:</span><span class="nc">Nat</span><span class="o">}).</span><span class="n">a</span><span class="o">;</span></code></pre></figure>
-
+<div class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="n">f</span> <span class="o">=</span> <span class="err">λ</span><span class="o">(</span><span class="n">x</span><span class="o">:</span><span class="nc">Top</span><span class="o">)</span> <span class="o">(</span><span class="n">x</span> <span class="k">as</span> <span class="o">{</span><span class="n">a</span><span class="o">:</span><span class="nc">Nat</span><span class="o">}).</span><span class="n">a</span><span class="o">;</span>
+</code></pre></div>
 <p>这个函数接收任何类型的参数，但是隐含一个假设，必须是一个有成员变量为数字类型的a，如果传递一个错误的参数typechecker也不报错，但运行的时候就会有错误了。所以含有down-cast的类型系统应该遵循： <code>trust, but verify</code>，编译的时候不报错，但是留着运行的时候检查。为了避免down-cast引起的复杂问题，ML等语言选择的是<code>down-cast with type tags</code>。</p>
 
 <p><code>channels</code>:</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text"><span></span>The key observation is that, from the point of view of typing, a communication channel behaves exactly like a reference cell: it can be used for both reading and writing, and, since it is difficult to determine statically which reads correspond to which writes, the only simple way to ensure type safety is to require that all the values passed along the channel must belong to the same type.
 </code></pre></div>
 <p>subtyping的引入导致分支多的情况下类型检查麻烦，因此引入了Join和Meet的概念，实现可参考代码里面的:</p>
-
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">join</span> <span class="n">ctx</span> <span class="n">tyS</span> <span class="n">tyT</span> <span class="o">=</span>
+<div class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="k">let</span> <span class="k">rec</span> <span class="n">join</span> <span class="n">ctx</span> <span class="n">tyS</span> <span class="n">tyT</span> <span class="o">=</span>
   <span class="k">if</span> <span class="n">subtype</span> <span class="n">ctx</span> <span class="n">tyS</span> <span class="n">tyT</span> <span class="k">then</span> <span class="n">tyT</span> <span class="k">else</span>
   <span class="k">if</span> <span class="n">subtype</span> <span class="n">ctx</span> <span class="n">tyT</span> <span class="n">tyS</span> <span class="k">then</span> <span class="n">tyS</span> <span class="k">else</span>
   <span class="k">let</span> <span class="n">tyS</span> <span class="o">=</span> <span class="n">simplifyty</span> <span class="n">ctx</span> <span class="n">tyS</span> <span class="k">in</span>
@@ -160,23 +157,21 @@
       <span class="nc">TyTop</span>
 
 <span class="ow">and</span> <span class="n">meet</span> <span class="n">ctx</span> <span class="n">tyS</span> <span class="n">tyT</span> <span class="o">=</span>
-  <span class="o">.......</span></code></pre></figure>
-
+  <span class="o">.......</span>
+</code></pre></div>
 <h2>Case Study: Imperative Objects</h2>
 
 <p>不考虑实现效率和语法简洁的条件下，目前为止学到的语言特性已经足够来模拟实现OOP。最简单的例子就是一个counter:</p>
-
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="n">c</span> <span class="o">=</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">1</span> <span class="k">in</span>
+<div class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="n">c</span> <span class="o">=</span> <span class="k">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">1</span> <span class="k">in</span>
     <span class="o">{</span><span class="n">get</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="o">!</span><span class="n">x</span><span class="o">,</span>
-    <span class="n">inc</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="n">x</span><span class="o">:=</span><span class="n">succ</span><span class="o">(!</span><span class="n">x</span><span class="o">)};</span></code></pre></figure>
-
+    <span class="n">inc</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="n">x</span><span class="o">:=</span><span class="n">succ</span><span class="o">(!</span><span class="n">x</span><span class="o">)};</span>
+</code></pre></div>
 <p>OOP作为一种抽象手段，可以让通过接口来隐藏实现，客户端的代码只通过同一个接口才操作各种子类的对象。这里的例子一个子类只是比父类多接口而已。</p>
-
-<figure class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="n">newResetCounter</span> <span class="o">=</span>
+<div class="highlight"><pre><code class="language-ocaml" data-lang="ocaml"><span></span><span class="n">newResetCounter</span> <span class="o">=</span>
     <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="n">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">1</span> <span class="k">in</span>
     <span class="o">{</span><span class="n">get</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="o">!</span><span class="n">x</span><span class="o">,</span>
-    <span class="n">inc</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="n">x</span><span class="o">:=</span><span class="n">succ</span><span class="o">(!</span><span class="n">x</span><span class="o">),</span> <span class="n">reset</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="n">x</span><span class="o">:=</span><span class="mi">1</span><span class="o">};</span></code></pre></figure>
-
+    <span class="n">inc</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="n">x</span><span class="o">:=</span><span class="n">succ</span><span class="o">(!</span><span class="n">x</span><span class="o">),</span> <span class="n">reset</span> <span class="o">=</span> <span class="err">λ</span><span class="o">_:</span><span class="nn">Unit</span><span class="p">.</span> <span class="n">x</span><span class="o">:=</span><span class="mi">1</span><span class="o">};</span>
+</code></pre></div>
 <p>self的简单是现实需要动态找到对应的method，更高效的实现当然是对象创建好后method table建好。</p>
 
             

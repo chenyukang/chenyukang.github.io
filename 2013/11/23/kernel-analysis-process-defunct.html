@@ -119,8 +119,7 @@
         <h1 class="title">Kernel analysis: Defunct Process</h1>
 
             <p>我发现带着问题去看内核代码比较容易理解。如果一个父进程显示的设置SIGCHLD为Ignore，子进程将自己清理自己。</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cp">#include</span> <span class="cpf">&lt;signal.h&gt;</span><span class="cp"></span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cp">#include</span> <span class="cpf">&lt;signal.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
@@ -141,13 +140,12 @@
     <span class="p">}</span>
     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;finished</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span></code></pre></figure>
-
+<span class="p">}</span>
+</code></pre></div>
 <p>我们可以顺便看看内核里面是怎么写的，</p>
 
 <p>linux/kernel/exit.c里面这部分是负责进程退出的，我截取了相关的代码：</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cm">/*</span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="cm">/*</span>
 <span class="cm"> * Send signals to all our closest relatives so that they know</span>
 <span class="cm"> * to properly mourn us..</span>
 <span class="cm"> */</span>
@@ -174,12 +172,11 @@
     <span class="cm">/* If the process is dead, release it - nobody will wait for it */</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">autoreap</span><span class="p">)</span>
         <span class="n">release_task</span><span class="p">(</span><span class="n">tsk</span><span class="p">);</span>
-<span class="p">}</span></code></pre></figure>
-
+<span class="p">}</span>
+</code></pre></div>
 <p>其中有一段是判断是否autoreap，我们继续可以看看
 linux/kernel/signal.c里面的do_notify_parent函数:</p>
-
-<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="kt">bool</span> <span class="nf">do_notify_parent</span><span class="p">(</span><span class="k">struct</span> <span class="n">task_struct</span> <span class="o">*</span><span class="n">tsk</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sig</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span></span><span class="kt">bool</span> <span class="nf">do_notify_parent</span><span class="p">(</span><span class="k">struct</span> <span class="n">task_struct</span> <span class="o">*</span><span class="n">tsk</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sig</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="k">struct</span> <span class="n">siginfo</span> <span class="n">info</span><span class="p">;</span>
     <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">flags</span><span class="p">;</span>
@@ -215,8 +212,8 @@ linux/kernel/signal.c里面的do_notify_parent函数:</p>
 
     <span class="n">__wake_up_parent</span><span class="p">(</span><span class="n">tsk</span><span class="p">,</span> <span class="n">tsk</span><span class="o">-&gt;</span><span class="n">parent</span><span class="p">);</span>
     <span class="k">return</span> <span class="n">autoreap</span><span class="p">;</span>
-<span class="p">}</span></code></pre></figure>
-
+<span class="p">}</span>
+</code></pre></div>
 <p>可以看到如果父进程对子进程的生死不关心，那么设置autoreap为TRUE，甚至这个信号也可以不发送了。</p>
 
             
