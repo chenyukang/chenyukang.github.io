@@ -3,8 +3,8 @@
   <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-  <meta name="description" content="yanm1ng&#39;s blog">
-  <meta name="keyword" content="hexo-theme, vuejs">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
   
     <link rel="shortcut icon" href="/css/images/logo.png">
   
@@ -126,7 +126,7 @@
 </li>
 </ul>
 <p>像写程序一样写日志，这对程序员吸引很大。<br>我用这个小脚本来完成发布:</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"><span class="function"><span class="title">do_commit</span></span>() &#123;</div><div class="line">    cmd=<span class="string">"git commit -a -m\"<span class="variable">$log</span>\""</span></div><div class="line">    <span class="built_in">echo</span> <span class="variable">$cmd</span></div><div class="line">    git add .;</div><div class="line">    git commit -a -m<span class="string">"<span class="variable">$log</span>"</span></div><div class="line">    git push;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">while</span> [ <span class="variable">$#</span> -gt 0 ]</div><div class="line"><span class="keyword">do</span></div><div class="line">  <span class="keyword">case</span> <span class="variable">$1</span> <span class="keyword">in</span></div><div class="line">    -commit |-u) <span class="built_in">shift</span>; <span class="built_in">log</span>=<span class="variable">$1</span>; do_commit; <span class="built_in">exit</span> 0;;</div><div class="line">  <span class="keyword">esac</span></div><div class="line">  <span class="built_in">shift</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"><span class="function"><span class="title">do_commit</span></span>() &#123;</div><div class="line">    cmd=<span class="string">"git commit -a -m\"<span class="variable">$log</span>\""</span></div><div class="line">    <span class="built_in">echo</span> <span class="variable">$cmd</span></div><div class="line">    git add .;</div><div class="line">    git commit -a -m<span class="string">"<span class="variable">$log</span>"</span></div><div class="line">    git push;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">while</span> [ <span class="variable">$#</span> -gt 0 ]</div><div class="line"><span class="keyword">do</span></div><div class="line">  <span class="keyword">case</span> <span class="variable">$1</span> <span class="keyword">in</span></div><div class="line">    -commit |-u) <span class="built_in">shift</span>; <span class="built_in">log</span>=<span class="variable">$1</span>; do_commit; <span class="built_in">exit</span> 0;;</div><div class="line">  <span class="keyword">esac</span></div><div class="line">  <span class="built_in">shift</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
 <ul>
 <li><strong>简洁</strong></li>
 </ul>
@@ -140,7 +140,7 @@
 <li><p>安装Jekyll 在本地，可能会遇上ruby版本的问题，我的机子上是1.8.7，需要1.9.2，使用<a href="https://rvm.io//" target="_blank" rel="external">rvm</a>来解决，具体参考<a href="http://lanvige.iteye.com/blog/857501" target="_blank" rel="external">这里</a>。具体使用下面一些命令:</p>
 </li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line">sudo apt-get install gems curl</div><div class="line">gem install rvm</div><div class="line">rvm get latest </div><div class="line">rvm reload</div><div class="line">rvm install 1.9.2</div><div class="line">rvm use 1.9.2</div><div class="line">ruby -v <span class="comment">#(use 1.9.2)</span></div><div class="line">gem install directory_watcher liquid open4 maruku classifier jekyll</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install gems curl</div><div class="line">gem install rvm</div><div class="line">rvm get latest </div><div class="line">rvm reload</div><div class="line">rvm install 1.9.2</div><div class="line">rvm use 1.9.2</div><div class="line">ruby -v <span class="comment">#(use 1.9.2)</span></div><div class="line">gem install directory_watcher liquid open4 maruku classifier jekyll</div></pre></td></tr></table></figure>
 <ul>
 <li><p>再建立yourname.github.com项目，git clone <a href="https://github.com/plusjade/jekyll-bootstrap.git" target="_blank" rel="external">jekyll bootstrap</a>到自己的代码库。</p>
 </li>

@@ -3,8 +3,8 @@
   <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-  <meta name="description" content="yanm1ng&#39;s blog">
-  <meta name="keyword" content="hexo-theme, vuejs">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
   
     <link rel="shortcut icon" href="/css/images/logo.png">
   
@@ -126,15 +126,15 @@
 <p><img src="/images/rubytt_class.png" alt="rubytt_class" class="img-center" style="width:320px;height:300px;"></p>
 <p>既然我能解析 schema.rb，也可以把数据模型给展示出来，然后再通过 model 文件里面分析模型之间的关系(has_one, has_many 等)， 于是就有了<a href="/images/rubytt_db.png">这样的结果</a>：</p>
 <p><img src="/images/rubytt_db.png" alt="rubytt_db" class="img-center" style="width:320px;height:300px;"></p>
-<p>不过做了一些之后我发现这两个 feature 有点鸡肋。特别是第一个，要找出 ruby 程序内部对象之间的继承关系其实很简单，比如我之前写过的<a href="http://cyukang.com/2012/12/26/browser-objs-in-ruby.html">一篇文章</a>。第二个模型的关系图还好，不过项目稍微大一些的时候这些图看起来很复杂。</p>
+<p>不过做了一些之后我发现这两个 feature 有点鸡肋。特别是第一个，要找出 ruby 程序内部对象之间的继承关系其实很简单，比如我之前写过的<a href="http://cyukang.com/2012/12/26/browser-objs-in-ruby.html" target="_blank" rel="external">一篇文章</a>。第二个模型的关系图还好，不过项目稍微大一些的时候这些图看起来很复杂。</p>
 <h3 id="variable-bug-finder"><a href="#variable-bug-finder" class="headerlink" title="variable bug finder"></a>variable bug finder</h3><p>在做完上面两个蛋疼的 feature 之后，碰巧碰到了项目里面另外一个 bug。是因为重构的时候不小心引入了一个 copy &amp; paste  bug。类似代码如下：</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">event = (order.status == <span class="string">'success'</span>) ? <span class="string">'success'</span> : <span class="string">'fail'</span></div><div class="line">Job.send([<span class="string">'Worker'</span>], &#123;<span class="string">'order_id'</span> =&gt; order.id, <span class="string">'event'</span> =&gt; <span class="string">'success'</span>&#125;)</div></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">event = (order.status == <span class="string">'success'</span>) ? <span class="string">'success'</span> : <span class="string">'fail'</span></div><div class="line">Job.send([<span class="string">'Worker'</span>], &#123;<span class="string">'order_id'</span> =&gt; order.id, <span class="string">'event'</span> =&gt; <span class="string">'success'</span>&#125;)</div></pre></td></tr></table></figure>
 <p>可以看到这个 event 本来应该使用的，结果却因为重构的时候 copy 了代码忘记把<code>&#39;event&#39; =&gt; &#39;success&#39;</code>改成<code>&#39;event&#39; =&gt; event</code>。event这个变量是未使用的变量，对于编译型语言来说这样的问题是可以在编译的时候发出报警的。因为一个变量未使用必然意味这要么是冗余代码，要么是 bug。那我可否通过 rubytt 给出类似报警？然后我就继续写了这么一个 checker，去检查ruby 程序中各种没使用的变量。最后还真能找出项目中一些其他的类似问题，比如：</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">result = &#123;&#125;</div><div class="line">trans = <span class="keyword">self</span>.transactions.where(..blah...)</div><div class="line">trans.each <span class="keyword">do</span> <span class="params">|tran|</span></div><div class="line">   result[<span class="symbol">:amount</span>] = trans.amount_cent  &lt;------- <span class="symbol">bug:</span> <span class="string">`trans`</span> is typo of <span class="string">'tran'</span></div><div class="line">   ...blah...</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">result = &#123;&#125;</div><div class="line">trans = <span class="keyword">self</span>.transactions.where(..blah...)</div><div class="line">trans.each <span class="keyword">do</span> <span class="params">|tran|</span></div><div class="line">   result[<span class="symbol">:amount</span>] = trans.amount_cent  &lt;------- <span class="symbol">bug:</span> <span class="string">`trans`</span> is typo of <span class="string">'tran'</span></div><div class="line">   ...blah...</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
 <p>当然还是能找到函数中未使用的参数等问题。修复的办法是如果确定这些变量是不被使用的，就在前面加<code>_</code>，这样rubytt 这样的 lint 类检查工具就跳过。后续我也正在做未定义变量的检查。</p>
 <h2 id="2-OCaml的程序发布"><a href="#2-OCaml的程序发布" class="headerlink" title="2. OCaml的程序发布"></a>2. OCaml的程序发布</h2><p>在做完上面的几个 feature 之后，我觉得可以尝试着把这个项目推广一下给同事们玩玩。如果让从来没接触过 OCaml 的朋友从头开始编译安装会显得很麻烦。所以我就尝试着把 rubytt 合并到 OCaml 的包管理仓库。于是在经过几次和 travis CI 的斗争后，终于发布了<a href="https://opam.ocaml.org/packages/rubytt/rubytt.0.1/" target="_blank" rel="external">rubytt.0.1</a> 。</p>
 <p>安装方法如下：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">gem install parallel ruby-progressbar</div><div class="line">sudo apt-get install --force-yes ocaml ocaml-native-compilers camlp4-extra opam</div><div class="line">// brew install opam   (MacOS)</div><div class="line">eval `opam config env`</div><div class="line">opam install rubytt</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">gem install parallel ruby-progressbar</div><div class="line">sudo apt-get install --force-yes ocaml ocaml-native-compilers camlp4-extra opam</div><div class="line">// brew install opam   (MacOS)</div><div class="line">eval `opam config env`</div><div class="line">opam install rubytt</div></pre></td></tr></table></figure>
 <p>OCaml 的圈子比较小众，不过其实很多工具还是挺好用的，比如这个 OPAM 包管理器。</p>
 <h2 id="3-其他心得"><a href="#3-其他心得" class="headerlink" title="3. 其他心得"></a>3. 其他心得</h2><p>做这个程序这么久，除了好玩还是收获不少。</p>
 <p>  OOP 和 FP 哪个好？通过这个项目的实践，我好好体会了一把 FP 写稍微大些的程序的感觉。说不上哪个好，我倒认为 type 确实很重要，rubytt 的过程中自动类型推导帮我发现了好多代码错误。编程语言应该让程序员能够精确无误地表达自己，尽量地避免人为引入的错误。</p>
