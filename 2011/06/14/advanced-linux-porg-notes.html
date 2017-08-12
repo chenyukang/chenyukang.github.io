@@ -116,7 +116,9 @@
 </div>
 <main class="app-body">
   <article class="post-article">
-    <section class="markdown-content"><p><strong><em>Advanced linux progamming</em></strong></p><br><div class="contents"><br><dl><br><dt><br><a href="#sec1">Writing and using Libraries</a><br><br></dt><br><dd><br><dl><br><dt><br><a href="#sec2">Archives</a><br></dt><br><dt><br><a href="#sec3">Shared Library</a><br></dt><br><dt><br><a href="#sec4">Pros and Cons</a><br></dt><br><dt><br><a href="#sec5">动态加载和卸载库</a><br><br></dt><br></dl><br></dd><br><dt><br><a href="#sec6">进程</a><br></dt><br><dd><br><dl><br><dt><br><a href="#sec7">创建进程</a><br></dt><br><dt><br><a href="#sec8">signal</a><br></dt><br><br><dt><br><a href="#sec9">process exit</a><br></dt><br></dl><br></dd><br><dt><br><a href="#sec10">Threads</a><br></dt><br><dd><br><dl><br><dt><br><a href="#sec11">互斥锁</a><br></dt><br><dt><br><br><a href="#sec12">Semaphores for Threads</a><br></dt><br><dt><br><a href="#sec13">Threads VS Process</a><br></dt><br></dl><br></dd><br><dt><br><a href="#sec14">Interprocess Communication</a><br></dt><br><dd><br><dl><br><dt><br><a href="#sec15">Share Memory</a><br><br></dt><br><dt><br><a href="#sec16">Process Semaphores</a><br></dt><br><dt><br><a href="#sec17">Mapped memory</a><br></dt><br><dt><br><a href="#sec18">管道</a><br></dt><br><dt><br><a href="#sec19">Socket</a><br></dt><br><br></dl><br></dd><br><dt><br><a href="#sec20">Mastering Linux</a><br></dt><br><dd><br><dl><br><dt><br><a href="#sec21">Device</a><br></dt><br><dt><br><a href="#sec22">Device Entry</a><br></dt><br><dt><br><br><a href="#sec23">/proc</a><br></dt><br></dl><br></dd><br><dt><br><a href="#sec24">Linux system call</a><br></dt><br><dt><br><a href="#sec25">Inline Assembly Code</a><br></dt><br><dt><br><a href="#sec26">Security</a><br></dt><br><br><dd><br><dl><br><dt><br><a href="#sec27">用户组 文件 进程权限</a><br></dt><br><dt><br><a href="#sec28">缓冲区漏洞</a><br></dt><br><dt><br><a href="#sec29">Race Conditions in /tmp</a><br></dt><br><dt><br><a href="#sec30">system ,popen函数的危险</a><br><br></dt><br></dl><br></dd><br></dl><br></div><br><br><br><h2><a name="sec1" id="sec1"></a><br>Writing and using Libraries</h2><br><br><p class="first">链接分为动态链接和静态链接。</p>
+    <section class="markdown-content"><h2>Writing and using Libraries</h2>
+
+<p class="first">链接分为动态链接和静态链接。</p>
 
 <h3><a name="sec2" id="sec2"></a><br>Archives</h3>
 
@@ -170,8 +172,6 @@ dlclose (handle);
 </pre>
 上面例子中打开libtest.so动态链接库，找到my_function定义，执行，然后卸载库文件。
 
-
-
 <h2><a name="sec6" id="sec6"></a>
 进程</h2>
 
@@ -204,8 +204,6 @@ system将执行/bin/sh,然后执行命令，因为不同系统中/bin/sh所链�
 
 <p class="first">nice命令可以调节process的优先权值。
 niceness value越大，进程的优先权越低，越小进程的优先权越高。一般进程的niceness value为0。只有root的进程可以减少一个进程的niceness value。</p>
-
-
 
 <h3><a name="sec8" id="sec8"></a>
 signal</h3>
@@ -301,8 +299,6 @@ pthread_mutex_init(&amp;mutex,<span style="color: #7fffd4;">NULL</span>);
 <p>4，多线程适用于多个相似的执行任务，而多进程可以执行不同类型的任务。</p>
 
 <p>5，多个线程中共享数据要容一些，但是也会产生相关问题(条件竞争，死锁)，多个进程共享数据难一些，使用IPC机制，虽然实现要难一些，但是不容易出现并发bug。</p>
-
-
 
 <h2><a name="sec14" id="sec14"></a><br>Interprocess Communication</h2>
 
@@ -433,8 +429,6 @@ $cat /proc/cpuinfo 查看cpu信息
 </pre>
 
 <p>/proc目录下同时包含系统中当前的进程信息，由于权限设置，有的只能由进程本身访问。可以通过访问文件获取系统中进程的相关信息，<br>比如参数，运行环境,内存使用信息等等。</p>
-
-
 
 
 <h2><a name="sec24" id="sec24"></a><br>Linux system call</h2>
