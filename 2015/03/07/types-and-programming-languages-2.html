@@ -116,8 +116,10 @@
 </div>
 <main class="app-body">
   <article class="post-article">
-    <section class="markdown-content"><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><h3 id="Side-effect"><a href="#Side-effect" class="headerlink" title="Side effect"></a>Side effect</h3><pre><code>In particular, besides just yielding results, evaluation of terms in these languages may assign to mutable variables (reference cells, arrays, mutable record fields, etc.), perform input and output to files, displays, or network connections, make non-local transfers of control via exceptions, jumps, or continuations, engage in inter-process synchronization and communication, and so on. In the literature on programming languages, such “side effects” of computation are more generally referred to as computational effects.
-</code></pre><p>引用指向的对象可以是基本类型、组合类型，甚至是函数，把指向函数的ref放进对应的record，就变成一个简单的object，OOP的原型就出来了。</p>
+    <section class="markdown-content"><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><h3 id="Side-effect"><a href="#Side-effect" class="headerlink" title="Side effect"></a>Side effect</h3><blockquote>
+<p>In particular, besides just yielding results, evaluation of terms in these languages may assign to mutable variables (reference cells, arrays, mutable record fields, etc.), perform input and output to files, displays, or network connections, make non-local transfers of control via exceptions, jumps, or continuations, engage in inter-process synchronization and communication, and so on. In the literature on programming languages, such “side effects” of computation are more generally referred to as computational effects.</p>
+</blockquote>
+<p>引用指向的对象可以是基本类型、组合类型，甚至是函数，把指向函数的ref放进对应的record，就变成一个简单的object，OOP的原型就出来了。</p>
 <figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line">update = λa:<span class="type">NatArray</span>. λm:<span class="type">Nat</span>. λv:<span class="type">Nat</span>.</div><div class="line">     a := (λn:<span class="type">Nat</span>. <span class="keyword">if</span> equal m n <span class="keyword">then</span> v <span class="keyword">else</span> (!a) n);</div></pre></td></tr></table></figure>
 <p>通过这个习题的例子可以看出ref引进的副作用。</p>
 <h2 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a>Garbage Collection</h2><h3 id="GC-or-not"><a href="#GC-or-not" class="headerlink" title="GC or not"></a>GC or not</h3><blockquote>

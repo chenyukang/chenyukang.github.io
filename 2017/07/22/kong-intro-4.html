@@ -120,7 +120,7 @@
 <p>Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又分两种类型的缓存，一种是<a href="https://github.com/openresty/lua-nginx-module#ngxshareddict" target="_blank" rel="external">shared dict</a>, 一种是使用<br><a href="https://github.com/openresty/lua-resty-lrucache" target="_blank" rel="external">lua-resty-lrucache</a>。这两者之间是有区别的: shared dict如同其名字一样是Nginx worker之间共享的，而lrucache是worker级别的，内存空间在Lua VM里由GC管理，不能在进程之间共享，自然也不会在Nginx worker之间共享。</p>
 <p>具体我们开发中使用哪一种由具体场景分析，比如在Kong的插件rate-limiting里就使用了共享缓存，因为我们需要针对一个Nginx所有的worker做请求数统计。</p>
 <p>share dict最常规的使用方法是:</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">http &#123;</div><div class="line">    lua_shared_dict dogs <span class="number">10</span>m;</div><div class="line">    server &#123;</div><div class="line">        location /set &#123;</div><div class="line">            content_by_lua_block &#123;</div><div class="line">                <span class="keyword">local</span> dogs = ngx.shared.dogs</div><div class="line">                dogs:set(<span class="string">"Jim"</span>, <span class="number">8</span>)</div><div class="line">                ngx.say(<span class="string">"STORED"</span>)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        location /get &#123;</div><div class="line">            content_by_lua_block &#123;</div><div class="line">                <span class="keyword">local</span> dogs = ngx.shared.dogs</div><div class="line">                ngx.say(dogs:get(<span class="string">"Jim"</span>))</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">http &#123;</div><div class="line">    lua_shared_dict dogs <span class="number">10</span>m;</div><div class="line">    server &#123;</div><div class="line">        location /set &#123;</div><div class="line">            content_by_lua_block &#123;</div><div class="line">                <span class="keyword">local</span> dogs = ngx.shared.dogs</div><div class="line">                dogs:set(<span class="string">"Jim"</span>, <span class="number">8</span>)</div><div class="line">                ngx.say(<span class="string">"STORED"</span>)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        location /get &#123;</div><div class="line">            content_by_lua_block &#123;</div><div class="line">                <span class="keyword">local</span> dogs = ngx.shared.dogs</div><div class="line">                ngx.say(dogs:get(<span class="string">"Jim"</span>))</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>lrucache的使用方法如<a href="https://github.com/openresty/lua-resty-lrucache" target="_blank" rel="external">文档所示</a>。</p>
 <h3 id="Kong里的多级缓存实现"><a href="#Kong里的多级缓存实现" class="headerlink" title="Kong里的多级缓存实现"></a>Kong里的多级缓存实现</h3><p>有了上面的了解，看database_cache.lua这个文件就比较直观了，这里Kong会分多类缓存: apis, consumers, plugins等。具体这样分是因为如果我们对配置做了修改，需要发出serf消息来指名这次改动涉及到哪些，其他Kong节点收到消息后自然只更新对应的缓存部分。所以Kong里申明了一个列表CACHE_KEYS来存要缓存的数据类别，同时写了不少生成缓存key的方法，比如: api_key，plugin_key等。</p>
 <p>仔细查看database_cache.lua，我们发现其实这里是做了两级缓存。Kong要从缓存里取出一个key/value，首先从lrucache里取，如果有则返回。如果没有则从share dict里去取，如果取到则deserialize然后存储在lrucache里，然后返回。如果shared dict里也没有，则返回nil。标准的两级缓存流程，这样做的好处在于减少deserialize的次数，而且shared dict可能被多个worker同时修改，要修改的时候需要加互斥锁。</p>
@@ -128,6 +128,15 @@
 <h3 id="如何避免缓存失效风暴"><a href="#如何避免缓存失效风暴" class="headerlink" title="如何避免缓存失效风暴"></a>如何避免缓存失效风暴</h3><p>我们在实现缓存的时候<a href="http://www.sobstel.org/blog/preventing-dogpile-effect/" target="_blank" rel="external">缓存失效风暴问题</a>需要谨慎考虑。agentzh在这里详细描述了<a href="https://github.com/openresty/lua-resty-lock" target="_blank" rel="external">加锁解决的策略</a>，<a href="https://github.com/mtourne/ngx.shcache" target="_blank" rel="external">ngx.shcache</a>这里也使用了相同的方法，具体可以好好研究一下那个图。</p>
 <p>主要注意的是在加锁后，再尝试去读取一次key，因为可能在加锁之前其他worker刚好把数据更新到了缓存里。</p>
 </section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Lua" >
+    <span class="tag-code">Lua</span>
+  </a>
+
+      </div>
     
     <div class="money-like">
       <div class="reward-btn">
