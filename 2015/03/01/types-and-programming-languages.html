@@ -118,33 +118,45 @@
   <article class="post-article">
     <section class="markdown-content"><p>最近掉进另外一个PL的坑里面，就是想读一下<a href="http://www.cis.upenn.edu/~bcpierce/tapl/" target="_blank" rel="external">这本书</a>，顺便继续熟悉一下Ocaml。下面的记录是阅读过程中的一些摘录和理解。</p>
 <p>1-2章是数学预备部分，理论部分有些地方比较难懂，主要是一些数学符号看久了眼花。<br>解释器的实现大多只用看syntax.ml和core.ml，就是语法和具体eval，typeof函数。</p>
-<h2 id="Untyped-Systems"><a href="#Untyped-Systems" class="headerlink" title="Untyped Systems"></a>Untyped Systems</h2><p>arith是一个无类型的解释器，是后面所有章节的基础。printtm_Term用了Format模块来格式化打印。</p>
-<h2 id="The-Untyped-Lambda-Calculus"><a href="#The-Untyped-Lambda-Calculus" class="headerlink" title="The Untyped Lambda-Calculus"></a>The Untyped Lambda-Calculus</h2><p>浅显易懂的Lambda-Calculus解释，同时列举了一些lambda calculus扩展其他语言部分的例子。</p>
-<h2 id="An-ML-Implementation-of-the-Lambda-Calculus"><a href="#An-ML-Implementation-of-the-Lambda-Calculus" class="headerlink" title="An ML Implementation of the Lambda-Calculus"></a>An ML Implementation of the Lambda-Calculus</h2><p>shifting和substitution的实现挺难看懂的，本质上是把context里面的变量用index来替换，处理变量查找的一种实现而已。eval部分是非常地简洁，我觉得ML系的语法看起来比Scheme都舒服紧凑。</p>
-<pre><code>Just because you’ve implemented something doesn’t mean you understand it.
-                                                    —Brian Cantwell Smith
-</code></pre><p>说起来全是泪，用这种函数式的编程语言来解释自己确实比较简单，但现实往往不是这样。语言能比较容易地实现自己至少可以表明语言的内核挺小，一个语言能实现bootstrap是成熟的一个表现。Rust的实现最初是用Ocaml写的，然后编译出一个Rust的编译器，然后用上一版本的Rust再重新实现Rust编译器。</p>
-<h2 id="Typed-Arithmetic-Expressions"><a href="#Typed-Arithmetic-Expressions" class="headerlink" title="Typed Arithmetic Expressions"></a>Typed Arithmetic Expressions</h2><p>tyarith是最简单的带类型的解释器，有bool和Nat类型。</p>
-<pre><code>Progress: A well-typed term is not stuck (either it is a value or it can take a step according to the evaluation rules).
-Preservation: If a well-typed term takes a step of evaluation, then the resulting term is also well typed
-</code></pre><p>These properties together tell us that a well-typed term can never reach a stuck state during evaluation.</p>
+<h4 id="Untyped-Systems"><a href="#Untyped-Systems" class="headerlink" title="Untyped Systems"></a>Untyped Systems</h4><p>arith是一个无类型的解释器，是后面所有章节的基础。printtm_Term用了Format模块来格式化打印。</p>
+<h4 id="The-Untyped-Lambda-Calculus"><a href="#The-Untyped-Lambda-Calculus" class="headerlink" title="The Untyped Lambda-Calculus"></a>The Untyped Lambda-Calculus</h4><p>浅显易懂的Lambda-Calculus解释，同时列举了一些lambda calculus扩展其他语言部分的例子。</p>
+<h4 id="An-ML-Implementation-of-the-Lambda-Calculus"><a href="#An-ML-Implementation-of-the-Lambda-Calculus" class="headerlink" title="An ML Implementation of the Lambda-Calculus"></a>An ML Implementation of the Lambda-Calculus</h4><p>shifting和substitution的实现挺难看懂的，本质上是把context里面的变量用index来替换，处理变量查找的一种实现而已。eval部分是非常地简洁，我觉得ML系的语法看起来比Scheme都舒服紧凑。</p>
+<blockquote>
+<p>Just because you’ve implemented something doesn’t mean you understand it.<br>​                                                    —Brian Cantwell Smith</p>
+</blockquote>
+<p>说起来全是泪，用这种函数式的编程语言来解释自己确实比较简单，但现实往往不是这样。语言能比较容易地实现自己至少可以表明语言的内核挺小，一个语言能实现bootstrap是成熟的一个表现。Rust的实现最初是用Ocaml写的，然后编译出一个Rust的编译器，然后用上一版本的Rust再重新实现Rust编译器。</p>
+<h4 id="Typed-Arithmetic-Expressions"><a href="#Typed-Arithmetic-Expressions" class="headerlink" title="Typed Arithmetic Expressions"></a>Typed Arithmetic Expressions</h4><p>tyarith是最简单的带类型的解释器，有bool和Nat类型。</p>
+<blockquote>
+<p>Progress: A well-typed term is not stuck (either it is a value or it can take a step according to the evaluation rules).<br>Preservation: If a well-typed term takes a step of evaluation, then the resulting term is also well typed</p>
+</blockquote>
+<p>These properties together tell us that a well-typed term can never reach a stuck state during evaluation.</p>
+<blockquote>
 <p>Safety = Progress + Preservation</p>
-<h2 id="Simply-Typed-Lambda-Calculus"><a href="#Simply-Typed-Lambda-Calculus" class="headerlink" title="Simply Typed Lambda-Calculus"></a>Simply Typed Lambda-Calculus</h2><pre><code>In general, languages in which type annotations in terms are used to help guide the typechecker are called explicitly typed. Languages in which we ask the typechecker to infer or reconstruct this information are called implicitly typed.
-
-Well-typed programs cannot “go wrong.” —Robin Milner (1978)
-</code></pre><h2 id="An-ML-Implementation-of-Simple-Types"><a href="#An-ML-Implementation-of-Simple-Types" class="headerlink" title="An ML Implementation of Simple Types"></a>An ML Implementation of Simple Types</h2><p>simplebool是一个只有bool类型的解释器，但是加上了函数。typeof挺简单，主要是函数这里注意处理形参和实参:</p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">| <span class="type">TmAbs</span>(fi,x,tyT1,t2) -&gt;</div><div class="line">    <span class="keyword">let</span> ctx' = addbinding ctx x (<span class="type">VarBind</span>(tyT1)) <span class="keyword">in</span></div><div class="line">    <span class="keyword">let</span> tyT2 = typeof ctx' t2 <span class="keyword">in</span></div><div class="line">    <span class="type">TyArr</span>(tyT1, tyT2)</div><div class="line">| <span class="type">TmApp</span>(fi,t1,t2) -&gt;</div><div class="line">    <span class="keyword">let</span> tyT1 = typeof ctx t1 <span class="keyword">in</span></div><div class="line">    <span class="keyword">let</span> tyT2 = typeof ctx t2 <span class="keyword">in</span></div><div class="line">    (<span class="keyword">match</span> tyT1 <span class="keyword">with</span></div><div class="line">        <span class="type">TyArr</span>(tyT11, tyT12) -&gt;</div><div class="line">          <span class="keyword">if</span> (=) tyT2 tyT11 <span class="keyword">then</span> tyT12</div><div class="line">          <span class="keyword">else</span> error fi <span class="string">"parameter type mismatch"</span></div><div class="line">      | _ -&gt; error fi <span class="string">"arrow type expected"</span>)</div></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="Simply-Typed-Lambda-Calculus"><a href="#Simply-Typed-Lambda-Calculus" class="headerlink" title="Simply Typed Lambda-Calculus"></a>Simply Typed Lambda-Calculus</h4><blockquote>
+<p>In general, languages in which type annotations in terms are used to help guide the typechecker are called explicitly typed. Languages in which we ask the typechecker to infer or reconstruct this information are called implicitly typed.</p>
+<p> Well-typed programs cannot “go wrong.” —Robin Milner (1978)</p>
+</blockquote>
+<h4 id="An-ML-Implementation-of-Simple-Types"><a href="#An-ML-Implementation-of-Simple-Types" class="headerlink" title="An ML Implementation of Simple Types"></a>An ML Implementation of Simple Types</h4><p>simplebool是一个只有bool类型的解释器，但是加上了函数。typeof挺简单，主要是函数这里注意处理形参和实参:</p>
+<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line">| <span class="type">TmAbs</span>(fi,x,tyT1,t2) -&gt;</div><div class="line">    <span class="keyword">let</span> ctx' = addbinding ctx x (<span class="type">VarBind</span>(tyT1)) <span class="keyword">in</span></div><div class="line">    <span class="keyword">let</span> tyT2 = typeof ctx' t2 <span class="keyword">in</span></div><div class="line">    <span class="type">TyArr</span>(tyT1, tyT2)</div><div class="line">| <span class="type">TmApp</span>(fi,t1,t2) -&gt;</div><div class="line">    <span class="keyword">let</span> tyT1 = typeof ctx t1 <span class="keyword">in</span></div><div class="line">    <span class="keyword">let</span> tyT2 = typeof ctx t2 <span class="keyword">in</span></div><div class="line">    (<span class="keyword">match</span> tyT1 <span class="keyword">with</span></div><div class="line">        <span class="type">TyArr</span>(tyT11, tyT12) -&gt;</div><div class="line">          <span class="keyword">if</span> (=) tyT2 tyT11 <span class="keyword">then</span> tyT12</div><div class="line">          <span class="keyword">else</span> error fi <span class="string">"parameter type mismatch"</span></div><div class="line">      | _ -&gt; error fi <span class="string">"arrow type expected"</span>)</div></pre></td></tr></table></figure>
 <p>if的判断部分必须为bool，而且两个分支必须为同一类型:</p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">| <span class="type">TmIf</span>(fi,t1,t2,t3) -&gt;</div><div class="line">   <span class="keyword">if</span> (=) (typeof ctx t1) <span class="type">TyBool</span> <span class="keyword">then</span></div><div class="line">     <span class="keyword">let</span> tyT2 = typeof ctx t2 <span class="keyword">in</span></div><div class="line">     <span class="keyword">if</span> (=) tyT2 (typeof ctx t3) <span class="keyword">then</span> tyT2</div><div class="line">     <span class="keyword">else</span> error fi <span class="string">"arms of conditional have different types"</span></div><div class="line">     <span class="keyword">else</span> error fi <span class="string">"guard of conditional not a boolean"</span></div></pre></td></tr></table></figure>
-<h2 id="Simple-Extensions"><a href="#Simple-Extensions" class="headerlink" title="Simple Extensions"></a>Simple Extensions</h2><p>在上一章的基础上，加上各种Drived Form。</p>
-<p>####Sequencing<br>是多个表达式串，这在有副作用的语言里面很常见。另外也可以把t1;t2理解为(λx:Unit.t2) t1。</p>
-<p>####Wildcards<br>如何翻译好，意思就是无用形参可以不指定名字。</p>
-<p>####Ascription<br>是指类型缩写(或者昵名)，C++里面的typedef，和Rust里面的usize as U都是。这个的好处在于文档和接口更清晰，如果函数的参数可以是函数，类型加进以后语法看起来就比较繁琐了，用类型缩写更清晰。typechecker的时候当然需要展开来进行。ascription和casting也有一定关系。</p>
+<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line">| <span class="type">TmIf</span>(fi,t1,t2,t3) -&gt;</div><div class="line">   <span class="keyword">if</span> (=) (typeof ctx t1) <span class="type">TyBool</span> <span class="keyword">then</span></div><div class="line">     <span class="keyword">let</span> tyT2 = typeof ctx t2 <span class="keyword">in</span></div><div class="line">     <span class="keyword">if</span> (=) tyT2 (typeof ctx t3) <span class="keyword">then</span> tyT2</div><div class="line">     <span class="keyword">else</span> error fi <span class="string">"arms of conditional have different types"</span></div><div class="line">     <span class="keyword">else</span> error fi <span class="string">"guard of conditional not a boolean"</span></div></pre></td></tr></table></figure>
+<h4 id="Simple-Extensions"><a href="#Simple-Extensions" class="headerlink" title="Simple Extensions"></a>Simple Extensions</h4><p>在上一章的基础上，加上各种Drived Form。</p>
+<ul>
+<li><p>Sequencing:</p>
+<p> 是多个表达式串，这在有副作用的语言里面很常见。另外也可以把t1;t2理解为(λx:Unit.t2) t1。</p>
+</li>
+<li><p>Wildcards: </p>
+<p>如何翻译好，意思就是无用形参可以不指定名字。</p>
+</li>
+<li><p>Ascription</p>
+<p>是指类型缩写(或者昵名)，C++里面的typedef，和Rust里面的usize as U都是。这个的好处在于文档和接口更清晰，如果函数的参数可以是函数，类型加进以后语法看起来就比较繁琐了，用类型缩写更清晰。typechecker的时候当然需要展开来进行。ascription和casting也有一定关系。</p>
 <p>增加各种简单的基础类型，比如String，还有Pairs，Tuple，Record， Sum，Enum，List。支持一种类型除了一个新类型名字外，其evaluation rules和type rules也要明确。这里的datatypes是按照Ocaml的语法来说明的。</p>
 <p>因为加上了好多种类型，fullsimple这个解释器复杂多了。</p>
-<p>####Type Dynamic</p>
-<pre><code>Even in statically typed languages, there is often the need to deal with data whose type cannot be determined at compile time. This occurs in particular when the lifetime of the data spans multiple machines or many runs of the compiler—when, for example, the data is stored in an external file system or database, or communicated across a network. To handle such situations safely, many languages offer facilities for inspecting the types of values at run time.
-</code></pre><p>####General Recursion<br>typed lambda-calculus加上fix combinator就是一门极小的但是是full abstraction的语言。Ocaml里面的letrec可以用来定义递归函数。fix point的概念需要继续理解。</p>
+</li>
+</ul>
+<h4 id="Type-Dynamic"><a href="#Type-Dynamic" class="headerlink" title="Type Dynamic"></a>Type Dynamic</h4><pre><code>Even in statically typed languages, there is often the need to deal with data whose type cannot be determined at compile time. This occurs in particular when the lifetime of the data spans multiple machines or many runs of the compiler—when, for example, the data is stored in an external file system or database, or communicated across a network. To handle such situations safely, many languages offer facilities for inspecting the types of values at run time.
+</code></pre><h4 id="General-Recursion"><a href="#General-Recursion" class="headerlink" title="General Recursion"></a>General Recursion</h4><p>typed lambda-calculus加上fix combinator就是一门极小的但是是full abstraction的语言。Ocaml里面的letrec可以用来定义递归函数。fix point的概念需要继续理解。</p>
 </section>
     
       <div class="tags">

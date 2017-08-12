@@ -126,25 +126,43 @@
 <li>查找出树中所有以某个字符串开始的所有字符串</li>
 </ul>
 <p>和hash有点像，不过hash对于第四点没这么方便。<br>我做了一些性能对比，测试数据是<code>/usr/share/dict/words</code>里面的所有单词，同时做插入和查询的操作。具体测试代码看<a href="https://github.com/chenyukang/critbit-perf" target="_blank" rel="external">这里</a>，结果是：</p>
-<table border="2" cellpadding="5" align="center"><br>  <tbody><br><tr><br><td>critbit </td> <td> 11.6 MB</td> <td>  23.34s </td><br></tr><br><tr><br><td>set </td>    <td>21.6 MB</td><td>   45.85s</td><br></tr><br><tr><br><td>trie </td>   <td>332.3 MB</td> <td> 17.84s</td><br></tr><br></tbody><br></table>
-
+<table>
+<thead>
+<tr>
+<th style="text-align:center">critbit</th>
+<th style="text-align:center">11.6MB</th>
+<th style="text-align:center">23.34</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">set</td>
+<td style="text-align:center">21.6 MB</td>
+<td style="text-align:center">45.85s</td>
+</tr>
+<tr>
+<td style="text-align:center">trie</td>
+<td style="text-align:center">332.3 MB</td>
+<td style="text-align:center">17.84s</td>
+</tr>
+</tbody>
+</table>
 <p>从中可以看到trie树的内存消耗是比较大的，但是查找速度最好。critbit的内存消耗真的非常小，如果只是把这里所有的单词存下来都要4MB的内存，其查找的速度虽然和trie树比起来差一些，但还是相当不错。</p>
 <p>好好的研读了crit-bit的实现和这篇文章，里面技巧挺多的。<br>critbit的结构很简单:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></div><div class="line">    <span class="keyword">void</span>* child[<span class="number">2</span>];</div><div class="line">    uint32 byte;</div><div class="line">    uint8 otherbits;</div><div class="line">&#125;critbit0_node;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></div><div class="line">    <span class="keyword">void</span>* root;</div><div class="line">&#125;critbit0_tree;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></div><div class="line">    <span class="keyword">void</span>* child[<span class="number">2</span>];</div><div class="line">    uint32 byte;</div><div class="line">    uint8 otherbits;</div><div class="line">&#125;critbit0_node;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></div><div class="line">    <span class="keyword">void</span>* root;</div><div class="line">&#125;critbit0_tree;</div></pre></td></tr></table></figure>
 <p>其中child是void*指针，对于树的内部节点其指向的是子节点，对于叶子节点其指向的是字符串。<br>byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用来快速的取得不同最高位，在查询的过程中用这个来做branch。</p>
-<p>具体的代码分析这里比较少，最复杂的函数是critbit0_insert。在插入过程中需要记录下来byte和otherbits,<br>并且更新前面的父节点。</p>
-<p><img src="/images/critbit.png" alt="critbit" class="img-center" height="400" width="400"></p>
+<p>具体的代码分析这里比较少，最复杂的函数是critbit0_insert。在插入过程中需要记录下来byte和otherbits,<br>并且更新前面的父节点。<br>​<br><img src="/images/critbit.png" alt="critbit" class="img-center" height="400" width="400"></p>
 <p>然后再继续插入后的结构变化是:<br><img src="/images/critbit_insert.png" alt="critbit" class="img-center" height="400" width="400"></p>
 <p>下面记录一下其中的几个技巧。</p>
 <h4 id="align指针最后一位用来做标志"><a href="#align指针最后一位用来做标志" class="headerlink" title="align指针最后一位用来做标志"></a>align指针最后一位用来做标志</h4><p>树的结构需要一个标志变量来表示是否是内部节点或者是叶子节点。这个变量如何能省掉？<br>看上面的void<em> root和void</em> child, 都是即可以用来指向字符串又可以指向节点，一般申请过来的指针变量都是align好的，所以最低位为0，这是可以拿来用的。因此对于内部节点我们可以在这个位上设置为1，只是要注意在通过这个指针取值的时候需要减回去。</p>
 <p><code>a = (posix_memalign((void**)&amp;x, sizeof(void*), ulen+1))</code></p>
 <p>posix_memalign在这里用的是sizeof(void*)，其实就和malloc一样了，因为一般Linux上编译器和C库已经处理了对齐问题。</p>
 <p>因此在查找的这段代码里是这样的：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">critbit0_contains</span><span class="params">(critbit0_tree*t, <span class="keyword">const</span> <span class="keyword">char</span>* u)</span> </span>&#123;</div><div class="line">    <span class="keyword">const</span> uint8* ubytes= (<span class="keyword">void</span>*)u;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">size_t</span> ulen= <span class="built_in">strlen</span>(u);</div><div class="line">    uint8* p= t-&gt;root;</div><div class="line">    <span class="keyword">if</span>(!p) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>( <span class="number">1</span> &amp; (<span class="keyword">intptr_t</span>)p )&#123;       <span class="comment">//内部节点? </span></div><div class="line">        critbit0_node* q = (<span class="keyword">void</span>*)(p<span class="number">-1</span>);  <span class="comment">//取得真正的指针</span></div><div class="line">        uint8 c = <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span>(q-&gt;byte &lt; ulen) c = ubytes[q-&gt;byte];</div><div class="line">        <span class="keyword">const</span> <span class="keyword">int</span> direction= (<span class="number">1</span>+(q-&gt;otherbits|c))&gt;&gt;<span class="number">8</span>;</div><div class="line">        p = q-&gt;child[direction];</div><div class="line">    &#125;</div><div class="line">	<span class="comment">//叶子节点</span></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span> == <span class="built_in">strcmp</span>(u, (<span class="keyword">const</span> <span class="keyword">char</span>*)p);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">critbit0_contains</span><span class="params">(critbit0_tree*t, <span class="keyword">const</span> <span class="keyword">char</span>* u)</span> </span>&#123;</div><div class="line">    <span class="keyword">const</span> uint8* ubytes= (<span class="keyword">void</span>*)u;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">size_t</span> ulen= <span class="built_in">strlen</span>(u);</div><div class="line">    uint8* p= t-&gt;root;</div><div class="line">    <span class="keyword">if</span>(!p) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>( <span class="number">1</span> &amp; (<span class="keyword">intptr_t</span>)p )&#123;       <span class="comment">//内部节点? </span></div><div class="line">        critbit0_node* q = (<span class="keyword">void</span>*)(p<span class="number">-1</span>);  <span class="comment">//取得真正的指针</span></div><div class="line">        uint8 c = <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span>(q-&gt;byte &lt; ulen) c = ubytes[q-&gt;byte];</div><div class="line">        <span class="keyword">const</span> <span class="keyword">int</span> direction= (<span class="number">1</span>+(q-&gt;otherbits|c))&gt;&gt;<span class="number">8</span>;</div><div class="line">        p = q-&gt;child[direction];</div><div class="line">    &#125;</div><div class="line">	<span class="comment">//叶子节点</span></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span> == <span class="built_in">strcmp</span>(u, (<span class="keyword">const</span> <span class="keyword">char</span>*)p);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h4 id="取最高位的非0bit"><a href="#取最高位的非0bit" class="headerlink" title="取最高位的非0bit"></a>取最高位的非0bit</h4><p>在插入过程中计算最高位的不同位。</p>
 <p><code>newotherbits = p[newbyte]^ubytes[newbyte];</code></p>
 <p>其实也可以用一个for循环来计算，不过这里是这样实现的:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">1</span>;</div><div class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">2</span>;</div><div class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">4</span>;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">1</span>;</div><div class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">2</span>;</div><div class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">4</span>;</div></pre></td></tr></table></figure>
 <p>这相当于是计算不小于它的2的整数次幂，对于32bit的代码可以看看<a href="http://blog.codingnow.com/cloud/CodeCollection" target="_blank" rel="external">这里</a>的<code>next_pow_of_2</code>。</p>
 <hr>
 <p><a href="https://github.com/agl/critbit" target="_blank" rel="external">文章和代码</a>，其中那篇文章有详细分析。</p>
