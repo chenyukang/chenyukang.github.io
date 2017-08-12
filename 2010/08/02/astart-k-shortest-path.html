@@ -118,8 +118,11 @@
   <article class="post-article">
     <section class="markdown-content"><p><br>那天师兄给面试，面到一道图算法题目，求图中两个点的前K短路径。当时觉得用Dijkstra+heap应该可以，不过也没想清楚。以前看到过这个，那时还没怎么仔细看图算法所以丢一边了， 今天好好看了一下。简单一点的解法是用Dijkstra+Astar。典型的题目就是<a href="http://acm.pku.edu.cn/JudgeOnline/problem?id=2449" target="_blank" rel="external">POJ 2449</a>。<br></p>
 
-<p></p><h4>A* 算法</h4><p></p>
-<p><br>再谈A<em>算法。A</em>算法中的评估函数为f(N)=cost(N)+h<em>(N)。其中cost(N)为从源点到N点的距离，h</em>(N)为N点到终点的的一个评估路径长度，设h(N)为实际N点到终点的路径长度。只要满足条件： h<em>(N)&lt;=h(N)，那么用这个评估函数找到最短路径。具体证明看这篇论文<a href="http://www.cs.auckland.ac.nz/compsci767s2c/projectReportExamples.d/astarNilsson.pdf" target="_blank" rel="external">A Formal Basis for the Heuristic Determination of Minimum Cost Paths</a>。 其优势在于在选择每个路径 上的点的时候给予了h(N)这个启发，在搜索空间中尽量选择可能最有可能产生最优解的下一个状态，使得搜索的时间都相应地减少。A</em>算法的思想也是贪心 的，Dijkstra是A<em>的一个特例，当h</em>(N)=0时，A*就退化成了Dijkstra算法，那么就是盲目的扩展当前最短路径了。<br><br>来个例子，下面这是一个城市的公路图网，一共有18263个点，23874条边，视为无向图。我们知道起点和终点的坐标，现在我们要求某两点之间的最短路径。<br></p><br><p><br>1.  用Dijkstra算法来，其中白色的点表示搜索过程中访问了的点。可以看出Dijkstra算法有点像BFS向周围扩展,做了很多无用的搜索。当然这与图的形状也有一定关系。<br></p>
+<h4>A* 算法</h4>
+
+<p>再谈A<em>算法。A</em>算法中的评估函数为f(N)=cost(N)+h<em>(N)。其中cost(N)为从源点到N点的距离，h</em>(N)为N点到终点的的一个评估路径长度，设h(N)为实际N点到终点的路径长度。只要满足条件： h<em>(N)&lt;=h(N)，那么用这个评估函数找到最短路径。具体证明看这篇论文<a href="http://www.cs.auckland.ac.nz/compsci767s2c/projectReportExamples.d/astarNilsson.pdf" target="_blank" rel="external">A Formal Basis for the Heuristic Determination of Minimum Cost Paths</a>。 其优势在于在选择每个路径 上的点的时候给予了h(N)这个启发，在搜索空间中尽量选择可能最有可能产生最优解的下一个状态，使得搜索的时间都相应地减少。A</em>算法的思想也是贪心 的，Dijkstra是A<em>的一个特例，当h</em>(N)=0时，A*就退化成了Dijkstra算法，那么就是盲目的扩展当前最短路径了。   </p>
+<p>来个例子，下面这是一个城市的公路图网，一共有18263个点，23874条边，视为无向图。我们知道起点和终点的坐标，现在我们要求某两点之间的最短路径。</p>
+<p><br>1.  用Dijkstra算法来，其中白色的点表示搜索过程中访问了的点。可以看出Dijkstra算法有点像BFS向周围扩展,做了很多无用的搜索。当然这与图的形状也有一定关系。<br></p>
 
 <p>[Dijkstra 访问18191个点]</p>
 <p><img title="Dij" src="/images/Dij.jpg" alt="" width="532" height="510" align="center"></p>
@@ -154,123 +157,7 @@
 
 <p><br>完整代码如下：<br></p>
 
-<pre class="src"><span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">7040K 282MS
-</span><span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;iostream&gt;</span>
-
-<span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;queue&gt;</span>
-<span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;vector&gt;</span>
-<span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;stdio.h&gt;</span>
-<span style="color: #ffd700;">#include</span> <span style="color: #deb887;">&lt;cstring&gt;</span>
-<span style="color: #00bfff; font-weight: bold;">using</span> <span style="color: #00bfff; font-weight: bold;">namespace</span> <span style="color: #ffd700;">std</span>;
-
-<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">MAXN</span>=1001;
-<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">INF</span>=(1&lt;&lt;20);
-<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">N</span>,<span style="color: #4eee94;">M</span>; <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">N个点 M条边
-
-</span><span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">S</span>,<span style="color: #4eee94;">T</span>,<span style="color: #4eee94;">K</span>; <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">起点和终点
-</span><span style="color: #00bfff; font-weight: bold;">typedef</span> <span style="color: #00bfff; font-weight: bold;">struct</span> <span style="color: #98f5ff;">_Edge</span>
-{
-    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">v</span>;<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">边顶点
-
-</span>    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">len</span>;<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">边长度
-</span>}<span style="color: #4eee94;">Edge</span>;
-
-<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">dist</span>[MAXN];
-<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">cnt</span>[MAXN];
-
-<span style="color: #98f5ff;">bool</span> <span style="color: #4eee94;">mark</span>[MAXN];
-
-<span style="color: #00bfff; font-weight: bold;">struct</span> <span style="color: #98f5ff;">Node</span>{
-    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">v</span>,<span style="color: #4eee94;">len</span>;
-    <span style="color: #daa520; font-weight: bold;">Node</span>() {};
-    <span style="color: #daa520; font-weight: bold;">Node</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">a</span>,<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">b</span>):v(a),len(b) {}
-};
-
-<span style="color: #98f5ff;">bool</span> <span style="color: #00bfff; font-weight: bold;">operator</span> <span style="color: #daa520; font-weight: bold;">&lt;</span> (<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">Node</span>&amp; <span style="color: #4eee94;">a</span>,<span style="color: #00bfff; font-weight: bold;">const</span> <span style="color: #98f5ff;">Node</span>&amp; <span style="color: #4eee94;">b</span>)
-{
-    <span style="color: #00bfff; font-weight: bold;">return</span> (a.len+dist[a.v]&gt;b.len+dist[b.v]);
-}
-
-<span style="color: #98f5ff;">vector</span>&lt;Edge&gt; <span style="color: #4eee94;">Adj</span>[MAXN];<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">图的邻接表表示
-</span><span style="color: #98f5ff;">vector</span>&lt;Edge&gt; <span style="color: #4eee94;">Rev</span>[MAXN];<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">图的逆图
-</span>
-<span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">Init_graph</span>()
-{
-    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">u</span>,<span style="color: #4eee94;">v</span>,<span style="color: #4eee94;">l</span>;
-    <span style="color: #98f5ff;">Edge</span> <span style="color: #4eee94;">edge</span>;
-    scanf(<span style="color: #deb887;">"%d%d"</span>,&amp;N,&amp;M);
-    <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=0;i&lt;M;i++)
-    {
-        scanf(<span style="color: #deb887;">"%d%d%d"</span>,&amp;u,&amp;v,&amp;l);
-        edge.v=v;
-        edge.len=l;
-        Adj[u].push_back(edge);
-        edge.v=u;
-        Rev[v].push_back(edge);
-    }
-    scanf(<span style="color: #deb887;">"%d%d%d"</span>,&amp;S,&amp;T,&amp;K);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">计算S到T的第K短路径
-
-</span>    <span style="color: #00bfff; font-weight: bold;">if</span>(S==T) K++;
-}
-
-<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">Dijkstra 算法 找出各个点到T的最短距离
-</span><span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">Dijkstra</span>()
-{
-    memset(mark,<span style="color: #ffd700;">false</span>,<span style="color: #00bfff; font-weight: bold;">sizeof</span>(mark));
-    <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=1;i&lt;=N;i++)
-        dist[i]=INF;
-    dist[T]=0;
-    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">u</span>,<span style="color: #4eee94;">v</span>,<span style="color: #4eee94;">min</span>;
-    <span style="color: #00bfff; font-weight: bold;">while</span>(1)
-    {
-        u=-1,min=INF;
-        <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=1;i&lt;=N;i++)
-            <span style="color: #00bfff; font-weight: bold;">if</span>(!mark[i] &amp;&amp; dist[i]&lt;min)
-            {
-                min=dist[i];
-                u=i;
-            }
-        <span style="color: #00bfff; font-weight: bold;">if</span>(u==-1) <span style="color: #00bfff; font-weight: bold;">break</span>;
-        mark[u]=<span style="color: #ffd700;">true</span>;
-        <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">k</span>=0;k&lt;Rev[u].size();k++)
-        {
-            v=Rev[u][k].v;
-            <span style="color: #00bfff; font-weight: bold;">if</span>(!mark[v] &amp;&amp; dist[v]&gt;dist[u]+Rev[u][k].len)
-                dist[v]=dist[u]+Rev[u][k].len;
-        }
-    }<span style="color: #5f9ea0; font-style: italic;">
-</span>}
-
-<span style="color: #98f5ff;">int</span> <span style="color: #daa520; font-weight: bold;">Astar</span>()
-{
-    <span style="color: #00bfff; font-weight: bold;">if</span>(dist[S]==INF) <span style="color: #00bfff; font-weight: bold;">return</span> -1;
-    memset(cnt,0,<span style="color: #00bfff; font-weight: bold;">sizeof</span>(cnt));
-    <span style="color: #98f5ff;">priority_queue</span>&lt;<span style="color: #98f5ff;">Node</span>&gt; <span style="color: #4eee94;">Q</span>;
-    Q.push(Node(S,0));
-    <span style="color: #00bfff; font-weight: bold;">while</span>(!Q.empty())
-    {
-        <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">len</span>=Q.top().len;
-        <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">v</span>=Q.top().v;
-        Q.pop();
-        cnt[v]++;
-        <span style="color: #00bfff; font-weight: bold;">if</span>(cnt[T]==K)
-            <span style="color: #00bfff; font-weight: bold;">return</span> len;
-        <span style="color: #00bfff; font-weight: bold;">if</span>(cnt[v]&gt;K)
-            <span style="color: #00bfff; font-weight: bold;">continue</span>;
-        <span style="color: #00bfff; font-weight: bold;">for</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">i</span>=0;i&lt;Adj[v].size();i++)
-            Q.push(Node(Adj[v][i].v,len+Adj[v][i].len));
-    }
-    <span style="color: #00bfff; font-weight: bold;">return</span> -1;
-}
-
-<span style="color: #98f5ff;">int</span> <span style="color: #daa520; font-weight: bold;">main</span>()
-{
-    Init_graph();
-    Dijkstra();
-    <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">ans</span>=Astar();
-    printf(<span style="color: #deb887;">"%d\n"</span>,ans);
-    <span style="color: #00bfff; font-weight: bold;">return</span> 0;
-}</pre>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">//7040K 282MS</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;queue&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> MAXN=<span class="number">1001</span>;</div><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> INF=(<span class="number">1</span>&lt;&lt;<span class="number">20</span>);</div><div class="line"><span class="keyword">int</span> N,M; <span class="comment">//N个点 M条边</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> S,T,K; <span class="comment">//起点和终点</span></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">Edge</span></span></div><div class="line"><span class="class">&#123;</span></div><div class="line">    <span class="keyword">int</span> v;<span class="comment">//边顶点</span></div><div class="line"></div><div class="line">    <span class="keyword">int</span> len;<span class="comment">//边长度</span></div><div class="line">&#125;Edge;</div><div class="line"></div><div class="line"><span class="keyword">int</span> dist[MAXN];</div><div class="line"><span class="keyword">int</span> cnt[MAXN];</div><div class="line"></div><div class="line"><span class="keyword">bool</span> mark[MAXN];</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Node</span>&#123;</span></div><div class="line">    <span class="keyword">int</span> v,len;</div><div class="line">    Node() &#123;&#125;;</div><div class="line">    Node(<span class="keyword">int</span> a,<span class="keyword">int</span> b):v(a),len(b) &#123;&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> Node&amp; a,<span class="keyword">const</span> Node&amp; b)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> (a.len+dist[a.v]&gt;b.len+dist[b.v]);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">vector</span>&lt;Edge&gt; Adj[MAXN];<span class="comment">//图的邻接表表示</span></div><div class="line"><span class="built_in">vector</span>&lt;Edge&gt; Rev[MAXN];<span class="comment">//图的逆图</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init_graph</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> u,v,l;</div><div class="line">    Edge edge;</div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;N,&amp;M);</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;M;i++)</div><div class="line">    &#123;</div><div class="line">        <span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;u,&amp;v,&amp;l);</div><div class="line">        edge.v=v;</div><div class="line">        edge.len=l;</div><div class="line">        Adj[u].push_back(edge);</div><div class="line">        edge.v=u;</div><div class="line">        Rev[v].push_back(edge);</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;S,&amp;T,&amp;K);<span class="comment">//计算S到T的第K短路径</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span>(S==T) K++;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//Dijkstra 算法 找出各个点到T的最短距离</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Dijkstra</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="built_in">memset</span>(mark,<span class="literal">false</span>,<span class="keyword">sizeof</span>(mark));</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=N;i++)</div><div class="line">        dist[i]=INF;</div><div class="line">    dist[T]=<span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> u,v,min;</div><div class="line">    <span class="keyword">while</span>(<span class="number">1</span>)</div><div class="line">    &#123;</div><div class="line">        u=<span class="number">-1</span>,min=INF;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=N;i++)</div><div class="line">            <span class="keyword">if</span>(!mark[i] &amp;&amp; dist[i]&lt;min)</div><div class="line">            &#123;</div><div class="line">                min=dist[i];</div><div class="line">                u=i;</div><div class="line">            &#125;</div><div class="line">        <span class="keyword">if</span>(u==<span class="number">-1</span>) <span class="keyword">break</span>;</div><div class="line">        mark[u]=<span class="literal">true</span>;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;Rev[u].size();k++)</div><div class="line">        &#123;</div><div class="line">            v=Rev[u][k].v;</div><div class="line">            <span class="keyword">if</span>(!mark[v] &amp;&amp; dist[v]&gt;dist[u]+Rev[u][k].len)</div><div class="line">                dist[v]=dist[u]+Rev[u][k].len;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">Astar</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">if</span>(dist[S]==INF) <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    <span class="built_in">memset</span>(cnt,<span class="number">0</span>,<span class="keyword">sizeof</span>(cnt));</div><div class="line">    priority_queue&lt;Node&gt; Q;</div><div class="line">    Q.push(Node(S,<span class="number">0</span>));</div><div class="line">    <span class="keyword">while</span>(!Q.empty())</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">int</span> len=Q.top().len;</div><div class="line">        <span class="keyword">int</span> v=Q.top().v;</div><div class="line">        Q.pop();</div><div class="line">        cnt[v]++;</div><div class="line">        <span class="keyword">if</span>(cnt[T]==K)</div><div class="line">            <span class="keyword">return</span> len;</div><div class="line">        <span class="keyword">if</span>(cnt[v]&gt;K)</div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Adj[v].size();i++)</div><div class="line">            Q.push(Node(Adj[v][i].v,len+Adj[v][i].len));</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    Init_graph();</div><div class="line">    Dijkstra();</div><div class="line">    <span class="keyword">int</span> ans=Astar();</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,ans);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </section>
     
       <div class="tags">
