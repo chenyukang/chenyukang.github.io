@@ -10,7 +10,7 @@
   
   <title>
     
-      迁移到Git | Yukang&#39;s Page
+      Kong源码分析: 缓存 | Yukang&#39;s Page
     
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -108,30 +108,32 @@
 </header>
 
     <div id="article-banner">
-  <h2>迁移到Git</h2>
-  <p class="post-date">2013-05-09</p>
+  <h2>Kong源码分析: 缓存</h2>
+  <p class="post-date">2017-07-22</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
 </div>
 <main class="app-body">
   <article class="post-article">
-    <section class="markdown-content"><p>公司这群人终于打算从CVS迁徙到Git上了，CVS这套公司用了六年。CVS这是90年代的东西，我们不能因为年代久远而嫌弃这，只是CVS这东西对于一个比较大的项目来说创建分支是相当漫长，大多数程序员都没有耐心的。<br>迁徙计划虽然纸上谈兵了很长时间，直到现在才终于打算行动。</p>
-<p>上午把Git在服务器上搭建好，主要卡在一个Git的命令上，因为一些权限问题。</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><div class="line"></div><div class="line">git init --bare --shared=group ; --shared=group forget this</div></pre></td></tr></table></figure>
-<p>Git的web接口是用的是<a href="http://viewgit.fealdia.org/" target="_blank" rel="external">ViewGit</a>，自己做了一些修改，加上<a href="http://qbnz.com/highlighter/" target="_blank" rel="external">GeShi</a>来高亮代码，并使用了<a href="https://github.com/trybeee/GitStats" target="_blank" rel="external">GitStats</a>来做代码统计。GitStats统计的项目非常多，看起来很直观。</p>
-<p>稍微记录一下常用的一些git命令。</p>
-<p>这里有一个最直观的Git学习的地方<a href="http://pcottle.github.io/learnGitBranching/?demo" target="_blank" rel="external">leanGitBranch</a>。</p>
-<table border="2" cellpadding="5" align="center"><br>  <tbody><br><tr><br><td>检出仓库 </td> <td>   git clone repo</td><br></tr><br><tr><br><td> 更新</td>   <td> git pull</td><br></tr><tr><br><td> 提交到远程</td> <td> git push</td><br></tr><br><tr><br><td>提交到本地</td>  <td>git commit -am”log message” </td><br></tr><br><td>创建branch</td>  <td>git branch branch_name</td><br><tr><br><td>切换branch</td>  <td>git checkout branch_name</td><br></tr><br><tr><br><td>合并branch</td>  <td>git merge branch_name</td><br></tr><br><tr><br><td>图形界面</td>         <td> gitk</td><br></tr><br><tr><br><td>解决冲突</td>          <td>git mergetool</td><br></tr><br><tr><br><td>撤销上一次commit</td>  <td>git revert HEAD</td><br></tr><br><tr><br><td>撤销上上次commit</td>  <td>git revert HEAD^ </td><br></tr><br><tr><br><td>撤销上一次的merge</td>  <td>git reset –hard HEAD^</td><br></tr><br></tbody><br></table>
-
-
+    <section class="markdown-content"><h3 id="Nginx里的缓存使用"><a href="#Nginx里的缓存使用" class="headerlink" title="Nginx里的缓存使用"></a>Nginx里的缓存使用</h3><p>在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是插件相关的配置，缓存之后就存储在内存中。</p>
+<p>Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又分两种类型的缓存，一种是<a href="https://github.com/openresty/lua-nginx-module#ngxshareddict" target="_blank" rel="external">shared dict</a>, 一种是使用<br><a href="https://github.com/openresty/lua-resty-lrucache" target="_blank" rel="external">lua-resty-lrucache</a>。这两者之间是有区别的: shared dict如同其名字一样是Nginx worker之间共享的，而lrucache是worker级别的，内存空间在Lua VM里由GC管理，不能在进程之间共享，自然也不会在Nginx worker之间共享。</p>
+<p>具体我们开发中使用哪一种由具体场景分析，比如在Kong的插件rate-limiting里就使用了共享缓存，因为我们需要针对一个Nginx所有的worker做请求数统计。</p>
+<p>share dict最常规的使用方法是:</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">http &#123;</div><div class="line">    lua_shared_dict dogs <span class="number">10</span>m;</div><div class="line">    server &#123;</div><div class="line">        location /set &#123;</div><div class="line">            content_by_lua_block &#123;</div><div class="line">                <span class="keyword">local</span> dogs = ngx.shared.dogs</div><div class="line">                dogs:set(<span class="string">"Jim"</span>, <span class="number">8</span>)</div><div class="line">                ngx.say(<span class="string">"STORED"</span>)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        location /get &#123;</div><div class="line">            content_by_lua_block &#123;</div><div class="line">                <span class="keyword">local</span> dogs = ngx.shared.dogs</div><div class="line">                ngx.say(dogs:get(<span class="string">"Jim"</span>))</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>lrucache的使用方法如<a href="https://github.com/openresty/lua-resty-lrucache" target="_blank" rel="external">文档所示</a>。</p>
+<h3 id="Kong里的多级缓存实现"><a href="#Kong里的多级缓存实现" class="headerlink" title="Kong里的多级缓存实现"></a>Kong里的多级缓存实现</h3><p>有了上面的了解，看database_cache.lua这个文件就比较直观了，这里Kong会分多类缓存: apis, consumers, plugins等。具体这样分是因为如果我们对配置做了修改，需要发出serf消息来指名这次改动涉及到哪些，其他Kong节点收到消息后自然只更新对应的缓存部分。所以Kong里申明了一个列表CACHE_KEYS来存要缓存的数据类别，同时写了不少生成缓存key的方法，比如: api_key，plugin_key等。</p>
+<p>仔细查看database_cache.lua，我们发现其实这里是做了两级缓存。Kong要从缓存里取出一个key/value，首先从lrucache里取，如果有则返回。如果没有则从share dict里去取，如果取到则deserialize然后存储在lrucache里，然后返回。如果shared dict里也没有，则返回nil。标准的两级缓存流程，这样做的好处在于减少deserialize的次数，而且shared dict可能被多个worker同时修改，要修改的时候需要加互斥锁。</p>
+<p>这里最常用的方法是get_or_set，尝试获取一个key的值，如果没有就执行对应的callback，返回结果当做value设置到缓存里，并把value作为最后的返回结果。这里的callback函数通常做的当然是从数据库里读取内容。</p>
+<h3 id="如何避免缓存失效风暴"><a href="#如何避免缓存失效风暴" class="headerlink" title="如何避免缓存失效风暴"></a>如何避免缓存失效风暴</h3><p>我们在实现缓存的时候<a href="http://www.sobstel.org/blog/preventing-dogpile-effect/" target="_blank" rel="external">缓存失效风暴问题</a>需要谨慎考虑。agentzh在这里详细描述了<a href="https://github.com/openresty/lua-resty-lock" target="_blank" rel="external">加锁解决的策略</a>，<a href="https://github.com/mtourne/ngx.shcache" target="_blank" rel="external">ngx.shcache</a>这里也使用了相同的方法，具体可以好好研究一下那个图。</p>
+<p>主要注意的是在加锁后，再尝试去读取一次key，因为可能在加锁之前其他worker刚好把数据更新到了缓存里。</p>
 </section>
     
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Tools" >
-    <span class="tag-code">Tools</span>
+  <a href="/tags#Lua" >
+    <span class="tag-code">Lua</span>
   </a>
 
       </div>
@@ -160,7 +162,7 @@
 
 <script>
   (function () {
-    var url = 'http://cyukang.com/2013/05/09/git-command.html';
+    var url = 'http://cyukang.com/2017/07/22/kong-intro-4.html';
     var banner = ''
     if (banner) {
       $('#article-banner').css({
@@ -211,7 +213,7 @@
     var gitmentConfig = "chenyukang";
     if (gitmentConfig != "undefined") {
       var gitment = new Gitment({
-        id: "迁移到Git",
+        id: "Kong源码分析: 缓存",
         owner: "chenyukang",
         repo: "chenyukang.github.io",
         oauth: {

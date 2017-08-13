@@ -117,9 +117,9 @@
 <main class="app-body">
   <article class="post-article">
     <section class="markdown-content"><p>Ruby里一切都是对象，如何能看到Ruby内建的对象模型呢。这里有个小程序来查看Ruby内部构建好的的对象和类。ObjectSpace可以迭代所有对象。</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> set = Set.new()</div><div class="line"> ObjectSpace.each_object <span class="keyword">do</span> <span class="params">|x|</span></div><div class="line">   set.add(x.<span class="keyword">class</span>)</div><div class="line"> <span class="keyword">end</span></div><div class="line"></div><div class="line">set.each <span class="keyword">do</span> <span class="params">|x|</span></div><div class="line">  puts x</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line"> set = Set.new()</div><div class="line"> ObjectSpace.each_object <span class="keyword">do</span> <span class="params">|x|</span></div><div class="line">   set.add(x.<span class="keyword">class</span>)</div><div class="line"> <span class="keyword">end</span></div><div class="line"></div><div class="line">set.each <span class="keyword">do</span> <span class="params">|x|</span></div><div class="line">  puts x</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
 <p>下面这段就能根据对象，取得class对象，建立起类的继承图。</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># Creates or updates a klass_tree.</span></div><div class="line"><span class="comment"># When updating no classes or objects are removed</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">object_browser</span><span class="params">(classtree = ClassTreeNode.new(Kernel)</span></span>)</div><div class="line">  ObjectSpace.each_object <span class="keyword">do</span> <span class="params">| x |</span></div><div class="line">    classnode = classtree</div><div class="line">    x.<span class="keyword">class</span>.ancestors.reverse[<span class="number">1</span>..-<span class="number">1</span>] \</div><div class="line">      .inject(classtree)&#123; <span class="params">| classnode, klass |</span></div><div class="line">      classnode.add_class(klass)</div><div class="line">    &#125;.add_object(x)</div><div class="line">  <span class="keyword">end</span></div><div class="line">  classtree</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># Creates or updates a klass_tree.</span></div><div class="line"><span class="comment"># When updating no classes or objects are removed</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">object_browser</span><span class="params">(classtree = ClassTreeNode.new(Kernel)</span></span>)</div><div class="line">  ObjectSpace.each_object <span class="keyword">do</span> <span class="params">| x |</span></div><div class="line">    classnode = classtree</div><div class="line">    x.<span class="keyword">class</span>.ancestors.reverse[<span class="number">1</span>..-<span class="number">1</span>] \</div><div class="line">      .inject(classtree)&#123; <span class="params">| classnode, klass |</span></div><div class="line">      classnode.add_class(klass)</div><div class="line">    &#125;.add_object(x)</div><div class="line">  <span class="keyword">end</span></div><div class="line">  classtree</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
 <p>use this command to get image:</p>
 <p>  $ruby prog.rb &gt; class.dot; dot -Tpng class.dot -o class.png</p>
 <p>结果看起来像这样，所有对象都画出来比较多，看大图还稍微能看到一些。完整的代码在<a href="https://gist.github.com/4380597" target="_blank" rel="external">这里</a>。<br><img src="/images/class.png" alt="class in Ruby" class="img-center"><br><img src="/images/objs.png" alt="class in Ruby" class="img-center"></p>
@@ -241,7 +241,7 @@
     <div class="scroll-top">
   <span class="arrow-icon"></span>
 </div>
-    <footer class="app-footer">
+    <footer class="app-footer" id="footer">
   <p class="copyright">
     &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
     <br>
@@ -299,5 +299,6 @@
 </script>
 
 <script src="/js/script.js"></script>
+
   </body>
 </html>

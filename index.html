@@ -108,195 +108,261 @@
 </header>
 
     <main class="app-body">
+    
   
     <article class="article-card">
-      <h2 class="article-head">
+      <h2 class="article-head" font-color="red">
         <a href="/2017/08/12/migrate-to-hexo.html">从 Jekyll换成Hexo</a>
       </h2>
-      <p class="article-date">August 12, 2017</p>
-      
-        
+      <p class="article-date">August 12, 2017
+          
+              
   <a href="/tags#Blog" >
     <span class="tag-code">Blog</span>
   </a>
 
-      
+          
+      </p>
       <div class="article-summary">
         
-          昨天看到自己的 Blog 在移动端显示丑死了，所以想着优化一下，找一个 mobile first 的风格试试。顺便把 blog 从 jekyll 换成了 Hexo。最后找到这个 hexo 的主题非常顺眼，便拿来用了，感谢yanm1ng为大家提供如此优秀的主题。回想起自己之前用过搜狐博客，然后 ...
+        
+            
+                <p>昨天看到自己的 Blog 在移动端显示丑死了，所以想着优化一下，找一个 mobile first 的风格试试。顺便把 blog 从 jekyll 换成了 Hexo。最后找到这个 <a href="https://github.com/yanm1ng/hexo-theme-vexo" target="_blank" rel="external">hexo 的主题</a>非常顺眼，便拿来用了，感谢<a href="https://github.com/yanm1ng" target="_blank" rel="external">yanm1ng</a>为大家提供如此优秀的主题。回想起自己之前用过搜狐博客，然后是 yo2，然后是 wordpress 自己搭，后来又出现了 jekyll，最终才找到最适合的写日志的方式。这次我把之前残留的 html 完全转换为了 markdown，并保留了创建日期，没想到这么多年来断断续续已经写了100来篇文章了。</p>
+<h4 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h4><p>hexo 其实和 jekyll 非常类似，只是迁徙过程中还是需要做一些处理。hexo 的文章排序选择了 date 倒序排，但是依赖于_post 里的文件创建时间，为了解决这个问题，然而 git 是不管理文件的时间戳的。结果会出现一些诡异的问题，文章的顺序会变乱。后来才发现 hexo 为了解决这个问题引入了一个叫做 db.json 的文件，存的内容大概是文件的时间戳之类的。为了保持之前的文章链接有效，写了一些小脚本处理文章。</p>
+<h4 id="gitment"><a href="#gitment" class="headerlink" title="gitment"></a>gitment</h4><p>关于评论还发现一个很好的解决方案，那就是使用<a href="https://github.com/imsun/gitment" target="_blank" rel="external">gitment</a>，这个方案是专门针对 github 上 host 的博客系统的，唯一不爽的地方在于需要自己为新增文章初始化创建一个 issue，每一条评论会增加对应文章 issue 的comments。当然结果也导致了只有 github 帐号才能评论。不过我觉得这还是挺不错，毕竟 github 作为程序员的社交系统已经如此流行。</p>
+<h4 id="typora"><a href="#typora" class="headerlink" title="typora"></a>typora</h4><p>另外经大家推荐尝试使用 markdown 编辑软件Typora。之前因为自己使用的 markdown 格式稍微有点差别， 而且也习惯了用 Emacs，所以并没用深度使用 Typora。这次好好尝试了一下，发现其可见即可得还是非常方便的。另外就是插入图片的时候可以直接拖入，并且配置一下图片的根目录，自动拷贝到图片目录(或者上传到图床)。这个功能真的很暖心，typora 的作者肯定也是用 git来管理自己的日志。</p>
+<p><img src="/images/134871342111-2510476.jpg" alt="134871342111"></p>
+
+            
         
       </div>
-      <a class="more" href="/2017/08/12/migrate-to-hexo.html">More</a>
+      
+          <a class="more" href="/2017/08/12/migrate-to-hexo.html#footer">发表评论</a>
+      
     </article>
   
     <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2017/07/23/kong-intro-4.html">Kong源码分析: 缓存</a>
+      <h2 class="article-head" font-color="red">
+        <a href="/2017/07/23/kong-intro-5.html">Kong源码分析: 事件</a>
       </h2>
-      <p class="article-date">July 23, 2017</p>
-      
-        
+      <p class="article-date">July 23, 2017
+          
+              
   <a href="/tags#Lua" >
     <span class="tag-code">Lua</span>
   </a>
 
-      
+          
+      </p>
       <div class="article-summary">
         
-          Nginx里的缓存使用在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是插件相关的配置，缓存之后就存储在内存中。
-Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又分两种类型的缓存，一种是shared dict, 一种是使用lua-r ...
+        
+            
+                Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。
+worker模型假设我们对Kong做了一个更改的请求，这个请求通常是通过admin_api这个路由处理的。也就是说最终执行数据库操作的动作是在一个Nginx worker进程里。因为操作了数据库所以我 .....
+            
         
       </div>
-      <a class="more" href="/2017/07/23/kong-intro-4.html">More</a>
+      
+          <a class="more" href="/2017/07/23/kong-intro-5.html">阅读全文</a>
+      
     </article>
   
     <article class="article-card">
-      <h2 class="article-head">
-        <a href="/2017/07/22/kong-intro-5.html">Kong源码分析: 事件</a>
+      <h2 class="article-head" font-color="red">
+        <a href="/2017/07/22/kong-intro-4.html">Kong源码分析: 缓存</a>
       </h2>
-      <p class="article-date">July 22, 2017</p>
-      
-        
+      <p class="article-date">July 22, 2017
+          
+              
   <a href="/tags#Lua" >
     <span class="tag-code">Lua</span>
   </a>
 
-      
+          
+      </p>
       <div class="article-summary">
         
-          Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。
-worker模型假设我们对Kong做了一个更改的请求，这个请求通常是通过admin_api这个路由处理的。也就是说最终执行数据库操作的动作是在一个Nginx worker进程里。因为操作了数据库所以我们需 ...
+        
+            
+                Nginx里的缓存使用在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是插件相关的配置，缓存之后就存储在内存中。
+Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又分两种类型的缓存，一种是shared dict, 一种是使用lua .....
+            
         
       </div>
-      <a class="more" href="/2017/07/22/kong-intro-5.html">More</a>
+      
+          <a class="more" href="/2017/07/22/kong-intro-4.html">阅读全文</a>
+      
     </article>
   
     <article class="article-card">
-      <h2 class="article-head">
+      <h2 class="article-head" font-color="red">
         <a href="/2017/07/16/kong-intro-3.html">Kong源码分析: 插件</a>
       </h2>
-      <p class="article-date">July 16, 2017</p>
-      
-        
+      <p class="article-date">July 16, 2017
+          
+              
   <a href="/tags#Lua" >
     <span class="tag-code">Lua</span>
   </a>
 
-      
+          
+      </p>
       <div class="article-summary">
         
-          插件的强大之处在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提供了提供模块开发机制，但是相对来说更底层一些，并且需要使用 C/C++ 来开发，对于很多开发人员来说 Nginx 仍为一个黑盒。OpenResty 集成了很多好用插件，并提供了通 ...
+        
+            
+                插件的强大之处在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提供了提供模块开发机制，但是相对来说更底层一些，并且需要使用 C/C++ 来开发，对于很多开发人员来说 Nginx 仍为一个黑盒。OpenResty 集成了很多好用插件，并提供 .....
+            
         
       </div>
-      <a class="more" href="/2017/07/16/kong-intro-3.html">More</a>
+      
+          <a class="more" href="/2017/07/16/kong-intro-3.html">阅读全文</a>
+      
     </article>
   
     <article class="article-card">
-      <h2 class="article-head">
+      <h2 class="article-head" font-color="red">
         <a href="/2017/07/07/kong-intro-2.html">Kong源码分析: 启动</a>
       </h2>
-      <p class="article-date">July 7, 2017</p>
-      
-        
+      <p class="article-date">July 7, 2017
+          
+              
   <a href="/tags#Lua" >
     <span class="tag-code">Lua</span>
   </a>
 
-      
+          
+      </p>
       <div class="article-summary">
         
-          Kong的初始化过程安装好Kong之后我们是用命令sudo ./bin/kong start -c kong.conf -vv来启动。其中kong.conf为配置文件，-vv选项打印出一些重要信息展示出来，方便发现问题。
-可以看到./bin/kong是一个脚本，是用的#!/usr/local ...
+        
+            
+                Kong的初始化过程安装好Kong之后我们是用命令sudo ./bin/kong start -c kong.conf -vv来启动。其中kong.conf为配置文件，-vv选项打印出一些重要信息展示出来，方便发现问题。
+可以看到./bin/kong是一个脚本，是用的#!/usr/loc .....
+            
         
       </div>
-      <a class="more" href="/2017/07/07/kong-intro-2.html">More</a>
+      
+          <a class="more" href="/2017/07/07/kong-intro-2.html">阅读全文</a>
+      
     </article>
   
     <article class="article-card">
-      <h2 class="article-head">
+      <h2 class="article-head" font-color="red">
         <a href="/2017/07/02/kong-intro.html">Kong源码分析</a>
       </h2>
-      <p class="article-date">July 2, 2017</p>
-      
-        
+      <p class="article-date">July 2, 2017
+          
+              
   <a href="/tags#Lua" >
     <span class="tag-code">Lua</span>
   </a>
 
-      
+          
+      </p>
       <div class="article-summary">
         
-          缘由最近在工作上接触了Kong这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一些涉及各个系统的功能就很困难。比如我们前段时间实现的灰度系统就把人折腾得很惨。因为我们的设计中有一些http header 需要在各个系统之间传递。每个项目的 Nginx 里面都 ...
+        
+            
+                缘由最近在工作上接触了Kong这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一些涉及各个系统的功能就很困难。比如我们前段时间实现的灰度系统就把人折腾得很惨。因为我们的设计中有一些http header 需要在各个系统之间传递。每个项目的 Nginx 里 .....
+            
         
       </div>
-      <a class="more" href="/2017/07/02/kong-intro.html">More</a>
+      
+          <a class="more" href="/2017/07/02/kong-intro.html">阅读全文</a>
+      
     </article>
   
     <article class="article-card">
-      <h2 class="article-head">
+      <h2 class="article-head" font-color="red">
         <a href="/2017/06/27/recent-reading-list.html">小说推荐</a>
       </h2>
-      <p class="article-date">June 27, 2017</p>
-      
+      <p class="article-date">June 27, 2017
+          
+      </p>
       <div class="article-summary">
         
-           之前我用过一段时间 Kindle，因为没有使用保护套导致在书包里面被压坏。而后一两年用 IPad 看了一些电子书，始终觉得稍微有些笨重，而且看久了眼睛不舒服。前段时间在 z.cn 上瞎逛又有了买个 Kindle 的欲望，拿到手后又好好找了一些电子书比较多的网站。目前使用最舒服的还是 htt ...
+        
+            
+                 之前我用过一段时间 Kindle，因为没有使用保护套导致在书包里面被压坏。而后一两年用 IPad 看了一些电子书，始终觉得稍微有些笨重，而且看久了眼睛不舒服。前段时间在 z.cn 上瞎逛又有了买个 Kindle 的欲望，拿到手后又好好找了一些电子书比较多的网站。目前使用最舒服的还是 h .....
+            
         
       </div>
-      <a class="more" href="/2017/06/27/recent-reading-list.html">More</a>
+      
+          <a class="more" href="/2017/06/27/recent-reading-list.html">阅读全文</a>
+      
     </article>
   
     <article class="article-card">
-      <h2 class="article-head">
+      <h2 class="article-head" font-color="red">
         <a href="/2017/05/22/try-on-openresty.html">OpenResty使用总结</a>
       </h2>
-      <p class="article-date">May 22, 2017</p>
-      
+      <p class="article-date">May 22, 2017
+          
+      </p>
       <div class="article-summary">
         
-          OpenResty最近用OpenResty比较多，除了一些业务逻辑的实现也做了AB组灰度相关的实现。OpenResty是在Nginx基础上做的扩展，应该算是国人开源项目中很成功的一个。在做的过程中写了不少Lua代码，写Lua代码的体验就是库好少，语言好简单。
-OpenResty lua编程相 ...
+        
+            
+                OpenResty最近用OpenResty比较多，除了一些业务逻辑的实现也做了AB组灰度相关的实现。OpenResty是在Nginx基础上做的扩展，应该算是国人开源项目中很成功的一个。在做的过程中写了不少Lua代码，写Lua代码的体验就是库好少，语言好简单。
+OpenResty lua编 .....
+            
         
       </div>
-      <a class="more" href="/2017/05/22/try-on-openresty.html">More</a>
+      
+          <a class="more" href="/2017/05/22/try-on-openresty.html">阅读全文</a>
+      
     </article>
   
     <article class="article-card">
-      <h2 class="article-head">
+      <h2 class="article-head" font-color="red">
         <a href="/2017/04/09/rubytt-cont.html">rubytt 续</a>
       </h2>
-      <p class="article-date">April 9, 2017</p>
-      
+      <p class="article-date">April 9, 2017
+          
+      </p>
       <div class="article-summary">
         
-          前段时间继续做了 rubytt 这个小项目，遇到一些问题。
+        
+            
+                前段时间继续做了 rubytt 这个小项目，遇到一些问题。
 我想做一个自动检测未定义变量的功能，发现如果只是做静态分析，是很难做出来的。还有涉及到各种 gem 包的分析，这些工作量较大。可以看出在这个PR里我甚至用上了一些硬编码。
-然后我想做一个自动分析代码复杂度的功能，比如某些函数太长，或 ...
+然后我想做一个自动分析代码复杂度的功能，比如某些函数太长 .....
+            
         
       </div>
-      <a class="more" href="/2017/04/09/rubytt-cont.html">More</a>
+      
+          <a class="more" href="/2017/04/09/rubytt-cont.html">阅读全文</a>
+      
     </article>
   
     <article class="article-card">
-      <h2 class="article-head">
+      <h2 class="article-head" font-color="red">
         <a href="/2017/01/24/disease-of-programmer.html">程序员病</a>
       </h2>
-      <p class="article-date">January 24, 2017</p>
-      
-        
+      <p class="article-date">January 24, 2017
+          
+              
   <a href="/tags#Books" >
     <span class="tag-code">Books</span>
   </a>
 
-      
+          
+      </p>
       <div class="article-summary">
         
-          最近看费曼的书《发现的乐趣》，里面有一段描述非常好玩:
+        
+            
+                最近看费曼的书《发现的乐趣》，里面有一段描述非常好玩:
 
-好，弗兰克先生开始实施他的计划了，与此同时，他也得了一种病——『计算机病』。现在每个使用计算机的人都知道这个毛病，那种病非常厉害，会干扰整个工作。这是我们面临的一个严重问题。所谓『计算机病』就是你一『玩』上计算机，就会上瘾。计算机真的 ...
+好，弗兰克先生开始实施他的计划了，与此同时，他也得了一种病——『计算机病』。现在每个使用计算机的人都知道这个毛病，那种病非常厉害，会干扰整个工作。这是我们面临的一个严重问题。所谓『计算机病』就是你一『玩』上计算机，就会上瘾。计算机 .....
+            
         
       </div>
-      <a class="more" href="/2017/01/24/disease-of-programmer.html">More</a>
+      
+          <a class="more" href="/2017/01/24/disease-of-programmer.html">阅读全文</a>
+      
     </article>
   
 
@@ -316,7 +382,7 @@ OpenResty lua编程相 ...
     <div class="scroll-top">
   <span class="arrow-icon"></span>
 </div>
-    <footer class="app-footer">
+    <footer class="app-footer" id="footer">
   <p class="copyright">
     &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
     <br>
@@ -374,5 +440,6 @@ OpenResty lua编程相 ...
 </script>
 
 <script src="/js/script.js"></script>
+
   </body>
 </html>
