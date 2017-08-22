@@ -112,6 +112,38 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2010/11/20/gene-alg.html">优化算法</a>
+      </h2>
+      <p class="article-date">November 20, 2010
+          
+              
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Algorithms" >
+    <span class="tag-code">Algorithms</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+          <p></p><h2>POJ 2714</h2><br>最近又在POJ上做题，碰上<a href="http://poj.org/problem?id=2714" target="_blank" rel="external">2714</a>，题意是：<p></p>
+<p>输入N，和N个点(x,y)，从原点开始一共可以走N步，每一步可以随机选择移动(x,y)，或者(-x,-y)。N的范围为1-100。<br>输出最远能走到离开原点多远的地方，输出其距离。</p>
+<p>分析一下，用迭代肯定可以，不过2^N的复杂度肯定太高了。每步有两种选择，其本质是求一个长度为N的0、1序列使得最后的值最大，为一个优化问 题。这里贪心不能求到最优解，稍微证明一下就能得出。如果不贪心，或者把贪心的范围扩大一点，求出每一步完后的凸包呢，然后再在这步的基础上继续扩展下一 些节点，再求凸包，继续如此，最后求得凸包中距离最远的。求凸包的复杂度位O(nlgn)，即最后的复杂度为O(N^2lgN)，是可以接受的。</p>
+<p></p><h2>随机搜索</h2><br>以前看过《集体智慧编程》这本书，这里有一章是说的优化。稍微回顾一下其中的几个算法。对于优化问题，首先得找到一个评价函数，对于其某个方案评价函数能给出某个值评估方案的优劣。至于返回值越大还是越好没有规定，对于特定的问题选择特定的评价函数。 随机搜索不是一种好的优化算法，但是却是后面的算法的根源。其基本思想是，我们随机长生一些解，看是否好，如果比当前更好，替换当前最优解，直到收敛了，或者猜测了足够的次数了。<p></p>
+<p><pre class="src"><span style="color: #00ffff;">do</span>{<br>   solution=rand_solution;<br>   value=eval(solution);<br>   <span style="color: #00ffff;">if</span>(value&gt;best)<br>       best=value;<br>   times++;<br>   <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">测试是否收敛<br></span>}<span style="color: #00ffff;">while</span>(times&lt;max_iter&amp;&amp;(!limit_flag));</pre><br>这种盲目的猜测虽然有机会在某一次猜中最优解，但是效率肯定不怎么好。随机算法还是有一些问题可以适用，比如素数判定，如果能保证错误率很低很低也是可行的算法。<br>
+        
+      </div>
+      
+          <a class="more" href="/2010/11/20/gene-alg.html">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2010/11/15/emacs-muse.html">Emacs Muse的使用</a>
       </h2>
       <p class="article-date">November 15, 2010
@@ -170,36 +202,6 @@ Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方�
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
-        <a href="/2010/10/27/haveyourfun.html">有你的快乐</a>
-      </h2>
-      <p class="article-date">October 27, 2010
-          
-              
-  <a href="/tags#工作" >
-    <span class="tag-code">工作</span>
-  </a>
-
-  <a href="/tags#Life|Notes" >
-    <span class="tag-code">Life|Notes</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                晚上睡在公司，这边除了晚上偶尔有施工的声音，一切都还不错。洗个热水澡，随便写写早点睡。嘈杂的音响放着这么王若琳的《有你的快乐》，标题就用这个吧，哈哈。关于工作：今年好像计算机专业的同学们还是非常好找工作，首先华为华赛来得非常早，然后就是腾讯，这几个公司就签了好多。成都很多同学都不想离开四 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2010/10/27/haveyourfun.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
         <a href="/2010/10/27/forc.html">给C瓜同学吧</a>
       </h2>
       <p class="article-date">October 27, 2010
@@ -227,6 +229,36 @@ Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方�
       </div>
       
           <a class="more" href="/2010/10/27/forc.html">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2010/10/27/haveyourfun.html">有你的快乐</a>
+      </h2>
+      <p class="article-date">October 27, 2010
+          
+              
+  <a href="/tags#工作" >
+    <span class="tag-code">工作</span>
+  </a>
+
+  <a href="/tags#Life|Notes" >
+    <span class="tag-code">Life|Notes</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                晚上睡在公司，这边除了晚上偶尔有施工的声音，一切都还不错。洗个热水澡，随便写写早点睡。嘈杂的音响放着这么王若琳的《有你的快乐》，标题就用这个吧，哈哈。关于工作：今年好像计算机专业的同学们还是非常好找工作，首先华为华赛来得非常早，然后就是腾讯，这几个公司就签了好多。成都很多同学都不想离开四 .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2010/10/27/haveyourfun.html">阅读全文</a>
       
     </article>
   
@@ -320,43 +352,6 @@ Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方�
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
-        <a href="/2010/08/21/emacs-for-fun.html">Emacs自虐</a>
-      </h2>
-      <p class="article-date">August 21, 2010
-          
-              
-  <a href="/tags#Emacs" >
-    <span class="tag-code">Emacs</span>
-  </a>
-
-  <a href="/tags#Linux" >
-    <span class="tag-code">Linux</span>
-  </a>
-
-  <a href="/tags#Backup" >
-    <span class="tag-code">Backup</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                无意中用了一下C#,发现VS下面有一个功能还是非常好的，就是每次按下回车键盘的时候，都可以把刚刚输入的那行代码自动排版一下，
-看起来要清晰一些。比如
-
-int a=0;                       ==&gt;  int a = 0;struct Node p=&amp; .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2010/08/21/emacs-for-fun.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
         <a href="/2010/08/21/using-automake.html">using automake</a>
       </h2>
       <p class="article-date">August 21, 2010
@@ -393,11 +388,15 @@ unix/linux下面使用相当广泛,对于简单一些的程序,手写makefile还
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
-        <a href="/2010/08/20/zheteng.html">折腾记录</a>
+        <a href="/2010/08/21/emacs-for-fun.html">Emacs自虐</a>
       </h2>
-      <p class="article-date">August 20, 2010
+      <p class="article-date">August 21, 2010
           
               
+  <a href="/tags#Emacs" >
+    <span class="tag-code">Emacs</span>
+  </a>
+
   <a href="/tags#Linux" >
     <span class="tag-code">Linux</span>
   </a>
@@ -412,13 +411,15 @@ unix/linux下面使用相当广泛,对于简单一些的程序,手写makefile还
         
         
             
-                centos 环境变量
-在配服务器web环境的时候，因为这个问题花费了不少时间。tomcat找不到java的其他开发包，开始以为是服务器是64位的问题。最后因为在/etc/profile文件里面设置为export CLASSPATH=…,这个export貌似不能少。或者是因为命令prel .....
+                无意中用了一下C#,发现VS下面有一个功能还是非常好的，就是每次按下回车键盘的时候，都可以把刚刚输入的那行代码自动排版一下，
+看起来要清晰一些。比如
+
+int a=0;                       ==&gt;  int a = 0;struct Node p=&amp; .....
             
         
       </div>
       
-          <a class="more" href="/2010/08/20/zheteng.html">阅读全文</a>
+          <a class="more" href="/2010/08/21/emacs-for-fun.html">阅读全文</a>
       
     </article>
   

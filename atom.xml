@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://cyukang.com/"/>
-  <updated>2017-08-12T16:01:45.000Z</updated>
+  <updated>2017-08-22T09:32:37.000Z</updated>
   <id>http://cyukang.com/</id>
   
   <author>
@@ -14,6 +14,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用 exercism 来练手学语言</title>
+    <link href="http://cyukang.com/2017/08/22/pl-practice-with-exercism.html"/>
+    <id>http://cyukang.com/2017/08/22/pl-practice-with-exercism.html</id>
+    <published>2017-08-22T04:12:02.000Z</published>
+    <updated>2017-08-22T09:32:37.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>有时候我们想学一门编程语言，但是光看看书和代码用例总是找不到感觉，这时候我们应该尝试写点不短不长的程序片段，可能是一个函数，或者是实现一个简单的算法。最近我发现这个叫做<a href="http://exercism.io/" target="_blank" rel="external">exercism.io</a>的网站不错，自己也在闲余时间在上面看看。</p>
+<p>这里支持30多种编程语言，每种语言大概有80个左右的小问题，每个题目已经写好了对应的测试用例。这些题目不是专门的算法题目，但会涉及到编程语言相关的基本方面，单元测试、字符串，数字处理，代码风格等。我们可以随机的找一些来练练手，提交自己的代码后也可以看看别人的代码。然后再对自己的代码进行一些改进。其他人也可能会对我提交的代码 review 并提交改进评论。多写和多看确实就是学习编程的最好途径。</p>
+<p><a href="http://exercism.io/" target="_blank" rel="external">http://exercism.io/</a>当然是开源的，大家都可以提供题目和测试。具体使用起来可以参考<a href="http://exercism.io/how-it-works/newbie" target="_blank" rel="external">文档</a>，其中有已经实现好的 cli 工具，每做一个 fetch 一下即可看到下一题。如果你对数学或者算法方面的问题更感兴趣，也可以试试<a href="https://projecteuler.net/" target="_blank" rel="external">https://projecteuler.net/</a>，这个则不限语言，只需要最终结果即可。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;有时候我们想学一门编程语言，但是光看看书和代码用例总是找不到感觉，这时候我们应该尝试写点不短不长的程序片段，可能是一个函数，或者是实现一个简单的算法。最近我发现这个叫做&lt;a href=&quot;http://exercism.io/&quot; target=&quot;_blank&quot; rel=&quot;ex
+    
+    </summary>
+    
+    
+      <category term="PL" scheme="http://cyukang.com/tags/PL/"/>
+    
+  </entry>
   
   <entry>
     <title>从 Jekyll换成Hexo</title>
@@ -673,46 +696,6 @@ b. limit_conn存放在 Nginx 的 shared_dict内，通过 Nginx 的配置增加�
     
       &lt;p&gt;&lt;img src=&quot;/images/lazy-eval.png&quot; alt=&quot;lazy-eval&quot; class=&quot;img-center&quot;&gt;&lt;/p&gt;
 &lt;h2 id=&quot;什么是惰性求值&quot;&gt;&lt;a href=&quot;#什么是惰性求值&quot; class=&quot;headerlink&quot; title=&quot;什么
-    
-    </summary>
-    
-    
-      <category term="Programming" scheme="http://cyukang.com/tags/Programming/"/>
-    
-      <category term="PL" scheme="http://cyukang.com/tags/PL/"/>
-    
-      <category term="OCaml" scheme="http://cyukang.com/tags/OCaml/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Types and Programming Languages (2)</title>
-    <link href="http://cyukang.com/2015/03/07/types-and-programming-languages-2.html"/>
-    <id>http://cyukang.com/2015/03/07/types-and-programming-languages-2.html</id>
-    <published>2015-03-06T16:00:00.000Z</published>
-    <updated>2017-08-12T00:30:22.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><h3 id="Side-effect"><a href="#Side-effect" class="headerlink" title="Side effect"></a>Side effect</h3><blockquote>
-<p>In particular, besides just yielding results, evaluation of terms in these languages may assign to mutable variables (reference cells, arrays, mutable record fields, etc.), perform input and output to files, displays, or network connections, make non-local transfers of control via exceptions, jumps, or continuations, engage in inter-process synchronization and communication, and so on. In the literature on programming languages, such “side effects” of computation are more generally referred to as computational effects.</p>
-</blockquote>
-<p>引用指向的对象可以是基本类型、组合类型，甚至是函数，把指向函数的ref放进对应的record，就变成一个简单的object，OOP的原型就出来了。</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line">update = λa:<span class="type">NatArray</span>. λm:<span class="type">Nat</span>. λv:<span class="type">Nat</span>.</div><div class="line">     a := (λn:<span class="type">Nat</span>. <span class="keyword">if</span> equal m n <span class="keyword">then</span> v <span class="keyword">else</span> (!a) n);</div></pre></td></tr></table></figure>
-<p>通过这个习题的例子可以看出ref引进的副作用。</p>
-<h2 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a>Garbage Collection</h2><h3 id="GC-or-not"><a href="#GC-or-not" class="headerlink" title="GC or not"></a>GC or not</h3><blockquote>
-<p>This is not just a question of taste in language design: it is extremely difficult to achieve type safety in the presence of an explicit deallocation operation.</p>
-<p> The reason for this is the familiar dangling reference problem: we allocate a cell holding a number, save a reference to it in some data structure, use it for a while, then deallocate it and allocate a new cell holding a boolean, possibly reusing the same storage. Now we can have two names for the same storage cell—one with type Ref Nat and the other with type Ref Bool.</p>
-</blockquote>
-<h3 id="Pointer"><a href="#Pointer" class="headerlink" title="Pointer"></a>Pointer</h3><blockquote>
-<p>Pointer arithmetic is occasionally very useful (especially for implementing low-level components of run-time systems, such as garbage collectors), it cannot be tracked by most type systems: knowing that location n in the store contains a Float doesn’t tell us anything useful about the type of location n + 4. In C, pointer arithmetic is a notorious source of type safety violations.</p>
-</blockquote>
-<p>Store typings: 引入引用后类型系统需要处理Cyclic reference structures，比如double linked list。Store typings就是一个locations到typings的映射。</p>
-<p>实现fullref： 引用部分的实现非常简单，</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line">| <span class="type">TmRef</span>(fi,t1) -&gt;</div><div class="line">    <span class="type">TyRef</span>(typeof ctx t1)</div><div class="line">| <span class="type">TmLoc</span>(fi,l) -&gt;</div><div class="line">    error fi <span class="string">"locations are not supposed to occur in source programs!"</span></div><div class="line">| <span class="type">TmDeref</span>(fi,t1) -&gt;</div><div class="line">    (<span class="keyword">match</span> simplifyty ctx (typeof ctx t1) <span class="keyword">with</span></div><div class="line">        <span class="type">TyRef</span>(tyT1) -&gt; tyT1</div><div class="line">      | <span class="type">TyBot</span> -&gt; <span class="type">TyBot</span></div><div class="line">      | <span class="type">TySource</span>(tyT1) -&gt; tyT1</div><div class="line">      | _ -&gt; error fi <span class="string">"argument of ! is not a Ref or Source"</span>)</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;References&quot;&gt;&lt;a href=&quot;#References&quot; class=&quot;headerlink&quot; title=&quot;References&quot;&gt;&lt;/a&gt;References&lt;/h2&gt;&lt;h3 id=&quot;Side-effect&quot;&gt;&lt;a href=&quot;#Side-effec
     
     </summary>
     

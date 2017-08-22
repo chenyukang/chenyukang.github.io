@@ -146,6 +146,37 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2011/03/27/guitar.html">近期</a>
+      </h2>
+      <p class="article-date">March 27, 2011
+          
+              
+  <a href="/tags#Life|Notes" >
+    <span class="tag-code">Life|Notes</span>
+  </a>
+
+  <a href="/tags#Backup" >
+    <span class="tag-code">Backup</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                1  学吉他
+我终于开始学吉他了，五音不全双手不灵活不识谱的我居然开始学吉他了。跟某些朋友说我要学吉他，对方往往有几种反应：1.头被墙夹了 2.要改变风格了？装文艺小青年了？ 3.要追哪个女生么？其实弹吉他还是符合本人闷骚这一特质的。说来惭愧，很早就想学点乐器了，小时候爸想让我学二胡来着 .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2011/03/27/guitar.html">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2011/03/09/cflow.html">Cflow分析</a>
       </h2>
       <p class="article-date">March 9, 2011
@@ -396,38 +427,6 @@
       </div>
       
           <a class="more" href="/2010/12/01/luopanzi.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2010/11/20/gene-alg.html">优化算法</a>
-      </h2>
-      <p class="article-date">November 20, 2010
-          
-              
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
-  </a>
-
-  <a href="/tags#Algorithms" >
-    <span class="tag-code">Algorithms</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-          <p></p><h2>POJ 2714</h2><br>最近又在POJ上做题，碰上<a href="http://poj.org/problem?id=2714" target="_blank" rel="external">2714</a>，题意是：<p></p>
-<p>输入N，和N个点(x,y)，从原点开始一共可以走N步，每一步可以随机选择移动(x,y)，或者(-x,-y)。N的范围为1-100。<br>输出最远能走到离开原点多远的地方，输出其距离。</p>
-<p>分析一下，用迭代肯定可以，不过2^N的复杂度肯定太高了。每步有两种选择，其本质是求一个长度为N的0、1序列使得最后的值最大，为一个优化问 题。这里贪心不能求到最优解，稍微证明一下就能得出。如果不贪心，或者把贪心的范围扩大一点，求出每一步完后的凸包呢，然后再在这步的基础上继续扩展下一 些节点，再求凸包，继续如此，最后求得凸包中距离最远的。求凸包的复杂度位O(nlgn)，即最后的复杂度为O(N^2lgN)，是可以接受的。</p>
-<p></p><h2>随机搜索</h2><br>以前看过《集体智慧编程》这本书，这里有一章是说的优化。稍微回顾一下其中的几个算法。对于优化问题，首先得找到一个评价函数，对于其某个方案评价函数能给出某个值评估方案的优劣。至于返回值越大还是越好没有规定，对于特定的问题选择特定的评价函数。 随机搜索不是一种好的优化算法，但是却是后面的算法的根源。其基本思想是，我们随机长生一些解，看是否好，如果比当前更好，替换当前最优解，直到收敛了，或者猜测了足够的次数了。<p></p>
-<p><pre class="src"><span style="color: #00ffff;">do</span>{<br>   solution=rand_solution;<br>   value=eval(solution);<br>   <span style="color: #00ffff;">if</span>(value&gt;best)<br>       best=value;<br>   times++;<br>   <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">测试是否收敛<br></span>}<span style="color: #00ffff;">while</span>(times&lt;max_iter&amp;&amp;(!limit_flag));</pre><br>这种盲目的猜测虽然有机会在某一次猜中最优解，但是效率肯定不怎么好。随机算法还是有一些问题可以适用，比如素数判定，如果能保证错误率很低很低也是可行的算法。<br>
-        
-      </div>
-      
-          <a class="more" href="/2010/11/20/gene-alg.html">阅读全文</a>
       
     </article>
   
