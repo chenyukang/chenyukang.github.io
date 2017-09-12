@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Lua时间处理 | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Lua时间处理</h2>
+  <p class="post-date">2017-09-12</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><p>我需要用Lua处理一个与时间相关的问题，比如我们在配置文件里面配置一个日期(北京时间)，然后在Openresty里面判断当前时间是否在这个日期之前或者之后来做对应的逻辑。</p>
+<p>Lua的时间处理还有点麻烦，主要是自带的相关库函数比较少。</p>
+<blockquote>
+<p>os.time()                &lt;== 返回当前系统的日历时间， “1505181586”<br>os.date()                &lt;== 返回本地化的时间字符串，”Tue Sep 12 09:59:56 2017”<br>os.clock()               &lt;== 返回执行该程序CPU花去的时钟秒数，这里是1156.726</p>
+</blockquote>
+<p>我首先需要一个日期字符串转换为时间戳的函数，找来找去有了这么一个函数，使用正则表达式然后组成表：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">convert_time</span><span class="params">(time_str)</span></span></div><div class="line">  <span class="comment">-- Assuming a date pattern like: yyyy-mm-dd hh:mm:ss</span></div><div class="line">  <span class="comment">-- Assuming timezone is Beijing</span></div><div class="line">  <span class="keyword">local</span> pattern = <span class="string">"(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)"</span></div><div class="line">  <span class="keyword">local</span> year, month, day, hour, minute, seconds = time_str:<span class="built_in">match</span>(pattern)</div><div class="line">  <span class="keyword">if</span> <span class="keyword">not</span> (year <span class="keyword">and</span> month <span class="keyword">and</span> day <span class="keyword">and</span> hour <span class="keyword">and</span> minute <span class="keyword">and</span> seconds) <span class="keyword">then</span></div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">  <span class="keyword">end</span></div><div class="line">  <span class="keyword">local</span> converted_timestamp =</div><div class="line">    <span class="built_in">os</span>.<span class="built_in">time</span>(&#123;tz = <span class="string">"CST"</span>, year = year, month = month,</div><div class="line">             day = day, hour = hour, <span class="built_in">min</span> = minute, sec = seconds&#125;)</div><div class="line">      </div><div class="line">    <span class="keyword">return</span> converted_timestamp </div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>然后我们可以使用os.time()获取当前时间戳来对比。但是必须注意时区问题，Lua里面要获取当前时区和UTC里面的offset可以使用一个比较笨拙的办法：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_timezone_offset_with_utc</span><span class="params">()</span></span></div><div class="line">  <span class="keyword">local</span> now = <span class="built_in">os</span>.<span class="built_in">time</span>()</div><div class="line">  <span class="keyword">return</span> <span class="built_in">os</span>.<span class="built_in">difftime</span>(now, <span class="built_in">os</span>.<span class="built_in">time</span>(<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">"!*t"</span>, now)))</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>使用这个函数获取时区的offset之后，对convert_time返回的结果做一下偏移即可和os.time()做对比。有个问题是上面的函数居然调用了三次系统调用，开销是比较大的。</p>
+<blockquote>
+<p>在 OpenResty 的世界里，不推荐使用这里的标准时间函数，因为这些函数通常会引发不止一个昂贵的系统调用，同时无法为 LuaJIT JIT 编译，对性能造成较大影响。推荐使用 ngx_lua 模块提供的带缓存的时间接口，如 <code>ngx.today</code>, <code>ngx.time</code>, <code>ngx.utctime</code>, <code>ngx.localtime</code>, <code>ngx.now</code>, <code>ngx.http_time</code>，以及 <code>ngx.cookie_time</code> 等。</p>
+</blockquote>
+<p><a href="https://github.com/stevedonovan/Penlight/blob/master/lua/pl/Date.lua" target="_blank" rel="external">Penlight</a>库也有很多日期相关的函数封装，不过大多也都使用了os相关函数。为了避免多次调用get_timezone_offset_with_utc我使用了Kong里面自带的cache相关函数做一下缓存：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="comment">-- 缓存上面的时区差，减少系统调用</span></div><div class="line"><span class="keyword">local</span> offset_with_cst, err =</div><div class="line">  cache.get_or_set(<span class="string">"timezone_offset"</span>, <span class="literal">nil</span>, get_timezone_offset_with_utc, <span class="literal">nil</span>)</div></pre></td></tr></table></figure>
+</section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Lua" >
+    <span class="tag-code">Lua</span>
+  </a>
+
+      </div>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2017/09/12/lua-time-related.html';
+    var banner = ''
+    if (banner) {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "Lua时间处理",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

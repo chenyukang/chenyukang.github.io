@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://cyukang.com/"/>
-  <updated>2017-08-22T09:38:00.000Z</updated>
+  <updated>2017-09-12T14:59:52.000Z</updated>
   <id>http://cyukang.com/</id>
   
   <author>
@@ -14,6 +14,82 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kong的0.11.0版本</title>
+    <link href="http://cyukang.com/2017/09/12/kong-new-release.html"/>
+    <id>http://cyukang.com/2017/09/12/kong-new-release.html</id>
+    <published>2017-09-12T06:43:00.000Z</published>
+    <updated>2017-09-12T14:59:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Kong发布了新的版本<a href="https://github.com/Mashape/kong/releases/tag/0.11.0" target="_blank" rel="external">0.11.0</a>，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了serf，这样整个Kong节点之间的缓存同步方式变化了。开发者给出的理由如下： </p>
+<ol>
+<li>依赖serf，serf并不属于Nginx/OpenResty</li>
+<li>这种依赖相互间通信来同步的机制对于deployment和容器化都有些不便</li>
+<li>在运行的Kong节点触发serf需要一些租塞的I/O</li>
+</ol>
+<p>新的实现的思路是以数据库作为中心，增加一个cluster events的表。任何Kong node都可以向数据库发送变更消息，其他节点polling数据库改动，然后来更新缓存内容。这个改动非常大，不过最终Kong终于实现了节点无状态，之前那个数据库里的nodes可以丢弃掉了，任何时候节点重启只要连上数据库即可工作。我们需要担心的是这么多节点去polling数据库(当然这些动作都是在后台)，是否是一个比较耗时的工作。</p>
+<p>Kong增加了新的配置选项db_update_frequency，默认为5s，表示多长时间polling一次，这需要用户自己权衡效率和及时性了。对于我们的业务来说及时性还是很重要的，比如我们新品发布时间精确到秒，那么我们就需要尽量调低这个参数。</p>
+<p>所有的改动在<a href="https://github.com/Mashape/kong/pull/2561/files，" target="_blank" rel="external">https://github.com/Mashape/kong/pull/2561/files，</a></p>
+<p>我大概看了一下代码，一些值得注意的地方如下：</p>
+<ol>
+<li>cluster相关的API和cmd都被移掉了，启动部分和serf信号处理部分都删掉了不少代码。</li>
+<li>polling需要避免一个问题，比如上一次polling还未执行完成，下一次polling就不应该启动，所以这里需要锁来处理。<a href="https://github.com/Mashape/kong/pull/2561/files#diff-44982f7ff5cb89eaf66ed31217aa0d12" target="_blank" rel="external">kong/cluster_events.lua</a>实现了polling的主要过程。</li>
+<li><a href="https://github.com/Mashape/kong/pull/2561/files#diff-904358fb4394ddf0541b4b3ede669a82" target="_blank" rel="external">kong/cluster_events/strategies/postgres.lua</a>目前polling还不支持分页，cluster_events是一个新建的表用来存储缓存更新事件，Kong节点就是来查询这些事件。</li>
+<li>缓存部分换成了<a href="https://github.com/thibaultcha/lua-resty-mlcache" target="_blank" rel="external">lua-resty-mlcache</a>，原来还是和之前分析的类似 L1级别缓存为一个LURcache，在LuaVM里可见， L2级别的缓存为lua_shared_dict，同一个Nginx下的所有worker可见， L3就是缓存未命中的情况，需要调用其他hookup的函数去获取数据然后缓存在L2。只是这里个ipc并不是用的lua-resty-mlcache里的，而是使用的resty.worker.events。</li>
+<li>事件处理部分分两部分，worker之间的事件和node之间的处理，分别由worker_events和cluster_event.lua来处理。</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Kong发布了新的版本&lt;a href=&quot;https://github.com/Mashape/kong/releases/tag/0.11.0&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;0.11.0&lt;/a&gt;，从这里开始区分了社区版本和商业版。这次改动比
+    
+    </summary>
+    
+    
+      <category term="Lua" scheme="http://cyukang.com/tags/Lua/"/>
+    
+      <category term="Kong" scheme="http://cyukang.com/tags/Kong/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Lua时间处理</title>
+    <link href="http://cyukang.com/2017/09/12/lua-time-related.html"/>
+    <id>http://cyukang.com/2017/09/12/lua-time-related.html</id>
+    <published>2017-09-12T01:51:00.000Z</published>
+    <updated>2017-09-12T14:59:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>我需要用Lua处理一个与时间相关的问题，比如我们在配置文件里面配置一个日期(北京时间)，然后在Openresty里面判断当前时间是否在这个日期之前或者之后来做对应的逻辑。</p>
+<p>Lua的时间处理还有点麻烦，主要是自带的相关库函数比较少。</p>
+<blockquote>
+<p>os.time()                &lt;== 返回当前系统的日历时间， “1505181586”<br>os.date()                &lt;== 返回本地化的时间字符串，”Tue Sep 12 09:59:56 2017”<br>os.clock()               &lt;== 返回执行该程序CPU花去的时钟秒数，这里是1156.726</p>
+</blockquote>
+<p>我首先需要一个日期字符串转换为时间戳的函数，找来找去有了这么一个函数，使用正则表达式然后组成表：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">convert_time</span><span class="params">(time_str)</span></span></div><div class="line">  <span class="comment">-- Assuming a date pattern like: yyyy-mm-dd hh:mm:ss</span></div><div class="line">  <span class="comment">-- Assuming timezone is Beijing</span></div><div class="line">  <span class="keyword">local</span> pattern = <span class="string">"(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)"</span></div><div class="line">  <span class="keyword">local</span> year, month, day, hour, minute, seconds = time_str:<span class="built_in">match</span>(pattern)</div><div class="line">  <span class="keyword">if</span> <span class="keyword">not</span> (year <span class="keyword">and</span> month <span class="keyword">and</span> day <span class="keyword">and</span> hour <span class="keyword">and</span> minute <span class="keyword">and</span> seconds) <span class="keyword">then</span></div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">  <span class="keyword">end</span></div><div class="line">  <span class="keyword">local</span> converted_timestamp =</div><div class="line">    <span class="built_in">os</span>.<span class="built_in">time</span>(&#123;tz = <span class="string">"CST"</span>, year = year, month = month,</div><div class="line">             day = day, hour = hour, <span class="built_in">min</span> = minute, sec = seconds&#125;)</div><div class="line">      </div><div class="line">    <span class="keyword">return</span> converted_timestamp </div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>然后我们可以使用os.time()获取当前时间戳来对比。但是必须注意时区问题，Lua里面要获取当前时区和UTC里面的offset可以使用一个比较笨拙的办法：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_timezone_offset_with_utc</span><span class="params">()</span></span></div><div class="line">  <span class="keyword">local</span> now = <span class="built_in">os</span>.<span class="built_in">time</span>()</div><div class="line">  <span class="keyword">return</span> <span class="built_in">os</span>.<span class="built_in">difftime</span>(now, <span class="built_in">os</span>.<span class="built_in">time</span>(<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">"!*t"</span>, now)))</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>使用这个函数获取时区的offset之后，对convert_time返回的结果做一下偏移即可和os.time()做对比。有个问题是上面的函数居然调用了三次系统调用，开销是比较大的。</p>
+<blockquote>
+<p>在 OpenResty 的世界里，不推荐使用这里的标准时间函数，因为这些函数通常会引发不止一个昂贵的系统调用，同时无法为 LuaJIT JIT 编译，对性能造成较大影响。推荐使用 ngx_lua 模块提供的带缓存的时间接口，如 <code>ngx.today</code>, <code>ngx.time</code>, <code>ngx.utctime</code>, <code>ngx.localtime</code>, <code>ngx.now</code>, <code>ngx.http_time</code>，以及 <code>ngx.cookie_time</code> 等。</p>
+</blockquote>
+<p><a href="https://github.com/stevedonovan/Penlight/blob/master/lua/pl/Date.lua" target="_blank" rel="external">Penlight</a>库也有很多日期相关的函数封装，不过大多也都使用了os相关函数。为了避免多次调用get_timezone_offset_with_utc我使用了Kong里面自带的cache相关函数做一下缓存：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="comment">-- 缓存上面的时区差，减少系统调用</span></div><div class="line"><span class="keyword">local</span> offset_with_cst, err =</div><div class="line">  cache.get_or_set(<span class="string">"timezone_offset"</span>, <span class="literal">nil</span>, get_timezone_offset_with_utc, <span class="literal">nil</span>)</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我需要用Lua处理一个与时间相关的问题，比如我们在配置文件里面配置一个日期(北京时间)，然后在Openresty里面判断当前时间是否在这个日期之前或者之后来做对应的逻辑。&lt;/p&gt;
+&lt;p&gt;Lua的时间处理还有点麻烦，主要是自带的相关库函数比较少。&lt;/p&gt;
+&lt;blockquot
+    
+    </summary>
+    
+    
+      <category term="Lua" scheme="http://cyukang.com/tags/Lua/"/>
+    
+  </entry>
   
   <entry>
     <title>使用 exercism 来练手学语言</title>
@@ -615,96 +691,6 @@ b. limit_conn存放在 Nginx 的 shared_dict内，通过 Nginx 的配置增加�
     
     
       <category term="Programming" scheme="http://cyukang.com/tags/Programming/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>最近读的一些杂书</title>
-    <link href="http://cyukang.com/2015/08/09/reading-notes.html"/>
-    <id>http://cyukang.com/2015/08/09/reading-notes.html</id>
-    <published>2015-08-08T16:00:00.000Z</published>
-    <updated>2015-08-08T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近看了几本书，大多都是觉得有些意思就从亚马逊上买了。自从我的Kindle坏了之后，我就基本只买纸质书了。虽然纸质书携带不够方便，看起来更够味。</p>
-<h3 id="别逗了，费曼先生-5"><a href="#别逗了，费曼先生-5" class="headerlink" title="别逗了，费曼先生! (5*)"></a>别逗了，费曼先生! (5*)</h3><p>这是我最推荐的一本，断断续续看了两遍。这本书虽然是翻译的，但是质量很够水准，费曼聪明的坏教授形象跃然纸上。费曼作为物理学家也挺逗的，从小喜欢发明各种东西、恶作剧，折腾电子器件，好玩。青年时期开始折腾物理，在暑假期间顺便当了一段时间『化学家』。后面又对破解密码锁、画画、打鼓、学习外语产生浓厚兴趣，并极其投入。贯穿其中最让人敬佩的是费曼的好奇心好韧性。整本书都是在用一种诙谐平叙事写法，不过突然怀念自己的妻子那段特别感人，他的妻子去世那段时间正是在研发原子弹期间：</p>
-<blockquote>
-<p>当我返回的时候他们都来问我发生了什么事儿，</p>
-<p>“她死了，工作进行的怎么样？”</p>
-<p>他们立刻明白了，我不想为此终日哀伤。我显然要做些安慰心理的事：现实是重要的。我一定要理解，从生理学上说，阿琳究竟是怎么了；</p>
-<p>我没哭，直到几个月之后。当时我在橡树岭，我正走过一家百货商店的橱窗，里头挂着女士服装，我想阿琳或许喜欢其中一件。此时此刻，我不盛悲戚。</p>
-</blockquote>
-<p>他谢绝芝加哥大学高薪聘请的那段挺逗：</p>
-<blockquote>
-<p>“我将有能力做我一直想做的事 ——- 找个迷人的情妇，为她买一座漂亮的房子，给她买好东西……用你们给的这份薪水，我必定真的会这么做，我知道那会是什么结果，我会为她操心，挂念她在干什么，我们会吵架。我回家的时候，又会如何如何。这些闹心的事儿，会让我寝食不安，会让我心情不快。我搞物理也搞不好了，一切都将是一团糟！……因此，我已经决定，我不能接受你们的好意。”</p>
-</blockquote>
-<p>费曼的理念是一个东西都可以用更通俗的说法来解释，但必须是建立的自己理解的基础上。</p>
-<p>在巴西的教学过程中，费曼对填鸭式教学进行了思考和批判，里面所描述的场景和国内的教学何其相似！学生只是背诵，根本不理解那些科学概念背后的生动的东西。</p>
-<p>最后，我认为判断人是否老了的一个标准就是其是否还对新鲜东西保持好奇心，有好奇心的人竟然这么好玩！</p>
-<h3 id="鱼羊野史-4"><a href="#鱼羊野史-4" class="headerlink" title="鱼羊野史 (4*)"></a>鱼羊野史 (4*)</h3><p>一直比较喜欢高晓松，他的一些老歌都挺好听的。在深圳的时候听过一次他的演唱会，观众大多都是一些30岁以上的中年人。高晓松家庭显赫，一直都随性游荡，涉猎广泛，吹起牛来根本停不下来。有一段时间我也会在上班路上听他的小松奇谈，东南西北特别能侃。小松奇谈里面我最喜欢的故事是其二叔的爱情故事《文革时期的何以笙箫默》，是真是假无从考证，不过这还真是个能拍成电影的好故事。偶然在网上看到高晓松的这三本书，空闲时间把这些都看完了。总得来说不如听小松奇谈来劲，而且很多篇都是比较八卦，比如李宇春、齐秦生日之类的。这些还活着的明星们八卦怎么说也不能算作历史吧，即使是野史。另外就是三本的内容竟然有不少是重合的！</p>
-<h3 id="李光耀观天下-4"><a href="#李光耀观天下-4" class="headerlink" title="李光耀观天下 (4*)"></a>李光耀观天下 (4*)</h3><p>中国的改革开放从新加坡借鉴了，中国相关的篇章还挺直接的。对邓小平和老毛的描述比较多，其他人就呵呵了。</p>
-<h3 id="成大事者不纠结-3-）"><a href="#成大事者不纠结-3-）" class="headerlink" title="成大事者不纠结 (3*）"></a>成大事者不纠结 (3*）</h3><p>逻辑思维的公众号更新很勤快，内容也不错。不过这本书倒是没什么太多内容，李鸿章和曾国藩的章节都是在逻辑思维里面讲过的。更让我不爽的是书的封装，居然带了一打微信推广号。</p>
-<h3 id="从0到1-3"><a href="#从0到1-3" class="headerlink" title="从0到1 (3*)"></a>从0到1 (3*)</h3><p>这本书挺有名的，不过看完后并没产生多少共鸣。可能是因为我现在对创业这个词有些抵触，创业现在动不动就是改变人类、情怀。这个词被玩坏了。在互联网这个行业，创业看起来有点类似大跃进。大家都吹牛，比如前段时间被扒皮的<a href="http://www.zhihu.com/question/27297651" target="_blank" rel="external">云视链</a>就属于吹牛吹破了的。真正从0到1创造出新事物的公司太少。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;最近看了几本书，大多都是觉得有些意思就从亚马逊上买了。自从我的Kindle坏了之后，我就基本只买纸质书了。虽然纸质书携带不够方便，看起来更够味。&lt;/p&gt;
-&lt;h3 id=&quot;别逗了，费曼先生-5&quot;&gt;&lt;a href=&quot;#别逗了，费曼先生-5&quot; class=&quot;headerlink&quot;
-    
-    </summary>
-    
-    
-      <category term="Life|Notes" scheme="http://cyukang.com/tags/Life-Notes/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>惰性求值和流</title>
-    <link href="http://cyukang.com/2015/04/26/lazy-eval-and-stream.html"/>
-    <id>http://cyukang.com/2015/04/26/lazy-eval-and-stream.html</id>
-    <published>2015-04-25T16:00:00.000Z</published>
-    <updated>2015-04-25T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/images/lazy-eval.png" alt="lazy-eval" class="img-center"></p>
-<h2 id="什么是惰性求值"><a href="#什么是惰性求值" class="headerlink" title="什么是惰性求值"></a>什么是惰性求值</h2><p>惰性在函数式编程语言中很常见，他的通俗解释就是一个变量或者表达式，不到必要的时候不会被eval。比如函数在传递参数的时候，参数的值可以不确定。</p>
-<p>这种方式叫做call-by-name, 首先很明显这可能会造成一部分performance差异，如果一个表达式没有用到，那么计算出其结果是毫无意义的。而惰性求值是memoized的call-by-name, 叫做call-by-need。<br>从技术实现上来说，一个表达式在计算其结果之前其状态是Deferred或者Delayed的，在计算之后将其结果存储下来并修改状态为Value，之后再取就没有必要重新去计算。用一些OCaml代码来说明：</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line"></div><div class="line"># <span class="keyword">let</span> v = <span class="keyword">lazy</span> (print_string <span class="string">"performing lazy computation\n"</span>; sqrt <span class="number">16.</span>);;</div><div class="line"><span class="keyword">val</span> v : <span class="built_in">float</span> <span class="built_in">lazy_t</span> = &lt;<span class="keyword">lazy</span>&gt;</div><div class="line"></div><div class="line"># <span class="type">Lazy</span>.force v;;</div><div class="line">performing <span class="keyword">lazy</span> computation</div><div class="line"></div><div class="line">- : <span class="built_in">float</span> = <span class="number">4.</span></div><div class="line"># <span class="type">Lazy</span>.force v;; - : <span class="built_in">float</span> = <span class="number">4.</span></div></pre></td></tr></table></figure>
-<p>关键字lazy表示延迟计算这个表达式， Lazy.force表示求值。可以看到第一次force的时候会打印出performing…信息，后面的force就直接返回了value。</p>
-<p>为了更好的理解这个概念，我们可以实现一把Lazy。首先定义一个lazy_state:</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line"># <span class="keyword">type</span> <span class="symbol">'a</span> lazy_state =</div><div class="line">| <span class="type">Delayed</span> <span class="keyword">of</span> (<span class="built_in">unit</span> -&gt; <span class="symbol">'a</span>)</div><div class="line">| <span class="type">Value</span> <span class="keyword">of</span> <span class="symbol">'a</span></div><div class="line">| <span class="type">Exn</span> <span class="keyword">of</span> <span class="built_in">exn</span></div><div class="line">;;</div><div class="line"></div><div class="line"># <span class="keyword">let</span> create_lazy f = <span class="built_in">ref</span> (<span class="type">Delayed</span> f);;</div></pre></td></tr></table></figure>
-<p>这个lazy_state有三种状态，第一种就是dealyed，’a表示任何类型的value。Value表示被eval过了，并且保存下来他的值。Exn表示错误或者异常的状态。那么create_lazy就表示创建一个lazy_expression,这里的参数f可以是任何类型的函数(函数的参数类型和返回类型都可以不确定)，ref是OCaml里面的类似指针的概念。</p>
-<p>上面例子就可以这样来写了:</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line"># <span class="keyword">let</span> v = create_lazy (print_string <span class="string">"performing lazy computation\n"</span>; sqrt <span class="number">16.</span>);;</div></pre></td></tr></table></figure>
-<p>然后实现核心的force:<br><figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line"># <span class="keyword">let</span> force v = <span class="keyword">match</span> !v <span class="keyword">with</span></div><div class="line">    | <span class="type">Value</span> x -&gt; x        <span class="comment">(* 如果已经求值就直接返回value *)</span></div><div class="line">    | <span class="type">Exn</span> e -&gt; raise e    <span class="comment">(* 如果发生错误，raise错误*)</span></div><div class="line">    | <span class="type">Delayed</span> f -&gt;</div><div class="line">        <span class="keyword">try</span></div><div class="line">            <span class="keyword">let</span> x = f <span class="literal">()</span> <span class="keyword">in</span>  <span class="comment">(* 如果还未求值，eval保存下来的f *)</span></div><div class="line">            v := <span class="type">Value</span> x;    <span class="comment">(* 并把结果保存下来 *)</span></div><div class="line">            x</div><div class="line">        <span class="keyword">with</span> <span class="built_in">exn</span> -&gt;</div><div class="line">            v := <span class="type">Exn</span> <span class="built_in">exn</span>;    <span class="comment">(* 如果发生错误，保存下来 *)</span></div><div class="line">    raise <span class="built_in">exn</span></div><div class="line">    ;;</div></pre></td></tr></table></figure></p>
-<p>这里的!v就是取这个引用里面的值(类比C语言里面的*pointer)。然后pattern match这个lazy_state，注释里面写了每一行的操作。这里的代码很简短，最核心的意思是我们能把一个函数或者代码块保存下来，在真正需要的时候去运行这个代码块。在函数式编程里面这很常见，函数和变量一样可以自由传递。虽然看起来好不起眼，不过这会给编程带来一些深刻的影响。</p>
-<h2 id="Memoization"><a href="#Memoization" class="headerlink" title="Memoization"></a>Memoization</h2><p>通过上面对laziness的解释，我们可以发现这个概念的核心思想类似算法设计里面的memoization，这样在计算过程中把重复计算的过程省略掉。比如这段代码有些好玩:</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line"><span class="keyword">let</span> memoize f =</div><div class="line">    <span class="keyword">let</span> table = <span class="type">Hashtbl</span>.<span class="type">Poly</span>.create <span class="literal">()</span></div><div class="line">    <span class="keyword">in</span> (<span class="keyword">fun</span> x -&gt;</div><div class="line">      <span class="keyword">match</span> <span class="type">Hashtbl</span>.find table x <span class="keyword">with</span></div><div class="line">      | <span class="type">Some</span> y -&gt; y</div><div class="line">      | <span class="type">None</span> -&gt;</div><div class="line">        <span class="keyword">let</span> y = f x <span class="keyword">in</span></div><div class="line">        <span class="type">Hashtbl</span>.add_exn table ~key:x ~data:y;</div><div class="line">        y</div><div class="line">     );;</div></pre></td></tr></table></figure>
-<p>这个函数接收任何类型的函数f，他会像一个wrapper一样给你包装一下: 给你一个table用来存储这个函数的结果，键值是你的参数x，如果发现参数是x的结果还没计算的时候，把结果算出来并存储在table里面。<br>这里我们又能看到函数式编程带来的好处，f是任何类型的函数(这里暂且还没处理递归)，这类问题在算法设计里面挺多的比如fibnacci，edit-distance。</p>
-<p>在递归情况下如何处理可以看看这，这是我看过的排版最好的技术类博客<a href="http://typeocaml.com" target="_blank" rel="external">Type OCaml</a>:<br><a href="http://typeocaml.com/2015/01/25/memoize-rec-untying-the-recursive-knot/" target="_blank" rel="external">Recursive Memoize &amp; Untying the Recursive Knot</a></p>
-<h2 id="Stream"><a href="#Stream" class="headerlink" title="Stream"></a>Stream</h2><p>有了lazy的概念之后，我们可以在编程里面表示一些看起来很数学的概念，比如一个表示所有整数的流:</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line"><span class="keyword">type</span> <span class="symbol">'a</span> stream_t = <span class="type">Nil</span> | <span class="type">Cons</span> <span class="keyword">of</span> <span class="symbol">'a</span> * (<span class="built_in">unit</span> -&gt; <span class="symbol">'a</span> stream_t)</div><div class="line"></div><div class="line"><span class="keyword">let</span> <span class="keyword">rec</span> from i = <span class="type">Cons</span> (i, <span class="keyword">fun</span><span class="literal">()</span> -&gt; from (i+<span class="number">1</span>))</div><div class="line"></div><div class="line"><span class="keyword">let</span> hd = <span class="keyword">function</span></div><div class="line">    | <span class="type">Nil</span> -&gt; failwith <span class="string">"hd"</span></div><div class="line">    | <span class="type">Cons</span> (v, _) -&gt; v</div><div class="line"></div><div class="line"><span class="keyword">let</span> tl = <span class="keyword">function</span></div><div class="line">    | <span class="type">Nil</span> -&gt; failwith <span class="string">"tl"</span></div><div class="line">    | <span class="type">Cons</span> (_, g) -&gt; g<span class="literal">()</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> <span class="keyword">rec</span> take n = <span class="keyword">function</span></div><div class="line">    | <span class="type">Nil</span> -&gt; <span class="literal">[]</span></div><div class="line">    | <span class="type">Cons</span> (_, _)  <span class="keyword">when</span> n = <span class="number">0</span> -&gt; <span class="literal">[]</span></div><div class="line">    | <span class="type">Cons</span> (hd, g) -&gt; hd::take (n-<span class="number">1</span>) (g<span class="literal">()</span>)</div></pre></td></tr></table></figure>
-<p>Cons是把两个元素组成链表，递归函数from做的事情就是把i和一个匿名函数fun() -&gt; from(i+1)链起来，当然匿名函数又在做类似的事情。<br>那么(from 1)就可以表示从1开始的所有整数了，hd是取一个流的头部，tl是取流的尾部(除头部剩下的)，take是从一个流里面取前n个元素。这可是非常的方便，还有更方便的：</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line"><span class="keyword">let</span> <span class="keyword">rec</span> filter f = <span class="keyword">function</span></div><div class="line">    | <span class="type">Nil</span> -&gt; <span class="type">Nil</span></div><div class="line">    | <span class="type">Cons</span> (hd, g) -&gt;</div><div class="line">        <span class="keyword">if</span> f hd <span class="keyword">then</span> <span class="type">Cons</span> (hd, <span class="keyword">fun</span><span class="literal">()</span> -&gt; filter f (g<span class="literal">()</span>))</div><div class="line">        <span class="keyword">else</span> filter f (g<span class="literal">()</span>)</div></pre></td></tr></table></figure>
-<p>我们虽然只知道有这么一个流，但还是可以加一个筛选条件给他，filter函数接收筛选函数f和一个流，返回的结果就是被筛选后的流！</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line"><span class="comment">(* delete multiples of p from a stream *)</span></div><div class="line"><span class="keyword">let</span> sift p = filter (<span class="keyword">fun</span> n -&gt; n <span class="keyword">mod</span> p &lt;&gt; <span class="number">0</span>)</div><div class="line"></div><div class="line"><span class="comment">(* sieve of Eratosthenes *)</span></div><div class="line"><span class="keyword">let</span> <span class="keyword">rec</span> sieve = <span class="keyword">function</span></div><div class="line">    | <span class="type">Nil</span> -&gt; <span class="type">Nil</span></div><div class="line">    | <span class="type">Cons</span> (p, g) -&gt;</div><div class="line">        <span class="keyword">let</span> next = sift p (g<span class="literal">()</span>) <span class="keyword">in</span></div><div class="line">        <span class="type">Cons</span> (p, <span class="keyword">fun</span> <span class="literal">()</span> -&gt; sieve next)</div><div class="line"></div><div class="line"><span class="comment">(* primes *)</span></div><div class="line"><span class="keyword">let</span> primes = sieve (from <span class="number">2</span>)</div></pre></td></tr></table></figure>
-<p>所有素数就可以这么来写了，有了这个流之后要取多少就取多少。</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>Haskell是纯函数式纯Lazy的实现，OCaml有imperative的部分，而且运行时不是Lazy的。相对来说我更喜欢OCaml的语法以及设计原则，FP有其好处，但imperative programming也有其益处。Lazy有其好处，但还是在用户明确需要的时候能提供就好。</p>
-<p>部分代码引用<a href="https://realworldocaml.org/" target="_blank" rel="external">Real World OCaml</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;/images/lazy-eval.png&quot; alt=&quot;lazy-eval&quot; class=&quot;img-center&quot;&gt;&lt;/p&gt;
-&lt;h2 id=&quot;什么是惰性求值&quot;&gt;&lt;a href=&quot;#什么是惰性求值&quot; class=&quot;headerlink&quot; title=&quot;什么
-    
-    </summary>
-    
-    
-      <category term="Programming" scheme="http://cyukang.com/tags/Programming/"/>
-    
-      <category term="PL" scheme="http://cyukang.com/tags/PL/"/>
-    
-      <category term="OCaml" scheme="http://cyukang.com/tags/OCaml/"/>
     
   </entry>
   
