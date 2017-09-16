@@ -121,13 +121,13 @@
 <main class="app-body">
   <article class="post-article">
     <section class="markdown-content"><h3 id="插件的强大之处"><a href="#插件的强大之处" class="headerlink" title="插件的强大之处"></a>插件的强大之处</h3><p>在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提供了提供模块开发机制，但是相对来说更底层一些，并且需要使用 C/C++ 来开发，对于很多开发人员来说 Nginx 仍为一个黑盒。OpenResty 集成了很多好用插件，并提供了通过 Lua 扩展 Nginx 的机制，所以 OpenResty 相对来说更灵活。而 Kong 在 OpenResty 基础上提供的插件机制更灵活，在于： </p>
-<pre><code>复用：OpenResty 的复用在于函数级别，我们可以把一些通用的 Lua 函数引入各个项目。而 Kong 的插件复用可以通过 API 修改一下配置即可。是否启用某个插件，这只是数据配置问题，启用与否不会涉及到代码的改动。
-
-抽象、统一: Kong 实现了基础的插件配置的存储和更新机制，所以我们只需按照要求定义插件配置的数据类型，插件实现的时候不用再去关心这些细节。
-
-灵活、组合: OpenResty 的一些处理部分有限制，比如 access_by_lua 在同一个 location 能调用一次， 当然我们可以把多个处理逻辑都放在这里，这又涉及到代码改动。 而 Kong 可以依次调用各个插件对应的 phase，并且通过引入优先级来解决前后顺序问题。
-</code></pre><p>插件开发的原则是提供机制，而非实现，在做插件开发的时候一定需要考虑这个插件能否满足一类相似的需求，这样我们只需要做一下参数的配置就能把插件启动在另外一个站点上。</p>
-<p>对于插件这块我的疑问在于这套机制如何运行的？如何找到站点对应的插件？如此多的插件是否会有性能问题？<br>​        </p>
+<blockquote>
+<p>​        复用：OpenResty 的复用在于函数级别，我们可以把一些通用的 Lua 函数引入各个项目。而 Kong 的插件复用可以通过 API 修改一下配置即可。是否启用某个插件，这只是数据配置问题，启用与否不会涉及到代码的改动。</p>
+<p>抽象、统一: Kong 实现了基础的插件配置的存储和更新机制，所以我们只需按照要求定义插件配置的数据类型，插件实现的时候不用再去关心这些细节。</p>
+<p>灵活、组合: OpenResty 的一些处理部分有限制，比如 access_by_lua 在同一个 location 能调用一次， 当然我们可以把多个处理逻辑都放在这里，这又涉及到代码改动。 而 Kong 可以依次调用各个插件对应的 phase，并且通过引入优先级来解决前后顺序问题。</p>
+</blockquote>
+<p>插件开发的原则是提供机制，而非实现，在做插件开发的时候一定需要考虑这个插件能否满足一类相似的需求，这样我们只需要做一下参数的配置就能把插件启动在另外一个站点上。</p>
+<p>对于插件这块我的疑问在于这套机制如何运行的？如何找到站点对应的插件？如此多的插件是否会有性能问题？​</p>
 <h3 id="Kong插件的运行机制"><a href="#Kong插件的运行机制" class="headerlink" title="Kong插件的运行机制"></a>Kong插件的运行机制</h3><p>在上一文 Kong 初始化分析中，我们看到 nginx_kong.lua 模板文件里面有这么一段代码：</p>
 <figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">location / &#123; </div><div class="line">  rewrite_by_lua_block &#123;</div><div class="line">      kong.rewrite()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  access_by_lua_block &#123;</div><div class="line">      kong.access()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  header_filter_by_lua_block &#123;</div><div class="line">      kong.header_filter()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  body_filter_by_lua_block &#123;</div><div class="line">      kong.body_filter()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  log_by_lua_block &#123;</div><div class="line">      kong.<span class="built_in">log</span>()</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>在 kong.lua 文件里面， kong.access 的实现是这样的:</p>
