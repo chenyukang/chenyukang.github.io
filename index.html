@@ -116,6 +116,51 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2017/09/14/deep-work.html">《深度工作-如何有效使用每一点脑力》读后</a>
+      </h2>
+      <p class="article-date">September 14, 2017
+          
+              
+  <a href="/tags#Books" >
+    <span class="tag-code">Books</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <p><a href="https://book.douban.com/subject/27056409/" target="_blank" rel="external">深度工作</a>这本书主要讲解了一些时间和精力管理方面的东西，人到了一定年龄就会觉得时间不够用，日子过得太快，每天觉得都没干什么就过去了。工作几年后这种感觉时不时袭来。反而是如果某段时间一直有一个阶段性的目标，就会觉得很踏实，进度和效率也可以。那种完全沉浸在思考中的状态真的也并不是累，相反所得到的结果往往是真实的收货和进步。用这本书里的术语可以称之为『深度工作』的阶段吧。</p>
+<p>说起来也有道理，如果自认为我们是知识工作者，那么大多数时间处于浮潜的工作状态就得不到什么深刻的结果。作为程序员，我也有时候感觉自己并不是在做什么高深的工作，那么这样长久下去会怎么样呢，随之而来的是不可避免的压力。</p>
+<p>这里讲的四个准则，任何一个都值得好好修炼，对于大多数人而言，大脑都已经被互联网和手机训练得愚钝和不可专注了：</p>
+<blockquote>
+<p>工作要深入<br>拥抱无聊<br>远离社交媒体<br>摒弃浮浅</p>
+</blockquote>
+<p>深入工作的价值在当今社会格外突出，因为机器的迅猛发展，特殊的技能所展现的价值越发明显。『连续听一系列中等水平的歌手唱歌并不能累加成一场无与伦比的演出— 换言之，才能并非一种商品，你不可以通过大批购买，然后累积起来达到一定水准，只有成为最优秀的才会得到额外奖励』。我们所面临的时代需要掌握一些更为复杂的工作和技能，而这些技能并不是随便看看就能轻易得到的。深入的东西只有静下心来，持续花大量时间和精力才能逐渐掌握。</p>
+<p>想要进入深度工作，会有两个方面需要注意:</p>
+<ol>
+<li>时间分配，如何避免被频繁打断，如何尽量延长一大段可以持续的时间</li>
+<li>学习和锻炼持续专注的能力</li>
+</ol>
+<p>关于时间分配，我之前尝试过番茄工作法，但是感觉并不好。因为仪式感太强和太频繁，在我正在进入工作状态的时候可能就到了节点。对于大多数程序员来说晚上可能是最能安静的写程序和思考的时间，不过随着更多的家庭责任，晚上的时间也短了。所以现在我打算早上尽早起来，这样还有一两个小时加以利用。</p>
+<p>关于专注能力这块：</p>
+<blockquote>
+<p>不断地切换注意力会对大脑产生长久的负面影响</p>
+</blockquote>
+<p>这个结论应该大家都有体会，持续专注的能力往往决定人的能力，有的人可以一直脑袋里想着问题，即使是在走路或者吃饭的时候。之前在学校我也有过一段时间，脑袋里一直在想着要找的答案，那种体验已经好久没有了。</p>
+<p>总之，这本书还不错，推荐有时间的话看看。</p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2017/09/14/deep-work.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2017/09/12/kong-new-release.html">Kong的0.11.0版本</a>
       </h2>
       <p class="article-date">September 12, 2017
@@ -135,29 +180,15 @@
         
         
             
-                <p>Kong发布了新的版本<a href="https://github.com/Mashape/kong/releases/tag/0.11.0" target="_blank" rel="external">0.11.0</a>，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了serf，这样整个Kong节点之间的缓存同步方式变化了。开发者给出的理由如下： </p>
-<ol>
-<li>依赖serf，serf并不属于Nginx/OpenResty</li>
-<li>这种依赖相互间通信来同步的机制对于deployment和容器化都有些不便</li>
-<li>在运行的Kong节点触发serf需要一些租塞的I/O</li>
-</ol>
-<p>新的实现的思路是以数据库作为中心，增加一个cluster events的表。任何Kong node都可以向数据库发送变更消息，其他节点polling数据库改动，然后来更新缓存内容。这个改动非常大，不过最终Kong终于实现了节点无状态，之前那个数据库里的nodes可以丢弃掉了，任何时候节点重启只要连上数据库即可工作。我们需要担心的是这么多节点去polling数据库(当然这些动作都是在后台)，是否是一个比较耗时的工作。</p>
-<p>Kong增加了新的配置选项db_update_frequency，默认为5s，表示多长时间polling一次，这需要用户自己权衡效率和及时性了。对于我们的业务来说及时性还是很重要的，比如我们新品发布时间精确到秒，那么我们就需要尽量调低这个参数。</p>
-<p>所有的改动在<a href="https://github.com/Mashape/kong/pull/2561/files，" target="_blank" rel="external">https://github.com/Mashape/kong/pull/2561/files，</a></p>
-<p>我大概看了一下代码，一些值得注意的地方如下：</p>
-<ol>
-<li>cluster相关的API和cmd都被移掉了，启动部分和serf信号处理部分都删掉了不少代码。</li>
-<li>polling需要避免一个问题，比如上一次polling还未执行完成，下一次polling就不应该启动，所以这里需要锁来处理。<a href="https://github.com/Mashape/kong/pull/2561/files#diff-44982f7ff5cb89eaf66ed31217aa0d12" target="_blank" rel="external">kong/cluster_events.lua</a>实现了polling的主要过程。</li>
-<li><a href="https://github.com/Mashape/kong/pull/2561/files#diff-904358fb4394ddf0541b4b3ede669a82" target="_blank" rel="external">kong/cluster_events/strategies/postgres.lua</a>目前polling还不支持分页，cluster_events是一个新建的表用来存储缓存更新事件，Kong节点就是来查询这些事件。</li>
-<li>缓存部分换成了<a href="https://github.com/thibaultcha/lua-resty-mlcache" target="_blank" rel="external">lua-resty-mlcache</a>，原来还是和之前分析的类似 L1级别缓存为一个LURcache，在LuaVM里可见， L2级别的缓存为lua_shared_dict，同一个Nginx下的所有worker可见， L3就是缓存未命中的情况，需要调用其他hookup的函数去获取数据然后缓存在L2。只是这里个ipc并不是用的lua-resty-mlcache里的，而是使用的resty.worker.events。</li>
-<li>事件处理部分分两部分，worker之间的事件和node之间的处理，分别由worker_events和cluster_event.lua来处理。</li>
-</ol>
+                Kong发布了新的版本0.11.0，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了serf，这样整个Kong节点之间的缓存同步方式变化了。开发者给出的理由如下： 
 
+依赖serf，serf并不属于Nginx/OpenResty
+这种依赖相互间通信来同步的机制对于deploym .....
             
         
       </div>
       
-          <a class="more" href="/2017/09/12/kong-new-release.html#footer">发表评论</a>
+          <a class="more" href="/2017/09/12/kong-new-release.html">阅读全文</a>
       
     </article>
   
@@ -373,26 +404,6 @@ Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又�
       </div>
       
           <a class="more" href="/2017/07/02/kong-intro.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/06/27/recent-reading-list.html">小说推荐</a>
-      </h2>
-      <p class="article-date">June 27, 2017
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                 之前我用过一段时间 Kindle，因为没有使用保护套导致在书包里面被压坏。而后一两年用 IPad 看了一些电子书，始终觉得稍微有些笨重，而且看久了眼睛不舒服。前段时间在 z.cn 上瞎逛又有了买个 Kindle 的欲望，拿到手后又好好找了一些电子书比较多的网站。目前使用最舒服的还是 h .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/06/27/recent-reading-list.html">阅读全文</a>
       
     </article>
   

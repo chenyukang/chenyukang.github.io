@@ -10,7 +10,7 @@
   
   <title>
     
-      Understanding Computation | Yukang&#39;s Page
+      《深度工作-如何有效使用每一点脑力》读后 | Yukang&#39;s Page
     
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -112,35 +112,38 @@
 </header>
 
     <div id="article-banner">
-  <h2>Understanding Computation</h2>
-  <p class="post-date">2015-02-10</p>
+  <h2>《深度工作-如何有效使用每一点脑力》读后</h2>
+  <p class="post-date">2017-09-14</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
 </div>
 <main class="app-body">
   <article class="post-article">
-    <section class="markdown-content"><p>前些天花了一些时间读这本书<a href="http://book.douban.com/subject/26148763/" target="_blank" rel="external">《计算的本质：深入剖析程序和计算机》</a>。总的来说这本书非常不错。虽然讲述的是一些看似理论的东西，<br>里面有不少短小的Ruby程序，读起来还是非常有趣的。回想当年大学的时候有一门课程叫做形式语言与自动机，当时觉得这门课真是太没劲了。理论的东西终究需要一些实践才能掌握，早早读到这样的书就好了。</p>
-<p>首先第一部分介绍了一些基本Ruby语法，十来页的介绍就够了。Ruby的语法真的是非常直观，人性化的。两年前我被Ruby吸引，现在我每天大部分时间都敲着Ruby代码，用Ruby很省事！对Ruby来说数据也是程序是很常见的，这本书使用Ruby来做示例是很好的选择。</p>
-<p>什么是程序？这是一个可以从各个角度深入的问题，程序是程序员表达自己脑海中的思想的形式。我们需要从编程语言开始，语言的语法和语义完整地定义了一门编程语言。这本书开始以小步语义来解释一个简单的语言，这样就得到一个的解释器程序。小步语义提供了一种轻松的方式来模拟计算的中间过程。随后介绍了大步语义，我觉得这两者之间的关联有些像自顶向下和自底向上。然后介绍了treetop这个工具，自定义grammar来实现一个简单的语法解释器。</p>
-<p>第三章开始介绍自动机，从最简单的确定性有限自动机开始(DFA)，然后是非确定性自动机(NFA)和正则表达式。我原来上学的时候大多在手动画这些状态图，远没这些简单的代码好玩。<br>有输入，有状态，有输出，这些状态机就是最简单的机器了。而NFA虽然看起来比DFA有更多的特性，但本质上它可以转化为DFA。为了增加计算能力，为自动机加上一些外部存储。用自带栈的确定性有限状态机(DPDA)能识别出平衡字符串。</p>
-<p>第五章介绍图灵机，图灵机本质上是有外部存储的状态机。我之前看过图灵传记，图灵对密码学非常感兴趣，而且在二战中破译了大量德军密电。图灵机的概念很简单，而计算的本质就是如此简单直接的描述。模拟图灵机的过程倒并没什么大的乐趣。</p>
-<p>第六章开始lambda演算，lambda演算是从另外一个角度去理解计算。这一章非常好玩，这里只是用了Ruby的三个特性： 对变量的引用，创建proc，调用proc来实现一个极小的编程语言。lambda演算的基本元素就是这三个：</p>
-<pre><code>&lt;exp&gt; ::= &lt;var&gt;                :变量引用
-| (lambda (&lt;var&gt;) &lt;exp&gt;)       :创建proc
-| (&lt;exp&gt; &lt;exp&gt;)                :调用proc
-</code></pre><p>从这些简单的元素构建出语言的各种特性非常好玩，最终一个简单的gcd被解释成充满了proc的Ruby程序，然后就能运行了。</p>
-<p>后面几章继续简述了可计算行问题。停机问题表明我们无法拥有能力不受限制的编程语言，淡淡的忧伤。</p>
-<p>这位作者<a href="http://codon.com/" target="_blank" rel="external">Tom Stuart</a>的博客非常有料，他在自己的网站上用幽默了一把<a href="http://codon.com/i-have-no-idea-what-im-doing" target="_blank" rel="external">I Have No Idea What I’m Doing</a>，这本书是这么写出来的。</p>
+    <section class="markdown-content"><p><a href="https://book.douban.com/subject/27056409/" target="_blank" rel="external">深度工作</a>这本书主要讲解了一些时间和精力管理方面的东西，人到了一定年龄就会觉得时间不够用，日子过得太快，每天觉得都没干什么就过去了。工作几年后这种感觉时不时袭来。反而是如果某段时间一直有一个阶段性的目标，就会觉得很踏实，进度和效率也可以。那种完全沉浸在思考中的状态真的也并不是累，相反所得到的结果往往是真实的收货和进步。用这本书里的术语可以称之为『深度工作』的阶段吧。</p>
+<p>说起来也有道理，如果自认为我们是知识工作者，那么大多数时间处于浮潜的工作状态就得不到什么深刻的结果。作为程序员，我也有时候感觉自己并不是在做什么高深的工作，那么这样长久下去会怎么样呢，随之而来的是不可避免的压力。</p>
+<p>这里讲的四个准则，任何一个都值得好好修炼，对于大多数人而言，大脑都已经被互联网和手机训练得愚钝和不可专注了：</p>
+<blockquote>
+<p>工作要深入<br>拥抱无聊<br>远离社交媒体<br>摒弃浮浅</p>
+</blockquote>
+<p>深入工作的价值在当今社会格外突出，因为机器的迅猛发展，特殊的技能所展现的价值越发明显。『连续听一系列中等水平的歌手唱歌并不能累加成一场无与伦比的演出— 换言之，才能并非一种商品，你不可以通过大批购买，然后累积起来达到一定水准，只有成为最优秀的才会得到额外奖励』。我们所面临的时代需要掌握一些更为复杂的工作和技能，而这些技能并不是随便看看就能轻易得到的。深入的东西只有静下心来，持续花大量时间和精力才能逐渐掌握。</p>
+<p>想要进入深度工作，会有两个方面需要注意:</p>
+<ol>
+<li>时间分配，如何避免被频繁打断，如何尽量延长一大段可以持续的时间</li>
+<li>学习和锻炼持续专注的能力</li>
+</ol>
+<p>关于时间分配，我之前尝试过番茄工作法，但是感觉并不好。因为仪式感太强和太频繁，在我正在进入工作状态的时候可能就到了节点。对于大多数程序员来说晚上可能是最能安静的写程序和思考的时间，不过随着更多的家庭责任，晚上的时间也短了。所以现在我打算早上尽早起来，这样还有一两个小时加以利用。</p>
+<p>关于专注能力这块：</p>
+<blockquote>
+<p>不断地切换注意力会对大脑产生长久的负面影响</p>
+</blockquote>
+<p>这个结论应该大家都有体会，持续专注的能力往往决定人的能力，有的人可以一直脑袋里想着问题，即使是在走路或者吃饭的时候。之前在学校我也有过一段时间，脑袋里一直在想着要找的答案，那种体验已经好久没有了。</p>
+<p>总之，这本书还不错，推荐有时间的话看看。</p>
 </section>
     
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
-  </a>
-
   <a href="/tags#Books" >
     <span class="tag-code">Books</span>
   </a>
@@ -171,7 +174,7 @@
 
 <script>
   (function () {
-    var url = 'http://cyukang.com/2015/02/10/understanding-computation.html';
+    var url = 'http://cyukang.com/2017/09/14/deep-work.html';
     var banner = ''
     if (banner) {
       $('#article-banner').css({
@@ -222,7 +225,7 @@
     var gitmentConfig = "chenyukang";
     if (gitmentConfig != "undefined") {
       var gitment = new Gitment({
-        id: "Understanding Computation",
+        id: "《深度工作-如何有效使用每一点脑力》读后",
         owner: "chenyukang",
         repo: "chenyukang.github.io",
         oauth: {
