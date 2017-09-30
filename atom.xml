@@ -5,22 +5,57 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://cyukang.com/"/>
-  <updated>2017-09-16T03:36:12.000Z</updated>
+  <updated>2017-09-18T04:40:41.000Z</updated>
   <id>http://cyukang.com/</id>
   
   <author>
-    <name>yukang</name>
+    <name>Yukang</name>
     
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>BuckleScript and Reason</title>
+    <link href="http://cyukang.com/2017/09/17/bucklescript-and-reason.html"/>
+    <id>http://cyukang.com/2017/09/17/bucklescript-and-reason.html</id>
+    <published>2017-09-17T14:47:27.000Z</published>
+    <updated>2017-09-18T04:40:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="BuckleScript"><a href="#BuckleScript" class="headerlink" title="BuckleScript"></a>BuckleScript</h4><p>虽然我不是前端工程师，不过因为喜欢 OCaml，所以偶尔关注 <a href="https://github.com/BuckleScript/bucklescript" target="_blank" rel="external">BuckleScript</a> 有一段时间了，今天又花时间看了看文档和代码。BuckleScript 是张宏波主导开发的开源项目，『有希望成为第一个完全由国人设计主导实现并被世界各地广泛使用的编译器』，不过是否能广泛被使用还得看后续推广。</p>
+<p>简单来说BuckleScript 是一个代码转换器，把你写的 OCaml 代码生成为纯 JS 代码。这样做的好处和必要性在于：</p>
+<ol>
+<li>JS 太牛了，<a href="https://www.youtube.com/watch?v=jFU-wc28lF4" target="_blank" rel="external">这个跨平台语言正在吞噬着所有软件领域</a></li>
+<li>JS太难维护了，大规模的 JS 代码更是噩梦。不管是从开发者角度和是从代码安全的角度，JS 需要类型！<a href="https://www.typescriptlang.org/" target="_blank" rel="external">微软的 Typescript</a> 和 <a href="https://flow.org/en/" target="_blank" rel="external">FB 的 Flow</a> ，甚至是<a href="http://elm-lang.org/examples" target="_blank" rel="external">Elm</a>都是为了给 JS 带来类型。</li>
+<li>OCaml类型系统稳定可靠，关键是编译器速度快，并且可以编译在多个平台上。</li>
+</ol>
+<p>就我个人而言非常喜欢 OCaml，之前也有一些自己的小项目用过 OCaml。BuckleScript从技术角度来说是非常好的，我看了一些生成的代码可读性比很多代码生成器要好。并且除了直接翻译代码，这个编译器也做了很多代码优化的工作，生成 size 更小，performance 更好的 JS 代码。遗憾的是目前还不支持 Core 这个库，我之前用 Core 比较多，ಥ_ಥ。</p>
+<p>关于代码生成，想起我们原来做过的 <a href="https://github.com/sipin/gorazor" target="_blank" rel="external">Gorazor</a>，从技术角度来说还是有些挑战的，不过从使用角度我个人持保留态度。代码生成毕竟会引入新的语法，我发现很多前端程序员其实并不怎么熟悉函数式编程那套，OCaml 的语法是否能在前端程序员中推广开来是个问题。BuckleScript的文档有待改进，可以给更多大一点的完整的例子。</p>
+<p>关于BuckleScript和js_of_ocaml 的区别，从文档上来看js_of_ocaml 可以把 bytecode 转换为 JS 代码，而BuckleScript是在从编译器里面的rawlambda生成代码，所以理论上来说 js_of_ocaml 对 OCaml 的兼容性更好，而BuckleScript 能生成更可读的 JS 代码，目标在于兼容npm平台。</p>
+<h4 id="ReasonML"><a href="#ReasonML" class="headerlink" title="ReasonML"></a>ReasonML</h4><p><a href="https://reasonml.github.io/" target="_blank" rel="external">ReasonML</a>的来由是之前我说的 OCaml 独特的语法，在很多人看来并不是很友好，所以FB 的这群人做了一个更符合大众品位的方言。然后可以通过 BuckleScript 再翻译为 JS 代码。好绕啊！不过据说 FB 已经在生成环境使用这些了。ReasonML 的开发者移植了一个之前用js_of_ocaml 写的<a href="https://github.com/reasonml-community/Mareo" target="_blank" rel="external">mario 的例子</a>，看了一遍觉得reason 的语法其实改动并不大，可能对 JS 的程序员来说更友好吧。reason 和 OCaml 的关系类似于 Elixir 和 Erlang 之前的关系，为了讨好一类程序员，又为了利用一个已经非常成熟可靠的现有平台。</p>
+<p>在 HN 上有一个比较老的<a href="https://news.ycombinator.com/item?id=12400397" target="_blank" rel="external">讨论帖</a>，有时间也可以再看看。</p>
+<p><a href="https://github.com/BuckleScript/bucklescript/wiki/Why-bucklescript-matters-for-Javascript-platform" target="_blank" rel="external">Why bucklescript matters for Javascript platform</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;BuckleScript&quot;&gt;&lt;a href=&quot;#BuckleScript&quot; class=&quot;headerlink&quot; title=&quot;BuckleScript&quot;&gt;&lt;/a&gt;BuckleScript&lt;/h4&gt;&lt;p&gt;虽然我不是前端工程师，不过因为喜欢 OCaml，所以偶尔关注
+    
+    </summary>
+    
+    
+      <category term="OCaml" scheme="http://cyukang.com/tags/OCaml/"/>
+    
+      <category term="Javascript" scheme="http://cyukang.com/tags/Javascript/"/>
+    
+  </entry>
+  
+  <entry>
     <title>《深度工作-如何有效使用每一点脑力》读后</title>
     <link href="http://cyukang.com/2017/09/14/deep-work.html"/>
     <id>http://cyukang.com/2017/09/14/deep-work.html</id>
     <published>2017-09-14T14:20:14.000Z</published>
-    <updated>2017-09-16T03:36:12.000Z</updated>
+    <updated>2017-09-13T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://book.douban.com/subject/27056409/" target="_blank" rel="external">深度工作</a>这本书主要讲解了一些时间和精力管理方面的东西，人到了一定年龄就会觉得时间不够用，日子过得太快，每天觉得都没干什么就过去了。工作几年后这种感觉时不时袭来。反而是如果某段时间一直有一个阶段性的目标，就会觉得很踏实，进度和效率也可以。那种完全沉浸在思考中的状态真的也并不是累，相反所得到的结果往往是真实的收获和进步。用这本书里的术语可以称之为『深度工作』的阶段吧。</p>
 <p>说起来也有道理，如果自认为我们是知识工作者，那么大多数时间处于浮潜的工作状态就得不到什么深刻的结果。作为程序员，我也有时候感觉自己并不是在做什么高深的工作，那么这样长久下去会怎么样呢，随之而来的是不可避免的压力。</p>
@@ -59,7 +94,7 @@
     <link href="http://cyukang.com/2017/09/12/kong-new-release.html"/>
     <id>http://cyukang.com/2017/09/12/kong-new-release.html</id>
     <published>2017-09-12T06:43:00.000Z</published>
-    <updated>2017-09-12T14:59:52.000Z</updated>
+    <updated>2017-09-11T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<p>Kong发布了新的版本<a href="https://github.com/Mashape/kong/releases/tag/0.11.0" target="_blank" rel="external">0.11.0</a>，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了serf，这样整个Kong节点之间的缓存同步方式变化了。开发者给出的理由如下： </p>
 <ol>
@@ -98,12 +133,12 @@
     <link href="http://cyukang.com/2017/09/12/lua-time-related.html"/>
     <id>http://cyukang.com/2017/09/12/lua-time-related.html</id>
     <published>2017-09-12T01:51:00.000Z</published>
-    <updated>2017-09-12T14:59:52.000Z</updated>
+    <updated>2017-09-11T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<p>我需要用Lua处理一个与时间相关的问题，比如我们在配置文件里面配置一个日期(北京时间)，然后在Openresty里面判断当前时间是否在这个日期之前或者之后来做对应的逻辑。</p>
 <p>Lua的时间处理还有点麻烦，主要是自带的相关库函数比较少。</p>
 <blockquote>
-<p>os.time()                &lt;== 返回当前系统的日历时间， “1505181586”<br>os.date()                &lt;== 返回本地化的时间字符串，”Tue Sep 12 09:59:56 2017”<br>os.clock()               &lt;== 返回执行该程序CPU花去的时钟秒数，这里是1156.726</p>
+<p>os.time()                &lt;== 返回当前系统的日历时间， 1505181586<br>os.date()                &lt;== 返回本地化的时间字符串，Tue Sep 12 09:59:56 2017<br>os.clock()               &lt;== 返回执行该程序CPU花去的时钟秒数，这里是1156.726</p>
 </blockquote>
 <p>我首先需要一个日期字符串转换为时间戳的函数，找来找去有了这么一个函数，使用正则表达式然后组成表：</p>
 <figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">convert_time</span><span class="params">(time_str)</span></span></div><div class="line">  <span class="comment">-- Assuming a date pattern like: yyyy-mm-dd hh:mm:ss</span></div><div class="line">  <span class="comment">-- Assuming timezone is Beijing</span></div><div class="line">  <span class="keyword">local</span> pattern = <span class="string">"(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)"</span></div><div class="line">  <span class="keyword">local</span> year, month, day, hour, minute, seconds = time_str:<span class="built_in">match</span>(pattern)</div><div class="line">  <span class="keyword">if</span> <span class="keyword">not</span> (year <span class="keyword">and</span> month <span class="keyword">and</span> day <span class="keyword">and</span> hour <span class="keyword">and</span> minute <span class="keyword">and</span> seconds) <span class="keyword">then</span></div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">  <span class="keyword">end</span></div><div class="line">  <span class="keyword">local</span> converted_timestamp =</div><div class="line">    <span class="built_in">os</span>.<span class="built_in">time</span>(&#123;tz = <span class="string">"CST"</span>, year = year, month = month,</div><div class="line">             day = day, hour = hour, <span class="built_in">min</span> = minute, sec = seconds&#125;)</div><div class="line">      </div><div class="line">    <span class="keyword">return</span> converted_timestamp </div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
@@ -135,7 +170,7 @@
     <link href="http://cyukang.com/2017/08/22/pl-practice-with-exercism.html"/>
     <id>http://cyukang.com/2017/08/22/pl-practice-with-exercism.html</id>
     <published>2017-08-22T04:12:02.000Z</published>
-    <updated>2017-08-22T09:38:00.000Z</updated>
+    <updated>2017-08-21T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<p>有时候我们想学一门编程语言，但是光看看书和代码用例总是找不到感觉，这时候我们应该尝试写点不短不长的程序片段，可能是一个函数，或者是实现一个简单的算法。最近我发现这个叫做<a href="http://exercism.io/" target="_blank" rel="external">exercism.io</a>的网站不错，自己也在闲余时间在上面看看。</p>
 <p>这里支持30多种编程语言，每种语言大概有80个左右的小问题，每个题目已经写好了对应的测试用例。这些题目不是专门的算法题目，但会涉及到编程语言相关的基本方面，单元测试、字符串，数字处理，代码风格等。我们可以随机的找一些来练练手，提交自己的代码后也可以看看别人的代码。然后再对自己的代码进行一些改进。其他人也可能会对我提交的代码 review 并提交改进评论。多写和多看确实就是学习编程的最好途径。</p>
@@ -158,7 +193,7 @@
     <link href="http://cyukang.com/2017/08/12/migrate-to-hexo.html"/>
     <id>http://cyukang.com/2017/08/12/migrate-to-hexo.html</id>
     <published>2017-08-12T00:38:00.000Z</published>
-    <updated>2017-08-12T16:01:45.000Z</updated>
+    <updated>2017-08-11T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<p>昨天看到自己的 Blog 在移动端显示丑死了，所以想着优化一下，找一个 mobile first 的风格试试。顺便把 blog 从 jekyll 换成了 Hexo。最后找到这个 <a href="https://github.com/yanm1ng/hexo-theme-vexo" target="_blank" rel="external">hexo 的主题</a>非常顺眼，便拿来用了，感谢<a href="https://github.com/yanm1ng" target="_blank" rel="external">yanm1ng</a>为大家提供如此优秀的主题。回想起自己之前用过搜狐博客，然后是 yo2，然后是 wordpress 自己搭，后来又出现了 jekyll，最终才找到最适合的写日志的方式。这次我把之前残留的 html 完全转换为了 markdown，并保留了创建日期，没想到这么多年来断断续续已经写了100来篇文章了。</p>
 <h4 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h4><p>hexo 其实和 jekyll 非常类似，只是迁徙过程中还是需要做一些处理。hexo 的文章排序选择了 date 倒序排，但是依赖于_post 里的文件创建时间，为了解决这个问题，然而 git 是不管理文件的时间戳的。结果会出现一些诡异的问题，文章的顺序会变乱。后来才发现 hexo 为了解决这个问题引入了一个叫做 db.json 的文件，存的内容大概是文件的时间戳之类的。为了保持之前的文章链接有效，写了一些小脚本处理文章。</p>
@@ -183,7 +218,7 @@
     <link href="http://cyukang.com/2017/07/23/kong-intro-5.html"/>
     <id>http://cyukang.com/2017/07/23/kong-intro-5.html</id>
     <published>2017-07-23T00:38:00.000Z</published>
-    <updated>2017-08-13T02:46:58.000Z</updated>
+    <updated>2017-07-22T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<p>Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。</p>
 <h3 id="worker模型"><a href="#worker模型" class="headerlink" title="worker模型"></a>worker模型</h3><p>假设我们对Kong做了一个更改的请求，这个请求通常是通过admin_api这个路由处理的。也就是说最终执行数据库操作的动作是在一个Nginx worker进程里。因为操作了数据库所以我们需要刷新这个Kong节点的所有worker的缓存，而且要把事件分发给其他Kong节点，让其他Kong节点刷新所有worker的缓存。</p>
@@ -241,7 +276,7 @@
     <link href="http://cyukang.com/2017/07/22/kong-intro-4.html"/>
     <id>http://cyukang.com/2017/07/22/kong-intro-4.html</id>
     <published>2017-07-22T00:38:00.000Z</published>
-    <updated>2017-08-13T02:46:22.000Z</updated>
+    <updated>2017-07-21T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<h3 id="Nginx里的缓存使用"><a href="#Nginx里的缓存使用" class="headerlink" title="Nginx里的缓存使用"></a>Nginx里的缓存使用</h3><p>在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是插件相关的配置，缓存之后就存储在内存中。</p>
 <p>Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又分两种类型的缓存，一种是<a href="https://github.com/openresty/lua-nginx-module#ngxshareddict" target="_blank" rel="external">shared dict</a>, 一种是使用<br><a href="https://github.com/openresty/lua-resty-lrucache" target="_blank" rel="external">lua-resty-lrucache</a>。这两者之间是有区别的: shared dict如同其名字一样是Nginx worker之间共享的，而lrucache是worker级别的，内存空间在Lua VM里由GC管理，不能在进程之间共享，自然也不会在Nginx worker之间共享。</p>
@@ -272,7 +307,7 @@
     <link href="http://cyukang.com/2017/07/16/kong-intro-3.html"/>
     <id>http://cyukang.com/2017/07/16/kong-intro-3.html</id>
     <published>2017-07-15T16:00:00.000Z</published>
-    <updated>2017-09-16T16:08:09.000Z</updated>
+    <updated>2017-07-15T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<h3 id="插件的强大之处"><a href="#插件的强大之处" class="headerlink" title="插件的强大之处"></a>插件的强大之处</h3><p>在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提供了提供模块开发机制，但是相对来说更底层一些，并且需要使用 C/C++ 来开发，对于很多开发人员来说 Nginx 仍为一个黑盒。OpenResty 集成了很多好用插件，并提供了通过 Lua 扩展 Nginx 的机制，所以 OpenResty 相对来说更灵活。而 Kong 在 OpenResty 基础上提供的插件机制更灵活，在于： </p>
 <blockquote>
@@ -318,7 +353,7 @@
     <link href="http://cyukang.com/2017/07/07/kong-intro-2.html"/>
     <id>http://cyukang.com/2017/07/07/kong-intro-2.html</id>
     <published>2017-07-06T16:00:00.000Z</published>
-    <updated>2017-09-16T16:07:00.000Z</updated>
+    <updated>2017-07-06T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<h3 id="Kong的初始化过程"><a href="#Kong的初始化过程" class="headerlink" title="Kong的初始化过程"></a>Kong的初始化过程</h3><p>安装好Kong之后我们是用命令<code>sudo ./bin/kong start -c kong.conf -vv</code>来启动。其中kong.conf为配置文件，<code>-vv</code>选项打印出一些重要信息展示出来，方便发现问题。</p>
 <p>可以看到<code>./bin/kong</code>是一个脚本，是用的<code>#!/usr/local/openresty/bin/resty</code>程序来执行，而resty是OpenResty的一个Perl可执行脚本。kong的内容很简单，就是一个入口函数调用：<br><code>require(&quot;kong.cmd.init&quot;)(arg)</code></p>
@@ -346,362 +381,6 @@
     
     
       <category term="Lua" scheme="http://cyukang.com/tags/Lua/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Kong源码分析</title>
-    <link href="http://cyukang.com/2017/07/02/kong-intro.html"/>
-    <id>http://cyukang.com/2017/07/02/kong-intro.html</id>
-    <published>2017-07-01T16:00:00.000Z</published>
-    <updated>2017-08-12T00:38:55.000Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h3><p>最近在工作上接触了<a href="">Kong</a>这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一些涉及各个系统的功能就很困难。比如我们前段时间实现的灰度系统就把人折腾得很惨。因为我们的设计中有一些http header 需要在各个系统之间传递。每个项目的 Nginx 里面都用了 Lua 写一些授权逻辑，最终这些逻辑分散在各个项目的 Nginx 层，维护困难。除了灰度，其他的一些比较基础的Nginx层功能也是各自为政。所以我们的教训是: 在做微服务化之前，需要统一的、可扩张的API网关。我们希望网关性能好，并且扩张性足够好。使用OpenResty是很自然的选择，我们希望有一层 Nginx 是所有请求都会经过的，这层 Nginx 会负责做一些基础操作，当然最重要的是做流量转发。</p>
-<p>调研了一阵子之后，我们所面临的是两条路，一是自己写一个类似于<a href="http://www.infoq.com/cn/articles/JD-Nignx-JEN" target="_blank" rel="external">京东JEN</a>的系统，在调研一圈之后我们发现 Kong 是比较适合自身业务需求的。二是在 Kong 的基础上做一些插件开发，然后集群部署Kong即可。</p>
-<p>我之前稍微看了一下介绍，认为 Kong 可能对我们来说太重了些。后来又仔细看了一阵源码，自己认为代码质量挺好，而且模块化和可扩张性做得很好，因此决定采用。</p>
-<h3 id="Kong简介"><a href="#Kong简介" class="headerlink" title="Kong简介"></a>Kong简介</h3><p>Kong 项目的目的是这样一幅图<a href="/images/kong-intro.png">kong-intro</a>：</p>
-<p><img src="/images/kong-intro.png" alt="kong-intro" class="img-center" style="width:320px;height:300px;"></p>
-<p>可以看到这正是我们要做的事情。使用Kong的优势在于：</p>
-<ol>
-<li>可扩展性，Kong依赖一个数据库来实现配置存储，依赖 <a href="https://www.serf.io" target="_blank" rel="external">serf</a> 来实现 instance 之间的通信。任何一个节点修改了其他节点会收到通知并重新reload配置。</li>
-<li>模块化，Kong 可以方便地增加新的插件，并且插件可以通过 Restful API 进行管理</li>
-</ol>
-<h3 id="主要代码模块"><a href="#主要代码模块" class="headerlink" title="主要代码模块"></a>主要代码模块</h3><p>Kong的使用方法这里不做介绍，<a href="https://getkong.org/docs/" target="_blank" rel="external">这里</a>有非常详细的文档和示例。我主要分析一下其<a href="https://github.com/Mashape/kong" target="_blank" rel="external">源码</a>和原理。</p>
-<ol>
-<li>core目录里面是一些基础框架代码，包括hooks，事件，插件基础</li>
-<li>plugins目录包括所有kong自带的插件，kong的插件扩展有一套自己的规范，按照规范来非常容易地就能扩展kong</li>
-<li>dao是数据库抽象层，目前kong自带支持数据库postgresql和cassandra。</li>
-<li>tools为一些工具函数，需要注意的是cache。因为所有配置（包括插件的配置）都会是用cache来缓存，为了减少读取数据库次数。</li>
-<li>api Kong会提供一个系列接口来更新配置</li>
-</ol>
-<p>我觉得Kong的代码质量很好，另外依照带着问题来学习新东西感觉非常有收获，这几个部分我都是从一个主题问题逐个分析，这几个问题解决了之后自然对代码就熟悉了很多，并且有信心在生产环境使用。后续我会陆续继续写一些Kong相关原理分析，顺便更深入熟悉一下Lua。主要涉及到Kong的初始化部分、缓存如何更新、插件机制如何实现等。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;缘由&quot;&gt;&lt;a href=&quot;#缘由&quot; class=&quot;headerlink&quot; title=&quot;缘由&quot;&gt;&lt;/a&gt;缘由&lt;/h3&gt;&lt;p&gt;最近在工作上接触了&lt;a href=&quot;&quot;&gt;Kong&lt;/a&gt;这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一
-    
-    </summary>
-    
-    
-      <category term="Lua" scheme="http://cyukang.com/tags/Lua/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>小说推荐</title>
-    <link href="http://cyukang.com/2017/06/27/recent-reading-list.html"/>
-    <id>http://cyukang.com/2017/06/27/recent-reading-list.html</id>
-    <published>2017-06-26T16:00:00.000Z</published>
-    <updated>2017-06-26T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p> 之前我用过一段时间 Kindle，因为没有使用保护套导致在书包里面被压坏。而后一两年用 IPad 看了一些电子书，始终觉得稍微有些笨重，而且看久了眼睛不舒服。前段时间在 z.cn 上瞎逛又有了买个 Kindle 的欲望，拿到手后又好好找了一些电子书比较多的网站。目前使用最舒服的还是 <a href="http://readfree.me。" target="_blank" rel="external">http://readfree.me。</a> 我已经在上面免费同步了好多本书。</p>
-<p>  最近用 Kindle 看了不少书，重新燃起了自己看小说的兴趣，当然也不全是小说。印象比较深书的有下面这些：</p>
-<h3 id="《历史转折中的邓小平》"><a href="#《历史转折中的邓小平》" class="headerlink" title="《历史转折中的邓小平》"></a>《历史转折中的邓小平》</h3><p> 小说口吻讲述近代历史人物略显奇怪，不过还是可以看看。其中恢复高考那段印象深刻。值此香港回归20周年时，感谢邓小平的远见和智慧。</p>
-<h3 id="《褚时健传》"><a href="#《褚时健传》" class="headerlink" title="《褚时健传》"></a>《褚时健传》</h3><p>强烈推荐的一部传记。特别敬佩褚时健解决问题的精神和执行力。褚时健一生的坎坷经历令人感叹。没几个人能做到，不管在哪个年龄段，都全心全意的做事解决问题，80多岁的年龄还能种出一大片果林。人生经历当得上『传奇』二字。</p>
-<h3 id="《牛鬼蛇神录》"><a href="#《牛鬼蛇神录》" class="headerlink" title="《牛鬼蛇神录》"></a>《牛鬼蛇神录》</h3><p> 王小凯在牢房里的各种见闻，以前还是禁书来着？看看还是有所收获。</p>
-<h3 id="《围城》"><a href="#《围城》" class="headerlink" title="《围城》"></a>《围城》</h3><p>  之前看过一次，而这次再重新读的时候才有所感触。有时候既然能在方鸿渐身上看到自己的影子，哈哈。总得来说挺幽默，女人吵架套路很固定。婚姻的不幸很多是来自两个家庭的矛盾，大多如此。</p>
-<h3 id="《檀香刑》"><a href="#《檀香刑》" class="headerlink" title="《檀香刑》"></a>《檀香刑》</h3><p>  莫言的小说，最初是在知乎的一个回答上看到的行刑的那段描写，让人窒息，所以一定要找来看完这本。值得一看，看来莫言的其他基本小说也不能放过了。</p>
-<h3 id="《白鹿原》"><a href="#《白鹿原》" class="headerlink" title="《白鹿原》"></a>《白鹿原》</h3><p>  这本书只看了一半，个人觉得一般。可能是因为我之前看了电影，大致的情节都知道了，所以觉得书稍显太慢，好长篇幅。</p>
-<h3 id="《约翰·克利斯朵夫》"><a href="#《约翰·克利斯朵夫》" class="headerlink" title="《约翰·克利斯朵夫》"></a>《约翰·克利斯朵夫》</h3><p>一个大部头小说，我应该是花了好两周的业余时间看完。最初想看这本书据说傅雷翻译得特别好，然而我下单的时候却买的是韩沪麟版本，在我看来也翻译得挺好。这本大部头叙述了一个音乐家一生的故事，前半部分情节更好。特别是描述小孩的友谊和爱情部分很吸引人。不少部分写的是对音乐的理解，只能怪自己音乐素养不够，浅尝辄止罢了。</p>
-<pre><code>大部分人在二三十岁上就死去了，因为过了这个年龄，他们只是自己的影子，此后的余生则是在模仿自己中度过，日复一日，更机械，更装腔作势地重复他们在有生之年的所作所为，所思所想，所爱所恨。
-
-所谓英雄，就是干了自己力所能及的事情的人，而常人还做不到这一点。
-</code></pre><h3 id="毛姆系列"><a href="#毛姆系列" class="headerlink" title="毛姆系列"></a>毛姆系列</h3><p> 据说毛姆文笔优美，我便开始找他的小说看。最开始是看了比较流行的《月亮和六便士》，看完后真是大呼过瘾，震撼。据说月亮是头顶上的理想，六便士是脚下的现实。小说里主人公斯特里克兰德为什么突然放下家庭，完全投入到画画中文中并没有交代清楚，像是命中注定了的，他必须画画，冷酷地完全舍弃其他。一个人完全沉浸在自己的追求中，现实看起来就微不足道了，道德也不会是约束。天才有时候是一种伟大的不幸，比如主人公，而绝大部分人过的是平庸的幸福，比如施特略夫。施特略夫这个觉得有些可爱，而遭遇有些悲惨。</p>
-<p> 然后看了《在中国的屏风上》，是毛姆游历中国的随笔，记录的比较杂。这本粗略看了看。</p>
-<p> 而后继续看《刀锋》，感觉和六便士有点点类似，都是讲一个完全追求精神生活的『圣人』，最后在印度看似有所悟。比较喜欢这女主个角色，诚实地知道自己所要并决心取舍，虽然她的小心机使得儿时的女伴完全堕落。</p>
-<p> 最后粗略看了《毛姆读书心得》，讲了一些读小说的事情，推荐品论了不少小说。</p>
-<h3 id="《霍乱时期的爱情》"><a href="#《霍乱时期的爱情》" class="headerlink" title="《霍乱时期的爱情》"></a>《霍乱时期的爱情》</h3><p>   这部小说被拍成了电影(我还没看)，大家都说写尽了人间的爱情。这本书我非常喜欢，从拿起就不能停了。故事吸引人，并且文笔有些幽默。比如抓鹦鹉的那段，前面花了大篇幅来描述鹦鹉的来历，而后突然鹦鹉就把医生给弄死。还有男主和女主的各种书信，在那样嘈杂热闹的环境下女主一回头突然崩溃。男主作为纯情男孩，突然被夺了童贞，后面又心安理得地穿梭于各个寡妇之间，并倔强、默默地继续爱女主五十年。妙的是，小说里详细的叙述，让我觉得这也并不矛盾，人性以及爱情就是这么复杂，不乏欺骗和隐瞒。婚姻里到处是妥协和不满。 结尾也非常好，让他们在『霍乱的船』上一直飘荡下去。</p>
-<h3 id="《树上的男爵》"><a href="#《树上的男爵》" class="headerlink" title="《树上的男爵》"></a>《树上的男爵》</h3><p>   经同事推荐看的。故事和海上钢琴师类似，讲一个公爵小男孩因为一次偶然的被罚，爬上了树！又因为对一个女孩的承诺，他打算一辈子不下树了。一个很好的故事，结尾也来得有想象力。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      推荐一些最近自己读过的小说
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>OpenResty使用总结</title>
-    <link href="http://cyukang.com/2017/05/22/try-on-openresty.html"/>
-    <id>http://cyukang.com/2017/05/22/try-on-openresty.html</id>
-    <published>2017-05-21T16:00:00.000Z</published>
-    <updated>2017-05-21T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="OpenResty"><a href="#OpenResty" class="headerlink" title="OpenResty"></a>OpenResty</h2><p>最近用OpenResty比较多，除了一些业务逻辑的实现也做了AB组灰度相关的实现。OpenResty是在Nginx基础上做的扩展，应该算是国人开源项目中很成功的一个。在做的过程中写了不少Lua代码，写Lua代码的体验就是库好少，语言好简单。</p>
-<h2 id="OpenResty-lua编程相关参考"><a href="#OpenResty-lua编程相关参考" class="headerlink" title="OpenResty lua编程相关参考"></a>OpenResty lua编程相关参考</h2><ul>
-<li><a href="https://moonbingbing.gitbooks.io/openresty-best-practices/lua/main.html" target="_blank" rel="external">OpenResty最佳实践</a></li>
-<li><a href="https://github.com/openresty/lua-nginx-module#name" target="_blank" rel="external">OpenResty Readme</a></li>
-</ul>
-<p>其中Readme要看完，大概会有一个全局的了解。最佳实践辅助看看。<br>理解Nginx处理的几个阶段： <a href="http://www.nginxguts.com/2011/01/phases/" target="_blank" rel="external">http://www.nginxguts.com/2011/01/phases/</a></p>
-<h2 id="处理Response-Body"><a href="#处理Response-Body" class="headerlink" title="处理Response Body"></a>处理Response Body</h2><p>在我们的实现中有一步需要给后端返回的结果里面加一段水印(也就是一段JS代码)，这步可以在body_filter这个里面做。不过需要注意body_filter是按流式方式处理的，需要把各个buffer存下来然后拼接起来。<br>而且后端返回的结果可能是zip压缩过的，<a href="https://groups.google.com/forum/#!topic/openresty-en/q-dcQNxpwTA" target="_blank" rel="external">所以需要解压，然后才能做替换或者拼接的操作</a>。</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="keyword">local</span> chunk, eof = ngx.<span class="built_in">arg</span>[<span class="number">1</span>], ngx.<span class="built_in">arg</span>[<span class="number">2</span>] </div><div class="line"><span class="keyword">local</span> buffered = ngx.ctx.buffered </div><div class="line"><span class="keyword">if</span> <span class="keyword">not</span> buffered <span class="keyword">then</span> </div><div class="line">   buffered = &#123;&#125;  <span class="comment">-- XXX we can use table.new here </span></div><div class="line">   ngx.ctx.buffered = buffered </div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> chunk ~= <span class="string">""</span> <span class="keyword">then</span> </div><div class="line">   buffered[#buffered + <span class="number">1</span>] = chunk </div><div class="line">   ngx.<span class="built_in">arg</span>[<span class="number">1</span>] = <span class="literal">nil</span> </div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> eof <span class="keyword">then</span> </div><div class="line">   <span class="keyword">local</span> whole = <span class="built_in">table</span>.<span class="built_in">concat</span>(buffered) </div><div class="line">   ngx.ctx.buffered = <span class="literal">nil</span></div><div class="line"></div><div class="line">   <span class="comment">-- try to unzip</span></div><div class="line">   <span class="keyword">local</span> <span class="built_in">status</span>, debody = <span class="built_in">pcall</span>(com.decode, whole)</div><div class="line">   </div><div class="line">   <span class="keyword">if</span> <span class="built_in">status</span> <span class="keyword">then</span> whole = debody <span class="keyword">end</span></div><div class="line">   <span class="comment">-- try to add or replace response body</span></div><div class="line">   <span class="keyword">local</span> js_code = ....</div><div class="line">   whole = whole .. js_code</div><div class="line">   </div><div class="line">   ngx.<span class="built_in">arg</span>[<span class="number">1</span>] = whole </div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>最后因为修改了response body，所以需要修改header filter里面的部分:<br><figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">ngx.header.content_length = <span class="literal">nil</span></div><div class="line">ngx.header.content_encoding = <span class="literal">nil</span></div></pre></td></tr></table></figure></p>
-<h2 id="容易出现的bug"><a href="#容易出现的bug" class="headerlink" title="容易出现的bug"></a>容易出现的bug</h2><ol>
-<li><p>尽量使用local变量： <a href="https://moonbingbing.gitbooks.io/openresty-best-practices/lua/local.html" target="_blank" rel="external">具体的解释</a>，我在实践的过程中出现过变量乱窜的情况，结果发现是没有是用local。</p>
-</li>
-<li><p>ngx.ctx 比 ngx.var 性能要好很多，但是在执行了ngx.exec后在子请求里ctx不一样，在我们的项目里大部分是用的是ngx.var。使用ngx.var需要注意的是需要在Nginx配置文件里面提前声明。另外<a href="https://groups.google.com/forum/#!topic/openresty/uv5zhqEdxCY" target="_blank" rel="external">ngx.ctx在使用的时候也有需要注意的地方</a></p>
-</li>
-<li><p><a href="https://moonbingbing.gitbooks.io/openresty-best-practices/openresty/share_var.html" target="_blank" rel="external">不同阶段共享变量</a></p>
-</li>
-<li><p>不要使用错误码来做内部跳转，使用ngx.exec很方便。</p>
-</li>
-<li><p><a href="https://moonbingbing.gitbooks.io/openresty-best-practices/lua/not_use_module.html" target="_blank" rel="external">是用推荐的方法来实现module</a></p>
-</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;OpenResty&quot;&gt;&lt;a href=&quot;#OpenResty&quot; class=&quot;headerlink&quot; title=&quot;OpenResty&quot;&gt;&lt;/a&gt;OpenResty&lt;/h2&gt;&lt;p&gt;最近用OpenResty比较多，除了一些业务逻辑的实现也做了AB组灰度相关的实现。O
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>rubytt 续</title>
-    <link href="http://cyukang.com/2017/04/09/rubytt-cont.html"/>
-    <id>http://cyukang.com/2017/04/09/rubytt-cont.html</id>
-    <published>2017-04-08T16:00:00.000Z</published>
-    <updated>2017-04-08T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>前段时间继续做了 <a href="http://github.com/chenyukang/rubytt" target="_blank" rel="external">rubytt</a> 这个小项目，遇到一些问题。</p>
-<p>我想做一个自动检测未定义变量的功能，发现如果只是做静态分析，是很难做出来的。还有涉及到各种 gem 包的分析，这些工作量较大。可以看出在这个<a href="https://github.com/chenyukang/rubytt/pull/21/files" target="_blank" rel="external">PR</a>里我甚至用上了一些硬编码。</p>
-<p>然后我想做一个自动分析代码复杂度的功能，比如某些函数太长，或者逻辑太多之类的。这个我实现起来很快，也是比较简单的遍历语法树，递归统计逻辑操作和幅值操作的总数之类的。不过这些在 rubocop 里面都实现了，其中<a href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" target="_blank" rel="external">Cyclomatic complexity</a>可用来衡量代码的复杂度。我仔细看了看 rubocop 的内容，这个项目里面做的检查还挺全的，不过很多都是风格类的检查。在我下一个项目一开始我就引入了 rubocop ，对于保证代码质量还是挺有帮助的。对于之前老的项目，如果不是一开始就保持代码风格和静态分析的检查，后面要追加就非常耗时了，往往大家也没有时间来做各种重构。</p>
-<p>rubytt 暂时告一段落，作为一个业余项目还是花费了些时间，造轮子的过程中收获不少。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;前段时间继续做了 &lt;a href=&quot;http://github.com/chenyukang/rubytt&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;rubytt&lt;/a&gt; 这个小项目，遇到一些问题。&lt;/p&gt;
-&lt;p&gt;我想做一个自动检测未定义变量的功能，发
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>程序员病</title>
-    <link href="http://cyukang.com/2017/01/24/disease-of-programmer.html"/>
-    <id>http://cyukang.com/2017/01/24/disease-of-programmer.html</id>
-    <published>2017-01-23T16:00:00.000Z</published>
-    <updated>2017-01-23T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近看费曼的书《发现的乐趣》，里面有一段描述非常好玩:</p>
-<blockquote>
-<p>好，弗兰克先生开始实施他的计划了，与此同时，他也得了一种病——『计算机病』。现在每个使用计算机的人都知道这个毛病，那种病非常厉害，会干扰整个工作。这是我们面临的一个严重问题。所谓『计算机病』就是你一『玩』上计算机，就会上瘾。计算机真的非常奇妙，你手上操作着那些 x 转换开关，这样弄得到某个偶数，那样弄得到某个奇数。如果你够聪明，很快你就能在一台机器上做越来越复杂的计算。只不过，没多久，整个系统就瘫痪了。</p>
-<p>他对工作不再上心了，也不再管理手下，整个系统运转得很慢很慢。但是，真正麻烦的是，他一直坐在一间办公室里，琢磨怎么让制表机自动打印出反正切值，然后机器就开始打印，成排成排地打印，扑哧，扑哧，扑哧，一边打印一边还自动用积分计算反正切值，整张表都是方正切值计算结果。</p>
-<p>其实，这毫无意义，因为我们人手一份反正切表。不过，如果你用过计算机，你就会理解他为什么得这种病。计算机能让你知道自己究竟能做多少事情，这也是一种乐趣。他第一次接触这机器，就染上了这种病，这个可怜的家伙——整个项目都是他发起的，可他却得了这种病。</p>
-</blockquote>
-<p>其实很多程序员都有这种病，可以概括为一句话『沉迷于工具』，计算机也是工具，这位弗兰克先生还未解决眼前的问题时就丢掉了方向。好奇心是程序员必不可少的东西，而如果管不住自己的好奇心就会耽误事。对于非程序员来说，这件事情看起来就是『某个杀猪佬，拿到了一把新刀，他觉得这么刀真他妈锋利，然后磨磨刀，再磨磨刀，反正猪是不会杀的』。</p>
-<p>程序员经常会『磨刀』，学习算法，是磨练自己的头脑和思维。学习语言，是为了多拥有一个工具或者也可说是锻炼自己的思维(不改变自己思维习惯的语言不足以学之?)。学习操作系统的原理和细节，也可以理解为加深对工具的认识和理解。在学校的学习方法大多数从基本原理和经典书籍学起，顺便找一些小项目练练手。在步职业阶段后，从实用的角度，我们是否应该直面问题，带着问题找工具，学用工具，理解工具，这个过程中更可以锻炼自己的能力。从个人体验来说，这种方式优于『先锻炼自己的能力，先学会某个工具，然后再找个问题来解决』。举例来说，其实做一些 ACM 之类的题也挺有乐趣的，但我理解为刷题也是在『磨刀』。更让自己有成就感的是，在工作中碰到一个解决不了的算法问题，通过学习和思考相关的东西解决了，这样的方式理解更深。其实如果是步入职场，很多程序员也没多少时间来广泛学习，带着问题来『磨刀』也是必然且更有效的选择。</p>
-<p>再多扯一点，不少程序员有一些类似于强迫症的症状(在很多情况下这是一个好的特点)。而在计算机这个领域里有太多东西容易沉溺，比如编辑器，编程语言，操作系统，框架， 范式等。这类工具都有可能让程序员走向某个极端，形成『偏见』。我也有类似的体验，只是现在回想起来觉得挺傻缺、傻气的。大多数程序员都不够拥有开阔的心态来面对这些工具，我们会觉得自己的选择是更好的，能解决一切问题的银弹。<a href="http://coolshell.cn/articles/1992.html" target="_blank" rel="external">这副图能说明这个道理</a>。</p>
-<p>我现在会注意避免自己陷入这些『疾病』中。比如一个工具，不管是框架也好，语言也好，不要在还没摸清楚门路的时候，花大片时间去学习。而是最好带着一个需要解决的问题，边做边摸索。</p>
-<p>发现自己的傻缺，就是成长，对吧！</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;最近看费曼的书《发现的乐趣》，里面有一段描述非常好玩:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;好，弗兰克先生开始实施他的计划了，与此同时，他也得了一种病——『计算机病』。现在每个使用计算机的人都知道这个毛病，那种病非常厉害，会干扰整个工作。这是我们面临的一个严重问题。所谓
-    
-    </summary>
-    
-    
-      <category term="Books" scheme="http://cyukang.com/tags/Books/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Ruby 程序的静态分析: rubytt</title>
-    <link href="http://cyukang.com/2016/12/27/rubytt.html"/>
-    <id>http://cyukang.com/2016/12/27/rubytt.html</id>
-    <published>2016-12-26T16:00:00.000Z</published>
-    <updated>2016-12-26T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="http://github.com/chenyukang/rubytt" target="_blank" rel="external">rubytt</a>是一个 Ruby 程序的静态分析器，这个项目从16年年初一直到年底，断断续续持续了近一年。这里稍微总结一下自己的开发过程。</p>
-<h2 id="0-缘由"><a href="#0-缘由" class="headerlink" title="0. 缘由"></a>0. 缘由</h2><p>14年开始，从我进入 DJI 之后开始接触 Rails 开发。Ruby 之前也接触过，不过都是写一些小脚本之类的东西。我们几乎用 Rails 写各种系统，开发的效率很快。对于经常变动的 Web 开发 rails 还是挺好的。在我经历过的一个对正确性要求很高的项目里，有一次系统出现一个致命的问题。我们6个开发人员在小黑屋里面足足找了一个下午。最后却发现不过是一个 type 错误引入的，导致后台任务一直执行错误。后来稍微多想了想，这样的类型错误应该是在开发阶段就及时发现的。 Rails 项目没有测试是不行的，所以我们后续补充了更多单元测试。另外我所使用过的静态语言几乎都能及早避免这样的错误，特别是在使用过 OCaml 这样的强类型语言后，我对类型有了更强的偏好。于是想我能不能做一个自动检测出类似 bug 的工具。据我所知<a href="https://github.com/yinwang0/rubysonar" target="_blank" rel="external">王垠的rubysonar</a>  可以做类型分析，于是我 checkout 出来看了看代码。Java代码不是特别复杂，也发现了两个问题并提交了 <a href="https://github.com/yinwang0/rubysonar/pull/12" target="_blank" rel="external">PR</a>。然后觉得这个东西还是比较好玩，干脆就自己另起一个项目来玩玩。</p>
-<h2 id="1-rubytt-的开发"><a href="#1-rubytt-的开发" class="headerlink" title="1. rubytt 的开发"></a>1. rubytt 的开发</h2><p>首先得给这个坑起一个名字，想了想就 rubytt 吧，其实就是”ruby to type” 的意思吧。然后语言还是用了最近业余使用得比较多的 OCaml。这可能对后期其他开发参与进来不利，不过也无所谓了，业余的项目先依自己的偏好吧。</p>
-<h3 id="parser"><a href="#parser" class="headerlink" title="parser"></a>parser</h3><p>首先面临的问题是 parser。rubysonar 的parser 也是依靠 Ruby 自己的<a href="http://ruby-doc.org/stdlib-2.0.0/libdoc/ripper/rdoc/Ripper.html" target="_blank" rel="external">ripper</a>。主要是 parser 太过繁琐，如果从头开始写整个坑估计是填不完了。所以我也就直接拿来了 rubysonar 的<a href="https://github.com/yinwang0/rubysonar/blob/master/src/main/resources/org/yinwang/rubysonar/ruby/dump_ruby.rb" target="_blank" rel="external">dump_ruby.rb</a>。 dump_ruby 把 ruby 源文件作为输入，输出一个 json 文件作为后端分析器的输入。这里我做了一些改动，rubysonar 里面是起来一个进程，把 dump_ruby 启动起来，用管道的方式一个个 parse 源程序。这样做的目的是避免 ruby 解释器频繁启动，避免整个速度会被拖慢。 我觉得还不如让dump_ruby 一次接收多个源程序，甚至可以是用 parallel 这个库来做并行。这样的结果是 parsing 的速度确实快了很多，一般大点的项目在10s 以内可以完成。这样项目的大概流程如下:</p>
-<p><img src="/images/rubytt.png" alt="rubytt" class="img-center" style="width:320px;height:310px;"></p>
-<h3 id="type-annoation"><a href="#type-annoation" class="headerlink" title="type annoation"></a>type annoation</h3><p>我想做自动的类型错误检查，所以需要类型分析。dump_ruby 出来的结果里面是带一些基本类型的，类型分析过程 rubysonar 里面有一个基本过程了。然后对于 Rails 项目来说，我们很多类型都可以在 db/schema.rb 里面可以分析出来，所以如果我把 schema.rb 文件也扫描分析一边，就可以为这些 model 加上不少类型。结果做出来还可以，至少目前可以分析出来很多 rubysonar 没有的类型。运行<code>rubytt -s source_dir -t type -o res</code>把结果输出到 res 目录。这里还有不少东西未做，比如函数的分析还是很复杂，目前做了一个初步。类型错误报出可以做一些了，但是还未来得及实现。因为我突然想到另外一个有趣的东西。</p>
-<h3 id="visualize-rails-project"><a href="#visualize-rails-project" class="headerlink" title="visualize rails project"></a>visualize rails project</h3><p>我既在 traverse 整个 AST，可以做很多好玩的事啊。比如把类之间的继承关系找出来，做一个类的继承关系图。于是就有了<a href="/images/rubytt_class.png">类似这样的结果(看大图)</a>：</p>
-<p><img src="/images/rubytt_class.png" alt="rubytt_class" class="img-center" style="width:320px;height:300px;"></p>
-<p>既然我能解析 schema.rb，也可以把数据模型给展示出来，然后再通过 model 文件里面分析模型之间的关系(has_one, has_many 等)， 于是就有了<a href="/images/rubytt_db.png">这样的结果</a>：</p>
-<p><img src="/images/rubytt_db.png" alt="rubytt_db" class="img-center" style="width:320px;height:300px;"></p>
-<p>不过做了一些之后我发现这两个 feature 有点鸡肋。特别是第一个，要找出 ruby 程序内部对象之间的继承关系其实很简单，比如我之前写过的<a href="http://cyukang.com/2012/12/26/browser-objs-in-ruby.html">一篇文章</a>。第二个模型的关系图还好，不过项目稍微大一些的时候这些图看起来很复杂。</p>
-<h3 id="variable-bug-finder"><a href="#variable-bug-finder" class="headerlink" title="variable bug finder"></a>variable bug finder</h3><p>在做完上面两个蛋疼的 feature 之后，碰巧碰到了项目里面另外一个 bug。是因为重构的时候不小心引入了一个 copy &amp; paste  bug。类似代码如下：</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">event = (order.status == <span class="string">'success'</span>) ? <span class="string">'success'</span> : <span class="string">'fail'</span></div><div class="line">Job.send([<span class="string">'Worker'</span>], &#123;<span class="string">'order_id'</span> =&gt; order.id, <span class="string">'event'</span> =&gt; <span class="string">'success'</span>&#125;)</div></pre></td></tr></table></figure>
-<p>可以看到这个 event 本来应该使用的，结果却因为重构的时候 copy 了代码忘记把<code>&#39;event&#39; =&gt; &#39;success&#39;</code>改成<code>&#39;event&#39; =&gt; event</code>。event这个变量是未使用的变量，对于编译型语言来说这样的问题是可以在编译的时候发出报警的。因为一个变量未使用必然意味这要么是冗余代码，要么是 bug。那我可否通过 rubytt 给出类似报警？然后我就继续写了这么一个 checker，去检查ruby 程序中各种没使用的变量。最后还真能找出项目中一些其他的类似问题，比如：</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">result = &#123;&#125;</div><div class="line">trans = <span class="keyword">self</span>.transactions.where(..blah...)</div><div class="line">trans.each <span class="keyword">do</span> <span class="params">|tran|</span></div><div class="line">   result[<span class="symbol">:amount</span>] = trans.amount_cent  &lt;------- <span class="symbol">bug:</span> <span class="string">`trans`</span> is typo of <span class="string">'tran'</span></div><div class="line">   ...blah...</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>当然还是能找到函数中未使用的参数等问题。修复的办法是如果确定这些变量是不被使用的，就在前面加<code>_</code>，这样rubytt 这样的 lint 类检查工具就跳过。后续我也正在做未定义变量的检查。</p>
-<h2 id="2-OCaml的程序发布"><a href="#2-OCaml的程序发布" class="headerlink" title="2. OCaml的程序发布"></a>2. OCaml的程序发布</h2><p>在做完上面的几个 feature 之后，我觉得可以尝试着把这个项目推广一下给同事们玩玩。如果让从来没接触过 OCaml 的朋友从头开始编译安装会显得很麻烦。所以我就尝试着把 rubytt 合并到 OCaml 的包管理仓库。于是在经过几次和 travis CI 的斗争后，终于发布了<a href="https://opam.ocaml.org/packages/rubytt/rubytt.0.1/" target="_blank" rel="external">rubytt.0.1</a> 。</p>
-<p>安装方法如下：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">gem install parallel ruby-progressbar</div><div class="line">sudo apt-get install --force-yes ocaml ocaml-native-compilers camlp4-extra opam</div><div class="line">// brew install opam   (MacOS)</div><div class="line">eval `opam config env`</div><div class="line">opam install rubytt</div></pre></td></tr></table></figure>
-<p>OCaml 的圈子比较小众，不过其实很多工具还是挺好用的，比如这个 OPAM 包管理器。</p>
-<h2 id="3-其他心得"><a href="#3-其他心得" class="headerlink" title="3. 其他心得"></a>3. 其他心得</h2><p>做这个程序这么久，除了好玩还是收获不少。</p>
-<p>  OOP 和 FP 哪个好？通过这个项目的实践，我好好体会了一把 FP 写稍微大些的程序的感觉。说不上哪个好，我倒认为 type 确实很重要，rubytt 的过程中自动类型推导帮我发现了好多代码错误。编程语言应该让程序员能够精确无误地表达自己，尽量地避免人为引入的错误。</p>
-<p>  构建测试脚手架，这也是第一份工作带给我的习惯。把每一个 feature 或者 bug 都写测试来覆盖。每次提交的时候都 review 一下测试用例的改动，这样才能不断保持质量。</p>
-<p>  希望来年能继续保持对这个程序的热情。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      一个 Ruby 静态分析器的开发过程
-    
-    </summary>
-    
-    
-      <category term="Programming" scheme="http://cyukang.com/tags/Programming/"/>
-    
-      <category term="Ruby" scheme="http://cyukang.com/tags/Ruby/"/>
-    
-      <category term="OCaml" scheme="http://cyukang.com/tags/OCaml/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>读《饥饿的盛世》</title>
-    <link href="http://cyukang.com/2016/12/11/qianlong-history.html"/>
-    <id>http://cyukang.com/2016/12/11/qianlong-history.html</id>
-    <published>2016-12-10T16:00:00.000Z</published>
-    <updated>2016-12-10T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近又读了本张宏杰的书《饥饿的盛势》。张宏杰的书今年看了好几本，讲述历史都挺生动，特别是对人物内心的剖析很到位。很多时候作者是站在历史人物的角度去分析，书里所展现的历史人物特别鲜活。很多历史人物都被脸谱化或者自带几个标签，这人不是好的则是坏的。可是人都是复杂的、多面的，真实的历史事件又会有各种偶然因素。这本书看完后，对乾隆印象具体了很多。乾隆盛世的背后，隐藏着这位皇帝仁慈和残暴、宽容和计较。乾隆作为为数不多的自律而有头脑的皇帝，几乎是创记录地维持帝国专制统治近60年。</p>
-<p>雍正仓促去世，乾隆在25岁的盛年继位，继位过程光明正大，水到渠成。上任之后就改变了帝国的航向。乾隆把被雍正折腾得要死的各种皇室宗族放出，给予产业和爵位，一下子扫除皇室王宫对雍正乾隆一族的怨恨。为了争取官僚集团对自己的效忠，他仿效祖父，宽大待下，从实际角度考虑问题，解决困难。对农民也采取了仁政，停捐纳，重视农业，赢取农民的爱戴。乾隆精通驭臣之术，虽然初征的时候执行仁政，他对于权利的集中却丝毫没有松懈过，时刻警惕名称、后宫、宦官等一切可能干扰权利的因素。</p>
-<p>张廷玉是雍正时的老臣，对大清可谓鞠躬尽瘁，雍正点名其可配太庙。而乾隆因为各种鸡毛蒜皮的小事和张廷玉斗，最后把人弄得晚节不保。这章读起来真的是好生动啊，这个宇宙第一的皇帝心眼小得夸张！</p>
-<p>原配皇后富察氏的两个皇子的相继去世、富察氏后来也病死，这对乾隆影响很大。皇帝权利再大也抵不过生老病死。终于，乾隆13年时，借皇后富察氏去世，乾隆刮起政坛风暴，重回雍正时期刚猛、狠戾、阴险的政治风格。无数人被无辜定罪，包括自己的儿子们。原配妻子的死是乾隆一生的怨念。</p>
-<p>在200多年前，乾隆为了留给后人一个『安全』的帝国，在内蒙古做了人类历史上一次惨绝人寰的灭族！纯朴的牧民们、归降的地人们一律被杀。</p>
-<p>从驯身到驯心，集权统治的最后一步是驯心，就是所谓的『大清精神文明建设』。从书的描述看来，乾隆缔造了中国历史上最严酷的文字狱。无数书籍被烧，文人不敢写字发声。中国的帝王所要的向来是服服帖帖、老老实实的子民，这些子民除了基本的生存权，就不应该有其他诉求了。朱元璋洪武年间甚至规定了子民怎么穿鞋、怎么着衣。乾隆对于越级上访一律惩罚，民间的异说也是不能放任的，疯子在朱元璋手下还能逃脱，乾隆可是能杀则杀。</p>
-<p>“千古第一全人”，乾隆年老后一直喜欢把自己和历史上的君王们比较，对自己所缔造的盛世甚为满意。甚至做到了历史上少有的权利的平稳交接，把自己的皇冠带在了嘉庆皇帝头上。不过晚年还是不得安稳，花了三年直到自己死时白莲教都没被压下。乾隆的60年统治中，中国的人口和版图都达到了峰值，而这又有什么用呢。自己培养出来的嘉庆守旧胆小，西方列强经过工业革命的洗礼已经远远超越大清。二十世纪初开始大清已经摇摇欲坠。甚至乾隆的坟墓都被炸开，真的是『千古第一全人』的巨大讽刺。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;最近又读了本张宏杰的书《饥饿的盛势》。张宏杰的书今年看了好几本，讲述历史都挺生动，特别是对人物内心的剖析很到位。很多时候作者是站在历史人物的角度去分析，书里所展现的历史人物特别鲜活。很多历史人物都被脸谱化或者自带几个标签，这人不是好的则是坏的。可是人都是复杂的、多面的，真实
-    
-    </summary>
-    
-    
-      <category term="Books" scheme="http://cyukang.com/tags/Books/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Nginx限流</title>
-    <link href="http://cyukang.com/2016/11/30/nginx-traffic-limit.html"/>
-    <id>http://cyukang.com/2016/11/30/nginx-traffic-limit.html</id>
-    <published>2016-11-29T16:00:00.000Z</published>
-    <updated>2016-11-29T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Nginx 限流可以通过几种方式实现：</p>
-<h2 id="1-Nginx自带的流量控制模块"><a href="#1-Nginx自带的流量控制模块" class="headerlink" title="1. Nginx自带的流量控制模块"></a>1. Nginx自带的流量控制模块</h2><p><a href="http://nginx.org/en/docs/http/ngx_http_limit_req_module.html" target="_blank" rel="external">ngx_http_limit_req 根据特定的key(通常为IP) 控制访问频率</a></p>
-<p><a href="http://nginx.org/en/docs/http/ngx_http_limit_req_module.html" target="_blank" rel="external">ngx_http_limit_req_module 控制连接数</a></p>
-<p>通过修改Nginx的配置文件，然后reload。这种方式配置比较简单，然而 reload 对于当前访问量比较大的服务器开销也有一些。<br> 根据<a href="http://www.toutiao.com/a6254279391729139970/" target="_blank" rel="external">新浪的经验</a>，每一次的 reload 对 Nginx 的 QPS 与耗时的影响通常会持续 8~10s，考虑到一次扩容会有频繁的变更，这对在线业务来说是不堪承受之重。因此，要避免对 Nginx 进行 reload。</p>
-<h2 id="2-使用lua-resty-limit-traffic-流量控制"><a href="#2-使用lua-resty-limit-traffic-流量控制" class="headerlink" title="2. 使用lua-resty-limit-traffic 流量控制"></a>2. 使用lua-resty-limit-traffic 流量控制</h2><p><a href="https://github.com/openresty/lua-resty-limit-traffic" target="_blank" rel="external">代码和文档</a>。这个库分为limit_conn 和 limit_req模块，limit_req限制某个 ip 或者 server 的访问频率，limit_conn 限制连接数。lua-resty-limit-traffic 的原理是使用 Nginx 的 shared_dict，建立一个 hashtable，根据目前连接数或者访问请求记录相关信息。对于每一个Nginx请求都有<a href="https://moonbingbing.gitbooks.io/openresty-best-practices/content/ngx_lua/phase.html" target="_blank" rel="external">一系列执行阶段</a>，每个阶段可以增加 hook，access_by_lua是处理前调用的hook, log_by_lua 是处理完成后调用的 hook。进入的时候通过 ip 作为 key 找到share_dict 里面的连接数，增加1。处理完之后找到连接数， 减去1。 通俗的理解就是顾客进入试衣间前持一个牌子，出来后归还牌子。当前的正在使用的牌子数目可以配置，以达到限流目的。</p>
-<p>依据系统状态动态改变限流的配置，可以考虑两种方案：</p>
-<pre><code>a. limit_conn 和 limit_delay 存放在 Redis内，在 access_by_lua_block 的部分去取出当前限制，这个方案的弊端在于对每个 request 多了一次 redis 请求。
-b. limit_conn存放在 Nginx 的 shared_dict内，通过 Nginx 的配置增加一个 location，专门用来请求来修改其值，任何一个 Nginx worker 修改成功后，其他 worker 都可见。
-</code></pre><h2 id="3-使用nginx-upsync-module"><a href="#3-使用nginx-upsync-module" class="headerlink" title="3. 使用nginx-upsync-module"></a>3. 使用nginx-upsync-module</h2><p><a href="https://github.com/weibocom/nginx-upsync-module" target="_blank" rel="external">nginx-upsync-module</a>是新浪的开源库，也是依赖 openresty 的。 这套工具可以修改 backend 的各种属性，weight, max_fails等。为了避免 reload，可以使用Consul或者Etcd 进行动态配置。</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>为了做一些自动限流，可以考虑分析 nginx 日志，或者系统负载信息。<br>系统负载分析工具，ruby gem 包usagewatch可以获取系统目前的 CPU 使用率，Memory使用率，系统 load 等相关信息，<br>日志分析工具<a href="https://github.com/allinurl/goaccess，使用goaccess，可以实时分析rails" target="_blank" rel="external">https://github.com/allinurl/goaccess，使用goaccess，可以实时分析rails</a> app日志。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Nginx 限流可以通过几种方式实现：&lt;/p&gt;
-&lt;h2 id=&quot;1-Nginx自带的流量控制模块&quot;&gt;&lt;a href=&quot;#1-Nginx自带的流量控制模块&quot; class=&quot;headerlink&quot; title=&quot;1. Nginx自带的流量控制模块&quot;&gt;&lt;/a&gt;1. Nginx自带
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>菊与刀</title>
-    <link href="http://cyukang.com/2016/08/09/dao-yu-ju.html"/>
-    <id>http://cyukang.com/2016/08/09/dao-yu-ju.html</id>
-    <published>2016-08-08T16:00:00.000Z</published>
-    <updated>2016-08-08T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>前些天在家偶然翻到一部日本电影《黄昏的清兵卫》，看完后觉得非常符合个人口味。顺着同类型的电影又看了《隐剑鬼爪》。两部电影都是由山田洋次导演，主要故事都是围绕德川幕府末期的武士展开。剧情其实有些类似，一个武士，一个柔弱女主，甚至是同一个仆从，在“义务”和“义理”的冲突下来一场厮杀。武士爱着女主，却因为种种“理”而不能靠近。突出武士阶层的隐忍和不可避免的没落。    </p>
-<p>看完电影后，又顺着看了多人推荐的《菊与刀》。二战后美国急需了解日本，特别是日本人民的习俗和心理特征，因为日本在西方人看来太过特别，他们在战争中所体现的凶残程度也是前所未有的。《菊与刀》正是在这样的历史背景下由本尼迪克所写。据说作者本人并没有去过日本，而是通过书籍和调研来完成。这本书也许有的方面写得有所夸张。</p>
-<p>看完这本书后，对上面两部电影有了更深些的理解。日本崇尚秩序，上级对下级的命令是无法抗拒的。这也解释了为什么二战时日本士兵凶暴残忍得像禽兽一般，而当天皇下诏投降书后，日本人绝大部分立马放弃抵抗，站在街头服服贴贴迎接盟军。在《隐剑鬼爪》中，藩府上级要求片桐出卖朋友交出叛党名单，片桐出于“义”而拒绝。但藩府换成“命令”的时候，他还是会去执行。“义务”和“义理”发生冲突的题材是很多日本故事和电影的基础。剧中人为履行义务忍受了一切，无论不幸、遗弃、疾病还是死亡，都未能使他们偏离。他们认为。所谓强者恰恰在于敢于抛弃个人幸福而去履行义务。他们认为，“性格的坚强不是表现为反抗，而是表现为顺从”，“真正的尊严在于各安其分，不卑不亢，自王子以至农夫，皆可以此自许”。</p>
-<p>总的来说，日本呈现出了复杂的矛盾：</p>
-<pre><code>日本人好斗而又温和；黩武而又爱美；自尊自傲而又彬彬有礼；
-顽固而又善变；驯服而又不愿  受人摆布；忠心而又易于叛变；
-勇敢而又怯懦；保守而又欢迎革新。
-他们十分介意别人对自己行为的看法，但当别人对其劣迹毫无所知时，又怡然自得。
-</code></pre><p>关于个人欲望：日本人并不谴责满足私欲。他们不是清教徒。他们认为享乐是件好事，是值得培养的。他们追求享乐，尊重享乐，但享乐必须恰如其分，不能妨碍人生重大事务。</p>
-<p>日本是比较讲究专注精神修炼，在他们看来，培养“一心”和“无我”对任何事业都是有好处的。</p>
-<p>这本书算是我看过的翻译书籍里面很流畅的一本，甚至基本看不出来是翻译的。这和《自私的基因》比起来好多了，后者的这个<a href="https://book.douban.com/subject/11445548/" target="_blank" rel="external">版本</a>基本没法看。</p>
-<p>两部电影中，相对来说我更喜欢《隐剑鬼爪》。</p>
-<p>－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－</p>
-<p>最后，两部电影的女主角都挺好，<a href="https://movie.douban.com/celebrity/1121531/" target="_blank" rel="external">宫泽理惠</a>和<a href="https://movie.douban.com/photos/photo/691073830" target="_blank" rel="external">松隆子</a>。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;前些天在家偶然翻到一部日本电影《黄昏的清兵卫》，看完后觉得非常符合个人口味。顺着同类型的电影又看了《隐剑鬼爪》。两部电影都是由山田洋次导演，主要故事都是围绕德川幕府末期的武士展开。剧情其实有些类似，一个武士，一个柔弱女主，甚至是同一个仆从，在“义务”和“义理”的冲突下来一场
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Add syntax check for Capistrano</title>
-    <link href="http://cyukang.com/2016/07/22/capistrano-syntax-check-for-rails.html"/>
-    <id>http://cyukang.com/2016/07/22/capistrano-syntax-check-for-rails.html</id>
-    <published>2016-07-21T16:00:00.000Z</published>
-    <updated>2016-07-21T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>In an normal release, Rails app’s unit testing will avoid most errors. But for the urgent code publishing, we have got several time of typo error. Code syntax error may cause server crash for a little while(Passenger web server and we using <code>./tmp/restart.txt</code> to restart). We use Capistrano to publish code, so I plan to add a syntax checking before publishing code.<br>The method is writing a task to bundle exec rails runner, this will report most ruby syntax error(except the undef variables in some functions, runner will load .rb files). </p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">namespace <span class="symbol">:app</span> <span class="keyword">do</span></div><div class="line">  desc <span class="string">"check all the ruby code"</span></div><div class="line">  task <span class="symbol">:check</span> =&gt; <span class="symbol">:environment</span> <span class="keyword">do</span></div><div class="line">    res = <span class="string">`RAILS_ENV=<span class="subst">#&#123;Rails.env&#125;</span>  bundle exec rails runner "" 2&gt;&amp;1`</span></div><div class="line">    raise res <span class="keyword">if</span> res.size &gt; <span class="number">0</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>then add this in the deploy.rb (Capistrano 3.1):</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">namespace <span class="symbol">:deploy</span> <span class="keyword">do</span></div><div class="line"></div><div class="line">  task <span class="symbol">:run_code_check</span> <span class="keyword">do</span></div><div class="line">    on roles(<span class="symbol">:all</span>) <span class="keyword">do</span></div><div class="line">      within release_path <span class="keyword">do</span></div><div class="line">        with <span class="symbol">rails_env:</span> fetch(<span class="symbol">:rails_env</span>) <span class="keyword">do</span></div><div class="line">          execute <span class="symbol">:rake</span>, <span class="string">'app:check'</span></div><div class="line">        <span class="keyword">end</span></div><div class="line">      <span class="keyword">end</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  before <span class="string">"deploy:updated"</span>, <span class="string">"deploy:run_code_check"</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>This is not a tricky part, but please pay attention to the line:</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">res = <span class="string">`RAILS_ENV=<span class="subst">#&#123;Rails.env&#125;</span>  bundle exec rails runner "" 2&gt;&amp;1`</span></div></pre></td></tr></table></figure>
-<p>This line of code cost me some time, I forget the <code>2&gt;&amp;1</code>. so <code>res</code> will just got the stdout, not the stderr output, which causes the exception is not raised, and Capistrano flow is not stopped.</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;In an normal release, Rails app’s unit testing will avoid most errors. But for the urgent code publishing, we have got several time of ty
-    
-    </summary>
-    
-    
-      <category term="Rails" scheme="http://cyukang.com/tags/Rails/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>刷刷算法和 OJ</title>
-    <link href="http://cyukang.com/2016/07/08/fun-on-hackerrank.html"/>
-    <id>http://cyukang.com/2016/07/08/fun-on-hackerrank.html</id>
-    <published>2016-07-07T16:00:00.000Z</published>
-    <updated>2016-07-07T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近我们部门内部组成了一个算法读书小组，每周大家轮流分享自己的学习心得。为了方便学习我还写了一个小的 内部OJ，看起来还挺还好玩的。界面风格学习了<a href="https://qduoj.com/submissions/" target="_blank" rel="external">青岛大学的 OJ</a>，后台使用  Docker 来做沙盒跑测试输出结果。顺便学习了实际使用Docker。唯一麻烦点的是选了一个阿里的主机，最开始更新起来比较慢。还是用亚马逊的比较好。讨论形式还在摸索，我们现在每周选择一两个主题，会有两个分享人主讲，另外在 OJ 上弄几道题目大家做。总的来说还是可以提高一些东西，算法方面的知识，比如分享、表达的技巧。</p>
-<p>等 OJ 完善得差不多了再分享出来。</p>
-<p>另外业务时间也在 HackerRank 上做了一些题目，刚开始是为了熟悉 OCaml，专门用 OCaml写<a href="https://www.hackerrank.com/domains/fp/intro" target="_blank" rel="external">FP 方面的题目</a>。 最近两周也顺便参加了<a href="https://www.hackerrank.com/contests" target="_blank" rel="external">一些比赛</a>。这些比赛有的是和一些公司合办的，有的是各个主题的。比如有周赛，从周一到周五每天一个问题。个人觉得这个比较适合已经工作了的程序员，因为可以在空闲时间慢慢思考。等比赛结束之后也可以看其他人的解法和代码。我<a href="https://www.hackerrank.com/cyukang" target="_blank" rel="external">最近写得比较多</a>，又找到了在学校时写程序的乐趣了。而且熟悉了之后用 OCaml实现算法还是挺快的。我的一些代码放在了<a href="https://github.com/chenyukang/CodeSnippet/tree/master/hackerrank" target="_blank" rel="external">这里</a>，感兴趣的可以参考。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      Hackerrank is a online judger for programming contest and practice
-    
-    </summary>
-    
-    
-      <category term="Programming" scheme="http://cyukang.com/tags/Programming/"/>
     
   </entry>
   
