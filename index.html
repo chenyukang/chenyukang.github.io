@@ -23,11 +23,10 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
 </head>
-<div class="wechat-share">
-  <img src="/css/images/logo.png" />
-</div>
-
 
   <body>
     <header class="header fixed-header">
@@ -117,6 +116,38 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2018/02/12/ruby-open-vul.html">Ruby的 open 函数导致命令执行</a>
+      </h2>
+      <p class="article-date">February 12, 2018
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>首先看看 open 函数的文档说明， <a href="https://apidock.com/ruby/v1_9_3_392/Kernel/open/class：" target="_blank" rel="external">https://apidock.com/ruby/v1_9_3_392/Kernel/open/class：</a> </p>
+<blockquote>
+<p>If <em>path</em> starts with a pipe character, a subprocess is created, connected to the <a href="https://apidock.com/ruby/Kernel/caller" target="_blank" rel="external">caller</a> by a pair of pipes. The returned <a href="https://apidock.com/ruby/IO" target="_blank" rel="external">IO</a> object may be used to write to the standard input and read from the standard output of this subprocess. If the command following the “|” is a single minus sign, Ruby forks, and this subprocess is connected to the parent. In the subprocess, the <a href="https://apidock.com/ruby/Kernel/open" target="_blank" rel="external">open</a> call returns nil. If the command is not “-”, the subprocess runs the command. If a block is associated with an <a href="https://apidock.com/ruby/Kernel/open" target="_blank" rel="external">open</a>(“|-”) call, that block will be run twice—once in the parent and once in the child. The block parameter will be an <a href="https://apidock.com/ruby/IO" target="_blank" rel="external">IO</a> object in the parent and nil in the child. The parent’s <a href="https://apidock.com/ruby/IO" target="_blank" rel="external">IO</a> object will be connected to the child’s stdin  and stdout. The subprocess will be terminated at the end of the block.</p>
+</blockquote>
+<p>其中说明了如果以|开头则会 fork 出一个进程，<code>|</code> 后面的内容则会当成一条命令执行，比如： </p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">cmd = open(<span class="string">"|date"</span>)</div><div class="line">print cmd.gets</div><div class="line">cmd.close</div><div class="line">=&gt; <span class="number">2018</span>年 <span class="number">2</span>月<span class="number">12</span>日 星期一 <span class="number">21</span>时<span class="number">37</span>分<span class="number">45</span>秒 CST</div></pre></td></tr></table></figure>
+<h4 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h4><p>正因为这样，这个 open 函数真的是很容易出错，最近的这个 PR： </p>
+<p><a href="https://github.com/ruby/ruby/pull/1777" target="_blank" rel="external">https://github.com/ruby/ruby/pull/1777</a></p>
+<p>之前我们的项目里也出现过类似的情况，直接相当于一个 webshell，任意执行命令。这样的 command injection 当然也很好检测，brakeman 之类的就可以。所以 Rails项目还是时不时地扫描一下比较好。</p>
+<p>Ruby 里面有几个 Open，<a href="https://stackoverflow.com/questions/1727217/file-open-open-and-io-foreach-in-ruby-what-is-the-difference" target="_blank" rel="external">这里</a>有比较明晰的解释，Kernel.open 这个函数就是一个 wrapper，根据不同的情况做对应的处理。趟多了坑之后，才会觉得这样的特性其实是增加了程序员的负担，比如这个<code>|</code>特性可能有的人就没注意到，即使是看过文档也可能看到了<a href="https://apidock.com/ruby/v1_8_6_287/Kernel/open" target="_blank" rel="external">老版本的文档</a>，从而不知道这个边边角角。</p>
+<p>当然同样的 system这样的命令执行函数也是类似的情况，比如<a href="https://github.com/OWASP/railsgoat/wiki/A1-Command-Injection" target="_blank" rel="external">railsgoat 里的这个 command injection</a>。原则是对于任何用户输入的参数，都需要做不安全的假设，做好检查。</p>
+<p><a href="https://github.com/OWASP/railsgoat" target="_blank" rel="external">https://github.com/OWASP/railsgoat</a>这个项目里有各种 Rails漏洞，值得看看。</p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2018/02/12/ruby-open-vul.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2017/09/17/bucklescript-and-reason.html">BuckleScript and Reason</a>
       </h2>
       <p class="article-date">September 17, 2017
@@ -136,25 +167,12 @@
         
         
             
-                <h4 id="BuckleScript"><a href="#BuckleScript" class="headerlink" title="BuckleScript"></a>BuckleScript</h4><p>虽然我不是前端工程师，不过因为喜欢 OCaml，所以偶尔关注 <a href="https://github.com/BuckleScript/bucklescript" target="_blank" rel="external">BuckleScript</a> 有一段时间了，今天又花时间看了看文档和代码。BuckleScript 是张宏波主导开发的开源项目，『有希望成为第一个完全由国人设计主导实现并被世界各地广泛使用的编译器』，不过是否能广泛被使用还得看后续推广。</p>
-<p>简单来说BuckleScript 是一个代码转换器，把你写的 OCaml 代码生成为纯 JS 代码。这样做的好处和必要性在于：</p>
-<ol>
-<li>JS 太牛了，<a href="https://www.youtube.com/watch?v=jFU-wc28lF4" target="_blank" rel="external">这个跨平台语言正在吞噬着所有软件领域</a></li>
-<li>JS太难维护了，大规模的 JS 代码更是噩梦。不管是从开发者角度和是从代码安全的角度，JS 需要类型！<a href="https://www.typescriptlang.org/" target="_blank" rel="external">微软的 Typescript</a> 和 <a href="https://flow.org/en/" target="_blank" rel="external">FB 的 Flow</a> ，甚至是<a href="http://elm-lang.org/examples" target="_blank" rel="external">Elm</a>都是为了给 JS 带来类型。</li>
-<li>OCaml类型系统稳定可靠，关键是编译器速度快，并且可以编译在多个平台上。</li>
-</ol>
-<p>就我个人而言非常喜欢 OCaml，之前也有一些自己的小项目用过 OCaml。BuckleScript从技术角度来说是非常好的，我看了一些生成的代码可读性比很多代码生成器要好。并且除了直接翻译代码，这个编译器也做了很多代码优化的工作，生成 size 更小，performance 更好的 JS 代码。遗憾的是目前还不支持 Core 这个库，我之前用 Core 比较多，ಥ_ಥ。</p>
-<p>关于代码生成，想起我们原来做过的 <a href="https://github.com/sipin/gorazor" target="_blank" rel="external">Gorazor</a>，从技术角度来说还是有些挑战的，不过从使用角度我个人持保留态度。代码生成毕竟会引入新的语法，我发现很多前端程序员其实并不怎么熟悉函数式编程那套，OCaml 的语法是否能在前端程序员中推广开来是个问题。BuckleScript的文档有待改进，可以给更多大一点的完整的例子。</p>
-<p>关于BuckleScript和js_of_ocaml 的区别，从文档上来看js_of_ocaml 可以把 bytecode 转换为 JS 代码，而BuckleScript是在从编译器里面的rawlambda生成代码，所以理论上来说 js_of_ocaml 对 OCaml 的兼容性更好，而BuckleScript 能生成更可读的 JS 代码，目标在于兼容npm平台。</p>
-<h4 id="ReasonML"><a href="#ReasonML" class="headerlink" title="ReasonML"></a>ReasonML</h4><p><a href="https://reasonml.github.io/" target="_blank" rel="external">ReasonML</a>的来由是之前我说的 OCaml 独特的语法，在很多人看来并不是很友好，所以FB 的这群人做了一个更符合大众品位的方言。然后可以通过 BuckleScript 再翻译为 JS 代码。好绕啊！不过据说 FB 已经在生成环境使用这些了。ReasonML 的开发者移植了一个之前用js_of_ocaml 写的<a href="https://github.com/reasonml-community/Mareo" target="_blank" rel="external">mario 的例子</a>，看了一遍觉得reason 的语法其实改动并不大，可能对 JS 的程序员来说更友好吧。reason 和 OCaml 的关系类似于 Elixir 和 Erlang 之前的关系，为了讨好一类程序员，又为了利用一个已经非常成熟可靠的现有平台。</p>
-<p>在 HN 上有一个比较老的<a href="https://news.ycombinator.com/item?id=12400397" target="_blank" rel="external">讨论帖</a>，有时间也可以再看看。</p>
-<p><a href="https://github.com/BuckleScript/bucklescript/wiki/Why-bucklescript-matters-for-Javascript-platform" target="_blank" rel="external">Why bucklescript matters for Javascript platform</a></p>
-
+                BuckleScript虽然我不是前端工程师，不过因为喜欢 OCaml，所以偶尔关注 BuckleScript 有一段时间了，今天又花时间看了看文档和代码。BuckleScript 是张宏波主导开发的开源项目，『有希望成为第一个完全由国人设计主导实现并被世界各地广泛使用的编译器』，不过是 .....
             
         
       </div>
       
-          <a class="more" href="/2017/09/17/bucklescript-and-reason.html#footer">发表评论</a>
+          <a class="more" href="/2017/09/17/bucklescript-and-reason.html">阅读全文</a>
       
     </article>
   
@@ -379,33 +397,6 @@ Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又�
       
     </article>
   
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/07/07/kong-intro-2.html">Kong源码分析: 启动</a>
-      </h2>
-      <p class="article-date">July 7, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Kong的初始化过程安装好Kong之后我们是用命令sudo ./bin/kong start -c kong.conf -vv来启动。其中kong.conf为配置文件，-vv选项打印出一些重要信息展示出来，方便发现问题。
-可以看到./bin/kong是一个脚本，是用的#!/usr/loc .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/07/07/kong-intro-2.html">阅读全文</a>
-      
-    </article>
-  
 
   
     <div class="guide-pager">
@@ -425,7 +416,7 @@ Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又�
 </div>
     <footer class="app-footer" id="footer">
     <p class="copyright">
-        &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        &copy; 2018 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
         with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
