@@ -116,6 +116,32 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2018/02/22/linux-source.html">Linux 当前 shell 执行命令</a>
+      </h2>
+      <p class="article-date">February 22, 2018
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要unset 当前shell 的环境变量等，</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span>!/usr/bin/env zsh</div><div class="line"></div><div class="line">if [ -z $http_proxy ]; then</div><div class="line">    echo "not using proxy, set it now ... ";</div><div class="line">    export http_proxy="http://127.0.0.1:1087";</div><div class="line">    export https_proxy="https://127.0.0.1:1087";</div><div class="line">    echo $http_proxy;</div><div class="line">else</div><div class="line">    echo "using proxy now, unset it now ...";</div><div class="line">    unset http_proxy;</div><div class="line">    unset https_proxy;</div><div class="line">    echo $http_proxy;</div><div class="line">fi</div></pre></td></tr></table></figure>
+<p>这时候需要执行 <code>. ./proxy_toggle.sh</code> 或者 <code>source ./proxy_toggle.sh</code>。</p>
+<p><code>.</code> (a period) is a <a href="http://www.gnu.org/software/bash/manual/bashref.html#Bourne-Shell-Builtins" target="_blank" rel="external">bash shell built-in command</a> that executes the commands from a file passed as argument, in the current shell. <code>source</code> is a synonym for <code>.</code></p>
+<p>From Bash man page:</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><div class="line">. filename [arguments]</div><div class="line">source filename [arguments]</div><div class="line"><span class="code">       Read  and  execute  commands  from filename in the current shell</span></div><div class="line"><span class="code">       environment and return the exit status of the last command  exe‐</span></div><div class="line"><span class="code">       cuted from filename.  If filename does not contain a slash, file</span></div><div class="line"><span class="code">       names in PATH are used to find the  directory  containing  file‐</span></div><div class="line"><span class="code">       name.   The  file  searched  for in PATH need not be executable.</span></div><div class="line"><span class="code">       When bash is  not  in  posix  mode,  the  current  directory  is</span></div><div class="line"><span class="code">       searched  if no file is found in PATH.  If the sourcepath option</span></div><div class="line"><span class="code">       to the shopt builtin command is turned  off,  the  PATH  is  not</span></div><div class="line"><span class="code">       searched.   If any arguments are supplied, they become the posi‐</span></div><div class="line"><span class="code">       tional parameters when  filename  is  executed.   Otherwise  the</span></div><div class="line"><span class="code">       positional  parameters  are unchanged.  The return status is the</span></div><div class="line"><span class="code">       status of the last command exited within the  script  (0  if  no</span></div><div class="line"><span class="code">       commands  are  executed),  and false if filename is not found or</span></div><div class="line"><span class="code">       cannot be read.</span></div></pre></td></tr></table></figure>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2018/02/22/linux-source.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2018/02/12/ruby-open-vul.html">Ruby的 open 函数导致命令执行</a>
       </h2>
       <p class="article-date">February 12, 2018
@@ -125,24 +151,14 @@
         
         
             
-                <h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>首先看看 open 函数的文档说明， <a href="https://apidock.com/ruby/v1_9_3_392/Kernel/open/class：" target="_blank" rel="external">https://apidock.com/ruby/v1_9_3_392/Kernel/open/class：</a> </p>
-<blockquote>
-<p>If <em>path</em> starts with a pipe character, a subprocess is created, connected to the <a href="https://apidock.com/ruby/Kernel/caller" target="_blank" rel="external">caller</a> by a pair of pipes. The returned <a href="https://apidock.com/ruby/IO" target="_blank" rel="external">IO</a> object may be used to write to the standard input and read from the standard output of this subprocess. If the command following the “|” is a single minus sign, Ruby forks, and this subprocess is connected to the parent. In the subprocess, the <a href="https://apidock.com/ruby/Kernel/open" target="_blank" rel="external">open</a> call returns nil. If the command is not “-”, the subprocess runs the command. If a block is associated with an <a href="https://apidock.com/ruby/Kernel/open" target="_blank" rel="external">open</a>(“|-”) call, that block will be run twice—once in the parent and once in the child. The block parameter will be an <a href="https://apidock.com/ruby/IO" target="_blank" rel="external">IO</a> object in the parent and nil in the child. The parent’s <a href="https://apidock.com/ruby/IO" target="_blank" rel="external">IO</a> object will be connected to the child’s stdin  and stdout. The subprocess will be terminated at the end of the block.</p>
-</blockquote>
-<p>其中说明了如果以|开头则会 fork 出一个进程，<code>|</code> 后面的内容则会当成一条命令执行，比如： </p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">cmd = open(<span class="string">"|date"</span>)</div><div class="line">print cmd.gets</div><div class="line">cmd.close</div><div class="line">=&gt; <span class="number">2018</span>年 <span class="number">2</span>月<span class="number">12</span>日 星期一 <span class="number">21</span>时<span class="number">37</span>分<span class="number">45</span>秒 CST</div></pre></td></tr></table></figure>
-<h4 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h4><p>正因为这样，这个 open 函数真的是很容易出错，最近的这个 PR： </p>
-<p><a href="https://github.com/ruby/ruby/pull/1777" target="_blank" rel="external">https://github.com/ruby/ruby/pull/1777</a></p>
-<p>之前我们的项目里也出现过类似的情况，直接相当于一个 webshell，任意执行命令。这样的 command injection 当然也很好检测，brakeman 之类的就可以。所以 Rails项目还是时不时地扫描一下比较好。</p>
-<p>Ruby 里面有几个 Open，<a href="https://stackoverflow.com/questions/1727217/file-open-open-and-io-foreach-in-ruby-what-is-the-difference" target="_blank" rel="external">这里</a>有比较明晰的解释，Kernel.open 这个函数就是一个 wrapper，根据不同的情况做对应的处理。趟多了坑之后，才会觉得这样的特性其实是增加了程序员的负担，比如这个<code>|</code>特性可能有的人就没注意到，即使是看过文档也可能看到了<a href="https://apidock.com/ruby/v1_8_6_287/Kernel/open" target="_blank" rel="external">老版本的文档</a>，从而不知道这个边边角角。</p>
-<p>当然同样的 system这样的命令执行函数也是类似的情况，比如<a href="https://github.com/OWASP/railsgoat/wiki/A1-Command-Injection" target="_blank" rel="external">railsgoat 里的这个 command injection</a>。原则是对于任何用户输入的参数，都需要做不安全的假设，做好检查。</p>
-<p><a href="https://github.com/OWASP/railsgoat" target="_blank" rel="external">https://github.com/OWASP/railsgoat</a>这个项目里有各种 Rails漏洞，值得看看。</p>
+                说明首先看看 open 函数的文档说明， https://apidock.com/ruby/v1_9_3_392/Kernel/open/class： 
 
+If path starts with a pipe character, a subprocess is created, con .....
             
         
       </div>
       
-          <a class="more" href="/2018/02/12/ruby-open-vul.html#footer">发表评论</a>
+          <a class="more" href="/2018/02/12/ruby-open-vul.html">阅读全文</a>
       
     </article>
   
@@ -368,32 +384,6 @@ Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又�
       </div>
       
           <a class="more" href="/2017/07/22/kong-intro-4.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/07/16/kong-intro-3.html">Kong源码分析: 插件</a>
-      </h2>
-      <p class="article-date">July 16, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                插件的强大之处在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提供了提供模块开发机制，但是相对来说更底层一些，并且需要使用 C/C++ 来开发，对于很多开发人员来说 Nginx 仍为一个黑盒。OpenResty 集成了很多好用插件，并提供 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/07/16/kong-intro-3.html">阅读全文</a>
       
     </article>
   

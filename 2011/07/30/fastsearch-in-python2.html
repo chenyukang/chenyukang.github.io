@@ -121,108 +121,23 @@
 <main class="app-body">
   <article class="post-article">
     <section class="markdown-content"><p>Python2.5的实现中有一个字符串匹配算法，在s中查找p是否存在，s的长度为n，p的长度为m。这个算法符合以下要求：</p>
-<p><blockquote></blockquote></p>
 <ul>
 <li>任何情况下都要比brute-force算法快</li>
 <li>O(1)的空间，O(m)的初始化复杂度</li>
 <li>O(n/m)的查找复杂度</li>
 <li>最坏情况下不能比O(nm)时间复杂度差</li>
-<li>实现简单，对于实际中的查找大部分表现良好，最坏情况出现概率小<br><br>标准的字符串查找算法不满足这些要求，KMP的时间复杂度为O(m+n)(初始化O(m)加第二部分O(n)， Boyer-Moore和其变形要求额外的空间，Python2.5里面增加了这个结合了Boyer-Moore和Sunday的思想的变形实现。来看看这是怎么个神奇的算法，KMP的思想是在每一次不匹配的情况下尽量的向右边移动，所以计算一个Next的移动下标数组。如果不匹配，最理想的情况下是向右边移动多长?应该是m，这样就能尽量减少对比的次数。所以每次比较的时候先比较p的最后一个字符，比如s=”aaaaaaad”，p=”aae”，如果从s的开头查找，只要发现第3个和p的第三个不一样，移动指标，移动多少？如果发现没有e，最长能移动p的长度，就是3。如果最后一个不匹配并且s[i+m]不是p中的字符就移动m，否则移动1。这里有两个问题：<blockquote></blockquote></li>
-<li>如何知道s中的某一个字符是否是p中的一部分?</li>
-<li>如何尽量移动m而不出现少找的情况?<br><br>第一个问题，可以用某个存储空间存下是否有p中的某个字符出现过，方便以后查找。Hash的思想，但是这里字符串查找里面再弄个Hash太无语了吧。一个简单的Bloom-filter，这里是这样实现的。</li>
+<li>实现简单，对于实际中的查找大部分表现良好，最坏情况出现概率小</li>
 </ul>
-<pre class="src"> 
-    <span style="color: #ff4500; font-style: italic;">/*</span><span style="color: #ff4500; font-style: italic;">&#35745;&#31639;mask</span><span style="color: #ff4500; font-style: italic;">*/</span> 
-    mlast = m-1;
-    <span style="color: #00ffff; font-weight: bold;">for</span> (mask = i = 0; i &lt;= mlast; i++) {
-        mask |= (1 &lt;&lt; (p[i] &amp; 0x1F));
-    }
-
-    <span style="color: #ff4500; font-style: italic;">/*</span><span style="color: #ff4500; font-style: italic;">&#21028;&#26029;s[i]&#19981;&#26159;p&#20013;&#30340;&#19968;&#20010;&#23383;&#31526;&#20018;</span><span style="color: #ff4500; font-style: italic;">*/</span> 
-    <span style="color: #00ffff; font-weight: bold;">if</span>(!(mask &amp; (1 &lt;&lt; (s[i] &amp; 0x1F))))
-         printf(<span style="color: #ffa07a;">"s[i] is not in pattern"</span>);
-    <span style="color: #00ffff; font-weight: bold;">else</span> 
-         printf(<span style="color: #ffa07a;">"s[i] is in pattern"</span>);
-</pre> 
-
+<p>标准的字符串查找算法不满足这些要求，KMP的时间复杂度为O(m+n)(初始化O(m)加第二部分O(n)， Boyer-Moore和其变形要求额外的空间，Python2.5里面增加了这个结合了Boyer-Moore和Sunday的思想的变形实现。来看看这是怎么个神奇的算法，KMP的思想是在每一次不匹配的情况下尽量的向右边移动，所以计算一个Next的移动下标数组。如果不匹配，最理想的情况下是向右边移动多长?应该是m，这样就能尽量减少对比的次数。所以每次比较的时候先比较p的最后一个字符，比如s=”aaaaaaad”，p=”aae”，如果从s的开头查找，只要发现第3个和p的第三个不一样，移动指标，移动多少？如果发现没有e，最长能移动p的长度，就是3。如果最后一个不匹配并且s[i+m]不是p中的字符就移动m，否则移动1。这里有两个问题：</p>
+<blockquote>
+<p>如何知道s中的某一个字符是否是p中的一部分?<br>如何尽量移动m而不出现少找的情况? </p>
+</blockquote>
+<p>第一个问题，可以用某个存储空间存下是否有p中的某个字符出现过，方便以后查找。Hash的思想，但是这里字符串查找里面再弄个Hash太无语了吧。一个简单的Bloom-filter，这里是这样实现的。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*计算mask*/</span> </div><div class="line">mlast = m<span class="number">-1</span>;</div><div class="line"><span class="keyword">for</span> (mask = i = <span class="number">0</span>; i &lt;= mlast; i++) &#123;</div><div class="line">    mask |= (<span class="number">1</span> &lt;&lt; (p[i] &amp; <span class="number">0x1F</span>));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*判断s[i]不是p中的一个字符串*/</span> </div><div class="line"><span class="keyword">if</span>(!(mask &amp; (<span class="number">1</span> &lt;&lt; (s[i] &amp; <span class="number">0x1F</span>))))</div><div class="line">     <span class="built_in">printf</span>(<span class="string">"s[i] is not in pattern"</span>);</div><div class="line"><span class="keyword">else</span> </div><div class="line">     <span class="built_in">printf</span>(<span class="string">"s[i] is in pattern"</span>);</div></pre></td></tr></table></figure>
 <p>其实我们是要判断一个s中的一个字符串没有出现在p中，取低5位不是可能产生冲突么？产生冲突也没问题，就像一个Hash只要一个元素算出来的Key指定的slot没元素不就能确定这个元素不在里面了么。</p>
-<p>第二个问题，有些巧妙。上面那个例子是因为s的最后一个字符没被匹配，所以能移动m的长度。如果这个例子s=”aaacaaaacaa”，p=”aacaa”，第5个位置都为a，最后一个匹配，但是s里面前几个其实不为aacaa，所以需要移动，但是移动多少呢?如果移动p的长度，那从第2个位置开始的aacaa就没被检查到。所以需要一个变量记录在每次最后一个字母匹配的情况下向右移动的合理偏移量，在这里为skip，初始化的时候计算出来，这最偏移量其实是计算的最小偏移量，就是移动skip个位置到第一个s[m-1]的位置。 整个实现既节省空间又速度快，强大。<br><a id="more"></a><br>具体实现如下：</p>
-<pre class="src"> 
-
-<span style="color: #ff4500; font-style: italic;">//</span><span style="color: #ff4500; font-style: italic;">&#22914;&#26524;mode&#20026;FAST_COUNT&#65292;&#21017;&#26597;&#25214;pattern&#20986;&#29616;&#30340;&#27425;&#25968;
-</span><span style="color: #7fffd4;">#define</span> <span style="color: #eedd82;">FAST_COUNT</span> 1
-
-<span style="color: #98fb98;">int</span> <span style="color: #87cefa; font-weight: bold;">fastsearch</span>(<span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #98fb98;">char</span>* <span style="color: #eedd82;">s</span>, <span style="color: #98fb98;">size_t</span> <span style="color: #eedd82;">n</span>,
-           <span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #98fb98;">char</span>* <span style="color: #eedd82;">p</span>, <span style="color: #98fb98;">size_t</span> <span style="color: #eedd82;">m</span>,
-           <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">mode</span>)
-{
-    <span style="color: #98fb98;">long</span> <span style="color: #eedd82;">mask</span>;
-    <span style="color: #98fb98;">size_t</span> <span style="color: #eedd82;">skip</span>, <span style="color: #eedd82;">count</span> = 0;
-    <span style="color: #98fb98;">size_t</span> <span style="color: #eedd82;">i</span>, <span style="color: #eedd82;">j</span>, <span style="color: #eedd82;">mlast</span>, <span style="color: #eedd82;">w</span>;
-
-    w = n - m;
-
-    <span style="color: #00ffff; font-weight: bold;">if</span> (w &lt; 0)
-        <span style="color: #00ffff; font-weight: bold;">return</span> -1;
-
-    <span style="color: #ff4500; font-style: italic;">/* </span><span style="color: #ff4500; font-style: italic;">&#22914;&#26524;m=1&#65292;&#29305;&#20363;&#65292;&#25195;&#25551;&#19968;&#36941;&#35299;&#20915;</span><span style="color: #ff4500; font-style: italic;">*/</span> 
-    <span style="color: #00ffff; font-weight: bold;">if</span> (m &lt;= 1) {
-        <span style="color: #00ffff; font-weight: bold;">if</span> (m &lt;= 0)
-            <span style="color: #00ffff; font-weight: bold;">return</span> -1;
-        <span style="color: #00ffff; font-weight: bold;">if</span> (mode == FAST_COUNT) {
-            <span style="color: #00ffff; font-weight: bold;">for</span> (i = 0; i &lt; n; i++)
-                <span style="color: #00ffff; font-weight: bold;">if</span> (s[i] == p[0])
-                    count++;
-            <span style="color: #00ffff; font-weight: bold;">return</span> count;
-        } <span style="color: #00ffff; font-weight: bold;">else</span> {
-            <span style="color: #00ffff; font-weight: bold;">for</span> (i = 0; i &lt; n; i++)
-                <span style="color: #00ffff; font-weight: bold;">if</span> (s[i] == p[0])
-                    <span style="color: #00ffff; font-weight: bold;">return</span> i;
-        }
-        <span style="color: #00ffff; font-weight: bold;">return</span> -1;
-    }
-
-    mlast = m - 1;
-
-    skip = mlast - 1;
-    <span style="color: #ff4500; font-style: italic;">/*</span><span style="color: #ff4500; font-style: italic;">&#35745;&#31639;mask</span><span style="color: #ff4500; font-style: italic;">*/</span> 
-    <span style="color: #00ffff; font-weight: bold;">for</span> (mask = i = 0; i &lt; mlast; i++) {
-        mask |= (1 &lt;&lt; (p[i] &amp; 0x1F));
-        <span style="color: #00ffff; font-weight: bold;">if</span> (p[i] == p[mlast])
-            skip = mlast - i - 1;
-    }
-    mask |= (1 &lt;&lt; (p[mlast] &amp; 0x1F));
-
-    <span style="color: #00ffff; font-weight: bold;">for</span> (i = 0; i &lt;= w; i++) {
-        <span style="color: #00ffff; font-weight: bold;">if</span> (s[i+m-1] == p[m-1]) {<span style="color: #ff4500; font-style: italic;">//</span><span style="color: #ff4500; font-style: italic;">pattern&#26411;&#23614;&#21305;&#37197;
-</span>            <span style="color: #ff4500; font-style: italic;">/* </span><span style="color: #ff4500; font-style: italic;">candidate match </span><span style="color: #ff4500; font-style: italic;">*/</span> 
-            <span style="color: #00ffff; font-weight: bold;">for</span> (j = 0; j &lt; mlast; j++)
-                <span style="color: #00ffff; font-weight: bold;">if</span> (s[i+j] != p[j])
-                    <span style="color: #00ffff; font-weight: bold;">break</span>;
-            <span style="color: #00ffff; font-weight: bold;">if</span> (j == mlast) {<span style="color: #ff4500; font-style: italic;">//</span><span style="color: #ff4500; font-style: italic;">&#19968;&#20010;&#21305;&#37197;&#25104;&#21151;
-</span>                <span style="color: #00ffff; font-weight: bold;">if</span> (mode != FAST_COUNT)
-                    <span style="color: #00ffff; font-weight: bold;">return</span> i;
-                count++;
-                i = i + mlast;
-                <span style="color: #00ffff; font-weight: bold;">continue</span>;
-            }
-            <span style="color: #ff4500; font-style: italic;">/*</span><span style="color: #ff4500; font-style: italic;">&#31227;&#21160;&#22810;&#23569;?,&#26681;&#25454;mask</span><span style="color: #ff4500; font-style: italic;">*/</span> 
-            <span style="color: #00ffff; font-weight: bold;">if</span> (!(mask &amp; (1 &lt;&lt; (s[i+m] &amp; 0x1F))))
-                i = i + m;
-            <span style="color: #00ffff; font-weight: bold;">else</span> 
-                i = i + skip;
-        } <span style="color: #00ffff; font-weight: bold;">else</span> {
-            <span style="color: #ff4500; font-style: italic;">/* </span><span style="color: #ff4500; font-style: italic;">skip: check if next character is part of pattern </span><span style="color: #ff4500; font-style: italic;">*/</span> 
-            <span style="color: #00ffff; font-weight: bold;">if</span> (!(mask &amp; (1 &lt;&lt; (s[i+m] &amp; 0x1F))))
-                i = i + m;
-        }
-    }
-
-    <span style="color: #00ffff; font-weight: bold;">if</span> (mode != FAST_COUNT)
-        <span style="color: #00ffff; font-weight: bold;">return</span> -1;
-    <span style="color: #00ffff; font-weight: bold;">return</span> count;
-}
-</pre>
+<p>第二个问题，有些巧妙。上面那个例子是因为s的最后一个字符没被匹配，所以能移动m的长度。如果这个例子s=”aaacaaaacaa”，p=”aacaa”，第5个位置都为a，最后一个匹配，但是s里面前几个其实不为aacaa，所以需要移动，但是移动多少呢?如果移动p的长度，那从第2个位置开始的aacaa就没被检查到。所以需要一个变量记录在每次最后一个字母匹配的情况下向右移动的合理偏移量，在这里为skip，初始化的时候计算出来，这最偏移量其实是计算的最小偏移量，就是移动skip个位置到第一个s[m-1]的位置。 整个实现既节省空间又速度快，强大。</p>
+<p>具体实现如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">//如果mode为FAST_COUNT，则查找pattern出现的次数</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> FAST_COUNT 1</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">fastsearch</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* s, <span class="keyword">size_t</span> n,</span></span></div><div class="line"><span class="function"><span class="params">           <span class="keyword">const</span> <span class="keyword">char</span>* p, <span class="keyword">size_t</span> m,</span></span></div><div class="line"><span class="function"><span class="params">           <span class="keyword">int</span> mode)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">long</span> mask;</div><div class="line">    <span class="keyword">size_t</span> skip, count = <span class="number">0</span>;</div><div class="line">    <span class="keyword">size_t</span> i, j, mlast, w;</div><div class="line"></div><div class="line">    w = n - m;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (w &lt; <span class="number">0</span>)</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line"></div><div class="line">    <span class="comment">/* 如果m=1，特例，扫描一遍解决*/</span> </div><div class="line">    <span class="keyword">if</span> (m &lt;= <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (m &lt;= <span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">        <span class="keyword">if</span> (mode == FAST_COUNT) &#123;</div><div class="line">            <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; i++)</div><div class="line">                <span class="keyword">if</span> (s[i] == p[<span class="number">0</span>])</div><div class="line">                    count++;</div><div class="line">            <span class="keyword">return</span> count;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; i++)</div><div class="line">                <span class="keyword">if</span> (s[i] == p[<span class="number">0</span>])</div><div class="line">                    <span class="keyword">return</span> i;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    mlast = m - <span class="number">1</span>;</div><div class="line"></div><div class="line">    skip = mlast - <span class="number">1</span>;</div><div class="line">    <span class="comment">/*计算mask*/</span> </div><div class="line">    <span class="keyword">for</span> (mask = i = <span class="number">0</span>; i &lt; mlast; i++) &#123;</div><div class="line">        mask |= (<span class="number">1</span> &lt;&lt; (p[i] &amp; <span class="number">0x1F</span>));</div><div class="line">        <span class="keyword">if</span> (p[i] == p[mlast])</div><div class="line">            skip = mlast - i - <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    mask |= (<span class="number">1</span> &lt;&lt; (p[mlast] &amp; <span class="number">0x1F</span>));</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= w; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (s[i+m<span class="number">-1</span>] == p[m<span class="number">-1</span>]) &#123;<span class="comment">//pattern末尾匹配</span></div><div class="line">            <span class="comment">/* candidate match */</span> </div><div class="line">            <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; mlast; j++)</div><div class="line">                <span class="keyword">if</span> (s[i+j] != p[j])</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">if</span> (j == mlast) &#123;<span class="comment">//一个匹配成功</span></div><div class="line">                <span class="keyword">if</span> (mode != FAST_COUNT)</div><div class="line">                    <span class="keyword">return</span> i;</div><div class="line">                count++;</div><div class="line">                i = i + mlast;</div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">/*移动多少?,根据mask*/</span> </div><div class="line">            <span class="keyword">if</span> (!(mask &amp; (<span class="number">1</span> &lt;&lt; (s[i+m] &amp; <span class="number">0x1F</span>))))</div><div class="line">                i = i + m;</div><div class="line">            <span class="keyword">else</span> </div><div class="line">                i = i + skip;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">/* skip: check if next character is part of pattern */</span> </div><div class="line">            <span class="keyword">if</span> (!(mask &amp; (<span class="number">1</span> &lt;&lt; (s[i+m] &amp; <span class="number">0x1F</span>))))</div><div class="line">                i = i + m;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (mode != FAST_COUNT)</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    <span class="keyword">return</span> count;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </section>
     
       <div class="tags">

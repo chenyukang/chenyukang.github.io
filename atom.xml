@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://cyukang.com/"/>
-  <updated>2018-02-13T02:03:26.086Z</updated>
+  <updated>2018-02-22T17:29:42.519Z</updated>
   <id>http://cyukang.com/</id>
   
   <author>
@@ -16,11 +16,36 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Linux 当前 shell 执行命令</title>
+    <link href="http://cyukang.com/2018/02/22/linux-source.html"/>
+    <id>http://cyukang.com/2018/02/22/linux-source.html</id>
+    <published>2018-02-22T13:46:33.000Z</published>
+    <updated>2018-02-22T17:29:42.519Z</updated>
+    
+    <content type="html"><![CDATA[<p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要unset 当前shell 的环境变量等，</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span>!/usr/bin/env zsh</div><div class="line"></div><div class="line">if [ -z $http_proxy ]; then</div><div class="line">    echo "not using proxy, set it now ... ";</div><div class="line">    export http_proxy="http://127.0.0.1:1087";</div><div class="line">    export https_proxy="https://127.0.0.1:1087";</div><div class="line">    echo $http_proxy;</div><div class="line">else</div><div class="line">    echo "using proxy now, unset it now ...";</div><div class="line">    unset http_proxy;</div><div class="line">    unset https_proxy;</div><div class="line">    echo $http_proxy;</div><div class="line">fi</div></pre></td></tr></table></figure>
+<p>这时候需要执行 <code>. ./proxy_toggle.sh</code> 或者 <code>source ./proxy_toggle.sh</code>。</p>
+<p><code>.</code> (a period) is a <a href="http://www.gnu.org/software/bash/manual/bashref.html#Bourne-Shell-Builtins" target="_blank" rel="external">bash shell built-in command</a> that executes the commands from a file passed as argument, in the current shell. <code>source</code> is a synonym for <code>.</code></p>
+<p>From Bash man page:</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><div class="line">. filename [arguments]</div><div class="line">source filename [arguments]</div><div class="line"><span class="code">       Read  and  execute  commands  from filename in the current shell</span></div><div class="line"><span class="code">       environment and return the exit status of the last command  exe‐</span></div><div class="line"><span class="code">       cuted from filename.  If filename does not contain a slash, file</span></div><div class="line"><span class="code">       names in PATH are used to find the  directory  containing  file‐</span></div><div class="line"><span class="code">       name.   The  file  searched  for in PATH need not be executable.</span></div><div class="line"><span class="code">       When bash is  not  in  posix  mode,  the  current  directory  is</span></div><div class="line"><span class="code">       searched  if no file is found in PATH.  If the sourcepath option</span></div><div class="line"><span class="code">       to the shopt builtin command is turned  off,  the  PATH  is  not</span></div><div class="line"><span class="code">       searched.   If any arguments are supplied, they become the posi‐</span></div><div class="line"><span class="code">       tional parameters when  filename  is  executed.   Otherwise  the</span></div><div class="line"><span class="code">       positional  parameters  are unchanged.  The return status is the</span></div><div class="line"><span class="code">       status of the last command exited within the  script  (0  if  no</span></div><div class="line"><span class="code">       commands  are  executed),  and false if filename is not found or</span></div><div class="line"><span class="code">       cannot be read.</span></div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要unset 当前shell 的环境变量等，&lt;/p&gt;
+&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;c
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Ruby的 open 函数导致命令执行</title>
     <link href="http://cyukang.com/2018/02/12/ruby-open-vul.html"/>
     <id>http://cyukang.com/2018/02/12/ruby-open-vul.html</id>
     <published>2018-02-12T12:39:46.000Z</published>
-    <updated>2018-02-13T02:03:26.086Z</updated>
+    <updated>2018-02-11T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>首先看看 open 函数的文档说明， <a href="https://apidock.com/ruby/v1_9_3_392/Kernel/open/class：" target="_blank" rel="external">https://apidock.com/ruby/v1_9_3_392/Kernel/open/class：</a> </p>
 <blockquote>
@@ -50,7 +75,7 @@
     <link href="http://cyukang.com/2017/09/17/bucklescript-and-reason.html"/>
     <id>http://cyukang.com/2017/09/17/bucklescript-and-reason.html</id>
     <published>2017-09-17T14:47:27.000Z</published>
-    <updated>2017-09-18T04:40:41.000Z</updated>
+    <updated>2017-09-16T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<h4 id="BuckleScript"><a href="#BuckleScript" class="headerlink" title="BuckleScript"></a>BuckleScript</h4><p>虽然我不是前端工程师，不过因为喜欢 OCaml，所以偶尔关注 <a href="https://github.com/BuckleScript/bucklescript" target="_blank" rel="external">BuckleScript</a> 有一段时间了，今天又花时间看了看文档和代码。BuckleScript 是张宏波主导开发的开源项目，『有希望成为第一个完全由国人设计主导实现并被世界各地广泛使用的编译器』，不过是否能广泛被使用还得看后续推广。</p>
 <p>简单来说BuckleScript 是一个代码转换器，把你写的 OCaml 代码生成为纯 JS 代码。这样做的好处和必要性在于：</p>
@@ -324,52 +349,6 @@
     <summary type="html">
     
       &lt;h3 id=&quot;Nginx里的缓存使用&quot;&gt;&lt;a href=&quot;#Nginx里的缓存使用&quot; class=&quot;headerlink&quot; title=&quot;Nginx里的缓存使用&quot;&gt;&lt;/a&gt;Nginx里的缓存使用&lt;/h3&gt;&lt;p&gt;在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是
-    
-    </summary>
-    
-    
-      <category term="Lua" scheme="http://cyukang.com/tags/Lua/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Kong源码分析: 插件</title>
-    <link href="http://cyukang.com/2017/07/16/kong-intro-3.html"/>
-    <id>http://cyukang.com/2017/07/16/kong-intro-3.html</id>
-    <published>2017-07-15T16:00:00.000Z</published>
-    <updated>2017-07-15T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="插件的强大之处"><a href="#插件的强大之处" class="headerlink" title="插件的强大之处"></a>插件的强大之处</h3><p>在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提供了提供模块开发机制，但是相对来说更底层一些，并且需要使用 C/C++ 来开发，对于很多开发人员来说 Nginx 仍为一个黑盒。OpenResty 集成了很多好用插件，并提供了通过 Lua 扩展 Nginx 的机制，所以 OpenResty 相对来说更灵活。而 Kong 在 OpenResty 基础上提供的插件机制更灵活，在于： </p>
-<blockquote>
-<p>​        复用：OpenResty 的复用在于函数级别，我们可以把一些通用的 Lua 函数引入各个项目。而 Kong 的插件复用可以通过 API 修改一下配置即可。是否启用某个插件，这只是数据配置问题，启用与否不会涉及到代码的改动。</p>
-<p>抽象、统一: Kong 实现了基础的插件配置的存储和更新机制，所以我们只需按照要求定义插件配置的数据类型，插件实现的时候不用再去关心这些细节。</p>
-<p>灵活、组合: OpenResty 的一些处理部分有限制，比如 access_by_lua 在同一个 location 能调用一次， 当然我们可以把多个处理逻辑都放在这里，这又涉及到代码改动。 而 Kong 可以依次调用各个插件对应的 phase，并且通过引入优先级来解决前后顺序问题。</p>
-</blockquote>
-<p>插件开发的原则是提供机制，而非实现，在做插件开发的时候一定需要考虑这个插件能否满足一类相似的需求，这样我们只需要做一下参数的配置就能把插件启动在另外一个站点上。</p>
-<p>对于插件这块我的疑问在于这套机制如何运行的？如何找到站点对应的插件？如此多的插件是否会有性能问题？​</p>
-<h3 id="Kong插件的运行机制"><a href="#Kong插件的运行机制" class="headerlink" title="Kong插件的运行机制"></a>Kong插件的运行机制</h3><p>在上一文 Kong 初始化分析中，我们看到 nginx_kong.lua 模板文件里面有这么一段代码：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">location / &#123; </div><div class="line">  rewrite_by_lua_block &#123;</div><div class="line">      kong.rewrite()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  access_by_lua_block &#123;</div><div class="line">      kong.access()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  header_filter_by_lua_block &#123;</div><div class="line">      kong.header_filter()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  body_filter_by_lua_block &#123;</div><div class="line">      kong.body_filter()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  log_by_lua_block &#123;</div><div class="line">      kong.<span class="built_in">log</span>()</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在 kong.lua 文件里面， kong.access 的实现是这样的:</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Kong.access</span><span class="params">()</span></span></div><div class="line">  core.access.before()</div><div class="line"></div><div class="line">  <span class="keyword">for</span> plugin, plugin_conf <span class="keyword">in</span> </div><div class="line">      plugins_iterator(singletons.loaded_plugins, <span class="literal">true</span>) <span class="keyword">do</span></div><div class="line">    plugin.handler:access(plugin_conf)</div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  core.access.after()</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>从这里可以看出 Kong 的插件运行机制就是从 loaded_plugins 里面依次执行。 学习 Kong 插件开发的方法是参考现有的一些插件实现，学着写几个就会了。用户自己定义的插件是在 base_plugin 基类上继承而来。Kong 里面使用的了<a href="https://github.com/rxi/classic" target="_blank" rel="external"> 这套 class 机制</a>，可以看到使用 Lua 实现面向对象还是很简单的。</p>
-<h3 id="singletons-loaded-plugins"><a href="#singletons-loaded-plugins" class="headerlink" title="singletons.loaded_plugins"></a>singletons.loaded_plugins</h3><p><a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L156" target="_blank" rel="external">singletons.loaded_plugins</a>在这里初始化的，在具体<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L70" target="_blank" rel="external">实现过程中</a>就是从数据库里面把插件配置读出，</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="keyword">local</span> ok, handler = utils.load_module_if_exists(<span class="string">"kong.plugins."</span> .. plugin .. <span class="string">".handler"</span>)</div></pre></td></tr></table></figure>
-<p> 在每一个插件在 handler.lua 的最后都是 return XXXXHandler，所以在调用 <a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L105" target="_blank" rel="external">handler()</a>后我们在内存中导入了插件的对象。另外在初始化后需要<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L116" target="_blank" rel="external">按照优先级来排序</a>，以此来保证各个插件之间的执行顺序。</p>
-<p>从上面的分析上看出，插件导入后都会在内存中的全局对象中存储，后面的开销在于依次迭代插件。</p>
-<h3 id="plugins-iterator"><a href="#plugins-iterator" class="headerlink" title="plugins_iterator"></a>plugins_iterator</h3><p>我们再来看看某个站点是否启用某个插件是如何处理的，最主要的实现在于 plugins_iterator 这个函数。首先我们得理解如何确定当前 request 对应的唯一标识符， 在<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/core/handler.lua#L128" target="_blank" rel="external">core.handler.access</a>的过程中保存了经过路由后的 api在ngx.ctx 里，这个 ngx.ctx 会在整个request 处理过程中反复被使用。再回到 plugins_interator 函数，这个函数的参数有两个，后一个叫access_or_cert_ctx， 因为对于一个 request处理中 plugins_iterator 会调用多次，这个参数的作用在于判断是否是第一个调用这个函数。第一次调用可能发生在<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L219" target="_blank" rel="external">ssl_certificate</a>或者<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L297" target="_blank" rel="external">access</a> 阶段， 因为在 ctx 里面 Kong 还是初始化了一个叫做<code>ctx.plugins_for_request</code>的变量来存储当前 request 启用的插件，这样后续 iterator 阶段就完全不会去重复 load 插件配置，这样做当然是为了性能上的考虑。</p>
-<p>读取插件配置的函数调用是： </p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> api <span class="keyword">then</span></div><div class="line">   plugin_configuration = load_plugin_configuration(api.id, consumer_id, plugin.name)</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p><a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/core/plugins_iterator.lua#L38" target="_blank" rel="external">load_plugin_configuration</a>也会首先尝试从内存缓存中取，如果取不到再从数据库中取出，然后存储在缓存中。</p>
-<p>从上面的分析看出，插件相关的读取和执行在大部分时间里是完全不会去读数据库的，所以性能损失并不会大。</p>
-<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p>Kong的插件部分并没有错误处理部分，从现有代码上看错误处理分两个部分:</p>
-<p>一种方式是<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/tools/responses.lua" target="_blank" rel="external">responses.lua</a>， 如果是在 Kong 的 Lua 代码部分检查出来的错误一般使用类似<a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L250" target="_blank" rel="external">responses.send(500)</a>这样的方式来向客户端返回错误码。</p>
-<p>第二种是通过 <a href="https://github.com/chenyukang/kong/blob/blog-ref/kong/templates/nginx_kong.lua#L81" target="_blank" rel="external">kong_error_handler</a>。 这种错误可能是执行了 ngx.exit(500) 之类的代码或者是 Nginx 内部触发的。</p>
-<p>这在某些情况下对用户不友好，我们不能只简单地返回一个错误信息，有的时候我们需要展示一个漂亮些的错误页面或者是把请求转到别的降级站点，对于这个需求我做了<a href="https://github.com/chenyukang/kong/tree/custom-error-handle" target="_blank" rel="external">一个分支来扩展错误处理</a>。 目前实现还未完整，不过已经可以定制化错误页面了。 这里增加了一个 <a href="https://github.com/chenyukang/kong/blob/custom-error-handle/kong/templates/nginx_kong.lua#L113" target="_blank" rel="external">ngx.var.api_id</a>，这个变量的初始化也在 <a href="https://github.com/chenyukang/kong/blob/60c934c851f41dfd6a921995a2568905284af742/kong/core/handler.lua#L98" target="_blank" rel="external">core.access 阶段</a>。因为存储在 ngx.ctx 里的这些信息在执行了 ngx.exit 之后已经释放了，所以我需要一个 ngx.var 级别的变量存储 api_id，然后使用这个变量来判断 error-handler 插件是否启用。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;插件的强大之处&quot;&gt;&lt;a href=&quot;#插件的强大之处&quot; class=&quot;headerlink&quot; title=&quot;插件的强大之处&quot;&gt;&lt;/a&gt;插件的强大之处&lt;/h3&gt;&lt;p&gt;在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提
     
     </summary>
     

@@ -121,17 +121,7 @@
 <main class="app-body">
   <article class="post-article">
     <section class="markdown-content"><p>这个操作好像经常要用到，拷贝当前光标连续的一段字符串(除了空白和换行), 写了个小函数来实现。</p>
-<pre class="src"> 
-(<span style="color: #00ffff;">defun</span> <span style="color: #87cefa;">get-continue-string</span> ()
-  (interactive)
-  (skip-chars-backward <span style="color: #ffa07a;">"^ \n"</span>)
-  (setq low (point))
-  (skip-chars-forward <span style="color: #ffa07a;">"^ \n"</span>)
-  (setq high (point))
-  (copy-region-as-kill low high)
-  (message (buffer-substring low high)))
-
-(global-set-key (kbd <span style="color: #ffa07a;">"C-x y"</span>) 'get-continue-string)</pre>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">(defun get-continue-string ()</div><div class="line">  (interactive)</div><div class="line">  (skip-chars-backward &quot;^ \n&quot;)</div><div class="line">  (setq low (point))</div><div class="line">  (skip-chars-forward &quot;^ \n&quot;)</div><div class="line">  (setq high (point))</div><div class="line">  (copy-region-as-kill low high)</div><div class="line">  (message (buffer-substring low high)))</div><div class="line"></div><div class="line">(global-set-key (kbd &quot;C-x y&quot;) &apos;get-continue-string)</div></pre></td></tr></table></figure>
 </section>
     
       <div class="tags">

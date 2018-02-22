@@ -124,32 +124,10 @@
 <p></p><h4>poj 2050</h4><p></p>
 <p class="first">这题折腾了很久很久，刚开始误以为每个文件的最大行数为1500，最后因为输出格式问题。代码也比较长330行，954ms。<br>使用数组作为hash，使用位图记录文件中存在的单词，idx为由单词转化得到的该单词在hash表中的index。</p>
 
-<pre class="src"><span style="color: #98f5ff;">unsigned</span> <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">docs_flag</span>[MAXDOC][(MAXWORDS+31)/32]; <span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">记录某个文件中是否存在某个单词
-</span><span style="color: #98f5ff;">void</span> <span style="color: #daa520; font-weight: bold;">set_docflag</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">doc</span>[], <span style="color: #98f5ff;">unsigned</span> <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">idx</span>)
-{
-        doc[idx&gt;&gt;5] |= (1&lt;&lt;(idx&amp;0x1f));
-}
 
-<span style="color: #98f5ff;">int</span>  <span style="color: #daa520; font-weight: bold;">get_docflag</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">doc</span>[],<span style="color: #98f5ff;">unsigned</span> <span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">idx</span>)
-{
-        <span style="color: #00bfff; font-weight: bold;">return</span> doc[idx&gt;&gt;5] &amp; (1&lt;&lt;(idx&amp;0x1f));
-}</pre>
-<h4>poj 2518</h4>
-<p class="first">这个好玩，一个4*4的方格，里面分别放四个A,B,C,D，初始状态从输入获取，先随便选取一个字母，然后能进行很多次操作。
-每次能交换两个相邻的方格，到任何一个小的2*2的方格中全部都是所选的字母就获胜。对于每一个输入，求最少多少次交换就能达到胜利状态，
-以及有多少方案可以达到这个目的。</p>
-例如：
-<pre class="example">AABB
-ABAB
-CDCD
-CCDD          output ==&gt; 1 4 (选择A或者B 交换BA 选择C或者D 交换DC)
-
-ACAB
-CBBD
-ADAD
-DCBC          output ==&gt; 4 96</pre>
-
-<p><br>首先想到还是搜索，用bit来减少空间。求最少次数，BFS搜索也许太慢，毕竟每次状态转移会有16个选择。对于每一个输入，先枚举A,B,C,D进行搜索。对于每一个字母，比如A，用一个整数表示其在方格的位置(最大数字到1&lt;&lt;16)，<br></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> docs_flag[MAXDOC][(MAXWORDS+<span class="number">31</span>)/<span class="number">32</span>]; <span class="comment">//记录某个文件中是否存在某个单词</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">set_docflag</span><span class="params">(<span class="keyword">int</span> doc[], <span class="keyword">unsigned</span> <span class="keyword">int</span> idx)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">        doc[idx&gt;&gt;<span class="number">5</span>] |= (<span class="number">1</span>&lt;&lt;(idx&amp;<span class="number">0x1f</span>));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span>  <span class="title">get_docflag</span><span class="params">(<span class="keyword">int</span> doc[],<span class="keyword">unsigned</span> <span class="keyword">int</span> idx)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">        <span class="keyword">return</span> doc[idx&gt;&gt;<span class="number">5</span>] &amp; (<span class="number">1</span>&lt;&lt;(idx&amp;<span class="number">0x1f</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p></p><h4>poj 2518</h4><p></p>
+<p class="first">这个好玩，一个4<em>4的方格，里面分别放四个A,B,C,D，初始状态从输入获取，先随便选取一个字母，然后能进行很多次操作。<br>每次能交换两个相邻的方格，到任何一个小的2</em>2的方格中全部都是所选的字母就获胜。对于每一个输入，求最少多少次交换就能达到胜利状态，<br>以及有多少方案可以达到这个目的。</p><br>例如：<br><pre class="example">AABB<br>ABAB<br>CDCD<br>CCDD          output ==&gt; 1 4 (选择A或者B 交换BA 选择C或者D 交换DC)<br><br>ACAB<br>CBBD<br>ADAD<br>DCBC          output ==&gt; 4 96</pre><br><br><p><br>首先想到还是搜索，用bit来减少空间。求最少次数，BFS搜索也许太慢，毕竟每次状态转移会有16个选择。对于每一个输入，先枚举A,B,C,D进行搜索。对于每一个字母，比如A，用一个整数表示其在方格的位置(最大数字到1&lt;&lt;16)，<br></p>
 
 <p><pre class="example">AABB<br>ABAB<br>CDCD<br>CCDD            state ==&gt; 1100 1010 0000 0000</pre></p>
 <p><br>胜利的状态有9个，可以先枚举出来，1100110000000000等等。胜利状态比较多，照一般的BFS写下去代码肯定比较复杂，时间和空间肯定也都要求比较多。考虑可以从胜利状态反着向初始状态搜，先把9个胜利状态放入数组，求到初始状态最少的步数，同时可以算出有多少种走法。这样做了还是超时，看有人说线上输入有很多组数据。<br></p>

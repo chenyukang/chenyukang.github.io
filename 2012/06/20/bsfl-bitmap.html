@@ -121,65 +121,18 @@
 <main class="app-body">
   <article class="post-article">
     <section class="markdown-content"><h2 id="如何找出int中第一个1"><a href="#如何找出int中第一个1" class="headerlink" title="如何找出int中第一个1"></a>如何找出int中第一个1</h2><p>对于这个问题我们可以从最原始的做法开始，如果没找到1返回0，如果第一位为1返回1。所以代码很简单如下：</p>
-<pre class="prettyprint lang-c">
-static int first_onebit(int x){
-    if(!x)
-        return 0;
-    else{
-        int idx = 0;
-        if(x%2 != 0) return 1;
-        while( x%2 == 0 ) {
-            x>>=1;
-            idx++;
-        }
-        return idx+1;
-    }
-}
-</pre>
-
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">first_onebit</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</div><div class="line">    <span class="keyword">if</span>(!x)</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    <span class="keyword">else</span>&#123;</div><div class="line">        <span class="keyword">int</span> idx = <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span>(x%<span class="number">2</span> != <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">        <span class="keyword">while</span>( x%<span class="number">2</span> == <span class="number">0</span> ) &#123;</div><div class="line">            x&gt;&gt;=<span class="number">1</span>;</div><div class="line">            idx++;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> idx+<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>如何能做到更好呢?这里有一个trick使用一条指令来完成这个工作，具体可以参考<a href="http://lxr.free-electrons.com/source/arch/x86/include/asm/bitops.h" target="_blank" rel="external">Linux Kernel里面这个ffs</a>的代码。我来简化一下就是这么一个函数:</p>
-<pre class="prettyprint lang-c">
-/* ffs: if ret == 0 : no one bit found
-   return index is begin with 1 */
-static int first_onebit(int x)
-{
-    if (!x) {
-        return -1;
-    }
-    else {
-        int ret;
-        __asm__("bsfl %1, %0; incl %0" : "=r" (ret) : "r" (x));
-        return ret;
-    }
-}
-</pre>
-
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* ffs: if ret == 0 : no one bit found</span></div><div class="line"><span class="comment">   return index is begin with 1 */</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">first_onebit</span><span class="params">(<span class="keyword">int</span> x)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">if</span> (!x) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">int</span> ret;</div><div class="line">        __asm__(<span class="string">"bsfl %1, %0; incl %0"</span> : <span class="string">"=r"</span> (ret) : <span class="string">"r"</span> (x));</div><div class="line">        <span class="keyword">return</span> ret;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>这里的bsfl是一条intel汇编指令，它的用法是bsfl op1,op2:顺向位扫描从右向左（从位0–&gt;位15或位31）扫描单节字或双字节操作数op2中第一个含”1”的位，并把扫描到的第一个含’1’的位的位号送操作数op1中。<br>所以就是一条指令完成了这个计算过程。</p>
 <p>这里真的会有多大的差别么，我们可以用程序来计算一下，测试如下:</p>
-<pre><code>int main()
-{
-    int x;
-    for(x=0; x&lt;=1000000000; x++){
-        first_onebit(x);
-    }
-    return 0;
-}
-</code></pre><p>第一个版本花费时间15.685s，第二个版本花费时间5.960s,而其实如果只是循环1000000000次什么也不做也好花费3.091s,所以第二个版本快到如此程度。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> x;</div><div class="line">    <span class="keyword">for</span>(x=<span class="number">0</span>; x&lt;=<span class="number">1000000000</span>; x++)&#123;</div><div class="line">        first_onebit(x);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第一个版本花费时间15.685s，第二个版本花费时间5.960s,而其实如果只是循环1000000000次什么也不做也好花费3.091s,所以第二个版本快到如此程度。</p>
 <h2 id="bitmap的优化"><a href="#bitmap的优化" class="headerlink" title="bitmap的优化"></a>bitmap的优化</h2><p>bitmap是一种常用的数据结构，在编程珠玑有详细介绍，应用也比较广泛比如可以用来做操作系统当中的<a href="http://wiki.osdev.org/Page_Frame_Allocation" target="_blank" rel="external">地址索引查询</a>。<br>对于bitmap中我们常常需要一个操作来找一个空位的bit来做set操作。既然我们知道了第一个1是如何快速查找的，第一0也就好办了，先取反，然后再找第一个1就行了。</p>
 <pre><code>#define first_zerobit(x) (first_onebit(~(x)))
 </code></pre><p>继续bitmap的first_empty就优化成这样了:</p>
-<pre><code>u32 first_empty()
-{
-    u32 idx;
-    for(idx=0; idx&lt;max_idx; idx++){
-        if(arr[idx] == 0xFFFFFFFF) //full
-            continue;
-        u32 v = arr[index];
-        return 32*idx + first_zerobit(v) - 1;
-    }
-    return -1;
-}
-</code></pre><h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>这样的用汇编指令来优化可能会有平台差异，所以你最好清楚自己的平台是否适用。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function">u32 <span class="title">first_empty</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    u32 idx;</div><div class="line">    <span class="keyword">for</span>(idx=<span class="number">0</span>; idx&lt;max_idx; idx++)&#123;</div><div class="line">        <span class="keyword">if</span>(arr[idx] == <span class="number">0xFFFFFFFF</span>) <span class="comment">//full</span></div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        u32 v = arr[index];</div><div class="line">        <span class="keyword">return</span> <span class="number">32</span>*idx + first_zerobit(v) - <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>这样的用汇编指令来优化可能会有平台差异，所以你最好清楚自己的平台是否适用。</p>
 </section>
     
       <div class="tags">
