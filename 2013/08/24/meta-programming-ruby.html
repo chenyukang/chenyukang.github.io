@@ -23,9 +23,38 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
 </head>
 
   <body>
@@ -118,7 +147,8 @@
     <a href="javascript:;"></a>
   </div>
 </div>
-<main class="app-body">
+<main class="app-body flex-box">
+  <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>『Metaprogramming Ruby』这本书看了两遍，从这本书里获取了一些乐趣。技术书籍就应该这样简明扼要，寓理于事。通过一个显示中的例子引入问题，展示元编程的解决办法， 顺带介绍一下用到相关技术的gems。</p>
 <p> 下面这些不是书评，只是我在看第二遍的时候的一些简单的择要，用于自己的记忆和检索。</p>
@@ -189,34 +219,82 @@
 <li>Defusing Monkeypatches, make it explicit with module, check it before patche, add warning messages.</li>
 </ul>
 </section>
+    <!-- Tags START -->
     
-    <div class="money-like">
-      <div class="reward-btn">
-        赏
-        <span class="money-code">
-          <span class="wechat-code">
-            <div class="code-image"></div>
-            <b>使用微信打赏</b>
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2013/09/26/gotous.html">
+        <span class="nav-arrow">← </span>
+        
+          初到美国
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2013/07/14/ruby-warrior.html">
+        
+          Learning Ruby with Ruby Warrior
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
           </span>
-        </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
       </div>
-      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
-    </div>
-    <div class="qrcode">
-      <canvas id="share-qrcode"></canvas>
-      <p class="notice">扫描二维码，分享此文章</p>
-    </div>
     
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
       <div id="comments"></div>
+      <!-- Gitment END -->
     
   </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Introduction"><span class="toc-nav-text">Introduction</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#The-Ruby-Object-Model"><span class="toc-nav-text">The Ruby Object Model</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Methods"><span class="toc-nav-text">Methods</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Blocks"><span class="toc-nav-text">Blocks</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Class-Definitions"><span class="toc-nav-text">Class Definitions</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Code-writes-code"><span class="toc-nav-text">Code writes code</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Active-record"><span class="toc-nav-text">Active record</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Metaprogramming-safely"><span class="toc-nav-text">Metaprogramming safely</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
 </main>
 
 <script>
   (function () {
     var url = 'http://cyukang.com/2013/08/24/meta-programming-ruby.html';
     var banner = ''
-    if (banner) {
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
         'background-image': 'url(' + banner + ')'
       })
@@ -227,32 +305,37 @@
 
      // error image
     $(".markdown-content img").on('error', function() {
-      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
     })
 
     // zoom image
     $(".markdown-content img").on('click', function() {
       var src = $(this).attr('src')
-      var imageW = $(this).width()
-      var imageH = $(this).height()
-      
-      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
-      zoom = zoom < 1 ? 1 : zoom
-      zoom = zoom > 2 ? 2 : zoom
-      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
 
-      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
-      $('.image-view-wrap').addClass('wrap-active')
-      $('.image-view-wrap img').css({
-        'width': `${imageW}`,
-        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
-      })
-      $('html').css('overflow', 'hidden')
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
 
-      $('.image-view-wrap').on('click', function() {
-        $(this).remove()
-        $('html').attr('style', '')
-      })
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
     })
 
     // qrcode
@@ -263,7 +346,7 @@
 
     // gitment
     var gitmentConfig = "chenyukang";
-    if (gitmentConfig != "undefined") {
+    if (gitmentConfig !== 'undefined') {
       var gitment = new Gitment({
         id: "Metaprogramming Ruby",
         owner: "chenyukang",
@@ -321,7 +404,7 @@
   async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
-      if (hasLine == 'false') {
+      if (hasLine === 'false') {
         figure.find('.gutter').hide();
       }
       var lang = figure.attr('class').split(' ')[1] || 'code';
@@ -342,10 +425,10 @@
     // Originial
     var _hmt = _hmt || [];
     (function() {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
     })();
 </script>
 

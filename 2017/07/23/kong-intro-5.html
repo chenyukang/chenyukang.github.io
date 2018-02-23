@@ -23,9 +23,38 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
 </head>
 
   <body>
@@ -118,7 +147,8 @@
     <a href="javascript:;"></a>
   </div>
 </div>
-<main class="app-body">
+<main class="app-body flex-box">
+  <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。</p>
 <h3 id="worker模型"><a href="#worker模型" class="headerlink" title="worker模型"></a>worker模型</h3><p>假设我们对Kong做了一个更改的请求，这个请求通常是通过admin_api这个路由处理的。也就是说最终执行数据库操作的动作是在一个Nginx worker进程里。因为操作了数据库所以我们需要刷新这个Kong节点的所有worker的缓存，而且要把事件分发给其他Kong节点，让其他Kong节点刷新所有worker的缓存。</p>
@@ -135,7 +165,7 @@
 </ol>
 <p>Kong使用的是一个<a href="https://github.com/Olivine-Labs/mediator_lua" target="_blank" rel="external">叫作mediator_lua</a>，mediator中文意思为”中间人”，很符合项目的意思。可以看到kong/core/events.lua里面实现如下：</p>
 <figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Events:subscribe</span><span class="params">(event_name, fn)</span></span></div><div class="line">  <span class="keyword">if</span> fn <span class="keyword">then</span></div><div class="line">    self._mediator:subscribe(&#123;event_name&#125;, <span class="function"><span class="keyword">function</span><span class="params">(message_t)</span></span></div><div class="line">      fn(message_t)</div><div class="line">      <span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">true</span> <span class="comment">-- Required to tell mediator to continue processing other events</span></div><div class="line">    <span class="keyword">end</span>)</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Events:publish</span><span class="params">(event_name, message_t)</span></span></div><div class="line">  <span class="keyword">if</span> event_name <span class="keyword">then</span></div><div class="line">    self._mediator:publish(&#123;<span class="built_in">string</span>.<span class="built_in">upper</span>(event_name)&#125;, message_t)</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>Kong.init初始化的时候会调用一个叫做attach_hooks的函数:<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">attach_hooks(events, require &quot;kong.core.hooks&quot;)</div></pre></td></tr></table></figure></p>
+<p>Kong.init初始化的时候会调用一个叫做attach_hooks的函数:<br><figure class="highlight stylus"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="title">attach_hooks</span><span class="params">(events, require <span class="string">"kong.core.hooks"</span>)</span></span></div></pre></td></tr></table></figure></p>
 <p>在load插件的时候也会把插件对应hooks绑定上：</p>
 <figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="comment">-- Attaching hooks</span></div><div class="line"><span class="keyword">local</span> ok, hooks = utils.load_module_if_exists(<span class="string">"kong.plugins."</span> .. plugin .. <span class="string">".hooks"</span>)</div><div class="line"><span class="keyword">if</span> ok <span class="keyword">then</span></div><div class="line">  attach_hooks(events, hooks)</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
 <h3 id="事件的来源"><a href="#事件的来源" class="headerlink" title="事件的来源"></a>事件的来源</h3><p>上面说过，Kong节点之间通信是通过<a href="https://www.serf.io/" target="_blank" rel="external">serf</a>发送的。我们来看看事件是如何触发发出通知的。<br>事件来于源数据库的修改，那就应该在数据库代码部分有触发事件的代码，查看dao/dao.lua这个文件里的代码，我们可以看到在insert、update、insert执行的时候都调用了一行代码</p>
@@ -158,6 +188,7 @@
 <p>也就是通过mediator_lua再把消息publish。之前初始化的时候已经attach_hooks了各种handler，这时候那些注册的函数才会被最终执行，比如核心的刷新缓存部分代码在core/hooks.lua的invalidate函数里面。</p>
 <h3 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h3><p>总的来说Kong事件部分的代码相当精妙，也很统一。比如当前worker做了修改，这个事件会发送给各个节点，包括当前自己所在的节点。通过发布订阅模式，写代码的时候只需关心消息发送、接受消息索要处理的逻辑。</p>
 </section>
+    <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
@@ -168,33 +199,80 @@
 
       </div>
     
-    <div class="money-like">
-      <div class="reward-btn">
-        赏
-        <span class="money-code">
-          <span class="wechat-code">
-            <div class="code-image"></div>
-            <b>使用微信打赏</b>
-          </span>
-        </span>
-      </div>
-      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
-    </div>
-    <div class="qrcode">
-      <canvas id="share-qrcode"></canvas>
-      <p class="notice">扫描二维码，分享此文章</p>
-    </div>
+    <!-- Tags END -->
+    <!-- NAV START -->
     
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2017/08/12/migrate-to-hexo.html">
+        <span class="nav-arrow">← </span>
+        
+          从 Jekyll换成Hexo
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2017/07/22/kong-intro-4.html">
+        
+          Kong源码分析: 缓存
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
       <div id="comments"></div>
+      <!-- Gitment END -->
     
   </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#worker模型"><span class="toc-nav-text">worker模型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#发布订阅模式"><span class="toc-nav-text">发布订阅模式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#事件的来源"><span class="toc-nav-text">事件的来源</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#serf-Kong节点之间通信"><span class="toc-nav-text">serf: Kong节点之间通信</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#worker刷新缓存"><span class="toc-nav-text">worker刷新缓存</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#回顾"><span class="toc-nav-text">回顾</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
 </main>
 
 <script>
   (function () {
     var url = 'http://cyukang.com/2017/07/23/kong-intro-5.html';
     var banner = ''
-    if (banner) {
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
         'background-image': 'url(' + banner + ')'
       })
@@ -205,32 +283,37 @@
 
      // error image
     $(".markdown-content img").on('error', function() {
-      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
     })
 
     // zoom image
     $(".markdown-content img").on('click', function() {
       var src = $(this).attr('src')
-      var imageW = $(this).width()
-      var imageH = $(this).height()
-      
-      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
-      zoom = zoom < 1 ? 1 : zoom
-      zoom = zoom > 2 ? 2 : zoom
-      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
 
-      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
-      $('.image-view-wrap').addClass('wrap-active')
-      $('.image-view-wrap img').css({
-        'width': `${imageW}`,
-        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
-      })
-      $('html').css('overflow', 'hidden')
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
 
-      $('.image-view-wrap').on('click', function() {
-        $(this).remove()
-        $('html').attr('style', '')
-      })
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
     })
 
     // qrcode
@@ -241,7 +324,7 @@
 
     // gitment
     var gitmentConfig = "chenyukang";
-    if (gitmentConfig != "undefined") {
+    if (gitmentConfig !== 'undefined') {
       var gitment = new Gitment({
         id: "Kong源码分析: 事件",
         owner: "chenyukang",
@@ -299,7 +382,7 @@
   async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
-      if (hasLine == 'false') {
+      if (hasLine === 'false') {
         figure.find('.gutter').hide();
       }
       var lang = figure.attr('class').split(' ')[1] || 'code';
@@ -320,10 +403,10 @@
     // Originial
     var _hmt = _hmt || [];
     (function() {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
     })();
 </script>
 

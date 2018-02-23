@@ -23,9 +23,38 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
 </head>
 
   <body>
@@ -118,7 +147,8 @@
     <a href="javascript:;"></a>
   </div>
 </div>
-<main class="app-body">
+<main class="app-body flex-box">
+  <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p><a href="https://book.douban.com/subject/27056409/" target="_blank" rel="external">深度工作</a>这本书主要讲解了一些时间和精力管理方面的东西，人到了一定年龄就会觉得时间不够用，日子过得太快，每天觉得都没干什么就过去了。工作几年后这种感觉时不时袭来。反而是如果某段时间一直有一个阶段性的目标，就会觉得很踏实，进度和效率也可以。那种完全沉浸在思考中的状态真的也并不是累，相反所得到的结果往往是真实的收获和进步。用这本书里的术语可以称之为『深度工作』的阶段吧。</p>
 <p>说起来也有道理，如果自认为我们是知识工作者，那么大多数时间处于浮潜的工作状态就得不到什么深刻的结果。作为程序员，我也有时候感觉自己并不是在做什么高深的工作，那么这样长久下去会怎么样呢，随之而来的是不可避免的压力。</p>
@@ -140,6 +170,7 @@
 <p>这个结论应该大家都有体会，持续专注的能力往往决定人的能力，有的人可以一直脑袋里想着问题，即使是在走路或者吃饭的时候。之前在学校我也有过一段时间，脑袋里一直在想着要找的答案，那种体验已经好久没有了。</p>
 <p>总之，这本书还不错，推荐有时间的话看看。</p>
 </section>
+    <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
@@ -150,33 +181,71 @@
 
       </div>
     
-    <div class="money-like">
-      <div class="reward-btn">
-        赏
-        <span class="money-code">
-          <span class="wechat-code">
-            <div class="code-image"></div>
-            <b>使用微信打赏</b>
-          </span>
-        </span>
-      </div>
-      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
-    </div>
-    <div class="qrcode">
-      <canvas id="share-qrcode"></canvas>
-      <p class="notice">扫描二维码，分享此文章</p>
-    </div>
+    <!-- Tags END -->
+    <!-- NAV START -->
     
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2017/09/17/bucklescript-and-reason.html">
+        <span class="nav-arrow">← </span>
+        
+          BuckleScript and Reason
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2017/09/12/kong-new-release.html">
+        
+          Kong的0.11.0版本
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
       <div id="comments"></div>
+      <!-- Gitment END -->
     
   </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
 </main>
 
 <script>
   (function () {
     var url = 'http://cyukang.com/2017/09/14/deep-work.html';
     var banner = ''
-    if (banner) {
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
         'background-image': 'url(' + banner + ')'
       })
@@ -187,32 +256,37 @@
 
      // error image
     $(".markdown-content img").on('error', function() {
-      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
     })
 
     // zoom image
     $(".markdown-content img").on('click', function() {
       var src = $(this).attr('src')
-      var imageW = $(this).width()
-      var imageH = $(this).height()
-      
-      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
-      zoom = zoom < 1 ? 1 : zoom
-      zoom = zoom > 2 ? 2 : zoom
-      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
 
-      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
-      $('.image-view-wrap').addClass('wrap-active')
-      $('.image-view-wrap img').css({
-        'width': `${imageW}`,
-        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
-      })
-      $('html').css('overflow', 'hidden')
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
 
-      $('.image-view-wrap').on('click', function() {
-        $(this).remove()
-        $('html').attr('style', '')
-      })
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
     })
 
     // qrcode
@@ -223,7 +297,7 @@
 
     // gitment
     var gitmentConfig = "chenyukang";
-    if (gitmentConfig != "undefined") {
+    if (gitmentConfig !== 'undefined') {
       var gitment = new Gitment({
         id: "《深度工作-如何有效使用每一点脑力》读后",
         owner: "chenyukang",
@@ -281,7 +355,7 @@
   async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
-      if (hasLine == 'false') {
+      if (hasLine === 'false') {
         figure.find('.gutter').hide();
       }
       var lang = figure.attr('class').split(' ')[1] || 'code';
@@ -302,10 +376,10 @@
     // Originial
     var _hmt = _hmt || [];
     (function() {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
     })();
 </script>
 

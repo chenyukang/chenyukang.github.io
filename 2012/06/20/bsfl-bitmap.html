@@ -23,9 +23,38 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
 </head>
 
   <body>
@@ -118,7 +147,8 @@
     <a href="javascript:;"></a>
   </div>
 </div>
-<main class="app-body">
+<main class="app-body flex-box">
+  <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><h2 id="如何找出int中第一个1"><a href="#如何找出int中第一个1" class="headerlink" title="如何找出int中第一个1"></a>如何找出int中第一个1</h2><p>对于这个问题我们可以从最原始的做法开始，如果没找到1返回0，如果第一位为1返回1。所以代码很简单如下：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">first_onebit</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</div><div class="line">    <span class="keyword">if</span>(!x)</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    <span class="keyword">else</span>&#123;</div><div class="line">        <span class="keyword">int</span> idx = <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span>(x%<span class="number">2</span> != <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">        <span class="keyword">while</span>( x%<span class="number">2</span> == <span class="number">0</span> ) &#123;</div><div class="line">            x&gt;&gt;=<span class="number">1</span>;</div><div class="line">            idx++;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> idx+<span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -134,6 +164,7 @@
 <figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function">u32 <span class="title">first_empty</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    u32 idx;</div><div class="line">    <span class="keyword">for</span>(idx=<span class="number">0</span>; idx&lt;max_idx; idx++)&#123;</div><div class="line">        <span class="keyword">if</span>(arr[idx] == <span class="number">0xFFFFFFFF</span>) <span class="comment">//full</span></div><div class="line">            <span class="keyword">continue</span>;</div><div class="line">        u32 v = arr[index];</div><div class="line">        <span class="keyword">return</span> <span class="number">32</span>*idx + first_zerobit(v) - <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>这样的用汇编指令来优化可能会有平台差异，所以你最好清楚自己的平台是否适用。</p>
 </section>
+    <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
@@ -148,33 +179,80 @@
 
       </div>
     
-    <div class="money-like">
-      <div class="reward-btn">
-        赏
-        <span class="money-code">
-          <span class="wechat-code">
-            <div class="code-image"></div>
-            <b>使用微信打赏</b>
-          </span>
-        </span>
-      </div>
-      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
-    </div>
-    <div class="qrcode">
-      <canvas id="share-qrcode"></canvas>
-      <p class="notice">扫描二维码，分享此文章</p>
-    </div>
+    <!-- Tags END -->
+    <!-- NAV START -->
     
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2012/06/25/gdb-with-libso.html">
+        <span class="nav-arrow">← </span>
+        
+          GDB调试动态链接库
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2012/06/13/try-jekyll-git.html">
+        
+          使用Jekyll和Github搭建博客
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
       <div id="comments"></div>
+      <!-- Gitment END -->
     
   </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#如何找出int中第一个1"><span class="toc-nav-text">如何找出int中第一个1</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#bitmap的优化"><span class="toc-nav-text">bitmap的优化</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#注意"><span class="toc-nav-text">注意</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
 </main>
 
 <script>
   (function () {
     var url = 'http://cyukang.com/2012/06/20/bsfl-bitmap.html';
     var banner = ''
-    if (banner) {
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
         'background-image': 'url(' + banner + ')'
       })
@@ -185,32 +263,37 @@
 
      // error image
     $(".markdown-content img").on('error', function() {
-      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
     })
 
     // zoom image
     $(".markdown-content img").on('click', function() {
       var src = $(this).attr('src')
-      var imageW = $(this).width()
-      var imageH = $(this).height()
-      
-      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
-      zoom = zoom < 1 ? 1 : zoom
-      zoom = zoom > 2 ? 2 : zoom
-      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
 
-      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
-      $('.image-view-wrap').addClass('wrap-active')
-      $('.image-view-wrap img').css({
-        'width': `${imageW}`,
-        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
-      })
-      $('html').css('overflow', 'hidden')
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
 
-      $('.image-view-wrap').on('click', function() {
-        $(this).remove()
-        $('html').attr('style', '')
-      })
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
     })
 
     // qrcode
@@ -221,7 +304,7 @@
 
     // gitment
     var gitmentConfig = "chenyukang";
-    if (gitmentConfig != "undefined") {
+    if (gitmentConfig !== 'undefined') {
       var gitment = new Gitment({
         id: "bsfl指令和Bitmap的一个优化",
         owner: "chenyukang",
@@ -279,7 +362,7 @@
   async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
-      if (hasLine == 'false') {
+      if (hasLine === 'false') {
         figure.find('.gutter').hide();
       }
       var lang = figure.attr('class').split(' ')[1] || 'code';
@@ -300,10 +383,10 @@
     // Originial
     var _hmt = _hmt || [];
     (function() {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
     })();
 </script>
 

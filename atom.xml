@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://cyukang.com/"/>
-  <updated>2018-02-22T17:29:42.519Z</updated>
+  <updated>2018-02-23T14:02:50.419Z</updated>
   <id>http://cyukang.com/</id>
   
   <author>
@@ -16,6 +16,38 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Nginx https too many redirect</title>
+    <link href="http://cyukang.com/2018/02/23/nginx-https-too-many-redirect.html"/>
+    <id>http://cyukang.com/2018/02/23/nginx-https-too-many-redirect.html</id>
+    <published>2018-02-23T09:38:44.000Z</published>
+    <updated>2018-02-23T14:02:50.419Z</updated>
+    
+    <content type="html"><![CDATA[<p>Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: </p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">return</span> <span class="number">302</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>; </div><div class="line"><span class="comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span></div></pre></td></tr></table></figure>
+<p>但是如果是多层Nginx，前面的Nginx需要把用户原始请求的scheme传递到后端，可以加上头部设置： </p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</div></pre></td></tr></table></figure>
+<p>后面的Nginx再判断一次:</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">if</span> ( <span class="variable">$http_x_forwarded_proto</span> != <span class="string">'https'</span> ) &#123;</div><div class="line">  <span class="attribute">return</span> <span class="number">301</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>否则强制https经常会出现类似<code>ERR_TOO_MANY_REDIRECTS 将您重定向的次数过多</code>这样的问题。</p>
+<p>可是在实践过程中偶尔也碰到过一些ELB会丢掉scheme的问题，比如在这样的请求链路情况下<code>elb =&gt; nginx =&gt; nginx =&gt; application</code>第二层Nginx获取的scheme就有问题了，这也可能会导致<code>too many redirects</code>问题。</p>
+<p>可以尝试在第二层Nginx上这样解决： </p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">proxy_set_header</span>   X-Forwarded-Proto <span class="variable">$http_x_forwarded_proto</span>;</div></pre></td></tr></table></figure>
+<p>当然强制https这样的跳转逻辑尽量放在请求链路的最外层，这样问题会少一些。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: &lt;/p&gt;
+&lt;figure class=&quot;highlight nginx&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;sp
+    
+    </summary>
+    
+    
+      <category term="Nginx" scheme="http://cyukang.com/tags/Nginx/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Linux 当前 shell 执行命令</title>
     <link href="http://cyukang.com/2018/02/22/linux-source.html"/>
     <id>http://cyukang.com/2018/02/22/linux-source.html</id>
@@ -23,7 +55,7 @@
     <updated>2018-02-22T17:29:42.519Z</updated>
     
     <content type="html"><![CDATA[<p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要unset 当前shell 的环境变量等，</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span>!/usr/bin/env zsh</div><div class="line"></div><div class="line">if [ -z $http_proxy ]; then</div><div class="line">    echo "not using proxy, set it now ... ";</div><div class="line">    export http_proxy="http://127.0.0.1:1087";</div><div class="line">    export https_proxy="https://127.0.0.1:1087";</div><div class="line">    echo $http_proxy;</div><div class="line">else</div><div class="line">    echo "using proxy now, unset it now ...";</div><div class="line">    unset http_proxy;</div><div class="line">    unset https_proxy;</div><div class="line">    echo $http_proxy;</div><div class="line">fi</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env zsh</span></div><div class="line"></div><div class="line">if [ -z $http_proxy ]; then</div><div class="line">    echo "not using proxy, set it now ... ";</div><div class="line">    export http_proxy="http://127.0.0.1:1087";</div><div class="line">    export https_proxy="https://127.0.0.1:1087";</div><div class="line">    echo $http_proxy;</div><div class="line">else</div><div class="line">    echo "using proxy now, unset it now ...";</div><div class="line">    unset http_proxy;</div><div class="line">    unset https_proxy;</div><div class="line">    echo $http_proxy;</div><div class="line">fi</div></pre></td></tr></table></figure>
 <p>这时候需要执行 <code>. ./proxy_toggle.sh</code> 或者 <code>source ./proxy_toggle.sh</code>。</p>
 <p><code>.</code> (a period) is a <a href="http://www.gnu.org/software/bash/manual/bashref.html#Bourne-Shell-Builtins" target="_blank" rel="external">bash shell built-in command</a> that executes the commands from a file passed as argument, in the current shell. <code>source</code> is a synonym for <code>.</code></p>
 <p>From Bash man page:</p>
@@ -290,7 +322,7 @@
 </ol>
 <p>Kong使用的是一个<a href="https://github.com/Olivine-Labs/mediator_lua" target="_blank" rel="external">叫作mediator_lua</a>，mediator中文意思为”中间人”，很符合项目的意思。可以看到kong/core/events.lua里面实现如下：</p>
 <figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Events:subscribe</span><span class="params">(event_name, fn)</span></span></div><div class="line">  <span class="keyword">if</span> fn <span class="keyword">then</span></div><div class="line">    self._mediator:subscribe(&#123;event_name&#125;, <span class="function"><span class="keyword">function</span><span class="params">(message_t)</span></span></div><div class="line">      fn(message_t)</div><div class="line">      <span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">true</span> <span class="comment">-- Required to tell mediator to continue processing other events</span></div><div class="line">    <span class="keyword">end</span>)</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Events:publish</span><span class="params">(event_name, message_t)</span></span></div><div class="line">  <span class="keyword">if</span> event_name <span class="keyword">then</span></div><div class="line">    self._mediator:publish(&#123;<span class="built_in">string</span>.<span class="built_in">upper</span>(event_name)&#125;, message_t)</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>Kong.init初始化的时候会调用一个叫做attach_hooks的函数:<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">attach_hooks(events, require &quot;kong.core.hooks&quot;)</div></pre></td></tr></table></figure></p>
+<p>Kong.init初始化的时候会调用一个叫做attach_hooks的函数:<br><figure class="highlight stylus"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="title">attach_hooks</span><span class="params">(events, require <span class="string">"kong.core.hooks"</span>)</span></span></div></pre></td></tr></table></figure></p>
 <p>在load插件的时候也会把插件对应hooks绑定上：</p>
 <figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="comment">-- Attaching hooks</span></div><div class="line"><span class="keyword">local</span> ok, hooks = utils.load_module_if_exists(<span class="string">"kong.plugins."</span> .. plugin .. <span class="string">".hooks"</span>)</div><div class="line"><span class="keyword">if</span> ok <span class="keyword">then</span></div><div class="line">  attach_hooks(events, hooks)</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
 <h3 id="事件的来源"><a href="#事件的来源" class="headerlink" title="事件的来源"></a>事件的来源</h3><p>上面说过，Kong节点之间通信是通过<a href="https://www.serf.io/" target="_blank" rel="external">serf</a>发送的。我们来看看事件是如何触发发出通知的。<br>事件来于源数据库的修改，那就应该在数据库代码部分有触发事件的代码，查看dao/dao.lua这个文件里的代码，我们可以看到在insert、update、insert执行的时候都调用了一行代码</p>
@@ -318,37 +350,6 @@
     
       &lt;p&gt;Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。&lt;/p&gt;
 &lt;h3 id=&quot;worker模型&quot;&gt;&lt;a href=&quot;#worker模型&quot; class=&quot;headerlink&quot; title=&quot;worker模型&quot;&gt;&lt;/a&gt;worker模型&lt;/h
-    
-    </summary>
-    
-    
-      <category term="Lua" scheme="http://cyukang.com/tags/Lua/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Kong源码分析: 缓存</title>
-    <link href="http://cyukang.com/2017/07/22/kong-intro-4.html"/>
-    <id>http://cyukang.com/2017/07/22/kong-intro-4.html</id>
-    <published>2017-07-22T00:38:00.000Z</published>
-    <updated>2017-07-21T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="Nginx里的缓存使用"><a href="#Nginx里的缓存使用" class="headerlink" title="Nginx里的缓存使用"></a>Nginx里的缓存使用</h3><p>在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是插件相关的配置，缓存之后就存储在内存中。</p>
-<p>Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又分两种类型的缓存，一种是<a href="https://github.com/openresty/lua-nginx-module#ngxshareddict" target="_blank" rel="external">shared dict</a>, 一种是使用<br><a href="https://github.com/openresty/lua-resty-lrucache" target="_blank" rel="external">lua-resty-lrucache</a>。这两者之间是有区别的: shared dict如同其名字一样是Nginx worker之间共享的，而lrucache是worker级别的，内存空间在Lua VM里由GC管理，不能在进程之间共享，自然也不会在Nginx worker之间共享。</p>
-<p>具体我们开发中使用哪一种由具体场景分析，比如在Kong的插件rate-limiting里就使用了共享缓存，因为我们需要针对一个Nginx所有的worker做请求数统计。</p>
-<p>share dict最常规的使用方法是:</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">http &#123;</div><div class="line">    lua_shared_dict dogs <span class="number">10</span>m;</div><div class="line">    server &#123;</div><div class="line">        location /set &#123;</div><div class="line">            content_by_lua_block &#123;</div><div class="line">                <span class="keyword">local</span> dogs = ngx.shared.dogs</div><div class="line">                dogs:set(<span class="string">"Jim"</span>, <span class="number">8</span>)</div><div class="line">                ngx.say(<span class="string">"STORED"</span>)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        location /get &#123;</div><div class="line">            content_by_lua_block &#123;</div><div class="line">                <span class="keyword">local</span> dogs = ngx.shared.dogs</div><div class="line">                ngx.say(dogs:get(<span class="string">"Jim"</span>))</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>lrucache的使用方法如<a href="https://github.com/openresty/lua-resty-lrucache" target="_blank" rel="external">文档所示</a>。</p>
-<h3 id="Kong里的多级缓存实现"><a href="#Kong里的多级缓存实现" class="headerlink" title="Kong里的多级缓存实现"></a>Kong里的多级缓存实现</h3><p>有了上面的了解，看database_cache.lua这个文件就比较直观了，这里Kong会分多类缓存: apis, consumers, plugins等。具体这样分是因为如果我们对配置做了修改，需要发出serf消息来指名这次改动涉及到哪些，其他Kong节点收到消息后自然只更新对应的缓存部分。所以Kong里申明了一个列表CACHE_KEYS来存要缓存的数据类别，同时写了不少生成缓存key的方法，比如: api_key，plugin_key等。</p>
-<p>仔细查看database_cache.lua，我们发现其实这里是做了两级缓存。Kong要从缓存里取出一个key/value，首先从lrucache里取，如果有则返回。如果没有则从share dict里去取，如果取到则deserialize然后存储在lrucache里，然后返回。如果shared dict里也没有，则返回nil。标准的两级缓存流程，这样做的好处在于减少deserialize的次数，而且shared dict可能被多个worker同时修改，要修改的时候需要加互斥锁。</p>
-<p>这里最常用的方法是get_or_set，尝试获取一个key的值，如果没有就执行对应的callback，返回结果当做value设置到缓存里，并把value作为最后的返回结果。这里的callback函数通常做的当然是从数据库里读取内容。</p>
-<h3 id="如何避免缓存失效风暴"><a href="#如何避免缓存失效风暴" class="headerlink" title="如何避免缓存失效风暴"></a>如何避免缓存失效风暴</h3><p>我们在实现缓存的时候<a href="http://www.sobstel.org/blog/preventing-dogpile-effect/" target="_blank" rel="external">缓存失效风暴问题</a>需要谨慎考虑。agentzh在这里详细描述了<a href="https://github.com/openresty/lua-resty-lock" target="_blank" rel="external">加锁解决的策略</a>，<a href="https://github.com/mtourne/ngx.shcache" target="_blank" rel="external">ngx.shcache</a>这里也使用了相同的方法，具体可以好好研究一下那个图。</p>
-<p>主要注意的是在加锁后，再尝试去读取一次key，因为可能在加锁之前其他worker刚好把数据更新到了缓存里。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;Nginx里的缓存使用&quot;&gt;&lt;a href=&quot;#Nginx里的缓存使用&quot; class=&quot;headerlink&quot; title=&quot;Nginx里的缓存使用&quot;&gt;&lt;/a&gt;Nginx里的缓存使用&lt;/h3&gt;&lt;p&gt;在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是
     
     </summary>
     

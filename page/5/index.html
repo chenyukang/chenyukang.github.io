@@ -23,9 +23,38 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
 </head>
 
   <body>
@@ -113,6 +142,38 @@
 
     <main class="app-body">
     
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2014/04/11/heartbleed.html">Heartbleed简单分析</a>
+      </h2>
+      <p class="article-date">April 11, 2014
+          
+              
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Bug" >
+    <span class="tag-code">Bug</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                
+这几天不断听到一个词“心血漏洞”，近年来影响最严重的互联网漏洞。今天小小地研究了一把，顺便把引起一些思考记录下来。
+到底是什么样的代码有一些C语言和开发经验的朋友看看这个Fix就能了解些具体细节了。在网络传输中有一个叫做心跳的概念，简单来讲就是客户端发送一个简单的心跳包给服务端，服务端 .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2014/04/11/heartbleed.html">阅读全文</a>
+      
+    </article>
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
@@ -302,12 +363,12 @@ isMatch("aa","a")       → falseisMatch("aa","aa")      → trueisMatch("aaa","
       <p class="article-date">October 5, 2013
           
               
-  <a href="/tags#Tools" >
-    <span class="tag-code">Tools</span>
-  </a>
-
   <a href="/tags#Ruby" >
     <span class="tag-code">Ruby</span>
+  </a>
+
+  <a href="/tags#Tools" >
+    <span class="tag-code">Tools</span>
   </a>
 
           
@@ -369,27 +430,6 @@ The main difference between a cat and a lie is that a ca .....
       
     </article>
   
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2013/08/24/meta-programming-ruby.html">Metaprogramming Ruby</a>
-      </h2>
-      <p class="article-date">August 24, 2013
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                『Metaprogramming Ruby』这本书看了两遍，从这本书里获取了一些乐趣。技术书籍就应该这样简明扼要，寓理于事。通过一个显示中的例子引入问题，展示元编程的解决办法， 顺带介绍一下用到相关技术的gems。
- 下面这些不是书评，只是我在看第二遍的时候的一些简单的择要，用于自己的记 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2013/08/24/meta-programming-ruby.html">阅读全文</a>
-      
-    </article>
-  
 
   
     <div class="guide-pager">
@@ -435,7 +475,7 @@ The main difference between a cat and a lie is that a ca .....
   async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
-      if (hasLine == 'false') {
+      if (hasLine === 'false') {
         figure.find('.gutter').hide();
       }
       var lang = figure.attr('class').split(' ')[1] || 'code';
@@ -456,10 +496,10 @@ The main difference between a cat and a lie is that a ca .....
     // Originial
     var _hmt = _hmt || [];
     (function() {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
     })();
 </script>
 

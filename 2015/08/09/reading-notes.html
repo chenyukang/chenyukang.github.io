@@ -23,9 +23,38 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
 </head>
 
   <body>
@@ -118,7 +147,8 @@
     <a href="javascript:;"></a>
   </div>
 </div>
-<main class="app-body">
+<main class="app-body flex-box">
+  <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>最近看了几本书，大多都是觉得有些意思就从亚马逊上买了。自从我的Kindle坏了之后，我就基本只买纸质书了。虽然纸质书携带不够方便，看起来更够味。</p>
 <h3 id="别逗了，费曼先生-5"><a href="#别逗了，费曼先生-5" class="headerlink" title="别逗了，费曼先生! (5*)"></a>别逗了，费曼先生! (5*)</h3><p>这是我最推荐的一本，断断续续看了两遍。这本书虽然是翻译的，但是质量很够水准，费曼聪明的坏教授形象跃然纸上。费曼作为物理学家也挺逗的，从小喜欢发明各种东西、恶作剧，折腾电子器件，好玩。青年时期开始折腾物理，在暑假期间顺便当了一段时间『化学家』。后面又对破解密码锁、画画、打鼓、学习外语产生浓厚兴趣，并极其投入。贯穿其中最让人敬佩的是费曼的好奇心好韧性。整本书都是在用一种诙谐平叙事写法，不过突然怀念自己的妻子那段特别感人，他的妻子去世那段时间正是在研发原子弹期间：</p>
@@ -140,6 +170,7 @@
 <h3 id="成大事者不纠结-3-）"><a href="#成大事者不纠结-3-）" class="headerlink" title="成大事者不纠结 (3*）"></a>成大事者不纠结 (3*）</h3><p>逻辑思维的公众号更新很勤快，内容也不错。不过这本书倒是没什么太多内容，李鸿章和曾国藩的章节都是在逻辑思维里面讲过的。更让我不爽的是书的封装，居然带了一打微信推广号。</p>
 <h3 id="从0到1-3"><a href="#从0到1-3" class="headerlink" title="从0到1 (3*)"></a>从0到1 (3*)</h3><p>这本书挺有名的，不过看完后并没产生多少共鸣。可能是因为我现在对创业这个词有些抵触，创业现在动不动就是改变人类、情怀。这个词被玩坏了。在互联网这个行业，创业看起来有点类似大跃进。大家都吹牛，比如前段时间被扒皮的<a href="http://www.zhihu.com/question/27297651" target="_blank" rel="external">云视链</a>就属于吹牛吹破了的。真正从0到1创造出新事物的公司太少。</p>
 </section>
+    <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
@@ -150,33 +181,80 @@
 
       </div>
     
-    <div class="money-like">
-      <div class="reward-btn">
-        赏
-        <span class="money-code">
-          <span class="wechat-code">
-            <div class="code-image"></div>
-            <b>使用微信打赏</b>
-          </span>
-        </span>
-      </div>
-      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
-    </div>
-    <div class="qrcode">
-      <canvas id="share-qrcode"></canvas>
-      <p class="notice">扫描二维码，分享此文章</p>
-    </div>
+    <!-- Tags END -->
+    <!-- NAV START -->
     
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2015/09/29/programming-language-and-interpreters.html">
+        <span class="nav-arrow">← </span>
+        
+          Tiny Interpreters
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2015/04/26/lazy-eval-and-stream.html">
+        
+          惰性求值和流
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
       <div id="comments"></div>
+      <!-- Gitment END -->
     
   </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#别逗了，费曼先生-5"><span class="toc-nav-text">别逗了，费曼先生! (5*)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#鱼羊野史-4"><span class="toc-nav-text">鱼羊野史 (4*)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#李光耀观天下-4"><span class="toc-nav-text">李光耀观天下 (4*)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#成大事者不纠结-3-）"><span class="toc-nav-text">成大事者不纠结 (3*）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#从0到1-3"><span class="toc-nav-text">从0到1 (3*)</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
 </main>
 
 <script>
   (function () {
     var url = 'http://cyukang.com/2015/08/09/reading-notes.html';
     var banner = ''
-    if (banner) {
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
         'background-image': 'url(' + banner + ')'
       })
@@ -187,32 +265,37 @@
 
      // error image
     $(".markdown-content img").on('error', function() {
-      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
     })
 
     // zoom image
     $(".markdown-content img").on('click', function() {
       var src = $(this).attr('src')
-      var imageW = $(this).width()
-      var imageH = $(this).height()
-      
-      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
-      zoom = zoom < 1 ? 1 : zoom
-      zoom = zoom > 2 ? 2 : zoom
-      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
 
-      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
-      $('.image-view-wrap').addClass('wrap-active')
-      $('.image-view-wrap img').css({
-        'width': `${imageW}`,
-        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
-      })
-      $('html').css('overflow', 'hidden')
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
 
-      $('.image-view-wrap').on('click', function() {
-        $(this).remove()
-        $('html').attr('style', '')
-      })
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
     })
 
     // qrcode
@@ -223,7 +306,7 @@
 
     // gitment
     var gitmentConfig = "chenyukang";
-    if (gitmentConfig != "undefined") {
+    if (gitmentConfig !== 'undefined') {
       var gitment = new Gitment({
         id: "最近读的一些杂书",
         owner: "chenyukang",
@@ -281,7 +364,7 @@
   async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
-      if (hasLine == 'false') {
+      if (hasLine === 'false') {
         figure.find('.gutter').hide();
       }
       var lang = figure.attr('class').split(' ')[1] || 'code';
@@ -302,10 +385,10 @@
     // Originial
     var _hmt = _hmt || [];
     (function() {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
     })();
 </script>
 

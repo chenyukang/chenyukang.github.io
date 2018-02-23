@@ -23,9 +23,38 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
 </head>
 
   <body>
@@ -116,6 +145,43 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2018/02/23/nginx-https-too-many-redirect.html">Nginx https too many redirect</a>
+      </h2>
+      <p class="article-date">February 23, 2018
+          
+              
+  <a href="/tags#Nginx" >
+    <span class="tag-code">Nginx</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <p>Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: </p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">return</span> <span class="number">302</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>; </div><div class="line"><span class="comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span></div></pre></td></tr></table></figure>
+<p>但是如果是多层Nginx，前面的Nginx需要把用户原始请求的scheme传递到后端，可以加上头部设置： </p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</div></pre></td></tr></table></figure>
+<p>后面的Nginx再判断一次:</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">if</span> ( <span class="variable">$http_x_forwarded_proto</span> != <span class="string">'https'</span> ) &#123;</div><div class="line">  <span class="attribute">return</span> <span class="number">301</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>否则强制https经常会出现类似<code>ERR_TOO_MANY_REDIRECTS 将您重定向的次数过多</code>这样的问题。</p>
+<p>可是在实践过程中偶尔也碰到过一些ELB会丢掉scheme的问题，比如在这样的请求链路情况下<code>elb =&gt; nginx =&gt; nginx =&gt; application</code>第二层Nginx获取的scheme就有问题了，这也可能会导致<code>too many redirects</code>问题。</p>
+<p>可以尝试在第二层Nginx上这样解决： </p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">proxy_set_header</span>   X-Forwarded-Proto <span class="variable">$http_x_forwarded_proto</span>;</div></pre></td></tr></table></figure>
+<p>当然强制https这样的跳转逻辑尽量放在请求链路的最外层，这样问题会少一些。</p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2018/02/23/nginx-https-too-many-redirect.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2018/02/22/linux-source.html">Linux 当前 shell 执行命令</a>
       </h2>
       <p class="article-date">February 22, 2018
@@ -125,18 +191,13 @@
         
         
             
-                <p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要unset 当前shell 的环境变量等，</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span>!/usr/bin/env zsh</div><div class="line"></div><div class="line">if [ -z $http_proxy ]; then</div><div class="line">    echo "not using proxy, set it now ... ";</div><div class="line">    export http_proxy="http://127.0.0.1:1087";</div><div class="line">    export https_proxy="https://127.0.0.1:1087";</div><div class="line">    echo $http_proxy;</div><div class="line">else</div><div class="line">    echo "using proxy now, unset it now ...";</div><div class="line">    unset http_proxy;</div><div class="line">    unset https_proxy;</div><div class="line">    echo $http_proxy;</div><div class="line">fi</div></pre></td></tr></table></figure>
-<p>这时候需要执行 <code>. ./proxy_toggle.sh</code> 或者 <code>source ./proxy_toggle.sh</code>。</p>
-<p><code>.</code> (a period) is a <a href="http://www.gnu.org/software/bash/manual/bashref.html#Bourne-Shell-Builtins" target="_blank" rel="external">bash shell built-in command</a> that executes the commands from a file passed as argument, in the current shell. <code>source</code> is a synonym for <code>.</code></p>
-<p>From Bash man page:</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><div class="line">. filename [arguments]</div><div class="line">source filename [arguments]</div><div class="line"><span class="code">       Read  and  execute  commands  from filename in the current shell</span></div><div class="line"><span class="code">       environment and return the exit status of the last command  exe‐</span></div><div class="line"><span class="code">       cuted from filename.  If filename does not contain a slash, file</span></div><div class="line"><span class="code">       names in PATH are used to find the  directory  containing  file‐</span></div><div class="line"><span class="code">       name.   The  file  searched  for in PATH need not be executable.</span></div><div class="line"><span class="code">       When bash is  not  in  posix  mode,  the  current  directory  is</span></div><div class="line"><span class="code">       searched  if no file is found in PATH.  If the sourcepath option</span></div><div class="line"><span class="code">       to the shopt builtin command is turned  off,  the  PATH  is  not</span></div><div class="line"><span class="code">       searched.   If any arguments are supplied, they become the posi‐</span></div><div class="line"><span class="code">       tional parameters when  filename  is  executed.   Otherwise  the</span></div><div class="line"><span class="code">       positional  parameters  are unchanged.  The return status is the</span></div><div class="line"><span class="code">       status of the last command exited within the  script  (0  if  no</span></div><div class="line"><span class="code">       commands  are  executed),  and false if filename is not found or</span></div><div class="line"><span class="code">       cannot be read.</span></div></pre></td></tr></table></figure>
-
+                Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要unset 当前shell 的环境变量等，
+#!/usr/bin/env zshif [ -z $http_proxy ]; then    echo "not using p .....
             
         
       </div>
       
-          <a class="more" href="/2018/02/22/linux-source.html#footer">发表评论</a>
+          <a class="more" href="/2018/02/22/linux-source.html">阅读全文</a>
       
     </article>
   
@@ -360,33 +421,6 @@ worker模型假设我们对Kong做了一个更改的请求，这个请求通常�
       
     </article>
   
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/07/22/kong-intro-4.html">Kong源码分析: 缓存</a>
-      </h2>
-      <p class="article-date">July 22, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Nginx里的缓存使用在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是插件相关的配置，缓存之后就存储在内存中。
-Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又分两种类型的缓存，一种是shared dict, 一种是使用lua .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/07/22/kong-intro-4.html">阅读全文</a>
-      
-    </article>
-  
 
   
     <div class="guide-pager">
@@ -432,7 +466,7 @@ Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又�
   async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
-      if (hasLine == 'false') {
+      if (hasLine === 'false') {
         figure.find('.gutter').hide();
       }
       var lang = figure.attr('class').split(' ')[1] || 'code';
@@ -453,10 +487,10 @@ Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又�
     // Originial
     var _hmt = _hmt || [];
     (function() {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
     })();
 </script>
 

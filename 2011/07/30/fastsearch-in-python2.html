@@ -23,9 +23,38 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
 </head>
 
   <body>
@@ -118,7 +147,8 @@
     <a href="javascript:;"></a>
   </div>
 </div>
-<main class="app-body">
+<main class="app-body flex-box">
+  <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Python2.5的实现中有一个字符串匹配算法，在s中查找p是否存在，s的长度为n，p的长度为m。这个算法符合以下要求：</p>
 <ul>
@@ -139,6 +169,7 @@
 <p>具体实现如下：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">//如果mode为FAST_COUNT，则查找pattern出现的次数</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> FAST_COUNT 1</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">fastsearch</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* s, <span class="keyword">size_t</span> n,</span></span></div><div class="line"><span class="function"><span class="params">           <span class="keyword">const</span> <span class="keyword">char</span>* p, <span class="keyword">size_t</span> m,</span></span></div><div class="line"><span class="function"><span class="params">           <span class="keyword">int</span> mode)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">long</span> mask;</div><div class="line">    <span class="keyword">size_t</span> skip, count = <span class="number">0</span>;</div><div class="line">    <span class="keyword">size_t</span> i, j, mlast, w;</div><div class="line"></div><div class="line">    w = n - m;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (w &lt; <span class="number">0</span>)</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line"></div><div class="line">    <span class="comment">/* 如果m=1，特例，扫描一遍解决*/</span> </div><div class="line">    <span class="keyword">if</span> (m &lt;= <span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (m &lt;= <span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">        <span class="keyword">if</span> (mode == FAST_COUNT) &#123;</div><div class="line">            <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; i++)</div><div class="line">                <span class="keyword">if</span> (s[i] == p[<span class="number">0</span>])</div><div class="line">                    count++;</div><div class="line">            <span class="keyword">return</span> count;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; i++)</div><div class="line">                <span class="keyword">if</span> (s[i] == p[<span class="number">0</span>])</div><div class="line">                    <span class="keyword">return</span> i;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    mlast = m - <span class="number">1</span>;</div><div class="line"></div><div class="line">    skip = mlast - <span class="number">1</span>;</div><div class="line">    <span class="comment">/*计算mask*/</span> </div><div class="line">    <span class="keyword">for</span> (mask = i = <span class="number">0</span>; i &lt; mlast; i++) &#123;</div><div class="line">        mask |= (<span class="number">1</span> &lt;&lt; (p[i] &amp; <span class="number">0x1F</span>));</div><div class="line">        <span class="keyword">if</span> (p[i] == p[mlast])</div><div class="line">            skip = mlast - i - <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    mask |= (<span class="number">1</span> &lt;&lt; (p[mlast] &amp; <span class="number">0x1F</span>));</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= w; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (s[i+m<span class="number">-1</span>] == p[m<span class="number">-1</span>]) &#123;<span class="comment">//pattern末尾匹配</span></div><div class="line">            <span class="comment">/* candidate match */</span> </div><div class="line">            <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; mlast; j++)</div><div class="line">                <span class="keyword">if</span> (s[i+j] != p[j])</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">if</span> (j == mlast) &#123;<span class="comment">//一个匹配成功</span></div><div class="line">                <span class="keyword">if</span> (mode != FAST_COUNT)</div><div class="line">                    <span class="keyword">return</span> i;</div><div class="line">                count++;</div><div class="line">                i = i + mlast;</div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">/*移动多少?,根据mask*/</span> </div><div class="line">            <span class="keyword">if</span> (!(mask &amp; (<span class="number">1</span> &lt;&lt; (s[i+m] &amp; <span class="number">0x1F</span>))))</div><div class="line">                i = i + m;</div><div class="line">            <span class="keyword">else</span> </div><div class="line">                i = i + skip;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">/* skip: check if next character is part of pattern */</span> </div><div class="line">            <span class="keyword">if</span> (!(mask &amp; (<span class="number">1</span> &lt;&lt; (s[i+m] &amp; <span class="number">0x1F</span>))))</div><div class="line">                i = i + m;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (mode != FAST_COUNT)</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    <span class="keyword">return</span> count;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </section>
+    <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
@@ -157,33 +188,71 @@
 
       </div>
     
-    <div class="money-like">
-      <div class="reward-btn">
-        赏
-        <span class="money-code">
-          <span class="wechat-code">
-            <div class="code-image"></div>
-            <b>使用微信打赏</b>
-          </span>
-        </span>
-      </div>
-      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
-    </div>
-    <div class="qrcode">
-      <canvas id="share-qrcode"></canvas>
-      <p class="notice">扫描二维码，分享此文章</p>
-    </div>
+    <!-- Tags END -->
+    <!-- NAV START -->
     
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2011/08/16/ooc_in_python.html">
+        <span class="nav-arrow">← </span>
+        
+          C的面向对象风格代码
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2011/07/24/emacssleep.html">
+        
+          让Emacs提醒睡觉
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
       <div id="comments"></div>
+      <!-- Gitment END -->
     
   </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
 </main>
 
 <script>
   (function () {
     var url = 'http://cyukang.com/2011/07/30/fastsearch-in-python2.html';
     var banner = ''
-    if (banner) {
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
         'background-image': 'url(' + banner + ')'
       })
@@ -194,32 +263,37 @@
 
      // error image
     $(".markdown-content img").on('error', function() {
-      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
     })
 
     // zoom image
     $(".markdown-content img").on('click', function() {
       var src = $(this).attr('src')
-      var imageW = $(this).width()
-      var imageH = $(this).height()
-      
-      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
-      zoom = zoom < 1 ? 1 : zoom
-      zoom = zoom > 2 ? 2 : zoom
-      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
 
-      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
-      $('.image-view-wrap').addClass('wrap-active')
-      $('.image-view-wrap img').css({
-        'width': `${imageW}`,
-        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
-      })
-      $('html').css('overflow', 'hidden')
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
 
-      $('.image-view-wrap').on('click', function() {
-        $(this).remove()
-        $('html').attr('style', '')
-      })
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
     })
 
     // qrcode
@@ -230,7 +304,7 @@
 
     // gitment
     var gitmentConfig = "chenyukang";
-    if (gitmentConfig != "undefined") {
+    if (gitmentConfig !== 'undefined') {
       var gitment = new Gitment({
         id: "一种更快的字符串匹配算法-源自Python2.5",
         owner: "chenyukang",
@@ -288,7 +362,7 @@
   async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
-      if (hasLine == 'false') {
+      if (hasLine === 'false') {
         figure.find('.gutter').hide();
       }
       var lang = figure.attr('class').split(' ')[1] || 'code';
@@ -309,10 +383,10 @@
     // Originial
     var _hmt = _hmt || [];
     (function() {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
     })();
 </script>
 

@@ -23,9 +23,38 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
 </head>
 
   <body>
@@ -118,7 +147,8 @@
     <a href="javascript:;"></a>
   </div>
 </div>
-<main class="app-body">
+<main class="app-body flex-box">
+  <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>之前看EOPL感觉收获挺大，最近又花业余时间看了看编译相关的东西，这是我看lcc的时候顺手记下的一些自己的理解。这本书<a href="http://book.douban.com/subject/1610344/" target="_blank" rel="external">《A Retargetable C Compiler》</a>还挺大头的。lcc代码量不是特别大，更复杂的是tinyCC，tinyCC甚至可以直接运行C代码。</p>
 <h2 id="alloc-c"><a href="#alloc-c" class="headerlink" title="alloc.c"></a>alloc.c</h2><p>为了尽量的少调用系统调用，在alloc基础上封装了一下。</p>
@@ -150,6 +180,7 @@
 <p>接口为gencode,emitcode。后面每一个代码生成的后端都是一个Interface结构，在function函数里面调用这两个函数生成汇编代码，其中还包含一个Xinterface成员，这是平台相关的接口。</p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>到现在我只是大概看了了前端和中间层，后面lcc跨平台的指令生成还没来得及研究，这本书的电子版不是很清晰，还是买个中文版来再稍微看看。总的来说，lcc是的Parsing和语义分析是同时进行的，就是所谓的one-pass方法。现在很多编译器所用的方法是先建立AST，后面可能要多次遍历整个AST进行分析，LLVM好像就是采用的这种方案。另外代码的优化是一个trade-off，作为教学用途的lcc没有过多做代码优化，这样lcc代码还是可以花不多的时间来一个大概的学习。</p>
 </section>
+    <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
@@ -164,33 +195,80 @@
 
       </div>
     
-    <div class="money-like">
-      <div class="reward-btn">
-        赏
-        <span class="money-code">
-          <span class="wechat-code">
-            <div class="code-image"></div>
-            <b>使用微信打赏</b>
-          </span>
-        </span>
-      </div>
-      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
-    </div>
-    <div class="qrcode">
-      <canvas id="share-qrcode"></canvas>
-      <p class="notice">扫描二维码，分享此文章</p>
-    </div>
+    <!-- Tags END -->
+    <!-- NAV START -->
     
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2015/01/10/rust-10-alpha.html">
+        <span class="nav-arrow">← </span>
+        
+          Rust coming to 1.0
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2014/08/01/install-server.html">
+        
+          折腾服务器
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
       <div id="comments"></div>
+      <!-- Gitment END -->
     
   </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#alloc-c"><span class="toc-nav-text">alloc.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#sym-c"><span class="toc-nav-text">sym.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#input-c"><span class="toc-nav-text">input.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#lex-c"><span class="toc-nav-text">lex.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#error-c"><span class="toc-nav-text">error.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#tree-c"><span class="toc-nav-text">tree.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#expr-c-enode-c"><span class="toc-nav-text">expr.c enode.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#stmt-c"><span class="toc-nav-text">stmt.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#decl-c"><span class="toc-nav-text">decl.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#dag-c"><span class="toc-nav-text">dag.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#小结"><span class="toc-nav-text">小结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
 </main>
 
 <script>
   (function () {
     var url = 'http://cyukang.com/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html';
     var banner = ''
-    if (banner) {
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
         'background-image': 'url(' + banner + ')'
       })
@@ -201,32 +279,37 @@
 
      // error image
     $(".markdown-content img").on('error', function() {
-      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
     })
 
     // zoom image
     $(".markdown-content img").on('click', function() {
       var src = $(this).attr('src')
-      var imageW = $(this).width()
-      var imageH = $(this).height()
-      
-      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
-      zoom = zoom < 1 ? 1 : zoom
-      zoom = zoom > 2 ? 2 : zoom
-      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
 
-      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
-      $('.image-view-wrap').addClass('wrap-active')
-      $('.image-view-wrap img').css({
-        'width': `${imageW}`,
-        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
-      })
-      $('html').css('overflow', 'hidden')
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
 
-      $('.image-view-wrap').on('click', function() {
-        $(this).remove()
-        $('html').attr('style', '')
-      })
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
     })
 
     // qrcode
@@ -237,7 +320,7 @@
 
     // gitment
     var gitmentConfig = "chenyukang";
-    if (gitmentConfig != "undefined") {
+    if (gitmentConfig !== 'undefined') {
       var gitment = new Gitment({
         id: "lcc阅读记录",
         owner: "chenyukang",
@@ -295,7 +378,7 @@
   async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
-      if (hasLine == 'false') {
+      if (hasLine === 'false') {
         figure.find('.gutter').hide();
       }
       var lang = figure.attr('class').split(' ')[1] || 'code';
@@ -316,10 +399,10 @@
     // Originial
     var _hmt = _hmt || [];
     (function() {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
     })();
 </script>
 

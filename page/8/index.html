@@ -23,9 +23,38 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
 </head>
 
   <body>
@@ -113,6 +142,41 @@
 
     <main class="app-body">
     
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2012/10/16/delegate_ruby_cpp.html">Ruby vs C++ for delegation</a>
+      </h2>
+      <p class="article-date">October 16, 2012
+          
+              
+  <a href="/tags#Ruby" >
+    <span class="tag-code">Ruby</span>
+  </a>
+
+  <a href="/tags#C++" >
+    <span class="tag-code">C++</span>
+  </a>
+
+  <a href="/tags#delegator" >
+    <span class="tag-code">delegator</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                下班之前同事BigBird给我show他的一段C++代码，对于我等拿C++当作C来用的未入门者实看起来实在是炫丽。虽然比较冗长晦涩，不过还是能看懂个大概，然后觉得这对于动态语言是非常容易实现的。 于是晚上回来用Ruby来搞搞，弄出下面这么段代码。
+C++版本在这里https://gist .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2012/10/16/delegate_ruby_cpp.html">阅读全文</a>
+      
+    </article>
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
@@ -232,12 +296,12 @@ Bochs调试Bochs自带调试功能，但是如果你是apt装上的是不行的�
       <p class="article-date">August 9, 2012
           
               
-  <a href="/tags#Tools" >
-    <span class="tag-code">Tools</span>
-  </a>
-
   <a href="/tags#Linux" >
     <span class="tag-code">Linux</span>
+  </a>
+
+  <a href="/tags#Tools" >
+    <span class="tag-code">Tools</span>
   </a>
 
           
@@ -391,38 +455,6 @@ static int first_onebit(int x)&#123;    if(!x)        return 0;    else&#123;   
       
     </article>
   
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2012/04/11/find-duplicated-cycle-detection.html">Find duplicated Number and Cycle detection</a>
-      </h2>
-      <p class="article-date">April 11, 2012
-          
-              
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
-  </a>
-
-  <a href="/tags#Algorithms" >
-    <span class="tag-code">Algorithms</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                一个有趣的问题，据说这个题目耗费了Don Knuth 24小时解决。一起来看看。
-
- You are given an array of integers of length n, where each element ranges  from 0 to n - 2, inclusive .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2012/04/11/find-duplicated-cycle-detection.html">阅读全文</a>
-      
-    </article>
-  
 
   
     <div class="guide-pager">
@@ -468,7 +500,7 @@ static int first_onebit(int x)&#123;    if(!x)        return 0;    else&#123;   
   async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
-      if (hasLine == 'false') {
+      if (hasLine === 'false') {
         figure.find('.gutter').hide();
       }
       var lang = figure.attr('class').split(' ')[1] || 'code';
@@ -489,10 +521,10 @@ static int first_onebit(int x)&#123;    if(!x)        return 0;    else&#123;   
     // Originial
     var _hmt = _hmt || [];
     (function() {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
     })();
 </script>
 

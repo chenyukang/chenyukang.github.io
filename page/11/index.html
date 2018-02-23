@@ -23,9 +23,38 @@
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
 </head>
 
   <body>
@@ -113,6 +142,41 @@
 
     <main class="app-body">
     
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2011/03/03/ood_for_wife.html">给老婆介绍OOD(翻译)</a>
+      </h2>
+      <p class="article-date">March 3, 2011
+          
+              
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Backup" >
+    <span class="tag-code">Backup</span>
+  </a>
+
+  <a href="/tags#OOD" >
+    <span class="tag-code">OOD</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+          <p><div class="contents"><dl> <dt> </dt> <dt>晚上看到个有趣的文章，翻译了一下，看过Head First绕过。 <a href="http://www.codeproject.com/KB/architecture/SOLIDPrinciplesInOOD.aspx" target="_blank" rel="external">原文在这里</a>。</dt> <dt> </dt> <dt><a href="#sec5">OOD介绍</a></dt> <dt><a href="#sec5">Why OOD?</a></dt> <dt><a href="#sec5">Single Responsibility Principle单一职责原则</a></dt> <dt><a href="#sec5">Open-closed Principle 开闭原则</a></dt> <dt><a href="#sec5">Liskov’s Substitution Principle 里氏可替换原则</a> </dt> <dt><a href="#sec6">The Interface Segregation Principle 接口分离原则</a> </dt> <dt><a href="#sec8">The Dependency Inversion Principle 依赖倒置原则</a></dt> <dt><a href="#sec8">总结</a> </dt> </dl></div><br>我的妻子Farhana想重新她软件开发师的职业生涯(她以前也是个软件开发师，但是因为第一个孩子的出生而没有继续下去)。所以，这段时间我在帮助她学习一些OOD方面的东西，我是一个比较有开发经验的程序员。</p>
+<p>从我早期的职业生涯中，我发现不管是多么复杂的技术问题，如果从普通交谈中以平常生活常见的角度去解释往往变得更容易理解。因为之前我和她有不少富有成果的交谈，我想可以和大家一起分享一下这种学习OOD的有趣方式。</p>
+<p>下面是我们学习OOD的对话：</p>
+<h3><a name="sec1"></a><br>OOD介绍</h3><br><ul><br>    <li>Shubho : 好，让我们开始学习OOD，你已经知道了面向对象三大特性，对吗？</li><br>    <li>Farhana: 你是指封装、继承、多态吗？是的，这些我知道。</li><br>    <li>Shubho : 好，希望你已经知道了使用对象和类，让我们今天开始学习OOD。</li><br>    <li>Farhana: 等等，知道面向对象特性还不够面向对象程序设计吗？我的意思是，我能定义类，封装成员变量和函数，我也能根据类之间的关系定义继承类。那还有什么需要学的么？</li><br>    <li>Shubho : 好问题，OOP和OOD是两码事。让我给个例子给你。当你还是小孩的时候你学会了字母表，对吧？</li><br>    <li>Farhana: 嗯</li><br>    <li>Shubho : 好，你也学会了如何用字母形成一个个有意义的单词，同时，你也学会了一些语法来造句子。比如，你要维持时态，使用介词、连接词、和其他语法来造出正确的句子。比如说一个句子像下面这样。”I” (pronoun) “want” (Verb) “to” (Preposition) “learn” (Verb) “OOD” (Noun) 你看，你要让这些单词安特定的顺序组成，你也  要选取正确的词来使得这个句子有意义。</li><br>    <li>Farhana: 呃，这是什么意思？</li><br>    <li>Shubho : 这和OOP是类似的。OOP是面向对象程序设计的基本原则和核心思想。这里，OOP对应于英语语法，这些基本语法告诉你如何用单词去构造一句有意义的话，<br>OOP告诉你使用类，封装成员变量和方法，也告诉你在代码中使用继承关系。</li><br>    <li>Farhana: 嗯，有点懂了。那么OOD对应于什么呢？</li><br>    <li>Shubho : 你马上就知道。好，现在比如说你想要就一个论题写一些文章。你也想就一些你比较精通的方面写一些书。知道如何遣词造句还不够写一篇好文章或者好书出来，对吧？你还需要学习很多，你需要知道如何用一种好的方式去解释一个东西，这样读者才能了解你到底在说什么。</li><br>    <li>Farhana: 有点趣，继续。</li><br>    <li>Shubho : 好，现在比如说你想就OOD方面写一个本书，你需要知道如何把这个主题分为小题目。然后在这些小议题上面逐章地写，你还要写前言、简介、解释、例子，还有许多其他段落。你需要知道如何从整体上把握这本书的构造，甚至需要一些写作技巧。这才能让你的书通俗易懂。在软件设计领域，OOD同样是个更上层的角度。你需要好好的设计，使得你的类和代码可以更好地模块化、复用、灵活。使用这些设计原则可以是你少重复发明轮子。懂了吗？</li><br>    <li>Farhana: Hmm，我明白了一些，但是请继续。</li><br>    <li>Shubho : 别急，一会你就知道了。我们只管讨论就是了。</li><br>
+        
+      </div>
+      
+          <a class="more" href="/2011/03/03/ood_for_wife.html">阅读全文</a>
+      
+    </article>
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
@@ -331,12 +395,12 @@
       <p class="article-date">November 15, 2010
           
               
-  <a href="/tags#Tools" >
-    <span class="tag-code">Tools</span>
-  </a>
-
   <a href="/tags#Emacs" >
     <span class="tag-code">Emacs</span>
+  </a>
+
+  <a href="/tags#Tools" >
+    <span class="tag-code">Tools</span>
   </a>
 
           
@@ -379,36 +443,6 @@ Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方�
       </div>
       
           <a class="more" href="/2010/11/14/damien-rice.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2010/10/27/haveyourfun.html">有你的快乐</a>
-      </h2>
-      <p class="article-date">October 27, 2010
-          
-              
-  <a href="/tags#工作" >
-    <span class="tag-code">工作</span>
-  </a>
-
-  <a href="/tags#Life|Notes" >
-    <span class="tag-code">Life|Notes</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                晚上睡在公司，这边除了晚上偶尔有施工的声音，一切都还不错。洗个热水澡，随便写写早点睡。嘈杂的音响放着这么王若琳的《有你的快乐》，标题就用这个吧，哈哈。关于工作：今年好像计算机专业的同学们还是非常好找工作，首先华为华赛来得非常早，然后就是腾讯，这几个公司就签了好多。成都很多同学都不想离开四 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2010/10/27/haveyourfun.html">阅读全文</a>
       
     </article>
   
@@ -457,7 +491,7 @@ Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方�
   async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
     $('figure pre').each(function(i, block) {
       var figure = $(this).parents('figure');
-      if (hasLine == 'false') {
+      if (hasLine === 'false') {
         figure.find('.gutter').hide();
       }
       var lang = figure.attr('class').split(' ')[1] || 'code';
@@ -478,10 +512,10 @@ Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方�
     // Originial
     var _hmt = _hmt || [];
     (function() {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
     })();
 </script>
 

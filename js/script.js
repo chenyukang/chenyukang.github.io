@@ -5,7 +5,25 @@
   var banner = document.getElementById('article-banner') || false
   var about = document.getElementById('about-banner') || false
   var top = $('.scroll-top')
+  var catalog = $('.catalog-container .toc-main')
   var isOpen = false
+
+  function detectmob() {
+        if(window.innerWidth <= 800) {
+            return true;
+        } else {
+            return false;
+        }
+   }
+
+  if(catalog.length != 0) {
+      app.css("maxWidth", "980px");
+      return;
+  }
+
+  if(detectmob()) {
+    $('.nav-container').hide();
+  }
 
   $(document).ready(function () {
     NProgress.start()
@@ -47,7 +65,9 @@
     var name = $(this).data('name')
     var maoH = list.find('#' + name).offset().top
 
-    $('html,body').animate({ scrollTop: maoH - header.height() }, 500)
+    $('html,body').animate({
+      scrollTop: maoH - header.height()
+    }, 500)
   })
 
   $('.reward-btn').on('click', function () {
@@ -55,11 +75,25 @@
   })
 
   $('.arrow-down').on('click', function () {
-    $('html,body').animate({ scrollTop: banner.offsetHeight - header.height() }, 500)
+    $('html, body').animate({
+      scrollTop: banner.offsetHeight - header.height()
+    }, 500)
+  })
+
+  $('.toc-nav a').on('click', function (e) {
+    e.preventDefault()
+    var catalogTarget = e.currentTarget
+    var scrollTarget = $(catalogTarget.getAttribute('href'))
+    var top = scrollTarget.offset().top
+    if (top > 0) {
+      $('html,body').animate({
+        scrollTop: top - 65
+      }, 500)
+    }
   })
 
   top.on('click', function () {
-    $('html,body').animate({ scrollTop: 0 }, 600)
+    $('html, body').animate({ scrollTop: 0 }, 600)
   })
 
   document.addEventListener('scroll', function () {
@@ -76,6 +110,11 @@
       top.addClass('opacity')
     } else {
       top.removeClass('opacity')
+    }
+    if (scrollTop > 190) {
+      catalog.addClass('fixed-toc')
+    } else {
+      catalog.removeClass('fixed-toc')
     }
   })
 })(jQuery)
