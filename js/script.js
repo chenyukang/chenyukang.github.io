@@ -18,7 +18,6 @@
 
   if(catalog.length != 0) {
       app.css("maxWidth", "980px");
-      return;
   }
 
   if(detectmob()) {
