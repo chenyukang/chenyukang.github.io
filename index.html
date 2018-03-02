@@ -145,6 +145,72 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2018/03/02/docker-postgres-password.html">Docker compose初始化失败问题</a>
+      </h2>
+      <p class="article-date">March 2, 2018
+          
+              
+  <a href="/tags#Tools" >
+    <span class="tag-code">Tools</span>
+  </a>
+
+  <a href="/tags#Docker" >
+    <span class="tag-code">Docker</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>今天在Docker Postgresql用户名和密码授权的问题上花了一些时间，问题是： </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">psql: FATAL:  password authentication failed for user "postgres"</div></pre></td></tr></table></figure>
+<p>admin的用户名和密码是可以在docker-compose.yml里设置的，通常我们可以配置为： </p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">postgresql:</span></div><div class="line"><span class="attr">  image:</span> <span class="attr">postgres:latest</span></div><div class="line"><span class="attr">  ports:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">"5434:5432"</span></div><div class="line"><span class="attr">  volumes:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">./data/pgsql:/var/lib/postgresql/data</span></div><div class="line"><span class="bullet">    -</span> <span class="string">./initialize/pgsql:/docker-entrypoint-initdb.d</span></div><div class="line"><span class="attr">  environment:</span></div><div class="line"><span class="attr">    POSTGRES_USER:</span> <span class="string">postgres</span></div><div class="line"><span class="attr">    POSTGRES_DB:</span> <span class="string">postgres</span></div><div class="line"><span class="attr">  secrets:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">pg_superuser_password</span></div></pre></td></tr></table></figure>
+<p>某个用户的密码可以在<code>./initialize/pgsql</code>目录的脚本里设置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span>!/bin/bash</div><div class="line">set -e</div><div class="line"></div><div class="line">psql -v ON_ERROR_STOP=1 --username "postgres" &lt;&lt;-EOSQL</div><div class="line">	CREATE USER user WITH PASSWORD 'the-password';</div><div class="line">	ALTER USER user CREATEDB;</div><div class="line">EOSQL</div></pre></td></tr></table></figure>
+<p>只是今天碰巧想修改一下这个密码，所以就把这个脚本里的密码修改了，然后执行命令： </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">docker-compose up --build -d --force-recreate</div></pre></td></tr></table></figure>
+<p>而后就一直出现上面的用户授权失败。</p>
+<h4 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h4><p>刚开始一直认为是可能dockerfile配置得不对，结果花费了些时间。后来突然想到了，PG里数据初始化应该只是第一次做了，后续如果发现<code>/var/lib/postgresql/data</code>里已经有数据了就再也不会重新设置密码，这里是配置volume的，如果还未有重要数据把<code>./data/pgsql</code>删除了即可，或者应该是可以通过attach进入容器通过pg命令修改。</p>
+<h4 id="bridge-networks失败"><a href="#bridge-networks失败" class="headerlink" title="bridge networks失败"></a>bridge networks失败</h4><p>这是另外一个坑，我在一台ubuntu的服务器上build一个docker-compose，里面配置了一个桥接网络:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="attr">networks:</span></div><div class="line"><span class="attr">  app_net:</span></div><div class="line"><span class="attr">    driver:</span> <span class="string">bridge</span></div><div class="line"><span class="attr">    ipam:</span></div><div class="line"><span class="attr">      driver:</span> <span class="string">default</span></div><div class="line"><span class="attr">      config:</span></div><div class="line"><span class="bullet">      -</span></div><div class="line"><span class="attr">        subnet:</span> <span class="number">192.168</span><span class="number">.20</span><span class="number">.0</span><span class="string">/24</span></div></pre></td></tr></table></figure>
+<p>在各个子容器里面配置了具体的ip地址： </p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">networks:</span></div><div class="line"><span class="attr">  app_net:</span></div><div class="line"><span class="attr">    ipv4_address:</span> <span class="number">192.168</span><span class="number">.20</span><span class="number">.1</span></div></pre></td></tr></table></figure>
+<p>结果进入容器怎么也连不上外部网络，折腾了一圈才发现需要安装一个<a href="https://docs.docker.com/v17.09/engine/userguide/networking/default_network/custom-docker0/" target="_blank" rel="external">bridge-utils</a>。而后安装了这个包之后，继续尝试force-recreate容器，仍然不行。无奈之余把子网换一个地址<code>192.168.30.0/24</code>即可，和PG初始类似，子网的初始化也是一个一次进行的工作，而后重新build image看起来是没有影响的。docker在跑的时候居然也不会有提示。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>最近在自己工作的项目都完全Docker化，感觉是配置来折腾用起来飞。最近也在做一个重度依赖Docker的项目，所以Docker的文档需要看完，特别是网络和数据存储那块，否则会花费不少时间折腾。</p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2018/03/02/docker-postgres-password.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2018/02/26/overcommit.html">使用overcommit生成git hooks</a>
+      </h2>
+      <p class="article-date">February 26, 2018
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                git hooks很方便地可以在git操作流程的各个阶段加入hooks，比如执行一些脚本来检查代码风格、跑单元测试、做代码静态检查等。git hooks的试用方法是在.git/hooks目录下写各种脚本，但是.git目录的这些脚本是不会checkin到repo里的，所以如果一个代码如果被 .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2018/02/26/overcommit.html">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2018/02/23/nginx-https-too-many-redirect.html">Nginx https too many redirect</a>
       </h2>
       <p class="article-date">February 23, 2018
@@ -160,23 +226,14 @@
         
         
             
-                <p>Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">return</span> <span class="number">302</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>; </div><div class="line"><span class="comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span></div></pre></td></tr></table></figure>
-<p>但是如果是多层Nginx，前面的Nginx需要把用户原始请求的scheme传递到后端，可以加上头部设置： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</div></pre></td></tr></table></figure>
-<p>后面的Nginx再判断一次:</p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">if</span> ( <span class="variable">$http_x_forwarded_proto</span> != <span class="string">'https'</span> ) &#123;</div><div class="line">  <span class="attribute">return</span> <span class="number">301</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>否则强制https经常会出现类似<code>ERR_TOO_MANY_REDIRECTS 将您重定向的次数过多</code>这样的问题。</p>
-<p>可是在实践过程中偶尔也碰到过一些ELB会丢掉scheme的问题，比如在这样的请求链路情况下<code>elb =&gt; nginx =&gt; nginx =&gt; application</code>第二层Nginx获取的scheme就有问题了，这也可能会导致<code>too many redirects</code>问题。</p>
-<p>可以尝试在第二层Nginx上这样解决： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">proxy_set_header</span>   X-Forwarded-Proto <span class="variable">$http_x_forwarded_proto</span>;</div></pre></td></tr></table></figure>
-<p>当然强制https这样的跳转逻辑尽量放在请求链路的最外层，这样问题会少一些。</p>
-
+                Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: 
+return 302 https://$host$request_uri; ## 需要注意这里是request_uri而不是uri，否则会引起安全问题
+但是如果是多层Nginx，前面的Nginx .....
             
         
       </div>
       
-          <a class="more" href="/2018/02/23/nginx-https-too-many-redirect.html#footer">发表评论</a>
+          <a class="more" href="/2018/02/23/nginx-https-too-many-redirect.html">阅读全文</a>
       
     </article>
   
@@ -365,59 +422,6 @@ os.time()                &l .....
       </div>
       
           <a class="more" href="/2017/08/22/pl-practice-with-exercism.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/08/12/migrate-to-hexo.html">从 Jekyll换成Hexo</a>
-      </h2>
-      <p class="article-date">August 12, 2017
-          
-              
-  <a href="/tags#Blog" >
-    <span class="tag-code">Blog</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                昨天看到自己的 Blog 在移动端显示丑死了，所以想着优化一下，找一个 mobile first 的风格试试。顺便把 blog 从 jekyll 换成了 Hexo。最后找到这个 hexo 的主题非常顺眼，便拿来用了，感谢yanm1ng为大家提供如此优秀的主题。回想起自己之前用过搜狐博客， .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/08/12/migrate-to-hexo.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/07/23/kong-intro-5.html">Kong源码分析: 事件</a>
-      </h2>
-      <p class="article-date">July 23, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。
-worker模型假设我们对Kong做了一个更改的请求，这个请求通常是通过admin_api这个路由处理的。也就是说最终执行数据库操作的动作是在一个Nginx worker进程里。因为操作了数据库所以我 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/07/23/kong-intro-5.html">阅读全文</a>
       
     </article>
   

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://cyukang.com/"/>
-  <updated>2018-02-23T14:02:50.419Z</updated>
+  <updated>2018-03-02T15:57:02.386Z</updated>
   <id>http://cyukang.com/</id>
   
   <author>
@@ -16,11 +16,76 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Docker compose初始化失败问题</title>
+    <link href="http://cyukang.com/2018/03/02/docker-postgres-password.html"/>
+    <id>http://cyukang.com/2018/03/02/docker-postgres-password.html</id>
+    <published>2018-03-02T15:17:35.000Z</published>
+    <updated>2018-03-02T15:57:02.386Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>今天在Docker Postgresql用户名和密码授权的问题上花了一些时间，问题是： </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">psql: FATAL:  password authentication failed for user "postgres"</div></pre></td></tr></table></figure>
+<p>admin的用户名和密码是可以在docker-compose.yml里设置的，通常我们可以配置为： </p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">postgresql:</span></div><div class="line"><span class="attr">  image:</span> <span class="attr">postgres:latest</span></div><div class="line"><span class="attr">  ports:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">"5434:5432"</span></div><div class="line"><span class="attr">  volumes:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">./data/pgsql:/var/lib/postgresql/data</span></div><div class="line"><span class="bullet">    -</span> <span class="string">./initialize/pgsql:/docker-entrypoint-initdb.d</span></div><div class="line"><span class="attr">  environment:</span></div><div class="line"><span class="attr">    POSTGRES_USER:</span> <span class="string">postgres</span></div><div class="line"><span class="attr">    POSTGRES_DB:</span> <span class="string">postgres</span></div><div class="line"><span class="attr">  secrets:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">pg_superuser_password</span></div></pre></td></tr></table></figure>
+<p>某个用户的密码可以在<code>./initialize/pgsql</code>目录的脚本里设置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span>!/bin/bash</div><div class="line">set -e</div><div class="line"></div><div class="line">psql -v ON_ERROR_STOP=1 --username "postgres" &lt;&lt;-EOSQL</div><div class="line">	CREATE USER user WITH PASSWORD 'the-password';</div><div class="line">	ALTER USER user CREATEDB;</div><div class="line">EOSQL</div></pre></td></tr></table></figure>
+<p>只是今天碰巧想修改一下这个密码，所以就把这个脚本里的密码修改了，然后执行命令： </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">docker-compose up --build -d --force-recreate</div></pre></td></tr></table></figure>
+<p>而后就一直出现上面的用户授权失败。</p>
+<h4 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h4><p>刚开始一直认为是可能dockerfile配置得不对，结果花费了些时间。后来突然想到了，PG里数据初始化应该只是第一次做了，后续如果发现<code>/var/lib/postgresql/data</code>里已经有数据了就再也不会重新设置密码，这里是配置volume的，如果还未有重要数据把<code>./data/pgsql</code>删除了即可，或者应该是可以通过attach进入容器通过pg命令修改。</p>
+<h4 id="bridge-networks失败"><a href="#bridge-networks失败" class="headerlink" title="bridge networks失败"></a>bridge networks失败</h4><p>这是另外一个坑，我在一台ubuntu的服务器上build一个docker-compose，里面配置了一个桥接网络:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="attr">networks:</span></div><div class="line"><span class="attr">  app_net:</span></div><div class="line"><span class="attr">    driver:</span> <span class="string">bridge</span></div><div class="line"><span class="attr">    ipam:</span></div><div class="line"><span class="attr">      driver:</span> <span class="string">default</span></div><div class="line"><span class="attr">      config:</span></div><div class="line"><span class="bullet">      -</span></div><div class="line"><span class="attr">        subnet:</span> <span class="number">192.168</span><span class="number">.20</span><span class="number">.0</span><span class="string">/24</span></div></pre></td></tr></table></figure>
+<p>在各个子容器里面配置了具体的ip地址： </p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">networks:</span></div><div class="line"><span class="attr">  app_net:</span></div><div class="line"><span class="attr">    ipv4_address:</span> <span class="number">192.168</span><span class="number">.20</span><span class="number">.1</span></div></pre></td></tr></table></figure>
+<p>结果进入容器怎么也连不上外部网络，折腾了一圈才发现需要安装一个<a href="https://docs.docker.com/v17.09/engine/userguide/networking/default_network/custom-docker0/" target="_blank" rel="external">bridge-utils</a>。而后安装了这个包之后，继续尝试force-recreate容器，仍然不行。无奈之余把子网换一个地址<code>192.168.30.0/24</code>即可，和PG初始类似，子网的初始化也是一个一次进行的工作，而后重新build image看起来是没有影响的。docker在跑的时候居然也不会有提示。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>最近在自己工作的项目都完全Docker化，感觉是配置来折腾用起来飞。最近也在做一个重度依赖Docker的项目，所以Docker的文档需要看完，特别是网络和数据存储那块，否则会花费不少时间折腾。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;问题&quot;&gt;&lt;a href=&quot;#问题&quot; class=&quot;headerlink&quot; title=&quot;问题&quot;&gt;&lt;/a&gt;问题&lt;/h4&gt;&lt;p&gt;今天在Docker Postgresql用户名和密码授权的问题上花了一些时间，问题是： &lt;/p&gt;
+&lt;figure class=&quot;highli
+    
+    </summary>
+    
+    
+      <category term="Tools" scheme="http://cyukang.com/tags/Tools/"/>
+    
+      <category term="Docker" scheme="http://cyukang.com/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用overcommit生成git hooks</title>
+    <link href="http://cyukang.com/2018/02/26/overcommit.html"/>
+    <id>http://cyukang.com/2018/02/26/overcommit.html</id>
+    <published>2018-02-26T11:02:14.000Z</published>
+    <updated>2018-03-02T15:54:33.490Z</updated>
+    
+    <content type="html"><![CDATA[<p><code>git hooks</code>很方便地可以在git操作流程的各个阶段加入hooks，比如执行一些脚本来检查代码风格、跑单元测试、做代码静态检查等。git hooks的试用方法是在.git/hooks目录下写各种脚本，但是.git目录的这些脚本是不会checkin到repo里的，所以如果一个代码如果被多个开发人员共享就会显得不太方便同步hooks。</p>
+<p><a href="https://stackoverflow.com/questions/427207/can-git-hook-scripts-be-managed-along-with-the-repository" target="_blank" rel="external">当然也有一些其他方法来解决这个问题</a>，比如配置links或者对于<code>git 2.9</code>以后也可以使用来定制hooks的目录:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">git config core.hooksPath hooks</div></pre></td></tr></table></figure>
+<p>对于熟悉Ruby的同学可以使用<a href="https://github.com/brigade/overcommit" target="_blank" rel="external">overcommit</a>这个gem来解决。使用方法就是通过配置<code>.overcommit.yml</code>，比如:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">PreCommit:</span></div><div class="line"><span class="attr">  RuboCop:</span></div><div class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></div><div class="line"><span class="attr">    command:</span> <span class="string">['bundle',</span> <span class="string">'exec'</span><span class="string">,</span> <span class="string">'rubocop'</span><span class="string">]</span> <span class="comment">#  The shell command should run</span></div><div class="line"></div><div class="line"><span class="attr">  AuthorName:</span></div><div class="line"><span class="attr">    enabled:</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
+<p>然后执行命令:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">overcommit install</div></pre></td></tr></table></figure>
+<p>来自动生成各种hooks，通常后面的修改都是修改这个yaml文件即可，不过记得修改后需要<code>overcommit --signed</code>来重新生成hooks。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;code&gt;git hooks&lt;/code&gt;很方便地可以在git操作流程的各个阶段加入hooks，比如执行一些脚本来检查代码风格、跑单元测试、做代码静态检查等。git hooks的试用方法是在.git/hooks目录下写各种脚本，但是.git目录的这些脚本是不会checki
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Nginx https too many redirect</title>
     <link href="http://cyukang.com/2018/02/23/nginx-https-too-many-redirect.html"/>
     <id>http://cyukang.com/2018/02/23/nginx-https-too-many-redirect.html</id>
     <published>2018-02-23T09:38:44.000Z</published>
-    <updated>2018-02-23T14:02:50.419Z</updated>
+    <updated>2018-02-23T09:52:56.000Z</updated>
     
     <content type="html"><![CDATA[<p>Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: </p>
 <figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">return</span> <span class="number">302</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>; </div><div class="line"><span class="comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span></div></pre></td></tr></table></figure>
@@ -52,7 +117,7 @@
     <link href="http://cyukang.com/2018/02/22/linux-source.html"/>
     <id>http://cyukang.com/2018/02/22/linux-source.html</id>
     <published>2018-02-22T13:46:33.000Z</published>
-    <updated>2018-02-22T17:29:42.519Z</updated>
+    <updated>2018-02-21T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要unset 当前shell 的环境变量等，</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env zsh</span></div><div class="line"></div><div class="line">if [ -z $http_proxy ]; then</div><div class="line">    echo "not using proxy, set it now ... ";</div><div class="line">    export http_proxy="http://127.0.0.1:1087";</div><div class="line">    export https_proxy="https://127.0.0.1:1087";</div><div class="line">    echo $http_proxy;</div><div class="line">else</div><div class="line">    echo "using proxy now, unset it now ...";</div><div class="line">    unset http_proxy;</div><div class="line">    unset https_proxy;</div><div class="line">    echo $http_proxy;</div><div class="line">fi</div></pre></td></tr></table></figure>
@@ -272,89 +337,6 @@
     
     
       <category term="PL" scheme="http://cyukang.com/tags/PL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>从 Jekyll换成Hexo</title>
-    <link href="http://cyukang.com/2017/08/12/migrate-to-hexo.html"/>
-    <id>http://cyukang.com/2017/08/12/migrate-to-hexo.html</id>
-    <published>2017-08-12T00:38:00.000Z</published>
-    <updated>2017-08-11T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>昨天看到自己的 Blog 在移动端显示丑死了，所以想着优化一下，找一个 mobile first 的风格试试。顺便把 blog 从 jekyll 换成了 Hexo。最后找到这个 <a href="https://github.com/yanm1ng/hexo-theme-vexo" target="_blank" rel="external">hexo 的主题</a>非常顺眼，便拿来用了，感谢<a href="https://github.com/yanm1ng" target="_blank" rel="external">yanm1ng</a>为大家提供如此优秀的主题。回想起自己之前用过搜狐博客，然后是 yo2，然后是 wordpress 自己搭，后来又出现了 jekyll，最终才找到最适合的写日志的方式。这次我把之前残留的 html 完全转换为了 markdown，并保留了创建日期，没想到这么多年来断断续续已经写了100来篇文章了。</p>
-<h4 id="hexo"><a href="#hexo" class="headerlink" title="hexo"></a>hexo</h4><p>hexo 其实和 jekyll 非常类似，只是迁徙过程中还是需要做一些处理。hexo 的文章排序选择了 date 倒序排，但是依赖于_post 里的文件创建时间，为了解决这个问题，然而 git 是不管理文件的时间戳的。结果会出现一些诡异的问题，文章的顺序会变乱。后来才发现 hexo 为了解决这个问题引入了一个叫做 db.json 的文件，存的内容大概是文件的时间戳之类的。为了保持之前的文章链接有效，写了一些小脚本处理文章。</p>
-<h4 id="gitment"><a href="#gitment" class="headerlink" title="gitment"></a>gitment</h4><p>关于评论还发现一个很好的解决方案，那就是使用<a href="https://github.com/imsun/gitment" target="_blank" rel="external">gitment</a>，这个方案是专门针对 github 上 host 的博客系统的，唯一不爽的地方在于需要自己为新增文章初始化创建一个 issue，每一条评论会增加对应文章 issue 的comments。当然结果也导致了只有 github 帐号才能评论。不过我觉得这还是挺不错，毕竟 github 作为程序员的社交系统已经如此流行。</p>
-<h4 id="typora"><a href="#typora" class="headerlink" title="typora"></a>typora</h4><p>另外经大家推荐尝试使用 markdown 编辑软件Typora。之前因为自己使用的 markdown 格式稍微有点差别， 而且也习惯了用 Emacs，所以并没用深度使用 Typora。这次好好尝试了一下，发现其可见即可得还是非常方便的。另外就是插入图片的时候可以直接拖入，并且配置一下图片的根目录，自动拷贝到图片目录(或者上传到图床)。这个功能真的很暖心，typora 的作者肯定也是用 git来管理自己的日志。</p>
-<p><img src="/images/134871342111-2510476.jpg" alt="134871342111"></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;昨天看到自己的 Blog 在移动端显示丑死了，所以想着优化一下，找一个 mobile first 的风格试试。顺便把 blog 从 jekyll 换成了 Hexo。最后找到这个 &lt;a href=&quot;https://github.com/yanm1ng/hexo-theme-v
-    
-    </summary>
-    
-    
-      <category term="Blog" scheme="http://cyukang.com/tags/Blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Kong源码分析: 事件</title>
-    <link href="http://cyukang.com/2017/07/23/kong-intro-5.html"/>
-    <id>http://cyukang.com/2017/07/23/kong-intro-5.html</id>
-    <published>2017-07-23T00:38:00.000Z</published>
-    <updated>2017-07-22T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。</p>
-<h3 id="worker模型"><a href="#worker模型" class="headerlink" title="worker模型"></a>worker模型</h3><p>假设我们对Kong做了一个更改的请求，这个请求通常是通过admin_api这个路由处理的。也就是说最终执行数据库操作的动作是在一个Nginx worker进程里。因为操作了数据库所以我们需要刷新这个Kong节点的所有worker的缓存，而且要把事件分发给其他Kong节点，让其他Kong节点刷新所有worker的缓存。</p>
-<p><img src="/images/kong-message.png" alt="kong-message" class="img-center"></p>
-<p>这就涉及到两部分:</p>
-<ol>
-<li>Kong节点之间的消息通信, 这是使用<a href="https://www.serf.io/" target="_blank" rel="external">serf</a>来实现的</li>
-<li>Kong每个节点内部，也就是Nginx worker之间的通信，这是使用<a href="https://github.com/Mashape/lua-resty-worker-events" target="_blank" rel="external">lua-resty-worker-events</a>来进行。</li>
-</ol>
-<h3 id="发布订阅模式"><a href="#发布订阅模式" class="headerlink" title="发布订阅模式"></a>发布订阅模式</h3><p>发布订阅是实现事件的一种经典设计模式，主要需要有两类操作：</p>
-<ol>
-<li>发布消息</li>
-<li>订阅消息，收到消息后触发指定的函数。</li>
-</ol>
-<p>Kong使用的是一个<a href="https://github.com/Olivine-Labs/mediator_lua" target="_blank" rel="external">叫作mediator_lua</a>，mediator中文意思为”中间人”，很符合项目的意思。可以看到kong/core/events.lua里面实现如下：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Events:subscribe</span><span class="params">(event_name, fn)</span></span></div><div class="line">  <span class="keyword">if</span> fn <span class="keyword">then</span></div><div class="line">    self._mediator:subscribe(&#123;event_name&#125;, <span class="function"><span class="keyword">function</span><span class="params">(message_t)</span></span></div><div class="line">      fn(message_t)</div><div class="line">      <span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">true</span> <span class="comment">-- Required to tell mediator to continue processing other events</span></div><div class="line">    <span class="keyword">end</span>)</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Events:publish</span><span class="params">(event_name, message_t)</span></span></div><div class="line">  <span class="keyword">if</span> event_name <span class="keyword">then</span></div><div class="line">    self._mediator:publish(&#123;<span class="built_in">string</span>.<span class="built_in">upper</span>(event_name)&#125;, message_t)</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>Kong.init初始化的时候会调用一个叫做attach_hooks的函数:<br><figure class="highlight stylus"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="title">attach_hooks</span><span class="params">(events, require <span class="string">"kong.core.hooks"</span>)</span></span></div></pre></td></tr></table></figure></p>
-<p>在load插件的时候也会把插件对应hooks绑定上：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="comment">-- Attaching hooks</span></div><div class="line"><span class="keyword">local</span> ok, hooks = utils.load_module_if_exists(<span class="string">"kong.plugins."</span> .. plugin .. <span class="string">".hooks"</span>)</div><div class="line"><span class="keyword">if</span> ok <span class="keyword">then</span></div><div class="line">  attach_hooks(events, hooks)</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<h3 id="事件的来源"><a href="#事件的来源" class="headerlink" title="事件的来源"></a>事件的来源</h3><p>上面说过，Kong节点之间通信是通过<a href="https://www.serf.io/" target="_blank" rel="external">serf</a>发送的。我们来看看事件是如何触发发出通知的。<br>事件来于源数据库的修改，那就应该在数据库代码部分有触发事件的代码，查看dao/dao.lua这个文件里的代码，我们可以看到在insert、update、insert执行的时候都调用了一行代码</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">event(self, event_types.ENTITY_DELETED, k, v.schema, entity)</div></pre></td></tr></table></figure>
-<p>这个函数的实现如下，这里做了数据的序列化，然后发布了一种叫做CLUSTER_PROGATE类型的消息：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">event</span><span class="params">(self, type, table, schema, data_t)</span></span></div><div class="line">  <span class="keyword">if</span> self.events_handler <span class="keyword">then</span></div><div class="line">    .....  执行数据序列化</div><div class="line">    self.events_handler:publish(self.events_handler.TYPES.CLUSTER_PROPAGATE, payload)</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>在core/hooks.lua接受消息部分，events.TYPES.CLUSTER_PROPAGATE对应的处理部分是singletons.serf:event(message_t)，所以我们看serf.lua这个源文件，最终event调用了invoke_signal，这个函数会运行一个serf命令，类似于这样：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">serf event -coalesce=<span class="literal">false</span> -rpc-addr=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">7373</span>  kong <span class="string">'&#123;"type":"ENTITY_UPDATED","primary_key":["id"],"collection":"apis","entity":&#123;"id":"94acca76-d61a-429e-86a9-5abf2c61ee31"&#125;&#125;'</span></div></pre></td></tr></table></figure>
-<p>这就出发了一个serf event，其他Kong节点会收到此消息。</p>
-<h3 id="serf-Kong节点之间通信"><a href="#serf-Kong节点之间通信" class="headerlink" title="serf: Kong节点之间通信"></a>serf: Kong节点之间通信</h3><p>那么Kong节点收到消息之后是如何处理的呢？Kong在启动的时候会在后台执行一个serf进程，类似这样：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">serf agent -profile wan -bind 0.0.0.0:7946 -log-level err -rpc-addr 127.0.0.1:7373 -event-handler member-join,member-leave,member-failed,member-update,member-reap,user:kong=/usr/local/kong/serf/serf_event.sh -node Kang.local_0.0.0.0:7946_be3b9352808e4839a272f30ca6025650</div></pre></td></tr></table></figure>
-<p>可以看看serf_event.sh这个脚本，内容如下：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">PAYLOAD=`cat` # Read from <span class="built_in">stdin</span></div><div class="line"><span class="keyword">if</span> [ <span class="string">"$SERF_EVENT"</span> != <span class="string">"user"</span> ]; <span class="keyword">then</span></div><div class="line">  PAYLOAD=<span class="string">"&#123;\"type\":\"$&#123;SERF_EVENT&#125;\",\"entity\": \"$&#123;PAYLOAD&#125;\"&#125;"</span></div><div class="line">fi</div><div class="line"></div><div class="line">CMD=<span class="string">"\</span></div><div class="line"><span class="string">local http = require 'resty.http' \</span></div><div class="line"><span class="string">local client = http.new() \</span></div><div class="line"><span class="string">client:set_timeout(5000) \</span></div><div class="line"><span class="string">client:connect('127.0.0.1', 8001) \</span></div><div class="line"><span class="string">client:request &#123; \</span></div><div class="line"><span class="string">  method = 'POST', \</span></div><div class="line"><span class="string">  path = '/cluster/events/', \</span></div><div class="line"><span class="string">  body = [=[$&#123;PAYLOAD&#125;]=], \</span></div><div class="line"><span class="string">  headers = &#123; \</span></div><div class="line"><span class="string">    ['content-type'] = 'application/json' \</span></div><div class="line"><span class="string">  &#125; \</span></div><div class="line"><span class="string">&#125;"</span></div><div class="line"></div><div class="line">/usr/<span class="keyword">local</span>/openresty/bin/resty -e <span class="string">"$CMD"</span></div></pre></td></tr></table></figure>
-<p>可以看到serf收到消息后会触发这个脚本，然后把消息发送到本节点的/cluster/events这个路由。api/routes/cluster.lua这个文件里有收到消息后的处理代码，其中最关键的是：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="comment">-- Trigger event in the node</span></div><div class="line">ev.post(constants.CACHE.CLUSTER, message_t.<span class="built_in">type</span>, message_t)</div></pre></td></tr></table></figure>
-<p>就是通过resty.worker.events publish出收到的消息，本节点的worker会处理这些消息。</p>
-<h3 id="worker刷新缓存"><a href="#worker刷新缓存" class="headerlink" title="worker刷新缓存"></a>worker刷新缓存</h3><p>假设当前Kong节点收到一个消息，这个消息是如何分发给各个worker的？从代码看出，在Kong初始化的时候有调用一个叫做kong.lua里面的Kong.init_worker()函数，其中有一段代码注册了event handler:<br><figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="keyword">local</span> worker_events = <span class="built_in">require</span> <span class="string">"resty.worker.events"</span></div><div class="line"></div><div class="line"><span class="keyword">local</span> handler = <span class="function"><span class="keyword">function</span><span class="params">(data, event, source, pid)</span></span>  </div><div class="line">  <span class="keyword">if</span> data <span class="keyword">and</span> data.collection == <span class="string">"apis"</span> <span class="keyword">then</span>    </div><div class="line">    <span class="built_in">assert</span>(core.build_router())</div><div class="line"></div><div class="line">  <span class="keyword">elseif</span> source <span class="keyword">and</span> source == constants.CACHE.CLUSTER <span class="keyword">then</span>    </div><div class="line">    singletons.events:publish(event, data)</div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">worker_events.register(handler)</div></pre></td></tr></table></figure></p>
-<p>可以从上面的handler代码看到，一个worker接收到消息之后执行的是：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">singletons.events:publish(event, data)</div></pre></td></tr></table></figure>
-<p>也就是通过mediator_lua再把消息publish。之前初始化的时候已经attach_hooks了各种handler，这时候那些注册的函数才会被最终执行，比如核心的刷新缓存部分代码在core/hooks.lua的invalidate函数里面。</p>
-<h3 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h3><p>总的来说Kong事件部分的代码相当精妙，也很统一。比如当前worker做了修改，这个事件会发送给各个节点，包括当前自己所在的节点。通过发布订阅模式，写代码的时候只需关心消息发送、接受消息索要处理的逻辑。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。&lt;/p&gt;
-&lt;h3 id=&quot;worker模型&quot;&gt;&lt;a href=&quot;#worker模型&quot; class=&quot;headerlink&quot; title=&quot;worker模型&quot;&gt;&lt;/a&gt;worker模型&lt;/h
-    
-    </summary>
-    
-    
-      <category term="Lua" scheme="http://cyukang.com/tags/Lua/"/>
     
   </entry>
   
