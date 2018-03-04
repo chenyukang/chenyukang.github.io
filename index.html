@@ -145,6 +145,61 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2018/03/04/kong-cluster-left-node.html">Kong集群Left Cluster Node问题</a>
+      </h2>
+      <p class="article-date">March 4, 2018
+          
+              
+  <a href="/tags#Tools" >
+    <span class="tag-code">Tools</span>
+  </a>
+
+  <a href="/tags#Kong" >
+    <span class="tag-code">Kong</span>
+  </a>
+
+  <a href="/tags#Golang" >
+    <span class="tag-code">Golang</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>Kong在实践中会有一些疑惑的地方，这里记录一下。注意这里记录的Kong集群部署的问题是0.10.3版本的，最新Kong版本已经不是通过serf来管理不同节点之间的配置同步问题。</p>
+<p>在Kong多节点部署的时候，有时候某个节点停掉后，我们在后台可以看到left的信息，而且这个left信息会保留一段不短的时间。类似于如下： </p>
+<p><img src="/images/kong-left-0133521.png" alt="kong-left"></p>
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>管理后台Konga是通过api获取的节点信息，在<code>kong/kong/api/routes/cluster.lua</code>文件里可以看到如下路由处理逻辑： </p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">GET = <span class="function"><span class="keyword">function</span><span class="params">(self, dao_factory, helpers)</span></span></div><div class="line">  <span class="keyword">local</span> members, err = singletons.serf:members()</div><div class="line">  <span class="keyword">if</span> err <span class="keyword">then</span></div><div class="line">    <span class="keyword">return</span> responses.send_HTTP_INTERNAL_SERVER_ERROR(err)</div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  <span class="keyword">local</span> result = &#123;data = &#123;&#125;&#125;</div><div class="line">  <span class="keyword">for</span> _, v <span class="keyword">in</span> <span class="built_in">pairs</span>(members) <span class="keyword">do</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> self.params.<span class="built_in">status</span> <span class="keyword">or</span> (self.params.<span class="built_in">status</span> <span class="keyword">and</span> v.<span class="built_in">status</span> == self.params.<span class="built_in">status</span>) <span class="keyword">then</span></div><div class="line">      table_insert(result.data, &#123;</div><div class="line">        name = v.name,</div><div class="line">        address = v.addr,</div><div class="line">        <span class="built_in">status</span> = v.<span class="built_in">status</span></div><div class="line">      &#125;)</div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  result.total = #result.data</div><div class="line">  <span class="keyword">return</span> responses.send_HTTP_OK(result)</div><div class="line"><span class="keyword">end</span>,</div></pre></td></tr></table></figure>
+<p>具体<code>serf:members()</code>的实现在serf.lua里面可以看到，就是执行了<code>serf cluster members</code>命令获取结果然后返回JSON。所以我们在服务器上执行这个命令其实也可以看到类似的结果： </p>
+<p><img src="/images/kong-left-cmd.png" alt="kong-left-cmd"></p>
+<p>那么问题的根源当然是在Serf本身里面，通过看文档发现原来确实是有一定延迟的。</p>
+<blockquote>
+<p>Serf keeps the state of dead nodes around for a set amount of time, so that when full syncs are requested, the requester also receives information about dead nodes. Because SWIM doesn’t do full syncs, SWIM deletes dead node state immediately upon learning that the node is dead. This change again helps the cluster converge more quickly.</p>
+<p><a href="https://www.serf.io/docs/internals/gossip.html#lifeguard-enhancements" target="_blank" rel="external">参考serf文档»</a></p>
+</blockquote>
+<h4 id="serf的具体实现"><a href="#serf的具体实现" class="headerlink" title="serf的具体实现"></a>serf的具体实现</h4><p>接着稍微看了一下Serf的代码，果然Go的项目代码直观好读。在Serf这个结构体里面保存了一个leftMembers的状态列表，每次收到left事件的时候处理逻辑是： </p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// handleNodeLeaveIntent is called when an intent to leave is received.</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Serf)</span> <span class="title">handleNodeLeaveIntent</span><span class="params">(leaveMsg *messageLeave)</span> <span class="title">bool</span></span> &#123;</div><div class="line">	..................</div><div class="line">    </div><div class="line">	<span class="comment">// State transition depends on current state</span></div><div class="line">	<span class="keyword">switch</span> member.Status &#123;</div><div class="line">	<span class="keyword">case</span> StatusAlive:</div><div class="line">		member.Status = StatusLeaving</div><div class="line">		member.statusLTime = leaveMsg.LTime</div><div class="line">		<span class="keyword">return</span> <span class="literal">true</span></div><div class="line">	<span class="keyword">case</span> StatusFailed:</div><div class="line">		member.Status = StatusLeft</div><div class="line">		member.statusLTime = leaveMsg.LTime</div><div class="line"></div><div class="line">		<span class="comment">// Remove from the failed list and add to the left list. We add</span></div><div class="line">		<span class="comment">// to the left list so that when we do a sync, other nodes will</span></div><div class="line">		<span class="comment">// remove it from their failed list.</span></div><div class="line">		s.failedMembers = removeOldMember(s.failedMembers, member.Name)</div><div class="line">		s.leftMembers = <span class="built_in">append</span>(s.leftMembers, member)</div><div class="line">        </div><div class="line">        ................</div><div class="line">        </div><div class="line">		<span class="keyword">return</span> <span class="literal">true</span></div><div class="line">	<span class="keyword">default</span>:</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过索引变量发现这个列表会定时通过<code>handleReap</code>函数更新，逻辑如下： </p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// handleReap periodically reaps the list of failed and left members, as well</span></div><div class="line"><span class="comment">// as old buffered intents.</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Serf)</span> <span class="title">handleReap</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">for</span> &#123;</div><div class="line">		<span class="keyword">select</span> &#123;</div><div class="line">		<span class="keyword">case</span> &lt;-time.After(s.config.ReapInterval):</div><div class="line">			s.memberLock.Lock()</div><div class="line">			now := time.Now()</div><div class="line">			s.failedMembers = s.reap(s.failedMembers, now, s.config.ReconnectTimeout)</div><div class="line">			s.leftMembers = s.reap(s.leftMembers, now, s.config.TombstoneTimeout)</div><div class="line">			reapIntents(s.recentIntents, now, s.config.RecentIntentTimeout)</div><div class="line">			s.memberLock.Unlock()</div><div class="line">		<span class="keyword">case</span> &lt;-s.shutdownCh:</div><div class="line">			<span class="keyword">return</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以看起来这里相关的Timeout是<code>s.config.TombstoneTimeout</code>, 接着需要看看<code>reap</code>到底做了什么，这里果然是把到了一定时间间隔的节点删掉了：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// reap is called with a list of old members and a timeout, and removes</span></div><div class="line"><span class="comment">// members that have exceeded the timeout. The members are removed from</span></div><div class="line"><span class="comment">// both the old list and the members itself. Locking is left to the caller.</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Serf)</span> <span class="title">reap</span><span class="params">(old []*memberState, now time.Time, timeout time.Duration)</span> []*<span class="title">memberState</span></span> &#123;</div><div class="line">	n := <span class="built_in">len</span>(old)</div><div class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</div><div class="line">		m := old[i]</div><div class="line"></div><div class="line">		<span class="comment">// Skip if the timeout is not yet reached</span></div><div class="line">		<span class="keyword">if</span> now.Sub(m.leaveTime) &lt;= timeout &#123;</div><div class="line">			<span class="keyword">continue</span></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// Delete from the list</span></div><div class="line">		old[i], old[n<span class="number">-1</span>] = old[n<span class="number">-1</span>], <span class="literal">nil</span></div><div class="line">		old = old[:n<span class="number">-1</span>]</div><div class="line">		n--</div><div class="line">		i--</div><div class="line"></div><div class="line">		..........</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> old</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>那么这个时间间隔是多久呢，在<code>serf/config.go</code>有一个默认配置： </p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line">TombstoneTimeout:             <span class="number">24</span> * time.Hour,</div></pre></td></tr></table></figure>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>serf这个软件值得好好分析一下，节点的状态同步和事件处理都是分布式软件的基础，后续继续看看这个<code>gossip protocol based on SWIM</code>的具体实现。另外<a href="https://www.hashicorp.com/" target="_blank" rel="external">hashicorp</a>这个公司的开源代码和文档都非常好，值得学习一番。</p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2018/03/04/kong-cluster-left-node.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2018/03/02/docker-postgres-password.html">Docker compose初始化失败问题</a>
       </h2>
       <p class="article-date">March 2, 2018
@@ -164,28 +219,14 @@
         
         
             
-                <h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>今天在Docker Postgresql用户名和密码授权的问题上花了一些时间，问题是： </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">psql: FATAL:  password authentication failed for user "postgres"</div></pre></td></tr></table></figure>
-<p>admin的用户名和密码是可以在docker-compose.yml里设置的，通常我们可以配置为： </p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">postgresql:</span></div><div class="line"><span class="attr">  image:</span> <span class="attr">postgres:latest</span></div><div class="line"><span class="attr">  ports:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">"5434:5432"</span></div><div class="line"><span class="attr">  volumes:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">./data/pgsql:/var/lib/postgresql/data</span></div><div class="line"><span class="bullet">    -</span> <span class="string">./initialize/pgsql:/docker-entrypoint-initdb.d</span></div><div class="line"><span class="attr">  environment:</span></div><div class="line"><span class="attr">    POSTGRES_USER:</span> <span class="string">postgres</span></div><div class="line"><span class="attr">    POSTGRES_DB:</span> <span class="string">postgres</span></div><div class="line"><span class="attr">  secrets:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">pg_superuser_password</span></div></pre></td></tr></table></figure>
-<p>某个用户的密码可以在<code>./initialize/pgsql</code>目录的脚本里设置：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span>!/bin/bash</div><div class="line">set -e</div><div class="line"></div><div class="line">psql -v ON_ERROR_STOP=1 --username "postgres" &lt;&lt;-EOSQL</div><div class="line">	CREATE USER user WITH PASSWORD 'the-password';</div><div class="line">	ALTER USER user CREATEDB;</div><div class="line">EOSQL</div></pre></td></tr></table></figure>
-<p>只是今天碰巧想修改一下这个密码，所以就把这个脚本里的密码修改了，然后执行命令： </p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">docker-compose up --build -d --force-recreate</div></pre></td></tr></table></figure>
-<p>而后就一直出现上面的用户授权失败。</p>
-<h4 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h4><p>刚开始一直认为是可能dockerfile配置得不对，结果花费了些时间。后来突然想到了，PG里数据初始化应该只是第一次做了，后续如果发现<code>/var/lib/postgresql/data</code>里已经有数据了就再也不会重新设置密码，这里是配置volume的，如果还未有重要数据把<code>./data/pgsql</code>删除了即可，或者应该是可以通过attach进入容器通过pg命令修改。</p>
-<h4 id="bridge-networks失败"><a href="#bridge-networks失败" class="headerlink" title="bridge networks失败"></a>bridge networks失败</h4><p>这是另外一个坑，我在一台ubuntu的服务器上build一个docker-compose，里面配置了一个桥接网络:</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="attr">networks:</span></div><div class="line"><span class="attr">  app_net:</span></div><div class="line"><span class="attr">    driver:</span> <span class="string">bridge</span></div><div class="line"><span class="attr">    ipam:</span></div><div class="line"><span class="attr">      driver:</span> <span class="string">default</span></div><div class="line"><span class="attr">      config:</span></div><div class="line"><span class="bullet">      -</span></div><div class="line"><span class="attr">        subnet:</span> <span class="number">192.168</span><span class="number">.20</span><span class="number">.0</span><span class="string">/24</span></div></pre></td></tr></table></figure>
-<p>在各个子容器里面配置了具体的ip地址： </p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">networks:</span></div><div class="line"><span class="attr">  app_net:</span></div><div class="line"><span class="attr">    ipv4_address:</span> <span class="number">192.168</span><span class="number">.20</span><span class="number">.1</span></div></pre></td></tr></table></figure>
-<p>结果进入容器怎么也连不上外部网络，折腾了一圈才发现需要安装一个<a href="https://docs.docker.com/v17.09/engine/userguide/networking/default_network/custom-docker0/" target="_blank" rel="external">bridge-utils</a>。而后安装了这个包之后，继续尝试force-recreate容器，仍然不行。无奈之余把子网换一个地址<code>192.168.30.0/24</code>即可，和PG初始类似，子网的初始化也是一个一次进行的工作，而后重新build image看起来是没有影响的。docker在跑的时候居然也不会有提示。</p>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>最近在自己工作的项目都完全Docker化，感觉是配置来折腾用起来飞。最近也在做一个重度依赖Docker的项目，所以Docker的文档需要看完，特别是网络和数据存储那块，否则会花费不少时间折腾。</p>
-
+                问题今天在Docker Postgresql用户名和密码授权的问题上花了一些时间，问题是： 
+psql: FATAL:  password authentication failed for user "postgres"
+admin的用户名和密码是可以在docker-compose.y .....
             
         
       </div>
       
-          <a class="more" href="/2018/03/02/docker-postgres-password.html#footer">发表评论</a>
+          <a class="more" href="/2018/03/02/docker-postgres-password.html">阅读全文</a>
       
     </article>
   
@@ -343,12 +384,12 @@ If path starts with a pipe character, a subprocess is created, con .....
       <p class="article-date">September 12, 2017
           
               
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
   <a href="/tags#Kong" >
     <span class="tag-code">Kong</span>
+  </a>
+
+  <a href="/tags#Lua" >
+    <span class="tag-code">Lua</span>
   </a>
 
           
@@ -395,33 +436,6 @@ os.time()                &l .....
       </div>
       
           <a class="more" href="/2017/09/12/lua-time-related.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/08/22/pl-practice-with-exercism.html">使用 exercism 来练手学语言</a>
-      </h2>
-      <p class="article-date">August 22, 2017
-          
-              
-  <a href="/tags#PL" >
-    <span class="tag-code">PL</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                有时候我们想学一门编程语言，但是光看看书和代码用例总是找不到感觉，这时候我们应该尝试写点不短不长的程序片段，可能是一个函数，或者是实现一个简单的算法。最近我发现这个叫做exercism.io的网站不错，自己也在闲余时间在上面看看。
-这里支持30多种编程语言，每种语言大概有80个左右的小问 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/08/22/pl-practice-with-exercism.html">阅读全文</a>
       
     </article>
   
