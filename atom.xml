@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://cyukang.com/"/>
-  <updated>2018-03-04T04:00:48.432Z</updated>
+  <updated>2018-03-05T15:31:26.122Z</updated>
   <id>http://cyukang.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://cyukang.com/2018/03/04/kong-cluster-left-node.html"/>
     <id>http://cyukang.com/2018/03/04/kong-cluster-left-node.html</id>
     <published>2018-03-04T03:02:32.000Z</published>
-    <updated>2018-03-04T04:00:48.432Z</updated>
+    <updated>2018-03-05T15:31:26.122Z</updated>
     
     <content type="html"><![CDATA[<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>Kong在实践中会有一些疑惑的地方，这里记录一下。注意这里记录的Kong集群部署的问题是0.10.3版本的，最新Kong版本已经不是通过serf来管理不同节点之间的配置同步问题。</p>
 <p>在Kong多节点部署的时候，有时候某个节点停掉后，我们在后台可以看到left的信息，而且这个left信息会保留一段不短的时间。类似于如下： </p>
@@ -65,7 +65,7 @@
     <link href="http://cyukang.com/2018/03/02/docker-postgres-password.html"/>
     <id>http://cyukang.com/2018/03/02/docker-postgres-password.html</id>
     <published>2018-03-02T15:17:35.000Z</published>
-    <updated>2018-03-02T15:57:02.386Z</updated>
+    <updated>2018-03-05T15:32:20.679Z</updated>
     
     <content type="html"><![CDATA[<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>今天在Docker Postgresql用户名和密码授权的问题上花了一些时间，问题是： </p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">psql: FATAL:  password authentication failed for user "postgres"</div></pre></td></tr></table></figure>
@@ -77,11 +77,6 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">docker-compose up --build -d --force-recreate</div></pre></td></tr></table></figure>
 <p>而后就一直出现上面的用户授权失败。</p>
 <h4 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h4><p>刚开始一直认为是可能dockerfile配置得不对，结果花费了些时间。后来突然想到了，PG里数据初始化应该只是第一次做了，后续如果发现<code>/var/lib/postgresql/data</code>里已经有数据了就再也不会重新设置密码，这里是配置volume的，如果还未有重要数据把<code>./data/pgsql</code>删除了即可，或者应该是可以通过attach进入容器通过pg命令修改。</p>
-<h4 id="bridge-networks失败"><a href="#bridge-networks失败" class="headerlink" title="bridge networks失败"></a>bridge networks失败</h4><p>这是另外一个坑，我在一台ubuntu的服务器上build一个docker-compose，里面配置了一个桥接网络:</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="attr">networks:</span></div><div class="line"><span class="attr">  app_net:</span></div><div class="line"><span class="attr">    driver:</span> <span class="string">bridge</span></div><div class="line"><span class="attr">    ipam:</span></div><div class="line"><span class="attr">      driver:</span> <span class="string">default</span></div><div class="line"><span class="attr">      config:</span></div><div class="line"><span class="bullet">      -</span></div><div class="line"><span class="attr">        subnet:</span> <span class="number">192.168</span><span class="number">.20</span><span class="number">.0</span><span class="string">/24</span></div></pre></td></tr></table></figure>
-<p>在各个子容器里面配置了具体的ip地址： </p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><div class="line"><span class="attr">networks:</span></div><div class="line"><span class="attr">  app_net:</span></div><div class="line"><span class="attr">    ipv4_address:</span> <span class="number">192.168</span><span class="number">.20</span><span class="number">.1</span></div></pre></td></tr></table></figure>
-<p>结果进入容器怎么也连不上外部网络，折腾了一圈才发现需要安装一个<a href="https://docs.docker.com/v17.09/engine/userguide/networking/default_network/custom-docker0/" target="_blank" rel="external">bridge-utils</a>。而后安装了这个包之后，继续尝试force-recreate容器，仍然不行。无奈之余把子网换一个地址<code>192.168.30.0/24</code>即可，和PG初始类似，子网的初始化也是一个一次进行的工作，而后重新build image看起来是没有影响的。docker在跑的时候居然也不会有提示。</p>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>最近在自己工作的项目都完全Docker化，感觉是配置来折腾用起来飞。最近也在做一个重度依赖Docker的项目，所以Docker的文档需要看完，特别是网络和数据存储那块，否则会花费不少时间折腾。</p>
 ]]></content>
     
@@ -104,7 +99,7 @@
     <link href="http://cyukang.com/2018/02/26/overcommit.html"/>
     <id>http://cyukang.com/2018/02/26/overcommit.html</id>
     <published>2018-02-26T11:02:14.000Z</published>
-    <updated>2018-03-02T15:54:33.490Z</updated>
+    <updated>2018-03-05T15:31:26.122Z</updated>
     
     <content type="html"><![CDATA[<p><code>git hooks</code>很方便地可以在git操作流程的各个阶段加入hooks，比如执行一些脚本来检查代码风格、跑单元测试、做代码静态检查等。git hooks的试用方法是在.git/hooks目录下写各种脚本，但是.git目录的这些脚本是不会checkin到repo里的，所以如果一个代码如果被多个开发人员共享就会显得不太方便同步hooks。</p>
 <p><a href="https://stackoverflow.com/questions/427207/can-git-hook-scripts-be-managed-along-with-the-repository" target="_blank" rel="external">当然也有一些其他方法来解决这个问题</a>，比如配置links或者对于<code>git 2.9</code>以后也可以使用来定制hooks的目录:</p>
@@ -130,7 +125,7 @@
     <link href="http://cyukang.com/2018/02/23/nginx-https-too-many-redirect.html"/>
     <id>http://cyukang.com/2018/02/23/nginx-https-too-many-redirect.html</id>
     <published>2018-02-23T09:38:44.000Z</published>
-    <updated>2018-02-23T09:52:56.000Z</updated>
+    <updated>2018-02-23T14:02:50.419Z</updated>
     
     <content type="html"><![CDATA[<p>Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: </p>
 <figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">return</span> <span class="number">302</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>; </div><div class="line"><span class="comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span></div></pre></td></tr></table></figure>
@@ -162,7 +157,7 @@
     <link href="http://cyukang.com/2018/02/22/linux-source.html"/>
     <id>http://cyukang.com/2018/02/22/linux-source.html</id>
     <published>2018-02-22T13:46:33.000Z</published>
-    <updated>2018-02-21T16:00:00.000Z</updated>
+    <updated>2018-02-22T17:29:42.519Z</updated>
     
     <content type="html"><![CDATA[<p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要unset 当前shell 的环境变量等，</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env zsh</span></div><div class="line"></div><div class="line">if [ -z $http_proxy ]; then</div><div class="line">    echo "not using proxy, set it now ... ";</div><div class="line">    export http_proxy="http://127.0.0.1:1087";</div><div class="line">    export https_proxy="https://127.0.0.1:1087";</div><div class="line">    echo $http_proxy;</div><div class="line">else</div><div class="line">    echo "using proxy now, unset it now ...";</div><div class="line">    unset http_proxy;</div><div class="line">    unset https_proxy;</div><div class="line">    echo $http_proxy;</div><div class="line">fi</div></pre></td></tr></table></figure>
@@ -319,9 +314,9 @@
     </summary>
     
     
-      <category term="Kong" scheme="http://cyukang.com/tags/Kong/"/>
-    
       <category term="Lua" scheme="http://cyukang.com/tags/Lua/"/>
+    
+      <category term="Kong" scheme="http://cyukang.com/tags/Kong/"/>
     
   </entry>
   
