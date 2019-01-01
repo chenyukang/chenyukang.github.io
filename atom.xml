@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://cyukang.com/"/>
-  <updated>2018-03-05T15:31:26.122Z</updated>
+  <updated>2019-01-01T15:45:34.108Z</updated>
   <id>http://cyukang.com/</id>
   
   <author>
@@ -16,11 +16,72 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>编译脚本到二进制</title>
+    <link href="http://cyukang.com/2019/01/01/compile-script-to-binary-for-obfuscation.html"/>
+    <id>http://cyukang.com/2019/01/01/compile-script-to-binary-for-obfuscation.html</id>
+    <published>2019-01-01T14:55:22.000Z</published>
+    <updated>2019-01-01T15:45:34.108Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h3><p>因为自己习惯使用 expect 脚本登录各种服务器，因为有一段时间登录的服务器太多了，之前写过一个程序来管理各种 expect 脚本。思路是用一个二进制程序来动态生成脚本，执行完之后再删除。因为不想把密码之类的直接写在固定的脚本里面，所以密码是编译在可执行的二进制文件里的。其实还是想做代码混淆。最近突然想是不是可以直接写一个程序，把所有脚本类的程序转换为二进制可执行文件。只是最终执行的时候可能还是需要用 exec 之类的 API 调用解释器执行各种脚本。</p>
+<p><img src="/images/image-20190101234053094.png" alt="image-20190101234053094"></p>
+<h3 id="rshc-的开发"><a href="#rshc-的开发" class="headerlink" title="rshc 的开发"></a>rshc 的开发</h3><p>不过这个程序看起来有些好玩，所以先我先查了一下是否之前有其他人这样做过。于是找到了 <a href="https://github.com/neurobin/shc" target="_blank" rel="external">shc</a> 这个开源程序，不过这个最初版本是 94 年写的。使用了一下发现居然不支持 expect 之类的。然后想着自己写个玩玩，最后用 Rust 搞出来一个初版: <a href="https://github.com/chenyukang/rshc" target="_blank" rel="external">rhsc</a>。</p>
+<p>目前我这个程序只是能把脚本程序，转换为 Rust 代码，然后使用 rustc 来编译为二进制，为了做一些代码混淆，其中也类似 shc 使用了 RC4 算法来做了一个简单的转换，密码是随机生成的。然后也做了另外一个增加密码的模式，这样可以为任何脚本增加密码校验功能。最终还是使用 Process 来执行解释器，所以如果要破解，可以使用一些类似 ptrace 或者<a href="https://github.com/neurobin/shc/issues/63" target="_blank" rel="external">其他方式</a>来试试。以后继续完善这方面的防御。另外，为了在生成代码之后尽量减少依赖，所以目前密码输入那块还未做到隐藏输入。</p>
+<h3 id="安装使用"><a href="#安装使用" class="headerlink" title="安装使用"></a>安装使用</h3><p>使用方式非常简单，先安装：</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">cargo install rshc</div></pre></td></tr></table></figure>
+<p>然后使用命令： </p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">rshc -f demo.sh -o demo.rs</div><div class="line"></div><div class="line">/<span class="regexp">/ add a passowrd when compile it, then binary will prompt for correct password before execution</span></div><div class="line"><span class="regexp">rshc -f demo.sh -o demo.rs -p</span></div></pre></td></tr></table></figure>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>时隔两年再用 Rust 写一些小项目，发现整个语言还是成熟很多：</p>
+<ul>
+<li>工具链很好用，特别是 cargo 之类的，从开发到发布都非常方便</li>
+<li>相关的库和文档也多了起来，相对来说更加容易上手写一些东西了</li>
+<li>编译器的错误提示特别好，可以通过错误索引号找到示例</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;缘由&quot;&gt;&lt;a href=&quot;#缘由&quot; class=&quot;headerlink&quot; title=&quot;缘由&quot;&gt;&lt;/a&gt;缘由&lt;/h3&gt;&lt;p&gt;因为自己习惯使用 expect 脚本登录各种服务器，因为有一段时间登录的服务器太多了，之前写过一个程序来管理各种 expect 脚本。思路是
+    
+    </summary>
+    
+    
+      <category term="Rust" scheme="http://cyukang.com/tags/Rust/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>SQL Injection attack</title>
+    <link href="http://cyukang.com/2018/03/10/sql-injection-attack.html"/>
+    <id>http://cyukang.com/2018/03/10/sql-injection-attack.html</id>
+    <published>2018-03-10T12:51:40.000Z</published>
+    <updated>2019-01-01T15:22:48.105Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="注入原理"><a href="#注入原理" class="headerlink" title="注入原理"></a>注入原理</h3><p>SQL注入一直是 Web 应用的一大安全隐患，注入的基本原理是通过修改输入的参数来操作后台执行的 SQL，注入可能会导致数据库被恶意修改、数据被恶意读取等严重行为。所以如果一个参数有漏洞，通过小心的构造注入点即可利用，这里的<a href="https://paper.seebug.org/15/" target="_blank" rel="external">渗透攻防Web篇-SQL注入攻击初级</a>有一些编写注入点的教程。</p>
+<p>最初的时候我在一个用 C 写后台的项目里待过，现在回想起来我们当时根本没注意SQL 注入，C 拼接处 SQL 的字符串很常见。不过现在大多数 Web 框架都已经有 ORM 了，ORM 可以在很大程度上避免注入的产生，因为程序员通常来说不用写纯的 SQL 了， 在最佳实践的前提下 ORM 会生成安全的 SQL。当然什么工具最终还是依赖程序员，比如下面的 Ruby 代码即会有问题: </p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">User.where(<span class="string">"email = <span class="subst">#&#123;params[<span class="symbol">:email</span>]&#125;</span>"</span>).first</div></pre></td></tr></table></figure>
+<p>更多作死的办法可以参考： <a href="https://rails-sqli.org/" target="_blank" rel="external">https://rails-sqli.org/</a></p>
+<h3 id="WAF"><a href="#WAF" class="headerlink" title="WAF"></a>WAF</h3><p>通常我们会使用一些 WAF 来阻挡 一些SQL 注入，但是 WAF 也有其局限性。WAF 一般是通用的，不会局限于某个特定的框架。我们可以实现在 Nginx 上，或者使用一些商用的 WAF，通常来说对于应用也不用修改其代码。不过 WAF 的问题在于其实基于规则的，而 SQL 本省是比较复杂的，可以看看<a href="https://github.com/ronsavage/SQL/blob/master/sql-2003-2.bnf" target="_blank" rel="external">2003 SQL BNF</a> 的描述有多么的长。所以 WAF 的规则大多数是一大堆较难维护的正则表达式，比如： <a href="https://github.com/unixhot/waf/blob/master/waf/rule-config/args.rule" target="_blank" rel="external">Nginx Waf示例</a>，注意这个项目用不太成熟，初步看会有比较严重的<a href="https://github.com/unixhot/waf/issues/12" target="_blank" rel="external">性能问题</a>。正因为规则是固定的，会导致存在很多误拦截的情况，所以我在 Kong 上实现的 WAF 就还不敢用起来。例如现实情况中出现过<a href="https://store.dji.com/select" target="_blank" rel="external">包含select的 uri</a>被拦的情况，一脸忧伤。</p>
+<h3 id="静态代码扫描"><a href="#静态代码扫描" class="headerlink" title="静态代码扫描"></a>静态代码扫描</h3><p>静态代码扫描会发现一些 SQL 注入，比如  Brakeman 之类的。不过通常静态代码扫描的问题也是分析得不够精准，会漏报、也会出现误报比较多，扫描的结果需要进行人工审计。当然这些工具也在逐步改进。</p>
+<h3 id="RASP-工具"><a href="#RASP-工具" class="headerlink" title="RASP 工具"></a>RASP 工具</h3><p>RASP 的意思是<a href="https://www.veracode.com/security/runtime-application-self-protection-rasp" target="_blank" rel="external">Runtime Application Self Protection</a>，这个概念近些年才提出，目前已经有一些安全公司做出了对应的产品，比如<a href="http://www.sqreen.io" target="_blank" rel="external">Sqreen</a>, 百度最近也新开一个开源项目叫做<a href="https://github.com/baidu/openrasp" target="_blank" rel="external">OpenRASP</a>，目前来说只支持 Java，开发者可以自己使用 Javascript 编写自己的插件。RASP 除了自己的规则还会依据请求时候的上下文来进行分析，这篇文章里有<a href="https://blog.sqreen.io/block-sql-injections-not-customers/" target="_blank" rel="external">一些描述</a>，这样误报的问题会大大减少。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;注入原理&quot;&gt;&lt;a href=&quot;#注入原理&quot; class=&quot;headerlink&quot; title=&quot;注入原理&quot;&gt;&lt;/a&gt;注入原理&lt;/h3&gt;&lt;p&gt;SQL注入一直是 Web 应用的一大安全隐患，注入的基本原理是通过修改输入的参数来操作后台执行的 SQL，注入可能会导致数据
+    
+    </summary>
+    
+    
+      <category term="security" scheme="http://cyukang.com/tags/security/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Kong集群Left Cluster Node问题</title>
     <link href="http://cyukang.com/2018/03/04/kong-cluster-left-node.html"/>
     <id>http://cyukang.com/2018/03/04/kong-cluster-left-node.html</id>
     <published>2018-03-04T03:02:32.000Z</published>
-    <updated>2018-03-05T15:31:26.122Z</updated>
+    <updated>2018-03-03T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>Kong在实践中会有一些疑惑的地方，这里记录一下。注意这里记录的Kong集群部署的问题是0.10.3版本的，最新Kong版本已经不是通过serf来管理不同节点之间的配置同步问题。</p>
 <p>在Kong多节点部署的时候，有时候某个节点停掉后，我们在后台可以看到left的信息，而且这个left信息会保留一段不短的时间。类似于如下： </p>
@@ -65,7 +126,7 @@
     <link href="http://cyukang.com/2018/03/02/docker-postgres-password.html"/>
     <id>http://cyukang.com/2018/03/02/docker-postgres-password.html</id>
     <published>2018-03-02T15:17:35.000Z</published>
-    <updated>2018-03-05T15:32:20.679Z</updated>
+    <updated>2018-03-01T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>今天在Docker Postgresql用户名和密码授权的问题上花了一些时间，问题是： </p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">psql: FATAL:  password authentication failed for user "postgres"</div></pre></td></tr></table></figure>
@@ -99,7 +160,7 @@
     <link href="http://cyukang.com/2018/02/26/overcommit.html"/>
     <id>http://cyukang.com/2018/02/26/overcommit.html</id>
     <published>2018-02-26T11:02:14.000Z</published>
-    <updated>2018-03-05T15:31:26.122Z</updated>
+    <updated>2018-02-25T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<p><code>git hooks</code>很方便地可以在git操作流程的各个阶段加入hooks，比如执行一些脚本来检查代码风格、跑单元测试、做代码静态检查等。git hooks的试用方法是在.git/hooks目录下写各种脚本，但是.git目录的这些脚本是不会checkin到repo里的，所以如果一个代码如果被多个开发人员共享就会显得不太方便同步hooks。</p>
 <p><a href="https://stackoverflow.com/questions/427207/can-git-hook-scripts-be-managed-along-with-the-repository" target="_blank" rel="external">当然也有一些其他方法来解决这个问题</a>，比如配置links或者对于<code>git 2.9</code>以后也可以使用来定制hooks的目录:</p>
@@ -125,7 +186,7 @@
     <link href="http://cyukang.com/2018/02/23/nginx-https-too-many-redirect.html"/>
     <id>http://cyukang.com/2018/02/23/nginx-https-too-many-redirect.html</id>
     <published>2018-02-23T09:38:44.000Z</published>
-    <updated>2018-02-23T14:02:50.419Z</updated>
+    <updated>2018-02-22T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<p>Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: </p>
 <figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">return</span> <span class="number">302</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>; </div><div class="line"><span class="comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span></div></pre></td></tr></table></figure>
@@ -157,7 +218,7 @@
     <link href="http://cyukang.com/2018/02/22/linux-source.html"/>
     <id>http://cyukang.com/2018/02/22/linux-source.html</id>
     <published>2018-02-22T13:46:33.000Z</published>
-    <updated>2018-02-22T17:29:42.519Z</updated>
+    <updated>2018-02-21T16:00:00.000Z</updated>
     
     <content type="html"><![CDATA[<p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要unset 当前shell 的环境变量等，</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env zsh</span></div><div class="line"></div><div class="line">if [ -z $http_proxy ]; then</div><div class="line">    echo "not using proxy, set it now ... ";</div><div class="line">    export http_proxy="http://127.0.0.1:1087";</div><div class="line">    export https_proxy="https://127.0.0.1:1087";</div><div class="line">    echo $http_proxy;</div><div class="line">else</div><div class="line">    echo "using proxy now, unset it now ...";</div><div class="line">    unset http_proxy;</div><div class="line">    unset https_proxy;</div><div class="line">    echo $http_proxy;</div><div class="line">fi</div></pre></td></tr></table></figure>
@@ -278,82 +339,6 @@
     
     
       <category term="Books" scheme="http://cyukang.com/tags/Books/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Kong的0.11.0版本</title>
-    <link href="http://cyukang.com/2017/09/12/kong-new-release.html"/>
-    <id>http://cyukang.com/2017/09/12/kong-new-release.html</id>
-    <published>2017-09-12T06:43:00.000Z</published>
-    <updated>2017-09-11T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Kong发布了新的版本<a href="https://github.com/Mashape/kong/releases/tag/0.11.0" target="_blank" rel="external">0.11.0</a>，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了serf，这样整个Kong节点之间的缓存同步方式变化了。开发者给出的理由如下： </p>
-<ol>
-<li>依赖serf，serf并不属于Nginx/OpenResty</li>
-<li>这种依赖相互间通信来同步的机制对于deployment和容器化都有些不便</li>
-<li>在运行的Kong节点触发serf需要一些租塞的I/O</li>
-</ol>
-<p>新的实现的思路是以数据库作为中心，增加一个cluster events的表。任何Kong node都可以向数据库发送变更消息，其他节点polling数据库改动，然后来更新缓存内容。这个改动非常大，不过最终Kong终于实现了节点无状态，之前那个数据库里的nodes可以丢弃掉了，任何时候节点重启只要连上数据库即可工作。我们需要担心的是这么多节点去polling数据库(当然这些动作都是在后台)，是否是一个比较耗时的工作。</p>
-<p>Kong增加了新的配置选项db_update_frequency，默认为5s，表示多长时间polling一次，这需要用户自己权衡效率和及时性了。对于我们的业务来说及时性还是很重要的，比如我们新品发布时间精确到秒，那么我们就需要尽量调低这个参数。</p>
-<p>所有的改动在<a href="https://github.com/Mashape/kong/pull/2561/files，" target="_blank" rel="external">https://github.com/Mashape/kong/pull/2561/files，</a></p>
-<p>我大概看了一下代码，一些值得注意的地方如下：</p>
-<ol>
-<li>cluster相关的API和cmd都被移掉了，启动部分和serf信号处理部分都删掉了不少代码。</li>
-<li>polling需要避免一个问题，比如上一次polling还未执行完成，下一次polling就不应该启动，所以这里需要锁来处理。<a href="https://github.com/Mashape/kong/pull/2561/files#diff-44982f7ff5cb89eaf66ed31217aa0d12" target="_blank" rel="external">kong/cluster_events.lua</a>实现了polling的主要过程。</li>
-<li><a href="https://github.com/Mashape/kong/pull/2561/files#diff-904358fb4394ddf0541b4b3ede669a82" target="_blank" rel="external">kong/cluster_events/strategies/postgres.lua</a>目前polling还不支持分页，cluster_events是一个新建的表用来存储缓存更新事件，Kong节点就是来查询这些事件。</li>
-<li>缓存部分换成了<a href="https://github.com/thibaultcha/lua-resty-mlcache" target="_blank" rel="external">lua-resty-mlcache</a>，原来还是和之前分析的类似 L1级别缓存为一个LURcache，在LuaVM里可见， L2级别的缓存为lua_shared_dict，同一个Nginx下的所有worker可见， L3就是缓存未命中的情况，需要调用其他hookup的函数去获取数据然后缓存在L2。只是这里个ipc并不是用的lua-resty-mlcache里的，而是使用的resty.worker.events。</li>
-<li>事件处理部分分两部分，worker之间的事件和node之间的处理，分别由worker_events和cluster_event.lua来处理。</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Kong发布了新的版本&lt;a href=&quot;https://github.com/Mashape/kong/releases/tag/0.11.0&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;0.11.0&lt;/a&gt;，从这里开始区分了社区版本和商业版。这次改动比
-    
-    </summary>
-    
-    
-      <category term="Lua" scheme="http://cyukang.com/tags/Lua/"/>
-    
-      <category term="Kong" scheme="http://cyukang.com/tags/Kong/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Lua时间处理</title>
-    <link href="http://cyukang.com/2017/09/12/lua-time-related.html"/>
-    <id>http://cyukang.com/2017/09/12/lua-time-related.html</id>
-    <published>2017-09-12T01:51:00.000Z</published>
-    <updated>2017-09-11T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>我需要用Lua处理一个与时间相关的问题，比如我们在配置文件里面配置一个日期(北京时间)，然后在Openresty里面判断当前时间是否在这个日期之前或者之后来做对应的逻辑。</p>
-<p>Lua的时间处理还有点麻烦，主要是自带的相关库函数比较少。</p>
-<blockquote>
-<p>os.time()                &lt;== 返回当前系统的日历时间， 1505181586<br>os.date()                &lt;== 返回本地化的时间字符串，Tue Sep 12 09:59:56 2017<br>os.clock()               &lt;== 返回执行该程序CPU花去的时钟秒数，这里是1156.726</p>
-</blockquote>
-<p>我首先需要一个日期字符串转换为时间戳的函数，找来找去有了这么一个函数，使用正则表达式然后组成表：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">convert_time</span><span class="params">(time_str)</span></span></div><div class="line">  <span class="comment">-- Assuming a date pattern like: yyyy-mm-dd hh:mm:ss</span></div><div class="line">  <span class="comment">-- Assuming timezone is Beijing</span></div><div class="line">  <span class="keyword">local</span> pattern = <span class="string">"(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)"</span></div><div class="line">  <span class="keyword">local</span> year, month, day, hour, minute, seconds = time_str:<span class="built_in">match</span>(pattern)</div><div class="line">  <span class="keyword">if</span> <span class="keyword">not</span> (year <span class="keyword">and</span> month <span class="keyword">and</span> day <span class="keyword">and</span> hour <span class="keyword">and</span> minute <span class="keyword">and</span> seconds) <span class="keyword">then</span></div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">  <span class="keyword">end</span></div><div class="line">  <span class="keyword">local</span> converted_timestamp =</div><div class="line">    <span class="built_in">os</span>.<span class="built_in">time</span>(&#123;tz = <span class="string">"CST"</span>, year = year, month = month,</div><div class="line">             day = day, hour = hour, <span class="built_in">min</span> = minute, sec = seconds&#125;)</div><div class="line">      </div><div class="line">    <span class="keyword">return</span> converted_timestamp </div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>然后我们可以使用os.time()获取当前时间戳来对比。但是必须注意时区问题，Lua里面要获取当前时区和UTC里面的offset可以使用一个比较笨拙的办法：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_timezone_offset_with_utc</span><span class="params">()</span></span></div><div class="line">  <span class="keyword">local</span> now = <span class="built_in">os</span>.<span class="built_in">time</span>()</div><div class="line">  <span class="keyword">return</span> <span class="built_in">os</span>.<span class="built_in">difftime</span>(now, <span class="built_in">os</span>.<span class="built_in">time</span>(<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">"!*t"</span>, now)))</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>使用这个函数获取时区的offset之后，对convert_time返回的结果做一下偏移即可和os.time()做对比。有个问题是上面的函数居然调用了三次系统调用，开销是比较大的。</p>
-<blockquote>
-<p>在 OpenResty 的世界里，不推荐使用这里的标准时间函数，因为这些函数通常会引发不止一个昂贵的系统调用，同时无法为 LuaJIT JIT 编译，对性能造成较大影响。推荐使用 ngx_lua 模块提供的带缓存的时间接口，如 <code>ngx.today</code>, <code>ngx.time</code>, <code>ngx.utctime</code>, <code>ngx.localtime</code>, <code>ngx.now</code>, <code>ngx.http_time</code>，以及 <code>ngx.cookie_time</code> 等。</p>
-</blockquote>
-<p><a href="https://github.com/stevedonovan/Penlight/blob/master/lua/pl/Date.lua" target="_blank" rel="external">Penlight</a>库也有很多日期相关的函数封装，不过大多也都使用了os相关函数。为了避免多次调用get_timezone_offset_with_utc我使用了Kong里面自带的cache相关函数做一下缓存：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="comment">-- 缓存上面的时区差，减少系统调用</span></div><div class="line"><span class="keyword">local</span> offset_with_cst, err =</div><div class="line">  cache.get_or_set(<span class="string">"timezone_offset"</span>, <span class="literal">nil</span>, get_timezone_offset_with_utc, <span class="literal">nil</span>)</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;我需要用Lua处理一个与时间相关的问题，比如我们在配置文件里面配置一个日期(北京时间)，然后在Openresty里面判断当前时间是否在这个日期之前或者之后来做对应的逻辑。&lt;/p&gt;
-&lt;p&gt;Lua的时间处理还有点麻烦，主要是自带的相关库函数比较少。&lt;/p&gt;
-&lt;blockquot
-    
-    </summary>
-    
-    
-      <category term="Lua" scheme="http://cyukang.com/tags/Lua/"/>
     
   </entry>
   

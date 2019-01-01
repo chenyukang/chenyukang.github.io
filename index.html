@@ -145,6 +145,72 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2019/01/01/compile-script-to-binary-for-obfuscation.html">编译脚本到二进制</a>
+      </h2>
+      <p class="article-date">January 1, 2019
+          
+              
+  <a href="/tags#Rust" >
+    <span class="tag-code">Rust</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <h3 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h3><p>因为自己习惯使用 expect 脚本登录各种服务器，因为有一段时间登录的服务器太多了，之前写过一个程序来管理各种 expect 脚本。思路是用一个二进制程序来动态生成脚本，执行完之后再删除。因为不想把密码之类的直接写在固定的脚本里面，所以密码是编译在可执行的二进制文件里的。其实还是想做代码混淆。最近突然想是不是可以直接写一个程序，把所有脚本类的程序转换为二进制可执行文件。只是最终执行的时候可能还是需要用 exec 之类的 API 调用解释器执行各种脚本。</p>
+<p><img src="/images/image-20190101234053094.png" alt="image-20190101234053094"></p>
+<h3 id="rshc-的开发"><a href="#rshc-的开发" class="headerlink" title="rshc 的开发"></a>rshc 的开发</h3><p>不过这个程序看起来有些好玩，所以先我先查了一下是否之前有其他人这样做过。于是找到了 <a href="https://github.com/neurobin/shc" target="_blank" rel="external">shc</a> 这个开源程序，不过这个最初版本是 94 年写的。使用了一下发现居然不支持 expect 之类的。然后想着自己写个玩玩，最后用 Rust 搞出来一个初版: <a href="https://github.com/chenyukang/rshc" target="_blank" rel="external">rhsc</a>。</p>
+<p>目前我这个程序只是能把脚本程序，转换为 Rust 代码，然后使用 rustc 来编译为二进制，为了做一些代码混淆，其中也类似 shc 使用了 RC4 算法来做了一个简单的转换，密码是随机生成的。然后也做了另外一个增加密码的模式，这样可以为任何脚本增加密码校验功能。最终还是使用 Process 来执行解释器，所以如果要破解，可以使用一些类似 ptrace 或者<a href="https://github.com/neurobin/shc/issues/63" target="_blank" rel="external">其他方式</a>来试试。以后继续完善这方面的防御。另外，为了在生成代码之后尽量减少依赖，所以目前密码输入那块还未做到隐藏输入。</p>
+<h3 id="安装使用"><a href="#安装使用" class="headerlink" title="安装使用"></a>安装使用</h3><p>使用方式非常简单，先安装：</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">cargo install rshc</div></pre></td></tr></table></figure>
+<p>然后使用命令： </p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">rshc -f demo.sh -o demo.rs</div><div class="line"></div><div class="line">/<span class="regexp">/ add a passowrd when compile it, then binary will prompt for correct password before execution</span></div><div class="line"><span class="regexp">rshc -f demo.sh -o demo.rs -p</span></div></pre></td></tr></table></figure>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>时隔两年再用 Rust 写一些小项目，发现整个语言还是成熟很多：</p>
+<ul>
+<li>工具链很好用，特别是 cargo 之类的，从开发到发布都非常方便</li>
+<li>相关的库和文档也多了起来，相对来说更加容易上手写一些东西了</li>
+<li>编译器的错误提示特别好，可以通过错误索引号找到示例</li>
+</ul>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2019/01/01/compile-script-to-binary-for-obfuscation.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2018/03/10/sql-injection-attack.html">SQL Injection attack</a>
+      </h2>
+      <p class="article-date">March 10, 2018
+          
+              
+  <a href="/tags#security" >
+    <span class="tag-code">security</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                注入原理SQL注入一直是 Web 应用的一大安全隐患，注入的基本原理是通过修改输入的参数来操作后台执行的 SQL，注入可能会导致数据库被恶意修改、数据被恶意读取等严重行为。所以如果一个参数有漏洞，通过小心的构造注入点即可利用，这里的渗透攻防Web篇-SQL注入攻击初级有一些编写注入点的教 .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2018/03/10/sql-injection-attack.html">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2018/03/04/kong-cluster-left-node.html">Kong集群Left Cluster Node问题</a>
       </h2>
       <p class="article-date">March 4, 2018
@@ -168,33 +234,13 @@
         
         
             
-                <h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>Kong在实践中会有一些疑惑的地方，这里记录一下。注意这里记录的Kong集群部署的问题是0.10.3版本的，最新Kong版本已经不是通过serf来管理不同节点之间的配置同步问题。</p>
-<p>在Kong多节点部署的时候，有时候某个节点停掉后，我们在后台可以看到left的信息，而且这个left信息会保留一段不短的时间。类似于如下： </p>
-<p><img src="/images/kong-left-0133521.png" alt="kong-left"></p>
-<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>管理后台Konga是通过api获取的节点信息，在<code>kong/kong/api/routes/cluster.lua</code>文件里可以看到如下路由处理逻辑： </p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">GET = <span class="function"><span class="keyword">function</span><span class="params">(self, dao_factory, helpers)</span></span></div><div class="line">  <span class="keyword">local</span> members, err = singletons.serf:members()</div><div class="line">  <span class="keyword">if</span> err <span class="keyword">then</span></div><div class="line">    <span class="keyword">return</span> responses.send_HTTP_INTERNAL_SERVER_ERROR(err)</div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  <span class="keyword">local</span> result = &#123;data = &#123;&#125;&#125;</div><div class="line">  <span class="keyword">for</span> _, v <span class="keyword">in</span> <span class="built_in">pairs</span>(members) <span class="keyword">do</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> self.params.<span class="built_in">status</span> <span class="keyword">or</span> (self.params.<span class="built_in">status</span> <span class="keyword">and</span> v.<span class="built_in">status</span> == self.params.<span class="built_in">status</span>) <span class="keyword">then</span></div><div class="line">      table_insert(result.data, &#123;</div><div class="line">        name = v.name,</div><div class="line">        address = v.addr,</div><div class="line">        <span class="built_in">status</span> = v.<span class="built_in">status</span></div><div class="line">      &#125;)</div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"></div><div class="line">  result.total = #result.data</div><div class="line">  <span class="keyword">return</span> responses.send_HTTP_OK(result)</div><div class="line"><span class="keyword">end</span>,</div></pre></td></tr></table></figure>
-<p>具体<code>serf:members()</code>的实现在serf.lua里面可以看到，就是执行了<code>serf cluster members</code>命令获取结果然后返回JSON。所以我们在服务器上执行这个命令其实也可以看到类似的结果： </p>
-<p><img src="/images/kong-left-cmd.png" alt="kong-left-cmd"></p>
-<p>那么问题的根源当然是在Serf本身里面，通过看文档发现原来确实是有一定延迟的。</p>
-<blockquote>
-<p>Serf keeps the state of dead nodes around for a set amount of time, so that when full syncs are requested, the requester also receives information about dead nodes. Because SWIM doesn’t do full syncs, SWIM deletes dead node state immediately upon learning that the node is dead. This change again helps the cluster converge more quickly.</p>
-<p><a href="https://www.serf.io/docs/internals/gossip.html#lifeguard-enhancements" target="_blank" rel="external">参考serf文档»</a></p>
-</blockquote>
-<h4 id="serf的具体实现"><a href="#serf的具体实现" class="headerlink" title="serf的具体实现"></a>serf的具体实现</h4><p>接着稍微看了一下Serf的代码，果然Go的项目代码直观好读。在Serf这个结构体里面保存了一个leftMembers的状态列表，每次收到left事件的时候处理逻辑是： </p>
-<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// handleNodeLeaveIntent is called when an intent to leave is received.</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Serf)</span> <span class="title">handleNodeLeaveIntent</span><span class="params">(leaveMsg *messageLeave)</span> <span class="title">bool</span></span> &#123;</div><div class="line">	..................</div><div class="line">    </div><div class="line">	<span class="comment">// State transition depends on current state</span></div><div class="line">	<span class="keyword">switch</span> member.Status &#123;</div><div class="line">	<span class="keyword">case</span> StatusAlive:</div><div class="line">		member.Status = StatusLeaving</div><div class="line">		member.statusLTime = leaveMsg.LTime</div><div class="line">		<span class="keyword">return</span> <span class="literal">true</span></div><div class="line">	<span class="keyword">case</span> StatusFailed:</div><div class="line">		member.Status = StatusLeft</div><div class="line">		member.statusLTime = leaveMsg.LTime</div><div class="line"></div><div class="line">		<span class="comment">// Remove from the failed list and add to the left list. We add</span></div><div class="line">		<span class="comment">// to the left list so that when we do a sync, other nodes will</span></div><div class="line">		<span class="comment">// remove it from their failed list.</span></div><div class="line">		s.failedMembers = removeOldMember(s.failedMembers, member.Name)</div><div class="line">		s.leftMembers = <span class="built_in">append</span>(s.leftMembers, member)</div><div class="line">        </div><div class="line">        ................</div><div class="line">        </div><div class="line">		<span class="keyword">return</span> <span class="literal">true</span></div><div class="line">	<span class="keyword">default</span>:</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>通过索引变量发现这个列表会定时通过<code>handleReap</code>函数更新，逻辑如下： </p>
-<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// handleReap periodically reaps the list of failed and left members, as well</span></div><div class="line"><span class="comment">// as old buffered intents.</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Serf)</span> <span class="title">handleReap</span><span class="params">()</span></span> &#123;</div><div class="line">	<span class="keyword">for</span> &#123;</div><div class="line">		<span class="keyword">select</span> &#123;</div><div class="line">		<span class="keyword">case</span> &lt;-time.After(s.config.ReapInterval):</div><div class="line">			s.memberLock.Lock()</div><div class="line">			now := time.Now()</div><div class="line">			s.failedMembers = s.reap(s.failedMembers, now, s.config.ReconnectTimeout)</div><div class="line">			s.leftMembers = s.reap(s.leftMembers, now, s.config.TombstoneTimeout)</div><div class="line">			reapIntents(s.recentIntents, now, s.config.RecentIntentTimeout)</div><div class="line">			s.memberLock.Unlock()</div><div class="line">		<span class="keyword">case</span> &lt;-s.shutdownCh:</div><div class="line">			<span class="keyword">return</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>所以看起来这里相关的Timeout是<code>s.config.TombstoneTimeout</code>, 接着需要看看<code>reap</code>到底做了什么，这里果然是把到了一定时间间隔的节点删掉了：</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// reap is called with a list of old members and a timeout, and removes</span></div><div class="line"><span class="comment">// members that have exceeded the timeout. The members are removed from</span></div><div class="line"><span class="comment">// both the old list and the members itself. Locking is left to the caller.</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Serf)</span> <span class="title">reap</span><span class="params">(old []*memberState, now time.Time, timeout time.Duration)</span> []*<span class="title">memberState</span></span> &#123;</div><div class="line">	n := <span class="built_in">len</span>(old)</div><div class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; n; i++ &#123;</div><div class="line">		m := old[i]</div><div class="line"></div><div class="line">		<span class="comment">// Skip if the timeout is not yet reached</span></div><div class="line">		<span class="keyword">if</span> now.Sub(m.leaveTime) &lt;= timeout &#123;</div><div class="line">			<span class="keyword">continue</span></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// Delete from the list</span></div><div class="line">		old[i], old[n<span class="number">-1</span>] = old[n<span class="number">-1</span>], <span class="literal">nil</span></div><div class="line">		old = old[:n<span class="number">-1</span>]</div><div class="line">		n--</div><div class="line">		i--</div><div class="line"></div><div class="line">		..........</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> old</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>那么这个时间间隔是多久呢，在<code>serf/config.go</code>有一个默认配置： </p>
-<figure class="highlight go"><table><tr><td class="code"><pre><div class="line">TombstoneTimeout:             <span class="number">24</span> * time.Hour,</div></pre></td></tr></table></figure>
-<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>serf这个软件值得好好分析一下，节点的状态同步和事件处理都是分布式软件的基础，后续继续看看这个<code>gossip protocol based on SWIM</code>的具体实现。另外<a href="https://www.hashicorp.com/" target="_blank" rel="external">hashicorp</a>这个公司的开源代码和文档都非常好，值得学习一番。</p>
-
+                问题Kong在实践中会有一些疑惑的地方，这里记录一下。注意这里记录的Kong集群部署的问题是0.10.3版本的，最新Kong版本已经不是通过serf来管理不同节点之间的配置同步问题。
+在Kong多节点部署的时候，有时候某个节点停掉后，我们在后台可以看到left的信息，而且这个left信息 .....
             
         
       </div>
       
-          <a class="more" href="/2018/03/04/kong-cluster-left-node.html#footer">发表评论</a>
+          <a class="more" href="/2018/03/04/kong-cluster-left-node.html">阅读全文</a>
       
     </article>
   
@@ -377,68 +423,6 @@ If path starts with a pipe character, a subprocess is created, con .....
       
     </article>
   
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/09/12/kong-new-release.html">Kong的0.11.0版本</a>
-      </h2>
-      <p class="article-date">September 12, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-  <a href="/tags#Kong" >
-    <span class="tag-code">Kong</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Kong发布了新的版本0.11.0，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了serf，这样整个Kong节点之间的缓存同步方式变化了。开发者给出的理由如下： 
-
-依赖serf，serf并不属于Nginx/OpenResty
-这种依赖相互间通信来同步的机制对于deploym .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/09/12/kong-new-release.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/09/12/lua-time-related.html">Lua时间处理</a>
-      </h2>
-      <p class="article-date">September 12, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                我需要用Lua处理一个与时间相关的问题，比如我们在配置文件里面配置一个日期(北京时间)，然后在Openresty里面判断当前时间是否在这个日期之前或者之后来做对应的逻辑。
-Lua的时间处理还有点麻烦，主要是自带的相关库函数比较少。
-
-os.time()                &l .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/09/12/lua-time-related.html">阅读全文</a>
-      
-    </article>
-  
 
   
     <div class="guide-pager">
@@ -458,7 +442,7 @@ os.time()                &l .....
 </div>
     <footer class="app-footer" id="footer">
     <p class="copyright">
-        &copy; 2018 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
         with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
