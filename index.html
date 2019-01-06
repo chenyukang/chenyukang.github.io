@@ -145,6 +145,59 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2019/01/06/wechat-tools.html">使用 Markown 编辑公众号方法</a>
+      </h2>
+      <p class="article-date">January 6, 2019
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <p>技术人员很多都喜欢使用 Markdown 格式来编辑文档，但是公众号后台默认不支持。</p>
+<p>所以关于工具和流程，最近我摸索出来目前最适合自己的一套是：</p>
+<p>还是维护之前 Hexo 那套，像代码那样使用 Git 管理，内容会上传到 Github 上。</p>
+<p>继续使用 Typora 编辑 Markdown 文件。注意使用图片工具 IPic 来方便地把图片上传到图床上，其实免费的微博图床就足够。然后使用在线的转换工具<a href="http://md.codingpy.com/" target="_blank" rel="external">md.codingpy.com</a>即可很方便地把 Markdown 转成适合公众号的内容，复制粘贴到后台编辑器里。</p>
+<p>这样在个人网站和公众号里都会有相同的内容，而且格式之类的都比较统一。</p>
+<p>这里再次推荐 Typora: <a href="https://typora.io/" target="_blank" rel="external">https://typora.io/</a> 这个工具，会让人特别有写东西的冲动。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fyxb4230duj310u0kmjs7.jpg" alt="image-20190106235957370"></p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2019/01/06/wechat-tools.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2019/01/04/try-wechat-blog.html">开始写公众号</a>
+      </h2>
+      <p class="article-date">January 4, 2019
+          
+              
+  <a href="/tags#WeChat" >
+    <span class="tag-code">WeChat</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                2018 过得很快，对于自己来说有点颓废、也很辛苦。说是颓废因为花了一些时间在游戏上，还有不少焦虑。最近看书，翻到胡适 1932 年一篇《寄语即将毕业的大学生》中写到，人到社会容易丢掉求知的欲望、抛弃学生时代的理想追求，为了防止堕落文中给出三点建议。读来觉得颇有道理，这三点建议放在现在也 .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2019/01/04/try-wechat-blog.html">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2019/01/01/compile-script-to-binary-for-obfuscation.html">编译脚本到二进制</a>
       </h2>
       <p class="article-date">January 1, 2019
@@ -160,26 +213,12 @@
         
         
             
-                <h3 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h3><p>因为自己习惯使用 expect 脚本登录各种服务器，有一段时间因为要登录的服务器太多了，所以之前写过一个程序来管理各种 expect 脚本。实现思路是根据配置文件，用一个程序来动态生成脚本，执行完之后再删除。这样临时生成的文件里也是包含密码等信息的。最近突然想是不是可以直接写一个程序，把所有脚本类的程序转换为二进制可执行文件<a href="https://www.slideshare.net/LizBaillie/rustconf-2016-illustrated-adventure-guide-65894363" target="_blank" rel="external">^image</a>。我不想把密码之类的直接写在固定的脚本里面，所以密码也是被编译在可执行的二进制文件里的，这样能达到一些代码混淆的目的。</p>
-<p><img src="/images/image-20190101234053094.png" alt="image-20190101234053094"></p>
-<h3 id="rshc-的开发"><a href="#rshc-的开发" class="headerlink" title="rshc 的开发"></a>rshc 的开发</h3><p>这个程序看起来有些好玩，所以先我先搜了一下是否之前有其他人这样做过。于是找到了 <a href="https://github.com/neurobin/shc" target="_blank" rel="external">shc</a> 这个开源程序，这个最初版本是 96 年用 C 写的，最终执行的时候还是用 execvp 调用解释器执行各种脚本。我使用了一下发现居然不支持 expect 之类的。然后想着自己写个玩玩，顺便再动手用用最近看得又心痒的 Rust，最后用搞出来一个初版: <a href="https://github.com/chenyukang/rshc" target="_blank" rel="external">rhsc</a>。</p>
-<p>目前我这个程序只是能把脚本程序，转换为 Rust 代码，然后使用 rustc 来编译为二进制，为了做一些代码混淆，其中也类似 shc 使用了 RC4 算法来做了一个简单的转换，加密用的 key 是随机生成的。然后也做了另外一个增加密码的模式，这样可以为任何脚本增加密码校验功能，最终使用 <a href="https://doc.rust-lang.org/beta/std/process/struct.Command.html" target="_blank" rel="external">Process</a> 来执行解释器。当然也谈不上多安全，如果要破解可以使用一些类似 ptrace 或者<a href="https://github.com/neurobin/shc/issues/63" target="_blank" rel="external">其他方式</a>来试试。以后我会继续完善这方面的防御。另外，为了在生成代码之后尽量减少依赖，所以目前密码输入时还未做到隐藏输入。</p>
-<h3 id="安装使用"><a href="#安装使用" class="headerlink" title="安装使用"></a>安装使用</h3><p>使用方式非常简单，先安装：</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">cargo install rshc</div></pre></td></tr></table></figure>
-<p>然后使用命令： </p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><div class="line">rshc -f demo.sh -o demo.rs</div><div class="line"></div><div class="line">/<span class="regexp">/ add a passowrd when compile it, </span></div><div class="line"><span class="regexp">/</span><span class="regexp">/ then binary will prompt for correct password before execution</span></div><div class="line"><span class="regexp">rshc -f demo.sh -o demo.rs -p</span></div></pre></td></tr></table></figure>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>时隔两年再用 Rust 写一些小项目，发现整个语言还是成熟很多：</p>
-<ul>
-<li>工具链很好用，特别是 cargo 之类的，<a href="https://crates.io/crates/rshc" target="_blank" rel="external">从开发到发布都非常方便</a></li>
-<li>相关的库和文档也多了起来，相对来说更加容易上手写一些东西了</li>
-<li>编译器的错误提示特别好，可以通过错误索引号找到示例</li>
-</ul>
-
+                缘由因为自己习惯使用 expect 脚本登录各种服务器，有一段时间因为要登录的服务器太多了，所以之前写过一个程序来管理各种 expect 脚本。实现思路是根据配置文件，用一个程序来动态生成脚本，执行完之后再删除。这样临时生成的文件里也是包含密码等信息的。最近突然想是不是可以直接写一个程序 .....
             
         
       </div>
       
-          <a class="more" href="/2019/01/01/compile-script-to-binary-for-obfuscation.html#footer">发表评论</a>
+          <a class="more" href="/2019/01/01/compile-script-to-binary-for-obfuscation.html">阅读全文</a>
       
     </article>
   
@@ -364,62 +403,6 @@ If path starts with a pipe character, a subprocess is created, con .....
       </div>
       
           <a class="more" href="/2018/02/12/ruby-open-vul.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/09/17/bucklescript-and-reason.html">BuckleScript and Reason</a>
-      </h2>
-      <p class="article-date">September 17, 2017
-          
-              
-  <a href="/tags#OCaml" >
-    <span class="tag-code">OCaml</span>
-  </a>
-
-  <a href="/tags#Javascript" >
-    <span class="tag-code">Javascript</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                BuckleScript虽然我不是前端工程师，不过因为喜欢 OCaml，所以偶尔关注 BuckleScript 有一段时间了，今天又花时间看了看文档和代码。BuckleScript 是张宏波主导开发的开源项目，『有希望成为第一个完全由国人设计主导实现并被世界各地广泛使用的编译器』，不过是 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/09/17/bucklescript-and-reason.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/09/14/deep-work.html">《深度工作-如何有效使用每一点脑力》读后</a>
-      </h2>
-      <p class="article-date">September 14, 2017
-          
-              
-  <a href="/tags#Books" >
-    <span class="tag-code">Books</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                深度工作这本书主要讲解了一些时间和精力管理方面的东西，人到了一定年龄就会觉得时间不够用，日子过得太快，每天觉得都没干什么就过去了。工作几年后这种感觉时不时袭来。反而是如果某段时间一直有一个阶段性的目标，就会觉得很踏实，进度和效率也可以。那种完全沉浸在思考中的状态真的也并不是累，相反所得到 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/09/14/deep-work.html">阅读全文</a>
       
     </article>
   
