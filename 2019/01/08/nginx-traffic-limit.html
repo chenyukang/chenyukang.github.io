@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Nginx限流 | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Nginx限流</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>Nginx 限流可以通过几种方式实现：</p>
+<h2 id="1-Nginx自带的流量控制模块"><a href="#1-Nginx自带的流量控制模块" class="headerlink" title="1. Nginx自带的流量控制模块"></a>1. Nginx自带的流量控制模块</h2><p><a href="http://nginx.org/en/docs/http/ngx_http_limit_req_module.html" target="_blank" rel="external">ngx_http_limit_req 根据特定的key(通常为IP) 控制访问频率</a></p>
+<p><a href="http://nginx.org/en/docs/http/ngx_http_limit_req_module.html" target="_blank" rel="external">ngx_http_limit_req_module 控制连接数</a></p>
+<p>通过修改Nginx的配置文件，然后reload。这种方式配置比较简单，然而 reload 对于当前访问量比较大的服务器开销也有一些。<br> 根据<a href="http://www.toutiao.com/a6254279391729139970/" target="_blank" rel="external">新浪的经验</a>，每一次的 reload 对 Nginx 的 QPS 与耗时的影响通常会持续 8~10s，考虑到一次扩容会有频繁的变更，这对在线业务来说是不堪承受之重。因此，要避免对 Nginx 进行 reload。</p>
+<h2 id="2-使用lua-resty-limit-traffic-流量控制"><a href="#2-使用lua-resty-limit-traffic-流量控制" class="headerlink" title="2. 使用lua-resty-limit-traffic 流量控制"></a>2. 使用lua-resty-limit-traffic 流量控制</h2><p><a href="https://github.com/openresty/lua-resty-limit-traffic" target="_blank" rel="external">代码和文档</a>。这个库分为limit_conn 和 limit_req模块，limit_req限制某个 ip 或者 server 的访问频率，limit_conn 限制连接数。lua-resty-limit-traffic 的原理是使用 Nginx 的 shared_dict，建立一个 hashtable，根据目前连接数或者访问请求记录相关信息。对于每一个Nginx请求都有<a href="https://moonbingbing.gitbooks.io/openresty-best-practices/content/ngx_lua/phase.html" target="_blank" rel="external">一系列执行阶段</a>，每个阶段可以增加 hook，access_by_lua是处理前调用的hook, log_by_lua 是处理完成后调用的 hook。进入的时候通过 ip 作为 key 找到share_dict 里面的连接数，增加1。处理完之后找到连接数， 减去1。 通俗的理解就是顾客进入试衣间前持一个牌子，出来后归还牌子。当前的正在使用的牌子数目可以配置，以达到限流目的。</p>
+<p>依据系统状态动态改变限流的配置，可以考虑两种方案：</p>
+<pre><code>a. limit_conn 和 limit_delay 存放在 Redis内，在 access_by_lua_block 的部分去取出当前限制，这个方案的弊端在于对每个 request 多了一次 redis 请求。
+b. limit_conn存放在 Nginx 的 shared_dict内，通过 Nginx 的配置增加一个 location，专门用来请求来修改其值，任何一个 Nginx worker 修改成功后，其他 worker 都可见。
+</code></pre><h2 id="3-使用nginx-upsync-module"><a href="#3-使用nginx-upsync-module" class="headerlink" title="3. 使用nginx-upsync-module"></a>3. 使用nginx-upsync-module</h2><p><a href="https://github.com/weibocom/nginx-upsync-module" target="_blank" rel="external">nginx-upsync-module</a>是新浪的开源库，也是依赖 openresty 的。 这套工具可以修改 backend 的各种属性，weight, max_fails等。为了避免 reload，可以使用Consul或者Etcd 进行动态配置。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>为了做一些自动限流，可以考虑分析 nginx 日志，或者系统负载信息。<br>系统负载分析工具，ruby gem 包usagewatch可以获取系统目前的 CPU 使用率，Memory使用率，系统 load 等相关信息，<br>日志分析工具<a href="https://github.com/allinurl/goaccess，使用goaccess，可以实时分析rails" target="_blank" rel="external">https://github.com/allinurl/goaccess，使用goaccess，可以实时分析rails</a> app日志。</p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/os-dev-debug.html">
+        <span class="nav-arrow">← </span>
+        
+          OS dev的Bochs调试
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/ood_for_wife.html">
+        
+          给老婆介绍OOD(翻译)
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-Nginx自带的流量控制模块"><span class="toc-nav-text">1. Nginx自带的流量控制模块</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-使用lua-resty-limit-traffic-流量控制"><span class="toc-nav-text">2. 使用lua-resty-limit-traffic 流量控制</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-使用nginx-upsync-module"><span class="toc-nav-text">3. 使用nginx-upsync-module</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#其他"><span class="toc-nav-text">其他</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/nginx-traffic-limit.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "Nginx限流",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

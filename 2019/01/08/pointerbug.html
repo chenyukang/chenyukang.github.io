@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      指针指针 | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>指针指针</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><br>今天由一个函数加深了对指针的理解，是这么一个函数：<br><pre class="src"><span style="color: #98fb98;">void</span> <span style="color: #87cefa;">BST_Delete</span>(<span style="color: #98fb98;">BITREE</span> <span style="color: #eedd82;">y</span>) <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">删除节点y<br></span>{<br>    <span style="color: #00ffff;">if</span> (y-&gt;lch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;rch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;p)<br>    {<br>        <span style="color: #00ffff;">if</span>(y==(y-&gt;p)-&gt;lch) (y-&gt;p)-&gt;lch=<span style="color: #7fffd4;">NULL</span>;<br>        <span style="color: #00ffff;">else</span> (y-&gt;p)-&gt;rch=<span style="color: #7fffd4;">NULL</span>;<br>    }<br>    <span style="color: #00ffff;">else</span> <span style="color: #00ffff;">if</span> (y-&gt;rch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;p)<br>    {<br>        <span style="color: #00ffff;">if</span>(y==y-&gt;p-&gt;lch) y-&gt;p-&gt;lch=y-&gt;lch;<br>        <span style="color: #00ffff;">else</span> y-&gt;p-&gt;rch=y-&gt;lch;<br>    }<br>    <span style="color: #00ffff;">else</span> <span style="color: #00ffff;">if</span> (y-&gt;lch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;p){<br>        <span style="color: #00ffff;">if</span>(y==y-&gt;p-&gt;lch) y-&gt;p-&gt;lch=y-&gt;rch;<br>        <span style="color: #00ffff;">else</span> y-&gt;p-&gt;rch=y-&gt;rch;<br>    }<br>    <span style="color: #00ffff;">else</span>    {<br>        <span style="color: #98fb98;">BITREE</span> <span style="color: #eedd82;">t</span>=BST_Successor(y);<br>        y-&gt;data=t-&gt;data;<br>        BST_Delete(t);<br>        y=t;<span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">y=NULL<br><br></span>    }<br>    free(y);<br>}</pre><br></p><br><p><br>在最后一个else内，如果二叉搜索树中有左右孩子，那么找这个删除节点的后继，把内容互换，然后删除后继 节点，因为后继节点一定只有一个孩子或者没有孩子。最后只有一个free()操作其实是为了代码简洁,可以把前面每一个else if后面加一个free， 最后不写free()操作。但是这么写运行起来会有问题，y=t,就是所指向的地址相同，但是因为是 递归操作，t指向的地址在调用BST_Delete(t)的时候已经被free掉了，所以如果再删除一次就会 出现内存错误，修改方法是y=NULL,或者修改函数参数，用指针引用的形式 void BST_Delete( BITREE&amp; y)，然后再在free(y)后面增加一句y=NULL。以前以为两次调用free(p)是不会出现问题的，free()在释放掉p指向的内存以后，会 自动将p赋值为NULL，其实没有这部分操作。<br></p><br><p><br><br>前些天还看到一个面试题目，malloc申请的空间用delete删除会有什么问题？一般来说没有问题， 内存会释放掉，而且即使是有析构函数的对象指针，用delete删除的时候同样会调用析构函数。这说明 c++的delete操作其实是在c的基础增加了一些操作，先调用析构函数，然后释放空间。良好的编程风格 就是free/malloc，new/delete一一对应，甚至不要出现一次调用，多次释放，像上面那样的因为递归 而产生的多次释放并不是很好发现<br></p>
+
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#C" >
+    <span class="tag-code">C</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/print-stack-before-exiting.html">
+        <span class="nav-arrow">← </span>
+        
+          获取挂掉程序的栈信息
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/poj-500.html">
+        
+          迟到的POJ 500
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/pointerbug.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "指针指针",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

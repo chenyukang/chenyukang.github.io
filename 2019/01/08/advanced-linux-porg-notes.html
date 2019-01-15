@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      《Advanced linux progamming》笔记 | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>《Advanced linux progamming》笔记</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2>Writing and using Libraries</h2>
+
+<p class="first">链接分为动态链接和静态链接。</p>
+
+<h3><a name="sec2" id="sec2"></a><br>Archives</h3>
+
+<p class="first">archive(静态链接)为目标文件的集合，linker从archive文件中找到obj文件进行链接。</p>
+
+<pre class="example">
+% ar cr libtest.a test1.o test2.o
+</pre>
+创建库文件libtest.a(类似windows下test.lib)，当linker处理archive文件的时候，将在库文件中查找当前已经处理但是还没定义的symbols。所以库文件应该出现在命令的最后。
+
+<pre class="example">
+% gcc -o app app.o -L. -ltest
+</pre>
+
+
+<h3><a name="sec3" id="sec3"></a><br>Shared Library</h3>
+
+<p class="first">Shared lib和archive的两个区别： 1，当进行的是动态链接，最后得到的可执行程序中不包含实际库中的执行代码，只是一个对库的引用。所以动态链接最后得到的可执行程序要小一些。 2 多个程序可以共享动态链接库，动态链接库不只是obj文件的集合，其中是单一的一个obj文件，包含了库中所有的信息，所以一个程序动态加载shared lib的时候是把库中所有的东西都加载了，而不是所引用的那部分。</p>
+
+<pre class="example">
+% gcc -c -fPIC test1.c
+% gcc -shared - fPIC libtest.so test1.o test2.o
+</pre>
+-fPIC选项指编译为位置独立的执行代码，这样可以动态加载，产生libtest.so文件。
+
+<p>默认的库文件寻找路径变量：LD_LIBRARY_PATH
+库文件之间的依赖关系：如果是动态链接，链接库会自动寻找到自己所依赖的其他库文件，如果是静态链接，必须为linker提供所有依赖的库文件名称。</p>
+
+<pre class="example">
+% gcc -static -o tifftest tifftest.c -ltiff -ljpeg -lz -lm
+</pre>
+上面例子中tiff依赖jpeg库，因为是-static链接，必须指明所有依赖的库文件。
+
+
+<h3><a name="sec4" id="sec4"></a>
+Pros and Cons</h3>
+
+<p class="first">动态链接的优势：可以减少可执行文件的size，如果库文件进行升级，原程序可以不用重新链接。如果是静态链接，库文件改变了程序要重新进行link。
+也有一些特殊情况必须使用static link。</p>
+
+
+<h3><a name="sec5" id="sec5"></a>
+动态加载和卸载库</h3>
+
+<pre class="src">
+<span style="color: #98fb98;">void</span>* <span style="color: #eedd82;">handle</span> = dlopen (&#8220;libtest.so&#8221;, RTLD_LAZY);
+
+<span style="color: #98fb98;">void</span> (*<span style="color: #87cefa;">test</span>)() = dlsym (handle, &#8220;my_function&#8221;);
+(*test)();
+dlclose (handle);
+</pre>
+上面例子中打开libtest.so动态链接库，找到my_function定义，执行，然后卸载库文件。
+
+<h2><a name="sec6" id="sec6"></a>
+进程</h2>
+
+<h3><a name="sec7" id="sec7"></a>
+创建进程</h3>
+
+<h4>using system</h4>
+
+<pre class="src">
+<span style="color: #b0c4de;">#include</span> <span style="color: #ffa07a;">&lt;stdlib.h&gt;</span>
+<span style="color: #98fb98;">int</span> <span style="color: #87cefa;">main</span> ()
+{
+  <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">return_value</span>;
+  return_value = system (<span style="color: #ffa07a;">"ls -l /"</span>);
+  <span style="color: #00ffff;">return</span> return_value;
+}
+
+</pre>
+system将执行/bin/sh,然后执行命令，因为不同系统中/bin/sh所链接的shell不同，所以会导致执行差异，同时这种方式存在安全隐患。
+
+
+<h4>using fork and exec</h4>
+
+<p class="first">fork创建一个子进程，fork的返回值用来区别父进程和子进程。子进程将和拷贝父进程一些信息，更详细的东西在这本书内没说明。</p>
+
+<p>exec函数家族，fork创建一个子进程，用exec在子进程中执行命令。</p>
+
+
+<h4>process scheduling</h4>
+
+<p class="first">nice命令可以调节process的优先权值。
+niceness value越大，进程的优先权越低，越小进程的优先权越高。一般进程的niceness value为0。只有root的进程可以减少一个进程的niceness value。</p>
+
+<h3><a name="sec8" id="sec8"></a>
+signal</h3>
+
+<p class="first">signal is asynchronous:进程收到信号的时候会立即处理信号，处理信号的一般方式分为几类：忽略，执行默认处理，执行特定的处理程序。
+因为信号处理是异步的，所以在信号处理程序中尽量不要执行IO，或者调用库函数。信号处理函数应该作最少量的工作，尽快返回到主流程中，或者干脆结束掉程序。一般只是设置变量表明某个信号发生了，主程序定时检查变量再处理。SIGTERM和SIGKILL区别，前一个可能被忽略，后一个不能被忽略。
+改变sig_atomic_t的值的操作是原子性的。</p>
+
+
+<h3><a name="sec9" id="sec9"></a>
+process exit</h3>
+
+<p class="first">exit(int return_value)函数退出一个进程，并把exit_code告诉父进车。kill(pid_t,KILL_TYPE)向某个进程发送相应的退出信号。
+wait函数家族，让父进程等待某个子进程的结束。WIFEXITED宏判断子进程是否正常退出或者是由于其他原因意外退出。
+zombie process(僵死进程)为一个进程已经退出，但是没有进行善后处理。一个父进程有责任处理子进程的善后处理，wait函数即为此用，父进程调用wait一直被阻塞(当子进程没有退出的时候),子进程退出后wait函数返回。如果父进程没有为已经退出的子进程处理善后，子进程将变为init的子进程，然后被处理删除。
+一种更好的处理方法是当子进程退出的时候发信号通知父进程，有几种方式可以实现(进程间通信),其中一种比较方便的方式是父进程处理SIGCHLD信号。</p>
+
+
+
+<h2><a name="sec10" id="sec10"></a>
+Threads</h2>
+
+<p class="first">线程作为亲量级进程，切换引起的开销更小，一个进程的多个子线程共享进程的资源。
+</p><h3>create thread</h3><p></p>
+
+<p>创建线程：pthread_create (&amp;thread_id, NULL(pointer_to_thread_info), &amp;thread_func, NULL(argument))
+线程的执行顺序是异步的，不能假设其执行顺序。
+向thread传递数据：可以通过pthread_create的地四个参数，传递一个void* 的指针，指针指向一个数据结构体。注意在多线程中的数据空间的销毁。
+More about thread_id:</p>
+
+<pre class="src">
+
+<span style="color: #00ffff;">if</span> (!pthread_equal (pthread_self (), other_thread))
+  pthread_join (other_thread, <span style="color: #7fffd4;">NULL</span>);
+</pre>
+
+<p>Thread Attributes,为了设定线程的某些属性，detach线程退出后自动回首资源，joinable则等到另一个线程调用pthread_jion获得其返回值。</p>
+
+<p>Thread-specific data:每个线程都有一份自己的拷贝，修改自己的数据不会影响到其他线程。</p>
+
+<p>Cleanup Handlers:使用pthread_cleanup_push(function,param)和pthread_cleanup_pop(int)在线程退出的时候自动调用清理函数，释放资源。</p>
+
+<p>多线程程序可能出现的问题：竞争，需要使用atomic操作。</p>
+
+
+<h3><a name="sec11" id="sec11"></a><br>互斥锁</h3>
+
+<p class="first">只有一个线程能够拥有，此时其他线程访问互斥锁将被阻塞。</p>
+
+<pre class="src">
+<span style="color: #98fb98;">pthread_mutex_t</span> <span style="color: #eedd82;">mutex</span>;
+pthread_mutex_init(&amp;mutex,<span style="color: #7fffd4;">NULL</span>);
+
+<span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">&#25110;&#32773;pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+</span><span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">&#32447;&#31243;&#20013;&#20351;&#29992;pthread_mutex_lock&#21644;pthread_mutex_unlock&#26469;&#38145;&#20303;&#21644;&#35299;&#38145;&#20114;&#26021;&#38145;&#65292;
+</span></pre>
+
+
+<h3><a name="sec12" id="sec12"></a><br>Semaphores for Threads</h3>
+
+<p class="first">sem_t 可以作为一个share counter 来使用，</p>
+
+<pre class="src">
+
+<span style="color: #98fb98;">sem_t</span> <span style="color: #eedd82;">job_queue_count</span>;
+
+<span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">initialize
+</span>sem_init(&amp;job_queue_count,0,0);
+
+<span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">wait for
+</span>sem_wait(&amp;job_queue_count);
+<span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">lock mutext
+</span><span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">and do somethting
+</span><span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">unlock
+
+</span>
+
+<span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">new job
+</span>sem_post(&amp;job_queue_count)
+</pre>
+
+
+<h3><a name="sec13" id="sec13"></a><br>Threads VS Process</h3>
+
+<p class="first">Guidelines:</p>
+
+<p>1，所有线程所执行的指令必须是在一个可执行文件里面，而多进程可以执行多个命令。</p>
+
+<p>2，因为多个线程共享相同的虚拟内存地址，所以一个线程的错误可能会影响到其他线程，而多进程程序中一个进程的错误不会影响到其他进程。</p>
+
+<p>3，为新进程拷贝内存将增加开销，但是只有在新进程写其内存的时候才会进行拷贝(写拷贝)。</p>
+
+<p>4，多线程适用于多个相似的执行任务，而多进程可以执行不同类型的任务。</p>
+
+<p>5，多个线程中共享数据要容一些，但是也会产生相关问题(条件竞争，死锁)，多个进程共享数据难一些，使用IPC机制，虽然实现要难一些，但是不容易出现并发bug。</p>
+
+<h2><a name="sec14" id="sec14"></a><br>Interprocess Communication</h2>
+
+
+<h3><a name="sec15" id="sec15"></a><br>Share Memory</h3>
+
+<p class="first">share Memeory 是最简单的进程间共享数据的方式。</p>
+
+<h4>Allocation</h4>
+
+<p class="first">shmget函数创建或者访问一个已经存在的share mem。</p>
+
+<pre class="src">
+<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">segment_id</span> = shmget (shm_key, getpagesize (),
+                         IPC_CREAT | S_IRUSR | S_IWUSER);
+
+</pre>
+
+
+<h4>Attachment and Detachment</h4>
+
+<p class="first">函数shmat(SHMID,pointer to address,flag)使得一个进程attach到一个共享内存。进程通过fork创建的子进程也将继承这一共享内存。<br>函数shmdt(address)将detach共享内存。</p>
+
+<pre class="src">
+  <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">segment_size</span>;
+  <span style="color: #00ffff;">const</span> <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">shared_segment_size</span>=0x6400;
+
+  <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">allocate a shared mem
+
+</span>  segment_id=shmget(IPC_PRIVATE,shared_segment_size,
+                    IPC_CREAT|IPC_EXCL|S_IRUSR|S_IWUSR);
+  <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">atach the share mem
+</span>  share_memory = (<span style="color: #98fb98;">char</span>*)shmat(segment_id,0,0);
+  printf(<span style="color: #ffa07a;">"share memory attached at addreass %p\n"</span>,share_memory);
+</pre>
+
+
+<h4>Control share mem</h4>
+
+<p class="first">函数调用exit或者exec 可以detach一个共享内存，但是并没有释放它。<br>必须调用shmctl去释放其空间。ipcs -m 命令可以查看系统中当前的share mem的信息，如果没有删除遗留的shared mem，其nattch为0。可以使用ipcrm shm segment_id删除。</p>
+
+
+
+<h3><a name="sec16" id="sec16"></a><br>Process Semaphores</h3>
+
+<p class="first">semaphore和shared memory的使用方式类似，可以通过semget,shmctl创建和删除，提供的参数表明要创建semaphore。<br>没详细说，查看其他书。</p>
+
+
+<h3><a name="sec17" id="sec17"></a><br>Mapped memory</h3>
+
+<p class="first">Mapped memory是不同进程可以通过一个公用的共享文件进行交流。Mapped mem在进程是进程和文件的一个桥梁，linux通过把文件映射到虚拟内存，这样进程可以像访问普通内存一样访问该文件。<br>void* mmap(address,LENGTH,prot_option,option,file_rp,pos) //将一个文件映射到address，如果不提供系统将映射到合适的地址<br>munmap(file_memory,FILE_LENGTH);// 释放memory<br>设置了MAP_SHARED,多个进程可以通过同一文件访问该内存区。</p>
+
+
+<h3><a name="sec18" id="sec18"></a><br>管道</h3>
+
+<h4>pipe</h4>
+
+<pre class="src">
+<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">pipe_fds</span>[2];
+<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">read_fd</span>;
+
+<span style="color: #98fb98;">int</span> <span style="color: #eedd82;">write_fd</span>;
+pipe (pipe_fds);
+read_fd = pipe_fds[0];
+write_fd = pipe_fds[1];
+</pre>
+pipe_fds[0] 为reading file desc,pipe_fds<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup>为writing file desc。
+Pipe只能用于同一个进程的子进程之间。
+dup2重定向标准输入输出符。
+
+<p>popen,pclose很方便，FILE* stream=popen(&quot;progam&quot;,&quot;w&quot;)向program发送。pclose(stream)关闭。</p>
+
+
+<h4>FIFO</h4>
+
+<p class="first">为有名字的pipe，任何不相关的两个进程可以通过fifo来进行数据传递。mkfifo函数创建FIFO。</p>
+
+
+
+<h3><a name="sec19" id="sec19"></a>
+Socket</h3>
+
+<p class="first">系统调用:</p>
+
+<pre class="example">
+socket-- Creates a socket
+close -- Destroys a socket
+connect -- Creates a connection between two sockets
+bind -- Labels a server socket with an address
+listen -- Configures a socket to accept conditions
+accept -- Accepts a connection and creates a new socket for the connection
+</pre>
+
+<p>Unix-domain sockets能用于同一机器上的进程通信。Internet-domain sockets用于不同机子上的通信。<br>struct sockaddr_in  addr类型变量为其地址结构。<br>addr.sin_family=AF_INET<br>addr.sin_addr 存储一个32bit的IP地址。</p>
+
+<p>只是给了两个程序例子，详细内容看网络编程相关书籍。</p>
+
+
+<h2><a name="sec20" id="sec20"></a><br>Mastering Linux</h2>
+
+<h3><a name="sec21" id="sec21"></a><br>Device</h3>
+
+<p class="first">分为字符设备和块设备，块设备可一随机访问，字符设备提供流。一般应用程序不会直接访问块设备，而是通过系统调用来使用块设备。<br>设备号，主设备号是根据设备类型分的，从设备号根据具体设备分。<br>cat /proc/devices 查看设备类型和主设备号。</p>
+
+
+<h3><a name="sec22" id="sec22"></a><br>Device Entry</h3>
+
+<p class="first">只有root的进程可以通过mknod创建新的Device Entry。<br>mknod name b/c 主设备号 从设备号</p>
+
+<p>linux目录/dev 下面是系统所支持的Device Entry。<br>字符设备可以像一般文件一样访问，甚至可以用重定向去访问。</p>
+
+<pre class="example">
+cat somefile &gt; /dev/audio
+可以发出声音了
+
+</pre>
+
+<p>特殊设备：/dev/null /dev/zero /dev/full /dev/random /dev/urandom<br>Loopback Devices:环回设备，在文件系统上新建一个普通文件，可用于模拟特定设备，比如软盘。<br>也可把实际设备中的内容拷贝到其中，比如把光盘中的内容拷贝到新建的一个cdrom-image中。</p>
+
+
+<h3><a name="sec23" id="sec23"></a><br>/proc</h3>
+
+<p class="first">mount命令可以看到一行输出：proc on /proc type proc (rw,noexec,nosuid,nodev)<br>/proc包含系统的一些配置信息，不和任何设备相关联。</p>
+
+<pre class="example">
+$cat /proc/version 查看内核版本
+$cat /proc/cpuinfo 查看cpu信息
+</pre>
+
+<p>/proc目录下同时包含系统中当前的进程信息，由于权限设置，有的只能由进程本身访问。可以通过访问文件获取系统中进程的相关信息，<br>比如参数，运行环境,内存使用信息等等。</p>
+
+
+<h2><a name="sec24" id="sec24"></a><br>Linux system call</h2>
+
+<p class="first">system call和一般的C库函数的区别：系统调用一般通过门陷入实现，是系统内核和用户程序的接口，运行过程中会进入系统内核。C库函数一般和普通的函数没有区别。</p>
+
+<p class="verse"><br><br><br>strace:该命令可以追踪一个程序执行过程中的调用的system call。<br><br><br>access:测试进程对于一个文件的权限。 int access(path,bit_flag),注意返回值和errno。<br><br>fcntl:锁住文件和控制文件操作。<br><br>fsync,fdatasync:flush disk buffer。<br><br>getrlimit,setrlimit:资源限制设置。<br><br>getusage:获取进程的统计信息。<br><br>gettimeofday:获取wall_clock time。<br><br>mlock:锁住一段物理内存，使得该内存不能因为swap换出，一些速度要求很高的和安全性要求很高的代码会使用这个功能。 mlock(address,mem_length)<br><br>mprotect:设置内存的权限。<br><br>nanosleep:高分辨率睡眠函数。<br><br><br>readlink:read symbolic links。<br><br>sendfile:Fast file Transfer。<br><br>setitimer:定时器。<br><br>sysinfo:获取系统统计信息。<br><br>uname:获取系统版本信息和硬件信息。<br><br></p>
+
+
+<h2><a name="sec25" id="sec25"></a><br>Inline Assembly Code</h2>
+
+<p class="first">/usr/include/asm/io.h 定义了汇编代码中能够直接访问的端口。<br>/usr/src/linux/include/asm and /usr/src/linux/include/asm-i386 linux内核中汇编代码头文件<br>/usr/src/linux/arch/i386/ and /usr/src/linux/drivers/  汇编代码<br>当使用特定平台的汇编代码时使用宏和函数来简化兼容问题。</p>
+
+
+<h2><a name="sec26" id="sec26"></a><br>Security</h2>
+
+<h3><a name="sec27" id="sec27"></a><br>用户组 文件 进程权限</h3>
+
+<p class="verse"><br><br><br>用户和组的概念<br><br>超级用户 无穷权力<br><br><br>proccess user id和proccess group id。进程开始的时候其id和启动该程序的用户信息相同。<br><br>文件权限 chmod stat(filename,&amp;(struct stat))<br><br>program without Execution Permissions: a security hole。 其他用户能够拷贝该文件，然后修改其权限。<br><br>Sticky bit:用于文件夹，当一个文件夹的sticky bit设置了后，要删除该文件夹下的一个文件必须拥有对该文件的拥有权，即使已经拥有该文件夹访问权。Linux下的/tmp设置了sticky bit。<br><br>Real and Effective ID::EID代表进程所具有的系统权限，如果是非root用户，EID=RID；只有root用户可以改变它的EID为任何有效的用户ID。<br><br>su命令：是一个setuid程序，当程序执行的时候其EID是文件的拥有者，而不是启动程序的用户号。chmod a+s使得文件有这个属性。<br><br></p>
+
+
+<h3><a name="sec28" id="sec28"></a><br><br>缓冲区漏洞</h3>
+
+<p class="first">如果栈中有固定长度的输入区，则会含有缓冲区漏洞。<br>最通常的形式：</p>
+
+<p><pre class="src"><br><span style="color: #98fb98;">char</span> <span style="color: #eedd82;">username</span>[32];<br><span style="color: #ff7f24;">/<em> </em></span><span style="color: #ff7f24;">Prompt the user for the username. </span><span style="color: #ff7f24;">/</span><br>printf (&#8220;Enter your username: &#8220;);</pre></p>
+<p><span style="color: #ff7f24;">/<em> </em></span><span style="color: #ff7f24;">Read a line of input. </span><span style="color: #ff7f24;">/</span><br>gets (username);<br><span style="color: #ff7f24;">/<em> </em></span><span style="color: #ff7f24;">Do other things here… </span><span style="color: #ff7f24;">/</span><br><br>攻击者可以故意使得缓冲区读满，然后在超出的区域植入想执行的代码段，获得控制权。</p>
+<h3><a name="sec29" id="sec29"></a><br>Race Conditions in /tmp</h3>
+
+<p class="first">攻击者先创建一个链接，如果应用程序在/tmp下创建打开一个相同名称的文件，所有写入的数据将传送到链接所指向的文件里。<br>解决方法：在文件名称内使用Random，open函数使用O_EXCL参数，如果文件存在则失败，打开一个文件后用lstat查看是否是链接文件，检查文件的所有者是否和进程所有者一样。<br>/tmp文件不能挂载在NFS下，因为O_EXCL不能在NFS文件系统下使用。</p>
+
+
+<h3><a name="sec30" id="sec30"></a><br>system ,popen函数的危险</h3>
+
+<p></p><p class="first">替代使用exec族函数。</p><br><!-- Page published by Emacs Muse ends here --><p></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Linux" >
+    <span class="tag-code">Linux</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/a-start-k-shortest.html">
+        <span class="nav-arrow">← </span>
+        
+          A*算法解决kth-shortest路径问题(2)
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/a-emacs-func.html">
+        
+          A Emacs func
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Writing and using Libraries</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Archives</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Shared Library</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">
+Pros and Cons</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">
+动态加载和卸载库</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">
+进程</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">
+创建进程</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">using system</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">using fork and exec</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">process scheduling</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">
+signal</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">
+process exit</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">
+Threads</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">create thread</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">互斥锁</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Semaphores for Threads</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Threads VS Process</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Interprocess Communication</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Share Memory</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Allocation</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Attachment and Detachment</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Control share mem</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Process Semaphores</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Mapped memory</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">管道</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">pipe</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">FIFO</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">
+Socket</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Mastering Linux</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Device</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Device Entry</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">/proc</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Linux system call</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Inline Assembly Code</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Security</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">用户组 文件 进程权限</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">缓冲区漏洞</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Race Conditions in /tmp</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">system ,popen函数的危险</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/advanced-linux-porg-notes.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "《Advanced linux progamming》笔记",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

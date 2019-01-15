@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      lcc阅读记录 | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>lcc阅读记录</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>之前看EOPL感觉收获挺大，最近又花业余时间看了看编译相关的东西，这是我看lcc的时候顺手记下的一些自己的理解。这本书<a href="http://book.douban.com/subject/1610344/" target="_blank" rel="external">《A Retargetable C Compiler》</a>还挺大头的。lcc代码量不是特别大，更复杂的是tinyCC，tinyCC甚至可以直接运行C代码。</p>
+<h2 id="alloc-c"><a href="#alloc-c" class="headerlink" title="alloc.c"></a>alloc.c</h2><p>为了尽量的少调用系统调用，在alloc基础上封装了一下。</p>
+<h2 id="sym-c"><a href="#sym-c" class="headerlink" title="sym.c"></a>sym.c</h2><p>用来存储symbol，注意scope的表示方法。</p>
+<h2 id="input-c"><a href="#input-c" class="headerlink" title="input.c"></a>input.c</h2><p>为了减少读取文件的开销，用一个buffer来缓存源文件内容。cp表示当前读取出来的字符位置，limit表示缓存的结尾字符位置，如果fillbuf一次以后仍然<code>cp == limit</code>则表示读取文件到EOF了。</p>
+<p>注意这里的fread读取的时候是通过stdin的，但是在main.c/main_init函数的时候通过freopen将源文件重定向到了stdin。</p>
+<p>fillbuf其实读取的时候是永远先把内容读取到buffer[MAXLINE+1]的位置，如果发现<code>cp &lt; limit</code>就把前面剩下的内容往前移动，这样永远保证buffer足够下一次预读取,这里有点巧妙。</p>
+<p>比较复杂的部分是处理resynch，input处理的内容是经过C语言预处理器的，这部分没有包含在这个编译器内。</p>
+<h2 id="lex-c"><a href="#lex-c" class="headerlink" title="lex.c"></a>lex.c</h2><p>一个完全是手写的C语言Parser，虽然只是兼容C99，但手写还是比较复杂的。<code>码农约架比写Parser是个体现实力的比赛。</code></p>
+<p>getchr逐个字符读取，cp就是input.c里面的当前字符。跳过BLANK，如果碰到NEWLINE则调用input.c读取下一行。</p>
+<p>token.h看起来有很多列，这个文件被多个地方用到。是用宏来生成一些Enum里面的代码。比如token type和expr type。</p>
+<p>gettok顾名思义在lex运行的时候不断提供一个一个的token，这主要是通过cp匹配map来判断，条件分支很多(依据当前的第一个字符)。<code>register unsigned char* rpc</code>存储当前字符。<code>register作为一个对编译器的提示，尽量用register来存储变量。事实上现在的编译器很多都能做auto register allocation，有的时候编译器的选择可能比人的选择更好。register在老的C代码里面可能更为常见。</code></p>
+<p>这个函数里面很多地方都用到了goto，主要是在匹配关键字的时候区分identifier。主要几大类是: number, keyword, identifier, string。 icon处理数字的前缀，fcon处理浮点数。</p>
+<p>Lexical analyzer基本理论是自动状态机，没一个token可以根据相应的正则表达式来表示。有一些工具可以用来自动生成这些繁琐的代码，比如LEX，更新一些的有Flex和re2c。</p>
+<h2 id="error-c"><a href="#error-c" class="headerlink" title="error.c"></a>error.c</h2><p>终于来到Parser部分了，lcc使用的是recursive-descent，很多商业的编译器都是用的这种直观的算法，事实上对于大部分语言都足够了。recursive-descent是自上而下的递归的，依据当前的token匹配语法结构。一个重要的问题是如何在处理的过程中给出适当的错误信息。error.c里面的函数test和expect用来测试下一个token是否是预期的,expect可以打印出错误信息。</p>
+<h2 id="tree-c"><a href="#tree-c" class="headerlink" title="tree.c"></a>tree.c</h2><p>最重要的数据结构struct tree，AST中的基本节点，包含子节点，和operator类型(比如AND，OR，NOT等）。在构建AST的时候root函数经常被用到。</p>
+<h2 id="expr-c-enode-c"><a href="#expr-c-enode-c" class="headerlink" title="expr.c enode.c"></a>expr.c enode.c</h2><p>parser的一部分，用来识别表达式。代码好复杂，和paresr有些类似，整个过程是构建AST。编译器的前端最重要的事情就是这了，后面的操作都是在这个基础上做的。为什么Scheme/Lisp的front部分比较简单，因为这货代码就和AST有些类似了，括号把一个一个的节点组合了起来。初看起来很难看，其实习惯了还好。</p>
+<p>上面说的是语法的识别，在构建AST的过程中另外一个事情就是语意的分析。包括类型检查，类型的转换，操作符优先级等，这些也在构建AST的时候顺便做了。比如在遇到expr1 ? expr2 : expr3的时候，expr1的值最后被cast成一个bool。指针之间的隐式转换也比较复杂。function call比较复杂，这里还做了函数参数的写法是否是老的风格，类型说明放在函数头的最后。assignments和binary operator的分析相对来说简单一些，需要做各种cast。</p>
+<p>前些天稍微看了一些Erlang，发现里面的类型推导比较好玩，甚至可以发现一些代码里面的逻辑错误：</p>
+<p>比如：</p>
+<figure class="highlight erlang"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="title">fact</span><span class="params">(<span class="number">0</span>)</span> -&gt;</span> <span class="number">1</span>;</div><div class="line"><span class="function"><span class="title">fact</span><span class="params">(N)</span> -&gt;</span> N * fact(N-<span class="number">1</span>).</div><div class="line"></div><div class="line"><span class="function"><span class="title">test</span><span class="params">()</span> -&gt;</span> fact(-<span class="number">5</span>).</div></pre></td></tr></table></figure>
+<p>不用运行Erlang的dialyzer就可以发现这里面的死循环，因为可以通过上面的定义推断出fact的参数是non_neg_integer,而-5是不符合的，所以报出来一个错误：</p>
+<p><code>fact(-5) will never return</code>。</p>
+<h2 id="stmt-c"><a href="#stmt-c" class="headerlink" title="stmt.c"></a>stmt.c</h2><p>codelist为双向列表，遇到新的执行块就加到这个列表上。在处理control-flow的过程中有的死代码块是可以被编译器发现的，只是我们平时都被忽略了。</p>
+<p>比如C代码:<br><figure class="highlight erlang"><table><tr><td class="code"><pre><div class="line">int loop() &#123;</div><div class="line"> Loop:</div><div class="line">    goto Loop;</div><div class="line">    return -<span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main() &#123;</div><div class="line">    printf(<span class="string">"loop: %d\n"</span>, loop());</div><div class="line">    return <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>loop永远不会返回，Gcc选项<code>-Wsuggest-attribute=noreturn</code>可以报出一个warning。</p>
+<h2 id="decl-c"><a href="#decl-c" class="headerlink" title="decl.c"></a>decl.c</h2><p>声明是C语言中最难解析的部分，原因是声明涉及到变量和类型，而从C声明中弄出类型信息还是挺复杂的。另外声明还分局部，全局，其中还涉及到函数参数，结构体等。decl.c可能是最复杂的文件了，1100多行代码，里面的函数之间又相互调用。finalize()函数最后检查是否有重复定义的变量。</p>
+<h2 id="dag-c"><a href="#dag-c" class="headerlink" title="dag.c"></a>dag.c</h2><p>lcc的intermediate code是用listnodes把前面parser的tree转换为DAG，最终整个程序会经过转换变成由多个DAG组合成的森林。listnodes还负责把一些公共的sub-expression简化。</p>
+<p>接口为gencode,emitcode。后面每一个代码生成的后端都是一个Interface结构，在function函数里面调用这两个函数生成汇编代码，其中还包含一个Xinterface成员，这是平台相关的接口。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>到现在我只是大概看了了前端和中间层，后面lcc跨平台的指令生成还没来得及研究，这本书的电子版不是很清晰，还是买个中文版来再稍微看看。总的来说，lcc是的Parsing和语义分析是同时进行的，就是所谓的one-pass方法。现在很多编译器所用的方法是先建立AST，后面可能要多次遍历整个AST进行分析，LLVM好像就是采用的这种方案。另外代码的优化是一个trade-off，作为教学用途的lcc没有过多做代码优化，这样lcc代码还是可以花不多的时间来一个大概的学习。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Compiler" >
+    <span class="tag-code">Compiler</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/a-emacs-func.html">
+        <span class="nav-arrow">← </span>
+        
+          A Emacs func
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/554.html">
+        
+          从豆瓣FM下载喜欢的音乐
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#alloc-c"><span class="toc-nav-text">alloc.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#sym-c"><span class="toc-nav-text">sym.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#input-c"><span class="toc-nav-text">input.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#lex-c"><span class="toc-nav-text">lex.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#error-c"><span class="toc-nav-text">error.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#tree-c"><span class="toc-nav-text">tree.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#expr-c-enode-c"><span class="toc-nav-text">expr.c enode.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#stmt-c"><span class="toc-nav-text">stmt.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#decl-c"><span class="toc-nav-text">decl.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#dag-c"><span class="toc-nav-text">dag.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#小结"><span class="toc-nav-text">小结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/a-retargetable-c-compiler-design-and-implementation.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "lcc阅读记录",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

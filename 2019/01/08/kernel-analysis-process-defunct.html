@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Kernel analysis: Defunct Process | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Kernel analysis: Defunct Process</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>我发现带着问题去看内核代码比较容易理解。如果一个父进程显示的设置SIGCHLD为Ignore，子进程将自己清理自己。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;signal.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">sigaction</span> <span class="title">sa</span>;</span></div><div class="line">	<span class="built_in">memset</span>(&amp;sa, <span class="number">0</span>, <span class="keyword">sizeof</span>(sa));</div><div class="line">	sa.sa_handler = SIG_IGN;</div><div class="line">	sigaction(SIGCHLD, &amp;sa, <span class="literal">NULL</span>);</div><div class="line">	<span class="keyword">int</span> pid = fork();</div><div class="line">	<span class="keyword">if</span>(pid &gt; <span class="number">0</span>) &#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"parent:%d\n"</span>, getpid());</div><div class="line">		sleep(<span class="number">30</span>);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"child:%d\n"</span>, getpid());</div><div class="line">		sleep(<span class="number">4</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"finished\n"</span>);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们可以顺便看看内核里面是怎么写的，</p>
+<p>linux/kernel/exit.c里面这部分是负责进程退出的，我截取了相关的代码：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment"> * Send signals to all our closest relatives so that they know</span></div><div class="line"><span class="comment"> * to properly mourn us..</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exit_notify</span><span class="params">(struct task_struct *tsk, <span class="keyword">int</span> group_dead)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">bool</span> autoreap;</div><div class="line"></div><div class="line">    forget_original_parent(tsk);</div><div class="line">    write_lock_irq(&amp;tasklist_lock);</div><div class="line"></div><div class="line">    <span class="comment">/* .... */</span></div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (thread_group_leader(tsk)) &#123;</div><div class="line">        autoreap = thread_group_empty(tsk) &amp;&amp;</div><div class="line">            do_notify_parent(tsk, tsk-&gt;exit_signal);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        autoreap = <span class="literal">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    tsk-&gt;exit_state = autoreap ? EXIT_DEAD : EXIT_ZOMBIE;</div><div class="line"></div><div class="line">    <span class="comment">/*..... */</span></div><div class="line"></div><div class="line">    <span class="comment">/* If the process is dead, release it - nobody will wait for it */</span></div><div class="line">    <span class="keyword">if</span> (autoreap)</div><div class="line">        release_task(tsk);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中有一段是判断是否autoreap，我们继续可以看看<br>linux/kernel/signal.c里面的do_notify_parent函数:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">do_notify_parent</span><span class="params">(struct task_struct *tsk, <span class="keyword">int</span> sig)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">siginfo</span> <span class="title">info</span>;</span></div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> flags;</div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sighand_struct</span> *<span class="title">psig</span>;</span></div><div class="line">    <span class="keyword">bool</span> autoreap = <span class="literal">false</span>;</div><div class="line"></div><div class="line">    <span class="comment">/* .... */</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!tsk-&gt;ptrace &amp;&amp; sig == SIGCHLD &amp;&amp;</div><div class="line">        (psig-&gt;action[SIGCHLD<span class="number">-1</span>].sa.sa_handler == SIG_IGN ||</div><div class="line">         (psig-&gt;action[SIGCHLD<span class="number">-1</span>].sa.sa_flags &amp; SA_NOCLDWAIT))) &#123;</div><div class="line">        <span class="comment">/*</span></div><div class="line"><span class="comment">         * We are exiting and our parent doesn't care.  POSIX.1</span></div><div class="line"><span class="comment">         * defines special semantics for setting SIGCHLD to SIG_IGN</span></div><div class="line"><span class="comment">         * or setting the SA_NOCLDWAIT flag: we should be reaped</span></div><div class="line"><span class="comment">         * automatically and not left for our parent's wait4 call.</span></div><div class="line"><span class="comment">         * Rather than having the parent do it as a magic kind of</span></div><div class="line"><span class="comment">         * signal handler, we just set this to tell do_exit that we</span></div><div class="line"><span class="comment">         * can be cleaned up without becoming a zombie.  Note that</span></div><div class="line"><span class="comment">         * we still call __wake_up_parent in this case, because a</span></div><div class="line"><span class="comment">         * blocked sys_wait4 might now return -ECHILD.</span></div><div class="line"><span class="comment">         *</span></div><div class="line"><span class="comment">         * Whether we send SIGCHLD or not for SA_NOCLDWAIT</span></div><div class="line"><span class="comment">         * is implementation-defined: we do (if you don't want</span></div><div class="line"><span class="comment">         * it, just use SIG_IGN instead).</span></div><div class="line"><span class="comment">         */</span></div><div class="line">        autoreap = <span class="literal">true</span>;</div><div class="line">        <span class="keyword">if</span> (psig-&gt;action[SIGCHLD<span class="number">-1</span>].sa.sa_handler == SIG_IGN)</div><div class="line">            sig = <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (valid_signal(sig) &amp;&amp; sig)</div><div class="line">        __group_send_sig_info(sig, &amp;info, tsk-&gt;parent);</div><div class="line"></div><div class="line">    __wake_up_parent(tsk, tsk-&gt;parent);</div><div class="line">	<span class="keyword">return</span> autoreap;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到如果父进程对子进程的生死不关心，那么设置autoreap为TRUE，甚至这个信号也可以不发送了。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Linux" >
+    <span class="tag-code">Linux</span>
+  </a>
+
+  <a href="/tags#Kernel" >
+    <span class="tag-code">Kernel</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/install-server.html">
+        <span class="nav-arrow">← </span>
+        
+          折腾服务器
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/heartbleed.html">
+        
+          Heartbleed简单分析
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/kernel-analysis-process-defunct.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "Kernel analysis: Defunct Process",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

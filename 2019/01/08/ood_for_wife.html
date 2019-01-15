@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      给老婆介绍OOD(翻译) | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>给老婆介绍OOD(翻译)</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><div class="contents"><dl> <dt> </dt> <dt>晚上看到个有趣的文章，翻译了一下，看过Head First绕过。 <a href="http://www.codeproject.com/KB/architecture/SOLIDPrinciplesInOOD.aspx" target="_blank" rel="external">原文在这里</a>。</dt> <dt> </dt> <dt><a href="#sec5">OOD介绍</a></dt> <dt><a href="#sec5">Why OOD?</a></dt> <dt><a href="#sec5">Single Responsibility Principle单一职责原则</a></dt> <dt><a href="#sec5">Open-closed Principle 开闭原则</a></dt> <dt><a href="#sec5">Liskov’s Substitution Principle 里氏可替换原则</a> </dt> <dt><a href="#sec6">The Interface Segregation Principle 接口分离原则</a> </dt> <dt><a href="#sec8">The Dependency Inversion Principle 依赖倒置原则</a></dt> <dt><a href="#sec8">总结</a> </dt> </dl></div><br>我的妻子Farhana想重新她软件开发师的职业生涯(她以前也是个软件开发师，但是因为第一个孩子的出生而没有继续下去)。所以，这段时间我在帮助她学习一些OOD方面的东西，我是一个比较有开发经验的程序员。</p>
+<p>从我早期的职业生涯中，我发现不管是多么复杂的技术问题，如果从普通交谈中以平常生活常见的角度去解释往往变得更容易理解。因为之前我和她有不少富有成果的交谈，我想可以和大家一起分享一下这种学习OOD的有趣方式。</p>
+<p>下面是我们学习OOD的对话：</p>
+<h3><a name="sec1"></a><br>OOD介绍</h3><br><ul><br>    <li>Shubho : 好，让我们开始学习OOD，你已经知道了面向对象三大特性，对吗？</li><br>    <li>Farhana: 你是指封装、继承、多态吗？是的，这些我知道。</li><br>    <li>Shubho : 好，希望你已经知道了使用对象和类，让我们今天开始学习OOD。</li><br>    <li>Farhana: 等等，知道面向对象特性还不够面向对象程序设计吗？我的意思是，我能定义类，封装成员变量和函数，我也能根据类之间的关系定义继承类。那还有什么需要学的么？</li><br>    <li>Shubho : 好问题，OOP和OOD是两码事。让我给个例子给你。当你还是小孩的时候你学会了字母表，对吧？</li><br>    <li>Farhana: 嗯</li><br>    <li>Shubho : 好，你也学会了如何用字母形成一个个有意义的单词，同时，你也学会了一些语法来造句子。比如，你要维持时态，使用介词、连接词、和其他语法来造出正确的句子。比如说一个句子像下面这样。”I” (pronoun) “want” (Verb) “to” (Preposition) “learn” (Verb) “OOD” (Noun) 你看，你要让这些单词安特定的顺序组成，你也  要选取正确的词来使得这个句子有意义。</li><br>    <li>Farhana: 呃，这是什么意思？</li><br>    <li>Shubho : 这和OOP是类似的。OOP是面向对象程序设计的基本原则和核心思想。这里，OOP对应于英语语法，这些基本语法告诉你如何用单词去构造一句有意义的话，<br>OOP告诉你使用类，封装成员变量和方法，也告诉你在代码中使用继承关系。</li><br>    <li>Farhana: 嗯，有点懂了。那么OOD对应于什么呢？</li><br>    <li>Shubho : 你马上就知道。好，现在比如说你想要就一个论题写一些文章。你也想就一些你比较精通的方面写一些书。知道如何遣词造句还不够写一篇好文章或者好书出来，对吧？你还需要学习很多，你需要知道如何用一种好的方式去解释一个东西，这样读者才能了解你到底在说什么。</li><br>    <li>Farhana: 有点趣，继续。</li><br>    <li>Shubho : 好，现在比如说你想就OOD方面写一个本书，你需要知道如何把这个主题分为小题目。然后在这些小议题上面逐章地写，你还要写前言、简介、解释、例子，还有许多其他段落。你需要知道如何从整体上把握这本书的构造，甚至需要一些写作技巧。这才能让你的书通俗易懂。在软件设计领域，OOD同样是个更上层的角度。你需要好好的设计，使得你的类和代码可以更好地模块化、复用、灵活。使用这些设计原则可以是你少重复发明轮子。懂了吗？</li><br>    <li>Farhana: Hmm，我明白了一些，但是请继续。</li><br>    <li>Shubho : 别急，一会你就知道了。我们只管讨论就是了。</li><br><a id="more"></a></ul><br><h3><a name="sec2"></a><br>Why OOD?</h3><br><ul><br>    <li>Shuboho : 这有个很重要的问题，为什么我们需要OOD，我们明明就能很快的稀里糊涂的设计一些类，赶快完成开发然后交付？这还不够么？</li><br>    <li>Shubho : 就是，我以前也不知道OOD，我仍然能开发完成项目。那这有什么问题么？</li><br>    <li>Shuboho : 好，让我来给你一个经典的引用:</li><br></ul><br><pre class="example">    “Walking on water and developing software from a specification are easy<br>    if both are frozen.” - Edward V. Berard<br>  (如果水是冰冻的在上面行走很方面，如果规格书是不变的，开发软件也很方便)</pre><br><ul><br>    <li>Shubho : 你是说软件的需求说明书一直都在变化？</li><br>    <li>Shuboho : 正确，最普遍的真理就是”你的软件注定都要变化”,为什么？因为你的软件需要解决的是现实生活中的问题，而这些都是会变化的—永远会变。你的软件按照今天需要做的，做的足够好。但是你不设计得足够好，你的软件足够灵活来应对”变化”吗？</li><br>    <li>Shubho : 好，这样，快给我介绍什么是”设计得足够灵活的软件”!</li><br>    <li>Shuboho : “一个设计的灵活的软件是容易适应变化的，它能够便于扩展和复用”。而使用一种好的”面向对象设计”方式是得到这种灵活设计的关键。但是，我们有什么标准来说明我们的代码中使用了良好的OOD？</li><br>    <li>Shubho : 呃嗯，这也是我的问题。</li><br>    <li>Shuboho : 你需要做到了下面几点:</li><br></ul><br><pre class="example">    <em> 面向对象方式
+    </em> 可复用<br>    <em> 修改代价最小化
+    </em> 不修改现有代码的基础上扩展</pre><br>前人已经在这方面做了许多工作，他们已经对一些通用的场景列出了一些通用的设计准则。最基本的五点可以简称为SOLID原则(Uncle BoB)。<br><pre class="example">S = Single Responsibility Principle<br>O = Opened Closed Principle<br>L = Liscov Substitution Principle<br>I = Interface Segregation Principle<br>D = Dependency Inversion Principle</pre><br>下面我们逐一介绍上面的几个原则。<br><h3><a name="sec3"></a><br>Single Responsibility Principle 单一职责原则</h3>
+
+<p></p><p style="text-align: center;"></p><p></p>
+<p><ul></ul></p>
+<p></p><p><a href="/images/1.jpg"><img class="aligncenter size-medium wp-image-426" title="1" src="/images/1-300x220.jpg" alt="" width="300" height="220" align="center"></a></p><br>    <li>Shubho : 先来看幅图，很形象。你能把所有的功能都集成在一个东西上，但是真的不应该。为什么？因为这为以后增加了很多额外的管理工作。我来用OO术语解释一下,”不能有多个理由去改变一个类”,或者说”一个类有且只能有单一职责”。</li><br>    <li>Farhana: 能解释一下吗？</li><br>    <p><a href="/images/2.png"><br>    <img class="aligncenter size-medium wp-image-427" title="2" src="/images/2-300x161.png" alt="" width="300" height="161" align="center"></a></p><br>    <li>Shubho : 让我们来看这个继承的例子，这是从Uncle Bob书上弄来的。Rectangle类做了两件事，</li><br><p></p>
+<p><ol><br>    <li>计算矩形的面积</li><br>    <li>在UI上画出矩形<br>两个程序要用这个类，</li><br>    <li>一个几何计算的程序要用来计算面积</li><br>    <li>一个图形界面程序要用来在UI上画一个矩形<br>这就违反了SRP原则。</li><br></ol></p>
+<p><ul><br>    <li>Farhana: 怎么？</li><br>    <li>Shubho : 你看，一个矩形类包含了两个不同的动作，一个计算面积，一个画矩形，这导致了下面的问题：</li><br></ul></p>
+<p><ol><br>    <li>在几何计算的程序中我们要包含GUI，进而又需要包含GUI所用的图形库。</li><br>    <li>任何因为图形界面而在这个类上面所做的修改将导致几何计算程序重新编译测试，相反也是。</li><br></ol></p>
+<p><ul><br>    <li>Farhana: 变得有趣了，所以我们应该根据其功能把这个类分开，对吧？</li><br>    <li>Shubho : 正是，那么该如何做？</li><br>    <li>Farhana: 我来试试，也许该这样，根据职责分为两个类，比如：</li></ul></p>
+<p><table class="muse-table" border="2" cellpadding="5" align="center"></table></p>
+<p><tbody></tbody></p>
+<p><tr></tr></p>
+<p><td>Rectangle</td></p>
+<p><td>这个类定义方法method()</td><br></p>
+<p><tr></tr></p>
+<p><td>RectangleUI</td></p>
+<p><td>这个类从Rectangle继承并定义Draw()方法</td><br><br><br><br><br>    <li>Shubho : 非常好，现在两个程序分别使用两个不同的类，我们甚至可以将两个类放在不同的Dll文件里面，这样任何一个类的改动不会影响到另外一个程序。</li><br>    <li>Farhana: 谢谢，我想我理解了SRP。一方面，SRP是一种把东西分开到一些便于复用和集中管理的小模块中。那么，我们同样也能在成员函数这一级别来使用这个原则吧？我是说，如果我写了很多很多行代码在一个函数中完成几件不同的事，这也违反了SRP原则，对吧？</li><br>    <li>Shubho : 是的，你应该把这个函数分成几个小的分别做一份特定的事。这也让你只需要很小的代价来应付变化。</li><br></p>
+<p></p><h3><a name="sec4"></a><br>Open-closed Principle 开闭原则</h3><p></p>
+<p><ul></ul></p>
+<p></p><p><a href="/images/3.jpg"><img class="aligncenter size-medium wp-image-428" title="3" src="/images/3-300x221.jpg" alt="" width="300" height="221" align="center"></a></p><br>    <li>Shubho : 这幅图是说开闭原则的。</li><br>    <li>Shubho : 先来解释一下:软件实体(类、模块、函数等等)应该对扩展开放，对修改封闭。最基本的层次，你应该能够在不修改一个类的基础上扩展它的行为。比如，我不需要在我的身体上做什么改变，就能穿上一件衣服，哈哈。</li><br>    <li>Farhana: 有趣，你能穿不同的衣服来改变的外貌，而不需要对你的身体做改变，所以你是对扩展开放的，对吧？</li><br>    <li>Shubho : 是的，在OOD里面，对扩展开放意味着我们能够扩张模块/类，对需求的变化添加一些新的东西。</li><br>    <li>Farhana: 而你的身体对修改是关闭的，我喜欢这个例子。那么核心的类和模块在扩展的时候是不能被修改的，你能具一些例子吗?</li><br>    <li>Shubho : 好，我们来看这副图，这是一个违反了开闭原则的例子。</li><br>    <p><a href="/images/4.png"><img class="aligncenter size-medium wp-image-429" title="4" src="/images/4-300x83.png" alt="" width="300" height="83" align="center"></a></p><br><p></p>
+<p><ul><br>    <li>Shubho : 你看，服务端和客户端是直接连接的，这样不管是因为什么原因，当服务端实现改变了的时候，客户端也需要改变。</li><br>    <li>Farhana: 恩，懂了点。如果一个浏览器只是针对于特定的服务器(比如IIS)，如果因为什么原因我们需要换一个服务器(比如Apache),浏览器也需要改变，这真是恐怖。</li><br>    <li>Shubho : 对，下面这个设计应该要好。</li><br>    <li>那个抽象的服务器类对修改是关闭的，而具体的子类实现对扩展是开放的。</li><br>    <p><a href="/images/5.png"><img class="aligncenter size-medium wp-image-430" title="5" src="/images/5-300x184.png" alt="" width="300" height="184" align="center"></a></p><br>    <li>Farhana: 恩，懂了。抽象是关键，对吧？</li><br>    <li>Shubho : 对，我们应该抽象系统中那些核心的概念，如果你抽象得好，当添加新功能的时候不需要修改。比如上面服务端是个抽象概念，如果IISServer是服务器的一种实现，现在需要扩展服务端这个概念，比如说一种新的ApacheServer实现，而这些扩展对客户端程序没有任何影响。</li><br></ul></p>
+<p></p><h3><a name="sec5"></a><br>Liskov’s Substitution Principle 里氏可替换原则</h3><p></p>
+<p><ul><br>    <li>Shubho : LSP原则听起来很难理解，其实含义很简单，看下面这副图。这个原则意思就是：子类必须能够替换其继承的基类。或者换一种说法：基类能使用的方法，子类也能使用。</li></ul></p>
+<pre><code>&lt;p&gt;&lt;a href=&quot;/images/7.jpg&quot;&gt;&lt;img class=&quot;aligncenter size-medium wp-image-431&quot; title=&quot;7&quot; src=&quot;/images/7-300x237.jpg&quot; alt=&quot;&quot; width=&quot;300&quot; height=&quot;237&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;li&gt;Farhana: 对不起，听起来很难懂。我认为这时OOP的基本规则，这时多态，对吗？&lt;/li&gt;
+&lt;li&gt;Shubho : 好问题，答案是：在基本OOP里面，&quot;继承&quot;被描述成一种&quot;is-a&quot;的关系，如果&quot;开发者&quot;是一个&quot;软件职业者&quot;,那么&quot;开发者&quot;类应该继承&quot;软件职业者&quot;,这种&quot;is-a&quot;的关系在类的设计中非常重要，但是这样非常容易导致一种错误的继承设计。LSP原则是一种保证正确使用继承的方法。让我们看个例子。&lt;/li&gt;
+&lt;p&gt;&lt;a href=&quot;/images/8.png&quot;&gt;&lt;img class=&quot;size-full wp-image-432 aligncenter&quot; title=&quot;8&quot; src=&quot;/images/8.png&quot; alt=&quot;&quot; width=&quot;188&quot; height=&quot;176&quot; align=&quot;center&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+</code></pre><p>KingFishera是一种能飞的鸟，它继承Bird类没问题。但是如果下面这样：<br>    </p><p><a href="/images/9.png"><img class="aligncenter size-medium wp-image-433" title="9" src="/images/9-300x130.png" alt="" width="300" height="130" align="center"></a></p><br><br>鸵鸟是一种鸟，所以它基于鸟基类。现在能飞么？不行，所以，这个设计违反了LSP。所以，即使在真实世界中看起来很自然。但在类的设计中，鸵鸟不应该继承鸟类。应该有一种不能飞的鸟类，然后鸵鸟从这个类中继承。<p></p>
+<p><ul><br>    <li>Farhana: 好，我懂了LSP，让我来指出为什么LSP这么重要：</li><br></ul></p>
+<p><ol><br>    <li>如果LSP不满足，类继承关系将会混乱，如果一个子类实例被当作参数传到一个函数，奇怪的事可能会发生。</li><br>    <li>如果LSP不满足，单元测试中基类通过而子类通不过。</li><br></ol></p>
+<p><ul><br>    <li>Shubho : 很正确，你能吧LSP原则当作一种验证工具，来测试你的继承层次是否正确。</li><br></ul></p>
+<p></p><h3><a name="sec6"></a><br>The Interface Segregation Principle 接口分离原则</h3><p></p>
+<p><ul></ul></p>
+<p><li> </li></p>
+<p></p><p><a href="/images/10.jpg"><img class="aligncenter size-medium wp-image-434" title="10" src="/images/10-300x223.jpg" alt="" width="300" height="223" align="center"></a></p><br>    <li>Farhana: 这是什么意思？</li><br>    <li>Shubho : 意思如下：客户代码应该不依赖他们不使用的接口。</li><br>    <li>Farhana: 解释一下。</li><br>    <li>Shubho : 当然，其意思就是，假设你要买一台电视机，现在有两台可供选择，一台有很多转换器和按钮，大部分你都不明白是用来干什么的。另一个只有少数几个按钮和转换器，对你来说很熟悉。你选哪一个？</li><br>    <li>Farhana: 当然是第二个。</li><br>    <li>Shubho : 是的，但是为什么？</li><br>    <li>Farhana: 因为我不需要那么转换器和按钮，那些我不明白，而且对我也没什么用嗄。</li><br>    <li>Shubho : 对，类似的，假设你有一些类，你要暴露一些接口给外界，这样外面的代码才能利用这个类。如果一个类的接口太多，也暴露了很多接口，这对于外界来说是比较混乱的。而且，方法太多的接口也是不利于复用的，这种”大而全”的接口导致类之间的紧耦合。这也导致一个问题，任何使用这个接口的类都需要实现那些方法，而有些对于这个类是根本没用的。所以这么做也带来了不必要的复杂性，导致维护的困难和系统的健壮性问题。接口分离原则保证接口设计得合理，他们都有自己的职责，这样简明、方便理解、利于复用。</li><br>    <li>Farhana: 哦，我懂了。你的意识是指接口只含又那些必须的方法，而不包括冗余的?</li><br>    <li>Shubho : 是的，来看个例子。下面这个例子违反了ISP原则。</li><br>    <p><a href="/images/11.png"><img class="aligncenter size-full wp-image-435" title="11" src="/images/11.png" alt="" width="185" height="181" align="center"></a></p><br><br>注意，IBird接口包含很多鸟的行为，还有Fly()行为，现在一个Bird类(鸵鸟)实现这个接口，它必须实现Fly()行为，这对于鸵鸟来说是不行的。<p></p>
+<p>正确的设计是这个。鸵鸟实现IBird接口，而可以飞的鸟实现IFlyingBird接口。</p>
+<p></p><p><a href="/images/12.png"><img class="aligncenter size-full wp-image-436" title="12" src="/images/12.png" alt="" width="202" height="234" align="center"></a></p><p></p>
+<p><li> </li></p>
+<p></p><h3><a name="sec7"></a><br>The Dependency Inversion Principle 依赖倒置原则</h3><p></p>
+<p><ul></ul></p>
+<p></p><p><a href="/images/13.jpg"><img class="aligncenter size-medium wp-image-437" title="13" src="/images/13-300x222.jpg" alt="" width="300" height="222" align="center"></a></p><br>    <li>Shubho : 是说：高层模块不依赖底层模块，两者都依赖抽象。抽象不应该依赖于细节，细节应该依赖于抽象。</li><br>    <li>让我们来看一个现实的例子，你的车子包括很多组成部分，有引擎、轮子、空调、还有其他东西，对吧？</li><br>    <li>Farhana: 是的。</li><br>    <li>Shubho : 好，每一件东西都是严格地独立地造的，而且每一样都是可以”插拔”的，所以你的引擎或者轮子坏了，你可以修它，甚至可以换掉它，但是其他部分不需要动。你换的时候需要保证配件和车子的设计是符合的，比如这车子需要1500Cc的引擎和18英尺的轮子。同时，你的车也可以使用2000CC的引擎，任何厂家的都可以。现在，想象一下如果你的车子不设计成这种可”插拔”的，会出现什么问题？</li><br>    <li>Farhana: 那真是太糟糕了！如果车子引擎坏掉你需要修理整个车子，或者卖一辆新的。</li><br>    <li>Shubho : 是的，那么”可插拔”是如何做到的?</li><br>    <li>Farhana: “抽象”是关键，对吧？</li><br>    <li>Shubho : 是的。在现实中，汽车是一种更高层次的实体，它依赖于一些第层次的实体，像引擎和轮子。而车子不依赖于具体引擎和轮子，依赖于这些概念。这样，任何符合这个概念的引擎或者轮子都能放进车子让车子跑动起来。看看下面这幅图，注意这里车子类中，有两个属性，都是接口类，而不是具体类。引擎是”可插拔”的是因为它接受任何满足这个抽象的具体实现，而不改变其他部分。</li><br>    <p><a href="/images/kkkkk.jpg"><img class="aligncenter size-medium wp-image-442" title="kkkkk" src="/images/kkkkk-300x163.jpg" alt="" width="300" height="163" align="center"></a></p><br>    <li>Farhana: 那么如果违反了DIP原则，将会有下面的风险。</li><br><p></p>
+<p><ol><br>    <li>破坏高层次的代码</li><br>    <li>当底层代码改动的时候，需要大量成本改变上层代码</li><br>    <li>代码复用不好</li><br></ol></p>
+<p><ul><br>    <li>Shubho : 完全正确！</li><br></ul></p>
+<p></p><h3><a name="sec8"></a><br>总结</h3><p></p>
+<p><ul><br>    <li>Shubho : 除了SOLID，还有其他很多原则。</li><br></ul></p>
+<p><pre class="example">    * “Composition over Inheritance”: This says about favoring composition over inheritance.</pre></p>
+<pre><code>* &quot;Principle of least knowledge&quot;: This says that &quot;the less your class knows, the better&quot;.
+* &quot;The Common Closure principle&quot; : This says that &quot;related classes should be packaged together&quot;.
+* &quot;The Stable Abstractions principle&quot;: This says that &quot;the more stable a class is, the more it must consist of abstract classes.&quot;&lt;/pre&gt;
+</code></pre><p>设计模式是OOD的特例，DP就像是对于特定场景的特定框架，而OOD则是说明。<a href="/images/1.jpg"><br></a></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Backup" >
+    <span class="tag-code">Backup</span>
+  </a>
+
+  <a href="/tags#OOD" >
+    <span class="tag-code">OOD</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/nginx-traffic-limit.html">
+        <span class="nav-arrow">← </span>
+        
+          Nginx限流
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/ooc_in_python.html">
+        
+          C的面向对象风格代码
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">OOD介绍</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Why OOD?</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Single Responsibility Principle 单一职责原则</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Open-closed Principle 开闭原则</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Liskov’s Substitution Principle 里氏可替换原则</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">The Interface Segregation Principle 接口分离原则</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">The Dependency Inversion Principle 依赖倒置原则</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/ood_for_wife.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "给老婆介绍OOD(翻译)",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      最近在用Go | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>最近在用Go</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="/images/golang-600x600.jpg" alt="Golang" class="img-center" height="320" width="320"></p>
+<p>最近一直在用Go做开发，我们打算整一套和Rails对应的Go开发框架。一些代码在我们的<a href="https://github.com/sipin" target="_blank" rel="external">Github小组里有</a>。这里的几个项目都用到了代码生成的方法，生成Go文件，最后的整个web程序被编译成一个可执行文件。<br>我们正在用一个项目来验证这个想法。其中：</p>
+<h3 id="1-xuanwu-玄武"><a href="#1-xuanwu-玄武" class="headerlink" title="1. xuanwu(玄武)"></a>1. xuanwu(玄武)</h3><p>根据thrift文件产生对应MVC里面的Model。生成的go文件里面，一个thrift类型对应一个go里面的type struct，生成的代码中包含一些基本的方法，比如FindByID等等，这都是根据thrift文件定义的对象属性自动生成的。这里用到了<a href="https://github.com/wickman/ptsd" target="_blank" rel="external">ptsd</a>来解析thrift文件，自己定义模板来生成Go代码。我后来加了<a href="https://github.com/sipin/xuanwu/blob/master/crud.py" target="_blank" rel="external">crud.py</a>和<a href="https://github.com/sipin/xuanwu/blob/master/tmpl/crud.tmpl" target="_blank" rel="external">crud.tmpl</a>来生成Controller的代码，这样MVC里面Model和Controller就都有了。不过对于Go这样的静态语言，生成代码这套方案有个难解决的问题就是如何在生成的代码基础上实现用户自定义。我们现在的解决办法是另外写一个对应的fix文件，在里面写入自己要重写的函数，另外写一个程序根据gen文件和fix文件来做一个基于函数定义的diff，如果用户定义了就忽略自动生成的函数。好绕的方法，不过因为Go库里面自带的的parser和AST，做这么一个diff程序还挺简单的。</p>
+<h3 id="2-gorazor-白虎"><a href="#2-gorazor-白虎" class="headerlink" title="2. gorazor(白虎)"></a>2. gorazor(白虎)</h3><p>功能是MVC里面的view engine，从C#里面的razor模仿而来，具体为什么要这么做<a href="https://github.com/sipin/gorazor/blob/master/docs/about_chinese.md" target="_blank" rel="external">这个详细的中文文档</a>里面说了。有了这个东西我们可以混着html写Go代码了。我是从这个项目开始正式学习Go的，整个开发过程还是比较顺利的。刚开始lexer大量使用了正则表达式，后来发现速度有些受影响就手动写了一部分。parser部分现在还有些难看，后面继续重构一下。Debug一直都是Println，很多时候已经够用了。</p>
+<h3 id="3-web"><a href="#3-web" class="headerlink" title="3. web"></a>3. web</h3><p>在web.go的基础上做了一些自己的修改。</p>
+<p>再说一下使用Go的一些感受，<code>大部分时候是很爽的</code>。对于喜欢C和Python的人来说上手Go是很容易的事情。Go更像是一个更现代化的C(而不是C++)，因为简洁是其一个重要特性。和Python相似的地方是提倡一种事有一种解决方法，而不像Ruby那样有各种魔法写法，所以看别人的代码容易一些。Go对代码的格式化有一些强制约定，但是缩进并不是语法的一部分，而是通过gofmt工具来自动纠正格式，这太方便了。再加上goimport这样的工具来自动加上或者移除不必要的import，我现在写Go代码的时候基本不需要关心格式和import这些琐事，绑定Emacs快捷键保存文件以后基本都解决了。</p>
+<p><code>Go的编译速度很快</code>，我的机器上这里20w行左右的Go代码基本编译在13s左右，这和C++比起来要快很多很多。</p>
+<hr>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p><a href="https://gist.github.com/chenyukang/9bbf1ef3be82fad7484f" target="_blank" rel="external">我是这么配置Emacs的Go相关的东西的</a></p>
+<p>其中go-autocomplete是来自动补全的，对于内置的库函数补全还是很好的。有的自定义的补全不出来。</p>
+<p>goimports修正import的。</p>
+<p>gocover是我自己写的一个程序，看到同事写在Vim里写Go代码的时候一个快捷键就跑相关的pkg的testing，并把结果打印出来。对于Go的这么快的编译速度，真的可以边写代码迅速按下快捷键测试的结果就出来了(还包括coverage噢)。于是我也写了个程序分析出当前编辑文件对应的package名字，设定好GOPATH，然后去tmp目录跑测试。这个程序就是<a href="https://gist.github.com/chenyukang/8b968320d959a6c25ec3" target="_blank" rel="external">gocover</a>，我绑定到<code>C-x g</code>，太方便了。</p>
+<p><code>Vim和Emacs的可扩展，是我们这群装逼党依然坚持用这些老古董的原因。</code>因为可扩展意味着将来要面对新的编程语言和环境时候，我们可以做出自己改变来适应。</p>
+<p>好的Go上手教程:</p>
+<p><a href="https://gobyexample.com/" target="_blank" rel="external">Go by Example</a></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Go" >
+    <span class="tag-code">Go</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/gotous.html">
+        <span class="nav-arrow">← </span>
+        
+          初到美国
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/gene-alg.html">
+        
+          优化算法
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-xuanwu-玄武"><span class="toc-nav-text">1. xuanwu(玄武)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-gorazor-白虎"><span class="toc-nav-text">2. gorazor(白虎)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-web"><span class="toc-nav-text">3. web</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#其他"><span class="toc-nav-text">其他</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/go-dev.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "最近在用Go",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

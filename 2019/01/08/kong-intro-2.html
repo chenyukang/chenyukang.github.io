@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Kong源码分析: 启动 | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Kong源码分析: 启动</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="Kong的初始化过程"><a href="#Kong的初始化过程" class="headerlink" title="Kong的初始化过程"></a>Kong的初始化过程</h3><p>安装好Kong之后我们是用命令<code>sudo ./bin/kong start -c kong.conf -vv</code>来启动。其中kong.conf为配置文件，<code>-vv</code>选项打印出一些重要信息展示出来，方便发现问题。</p>
+<p>可以看到<code>./bin/kong</code>是一个脚本，是用的<code>#!/usr/local/openresty/bin/resty</code>程序来执行，而resty是OpenResty的一个Perl可执行脚本。kong的内容很简单，就是一个入口函数调用：<br><code>require(&quot;kong.cmd.init&quot;)(arg)</code></p>
+<p>所以我们可以从cmd/init.lua这个文件开始入手看启动过程。一翻开init.lua这个文件，发现其实不过是个wrapper，解析了args之后就是调用start，stop，quit等命令。然后我们顺藤摸瓜找cmd/start.lua文件，整个启动过程就在这里了：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="keyword">local</span> conf = <span class="built_in">assert</span>(conf_loader(args.conf, &#123;</div><div class="line">  prefix = args.prefix</div><div class="line">&#125;))</div><div class="line"></div><div class="line"><span class="keyword">local</span> err</div><div class="line"><span class="keyword">local</span> dao = <span class="built_in">assert</span>(DAOFactory.new(conf))</div><div class="line"><span class="built_in">xpcall</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span></div><div class="line">  <span class="built_in">assert</span>(prefix_handler.prepare_prefix(conf, args.nginx_conf))</div><div class="line">  <span class="built_in">assert</span>(dao:run_migrations())</div><div class="line">  <span class="built_in">assert</span>(serf_signals.start(conf, dao))</div><div class="line">  <span class="built_in">assert</span>(nginx_signals.start(conf))</div><div class="line">  <span class="built_in">log</span>(<span class="string">"Kong started"</span>)</div><div class="line"><span class="keyword">end</span>, <span class="function"><span class="keyword">function</span><span class="params">(e)</span></span></div><div class="line">  err = e <span class="comment">-- cannot throw from this function</span></div><div class="line"><span class="keyword">end</span>)</div></pre></td></tr></table></figure>
+<p>从代码上来看很直观，首先conf_loader载入配置文件，DAOFactory构建数据库连接层，prefix_handler.prepare_prefix是准备一些由程序生成的配置文件。dao:run_migrations是迁移表结构到数据库，类似其他 Web 框架。serf_signals是启动serf程序，nginx_signals是启动nginx进程。</p>
+<h3 id="读取配置文件conf-loader"><a href="#读取配置文件conf-loader" class="headerlink" title="读取配置文件conf_loader"></a>读取配置文件conf_loader</h3><p>conf_loader读取的当然是命令行里面传入的kong.conf文件，打开conf_loader.lua看了看，是是用一个lua第三方库来做文件解析的。<code>local pl_config = require &quot;pl.config&quot;</code>，最开始不太知道这个pl是什么，经过搜索后才知道是这里<a href="https://github.com/stevedonovan/Penlight/tree/master/lua/pl" target="_blank" rel="external">定义的</a>，在kong.rockspec里面有定义了该库的依赖<code>&quot;penlight == 1.4.1&quot;</code>。读取配置的整个过程比较琐碎，最后回构建一个解析好的conf表。这里学到了Lua里面的setmetatable设置元表的方法，table作为Lua里面的最基本数据结构，setmetatable可以方便的绑定一个key和其对应的方法。看起来也像是面向对象的风格，在conf_loader的最后部分是:</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="keyword">return</span> <span class="built_in">setmetatable</span>(&#123;</div><div class="line">  <span class="built_in">load</span> = <span class="built_in">load</span>,</div><div class="line">  add_default_path = <span class="function"><span class="keyword">function</span><span class="params">(path)</span></span></div><div class="line">    DEFAULT_PATHS[#DEFAULT_PATHS+<span class="number">1</span>] = <span class="built_in">path</span></div><div class="line">  <span class="keyword">end</span>,</div><div class="line">  ......</div><div class="line">&#125;, &#123;</div><div class="line">  <span class="built_in">__call</span> = <span class="function"><span class="keyword">function</span><span class="params">(_, ...)</span></span></div><div class="line">    <span class="keyword">return</span> <span class="built_in">load</span>(...)</div><div class="line">  <span class="keyword">end</span></div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>这样其他地方调用的时候<code>local conf, err, errors = conf_loader(args.conf)</code>自然就把args.conf传入load，返回解析后的结果。</p>
+<h3 id="prepare-prefix动态生成Nginx和serf的配置"><a href="#prepare-prefix动态生成Nginx和serf的配置" class="headerlink" title="prepare_prefix动态生成Nginx和serf的配置"></a>prepare_prefix动态生成Nginx和serf的配置</h3><p>prefix_handler.lua这个文件主要在准备一些Nginx的配置文件和serf的配置文件。prepare_prefix函数前半部分在创建各个子目录，logs、serf、pids、以及各个日志文件。关于Kong的config部分需要参考一下<a href="https://getkong.org/docs/0.10.x/configuration/" target="_blank" rel="external">这里</a>。这个函数比较长，重要的部分是生成Nginx的配置文件。<br>可以看到compile_kong_conf函数其实是是用kong/templates目录下的nginx_kong.lua和nginx.lua分别生成两个文件，其中nginx_kong.lua里面包含了嵌入Kong的Lua代码的逻辑。</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line">init_by_lua_block &#123;</div><div class="line">    <span class="built_in">require</span> <span class="string">'luarocks.loader'</span></div><div class="line">    <span class="built_in">require</span> <span class="string">'resty.core'</span></div><div class="line">    kong = <span class="built_in">require</span> <span class="string">'kong'</span></div><div class="line">    kong.init()</div><div class="line">&#125;</div><div class="line"></div><div class="line">location / &#123; </div><div class="line">  rewrite_by_lua_block &#123;</div><div class="line">      kong.rewrite()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  access_by_lua_block &#123;</div><div class="line">      kong.access()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  header_filter_by_lua_block &#123;</div><div class="line">      kong.header_filter()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  body_filter_by_lua_block &#123;</div><div class="line">      kong.body_filter()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  log_by_lua_block &#123;</div><div class="line">      kong.<span class="built_in">log</span>()</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>因此我们可以知道Kong每次reload或者启动的时候会生成新的Nginx配置文件，所以我们如果要加入自己的配置可以直接修改nginx_kong.lua文件。另外我在使用的时候发现一个小问题，Kong把serf的node_id存在一个文件里，如果我们把之前跑过Kong的机器做了镜像，然后再启动一个新的实例时，这个node_id文件既然存在则没有重新生成，最终导致两台kong实例并没有相互通信形成一个集群。我认为这里其实可以再检查一下node_id的文件和本机的ip是否一致，如果不一致则重新生成。</p>
+<h3 id="dao-run-migrations"><a href="#dao-run-migrations" class="headerlink" title="dao:run_migrations()"></a>dao:run_migrations()</h3><p>初始化过程的下一步则是执行数据库操作，Kong目前只支持cassandra和Postgres，个人认为应该增加Redis的支持。</p>
+<h3 id="serf-signals-start"><a href="#serf-signals-start" class="headerlink" title="serf_signals.start"></a>serf_signals.start</h3><p>之前提到过serf是用来保证kong instance之间的通信的，启动的时候的一个很重要参数是<code>--event-handler</code>，参数的内容是一个可执行脚本(通常叫做serf_event.sh)，文件的内容是前面生成配置文件的时候写入的。默认情况下serf会监听在7946端口，如果多台server需要形成一个集群，这个端口之间需要能相互通信。这里就有一个问题，在一个新的server刚启动的时候，该server是如何发现其他节点的呢？我们可以看到serf_signals.lua里的start函数调用了serf:autojoin()函数，跟踪到autojoin里面看代码，其实是从数据库里读取出其他nodes的信息，然后依次告诉对方新同志加入了，然后把自己的节点信息写入到数据库里。自然如果要退出也需要把自己的信息从数据库里删掉。</p>
+<h3 id="nginx-signals-start"><a href="#nginx-signals-start" class="headerlink" title="nginx_signals.start"></a>nginx_signals.start</h3><p>启动的最后一步即是Nginx的启动，其实最终执行的命令就是:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">/usr/local/openresty/nginx/sbin/nginx -p /usr/local/kong -c nginx.conf</div></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过上面的分析，可以总结Kong的启动过程即是：解析输入参数，验证参数合法性并生成必要的目录和配置文件，执行数据库操作，启动serf，启动Nginx。最终其实就是一个OpenResty启动过程，嵌入Kong里面的core部分的Lua代码。后面继续分析其可扩展的插件机制。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Lua" >
+    <span class="tag-code">Lua</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/kong-intro-3.html">
+        <span class="nav-arrow">← </span>
+        
+          Kong源码分析: 插件
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/install-server.html">
+        
+          折腾服务器
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Kong的初始化过程"><span class="toc-nav-text">Kong的初始化过程</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#读取配置文件conf-loader"><span class="toc-nav-text">读取配置文件conf_loader</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#prepare-prefix动态生成Nginx和serf的配置"><span class="toc-nav-text">prepare_prefix动态生成Nginx和serf的配置</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#dao-run-migrations"><span class="toc-nav-text">dao:run_migrations()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#serf-signals-start"><span class="toc-nav-text">serf_signals.start</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#nginx-signals-start"><span class="toc-nav-text">nginx_signals.start</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#总结"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/kong-intro-2.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "Kong源码分析: 启动",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

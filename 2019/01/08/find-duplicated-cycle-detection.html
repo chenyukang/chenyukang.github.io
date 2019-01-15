@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Find duplicated Number and Cycle detection | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Find duplicated Number and Cycle detection</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>一个有趣的问题，据说这个题目耗费了Don Knuth 24小时解决。一起来看看。</p>
+<blockquote>
+<p> You are given an array of integers of length n, where each element ranges<br>  from 0 to n - 2, inclusive.  Prove that at least one  duplicate element must<br>  exist, and give an O(n)-time, O(1)-space algorithm for finding some<br>  duplicated element.  You must not modify the array elements during this<br>  process.</p>
+</blockquote>
+<p><br>这有几个重要的约束，O(n)，O(1)的复杂度，不能修改这个数组。可能有多个数重复了，但至少有一个数重复了。<br><br>首先第一个证明问题，等价于n个鸽子，n-1个笼子，那么至少有一个笼子里面有2个鸽子，就是鸽笼原理(抽屉原理), 反证法可以证明。<br><br>难的是第二个问题，假设a[0, n], 值都在0,1, …, n-2 范围内。如果扫描这个数组，重复的会出现第二次(废话,囧)，<br>关键是只能用O(1)的空间，否则用空间记录出现过的就行了。如果把数组看成一个映射，i -&gt; f(i) = a[i]， 那么这个问题可以转换成更抽象的模型。 举个例子：<br></p>
+
+<p><pre class="example">n = 6<br>index: 0 1 2 3 4 5<br>value: 1 4 0 0 3 2</pre></p>
+<p><br>其index对应value映射为为0-&gt;1, 1-&gt;4, 2-&gt;0等等，那么把这个图画出来就是这样：<br></p>
+
+<p><a href="/images/cycle3.png"><img class="img-center size-full wp-image-844" title="cycle" src="/images/cycle3.png" alt="" width="275" height="259"></a></p>
+<p>&nbsp;</p>
+<p><br>这个问题转换为求图中环开始的点，因为出现环说明某个点重复出现了。从5开始遍历这个图会在0处发现环，为什么选取5，因为5肯定为一个起点，并且不在0~N-2内。其实只要选取不孤立的那个点当作起点就可以检测环，极端情况比如：<br></p>
+
+<p><pre>n = 6<br>index: 0 1 2 3 4 5<br>value: 0 1 2 4 5 3</pre></p>
+<p><br>选择index=5还是可以发现环，如果选取0就发现不了3和4,5之间的那个环。<br></p>
+
+<p><br>[Cycle detection]是一个经典的计算机问题。经典的算法是Floyd’s cycle-finding algorithm，这个算法简单而优美。严格的数学证明当然可以，也能更明显的从现实经验得出结论。如果一个赛道中间出现某个环(分两种情况，赛道本身是环、赛道前面有一段没环而中间出现一个环9字形)，求这个环的周长C。让两位运动员同时出发，并且P1的速度是P2的两倍，当他们第一重新相遇的时候，一定是在环的某个点上，并且其路程之差为这个环的周长的K倍(K&gt;=1)，这解决了一部分问题，我们知道了KC的值，如果K==1，则得出结果，说明两人刚好是在环开始点相遇。否则就是在环内其余点相遇，可以得知现在P2的路程为KC(P1的路程为2KC), 如果让P3以和P2同样的速度从起点开始，P2继续从相遇点开始跑，那么P2和P3肯定还会相遇，并且相遇的点一定为环开始点! 回到这个问题，这个index的值就是重复的值。代码描述如下：<br></p>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">detectCycle</span><span class="params">(<span class="keyword">int</span>* seq， <span class="keyword">int</span> Num)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> slow = Num <span class="number">-1</span>;</div><div class="line">    <span class="keyword">int</span> fast = Num <span class="number">-1</span>;</div><div class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">        slow = seq[slow];</div><div class="line">        fast = seq[seq[fast]];</div><div class="line">        <span class="keyword">if</span>(slow == fast)</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">int</span> finder = Num - <span class="number">1</span>;</div><div class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">        slow = seq[slow];</div><div class="line">        finder = seq[finder];</div><div class="line">        <span class="keyword">if</span>(slow == finder)</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> finder;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><br>算法描述很简单，但其中思维的却很有乐趣。以前同样有一个问题，检测一个链表是否有环，这是由此出来的一个特例，因为对于一个链表的每个节点除了头节点都有一个前节点和后节点(无环则末节点指向空)，而图是一个更通用的模型。<br></p>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">list_has_cycle</span><span class="params">(NODE *<span class="built_in">list</span>)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    NODE *fast=<span class="built_in">list</span>;</div><div class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">        <span class="keyword">if</span>(!(fast=fast-&gt;next)) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span>(fast==<span class="built_in">list</span>) <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">        <span class="keyword">if</span>(!(fast=fast-&gt;next)) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span>(fast==<span class="built_in">list</span>) <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">        <span class="built_in">list</span>=<span class="built_in">list</span>-&gt;next;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Algorithms" >
+    <span class="tag-code">Algorithms</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/forc.html">
+        <span class="nav-arrow">← </span>
+        
+          给C瓜同学吧
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/fastsearch-in-python2.html">
+        
+          一种更快的字符串匹配算法-源自Python2.5
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/find-duplicated-cycle-detection.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "Find duplicated Number and Cycle detection",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

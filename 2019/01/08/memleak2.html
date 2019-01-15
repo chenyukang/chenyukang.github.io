@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      内存又泄漏:( | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>内存又泄漏:(</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p></p><h3>内存泄漏</h3><p></p>
+<p class="first">上一次以为内存泄露查完了，发现服务器跑了比较长时间后又占用太多内存。刚好这段时间加了一些新的模块，又该查查了。整个服务器模块分的还行，但是中间经过几个人一起写，所以看起来就麻烦了。要解决问题还是必须找到泄露的代码段。在C/C++中，只要用了指针这东西，很多逻辑上的问题也会产生内存泄露。在线下用上次封装malloc和free的方法测试，找不到产生内存泄露的样例，grep了一下没有用原来的malloc之类的东西啊，那就应该是测试数量太少的问题。没法，从线上的log中导入一些天的访问记录，其中包含了一天的访问url。试着用Python写个小程序把一天中所有的url依次往线下的服务器发送，这应该有几万条数据了。Python中这相关的库够多的,可以用的httplib,或者webbrowser模块中的webbrowser.open(“url_address”,1),不过这得打开系统的默认的浏览器，并且好像还没关掉一个tab的接口。最合适这个简单任务的是urllib这个模块，下面这样就行了，往线下的服务器狂发请求吧:</p>
+
+<p><pre class="src">    <span style="color: #00bfff; font-weight: bold;">for</span> rec <span style="color: #00bfff; font-weight: bold;">in</span> alllogs:<br>        urlstr = rec[0]<br>        <span style="color: #5f9ea0; font-style: italic;">#</span><span style="color: #5f9ea0; font-style: italic;">print urlstr<br></span>        line=line+1<br>        <span style="color: #00bfff; font-weight: bold;">print</span> line,allnum,allnum-line,urlstr<br>        <span style="color: #00bfff; font-weight: bold;">try:</span><br>            u = urllib.urlopen(urlstr)<br>        <span style="color: #00bfff; font-weight: bold;">except</span> <span style="color: #00bfff; font-weight: bold;">IOError</span>,e:<br>            <span style="color: #00bfff; font-weight: bold;">print</span> <span style="color: #deb887;">‘connect refused’</span>,e<br>        <span style="color: #00bfff; font-weight: bold;">except</span> <span style="color: #00bfff; font-weight: bold;">UnicodeError</span>,e:<br>            <span style="color: #00bfff; font-weight: bold;">print</span> <span style="color: #deb887;">‘UnicodeError’</span>,e<br>        res = u.read()<br>        <span style="color: #5f9ea0; font-style: italic;">#</span><span style="color: #5f9ea0; font-style: italic;">#print u.info()</span></pre></p>
+<p>        <span style="color: #00bfff; font-weight: bold;">print</span> <span style="color: #deb887;">“read %d data”</span>%(<span style="color: #00bfff; font-weight: bold;">len</span>(res))<br>        <span style="color: #5f9ea0; font-style: italic;">#</span><span style="color: #5f9ea0; font-style: italic;">#time.sleep(0.01)</span></p>
+<p></p><h3>调试方式</h3><p></p>
+<p class="first">Linux下有一些内存调试工具，不过感觉要么过于复杂要么对代码改动太多，对于在后台这种长时间运行的程序不是很适用。上次提到的封装malloc,calloc,free这些函数的检测方法本来是挺好的，但是有两个问题：</p>
+
+<p><pre class="example">1.用于存储内存信息的空间是用数组的，其大小运行时候就固定。<br>2.不适合多线程程序。</pre></p>
+<p><br>如果用上面所有的url向服务器发送完毕后，再来检查输出文件不可行，因为运行中超过了数组的最大记录数后面的检测就没办法记录下来了。对于第二个问题，这个服务器模型是一种简单的多线程并发，启动时设定其启动线程的数目，多个线程排队，一个线程处理一个请求所以之间并无过多的交互。如果保证一个线程运行过程中不会出现内存泄漏，那应该就没问题了。调试的时候在每一个线程开始跑的时候就启动清空上面的记录内存申请和释放的数组，如果某个一个url请求产生了泄漏就停下来查看生成的meminfo.xls。这样跑完几万个url后，发现一些代码问题。这些bug要是通过人来审查代码不可能查出来，所以测试还是非常重要。其中一部分代码错误是使用了C写了一些基本的数据结构，这些里面有的使用了malloc来动态调整空间大小，用起来倒是比较方便，但是用完后必须显式地释放掉。这和指针的问题是一样的:何时何地释放。调试后会在代码中加入了很多语句，打印信息、脚手架位置等等，这可以用下面这些命令来替换成空白或者注释。<br><pre class="src"> grep debug_str -rl ./*.c | xargs sed -i <span style="color: #deb887;">“s/debug_str/substr/g”</span></pre><br></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+  <a href="/tags#C" >
+    <span class="tag-code">C</span>
+  </a>
+
+  <a href="/tags#Backup" >
+    <span class="tag-code">Backup</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/meta-programming-ruby.html">
+        <span class="nav-arrow">← </span>
+        
+          Metaprogramming Ruby
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/nba-kids.html">
+        
+          孩子们眼中的NBA球员薪水
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">内存泄漏</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">调试方式</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/memleak2.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "内存又泄漏:(",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

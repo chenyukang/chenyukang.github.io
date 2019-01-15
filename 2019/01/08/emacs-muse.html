@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Emacs Muse的使用 | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Emacs Muse的使用</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><div class="contents"><dl> <dt> <a href="#sec1">Muse简介</a> </dt> <dt> <a href="#sec2">Muse的配置</a> </dt> <dt> <a href="#sec3">Muse中源代码高亮显示</a> </dt> <dt> <a href="#sec4">Muse 来写主页和博客</a> </dt> </dl></div></p>
+<p></p><h2>Muse简介</h2><p></p>
+<p class="first">Muse 是由 <a href="http://www.emacswiki.org/cgi-bin/wiki/" target="_blank" rel="external">EmacsWiki</a> 衍生的，为emacs下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括html,pdf，latex等等。Muse的编辑规则很简单，而且支持“所见即所得”的编辑方式可以让文档编辑更轻松。我使用这个工具已经快一年了，强烈推荐。这个html文件就是从Muse调用htmlize生成的。</p>
+
+<p></p><h2><a name="sec2"></a><br>Muse的配置</h2><p></p>
+<p class="first">从<a href="http://mwolson.org/static/dist/muse/muse-3.12.tar.gz" target="_blank" rel="external">这里</a>下载最新版本的Muse，比较简单的安装方法是解压后直接在目录下运行make，然后把所有的文件都拷贝到emacs的一个加载目录下面(比如~/.emacs.d/muse/)。设置.emacs加入以下几行。</p>
+
+<pre>;; 加载 muse
+(require 'muse-mode)
+(require 'muse-html)</pre>
+然后就可以利用Muse-mode来方便地创建文档。这里有个<a href="http://mwolson.org/projects/MuseQuickStart.html" target="_blank" rel="external">QuickStarted</a>，看一遍就基本掌握了编辑规则。编辑完成以后按键C-u C-c C-t即可发布该文档。
+<h2><a name="sec3"></a>
+Muse中源代码高亮显示</h2>
+<p class="first">在Muse-mode中编辑时是所见即所得样式的显示，但是有一个问题是代码不能高亮显示，要贴代码就有点不方便，解决的方法是要下载htmlize.el,而且需要1.34以后的版本才支持这个功能，在<a href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el" target="_blank" rel="external">这里</a>下载。使用方法也有说明。</p>
+
+<h2><a name="sec4"></a>
+Muse 来写主页和博客</h2>
+<p class="first">很多搞学术的同学喜欢建一个看起来很严谨的静态主页，这样的主页用Muse来维护非常方便。对于wordpress的博客或者主页，一款离线撰写工具是必须的，在windows下可以用WindowsLiveWriter,Linux下也有相应工具。不过我大部分还是在自己电脑上用Muse来写完发布成html格式，然后再发布到主页上。首先我们需要建立一个主页的工程。比如我的：</p>
+
+<pre class="src"><span style="color: #ff7f24;">;;</span><span style="color: #ff7f24;">==新建一个wiki工程
+</span>(setq muse-project-alist
+      '((<span style="color: #ffa07a;">"MainPage"</span>
+         (<span style="color: #ffa07a;">"~/document/blog/Home"</span> <span style="color: #b0c4de;">:default</span> <span style="color: #ffa07a;">"index"</span>)
+         (<span style="color: #b0c4de;">:base</span> <span style="color: #ffa07a;">"html"</span> <span style="color: #b0c4de;">:path</span> <span style="color: #ffa07a;">"~/document/blog/Home_Page"</span>))
+        (<span style="color: #ffa07a;">"Computer"</span>
+         (<span style="color: #ffa07a;">"~/document/blog/Home/Computer/"</span> <span style="color: #b0c4de;">:default</span> <span style="color: #ffa07a;">"index"</span>)
+         (<span style="color: #b0c4de;">:base</span> <span style="color: #ffa07a;">"html"</span> <span style="color: #b0c4de;">:path</span> <span style="color: #ffa07a;">"~/document/blog/Home_Page/Computer"</span>))
+        (<span style="color: #ffa07a;">"Sport"</span>
+         (<span style="color: #ffa07a;">"~/document/blog/Home/Sport"</span> <span style="color: #b0c4de;">:default</span> <span style="color: #ffa07a;">"index"</span>)
+         (<span style="color: #b0c4de;">:base</span> <span style="color: #ffa07a;">"html"</span> <span style="color: #b0c4de;">:path</span> <span style="color: #ffa07a;">"~/document/blog/Home_Page/Sports"</span>))
+        (<span style="color: #ffa07a;">"Other"</span>
+         (<span style="color: #ffa07a;">"~/document/blog/Home/Other"</span> <span style="color: #b0c4de;">:defualt</span> <span style="color: #ffa07a;">"index"</span>)
+         (<span style="color: #b0c4de;">:base</span> <span style="color: #ffa07a;">"html"</span> <span style="color: #b0c4de;">:path</span> <span style="color: #ffa07a;">"~/document/blog/Home_Page/Other"</span>))))</pre>
+
+<p><br>然后到相应目录下撰写muse文件，快捷键C-c c-p就发布了整个工程，在Home_Page相应的目录下生成了html的文件。看起来有点复杂，其实还是很方便的，代码高亮这个程序员都喜欢的功能肯定就不用操心了，同时在本机上留有个备份。这种wiki风格的网页还是很利于浏览。不过有一个弊端，图片插入虽然在撰写过程中能直接预览的，但是上传到wordpress上路径肯定会变，所以还是要再稍微编辑一下。<br></p>
+
+<p><img src="/images/muse.jpg" alt="screen" class="img-center" width="400" height="400"></p>
+
+<p></p><p></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Emacs" >
+    <span class="tag-code">Emacs</span>
+  </a>
+
+  <a href="/tags#Tools" >
+    <span class="tag-code">Tools</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/emacs-for-fun.html">
+        <span class="nav-arrow">← </span>
+        
+          Emacs自虐
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/do-presentation-like-a-geek.html">
+        
+          Do Presentation like a Geek
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Muse简介</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">Muse的配置</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">
+Muse中源代码高亮显示</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-text">
+Muse 来写主页和博客</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/emacs-muse.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "Emacs Muse的使用",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

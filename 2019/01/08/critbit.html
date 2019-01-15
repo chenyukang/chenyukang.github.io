@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      高效的Crit-bit Tree | Yukang&#39;s Page
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>高效的Crit-bit Tree</h2>
+  <p class="post-date">2019-01-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>最近了解到有这么一种数据结构，想拿来在工作中做一些事情，结果效果不好。原来我的理解有一些不对。在这里记录一下。</p>
+<p><a href="http://cr.yp.to/critbit.html" target="_blank" rel="external">Crit-bit tree</a>是一种特别的树结构，一般用于存放字符串。Critbit tree是一种<a href="http://en.wikipedia.org/wiki/Trie#Bitwise_tries" target="_blank" rel="external">BitWise tries</a>，其树的深度为O(longest-length)，有点像二叉树，不过对于字符串做分支检测的时候代价很小。</p>
+<p>Crit-bit快速高效的支持下面的一些操作：</p>
+<ul>
+<li>插入一个字符串</li>
+<li>测试一个字符串是否在树里</li>
+<li>删除一个字符串</li>
+<li>查找出树中所有以某个字符串开始的所有字符串</li>
+</ul>
+<p>和hash有点像，不过hash对于第四点没这么方便。<br>我做了一些性能对比，测试数据是<code>/usr/share/dict/words</code>里面的所有单词，同时做插入和查询的操作。具体测试代码看<a href="https://github.com/chenyukang/critbit-perf" target="_blank" rel="external">这里</a>，结果是：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">critbit</th>
+<th style="text-align:center">11.6MB</th>
+<th style="text-align:center">23.34</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">set</td>
+<td style="text-align:center">21.6 MB</td>
+<td style="text-align:center">45.85s</td>
+</tr>
+<tr>
+<td style="text-align:center">trie</td>
+<td style="text-align:center">332.3 MB</td>
+<td style="text-align:center">17.84s</td>
+</tr>
+</tbody>
+</table>
+<p>从中可以看到trie树的内存消耗是比较大的，但是查找速度最好。critbit的内存消耗真的非常小，如果只是把这里所有的单词存下来都要4MB的内存，其查找的速度虽然和trie树比起来差一些，但还是相当不错。</p>
+<p>好好的研读了crit-bit的实现和这篇文章，里面技巧挺多的。<br>critbit的结构很简单:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></div><div class="line">    <span class="keyword">void</span>* child[<span class="number">2</span>];</div><div class="line">    uint32 byte;</div><div class="line">    uint8 otherbits;</div><div class="line">&#125;critbit0_node;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></div><div class="line">    <span class="keyword">void</span>* root;</div><div class="line">&#125;critbit0_tree;</div></pre></td></tr></table></figure>
+<p>其中child是void*指针，对于树的内部节点其指向的是子节点，对于叶子节点其指向的是字符串。<br>byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用来快速的取得不同最高位，在查询的过程中用这个来做branch。</p>
+<p>具体的代码分析这里比较少，最复杂的函数是critbit0_insert。在插入过程中需要记录下来byte和otherbits,<br>并且更新前面的父节点。<br>​<br><img src="/images/critbit.png" alt="critbit" class="img-center" height="400" width="400"></p>
+<p>然后再继续插入后的结构变化是:<br><img src="/images/critbit_insert.png" alt="critbit" class="img-center" height="400" width="400"></p>
+<p>下面记录一下其中的几个技巧。</p>
+<h4 id="align指针最后一位用来做标志"><a href="#align指针最后一位用来做标志" class="headerlink" title="align指针最后一位用来做标志"></a>align指针最后一位用来做标志</h4><p>树的结构需要一个标志变量来表示是否是内部节点或者是叶子节点。这个变量如何能省掉？<br>看上面的void<em> root和void</em> child, 都是即可以用来指向字符串又可以指向节点，一般申请过来的指针变量都是align好的，所以最低位为0，这是可以拿来用的。因此对于内部节点我们可以在这个位上设置为1，只是要注意在通过这个指针取值的时候需要减回去。</p>
+<p><code>a = (posix_memalign((void**)&amp;x, sizeof(void*), ulen+1))</code></p>
+<p>posix_memalign在这里用的是sizeof(void*)，其实就和malloc一样了，因为一般Linux上编译器和C库已经处理了对齐问题。</p>
+<p>因此在查找的这段代码里是这样的：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">critbit0_contains</span><span class="params">(critbit0_tree*t, <span class="keyword">const</span> <span class="keyword">char</span>* u)</span> </span>&#123;</div><div class="line">    <span class="keyword">const</span> uint8* ubytes= (<span class="keyword">void</span>*)u;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">size_t</span> ulen= <span class="built_in">strlen</span>(u);</div><div class="line">    uint8* p= t-&gt;root;</div><div class="line">    <span class="keyword">if</span>(!p) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>( <span class="number">1</span> &amp; (<span class="keyword">intptr_t</span>)p )&#123;       <span class="comment">//内部节点? </span></div><div class="line">        critbit0_node* q = (<span class="keyword">void</span>*)(p<span class="number">-1</span>);  <span class="comment">//取得真正的指针</span></div><div class="line">        uint8 c = <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span>(q-&gt;byte &lt; ulen) c = ubytes[q-&gt;byte];</div><div class="line">        <span class="keyword">const</span> <span class="keyword">int</span> direction= (<span class="number">1</span>+(q-&gt;otherbits|c))&gt;&gt;<span class="number">8</span>;</div><div class="line">        p = q-&gt;child[direction];</div><div class="line">    &#125;</div><div class="line">	<span class="comment">//叶子节点</span></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span> == <span class="built_in">strcmp</span>(u, (<span class="keyword">const</span> <span class="keyword">char</span>*)p);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="取最高位的非0bit"><a href="#取最高位的非0bit" class="headerlink" title="取最高位的非0bit"></a>取最高位的非0bit</h4><p>在插入过程中计算最高位的不同位。</p>
+<p><code>newotherbits = p[newbyte]^ubytes[newbyte];</code></p>
+<p>其实也可以用一个for循环来计算，不过这里是这样实现的:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">1</span>;</div><div class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">2</span>;</div><div class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">4</span>;</div></pre></td></tr></table></figure>
+<p>这相当于是计算不小于它的2的整数次幂，对于32bit的代码可以看看<a href="http://blog.codingnow.com/cloud/CodeCollection" target="_blank" rel="external">这里</a>的<code>next_pow_of_2</code>。</p>
+<hr>
+<p><a href="https://github.com/agl/critbit" target="_blank" rel="external">文章和代码</a>，其中那篇文章有详细分析。</p>
+<p><a href="https://github.com/chenyukang/critbit-perf" target="_blank" rel="external">我的测试代码,trie/set等</a>。 </p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Critbit" >
+    <span class="tag-code">Critbit</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2019/01/08/damien-rice.html">
+        <span class="nav-arrow">← </span>
+        
+          又是一些歌
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2019/01/08/concrete-abstractions.html">
+        
+          《Concrete Abstractions》的一些解答
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title">ToC</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#align指针最后一位用来做标志"><span class="toc-nav-text">align指针最后一位用来做标志</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#取最高位的非0bit"><span class="toc-nav-text">取最高位的非0bit</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/01/08/critbit.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "高效的Crit-bit Tree",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
