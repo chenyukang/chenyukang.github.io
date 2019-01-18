@@ -145,13 +145,13 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
-        <a href="/2019/01/10/book-review-wujun.html">《见识》阅读笔记</a>
+        <a href="/2019/01/18/rust-dbg.html">Rust 的 dbg! 宏</a>
       </h2>
-      <p class="article-date">January 10, 2019
+      <p class="article-date">January 18, 2019
           
               
-  <a href="/tags#Reading" >
-    <span class="tag-code">Reading</span>
+  <a href="/tags#Rust" >
+    <span class="tag-code">Rust</span>
   </a>
 
           
@@ -160,23 +160,49 @@
         
         
             
-                <p>到年底小组内还有多余的预算，于是大家都在网上选书。看到吴军出了两本新书，出于对作者的信任就直接下单了。上个周末就花了些时间很快地看完了两本。内容稍微有些重合，主要是有的例子会拿来阐述多个道理。所以两本连着看会有些作者凑书的感受。当然两本都还是不错的，读完《态度》对于我这个新手爸爸来说也是收获不少。个人更推荐《见识》这本书。</p>
-<p>《见识》更多关注个人成长、看待问题的视角、工作职场中的一些经验。其中几个主题：</p>
-<h3 id="人生是一条河"><a href="#人生是一条河" class="headerlink" title="人生是一条河"></a>人生是一条河</h3><p>每个人都希望自己这条河能够更宽一点、更深一点、更长一点。只有给予才能带来幸福感。</p>
-<p>认识到生命是有限的，应该挑重要的事做，向死而生。</p>
-<h3 id="人生需要做减法"><a href="#人生需要做减法" class="headerlink" title="人生需要做减法"></a>人生需要做减法</h3><p>不做选择的幸福，从另外一个角度去解释为什么印度人在硅谷更容易成功。我觉得是有一定道理的，印度人因为名族的阶级观念，在生活工作中少了一些选择，却能一直在某个领域坚持数十年。第一份工作的过程中，接触了不少印度人。其中一位从印度到硅谷，一直都是在一个公司工作了 14 年左右，我问他为什么不跳槽，他倒觉得无所谓，安家乐业地每天过得很稳。少了选择就不容易思前想后，一门子扎进去了。在工作上，很多人都不能坚持一直耕耘于某个特定的领域，坚持下来的就成了。</p>
-<p>做人与作诗：这章讲的道理类似于『出世』与『入世』，让我想起《月亮和六便士》里的画家。</p>
-<p>要会做减法，为“做重要的事”服务，同时认清什么是重要的事。</p>
-<h3 id="西瓜与芝麻"><a href="#西瓜与芝麻" class="headerlink" title="西瓜与芝麻"></a>西瓜与芝麻</h3><p>想起骚年的时候总是花时间去找些破解软件，舍不得一点钱买些软件或者工具，渐渐地意识到了这就是为了芝麻丢西瓜的事。类似的还有很多，现在则改变了认知，能付费节约时间则付费，能花钱买到更好的则花钱。</p>
-<h3 id="生也有涯-知也无涯"><a href="#生也有涯-知也无涯" class="headerlink" title="生也有涯 知也无涯"></a>生也有涯 知也无涯</h3><p>正因为如此，生活、学习、工作中需要聚焦，别分散精力。人能在某一段时间内做好一件事，并且做得比其他人好，好到自己觉得不能更好为止。也正是因为『知也无涯』，不要为了自己的未知而焦虑，因为这是再正常不过的了，自己学起来就好，别丢掉好奇心。</p>
-<h3 id="我们一定比-18-世纪的人过得幸福么？"><a href="#我们一定比-18-世纪的人过得幸福么？" class="headerlink" title="我们一定比 18 世纪的人过得幸福么？"></a>我们一定比 18 世纪的人过得幸福么？</h3><p>显然，当代人并不幸福，特别是我们这些年轻的一代。物质上倒谈不上匮乏，而是没有自己的时间，然后则是人到中年必不可免的生活压力和焦虑。EB的说唱里有段歌词『所有人都忙着想要更多的东西 所以得到之后就没有精力去珍惜 情歌越来越多 真情却越来越少 巧克力的保质期越来越长 爱情的保质期却越来越短 生活变得越来越丰富多彩 于是越来越多的人变得分不清黑白』。</p>
-<h3 id="我们与天才差多远"><a href="#我们与天才差多远" class="headerlink" title="我们与天才差多远"></a>我们与天才差多远</h3><p>我们绝大部分人成长过程中，迟早会意识到自己不过是芸芸众生中的普通人。硅谷中，我认为有一种气氛特别好，就是对聪明人的崇敬。之前的老板应该已经算是又聪明又勤奋的那种，谈话中总是会说起自己碰见过的聪明人，聪明到如何程度，以及一些小故事。有的生理上的差异是解释不清的，比如有的人就是善于计算，有的人精于细节。不过天才的见识、勇气、或者方法上有的是值得学习的。</p>
+                <p>前几天在群里看到有人讨论 dbg! 宏已经在 Nightly 可以使用了，最近发布的 stable 版本 1.32.0 也可以使用了。 翻看了一下并玩了玩，这个简单的宏确实是调试好帮手，特别是适合我这样的喜欢打印调试的开发者。这个提议从 2017 年 10 月开始，从 <a href="https://github.com/rust-lang/rfcs/pull/2173" target="_blank" rel="external">https://github.com/rust-lang/rfcs/pull/2173</a> 可以看到，为了增加这个宏很多贡献者经过了无数次的讨论和回复。真是太佩服 Rust Team 的开发者，付出了这么多时间来增加这个看似很小又实用的功能。</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>先看看这个调试宏是怎么使用的，目前使用这个宏需要切换到 Nightly 版本或者最新的稳定版，已经安装了 rustup 的话就很简单了：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">rustup default nightly</div><div class="line">rustup update</div></pre></td></tr></table></figure>
+<p>然后很简单就是把一个表达式当作参数传入:</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">factorial</span></span>(n: <span class="built_in">u32</span>) -&gt; <span class="built_in">u32</span> &#123;</div><div class="line">     <span class="keyword">if</span> dbg!(n &lt;= <span class="number">1</span>) &#123;</div><div class="line">         dbg!(<span class="number">1</span>)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">         dbg!(n * factorial(n - <span class="number">1</span>))</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</div><div class="line">    dbg!(factorial(<span class="number">5</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">[src/main.rs:4] n &lt;= 1 = false</div><div class="line">[src/main.rs:4] n &lt;= 1 = false</div><div class="line">[src/main.rs:4] n &lt;= 1 = false</div><div class="line">[src/main.rs:4] n &lt;= 1 = false</div><div class="line">[src/main.rs:4] n &lt;= 1 = true</div><div class="line">[src/main.rs:5] 1 = 1</div><div class="line">[src/main.rs:7] n * factorial(n - 1) = 2</div><div class="line">[src/main.rs:7] n * factorial(n - 1) = 6</div><div class="line">[src/main.rs:7] n * factorial(n - 1) = 24</div><div class="line">[src/main.rs:7] n * factorial(n - 1) = 120</div><div class="line">[src/main.rs:12] factorial(5) = 120</div></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>原理当然也就是把表达式和位置打印出来，但是这里有个技巧，在宏里面使用 match，这是为了避免参数被调用多次，因为宏在编译之前会被展开。Rust 的宏比较复杂，也不可避免会有些 hacky，对于喜欢爱折腾的程序员还是有吸引力。再看看这个宏是怎么实现的，代码很少。：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><div class="line"><span class="built_in">macro_rules!</span> dbg &#123;</div><div class="line">    ($val:expr) =&gt; &#123;</div><div class="line">        <span class="keyword">match</span> $val &#123;</div><div class="line">            tmp =&gt; &#123;</div><div class="line">                eprintln!(<span class="string">"[&#123;&#125;:&#123;&#125;] &#123;&#125; = &#123;:#?&#125;"</span>,</div><div class="line">                          <span class="built_in">file!</span>(), <span class="built_in">line!</span>(), <span class="built_in">stringify!</span>($val), &amp;tmp);</div><div class="line">                tmp</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到目前这个实现是只支持一个参数的，如果传入的参数类型没有实现 Copy Trait，可以传入引用。另外如果想同时打印多个参数，可以使用类似这样的做法：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><div class="line">dbg!((exp1, exp2))</div></pre></td></tr></table></figure>
 
             
         
       </div>
       
-          <a class="more" href="/2019/01/10/book-review-wujun.html#footer">发表评论</a>
+          <a class="more" href="/2019/01/18/rust-dbg.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2019/01/10/book-review-wujun.html">《见识》阅读笔记</a>
+      </h2>
+      <p class="article-date">January 10, 2019
+          
+              
+  <a href="/tags#Books" >
+    <span class="tag-code">Books</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                到年底小组内还有多余的预算，于是大家都在网上选书。看到吴军出了两本新书，出于对作者的信任就直接下单了。上个周末就花了些时间很快地看完了两本。内容稍微有些重合，主要是有的例子会拿来阐述多个道理。所以两本连着看会有些作者凑书的感受。当然两本都还是不错的，读完《态度》对于我这个新手爸爸来说也是 .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2019/01/10/book-review-wujun.html">阅读全文</a>
       
     </article>
   
@@ -393,34 +419,6 @@ admin的用户名和密码是可以在docker-compose.y .....
       </div>
       
           <a class="more" href="/2018/02/26/overcommit.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2018/02/23/nginx-https-too-many-redirect.html">Nginx https too many redirect</a>
-      </h2>
-      <p class="article-date">February 23, 2018
-          
-              
-  <a href="/tags#Nginx" >
-    <span class="tag-code">Nginx</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: 
-return 302 https://$host$request_uri; ## 需要注意这里是request_uri而不是uri，否则会引起安全问题
-但是如果是多层Nginx，前面的Nginx .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2018/02/23/nginx-https-too-many-redirect.html">阅读全文</a>
       
     </article>
   

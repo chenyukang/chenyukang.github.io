@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://cyukang.com/"/>
-  <updated>2019-01-15T15:23:53.344Z</updated>
+  <updated>2019-01-18T14:14:34.071Z</updated>
   <id>http://cyukang.com/</id>
   
   <author>
@@ -16,11 +16,42 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Rust 的 dbg! 宏</title>
+    <link href="http://cyukang.com/2019/01/18/rust-dbg.html"/>
+    <id>http://cyukang.com/2019/01/18/rust-dbg.html</id>
+    <published>2019-01-17T16:23:24.000Z</published>
+    <updated>2019-01-18T14:14:34.071Z</updated>
+    
+    <content type="html"><![CDATA[<p>前几天在群里看到有人讨论 dbg! 宏已经在 Nightly 可以使用了，最近发布的 stable 版本 1.32.0 也可以使用了。 翻看了一下并玩了玩，这个简单的宏确实是调试好帮手，特别是适合我这样的喜欢打印调试的开发者。这个提议从 2017 年 10 月开始，从 <a href="https://github.com/rust-lang/rfcs/pull/2173" target="_blank" rel="external">https://github.com/rust-lang/rfcs/pull/2173</a> 可以看到，为了增加这个宏很多贡献者经过了无数次的讨论和回复。真是太佩服 Rust Team 的开发者，付出了这么多时间来增加这个看似很小又实用的功能。</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>先看看这个调试宏是怎么使用的，目前使用这个宏需要切换到 Nightly 版本或者最新的稳定版，已经安装了 rustup 的话就很简单了：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">rustup default nightly</div><div class="line">rustup update</div></pre></td></tr></table></figure>
+<p>然后很简单就是把一个表达式当作参数传入:</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">factorial</span></span>(n: <span class="built_in">u32</span>) -&gt; <span class="built_in">u32</span> &#123;</div><div class="line">     <span class="keyword">if</span> dbg!(n &lt;= <span class="number">1</span>) &#123;</div><div class="line">         dbg!(<span class="number">1</span>)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">         dbg!(n * factorial(n - <span class="number">1</span>))</div><div class="line">     &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</div><div class="line">    dbg!(factorial(<span class="number">5</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">[src/main.rs:4] n &lt;= 1 = false</div><div class="line">[src/main.rs:4] n &lt;= 1 = false</div><div class="line">[src/main.rs:4] n &lt;= 1 = false</div><div class="line">[src/main.rs:4] n &lt;= 1 = false</div><div class="line">[src/main.rs:4] n &lt;= 1 = true</div><div class="line">[src/main.rs:5] 1 = 1</div><div class="line">[src/main.rs:7] n * factorial(n - 1) = 2</div><div class="line">[src/main.rs:7] n * factorial(n - 1) = 6</div><div class="line">[src/main.rs:7] n * factorial(n - 1) = 24</div><div class="line">[src/main.rs:7] n * factorial(n - 1) = 120</div><div class="line">[src/main.rs:12] factorial(5) = 120</div></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>原理当然也就是把表达式和位置打印出来，但是这里有个技巧，在宏里面使用 match，这是为了避免参数被调用多次，因为宏在编译之前会被展开。Rust 的宏比较复杂，也不可避免会有些 hacky，对于喜欢爱折腾的程序员还是有吸引力。再看看这个宏是怎么实现的，代码很少。：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><div class="line"><span class="built_in">macro_rules!</span> dbg &#123;</div><div class="line">    ($val:expr) =&gt; &#123;</div><div class="line">        <span class="keyword">match</span> $val &#123;</div><div class="line">            tmp =&gt; &#123;</div><div class="line">                eprintln!(<span class="string">"[&#123;&#125;:&#123;&#125;] &#123;&#125; = &#123;:#?&#125;"</span>,</div><div class="line">                          <span class="built_in">file!</span>(), <span class="built_in">line!</span>(), <span class="built_in">stringify!</span>($val), &amp;tmp);</div><div class="line">                tmp</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到目前这个实现是只支持一个参数的，如果传入的参数类型没有实现 Copy Trait，可以传入引用。另外如果想同时打印多个参数，可以使用类似这样的做法：</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><div class="line">dbg!((exp1, exp2))</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;前几天在群里看到有人讨论 dbg! 宏已经在 Nightly 可以使用了，最近发布的 stable 版本 1.32.0 也可以使用了。 翻看了一下并玩了玩，这个简单的宏确实是调试好帮手，特别是适合我这样的喜欢打印调试的开发者。这个提议从 2017 年 10 月开始，从 &lt;a
+    
+    </summary>
+    
+    
+      <category term="Rust" scheme="http://cyukang.com/tags/Rust/"/>
+    
+  </entry>
+  
+  <entry>
     <title>《见识》阅读笔记</title>
     <link href="http://cyukang.com/2019/01/10/book-review-wujun.html"/>
     <id>http://cyukang.com/2019/01/10/book-review-wujun.html</id>
     <published>2019-01-10T15:22:40.000Z</published>
-    <updated>2019-01-15T15:23:53.344Z</updated>
+    <updated>2019-01-15T16:09:12.152Z</updated>
     
     <content type="html"><![CDATA[<p>到年底小组内还有多余的预算，于是大家都在网上选书。看到吴军出了两本新书，出于对作者的信任就直接下单了。上个周末就花了些时间很快地看完了两本。内容稍微有些重合，主要是有的例子会拿来阐述多个道理。所以两本连着看会有些作者凑书的感受。当然两本都还是不错的，读完《态度》对于我这个新手爸爸来说也是收获不少。个人更推荐《见识》这本书。</p>
 <p>《见识》更多关注个人成长、看待问题的视角、工作职场中的一些经验。其中几个主题：</p>
@@ -42,7 +73,7 @@
     </summary>
     
     
-      <category term="Reading" scheme="http://cyukang.com/tags/Reading/"/>
+      <category term="Books" scheme="http://cyukang.com/tags/Books/"/>
     
   </entry>
   
@@ -294,38 +325,6 @@
     
     </summary>
     
-    
-  </entry>
-  
-  <entry>
-    <title>Nginx https too many redirect</title>
-    <link href="http://cyukang.com/2018/02/23/nginx-https-too-many-redirect.html"/>
-    <id>http://cyukang.com/2018/02/23/nginx-https-too-many-redirect.html</id>
-    <published>2018-02-23T09:38:44.000Z</published>
-    <updated>2018-02-22T16:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">return</span> <span class="number">302</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>; </div><div class="line"><span class="comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span></div></pre></td></tr></table></figure>
-<p>但是如果是多层Nginx，前面的Nginx需要把用户原始请求的scheme传递到后端，可以加上头部设置： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</div></pre></td></tr></table></figure>
-<p>后面的Nginx再判断一次:</p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">if</span> ( <span class="variable">$http_x_forwarded_proto</span> != <span class="string">'https'</span> ) &#123;</div><div class="line">  <span class="attribute">return</span> <span class="number">301</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>否则强制https经常会出现类似<code>ERR_TOO_MANY_REDIRECTS 将您重定向的次数过多</code>这样的问题。</p>
-<p>可是在实践过程中偶尔也碰到过一些ELB会丢掉scheme的问题，比如在这样的请求链路情况下<code>elb =&gt; nginx =&gt; nginx =&gt; application</code>第二层Nginx获取的scheme就有问题了，这也可能会导致<code>too many redirects</code>问题。</p>
-<p>可以尝试在第二层Nginx上这样解决： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">proxy_set_header</span>   X-Forwarded-Proto <span class="variable">$http_x_forwarded_proto</span>;</div></pre></td></tr></table></figure>
-<p>当然强制https这样的跳转逻辑尽量放在请求链路的最外层，这样问题会少一些。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: &lt;/p&gt;
-&lt;figure class=&quot;highlight nginx&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;sp
-    
-    </summary>
-    
-    
-      <category term="Nginx" scheme="http://cyukang.com/tags/Nginx/"/>
     
   </entry>
   
