@@ -145,6 +145,50 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2019/06/23/2019-06-23-random-notes.html">保存 kmacro </a>
+      </h2>
+      <p class="article-date">June 23, 2019
+          
+              
+  <a href="/tags#Emacs" >
+    <span class="tag-code">Emacs</span>
+  </a>
+
+  <a href="/tags#Notes" >
+    <span class="tag-code">Notes</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <p>宏是很强大的编辑方法，如果要长久保存一些宏可以使用下面的办法：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">M-x start-kbd-macro</div></pre></td></tr></table></figure>
+<p>开始记录宏，通常快捷键为”C-x (“, 结束的快捷键为 “C-x )”。</p>
+<p> 然后使用命令: </p>
+ <figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">M-x kmacro-name-last-macro</div></pre></td></tr></table></figure>
+<p>  可以把这条宏给命名，如果要保存这个宏以便日后使用，需要打开 init.el 继续使用命令： </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">M-x insert-kbd-macro</div></pre></td></tr></table></figure>
+<p>选中命名的宏，这样就在 init.el 里面插入了刚才的宏，这个名字也就可以当作日常命令使用了。</p>
+<p>例如我新建一个宏，作用是查找测试文件中的 “#[ignore]”，并删除掉那行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">(fset &apos;rust-ignore</div><div class="line">      (lambda (&amp;optional arg) &quot;Keyboard macro.&quot; (interactive &quot;p&quot;)</div><div class="line">        (kmacro-exec-ring-item</div><div class="line">         (quote ([12 115 101 97 114 99 104 return 35 91 105 103 110 111 114 101 return 1 11 11 14] 0 &quot;%d&quot;)) arg)))</div></pre></td></tr></table></figure>
+<p>如果要重复执行，则需要运行： </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">C-x z</div></pre></td></tr></table></figure>
+<p>当然后面可以连续按 z z z …. ， 执行多遍。</p>
+<p> 参考: <a href="https://emacs.stackexchange.com/questions/70/how-to-save-a-keyboard-macro-as-a-lisp-function" target="_blank" rel="external">https://emacs.stackexchange.com/questions/70/how-to-save-a-keyboard-macro-as-a-lisp-function</a></p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2019/06/23/2019-06-23-random-notes.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2019/01/23/2019-wishes.html">2019，愿你也健康</a>
       </h2>
       <p class="article-date">January 23, 2019
@@ -160,32 +204,13 @@
         
         
             
-                <h4 id="坚持"><a href="#坚持" class="headerlink" title="坚持"></a>坚持</h4><p>最近在坚持养成每天尽量花一小时锻炼的习惯，因为我想在 2019 年有个更健康、有活力的身体。</p>
-<p>随着年纪的增长，身体的一些反馈还是如实地告诉自己在变老。衰老就是能力不断地退化、消失。之前打球能蹦蹦跳跳的，现在多跑跑就会喘气；之前精力更好、更喜欢到处走动，现在更倾向于静静休息。去年有的时候身体感觉不太好，有段时间特别疲劳，甚至也体验过一段低迷的至暗时刻。大概是因为生活不规律，而且基本没有怎么锻炼，体重也不断上升。因为在 2017 年初打篮球的时候把膝盖伤了，后来也不能激烈打球了。现在比较适合自己的运动方式就是跑步、游泳、散步之类的。</p>
-<hr>
-<h4 id="人总是会忘掉这件事"><a href="#人总是会忘掉这件事" class="headerlink" title="人总是会忘掉这件事"></a>人总是会忘掉这件事</h4><p>当然锻炼养生也不能抵抗衰老，这是个自然过程，锻炼至少能有助于健康。健康是所有幸福的最大基础，比什么都重要，俗话说『宁做健康的乞丐，也比做病恹恹的国王快活得多』。人更无法逃避的是死亡，这是所有生物的最终归宿和命运。只是人总会渐渐忘记自己会死，梁文道说的一个故事：</p>
-<blockquote>
-<p>很多年前，一位德国摄影师跟一个记者合作的拍摄计划，很有意思。那个摄影师去很多的临终病房，拍摄一些快要死去的人，趁他们还在世的时候，拍下他们的遗照。然后他们刚刚离开，合上眼睛的时候，又为他们再拍一张照片，两张照片放在同一版上，前面则是文字记者做的采访。</p>
-<p>在这一系列的采访跟摄影当中，其中一个已死的老太太，在她的采访里面说的一句话，他一辈子都不会忘记。她说什么呢？她跟文字记者说，“你看，你看”，就指着病房玻璃外面楼下对面马路的一个超级市场，她指着那个超级市场跟摄影师和记者说：“<strong>你看那里头的人们，天天进进出出买东西，买面包、买肉、买卫生纸，你看他们的样子，他们好像从来不觉得自己会死。</strong>”</p>
-</blockquote>
-<h4 id="读《最后的告别》"><a href="#读《最后的告别》" class="headerlink" title="读《最后的告别》"></a>读《最后的告别》</h4><p>这本书很多人都推荐过，我最近刚好也看了一遍。这里面谈了一些人在最终衰老、告别时必须面对的问题和思考，其中也有一些作者所经历的老人故事，还有自己的父亲最后的抗争。其中有一个故事印象深刻，看完后我又查了查还真有这么个人和事。</p>
-<blockquote>
-<p>1980年3月，当附近火山已经开始冒水汽、隆隆作响时，这位83岁的老人却仍然拒绝撤离他在华盛顿奥林匹亚市附近圣海伦山脚的家。他是第一次世界大战时期的飞行员、禁酒时期的私酒制造者，已经在灵湖的这所房子里住了半个多世纪了。5年前，他成了鳏夫。所以，当时，在山脚这处300多亩的地盘上，只住着他和他的16只猫。三年前，他在屋顶铲雪的时候掉下来，摔断了腿。医生说他是个“该死的傻瓜”，在这样的年龄还爬到房顶去做事。<br>　　<br>　　“该死！”他给医生骂回去，“<strong>我都 80岁了！我有权做决定，有权做我想做的事。</strong>”</p>
-<p>由于受到火山喷发的威胁，官方要求附近居民全部撤离，但是杜鲁门哪儿都不去。火山闷烧了两个多月，官方把撤离区域扩大到火山周围16千米。杜鲁门固执地不肯离开。</p>
-<p>　“如果这个地方要毁灭，那我想跟它同归于尽，”他说，“反正如果失去它，我也会在一周之内结果我自己。”他直率、不和悦的讲话方式吸引了记者。他说起话来滔滔不绝，头戴一顶绿色的约翰·迪尔棒球帽，手拿一大高脚杯波旁威士忌和可乐。当地警察考虑为了他好而逮捕他，但是，由于他的年龄以及他们必须得承受的负面新闻，只好作罢。他们提出但凡有机会就带他离开，但他坚决予以拒绝。他告诉一位朋友：“<strong>如果我明天死去，我也已经度过了愉快的一生。我能做的事都做了，想做的事都做了。</strong>”<br>　　<br>　　1980年5月18日早上8点40分，火山终于爆发了，其威力相当于一颗原子弹。巨量的岩浆流吞没了整个湖，埋葬了杜鲁门、他的猫和他的家。事后，他成了偶像——一个老头留在自己家里碰运气，在这种可能性似乎已经消失的年代，他按照自己的方式生活。</p>
-<p><img src="/images/1920px-St_Helens_before_1980_eruption_horizon_fixed.jpg" alt="1920px-St_Helens_before_1980_eruption_horizon_fixed"></p>
-</blockquote>
-<p>相对书中的很多老人来说，这位老人的选择充满了勇气，他以决绝的选择来面对衰老和死亡，并没有经受医院的无尽折磨。年轻人看起来这算是是自杀吧，加缪认为自杀是唯一严肃的哲学问题，看来老人对此已经有了答案。能有多少人老了能还以自己喜欢的生活方式活着，并在最终告别的时候心里都是满足：我已经愉快地度过了一生。</p>
-<p>孔子说『未知生<em>，</em>焉知死』，反过来如果没有认真思考过死这件事，人又能真的知道怎么活。</p>
-<h4 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h4><p>最近大环境不太好，很多人都在纠结于今年能拿到多少年终，好多事情并不是个人所能决定，自己能最能把握的是自己的身体，珍惜生命、保护好自己，以免年纪轻轻落得一身病，年纪大了用钱换命。</p>
-<p>最后推荐一个纪录片：《人世间》。每天都有无数的人在和疾病、死亡抗争，活着对很多人来说其实真不是件容易的事。</p>
-<p>日子中很多艰辛和苦难，和生死比起来那就不是事。</p>
-
+                坚持最近在坚持养成每天尽量花一小时锻炼的习惯，因为我想在 2019 年有个更健康、有活力的身体。
+随着年纪的增长，身体的一些反馈还是如实地告诉自己在变老。衰老就是能力不断地退化、消失。之前打球能蹦蹦跳跳的，现在多跑跑就会喘气；之前精力更好、更喜欢到处走动，现在更倾向于静静休息。去年有的时 .....
             
         
       </div>
       
-          <a class="more" href="/2019/01/23/2019-wishes.html#footer">发表评论</a>
+          <a class="more" href="/2019/01/23/2019-wishes.html">阅读全文</a>
       
     </article>
   
@@ -402,38 +427,6 @@ zsh 配置下面这个配置主要增强了 zsh 的 history 补全，以及pwdf�
       </div>
       
           <a class="more" href="/2018/03/04/kong-cluster-left-node.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2018/03/02/docker-postgres-password.html">Docker compose初始化失败问题</a>
-      </h2>
-      <p class="article-date">March 2, 2018
-          
-              
-  <a href="/tags#Tools" >
-    <span class="tag-code">Tools</span>
-  </a>
-
-  <a href="/tags#Docker" >
-    <span class="tag-code">Docker</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                问题今天在Docker Postgresql用户名和密码授权的问题上花了一些时间，问题是： 
-psql: FATAL:  password authentication failed for user "postgres"
-admin的用户名和密码是可以在docker-compose.y .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2018/03/02/docker-postgres-password.html">阅读全文</a>
       
     </article>
   
