@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      Linux 当前 shell 执行命令 | Yukang&#39;s Page
-    
+      
+          Linux 当前 shell 执行命令 | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -151,11 +154,11 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要unset 当前shell 的环境变量等，</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env zsh</span></div><div class="line"></div><div class="line">if [ -z $http_proxy ]; then</div><div class="line">    echo "not using proxy, set it now ... ";</div><div class="line">    export http_proxy="http://127.0.0.1:1087";</div><div class="line">    export https_proxy="https://127.0.0.1:1087";</div><div class="line">    echo $http_proxy;</div><div class="line">else</div><div class="line">    echo "using proxy now, unset it now ...";</div><div class="line">    unset http_proxy;</div><div class="line">    unset https_proxy;</div><div class="line">    echo $http_proxy;</div><div class="line">fi</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env zsh</span></span><br><span class="line"></span><br><span class="line">if [ -z $http_proxy ]; then</span><br><span class="line">    echo "not using proxy, set it now ... ";</span><br><span class="line">    export http_proxy="http://127.0.0.1:1087";</span><br><span class="line">    export https_proxy="https://127.0.0.1:1087";</span><br><span class="line">    echo $http_proxy;</span><br><span class="line">else</span><br><span class="line">    echo "using proxy now, unset it now ...";</span><br><span class="line">    unset http_proxy;</span><br><span class="line">    unset https_proxy;</span><br><span class="line">    echo $http_proxy;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 <p>这时候需要执行 <code>. ./proxy_toggle.sh</code> 或者 <code>source ./proxy_toggle.sh</code>。</p>
-<p><code>.</code> (a period) is a <a href="http://www.gnu.org/software/bash/manual/bashref.html#Bourne-Shell-Builtins" target="_blank" rel="external">bash shell built-in command</a> that executes the commands from a file passed as argument, in the current shell. <code>source</code> is a synonym for <code>.</code></p>
+<p><code>.</code> (a period) is a <a href="http://www.gnu.org/software/bash/manual/bashref.html#Bourne-Shell-Builtins" target="_blank" rel="noopener">bash shell built-in command</a> that executes the commands from a file passed as argument, in the current shell. <code>source</code> is a synonym for <code>.</code></p>
 <p>From Bash man page:</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><div class="line">. filename [arguments]</div><div class="line">source filename [arguments]</div><div class="line"><span class="code">       Read  and  execute  commands  from filename in the current shell</span></div><div class="line"><span class="code">       environment and return the exit status of the last command  exe‐</span></div><div class="line"><span class="code">       cuted from filename.  If filename does not contain a slash, file</span></div><div class="line"><span class="code">       names in PATH are used to find the  directory  containing  file‐</span></div><div class="line"><span class="code">       name.   The  file  searched  for in PATH need not be executable.</span></div><div class="line"><span class="code">       When bash is  not  in  posix  mode,  the  current  directory  is</span></div><div class="line"><span class="code">       searched  if no file is found in PATH.  If the sourcepath option</span></div><div class="line"><span class="code">       to the shopt builtin command is turned  off,  the  PATH  is  not</span></div><div class="line"><span class="code">       searched.   If any arguments are supplied, they become the posi‐</span></div><div class="line"><span class="code">       tional parameters when  filename  is  executed.   Otherwise  the</span></div><div class="line"><span class="code">       positional  parameters  are unchanged.  The return status is the</span></div><div class="line"><span class="code">       status of the last command exited within the  script  (0  if  no</span></div><div class="line"><span class="code">       commands  are  executed),  and false if filename is not found or</span></div><div class="line"><span class="code">       cannot be read.</span></div></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">. filename [arguments]</span><br><span class="line">source filename [arguments]</span><br><span class="line"><span class="code">       Read  and  execute  commands  from filename in the current shell</span></span><br><span class="line"><span class="code">       environment and return the exit status of the last command  exe‐</span></span><br><span class="line"><span class="code">       cuted from filename.  If filename does not contain a slash, file</span></span><br><span class="line"><span class="code">       names in PATH are used to find the  directory  containing  file‐</span></span><br><span class="line"><span class="code">       name.   The  file  searched  for in PATH need not be executable.</span></span><br><span class="line"><span class="code">       When bash is  not  in  posix  mode,  the  current  directory  is</span></span><br><span class="line"><span class="code">       searched  if no file is found in PATH.  If the sourcepath option</span></span><br><span class="line"><span class="code">       to the shopt builtin command is turned  off,  the  PATH  is  not</span></span><br><span class="line"><span class="code">       searched.   If any arguments are supplied, they become the posi‐</span></span><br><span class="line"><span class="code">       tional parameters when  filename  is  executed.   Otherwise  the</span></span><br><span class="line"><span class="code">       positional  parameters  are unchanged.  The return status is the</span></span><br><span class="line"><span class="code">       status of the last command exited within the  script  (0  if  no</span></span><br><span class="line"><span class="code">       commands  are  executed),  and false if filename is not found or</span></span><br><span class="line"><span class="code">       cannot be read.</span></span><br></pre></td></tr></table></figure>
 </section>
     <!-- Tags START -->
     

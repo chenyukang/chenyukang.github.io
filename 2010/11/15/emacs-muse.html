@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      Emacs Muse的使用 | Yukang&#39;s Page
-    
+      
+          Emacs Muse的使用 | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -152,18 +155,18 @@
   <article class="post-article">
     <section class="markdown-content"><p><div class="contents"><dl> <dt> <a href="#sec1">Muse简介</a> </dt> <dt> <a href="#sec2">Muse的配置</a> </dt> <dt> <a href="#sec3">Muse中源代码高亮显示</a> </dt> <dt> <a href="#sec4">Muse 来写主页和博客</a> </dt> </dl></div></p>
 <p></p><h2>Muse简介</h2><p></p>
-<p class="first">Muse 是由 <a href="http://www.emacswiki.org/cgi-bin/wiki/" target="_blank" rel="external">EmacsWiki</a> 衍生的，为emacs下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括html,pdf，latex等等。Muse的编辑规则很简单，而且支持“所见即所得”的编辑方式可以让文档编辑更轻松。我使用这个工具已经快一年了，强烈推荐。这个html文件就是从Muse调用htmlize生成的。</p>
+<p class="first">Muse 是由 <a href="http://www.emacswiki.org/cgi-bin/wiki/" target="_blank" rel="noopener">EmacsWiki</a> 衍生的，为emacs下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括html,pdf，latex等等。Muse的编辑规则很简单，而且支持“所见即所得”的编辑方式可以让文档编辑更轻松。我使用这个工具已经快一年了，强烈推荐。这个html文件就是从Muse调用htmlize生成的。</p>
 
 <p></p><h2><a name="sec2"></a><br>Muse的配置</h2><p></p>
-<p class="first">从<a href="http://mwolson.org/static/dist/muse/muse-3.12.tar.gz" target="_blank" rel="external">这里</a>下载最新版本的Muse，比较简单的安装方法是解压后直接在目录下运行make，然后把所有的文件都拷贝到emacs的一个加载目录下面(比如~/.emacs.d/muse/)。设置.emacs加入以下几行。</p>
+<p class="first">从<a href="http://mwolson.org/static/dist/muse/muse-3.12.tar.gz" target="_blank" rel="noopener">这里</a>下载最新版本的Muse，比较简单的安装方法是解压后直接在目录下运行make，然后把所有的文件都拷贝到emacs的一个加载目录下面(比如~/.emacs.d/muse/)。设置.emacs加入以下几行。</p>
 
 <pre>;; 加载 muse
 (require 'muse-mode)
 (require 'muse-html)</pre>
-然后就可以利用Muse-mode来方便地创建文档。这里有个<a href="http://mwolson.org/projects/MuseQuickStart.html" target="_blank" rel="external">QuickStarted</a>，看一遍就基本掌握了编辑规则。编辑完成以后按键C-u C-c C-t即可发布该文档。
+然后就可以利用Muse-mode来方便地创建文档。这里有个<a href="http://mwolson.org/projects/MuseQuickStart.html" target="_blank" rel="noopener">QuickStarted</a>，看一遍就基本掌握了编辑规则。编辑完成以后按键C-u C-c C-t即可发布该文档。
 <h2><a name="sec3"></a>
 Muse中源代码高亮显示</h2>
-<p class="first">在Muse-mode中编辑时是所见即所得样式的显示，但是有一个问题是代码不能高亮显示，要贴代码就有点不方便，解决的方法是要下载htmlize.el,而且需要1.34以后的版本才支持这个功能，在<a href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el" target="_blank" rel="external">这里</a>下载。使用方法也有说明。</p>
+<p class="first">在Muse-mode中编辑时是所见即所得样式的显示，但是有一个问题是代码不能高亮显示，要贴代码就有点不方便，解决的方法是要下载htmlize.el,而且需要1.34以后的版本才支持这个功能，在<a href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el" target="_blank" rel="noopener">这里</a>下载。使用方法也有说明。</p>
 
 <h2><a name="sec4"></a>
 Muse 来写主页和博客</h2>
@@ -195,11 +198,11 @@ Muse 来写主页和博客</h2>
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Emacs" >
+  <a href="/tags#Emacs">
     <span class="tag-code">Emacs</span>
   </a>
 
-  <a href="/tags#Tools" >
+  <a href="/tags#Tools">
     <span class="tag-code">Tools</span>
   </a>
 

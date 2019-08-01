@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      Wumpus and 《Land of Lisp》 | Yukang&#39;s Page
-    
+      
+          Wumpus and 《Land of Lisp》 | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -164,26 +167,26 @@
 
 <p><br>说起来复杂，来看副图。有点像挖地雷那种小游戏。有？符号的为没访问过的点，*为当前点，从14到15遇到警察死掉了。<br></p><br><p style="text-align: center;"><a href="/images/known-city.dot_.png"><img class="aligncenter size-full wp-image-614" title="known-city.dot" src="/images/known-city.dot_.png" alt="" width="416" height="332"></a></p><br>上周末玩了好几个小时，还挺难胜，主要还是图比较大，游戏一开是整个地图是已经生成了的，要偷懒可以看看。<br><br><a href="/images/city.dot_.png"><img src="/images/city.dot_.png" alt="" title="city.dot" width="690" height="430" class="aligncenter size-full wp-image-617"></a><br><br><p><br>来看看如何用Lisp代码来实现这个程序，程序比较短。首先是如何生成图，需要生成一个随机的连通图。设定节点数目和边的数目，以编号代表节点。random-node:随机地选一个节点。edge-pair:连接两个点表示边。make-edge-list: 重复N次，生成N条边的集合。这个随机图可能不是连通的，下面的代码找出孤立的点集，用一些边连接起来这些孤立的点集，随机图产生完成。第二步向某些点之间加警察，随机的。这其中用了各种mapcar和Lambda，这样的效果使得Lisp程序看起来全是括号。mapcar的意思就是我要在这个列表上面所有的元素上都执行这个Lambda函数。visited列表保存已经访问过的节点，know-city-nodes更新(不是纯函数式编程的风格)，know-city-edges根据访问的节点，生成已知的路径，当前已知的用dot画出来。<em>graphviz</em>是个好东西，最近也在学习用这个来画一些流程图，效果挺好的。<br></p>
 
-<p><br><br>乱说说Common Lisp，看了一些这方面的资料，这语言不管有多少牛逼人士簇拥(<a href="http://book.douban.com/subject/6021440/" target="_blank" rel="external">最近Paul Grahamd的书被翻译了</a>)，使用的人还是太少还是有一定的历史原因，早期的实现效率是一个问题，而当实现和硬件都不错了的时候C/C++已经成大局了。另一个很重要的原因是，文档不是很好，我想找个处理图片方面的库，见到一个README文件跟救命稻草似的，打开一看”Do you really need DOCS?”。Lisp的哲学是语言不能给太多限制，甚至做到代码就是数据、数据就是代码，你可以轻而地为语言添加特性，你还可以用宏来写出生成代码的代码。Lisp给了程序员最大的自由来挑战语言的限制，所以会出现如此多种的方言。好的一面是面对特定的问题或许能得到优美而高效率的解决方法，而这个代码对于另外一个程序员来说太难读懂(特别是夹杂了宏的代码)，继而难于流传。这里有篇经典的<a href="http://dreamsongs.com/Files/LispGoodNewsBadNews.pdf" target="_blank" rel="external">Lisp:Good news,Bad news</a>，作者为早期用Lisp作为开发语言开公司的。<br></p><br><p><br><br>以后看看Haskell吧，这个比较有前途。<br></p>
+<p><br><br>乱说说Common Lisp，看了一些这方面的资料，这语言不管有多少牛逼人士簇拥(<a href="http://book.douban.com/subject/6021440/" target="_blank" rel="noopener">最近Paul Grahamd的书被翻译了</a>)，使用的人还是太少还是有一定的历史原因，早期的实现效率是一个问题，而当实现和硬件都不错了的时候C/C++已经成大局了。另一个很重要的原因是，文档不是很好，我想找个处理图片方面的库，见到一个README文件跟救命稻草似的，打开一看”Do you really need DOCS?”。Lisp的哲学是语言不能给太多限制，甚至做到代码就是数据、数据就是代码，你可以轻而地为语言添加特性，你还可以用宏来写出生成代码的代码。Lisp给了程序员最大的自由来挑战语言的限制，所以会出现如此多种的方言。好的一面是面对特定的问题或许能得到优美而高效率的解决方法，而这个代码对于另外一个程序员来说太难读懂(特别是夹杂了宏的代码)，继而难于流传。这里有篇经典的<a href="http://dreamsongs.com/Files/LispGoodNewsBadNews.pdf" target="_blank" rel="noopener">Lisp:Good news,Bad news</a>，作者为早期用Lisp作为开发语言开公司的。<br></p><br><p><br><br>以后看看Haskell吧，这个比较有前途。<br></p>
 </section>
     <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
+  <a href="/tags#Programming">
     <span class="tag-code">Programming</span>
   </a>
 
-  <a href="/tags#Books" >
+  <a href="/tags#Books">
     <span class="tag-code">Books</span>
   </a>
 
-  <a href="/tags#Lisp" >
+  <a href="/tags#Lisp">
     <span class="tag-code">Lisp</span>
   </a>
 
-  <a href="/tags#wumpus" >
+  <a href="/tags#wumpus">
     <span class="tag-code">wumpus</span>
   </a>
 

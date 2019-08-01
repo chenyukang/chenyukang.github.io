@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      lcc阅读记录 | Yukang&#39;s Page
-    
+      
+          lcc阅读记录 | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -150,7 +153,7 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>之前看EOPL感觉收获挺大，最近又花业余时间看了看编译相关的东西，这是我看lcc的时候顺手记下的一些自己的理解。这本书<a href="http://book.douban.com/subject/1610344/" target="_blank" rel="external">《A Retargetable C Compiler》</a>还挺大头的。lcc代码量不是特别大，更复杂的是tinyCC，tinyCC甚至可以直接运行C代码。</p>
+    <section class="markdown-content"><p>之前看EOPL感觉收获挺大，最近又花业余时间看了看编译相关的东西，这是我看lcc的时候顺手记下的一些自己的理解。这本书<a href="http://book.douban.com/subject/1610344/" target="_blank" rel="noopener">《A Retargetable C Compiler》</a>还挺大头的。lcc代码量不是特别大，更复杂的是tinyCC，tinyCC甚至可以直接运行C代码。</p>
 <h2 id="alloc-c"><a href="#alloc-c" class="headerlink" title="alloc.c"></a>alloc.c</h2><p>为了尽量的少调用系统调用，在alloc基础上封装了一下。</p>
 <h2 id="sym-c"><a href="#sym-c" class="headerlink" title="sym.c"></a>sym.c</h2><p>用来存储symbol，注意scope的表示方法。</p>
 <h2 id="input-c"><a href="#input-c" class="headerlink" title="input.c"></a>input.c</h2><p>为了减少读取文件的开销，用一个buffer来缓存源文件内容。cp表示当前读取出来的字符位置，limit表示缓存的结尾字符位置，如果fillbuf一次以后仍然<code>cp == limit</code>则表示读取文件到EOF了。</p>
@@ -169,11 +172,11 @@
 <p>上面说的是语法的识别，在构建AST的过程中另外一个事情就是语意的分析。包括类型检查，类型的转换，操作符优先级等，这些也在构建AST的时候顺便做了。比如在遇到expr1 ? expr2 : expr3的时候，expr1的值最后被cast成一个bool。指针之间的隐式转换也比较复杂。function call比较复杂，这里还做了函数参数的写法是否是老的风格，类型说明放在函数头的最后。assignments和binary operator的分析相对来说简单一些，需要做各种cast。</p>
 <p>前些天稍微看了一些Erlang，发现里面的类型推导比较好玩，甚至可以发现一些代码里面的逻辑错误：</p>
 <p>比如：</p>
-<figure class="highlight erlang"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="title">fact</span><span class="params">(<span class="number">0</span>)</span> -&gt;</span> <span class="number">1</span>;</div><div class="line"><span class="function"><span class="title">fact</span><span class="params">(N)</span> -&gt;</span> N * fact(N-<span class="number">1</span>).</div><div class="line"></div><div class="line"><span class="function"><span class="title">test</span><span class="params">()</span> -&gt;</span> fact(-<span class="number">5</span>).</div></pre></td></tr></table></figure>
+<figure class="highlight erlang"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">fact</span><span class="params">(<span class="number">0</span>)</span> -&gt;</span> <span class="number">1</span>;</span><br><span class="line"><span class="function"><span class="title">fact</span><span class="params">(N)</span> -&gt;</span> N * fact(N-<span class="number">1</span>).</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">test</span><span class="params">()</span> -&gt;</span> fact(-<span class="number">5</span>).</span><br></pre></td></tr></table></figure>
 <p>不用运行Erlang的dialyzer就可以发现这里面的死循环，因为可以通过上面的定义推断出fact的参数是non_neg_integer,而-5是不符合的，所以报出来一个错误：</p>
 <p><code>fact(-5) will never return</code>。</p>
 <h2 id="stmt-c"><a href="#stmt-c" class="headerlink" title="stmt.c"></a>stmt.c</h2><p>codelist为双向列表，遇到新的执行块就加到这个列表上。在处理control-flow的过程中有的死代码块是可以被编译器发现的，只是我们平时都被忽略了。</p>
-<p>比如C代码:<br><figure class="highlight erlang"><table><tr><td class="code"><pre><div class="line">int loop() &#123;</div><div class="line"> Loop:</div><div class="line">    goto Loop;</div><div class="line">    return -<span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main() &#123;</div><div class="line">    printf(<span class="string">"loop: %d\n"</span>, loop());</div><div class="line">    return <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>比如C代码:<br><figure class="highlight erlang"><table><tr><td class="code"><pre><span class="line">int loop() &#123;</span><br><span class="line"> Loop:</span><br><span class="line">    goto Loop;</span><br><span class="line">    return -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    printf(<span class="string">"loop: %d\n"</span>, loop());</span><br><span class="line">    return <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>loop永远不会返回，Gcc选项<code>-Wsuggest-attribute=noreturn</code>可以报出一个warning。</p>
 <h2 id="decl-c"><a href="#decl-c" class="headerlink" title="decl.c"></a>decl.c</h2><p>声明是C语言中最难解析的部分，原因是声明涉及到变量和类型，而从C声明中弄出类型信息还是挺复杂的。另外声明还分局部，全局，其中还涉及到函数参数，结构体等。decl.c可能是最复杂的文件了，1100多行代码，里面的函数之间又相互调用。finalize()函数最后检查是否有重复定义的变量。</p>
 <h2 id="dag-c"><a href="#dag-c" class="headerlink" title="dag.c"></a>dag.c</h2><p>lcc的intermediate code是用listnodes把前面parser的tree转换为DAG，最终整个程序会经过转换变成由多个DAG组合成的森林。listnodes还负责把一些公共的sub-expression简化。</p>
@@ -185,11 +188,11 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
+  <a href="/tags#Programming">
     <span class="tag-code">Programming</span>
   </a>
 
-  <a href="/tags#Compiler" >
+  <a href="/tags#Compiler">
     <span class="tag-code">Compiler</span>
   </a>
 

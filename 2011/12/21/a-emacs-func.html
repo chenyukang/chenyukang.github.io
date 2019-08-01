@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      A Emacs func | Yukang&#39;s Page
-    
+      
+          A Emacs func | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -151,18 +154,18 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>这个操作好像经常要用到，拷贝当前光标连续的一段字符串(除了空白和换行), 写了个小函数来实现。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">(defun get-continue-string ()</div><div class="line">  (interactive)</div><div class="line">  (skip-chars-backward &quot;^ \n&quot;)</div><div class="line">  (setq low (point))</div><div class="line">  (skip-chars-forward &quot;^ \n&quot;)</div><div class="line">  (setq high (point))</div><div class="line">  (copy-region-as-kill low high)</div><div class="line">  (message (buffer-substring low high)))</div><div class="line"></div><div class="line">(global-set-key (kbd &quot;C-x y&quot;) &apos;get-continue-string)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(defun get-continue-string ()</span><br><span class="line">  (interactive)</span><br><span class="line">  (skip-chars-backward &quot;^ \n&quot;)</span><br><span class="line">  (setq low (point))</span><br><span class="line">  (skip-chars-forward &quot;^ \n&quot;)</span><br><span class="line">  (setq high (point))</span><br><span class="line">  (copy-region-as-kill low high)</span><br><span class="line">  (message (buffer-substring low high)))</span><br><span class="line"></span><br><span class="line">(global-set-key (kbd &quot;C-x y&quot;) &apos;get-continue-string)</span><br></pre></td></tr></table></figure>
 </section>
     <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Emacs" >
+  <a href="/tags#Emacs">
     <span class="tag-code">Emacs</span>
   </a>
 
-  <a href="/tags#Programming" >
+  <a href="/tags#Programming">
     <span class="tag-code">Programming</span>
   </a>
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      A mini Scheme interpreter written in Go | Yukang&#39;s Page
-    
+      
+          A mini Scheme interpreter written in Go | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -153,10 +156,10 @@
     <section class="markdown-content"><p><center><img src="/images/schemed-brained-hare.jpg" alt="figure: hare" height="320" width="320"></center></p>
 <p><center>Scheme-Brained Hare</center></p>
 
-<p>在我学Go的时候开始了一个自己的业余小项目，就是这个<a href="https://github.com/chenyukang/GoScheme" target="_blank" rel="external">GoScheme</a>，打算用Go来写一个Scheme解释器，因为重写轮子是学习新东西的好手段。<br>现在基本完成了，当然只是一些基本的语法支持，没有宏。</p>
+<p>在我学Go的时候开始了一个自己的业余小项目，就是这个<a href="https://github.com/chenyukang/GoScheme" target="_blank" rel="noopener">GoScheme</a>，打算用Go来写一个Scheme解释器，因为重写轮子是学习新东西的好手段。<br>现在基本完成了，当然只是一些基本的语法支持，没有宏。</p>
 <p>我只是用这个项目来熟悉Go的语法，Go来做这种项目没有特别大的优势，这个项目用C来实现代码量会更少一些。比如这里个里面的基本数据对象包括各种类型，boolean, symbol, fixnum, proc等等，又都是一个Object类型。如果是C可以用union类型来表示，然后通过Object*实现接口上的统一操作各种数据，类似的代码像这样子：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">object</span> &#123;</span></div><div class="line">    object_type type;</div><div class="line">    <span class="keyword">union</span> &#123;</div><div class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">            <span class="keyword">char</span> value;</div><div class="line">        &#125; boolean;</div><div class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">            <span class="keyword">char</span> *value;</div><div class="line">        &#125; symbol;</div><div class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">object</span> *<span class="title">car</span>;</span></div><div class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">object</span> *<span class="title">cdr</span>;</span></div><div class="line">        &#125; pair;</div><div class="line">		<span class="comment">// ..........</span></div><div class="line">    &#125; data;</div><div class="line">&#125; object;</div></pre></td></tr></table></figure>
-<p>Go里面没有Union这种类型，所以我用了<a href="https://github.com/chenyukang/GoScheme/blob/master/src/eval/data.go" target="_blank" rel="external">reflect</a>来实现这些东西，看起来还不是那么简洁。Go的自带的一些toolset还可以，比如testing，format，coverage等，可以减少一些琐碎的事。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">object</span> &#123;</span></span><br><span class="line">    object_type type;</span><br><span class="line">    <span class="keyword">union</span> &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">            <span class="keyword">char</span> value;</span><br><span class="line">        &#125; boolean;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">            <span class="keyword">char</span> *value;</span><br><span class="line">        &#125; symbol;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">object</span> *<span class="title">car</span>;</span></span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">object</span> *<span class="title">cdr</span>;</span></span><br><span class="line">        &#125; pair;</span><br><span class="line">		<span class="comment">// ..........</span></span><br><span class="line">    &#125; data;</span><br><span class="line">&#125; object;</span><br></pre></td></tr></table></figure>
+<p>Go里面没有Union这种类型，所以我用了<a href="https://github.com/chenyukang/GoScheme/blob/master/src/eval/data.go" target="_blank" rel="noopener">reflect</a>来实现这些东西，看起来还不是那么简洁。Go的自带的一些toolset还可以，比如testing，format，coverage等，可以减少一些琐碎的事。</p>
 <p>另外，以后项目里配一下travis-CI可以做集成测试。</p>
 <p>Go更适合做一些需要并发的任务，比如服务端的事情。</p>
 </section>
@@ -165,11 +168,11 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Scheme" >
+  <a href="/tags#Scheme">
     <span class="tag-code">Scheme</span>
   </a>
 
-  <a href="/tags#Go" >
+  <a href="/tags#Go">
     <span class="tag-code">Go</span>
   </a>
 

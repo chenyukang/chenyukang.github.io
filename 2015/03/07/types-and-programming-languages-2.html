@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      Types and Programming Languages (2) | Yukang&#39;s Page
-    
+      
+          Types and Programming Languages (2) | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -154,7 +157,7 @@
 <p>In particular, besides just yielding results, evaluation of terms in these languages may assign to mutable variables (reference cells, arrays, mutable record fields, etc.), perform input and output to files, displays, or network connections, make non-local transfers of control via exceptions, jumps, or continuations, engage in inter-process synchronization and communication, and so on. In the literature on programming languages, such “side effects” of computation are more generally referred to as computational effects.</p>
 </blockquote>
 <p>引用指向的对象可以是基本类型、组合类型，甚至是函数，把指向函数的ref放进对应的record，就变成一个简单的object，OOP的原型就出来了。</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line">update = λa:<span class="type">NatArray</span>. λm:<span class="type">Nat</span>. λv:<span class="type">Nat</span>.</div><div class="line">     a := (λn:<span class="type">Nat</span>. <span class="keyword">if</span> equal m n <span class="keyword">then</span> v <span class="keyword">else</span> (!a) n);</div></pre></td></tr></table></figure>
+<figure class="highlight ocaml"><table><tr><td class="code"><pre><span class="line">update = λa:<span class="type">NatArray</span>. λm:<span class="type">Nat</span>. λv:<span class="type">Nat</span>.</span><br><span class="line">     a := (λn:<span class="type">Nat</span>. <span class="keyword">if</span> equal m n <span class="keyword">then</span> v <span class="keyword">else</span> (!a) n);</span><br></pre></td></tr></table></figure>
 <p>通过这个习题的例子可以看出ref引进的副作用。</p>
 <h2 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a>Garbage Collection</h2><h3 id="GC-or-not"><a href="#GC-or-not" class="headerlink" title="GC or not"></a>GC or not</h3><blockquote>
 <p>This is not just a question of taste in language design: it is extremely difficult to achieve type safety in the presence of an explicit deallocation operation.</p>
@@ -165,22 +168,22 @@
 </blockquote>
 <p>Store typings: 引入引用后类型系统需要处理Cyclic reference structures，比如double linked list。Store typings就是一个locations到typings的映射。</p>
 <p>实现fullref： 引用部分的实现非常简单，</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line">| <span class="type">TmRef</span>(fi,t1) -&gt;</div><div class="line">    <span class="type">TyRef</span>(typeof ctx t1)</div><div class="line">| <span class="type">TmLoc</span>(fi,l) -&gt;</div><div class="line">    error fi <span class="string">"locations are not supposed to occur in source programs!"</span></div><div class="line">| <span class="type">TmDeref</span>(fi,t1) -&gt;</div><div class="line">    (<span class="keyword">match</span> simplifyty ctx (typeof ctx t1) <span class="keyword">with</span></div><div class="line">        <span class="type">TyRef</span>(tyT1) -&gt; tyT1</div><div class="line">      | <span class="type">TyBot</span> -&gt; <span class="type">TyBot</span></div><div class="line">      | <span class="type">TySource</span>(tyT1) -&gt; tyT1</div><div class="line">      | _ -&gt; error fi <span class="string">"argument of ! is not a Ref or Source"</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight ocaml"><table><tr><td class="code"><pre><span class="line">| <span class="type">TmRef</span>(fi,t1) -&gt;</span><br><span class="line">    <span class="type">TyRef</span>(typeof ctx t1)</span><br><span class="line">| <span class="type">TmLoc</span>(fi,l) -&gt;</span><br><span class="line">    error fi <span class="string">"locations are not supposed to occur in source programs!"</span></span><br><span class="line">| <span class="type">TmDeref</span>(fi,t1) -&gt;</span><br><span class="line">    (<span class="keyword">match</span> simplifyty ctx (typeof ctx t1) <span class="keyword">with</span></span><br><span class="line">        <span class="type">TyRef</span>(tyT1) -&gt; tyT1</span><br><span class="line">      | <span class="type">TyBot</span> -&gt; <span class="type">TyBot</span></span><br><span class="line">      | <span class="type">TySource</span>(tyT1) -&gt; tyT1</span><br><span class="line">      | _ -&gt; error fi <span class="string">"argument of ! is not a Ref or Source"</span>)</span><br></pre></td></tr></table></figure>
 </section>
     <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
+  <a href="/tags#Programming">
     <span class="tag-code">Programming</span>
   </a>
 
-  <a href="/tags#OCaml" >
+  <a href="/tags#OCaml">
     <span class="tag-code">OCaml</span>
   </a>
 
-  <a href="/tags#PL" >
+  <a href="/tags#PL">
     <span class="tag-code">PL</span>
   </a>
 

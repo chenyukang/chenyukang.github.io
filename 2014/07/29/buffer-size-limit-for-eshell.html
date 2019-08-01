@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      Automatically cleanup the buffer for Eshell | Yukang&#39;s Page
-    
+      
+          Automatically cleanup the buffer for Eshell | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -153,20 +156,20 @@
     <section class="markdown-content"><p>Keep writing some simple thing in English, for I will have less chance for writing English words in daily working.</p>
 <p>I will always run eshell for shell tasks, because this is really like the normal buffer in Emacs, so all the command for Emacs will keep working for this buffer. This is convenient for some actions.</p>
 <p>The problem annoying me is that if the size of buffer for eshell is too big, Emacs will gets more and more slow. Emacs essentially is a sole process program. So I have some digg and written a trivial elisp code like this solved the problem.</p>
-<figure class="highlight lisp"><table><tr><td class="code"><pre><div class="line">(<span class="name">defun</span> clear-and-send-input()</div><div class="line">  (<span class="name">interactive</span>)</div><div class="line">  (<span class="name">if</span> (<span class="name">&gt;</span> (<span class="name">count-lines</span> <span class="number">1</span> (<span class="name">point</span>)) <span class="number">800</span>)</div><div class="line">      (<span class="name">let</span> ((<span class="name">inhibit-read-only</span> <span class="literal">t</span>))</div><div class="line">        (<span class="name">message</span> <span class="string">"Clear the eshell now !"</span>)</div><div class="line">	(<span class="name">erase-buffer</span>)))</div><div class="line">  (<span class="name">eshell-send-input</span>))</div><div class="line"></div><div class="line">(<span class="name">add-hook</span> 'eshell-mode-hook</div><div class="line">	  (<span class="name">lambda</span> ()</div><div class="line">	  (<span class="name">local-set-key</span> (<span class="name">kbd</span> <span class="string">"&lt;return&gt;"</span>) 'clear-and-send-input)))</div></pre></td></tr></table></figure>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">defun</span> clear-and-send-input()</span><br><span class="line">  (<span class="name">interactive</span>)</span><br><span class="line">  (<span class="name">if</span> (<span class="name">&gt;</span> (<span class="name">count-lines</span> <span class="number">1</span> (<span class="name">point</span>)) <span class="number">800</span>)</span><br><span class="line">      (<span class="name">let</span> ((<span class="name">inhibit-read-only</span> <span class="literal">t</span>))</span><br><span class="line">        (<span class="name">message</span> <span class="string">"Clear the eshell now !"</span>)</span><br><span class="line">	(<span class="name">erase-buffer</span>)))</span><br><span class="line">  (<span class="name">eshell-send-input</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">add-hook</span> 'eshell-mode-hook</span><br><span class="line">	  (<span class="name">lambda</span> ()</span><br><span class="line">	  (<span class="name">local-set-key</span> (<span class="name">kbd</span> <span class="string">"&lt;return&gt;"</span>) 'clear-and-send-input)))</span><br></pre></td></tr></table></figure>
 <p>clear-and-send-input is a wrapper for eshell-send-input, I set the maximal number of eshell buffer to 800, and I bind this function to <return>, so every time if the buffer size is too big, this wrapper will automatically clean up the buffer.</return></p>
-<p>And yesterday I found this article <a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide" target="_blank" rel="external">Mastering Emacs in one year guide</a>is really thought-provoking, Hope this may help you.</p>
+<p>And yesterday I found this article <a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide" target="_blank" rel="noopener">Mastering Emacs in one year guide</a>is really thought-provoking, Hope this may help you.</p>
 </section>
     <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Emacs" >
+  <a href="/tags#Emacs">
     <span class="tag-code">Emacs</span>
   </a>
 
-  <a href="/tags#shell" >
+  <a href="/tags#shell">
     <span class="tag-code">shell</span>
   </a>
 

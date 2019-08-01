@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      Nginx https too many redirect | Yukang&#39;s Page
-    
+      
+          Nginx https too many redirect | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -151,15 +154,15 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">return</span> <span class="number">302</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>; </div><div class="line"><span class="comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span></div></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">return</span> <span class="number">302</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>; </span><br><span class="line"><span class="comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span></span><br></pre></td></tr></table></figure>
 <p>但是如果是多层Nginx，前面的Nginx需要把用户原始请求的scheme传递到后端，可以加上头部设置： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</div></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</span><br></pre></td></tr></table></figure>
 <p>后面的Nginx再判断一次:</p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">if</span> ( <span class="variable">$http_x_forwarded_proto</span> != <span class="string">'https'</span> ) &#123;</div><div class="line">  <span class="attribute">return</span> <span class="number">301</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">if</span> ( <span class="variable">$http_x_forwarded_proto</span> != <span class="string">'https'</span> ) &#123;</span><br><span class="line">  <span class="attribute">return</span> <span class="number">301</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>否则强制https经常会出现类似<code>ERR_TOO_MANY_REDIRECTS 将您重定向的次数过多</code>这样的问题。</p>
 <p>可是在实践过程中偶尔也碰到过一些ELB会丢掉scheme的问题，比如在这样的请求链路情况下<code>elb =&gt; nginx =&gt; nginx =&gt; application</code>第二层Nginx获取的scheme就有问题了，这也可能会导致<code>too many redirects</code>问题。</p>
 <p>可以尝试在第二层Nginx上这样解决： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">proxy_set_header</span>   X-Forwarded-Proto <span class="variable">$http_x_forwarded_proto</span>;</div></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">proxy_set_header</span>   X-Forwarded-Proto <span class="variable">$http_x_forwarded_proto</span>;</span><br></pre></td></tr></table></figure>
 <p>当然强制https这样的跳转逻辑尽量放在请求链路的最外层，这样问题会少一些。</p>
 </section>
     <!-- Tags START -->
@@ -167,7 +170,7 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Nginx" >
+  <a href="/tags#Nginx">
     <span class="tag-code">Nginx</span>
   </a>
 

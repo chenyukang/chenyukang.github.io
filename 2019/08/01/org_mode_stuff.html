@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+      
+          My org-mode stuff | Yukang&#39;s Page
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>My org-mode stuff</h2>
+  <p class="post-date">2019-08-01</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>I switched to org-mode from EverNote recently, and the experience imrpoved much for noteand journal writing, especially for technical notes. After the whole tool is set appropriately, I am even addicted to writing.I found these code snippets are really handy, so let’s have a share.</p>
+<h3 id="Insert-Pic-from-paste"><a href="#Insert-Pic-from-paste" class="headerlink" title="Insert Pic from paste"></a>Insert Pic from paste</h3><p>You need to install <strong>pngpaste</strong> first, then with this elisp function, we can copy thepicture from paste very quickly, the picture will store on current directory’s imgsub-directory, it will create it if img directory is not exists.</p>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">defun</span> org-insert-image ()</span><br><span class="line">  (<span class="name">interactive</span>)</span><br><span class="line">  (<span class="name">let*</span> ((<span class="name">path</span> (<span class="name">concat</span> default-directory <span class="string">"img/"</span>))</span><br><span class="line">         (<span class="name">image-file</span> (<span class="name">concat</span></span><br><span class="line">                      path</span><br><span class="line">                      (<span class="name">buffer-name</span>)</span><br><span class="line">                      (<span class="name">format-time-string</span> <span class="string">"_%Y%m%d_%H%M%S.png"</span>))))</span><br><span class="line">    (<span class="name">if</span> (<span class="name">not</span> (<span class="name">file-exists-p</span> path))</span><br><span class="line">        (<span class="name">mkdir</span> path))</span><br><span class="line">    (<span class="name">shell-command</span> (<span class="name">concat</span> <span class="string">"pngpaste "</span> image-file))</span><br><span class="line">    (<span class="name">org-insert-link</span> <span class="literal">nil</span> (<span class="name">concat</span> <span class="string">"file:"</span> image-file) <span class="string">""</span>))</span><br><span class="line">    <span class="comment">;; (org-display-inline-images) ;; show inline picture</span></span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
+<h3 id="Using-org-ruby-for-Hexo-publishing"><a href="#Using-org-ruby-for-Hexo-publishing" class="headerlink" title="Using org-ruby for Hexo publishing"></a>Using org-ruby for Hexo publishing</h3><p>I using Hexo for blogging, the default format is markdown in Hexo, so I need toconvert org format to markdown format very conveniently, and finally org-ruby solve it.I did some dirty hacks on the codebase, <a href="https://github.com/chenyukang/org-ruby/pull/1/files" target="_blank" rel="noopener">please have a look at this PR</a>, this PRsolve three issues:</p>
+<ul>
+<li>Add title and path attributes in org file, and the ruby script will extract it fordumping markdown file.</li>
+<li>Fix the fill paragraph problem, I don’t need the blanks which will broken the layout.</li>
+<li>Copy the images to proper directory for Hexo, support image size attributes.</li>
+</ul>
+<p>Then I added an elisp function for auto publish it after saving file whenever”#MD_TITLE:” is founded in buffer:</p>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">defun</span> org-publish-to-hexo ()</span><br><span class="line">  (<span class="name">interactive</span>)</span><br><span class="line">  (<span class="name">shell-command</span> (<span class="name">concat</span></span><br><span class="line">                  <span class="string">"org-ruby "</span> <span class="string">"--translate "</span> <span class="string">"markdown "</span> <span class="string">"-a "</span></span><br><span class="line">                  (<span class="name">buffer-name</span>))))</span><br><span class="line">(<span class="name">defalias</span> 'op 'org-publish-to-hexo)</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> buffer-contains-substring (<span class="name">string</span>)</span><br><span class="line">  (<span class="name">save-excursion</span></span><br><span class="line">    (<span class="name">save-match-data</span></span><br><span class="line">      (<span class="name">goto-char</span> (<span class="name">point-min</span>))</span><br><span class="line">      (<span class="name">search-forward</span> string <span class="literal">nil</span> <span class="literal">t</span>))))</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> org-auto-publish-save-hook ()</span><br><span class="line">  (<span class="name">when</span> (<span class="name">and</span> (<span class="name">eq</span> major-mode 'org-mode)</span><br><span class="line">             (<span class="name">buffer-contains-substring</span> <span class="string">"#+MD_TITLE:"</span>)</span><br><span class="line">             (<span class="name">buffer-contains-substring</span> <span class="string">"#+MD_PATH:"</span>))</span><br><span class="line">    (<span class="name">message</span> <span class="string">"publishing to Hexo markdown"</span>)</span><br><span class="line">    (<span class="name">org-publish-to-hexo</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name">add-hook</span> 'after-save-hook #'org-auto-publish-save-hook)</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> org-before-save-hook ()</span><br><span class="line">  (<span class="name">when</span> (<span class="name">eq</span> major-mode 'org-mode)</span><br><span class="line">    (<span class="name">message</span> <span class="string">"saving org-file"</span>)</span><br><span class="line">    (<span class="name">pangu-spacing-space-current-buffer</span>)</span><br><span class="line">    <span class="comment">;;(fill-region (point-min) (point-max))</span></span><br><span class="line">    ))</span><br><span class="line">(<span class="name">add-hook</span> 'before-save-hook #'org-before-save-hook)</span><br></pre></td></tr></table></figure>
+<h3 id="pangu-spacing"><a href="#pangu-spacing" class="headerlink" title="pangu-spacing"></a>pangu-spacing</h3><p>This package will add spacing between Chinese word and English word, so I hooked itbefore save org file:</p>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">require</span> 'pangu-spacing)</span><br><span class="line">(<span class="name">global-pangu-spacing-mode</span> <span class="number">1</span>)</span><br><span class="line"><span class="comment">;;(setq pangu-spacing-real-insert-separtor t)</span></span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> org-before-save-hook ()</span><br><span class="line">  (<span class="name">when</span> (<span class="name">eq</span> major-mode 'org-mode)</span><br><span class="line">    (<span class="name">message</span> <span class="string">"saving org-file"</span>)</span><br><span class="line">    (<span class="name">pangu-spacing-space-current-buffer</span>)</span><br><span class="line">    ))</span><br><span class="line"></span><br><span class="line">(<span class="name">add-hook</span> 'before-save-hook #'org-before-save-hook)</span><br></pre></td></tr></table></figure>
+<h3 id="org-capture"><a href="#org-capture" class="headerlink" title="org-capture"></a>org-capture</h3><p>And the best thing is org-capture, with this we can write all kinds of tempaltes, forjournal writing, I need to generate file according to date and time:</p>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">defun</span> create-code-file ()</span><br><span class="line">  (<span class="name">interactive</span>)</span><br><span class="line">  (<span class="name">let</span> ((<span class="name">name</span> (<span class="name">concat</span> (<span class="name">format-time-string</span> <span class="string">"%Y_%m_%d_"</span>)</span><br><span class="line">                       (<span class="name">read-string</span> <span class="string">"file-name: "</span>))))</span><br><span class="line">    (<span class="name">expand-file-name</span> (<span class="name">format</span> <span class="string">"%s.org"</span> name) <span class="string">"~/Dropbox/org/snippets/"</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> gen-date-file ()</span><br><span class="line">  <span class="string">"Create an org file in ~/notes/snippets."</span></span><br><span class="line">  (<span class="name">format-time-string</span> <span class="string">"~/Dropbox/org/journals/%Y_%m_%d.org"</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">setq</span> org-capture-templates</span><br><span class="line">      '((<span class="string">"t"</span> <span class="string">"Todo"</span> entry (file+datetree <span class="string">"~/Dropbox/org/work.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %?\n  %i\n "</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"x"</span> <span class="string">"Task"</span> entry (file+datetree <span class="string">"~/Dropbox/org/work.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n"</span>)</span><br><span class="line">        (<span class="string">"e"</span> <span class="string">"Task"</span> entry (file+datetree <span class="string">"~/Dropbox/org/life.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"l"</span> <span class="string">"Todo"</span> entry (file+datetree <span class="string">"~/Dropbox/org/learn.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %?\nEntered on %U\n  %i\n\n "</span> :kill-buffer <span class="literal">t</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"k"</span> <span class="string">"Todo"</span> entry (file+datetree <span class="string">"~/Dropbox/org/learn.org"</span>)</span><br><span class="line">         <span class="string">"* TODO %?\n  %i\n %f\n %a"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"j"</span> <span class="string">"Journal"</span> entry (file+datetree <span class="string">"~/Dropbox/org/_journal.org"</span> )</span><br><span class="line">         <span class="string">"** %?\nEntered on %U\n  %i\n"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"J"</span> <span class="string">"Journal"</span> entry (file gen-date-file)</span><br><span class="line">         <span class="string">"** %?\nEntered on %U\n  %i\n"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"c"</span> <span class="string">"Code snippet"</span> entry (file+headline <span class="string">"~/Dropbox/org/_code.org"</span> <span class="string">"Code"</span>)</span><br><span class="line">         <span class="string">"** %^&#123;desc&#125;\n#+BEGIN_SRC %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC"</span> </span><br><span class="line">          :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"C"</span> <span class="string">"Notes"</span> entry (file create-code-file)</span><br><span class="line">         <span class="string">"** %^&#123;desc&#125;\n#+BEGIN_SRC %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC"</span> </span><br><span class="line">          :empty-lines <span class="number">1</span>)</span><br><span class="line">        ))</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/2019/07/31/details_matter.html">
+        
+          满足感源自细节
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Insert-Pic-from-paste"><span class="toc-nav-text">Insert Pic from paste</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Using-org-ruby-for-Hexo-publishing"><span class="toc-nav-text">Using org-ruby for Hexo publishing</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#pangu-spacing"><span class="toc-nav-text">pangu-spacing</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#org-capture"><span class="toc-nav-text">org-capture</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://cyukang.com/2019/08/01/org_mode_stuff.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "My org-mode stuff",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2019 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

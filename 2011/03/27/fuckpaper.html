@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      论文吐槽 | Yukang&#39;s Page
-    
+      
+          论文吐槽 | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -155,7 +158,7 @@
 <p class="first">这题折腾了很久很久，刚开始误以为每个文件的最大行数为1500，最后因为输出格式问题。代码也比较长330行，954ms。<br>使用数组作为hash，使用位图记录文件中存在的单词，idx为由单词转化得到的该单词在hash表中的index。</p>
 
 
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> docs_flag[MAXDOC][(MAXWORDS+<span class="number">31</span>)/<span class="number">32</span>]; <span class="comment">//记录某个文件中是否存在某个单词</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">set_docflag</span><span class="params">(<span class="keyword">int</span> doc[], <span class="keyword">unsigned</span> <span class="keyword">int</span> idx)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">        doc[idx&gt;&gt;<span class="number">5</span>] |= (<span class="number">1</span>&lt;&lt;(idx&amp;<span class="number">0x1f</span>));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span>  <span class="title">get_docflag</span><span class="params">(<span class="keyword">int</span> doc[],<span class="keyword">unsigned</span> <span class="keyword">int</span> idx)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">        <span class="keyword">return</span> doc[idx&gt;&gt;<span class="number">5</span>] &amp; (<span class="number">1</span>&lt;&lt;(idx&amp;<span class="number">0x1f</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> docs_flag[MAXDOC][(MAXWORDS+<span class="number">31</span>)/<span class="number">32</span>]; <span class="comment">//记录某个文件中是否存在某个单词</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set_docflag</span><span class="params">(<span class="keyword">int</span> doc[], <span class="keyword">unsigned</span> <span class="keyword">int</span> idx)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        doc[idx&gt;&gt;<span class="number">5</span>] |= (<span class="number">1</span>&lt;&lt;(idx&amp;<span class="number">0x1f</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span>  <span class="title">get_docflag</span><span class="params">(<span class="keyword">int</span> doc[],<span class="keyword">unsigned</span> <span class="keyword">int</span> idx)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> doc[idx&gt;&gt;<span class="number">5</span>] &amp; (<span class="number">1</span>&lt;&lt;(idx&amp;<span class="number">0x1f</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p></p><h4>poj 2518</h4><p></p>
 <p class="first">这个好玩，一个4<em>4的方格，里面分别放四个A,B,C,D，初始状态从输入获取，先随便选取一个字母，然后能进行很多次操作。<br>每次能交换两个相邻的方格，到任何一个小的2</em>2的方格中全部都是所选的字母就获胜。对于每一个输入，求最少多少次交换就能达到胜利状态，<br>以及有多少方案可以达到这个目的。</p><br>例如：<br><pre class="example">AABB<br>ABAB<br>CDCD<br>CCDD          output ==&gt; 1 4 (选择A或者B 交换BA 选择C或者D 交换DC)<br><br>ACAB<br>CBBD<br>ADAD<br>DCBC          output ==&gt; 4 96</pre><br><br><p><br>首先想到还是搜索，用bit来减少空间。求最少次数，BFS搜索也许太慢，毕竟每次状态转移会有16个选择。对于每一个输入，先枚举A,B,C,D进行搜索。对于每一个字母，比如A，用一个整数表示其在方格的位置(最大数字到1&lt;&lt;16)，<br></p>
 
@@ -173,15 +176,15 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Backup" >
+  <a href="/tags#Backup">
     <span class="tag-code">Backup</span>
   </a>
 
-  <a href="/tags#ACM" >
+  <a href="/tags#ACM">
     <span class="tag-code">ACM</span>
   </a>
 
-  <a href="/tags#POJ" >
+  <a href="/tags#POJ">
     <span class="tag-code">POJ</span>
   </a>
 

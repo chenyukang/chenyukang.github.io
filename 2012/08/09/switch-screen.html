@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      Linux下快捷切换屏幕 | Yukang&#39;s Page
-    
+      
+          Linux下快捷切换屏幕 | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -152,11 +155,11 @@
   <article class="post-article">
     <section class="markdown-content"><p><img src="/images/screen.jpg" alt="screen" class="img-center" width="500px"></p>
 <p>在办公室工作的时候一般面对两个显示器，大部分时候左边用来看代码，右边用来写程序。双显示屏还是有助于提高工作效率的。有一点困扰我的是如果要切换屏幕一般得用鼠标，这对于<br>Emacs党是有些不能忍受的，右手离开键盘总是得停顿一下的感觉。今天找到一个解决办法。</p>
-<p>最终找到的是这个号称Linux下键盘精灵的一个程序:<a href="http://www.semicomplete.com/projects/xdotool/" target="_blank" rel="external">xdotool</a>，下载下来编译安装。这个东西可以模拟鼠标和键盘的行为：</p>
+<p>最终找到的是这个号称Linux下键盘精灵的一个程序:<a href="http://www.semicomplete.com/projects/xdotool/" target="_blank" rel="noopener">xdotool</a>，下载下来编译安装。这个东西可以模拟鼠标和键盘的行为：</p>
 <p>比如：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><div class="line">xdotool search "Mozilla Firefox" windowactivate --sync key --clearmodifiers ctrl+l </div><div class="line">(快速切换倒firefox,并focus在地址输入栏)</div><div class="line"></div><div class="line">xdotool getmouselocation --shell  (获取当前鼠标位置等信息)</div><div class="line">X=880</div><div class="line">Y=443</div><div class="line">SCREEN=0</div><div class="line">WINDOW=16777250</div><div class="line"></div><div class="line">xdotool getactivewindow windowmove 100 100    # Moves to 100,100</div><div class="line">xdotool getactivewindow windowmove x 100      # Moves to x,100</div><div class="line">xdotool getactivewindow windowmove 100 y      # Moves to 100,y</div><div class="line">xdotool getactivewindow windowmove 100 y      # Moves to 100,y</div><div class="line">xdotool mousemove --screen 0 100 100          # Moves to screen 0 pos at 100,100</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">xdotool search "Mozilla Firefox" windowactivate --sync key --clearmodifiers ctrl+l </span><br><span class="line">(快速切换倒firefox,并focus在地址输入栏)</span><br><span class="line"></span><br><span class="line">xdotool getmouselocation --shell  (获取当前鼠标位置等信息)</span><br><span class="line">X=880</span><br><span class="line">Y=443</span><br><span class="line">SCREEN=0</span><br><span class="line">WINDOW=16777250</span><br><span class="line"></span><br><span class="line">xdotool getactivewindow windowmove 100 100    # Moves to 100,100</span><br><span class="line">xdotool getactivewindow windowmove x 100      # Moves to x,100</span><br><span class="line">xdotool getactivewindow windowmove 100 y      # Moves to 100,y</span><br><span class="line">xdotool getactivewindow windowmove 100 y      # Moves to 100,y</span><br><span class="line">xdotool mousemove --screen 0 100 100          # Moves to screen 0 pos at 100,100</span><br></pre></td></tr></table></figure>
 <p>有了上面windowmove命令，屏幕的切换就好实现了。写个丑陋的python脚本来保存当前的位置，切换到另外一个屏幕，再次调用的时候返回到原来的位置，<br>保存为mouse.py。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> commands</div><div class="line"></div><div class="line">data_f = <span class="string">"/tmp/window_data"</span></div><div class="line">now_info = commands.getoutput(<span class="string">"xdotool getmouselocation --shell"</span>).split(<span class="string">'\n'</span>)</div><div class="line">x = (now_info[<span class="number">1</span>])[<span class="number">2</span>:]</div><div class="line">y = (now_info[<span class="number">2</span>])[<span class="number">2</span>:]</div><div class="line">screen = (now_info[<span class="number">3</span>])[<span class="number">7</span>:]</div><div class="line">window = (now_info[<span class="number">4</span>])[<span class="number">7</span>:]</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_store</span><span class="params">()</span>:</span></div><div class="line">    data = open(data_f, <span class="string">"w+"</span>)</div><div class="line">    content = screen+<span class="string">"\n"</span>+x+<span class="string">"\n"</span>+y+<span class="string">"\n"</span>+window</div><div class="line">    data.write(content)</div><div class="line">    data.close()</div><div class="line">    </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_update</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">if</span> screen == <span class="string">"1"</span>:</div><div class="line">        new_sc = <span class="string">"0"</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        new_sc = <span class="string">"1"</span></div><div class="line">    cmd = <span class="string">"xdotool mousemove --screen "</span> + new_sc +  <span class="string">" 0 0"</span></div><div class="line">    commands.getoutput(cmd)</div><div class="line"></div><div class="line"><span class="keyword">if</span> os.path.exists(data_f):</div><div class="line">    data = open(data_f, <span class="string">"r+"</span>)</div><div class="line">    content = data.readlines()</div><div class="line">    data.close()</div><div class="line">    screen = content[<span class="number">0</span>][<span class="number">0</span>:<span class="number">-1</span>]</div><div class="line">    old_x = content[<span class="number">1</span>][<span class="number">0</span>:<span class="number">-1</span>]</div><div class="line">    old_y = content[<span class="number">2</span>][<span class="number">0</span>:<span class="number">-1</span>]</div><div class="line">    old_window = content[<span class="number">3</span>]</div><div class="line">    <span class="keyword">if</span> old_window != window:</div><div class="line">        cmd = <span class="string">"xdotool mousemove -w "</span> + old_window + <span class="string">" "</span> + old_x + <span class="string">" "</span> + old_y</div><div class="line">        commands.getoutput(cmd)</div><div class="line">        do_store()</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        do_store()</div><div class="line">        do_update()</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    do_store()</div><div class="line">    do_update()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> commands</span><br><span class="line"></span><br><span class="line">data_f = <span class="string">"/tmp/window_data"</span></span><br><span class="line">now_info = commands.getoutput(<span class="string">"xdotool getmouselocation --shell"</span>).split(<span class="string">'\n'</span>)</span><br><span class="line">x = (now_info[<span class="number">1</span>])[<span class="number">2</span>:]</span><br><span class="line">y = (now_info[<span class="number">2</span>])[<span class="number">2</span>:]</span><br><span class="line">screen = (now_info[<span class="number">3</span>])[<span class="number">7</span>:]</span><br><span class="line">window = (now_info[<span class="number">4</span>])[<span class="number">7</span>:]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_store</span><span class="params">()</span>:</span></span><br><span class="line">    data = open(data_f, <span class="string">"w+"</span>)</span><br><span class="line">    content = screen+<span class="string">"\n"</span>+x+<span class="string">"\n"</span>+y+<span class="string">"\n"</span>+window</span><br><span class="line">    data.write(content)</span><br><span class="line">    data.close()</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_update</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">if</span> screen == <span class="string">"1"</span>:</span><br><span class="line">        new_sc = <span class="string">"0"</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        new_sc = <span class="string">"1"</span></span><br><span class="line">    cmd = <span class="string">"xdotool mousemove --screen "</span> + new_sc +  <span class="string">" 0 0"</span></span><br><span class="line">    commands.getoutput(cmd)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> os.path.exists(data_f):</span><br><span class="line">    data = open(data_f, <span class="string">"r+"</span>)</span><br><span class="line">    content = data.readlines()</span><br><span class="line">    data.close()</span><br><span class="line">    screen = content[<span class="number">0</span>][<span class="number">0</span>:<span class="number">-1</span>]</span><br><span class="line">    old_x = content[<span class="number">1</span>][<span class="number">0</span>:<span class="number">-1</span>]</span><br><span class="line">    old_y = content[<span class="number">2</span>][<span class="number">0</span>:<span class="number">-1</span>]</span><br><span class="line">    old_window = content[<span class="number">3</span>]</span><br><span class="line">    <span class="keyword">if</span> old_window != window:</span><br><span class="line">        cmd = <span class="string">"xdotool mousemove -w "</span> + old_window + <span class="string">" "</span> + old_x + <span class="string">" "</span> + old_y</span><br><span class="line">        commands.getoutput(cmd)</span><br><span class="line">        do_store()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        do_store()</span><br><span class="line">        do_update()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    do_store()</span><br><span class="line">    do_update()</span><br></pre></td></tr></table></figure>
 <p>最后，通过Emacs下绑定快捷键来调用这个脚本即可实现两个屏幕之间的切换，又可以远离鼠标了。哈哈。</p>
 <pre class="prettyprint lang-lisp">
 (defun switch-screen()
@@ -174,11 +177,11 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Linux" >
+  <a href="/tags#Linux">
     <span class="tag-code">Linux</span>
   </a>
 
-  <a href="/tags#Tools" >
+  <a href="/tags#Tools">
     <span class="tag-code">Tools</span>
   </a>
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      Types and Programming Languages (1) | Yukang&#39;s Page
-    
+      
+          Types and Programming Languages (1) | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -150,7 +153,7 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>最近掉进另外一个PL的坑里面，就是想读一下<a href="http://www.cis.upenn.edu/~bcpierce/tapl/" target="_blank" rel="external">这本书</a>，顺便继续熟悉一下Ocaml。下面的记录是阅读过程中的一些摘录和理解。</p>
+    <section class="markdown-content"><p>最近掉进另外一个PL的坑里面，就是想读一下<a href="http://www.cis.upenn.edu/~bcpierce/tapl/" target="_blank" rel="noopener">这本书</a>，顺便继续熟悉一下Ocaml。下面的记录是阅读过程中的一些摘录和理解。</p>
 <p>1-2章是数学预备部分，理论部分有些地方比较难懂，主要是一些数学符号看久了眼花。<br>解释器的实现大多只用看syntax.ml和core.ml，就是语法和具体eval，typeof函数。</p>
 <h4 id="Untyped-Systems"><a href="#Untyped-Systems" class="headerlink" title="Untyped Systems"></a>Untyped Systems</h4><p>arith是一个无类型的解释器，是后面所有章节的基础。printtm_Term用了Format模块来格式化打印。</p>
 <h4 id="The-Untyped-Lambda-Calculus"><a href="#The-Untyped-Lambda-Calculus" class="headerlink" title="The Untyped Lambda-Calculus"></a>The Untyped Lambda-Calculus</h4><p>浅显易懂的Lambda-Calculus解释，同时列举了一些lambda calculus扩展其他语言部分的例子。</p>
@@ -172,9 +175,9 @@
 <p> Well-typed programs cannot “go wrong.” —Robin Milner (1978)</p>
 </blockquote>
 <h4 id="An-ML-Implementation-of-Simple-Types"><a href="#An-ML-Implementation-of-Simple-Types" class="headerlink" title="An ML Implementation of Simple Types"></a>An ML Implementation of Simple Types</h4><p>simplebool是一个只有bool类型的解释器，但是加上了函数。typeof挺简单，主要是函数这里注意处理形参和实参:</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line">| <span class="type">TmAbs</span>(fi,x,tyT1,t2) -&gt;</div><div class="line">    <span class="keyword">let</span> ctx' = addbinding ctx x (<span class="type">VarBind</span>(tyT1)) <span class="keyword">in</span></div><div class="line">    <span class="keyword">let</span> tyT2 = typeof ctx' t2 <span class="keyword">in</span></div><div class="line">    <span class="type">TyArr</span>(tyT1, tyT2)</div><div class="line">| <span class="type">TmApp</span>(fi,t1,t2) -&gt;</div><div class="line">    <span class="keyword">let</span> tyT1 = typeof ctx t1 <span class="keyword">in</span></div><div class="line">    <span class="keyword">let</span> tyT2 = typeof ctx t2 <span class="keyword">in</span></div><div class="line">    (<span class="keyword">match</span> tyT1 <span class="keyword">with</span></div><div class="line">        <span class="type">TyArr</span>(tyT11, tyT12) -&gt;</div><div class="line">          <span class="keyword">if</span> (=) tyT2 tyT11 <span class="keyword">then</span> tyT12</div><div class="line">          <span class="keyword">else</span> error fi <span class="string">"parameter type mismatch"</span></div><div class="line">      | _ -&gt; error fi <span class="string">"arrow type expected"</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight ocaml"><table><tr><td class="code"><pre><span class="line">| <span class="type">TmAbs</span>(fi,x,tyT1,t2) -&gt;</span><br><span class="line">    <span class="keyword">let</span> ctx' = addbinding ctx x (<span class="type">VarBind</span>(tyT1)) <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> tyT2 = typeof ctx' t2 <span class="keyword">in</span></span><br><span class="line">    <span class="type">TyArr</span>(tyT1, tyT2)</span><br><span class="line">| <span class="type">TmApp</span>(fi,t1,t2) -&gt;</span><br><span class="line">    <span class="keyword">let</span> tyT1 = typeof ctx t1 <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> tyT2 = typeof ctx t2 <span class="keyword">in</span></span><br><span class="line">    (<span class="keyword">match</span> tyT1 <span class="keyword">with</span></span><br><span class="line">        <span class="type">TyArr</span>(tyT11, tyT12) -&gt;</span><br><span class="line">          <span class="keyword">if</span> (=) tyT2 tyT11 <span class="keyword">then</span> tyT12</span><br><span class="line">          <span class="keyword">else</span> error fi <span class="string">"parameter type mismatch"</span></span><br><span class="line">      | _ -&gt; error fi <span class="string">"arrow type expected"</span>)</span><br></pre></td></tr></table></figure>
 <p>if的判断部分必须为bool，而且两个分支必须为同一类型:</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><div class="line">| <span class="type">TmIf</span>(fi,t1,t2,t3) -&gt;</div><div class="line">   <span class="keyword">if</span> (=) (typeof ctx t1) <span class="type">TyBool</span> <span class="keyword">then</span></div><div class="line">     <span class="keyword">let</span> tyT2 = typeof ctx t2 <span class="keyword">in</span></div><div class="line">     <span class="keyword">if</span> (=) tyT2 (typeof ctx t3) <span class="keyword">then</span> tyT2</div><div class="line">     <span class="keyword">else</span> error fi <span class="string">"arms of conditional have different types"</span></div><div class="line">     <span class="keyword">else</span> error fi <span class="string">"guard of conditional not a boolean"</span></div></pre></td></tr></table></figure>
+<figure class="highlight ocaml"><table><tr><td class="code"><pre><span class="line">| <span class="type">TmIf</span>(fi,t1,t2,t3) -&gt;</span><br><span class="line">   <span class="keyword">if</span> (=) (typeof ctx t1) <span class="type">TyBool</span> <span class="keyword">then</span></span><br><span class="line">     <span class="keyword">let</span> tyT2 = typeof ctx t2 <span class="keyword">in</span></span><br><span class="line">     <span class="keyword">if</span> (=) tyT2 (typeof ctx t3) <span class="keyword">then</span> tyT2</span><br><span class="line">     <span class="keyword">else</span> error fi <span class="string">"arms of conditional have different types"</span></span><br><span class="line">     <span class="keyword">else</span> error fi <span class="string">"guard of conditional not a boolean"</span></span><br></pre></td></tr></table></figure>
 <h4 id="Simple-Extensions"><a href="#Simple-Extensions" class="headerlink" title="Simple Extensions"></a>Simple Extensions</h4><p>在上一章的基础上，加上各种Drived Form。</p>
 <ul>
 <li><p>Sequencing:</p>
@@ -197,15 +200,15 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
+  <a href="/tags#Programming">
     <span class="tag-code">Programming</span>
   </a>
 
-  <a href="/tags#OCaml" >
+  <a href="/tags#OCaml">
     <span class="tag-code">OCaml</span>
   </a>
 
-  <a href="/tags#PL" >
+  <a href="/tags#PL">
     <span class="tag-code">PL</span>
   </a>
 

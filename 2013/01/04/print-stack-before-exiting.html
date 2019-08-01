@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -9,23 +9,26 @@
     <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
-    
-      获取挂掉程序的栈信息 | Yukang&#39;s Page
-    
+      
+          获取挂掉程序的栈信息 | Yukang&#39;s Page
+      
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/vs.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -151,7 +154,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>在程序挂掉的时候最好还是留点有用的遗言，特别是对于一些比较难重现的Bug，也许这些信息会成为解决问题的关键。</p>
-<p>下面这个技巧可以让程挂掉的时候打印出来栈信息。这个办法来自<a href="http://neugierig.org/software/blog/2012/06/backtraces.html" target="_blank" rel="external">这里</a>, 我觉得把SIGABRT、SIGBUS信号加进去也挺好的，在此做了点修改。曾经尝也试过glibc的backtrace函数，，但是给的信息不全(没有行号)，对此做得最好的还是gdb。 在终端可以用gdb获取某个进程的当前栈：</p>
+<p>下面这个技巧可以让程挂掉的时候打印出来栈信息。这个办法来自<a href="http://neugierig.org/software/blog/2012/06/backtraces.html" target="_blank" rel="noopener">这里</a>, 我觉得把SIGABRT、SIGBUS信号加进去也挺好的，在此做了点修改。曾经尝也试过glibc的backtrace函数，，但是给的信息不全(没有行号)，对此做得最好的还是gdb。 在终端可以用gdb获取某个进程的当前栈：</p>
 <pre><code>$ gdb -p 5595 -batch -ex bt
 0xb7fb4410 in __kernel_vsyscall ()
 #0  0xb7fb4410 in __kernel_vsyscall ()
@@ -159,8 +162,8 @@
 #2  0xb7dc2b87 in sleep () from /lib/tls/i686/cmov/libc.so.6
 #3  0x0804874f in main () at print_stack.cc:64
 </code></pre><p>那么一个好的办法就是在程序开始的时候设置好信号，绑定SIGSEGV和SIGABRT到DumpBackTrace()函数，DumpBackTrace函数fork出来一个新进程，运行上面的命令来获取调用栈。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;signal.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">DumpBacktrace</span><span class="params">(<span class="keyword">int</span>)</span> </span>&#123;</div><div class="line">    <span class="keyword">pid_t</span> dying_pid = getpid();</div><div class="line">    <span class="keyword">pid_t</span> child_pid = fork();</div><div class="line">    <span class="keyword">if</span> (child_pid &lt; <span class="number">0</span>) &#123;</div><div class="line">        perror(<span class="string">"fork() while collecting backtrace:"</span>);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (child_pid == <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">char</span> buf[<span class="number">1024</span>];</div><div class="line">        <span class="built_in">sprintf</span>(buf, <span class="string">"gdb -p %d -batch -ex bt 2&gt;/dev/null | "</span></div><div class="line">                <span class="string">"sed '0,/&lt;signal handler/d'"</span>, dying_pid);</div><div class="line">        <span class="keyword">const</span> <span class="keyword">char</span>* argv[] = &#123;<span class="string">"sh"</span>, <span class="string">"-c"</span>, buf, <span class="literal">NULL</span>&#125;;</div><div class="line">        execve(<span class="string">"/bin/sh"</span>, (<span class="keyword">char</span>**)argv, <span class="literal">NULL</span>);</div><div class="line">        _exit(<span class="number">1</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        waitpid(child_pid, <span class="literal">NULL</span>, <span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line">    _exit(<span class="number">1</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">BacktraceOnSegv</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sigaction</span> <span class="title">action</span> = &#123;</span>&#125;;</div><div class="line">    action.sa_handler = DumpBacktrace;</div><div class="line">    <span class="keyword">if</span> (sigaction(SIGSEGV, &amp;action, <span class="literal">NULL</span>) &lt; <span class="number">0</span>) &#123;</div><div class="line">        perror(<span class="string">"sigaction(SEGV)"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (sigaction(SIGABRT, &amp;action, <span class="literal">NULL</span>) &lt; <span class="number">0</span>) &#123;</div><div class="line">        perror(<span class="string">"sigaction(SEGV)"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">//assert(0);</span></div><div class="line">    <span class="keyword">int</span>* p = <span class="number">0</span>;</div><div class="line">    *p = <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    BacktraceOnSegv();</div><div class="line">    test();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>另外前段时间看到这篇文章<a href="http://www.runswift.ly/solving-bugs.html" target="_blank" rel="external">Solving vs. Fixing</a>写得不错，在面对一个bug的时候，先不要急于立马上gdb调试，根据现有的信息好好思考为什么会出现这个情况。<br>Reddit上的一个得分最高的回复：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DumpBacktrace</span><span class="params">(<span class="keyword">int</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">pid_t</span> dying_pid = getpid();</span><br><span class="line">    <span class="keyword">pid_t</span> child_pid = fork();</span><br><span class="line">    <span class="keyword">if</span> (child_pid &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">"fork() while collecting backtrace:"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (child_pid == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">char</span> buf[<span class="number">1024</span>];</span><br><span class="line">        <span class="built_in">sprintf</span>(buf, <span class="string">"gdb -p %d -batch -ex bt 2&gt;/dev/null | "</span></span><br><span class="line">                <span class="string">"sed '0,/&lt;signal handler/d'"</span>, dying_pid);</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">char</span>* argv[] = &#123;<span class="string">"sh"</span>, <span class="string">"-c"</span>, buf, <span class="literal">NULL</span>&#125;;</span><br><span class="line">        execve(<span class="string">"/bin/sh"</span>, (<span class="keyword">char</span>**)argv, <span class="literal">NULL</span>);</span><br><span class="line">        _exit(<span class="number">1</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        waitpid(child_pid, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    _exit(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BacktraceOnSegv</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sigaction</span> <span class="title">action</span> = &#123;</span>&#125;;</span><br><span class="line">    action.sa_handler = DumpBacktrace;</span><br><span class="line">    <span class="keyword">if</span> (sigaction(SIGSEGV, &amp;action, <span class="literal">NULL</span>) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">"sigaction(SEGV)"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (sigaction(SIGABRT, &amp;action, <span class="literal">NULL</span>) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">"sigaction(SEGV)"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//assert(0);</span></span><br><span class="line">    <span class="keyword">int</span>* p = <span class="number">0</span>;</span><br><span class="line">    *p = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    BacktraceOnSegv();</span><br><span class="line">    test();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外前段时间看到这篇文章<a href="http://www.runswift.ly/solving-bugs.html" target="_blank" rel="noopener">Solving vs. Fixing</a>写得不错，在面对一个bug的时候，先不要急于立马上gdb调试，根据现有的信息好好思考为什么会出现这个情况。<br>Reddit上的一个得分最高的回复：</p>
 <pre><code>The ability to reason about code is probably the most important skill. 
 But it is sadly rare, and doesn&apos;t seem to be taught much, if at all.
 Some things are simple, others take some more thought:
@@ -185,11 +188,11 @@ even on the most complex of problems.
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
+  <a href="/tags#Programming">
     <span class="tag-code">Programming</span>
   </a>
 
-  <a href="/tags#C/C++" >
+  <a href="/tags#C/C++">
     <span class="tag-code">C/C++</span>
   </a>
 
