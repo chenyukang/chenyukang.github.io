@@ -148,6 +148,34 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2019/08/06/type_check_in_c.html">C 语言的 typecheck</a>
+      </h2>
+      <p class="article-date">August 6, 2019
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <h4 id="类型保证"><a href="#类型保证" class="headerlink" title="类型保证"></a>类型保证</h4><p>强类型的编程语言通常编译器自带一些类型检查，保证代码编译后不会出现类型方面的错误，比如 Rust 之类的甚至做了变量的生命周期检查，以防止内存出错或者未定义行为。常见的变成语言类型如下：</p>
+<p><img src="/images/2019_08_06.org_20190806_012652.png" width="70%" hegiht="70%" align="center"></p>
+<h4 id="typecheck"><a href="#typecheck" class="headerlink" title="typecheck"></a>typecheck</h4><p> 但是 C 为弱类型语言，弱类型语言，类型检查更不严格，如偏向于容忍隐式类型转换。譬如说 C 语言的 int 可以变成 double。 这样的结果是：容易产生 forbidden behaviours。为了解决类似问题，Linux 内核中的这个宏比较有技巧。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> typecheck(type,x)                       \</span></div><div class="line">  (&#123;  type __dummy;                             \</div><div class="line">  typeof(x) __dummy2;                           \</div><div class="line">  (<span class="keyword">void</span>)(&amp;__dummy == &amp;__dummy2);                \</div><div class="line">  <span class="number">1</span>;                                            \</div><div class="line">  &#125;)</div></pre></td></tr></table></figure>
+<p> 使用的时候可以保证某些变量为特定的类型：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> a;</div><div class="line">typecheck(<span class="keyword">char</span>, a);</div></pre></td></tr></table></figure>
+<p> 这样就会报出一个编译错误：</p>
+<p><img src="/images/2019_08_06.org_20190806_011627.png" width="70%" hegiht="70%" align="center"></p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2019/08/06/type_check_in_c.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2019/08/01/org_mode_stuff.html">My org-mode stuff</a>
       </h2>
       <p class="article-date">August 1, 2019
@@ -157,26 +185,12 @@
         
         
             
-                <p> I switched to org-mode from EverNote recently, and the experience imrpoved much for note and journal writing, especially for technical notes. After the whole tool is set appropriately, I am even addicted to writing. During my setting up for org-mode and related tools, I found these code snippets are really handy, so let’s have a share.</p>
-<h3 id="Insert-Pic-from-paste"><a href="#Insert-Pic-from-paste" class="headerlink" title="Insert Pic from paste"></a>Insert Pic from paste</h3><p> You need to install <strong>pngpaste</strong> first, then with this elisp function, we can copy the picture from paste very quickly, the picture will store on current directory’s img sub-directory, it will create it if img directory is not exists.</p>
-<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">defun</span> org-insert-image ()</span><br><span class="line">  (<span class="name">interactive</span>)</span><br><span class="line">  (<span class="name">let*</span> ((<span class="name">path</span> (<span class="name">concat</span> default-directory <span class="string">"img/"</span>))</span><br><span class="line">         (<span class="name">image-file</span> (<span class="name">concat</span></span><br><span class="line">                      path</span><br><span class="line">                      (<span class="name">buffer-name</span>)</span><br><span class="line">                      (<span class="name">format-time-string</span> <span class="string">"_%Y%m%d_%H%M%S.png"</span>))))</span><br><span class="line">    (<span class="name">if</span> (<span class="name">not</span> (<span class="name">file-exists-p</span> path))</span><br><span class="line">        (<span class="name">mkdir</span> path))</span><br><span class="line">    (<span class="name">shell-command</span> (<span class="name">concat</span> <span class="string">"pngpaste "</span> image-file))</span><br><span class="line">    (<span class="name">org-insert-link</span> <span class="literal">nil</span> (<span class="name">concat</span> <span class="string">"file:"</span> image-file) <span class="string">""</span>))</span><br><span class="line">    <span class="comment">;; (org-display-inline-images) ;; show inline picture</span></span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
-<h3 id="Using-org-ruby-for-Hexo-publishing"><a href="#Using-org-ruby-for-Hexo-publishing" class="headerlink" title="Using org-ruby for Hexo publishing"></a>Using org-ruby for Hexo publishing</h3><p> I using Hexo for blogging, the default format is markdown in Hexo, so I need to convert org format to markdown format very conveniently, and finally org-ruby solve it. I did some dirty hacks on the codebase, <a href="https://github.com/chenyukang/org-ruby/pull/1/files" target="_blank" rel="noopener">please have a look at this PR</a>, this PR solve three issues.</p>
-<ul>
-<li>Add title and path attributes in org file, and the ruby script will extract it for dumping markdown file.</li>
-<li>Fix the fill paragraph problem, I don’t need the blanks which will broken the paragraph layout.</li>
-<li>Copy the images to proper directory for Hexo, support image size attributes.</li>
-</ul>
-<p> Then I added an elisp function for auto publish it after saving file whenever “#MD_TITLE:” is founded in buffer:</p>
-<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">defun</span> org-publish-to-hexo ()</span><br><span class="line">  (<span class="name">interactive</span>)</span><br><span class="line">  (<span class="name">shell-command</span> (<span class="name">concat</span></span><br><span class="line">                  <span class="string">"org-ruby "</span> <span class="string">"--translate "</span> <span class="string">"markdown "</span> <span class="string">"-a "</span></span><br><span class="line">                  (<span class="name">buffer-name</span>))))</span><br><span class="line">(<span class="name">defalias</span> 'op 'org-publish-to-hexo)</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> buffer-contains-substring (<span class="name">string</span>)</span><br><span class="line">  (<span class="name">save-excursion</span></span><br><span class="line">    (<span class="name">save-match-data</span></span><br><span class="line">      (<span class="name">goto-char</span> (<span class="name">point-min</span>))</span><br><span class="line">      (<span class="name">search-forward</span> string <span class="literal">nil</span> <span class="literal">t</span>))))</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> org-auto-publish-save-hook ()</span><br><span class="line">  (<span class="name">when</span> (<span class="name">and</span> (<span class="name">eq</span> major-mode 'org-mode)</span><br><span class="line">             (<span class="name">buffer-contains-substring</span> <span class="string">"#+MD_TITLE:"</span>)</span><br><span class="line">             (<span class="name">buffer-contains-substring</span> <span class="string">"#+MD_PATH:"</span>))</span><br><span class="line">    (<span class="name">message</span> <span class="string">"publishing to Hexo markdown"</span>)</span><br><span class="line">    (<span class="name">org-publish-to-hexo</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name">add-hook</span> 'after-save-hook #'org-auto-publish-save-hook)</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> org-before-save-hook ()</span><br><span class="line">  (<span class="name">when</span> (<span class="name">eq</span> major-mode 'org-mode)</span><br><span class="line">    (<span class="name">message</span> <span class="string">"saving org-file"</span>)</span><br><span class="line">    (<span class="name">pangu-spacing-space-current-buffer</span>)</span><br><span class="line">    <span class="comment">;;(fill-region (point-min) (point-max))</span></span><br><span class="line">    ))</span><br><span class="line">(<span class="name">add-hook</span> 'before-save-hook #'org-before-save-hook)</span><br></pre></td></tr></table></figure>
-<h3 id="pangu-spacing"><a href="#pangu-spacing" class="headerlink" title="pangu-spacing"></a>pangu-spacing</h3><p> This package will add spacing between Chinese word and English word, so I hooked it before save org file:</p>
-<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">require</span> 'pangu-spacing)</span><br><span class="line">(<span class="name">global-pangu-spacing-mode</span> <span class="number">1</span>)</span><br><span class="line"><span class="comment">;;(setq pangu-spacing-real-insert-separtor t)</span></span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> org-before-save-hook ()</span><br><span class="line">  (<span class="name">when</span> (<span class="name">eq</span> major-mode 'org-mode)</span><br><span class="line">    (<span class="name">message</span> <span class="string">"saving org-file"</span>)</span><br><span class="line">    (<span class="name">pangu-spacing-space-current-buffer</span>)</span><br><span class="line">    ))</span><br><span class="line"></span><br><span class="line">(<span class="name">add-hook</span> 'before-save-hook #'org-before-save-hook)</span><br></pre></td></tr></table></figure>
-<h3 id="org-capture"><a href="#org-capture" class="headerlink" title="org-capture"></a>org-capture</h3><p> And the best thing is org-capture, with this we can write all kinds of tempaltes, for journal writing, I need to generate file according to date and time:</p>
-<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">defun</span> create-code-file ()</span><br><span class="line">  (<span class="name">interactive</span>)</span><br><span class="line">  (<span class="name">let</span> ((<span class="name">name</span> (<span class="name">concat</span> (<span class="name">format-time-string</span> <span class="string">"%Y_%m_%d_"</span>)</span><br><span class="line">                       (<span class="name">read-string</span> <span class="string">"file-name: "</span>))))</span><br><span class="line">    (<span class="name">expand-file-name</span> (<span class="name">format</span> <span class="string">"%s.org"</span> name) <span class="string">"~/Dropbox/org/snippets/"</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> gen-date-file ()</span><br><span class="line">  <span class="string">"Create an org file in ~/notes/snippets."</span></span><br><span class="line">  (<span class="name">format-time-string</span> <span class="string">"~/Dropbox/org/journals/%Y_%m_%d.org"</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">setq</span> org-capture-templates</span><br><span class="line">      '((<span class="string">"t"</span> <span class="string">"Todo"</span> entry (file+datetree <span class="string">"~/Dropbox/org/work.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %?\n  %i\n "</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"x"</span> <span class="string">"Task"</span> entry (file+datetree <span class="string">"~/Dropbox/org/work.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n"</span>)</span><br><span class="line">        (<span class="string">"e"</span> <span class="string">"Task"</span> entry (file+datetree <span class="string">"~/Dropbox/org/life.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"l"</span> <span class="string">"Todo"</span> entry (file+datetree <span class="string">"~/Dropbox/org/learn.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %?\nEntered on %U\n  %i\n\n "</span> :kill-buffer <span class="literal">t</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"k"</span> <span class="string">"Todo"</span> entry (file+datetree <span class="string">"~/Dropbox/org/learn.org"</span>)</span><br><span class="line">         <span class="string">"* TODO %?\n  %i\n %f\n %a"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"j"</span> <span class="string">"Journal"</span> entry (file+datetree <span class="string">"~/Dropbox/org/_journal.org"</span> )</span><br><span class="line">         <span class="string">"** %?\nEntered on %U\n  %i\n"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"J"</span> <span class="string">"Journal"</span> entry (file gen-date-file)</span><br><span class="line">         <span class="string">"** %?\nEntered on %U\n  %i\n"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"c"</span> <span class="string">"Code snippet"</span> entry (file+headline <span class="string">"~/Dropbox/org/_code.org"</span> <span class="string">"Code"</span>)</span><br><span class="line">         <span class="string">"** %^&#123;desc&#125;\n#+BEGIN_SRC %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC"</span> </span><br><span class="line">          :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"C"</span> <span class="string">"Notes"</span> entry (file create-code-file)</span><br><span class="line">         <span class="string">"** %^&#123;desc&#125;\n#+BEGIN_SRC %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC"</span> </span><br><span class="line">          :empty-lines <span class="number">1</span>)</span><br><span class="line">        ))</span><br></pre></td></tr></table></figure>
+                 I switched to org-mode from EverNote recently, and the experience imrpoved much for note and journal writing, especially for technical notes. A .....
             
         
       </div>
       
-          <a class="more" href="/2019/08/01/org_mode_stuff.html#footer">发表评论</a>
+          <a class="more" href="/2019/08/01/org_mode_stuff.html">阅读全文</a>
       
     </article>
   
@@ -390,32 +404,6 @@ zsh 配置下面这个配置主要增强了 zsh 的 history 补全，以及pwdf�
       </div>
       
           <a class="more" href="/2019/01/04/peco-for-zsh.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2019/01/01/compile-script-to-binary-for-obfuscation.html">编译脚本到二进制</a>
-      </h2>
-      <p class="article-date">January 1, 2019
-          
-              
-  <a href="/tags#Rust" >
-    <span class="tag-code">Rust</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                缘由因为自己习惯使用 expect 脚本登录各种服务器，有一段时间因为要登录的服务器太多了，所以之前写过一个程序来管理各种 expect 脚本。实现思路是根据配置文件，用一个程序来动态生成脚本，执行完之后再删除。这样临时生成的文件里也是包含密码等信息的。最近突然想是不是可以直接写一个程序 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2019/01/01/compile-script-to-binary-for-obfuscation.html">阅读全文</a>
       
     </article>
   
