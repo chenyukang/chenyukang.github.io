@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+      
+          限流相关知识 | Yukang&#39;s Page
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>限流相关知识</h2>
+  <p class="post-date">2020-09-08</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="基本限流原理"><a href="#基本限流原理" class="headerlink" title="基本限流原理"></a>基本限流原理</h2><blockquote>
+<p>业界较为常见的两个基础限流算法是漏斗算法和令牌算法，这两个算法大同小异。漏斗算法可以理解为每一个请求都会消耗一定的空气，而漏斗里的空气是有限的，通过漏水的方式获得空气的速率也是有限的。令牌算法可以理解为每一个请求都会消耗一个令牌，而令牌桶生产令牌的能力是有限的，存放令牌的桶容量也是有限的。</p>
+</blockquote>
+<h3 id="漏桶算法"><a href="#漏桶算法" class="headerlink" title="漏桶算法"></a>漏桶算法</h3><p>漏桶可以看作是一个带有常量服务时间的单服务器队列，如果漏桶（包缓存）溢出，那么数据包会被丢弃。在网络中，漏桶算法可以控制端口的流量输出速率，平滑网络上的突发流量，实现流量整形，从而为网络提供一个稳定的流量。</p>
+<p><img src="/images/arc.org_20190731_145606.png" alt="file:img/arc.org_20190731_145606.png"></p>
+<h3 id="令牌桶算法"><a href="#令牌桶算法" class="headerlink" title="令牌桶算法"></a>令牌桶算法</h3><ul>
+<li><p>定义一个令牌桶，其拥有几个关键属性</p>
+<ul>
+<li>桶容量</li>
+<li>令牌产生速率</li>
+<li>当前桶中令牌数</li>
+<li>最近一次取（生成）令牌时间</li>
+</ul>
+</li>
+<li><p>从桶中申请令牌，这一步中有两个关键动作</p>
+<ul>
+<li>根据上一次生成令牌时间到现在的时间，及生成速率计算出当前令牌桶中的令牌数</li>
+<li>判断令牌桶中是否有足够的令牌，并返回结果</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/arc.org_20190731_145621.png" alt="file:img/arc.org_20190731_145621.png"></p>
+<h3 id="两者差异"><a href="#两者差异" class="headerlink" title="两者差异"></a>两者差异</h3><p>本质上是生产者消费者的事情。而实际上，这两种算法具有截然不同的特性并且为截然不同的目的而使用。它们之间最主要的差别在于：</p>
+<p>漏桶算法能够强行限制数据的传输速率，而令牌桶算法能够在限制数据的平均传输速率的同时还允许某种程度的突发传输。</p>
+<p>漏桶: 漏桶的出水速度是恒定的，那么意味着如果瞬时大流量的话，将有大部分请求被丢弃掉（也就是所谓的溢出）。</p>
+<p>令牌桶: 生成令牌的速度是恒定的，而请求去拿令牌是没有速度限制的。这意味，面对瞬时大流量，该算法可以在短时间内请求拿到大量令牌，而且拿令牌的过程并不是消耗很大的事情。</p>
+<h2 id="一些实现"><a href="#一些实现" class="headerlink" title="一些实现"></a>一些实现</h2><h3 id="Nginx-的限流"><a href="#Nginx-的限流" class="headerlink" title="Nginx 的限流"></a>Nginx 的限流</h3><p><a href="https://nginx.org/en/docs/http/ngx_http_limit_req_module.html" target="_blank" rel="external">参考 Nginx 文档</a>，Nginx 使用的就是漏桶算法，使用方法如下：</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><div class="line"><span class="attribute">limit_req_zone</span> <span class="variable">$binary_remote_addr</span> zone=perip:<span class="number">10m</span> rate=1r/s;</div><div class="line"><span class="attribute">limit_req_zone</span> <span class="variable">$server_name</span> zone=perserver:<span class="number">10m</span> rate=10r/s;</div><div class="line"></div><div class="line"></div><div class="line"><span class="section">server</span> &#123;</div><div class="line">    ...</div><div class="line">    <span class="attribute">limit_req</span> zone=perip burst=<span class="number">5</span> nodelay;</div><div class="line">    <span class="attribute">limit_req</span> zone=perserver burst=<span class="number">10</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="使用-shared-cache-简单实现"><a href="#使用-shared-cache-简单实现" class="headerlink" title="使用 shared.cache 简单实现"></a>使用 shared.cache 简单实现</h3><p>如果我们是简单限制请求到后端的 RPS， 但是又有一些情况需要特殊处理，比如某些 token 就不限制等，那么可以利用 OpenResty 的 shared.cache  的 key 过期时间这个特性。<a href="https://github.com/Kong/kong/blob/0.10.3/kong/tools/database_cache.lua" target="_blank" rel="external">Kong 的 cache 层做了很好的封装</a>，可以参考，限制 RPS 基本代码如下所示：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">rps_check</span><span class="params">(conf, request_uri, limit)</span></span></div><div class="line">  <span class="keyword">local</span> key = get_local_key(ngx.ctx.api.id, request_uri)</div><div class="line">  <span class="keyword">local</span> current, _ = cache.sh_get(key)</div><div class="line">  <span class="keyword">if</span> current ~= <span class="literal">nil</span> <span class="keyword">and</span> current &gt; limit <span class="keyword">then</span></div><div class="line">     <span class="keyword">return</span> ... <span class="comment">-- rejct request and return</span></div><div class="line">  <span class="keyword">end</span></div><div class="line">  cache.sh_add(key, <span class="number">0</span>, <span class="number">1</span>) <span class="comment">--  设置过期时间为 1 s</span></div><div class="line">  <span class="keyword">local</span> _, err = cache.sh_incr(key, <span class="number">1</span>) <span class="comment">--  处理请求，增加 value</span></div><div class="line">  <span class="keyword">if</span> err <span class="keyword">then</span> <span class="keyword">return</span> <span class="literal">nil</span>, err <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<p>或者使用 OpenResty 的更完善的实现： <a href="https://github.com/openresty/lua-resty-limit-traffic" target="_blank" rel="external">https://github.com/openresty/lua-resty-limit-traffic</a></p>
+<h3 id="Redis-cell"><a href="#Redis-cell" class="headerlink" title="Redis-cell"></a>Redis-cell</h3><p>我们可以使用 Redis + Lua 来实现这个限流功能，但是 Lua 的性能要比 C 弱很多，通常这个限流算法能达到 1w 左右的 QPS 就到顶了。还可以使用 Redis-Cell 模块，其内部使用 Rust 实现，它能达到 5w 左右的 QPS 也就到极限了。这时候它们都进入了满负荷状态，但是在生产环境中我们不会希望它们一直满负荷工作。</p>
+<p>限流组件，使用 Rust 实现：<a href="https://www.jianshu.com/p/1b026b874c40" target="_blank" rel="external">https://www.jianshu.com/p/1b026b874c40</a></p>
+<h2 id="分布式限流"><a href="#分布式限流" class="headerlink" title="分布式限流"></a>分布式限流</h2><p><img src="/images/arc.org_20190731_145930.png" alt="file:img/arc.org_20190731_145930.png"></p>
+<blockquote>
+<p>我们将整体的 QPS 按照权重分散多每个子节点，每个字节点在内存中进行单机限流。如果每个节点都是对等的，那么每个子节点就可以分得 1/n 的 QPS。</p>
+<p>它的优点在于分散了限流压力，将 IO 操作变成纯内存计算，这样就可以很轻松地应对超高的 QPS 限流。但是这也增加了系统的复杂度，需要有一个集中的配置中心来向每个子节点来分发 QPS 阈值，需要每个应用字节点向这个配置中心进行注册，需要有一个配置管理后台来对系统的 QPS 分配进行管理。</p>
+</blockquote>
+<h2 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2><p><a href="https://juejin.im/post/5cf2007951882521bf3407dbhttps://segmentfault.com/a/1190000015967922https://www.jianshu.com/p/1b026b874c40[令牌桶算法](https://baike.baidu.com/item/%E4%BB%A4%E7%89%8C%E6%A1%B6%E7%AE%97%E6%B3%95" target="_blank" rel="external">https://juejin.im/post/5cf2007951882521bf3407dbhttps://segmentfault.com/a/1190000015967922https://www.jianshu.com/p/1b026b874c40[令牌桶算法](https://baike.baidu.com/item/%E4%BB%A4%E7%89%8C%E6%A1%B6%E7%AE%97%E6%B3%95</a>)</p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2020/09/08/database.html">
+        <span class="nav-arrow">← </span>
+        
+          数据库相关知识
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2020/09/08/networking-notes.html">
+        
+          网络相关知识
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#基本限流原理"><span class="toc-nav-text">基本限流原理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#漏桶算法"><span class="toc-nav-text">漏桶算法</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#令牌桶算法"><span class="toc-nav-text">令牌桶算法</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#两者差异"><span class="toc-nav-text">两者差异</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一些实现"><span class="toc-nav-text">一些实现</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Nginx-的限流"><span class="toc-nav-text">Nginx 的限流</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#使用-shared-cache-简单实现"><span class="toc-nav-text">使用 shared.cache 简单实现</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Redis-cell"><span class="toc-nav-text">Redis-cell</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#分布式限流"><span class="toc-nav-text">分布式限流</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参考："><span class="toc-nav-text">参考：</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://chenyukang.github.io/2020/09/08/req-limit.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "限流相关知识",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

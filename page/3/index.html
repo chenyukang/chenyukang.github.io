@@ -148,6 +148,77 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2018/02/23/nginx-https-too-many-redirect.html">Nginx https too many redirect</a>
+      </h2>
+      <p class="article-date">February 23, 2018
+          
+              
+  <a href="/tags#Nginx" >
+    <span class="tag-code">Nginx</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: 
+return 302 https://$host$request_uri; ## 需要注意这里是request_uri而不是uri，否则会引起安全问题
+但是如果是多层Nginx，前面的Nginx .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2018/02/23/nginx-https-too-many-redirect.html">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2018/02/22/linux-source.html">Linux 当前 shell 执行命令</a>
+      </h2>
+      <p class="article-date">February 22, 2018
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要unset 当前shell 的环境变量等，
+#!/usr/bin/env zshif [ -z $http_proxy ]; then    echo "not using p .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2018/02/22/linux-source.html">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2018/02/12/ruby-open-vul.html">Ruby的 open 函数导致命令执行</a>
+      </h2>
+      <p class="article-date">February 12, 2018
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                说明首先看看 open 函数的文档说明， https://apidock.com/ruby/v1_9_3_392/Kernel/open/class： 
+
+If path starts with a pipe character, a subprocess is created, con .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2018/02/12/ruby-open-vul.html">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2017/09/17/bucklescript-and-reason.html">BuckleScript and Reason</a>
       </h2>
       <p class="article-date">September 17, 2017
@@ -341,86 +412,6 @@ worker模型假设我们对Kong做了一个更改的请求，这个请求通常�
       </div>
       
           <a class="more" href="/2017/07/23/kong-intro-5.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/07/22/kong-intro-4.html">Kong源码分析: 缓存</a>
-      </h2>
-      <p class="article-date">July 22, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Nginx里的缓存使用在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是插件相关的配置，缓存之后就存储在内存中。
-Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又分两种类型的缓存，一种是shared dict, 一种是使用lua .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/07/22/kong-intro-4.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/07/16/kong-intro-3.html">Kong源码分析: 插件</a>
-      </h2>
-      <p class="article-date">July 16, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                插件的强大之处在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提供了提供模块开发机制，但是相对来说更底层一些，并且需要使用 C/C++ 来开发，对于很多开发人员来说 Nginx 仍为一个黑盒。OpenResty 集成了很多好用插件，并提供 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/07/16/kong-intro-3.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2017/07/07/kong-intro-2.html">Kong源码分析: 启动</a>
-      </h2>
-      <p class="article-date">July 7, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Kong的初始化过程安装好Kong之后我们是用命令sudo ./bin/kong start -c kong.conf -vv来启动。其中kong.conf为配置文件，-vv选项打印出一些重要信息展示出来，方便发现问题。
-可以看到./bin/kong是一个脚本，是用的#!/usr/loc .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2017/07/07/kong-intro-2.html">阅读全文</a>
       
     </article>
   
