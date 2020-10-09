@@ -153,7 +153,7 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p></p><h2>POJ 2714</h2><br>最近又在POJ上做题，碰上<a href="http://poj.org/problem?id=2714" target="_blank" rel="noopener">2714</a>，题意是：<p></p>
+    <section class="markdown-content"><p></p><h2>POJ 2714</h2><br>最近又在POJ上做题，碰上<a href="http://poj.org/problem?id=2714" target="_blank" rel="external">2714</a>，题意是：<p></p>
 <p>输入N，和N个点(x,y)，从原点开始一共可以走N步，每一步可以随机选择移动(x,y)，或者(-x,-y)。N的范围为1-100。<br>输出最远能走到离开原点多远的地方，输出其距离。</p>
 <p>分析一下，用迭代肯定可以，不过2^N的复杂度肯定太高了。每步有两种选择，其本质是求一个长度为N的0、1序列使得最后的值最大，为一个优化问 题。这里贪心不能求到最优解，稍微证明一下就能得出。如果不贪心，或者把贪心的范围扩大一点，求出每一步完后的凸包呢，然后再在这步的基础上继续扩展下一 些节点，再求凸包，继续如此，最后求得凸包中距离最远的。求凸包的复杂度位O(nlgn)，即最后的复杂度为O(N^2lgN)，是可以接受的。</p>
 <p></p><h2>随机搜索</h2><br>以前看过《集体智慧编程》这本书，这里有一章是说的优化。稍微回顾一下其中的几个算法。对于优化问题，首先得找到一个评价函数，对于其某个方案评价函数能给出某个值评估方案的优劣。至于返回值越大还是越好没有规定，对于特定的问题选择特定的评价函数。 随机搜索不是一种好的优化算法，但是却是后面的算法的根源。其基本思想是，我们随机长生一些解，看是否好，如果比当前更好，替换当前最优解，直到收敛了，或者猜测了足够的次数了。<p></p>
@@ -176,7 +176,7 @@
 
 <p>说明：上面的图来自《集体智慧编程》中，这是本不错的书，在网上有代码，python写的，感兴趣的同学可以仔细看看。</p>
 <p>我试着用遗传算法去解上面这个问题，参数调了很多次，最后还是能在一个可以接受的时间内得到所有正确的解。</p>
-<p>代码在后面，写得很难看。<a href="http://moorekang.com/wp-content/uploads/2010/11/gene_alg.zip" target="_blank" rel="noopener">gene_alg</a></p>
+<p>代码在后面，写得很难看。<a href="http://moorekang.com/wp-content/uploads/2010/11/gene_alg.zip" target="_blank" rel="external">gene_alg</a></p>
 </section>
     <!-- Tags START -->
     

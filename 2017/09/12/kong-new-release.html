@@ -153,7 +153,7 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>Kong发布了新的版本<a href="https://github.com/Mashape/kong/releases/tag/0.11.0" target="_blank" rel="noopener">0.11.0</a>，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了serf，这样整个Kong节点之间的缓存同步方式变化了。开发者给出的理由如下： </p>
+    <section class="markdown-content"><p>Kong发布了新的版本<a href="https://github.com/Mashape/kong/releases/tag/0.11.0" target="_blank" rel="external">0.11.0</a>，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了serf，这样整个Kong节点之间的缓存同步方式变化了。开发者给出的理由如下： </p>
 <ol>
 <li>依赖serf，serf并不属于Nginx/OpenResty</li>
 <li>这种依赖相互间通信来同步的机制对于deployment和容器化都有些不便</li>
@@ -161,13 +161,13 @@
 </ol>
 <p>新的实现的思路是以数据库作为中心，增加一个cluster events的表。任何Kong node都可以向数据库发送变更消息，其他节点polling数据库改动，然后来更新缓存内容。这个改动非常大，不过最终Kong终于实现了节点无状态，之前那个数据库里的nodes可以丢弃掉了，任何时候节点重启只要连上数据库即可工作。我们需要担心的是这么多节点去polling数据库(当然这些动作都是在后台)，是否是一个比较耗时的工作。</p>
 <p>Kong增加了新的配置选项db_update_frequency，默认为5s，表示多长时间polling一次，这需要用户自己权衡效率和及时性了。对于我们的业务来说及时性还是很重要的，比如我们新品发布时间精确到秒，那么我们就需要尽量调低这个参数。</p>
-<p>所有的改动在<a href="https://github.com/Mashape/kong/pull/2561/files，" target="_blank" rel="noopener">https://github.com/Mashape/kong/pull/2561/files，</a></p>
+<p>所有的改动在<a href="https://github.com/Mashape/kong/pull/2561/files，" target="_blank" rel="external">https://github.com/Mashape/kong/pull/2561/files，</a></p>
 <p>我大概看了一下代码，一些值得注意的地方如下：</p>
 <ol>
 <li>cluster相关的API和cmd都被移掉了，启动部分和serf信号处理部分都删掉了不少代码。</li>
-<li>polling需要避免一个问题，比如上一次polling还未执行完成，下一次polling就不应该启动，所以这里需要锁来处理。<a href="https://github.com/Mashape/kong/pull/2561/files#diff-44982f7ff5cb89eaf66ed31217aa0d12" target="_blank" rel="noopener">kong/cluster_events.lua</a>实现了polling的主要过程。</li>
-<li><a href="https://github.com/Mashape/kong/pull/2561/files#diff-904358fb4394ddf0541b4b3ede669a82" target="_blank" rel="noopener">kong/cluster_events/strategies/postgres.lua</a>目前polling还不支持分页，cluster_events是一个新建的表用来存储缓存更新事件，Kong节点就是来查询这些事件。</li>
-<li>缓存部分换成了<a href="https://github.com/thibaultcha/lua-resty-mlcache" target="_blank" rel="noopener">lua-resty-mlcache</a>，原来还是和之前分析的类似 L1级别缓存为一个LURcache，在LuaVM里可见， L2级别的缓存为lua_shared_dict，同一个Nginx下的所有worker可见， L3就是缓存未命中的情况，需要调用其他hookup的函数去获取数据然后缓存在L2。只是这里个ipc并不是用的lua-resty-mlcache里的，而是使用的resty.worker.events。</li>
+<li>polling需要避免一个问题，比如上一次polling还未执行完成，下一次polling就不应该启动，所以这里需要锁来处理。<a href="https://github.com/Mashape/kong/pull/2561/files#diff-44982f7ff5cb89eaf66ed31217aa0d12" target="_blank" rel="external">kong/cluster_events.lua</a>实现了polling的主要过程。</li>
+<li><a href="https://github.com/Mashape/kong/pull/2561/files#diff-904358fb4394ddf0541b4b3ede669a82" target="_blank" rel="external">kong/cluster_events/strategies/postgres.lua</a>目前polling还不支持分页，cluster_events是一个新建的表用来存储缓存更新事件，Kong节点就是来查询这些事件。</li>
+<li>缓存部分换成了<a href="https://github.com/thibaultcha/lua-resty-mlcache" target="_blank" rel="external">lua-resty-mlcache</a>，原来还是和之前分析的类似 L1级别缓存为一个LURcache，在LuaVM里可见， L2级别的缓存为lua_shared_dict，同一个Nginx下的所有worker可见， L3就是缓存未命中的情况，需要调用其他hookup的函数去获取数据然后缓存在L2。只是这里个ipc并不是用的lua-resty-mlcache里的，而是使用的resty.worker.events。</li>
 <li>事件处理部分分两部分，worker之间的事件和node之间的处理，分别由worker_events和cluster_event.lua来处理。</li>
 </ol>
 </section>
@@ -176,12 +176,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Kong" >
-    <span class="tag-code">Kong</span>
-  </a>
-
   <a href="/tags#Lua" >
     <span class="tag-code">Lua</span>
+  </a>
+
+  <a href="/tags#Kong" >
+    <span class="tag-code">Kong</span>
   </a>
 
       </div>
