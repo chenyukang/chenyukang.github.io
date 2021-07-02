@@ -148,47 +148,6 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
-        <a href="/2011/06/14/advanced-linux-porg-notes.html">《Advanced linux progamming》笔记</a>
-      </h2>
-      <p class="article-date">June 14, 2011
-          
-              
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
-  </a>
-
-  <a href="/tags#Linux" >
-    <span class="tag-code">Linux</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Writing and using Libraries
-
-链接分为动态链接和静态链接。
-
-Archives
-
-archive(静态链接)为目标文件的集合，linker从archive文件中找到obj文件进行链接。
-
-
-% ar cr libtest.a test1.o test2.o
-
- .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2011/06/14/advanced-linux-porg-notes.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
         <a href="/2011/06/07/554.html">从豆瓣FM下载喜欢的音乐</a>
       </h2>
       <p class="article-date">June 7, 2011
@@ -229,45 +188,17 @@ archive(静态链接)为目标文件的集合，linker从archive文件中找到o
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
-        <a href="/2011/05/23/hexiethings.html">有些该知道的</a>
-      </h2>
-      <p class="article-date">May 23, 2011
-          
-              
-  <a href="/tags#Life|Notes" >
-    <span class="tag-code">Life|Notes</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                最早是在嫣牛博上乱逛，看到一个叫做”推倒柏林墙“的系列几篇文章都挺好玩的。然后在网上找了一个这系列的集合，大概这半个月时不时在看这里的一些文章，从中得到不少新的认知，因此在这里推荐一下。
-
-不像某个小同学如此年纪有如此政治觉悟，本来我是对于政治甚至历史并不怎么感兴趣的，不感兴趣是觉得政治 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2011/05/23/hexiethings.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
         <a href="/2011/05/22/memcached.html">读memcached</a>
       </h2>
       <p class="article-date">May 22, 2011
           
               
-  <a href="/tags#C" >
-    <span class="tag-code">C</span>
-  </a>
-
   <a href="/tags#Linux" >
     <span class="tag-code">Linux</span>
+  </a>
+
+  <a href="/tags#C" >
+    <span class="tag-code">C</span>
   </a>
 
   <a href="/tags#Backup" >
@@ -439,12 +370,12 @@ assoc.c: 记录一个item是否存在于缓存中，这里使用了power 2扩展
     <span class="tag-code">Programming</span>
   </a>
 
-  <a href="/tags#C" >
-    <span class="tag-code">C</span>
-  </a>
-
   <a href="/tags#Linux" >
     <span class="tag-code">Linux</span>
+  </a>
+
+  <a href="/tags#C" >
+    <span class="tag-code">C</span>
   </a>
 
           
@@ -494,6 +425,67 @@ assoc.c: 记录一个item是否存在于缓存中，这里使用了power 2扩展
       </div>
       
           <a class="more" href="/2011/03/03/ood_for_wife.html">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2011/02/22/workingtime.html">在显示器前干了什么</a>
+      </h2>
+      <p class="article-date">February 22, 2011
+          
+              
+  <a href="/tags#Backup" >
+    <span class="tag-code">Backup</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+          <p></p><h4>时间啊时间</h4><p></p>
+<p class="first">写论文头大，翻资料找到一个以前写的小东西。有段时间在实验室，一坐就是一整天，经常在网上找找资料，找着找着就从一个链接点到另一链接，从豆瓣到Hoop，再弹出个QQ，一整个上午就过去了。天天对这显示器，于是就想我整天呆在这大部分时间在干什么了，要是有个记录就好了。就想写这么一个小程序，来记录我一天在电脑前花的时间分布。</p>
+
+<p></p><h4>方法</h4><p></p>
+<p class="first">怎么实现呢。要知道现在在干什么，就应该要知道我现在在活动程序，编辑或者鼠标点击的。如何知道现在活动的程序名，如果能获得当前活动的程序的可执行文件的路径就比较好办了。于是在网上找了找，在Windows下可以这样实现。</p>
+
+<p><pre class="src"><span style="color: #98f5ff;">CString</span> <span style="color: #daa520; font-weight: bold;">getProcPath</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">PID</span>)<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回pid进程的可执行程序名称<br></span>{<br>        <span style="color: #98f5ff;">HANDLE</span> <span style="color: #4eee94;">hModule</span>;<br>        <span style="color: #98f5ff;">MODULEENTRY32</span>* <span style="color: #4eee94;">minfo</span>=<span style="color: #00bfff; font-weight: bold;">new</span> <span style="color: #98f5ff;">MODULEENTRY32</span>;<br>        minfo-&gt;dwSize=<span style="color: #00bfff; font-weight: bold;">sizeof</span>(MODULEENTRY32);<br>        hModule=CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,PID);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">对系统进程进行拍照</span></pre></p>
+<p>        Module32First(hModule, minfo);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回与进程相关的第一个模块信息<br></span><br>        <span style="color: #98f5ff;">CString</span> <span style="color: #4eee94;">str</span>;<br>        str=CString(minfo-&gt;szExePath);<br>        CloseHandle(hModule);<br>        <span style="color: #00bfff; font-weight: bold;">if</span>(minfo) <span style="color: #00bfff; font-weight: bold;">delete</span> minfo;</p>
+<pre><code>&lt;span style=&quot;color: #00bfff; font-weight: bold;&quot;&gt;return&lt;/span&gt; str;
+</code></pre><p>}<br>
+        
+      </div>
+      
+          <a class="more" href="/2011/02/22/workingtime.html">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
+        <a href="/2011/02/16/chunjie.html">春节杂记</a>
+      </h2>
+      <p class="article-date">February 16, 2011
+          
+              
+  <a href="/tags#Notes" >
+    <span class="tag-code">Notes</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                在家待了三周，一直是豆瓣和围脖，以前觉得为什么这么那么多人玩围脖、twitter，这东西真的挺无聊的，但无聊起来这真是个好东西咯，哈哈。
+
+年前的同学聚会必然少不了，只是也确实觉得没特别大的意思。很多年没见的同学，之前真的很想见，可是见后又有那么点失望，除了变成熟一点什么都没 变。为什么 .....
+            
+        
+      </div>
+      
+          <a class="more" href="/2011/02/16/chunjie.html">阅读全文</a>
       
     </article>
   
