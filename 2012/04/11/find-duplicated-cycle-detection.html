@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.9.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -27,8 +27,8 @@
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -171,10 +171,10 @@
 
 <p><br>[Cycle detection]是一个经典的计算机问题。经典的算法是Floyd’s cycle-finding algorithm，这个算法简单而优美。严格的数学证明当然可以，也能更明显的从现实经验得出结论。如果一个赛道中间出现某个环(分两种情况，赛道本身是环、赛道前面有一段没环而中间出现一个环9字形)，求这个环的周长C。让两位运动员同时出发，并且P1的速度是P2的两倍，当他们第一重新相遇的时候，一定是在环的某个点上，并且其路程之差为这个环的周长的K倍(K&gt;=1)，这解决了一部分问题，我们知道了KC的值，如果K==1，则得出结果，说明两人刚好是在环开始点相遇。否则就是在环内其余点相遇，可以得知现在P2的路程为KC(P1的路程为2KC), 如果让P3以和P2同样的速度从起点开始，P2继续从相遇点开始跑，那么P2和P3肯定还会相遇，并且相遇的点一定为环开始点! 回到这个问题，这个index的值就是重复的值。代码描述如下：<br></p>
 
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">detectCycle</span><span class="params">(<span class="keyword">int</span>* seq， <span class="keyword">int</span> Num)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">int</span> slow = Num <span class="number">-1</span>;</div><div class="line">    <span class="keyword">int</span> fast = Num <span class="number">-1</span>;</div><div class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">        slow = seq[slow];</div><div class="line">        fast = seq[seq[fast]];</div><div class="line">        <span class="keyword">if</span>(slow == fast)</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">int</span> finder = Num - <span class="number">1</span>;</div><div class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">        slow = seq[slow];</div><div class="line">        finder = seq[finder];</div><div class="line">        <span class="keyword">if</span>(slow == finder)</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> finder;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">detectCycle</span><span class="params">(<span class="keyword">int</span>* seq， <span class="keyword">int</span> Num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> slow = Num <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">int</span> fast = Num <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        slow = seq[slow];</span><br><span class="line">        fast = seq[seq[fast]];</span><br><span class="line">        <span class="keyword">if</span>(slow == fast)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> finder = Num - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        slow = seq[slow];</span><br><span class="line">        finder = seq[finder];</span><br><span class="line">        <span class="keyword">if</span>(slow == finder)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> finder;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><br>算法描述很简单，但其中思维的却很有乐趣。以前同样有一个问题，检测一个链表是否有环，这是由此出来的一个特例，因为对于一个链表的每个节点除了头节点都有一个前节点和后节点(无环则末节点指向空)，而图是一个更通用的模型。<br></p>
 
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">hasCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</div><div class="line">  ListNode* slow = head;</div><div class="line">  ListNode* fast = head;</div><div class="line">  <span class="keyword">while</span>(fast &amp;&amp; fast-&gt;next) &#123;</div><div class="line">      slow = slow-&gt;next;</div><div class="line">      fast = fast-&gt;next-&gt;next;</div><div class="line">      <span class="keyword">if</span>(slow == fast)</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">    &#125;</div><div class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">hasCycle</span><span class="params">(ListNode *head)</span> </span>&#123;</span><br><span class="line">  ListNode* slow = head;</span><br><span class="line">  ListNode* fast = head;</span><br><span class="line">  <span class="keyword">while</span>(fast &amp;&amp; fast-&gt;next) &#123;</span><br><span class="line">      slow = slow-&gt;next;</span><br><span class="line">      fast = fast-&gt;next-&gt;next;</span><br><span class="line">      <span class="keyword">if</span>(slow == fast)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </section>
     <!-- Tags START -->
     
@@ -322,7 +322,7 @@
 </div>
     <footer class="app-footer" id="footer">
     <p class="copyright">
-        &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
         with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>

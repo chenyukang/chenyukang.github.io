@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.9.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -10,7 +10,7 @@
   
   <title>
       
-          Yukang&#39;s Page
+          UbiGraph动态显示Python函数调用 | Yukang&#39;s Page
       
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -27,8 +27,8 @@
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -144,7 +144,7 @@
 </header>
 
     <div id="article-banner">
-  <h2></h2>
+  <h2>UbiGraph动态显示Python函数调用</h2>
   <p class="post-date">2012-09-27</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -153,18 +153,30 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>layout: post<br>title: “UbiGraph动态显示Python函数调用”<br>description: “”<br>category:<br>tags: [Python, Tools]</p>
-<h2 id="UbiGraph显示环境"><a href="#UbiGraph显示环境" class="headerlink" title="UbiGraph显示环境"></a>UbiGraph显示环境</h2><p> <a href="http://www.ubietylab.net/ubigraph/content/Docs/index.html" target="_blank" rel="external">UbiGraph</a>是一个显示平台，可以非常方便地使用Python/C/Ruby来控制渲染，只需要制定节点和边还有其他相关属性，其余的都不用管了。其使用XML-RPC服务于客户端，所以甚至可以在一台机器上开server，在另外一台机器上用渲染代码控制，这个环境对于算法和数据的可视化很有用。 比如：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><div class="line"><span class="keyword">import</span> ubigraph</div><div class="line"></div><div class="line">U = ubigraph.Ubigraph()</div><div class="line">U.clear()</div><div class="line"></div><div class="line">x = U.newVertex(shape=<span class="string">"sphere"</span>, color=<span class="string">"#ffff00"</span>)</div><div class="line"></div><div class="line">smallRed = U.newVertexStyle(shape=<span class="string">"sphere"</span>, color=<span class="string">"#ff0000"</span>, size=<span class="string">"0.2"</span>)</div><div class="line"></div><div class="line">previous_r = <span class="keyword">None</span></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">10</span>):</div><div class="line">  r = U.newVertex(style=smallRed, label=str(i))</div><div class="line">  U.newEdge(x,r,arrow=<span class="keyword">True</span>)</div><div class="line">  <span class="keyword">if</span> previous_r != <span class="keyword">None</span>:</div><div class="line">   U.newEdge(r,previous_r,spline=<span class="keyword">True</span>,stroke=<span class="string">"dashed"</span>)</div><div class="line">  previous_r = r</div></pre></td></tr></table></figure>
+    <section class="markdown-content"><h2 id="UbiGraph显示环境"><a href="#UbiGraph显示环境" class="headerlink" title="UbiGraph显示环境"></a>UbiGraph显示环境</h2><p> <a href="http://www.ubietylab.net/ubigraph/content/Docs/index.html" target="_blank" rel="noopener">UbiGraph</a>是一个显示平台，可以非常方便地使用Python/C/Ruby来控制渲染，只需要制定节点和边还有其他相关属性，其余的都不用管了。其使用XML-RPC服务于客户端，所以甚至可以在一台机器上开server，在另外一台机器上用渲染代码控制，这个环境对于算法和数据的可视化很有用。 比如：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> ubigraph</span><br><span class="line"></span><br><span class="line">U = ubigraph.Ubigraph()</span><br><span class="line">U.clear()</span><br><span class="line"></span><br><span class="line">x = U.newVertex(shape=<span class="string">"sphere"</span>, color=<span class="string">"#ffff00"</span>)</span><br><span class="line"></span><br><span class="line">smallRed = U.newVertexStyle(shape=<span class="string">"sphere"</span>, color=<span class="string">"#ff0000"</span>, size=<span class="string">"0.2"</span>)</span><br><span class="line"></span><br><span class="line">previous_r = <span class="keyword">None</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">10</span>):</span><br><span class="line">  r = U.newVertex(style=smallRed, label=str(i))</span><br><span class="line">  U.newEdge(x,r,arrow=<span class="keyword">True</span>)</span><br><span class="line">  <span class="keyword">if</span> previous_r != <span class="keyword">None</span>:</span><br><span class="line">   U.newEdge(r,previous_r,spline=<span class="keyword">True</span>,stroke=<span class="string">"dashed"</span>)</span><br><span class="line">  previous_r = r</span><br></pre></td></tr></table></figure>
 <p>显示效果如下：<br><img src="/images/ubigraph_py.png" alt="ubigraph_python" class="img-center"></p>
 <p>只是这个软件是免费的但不是开源的，另外还没有支持Windows平台。</p>
-<h2 id="使用Ubigraph显示Python函数调用"><a href="#使用Ubigraph显示Python函数调用" class="headerlink" title="使用Ubigraph显示Python函数调用"></a>使用Ubigraph显示Python函数调用</h2><p>这是在<a href="http://pyevolve.sourceforge.net/wordpress/?p=210" target="_blank" rel="external">这里</a>看到的，貌似需要翻墙。代码比较简单，在点击查看<a href="http://cyukang.com/images/prof3d.py" target="_blank" rel="external">prof3d.py</a>。</p>
+<h2 id="使用Ubigraph显示Python函数调用"><a href="#使用Ubigraph显示Python函数调用" class="headerlink" title="使用Ubigraph显示Python函数调用"></a>使用Ubigraph显示Python函数调用</h2><p>这是在<a href="http://pyevolve.sourceforge.net/wordpress/?p=210" target="_blank" rel="noopener">这里</a>看到的，貌似需要翻墙。代码比较简单，在点击查看<a href="http://cyukang.com/images/prof3d.py" target="_blank" rel="noopener">prof3d.py</a>。</p>
 <p>使用方法是先启动Ubigraph的server，然后运行下面的代码：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><div class="line"><span class="keyword">import</span> prof3d</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_main</span><span class="params">()</span>:</span></div><div class="line">  <span class="comment"># your code</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">   prof3d.profile_me()</div><div class="line">   run_main()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> prof3d</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_main</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="comment"># your code</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">   prof3d.profile_me()</span><br><span class="line">   run_main()</span><br></pre></td></tr></table></figure>
 <p>这段Python的代码函数调用关系就显示出来了，而且还是动态的。</p>
 <p>效果如下：<br><img src="/images/python_call.png" alt="ubigraph_python" class="img-center"></p>
 </section>
     <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+  <a href="/tags#Tools" >
+    <span class="tag-code">Tools</span>
+  </a>
+
+      </div>
     
     <!-- Tags END -->
     <!-- NAV START -->
@@ -277,7 +289,7 @@
     var gitmentConfig = "chenyukang";
     if (gitmentConfig !== 'undefined') {
       var gitment = new Gitment({
-        id: "",
+        id: "UbiGraph动态显示Python函数调用",
         owner: "chenyukang",
         repo: "chenyukang.github.io",
         oauth: {
@@ -307,7 +319,7 @@
 </div>
     <footer class="app-footer" id="footer">
     <p class="copyright">
-        &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
         with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>

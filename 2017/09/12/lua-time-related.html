@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.9.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -27,8 +27,8 @@
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -159,15 +159,15 @@
 <p>os.time()                &lt;== 返回当前系统的日历时间， 1505181586<br>os.date()                &lt;== 返回本地化的时间字符串，Tue Sep 12 09:59:56 2017<br>os.clock()               &lt;== 返回执行该程序CPU花去的时钟秒数，这里是1156.726</p>
 </blockquote>
 <p>我首先需要一个日期字符串转换为时间戳的函数，找来找去有了这么一个函数，使用正则表达式然后组成表：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">convert_time</span><span class="params">(time_str)</span></span></div><div class="line">  <span class="comment">-- Assuming a date pattern like: yyyy-mm-dd hh:mm:ss</span></div><div class="line">  <span class="comment">-- Assuming timezone is Beijing</span></div><div class="line">  <span class="keyword">local</span> pattern = <span class="string">"(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)"</span></div><div class="line">  <span class="keyword">local</span> year, month, day, hour, minute, seconds = time_str:<span class="built_in">match</span>(pattern)</div><div class="line">  <span class="keyword">if</span> <span class="keyword">not</span> (year <span class="keyword">and</span> month <span class="keyword">and</span> day <span class="keyword">and</span> hour <span class="keyword">and</span> minute <span class="keyword">and</span> seconds) <span class="keyword">then</span></div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">  <span class="keyword">end</span></div><div class="line">  <span class="keyword">local</span> converted_timestamp =</div><div class="line">    <span class="built_in">os</span>.<span class="built_in">time</span>(&#123;tz = <span class="string">"CST"</span>, year = year, month = month,</div><div class="line">             day = day, hour = hour, <span class="built_in">min</span> = minute, sec = seconds&#125;)</div><div class="line">      </div><div class="line">    <span class="keyword">return</span> converted_timestamp </div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">convert_time</span><span class="params">(time_str)</span></span></span><br><span class="line">  <span class="comment">-- Assuming a date pattern like: yyyy-mm-dd hh:mm:ss</span></span><br><span class="line">  <span class="comment">-- Assuming timezone is Beijing</span></span><br><span class="line">  <span class="keyword">local</span> pattern = <span class="string">"(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)"</span></span><br><span class="line">  <span class="keyword">local</span> year, month, day, hour, minute, seconds = time_str:<span class="built_in">match</span>(pattern)</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">not</span> (year <span class="keyword">and</span> month <span class="keyword">and</span> day <span class="keyword">and</span> hour <span class="keyword">and</span> minute <span class="keyword">and</span> seconds) <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">local</span> converted_timestamp =</span><br><span class="line">    <span class="built_in">os</span>.<span class="built_in">time</span>(&#123;tz = <span class="string">"CST"</span>, year = year, month = month,</span><br><span class="line">             day = day, hour = hour, <span class="built_in">min</span> = minute, sec = seconds&#125;)</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">return</span> converted_timestamp </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <p>然后我们可以使用os.time()获取当前时间戳来对比。但是必须注意时区问题，Lua里面要获取当前时区和UTC里面的offset可以使用一个比较笨拙的办法：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_timezone_offset_with_utc</span><span class="params">()</span></span></div><div class="line">  <span class="keyword">local</span> now = <span class="built_in">os</span>.<span class="built_in">time</span>()</div><div class="line">  <span class="keyword">return</span> <span class="built_in">os</span>.<span class="built_in">difftime</span>(now, <span class="built_in">os</span>.<span class="built_in">time</span>(<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">"!*t"</span>, now)))</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_timezone_offset_with_utc</span><span class="params">()</span></span></span><br><span class="line">  <span class="keyword">local</span> now = <span class="built_in">os</span>.<span class="built_in">time</span>()</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">os</span>.<span class="built_in">difftime</span>(now, <span class="built_in">os</span>.<span class="built_in">time</span>(<span class="built_in">os</span>.<span class="built_in">date</span>(<span class="string">"!*t"</span>, now)))</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <p>使用这个函数获取时区的offset之后，对convert_time返回的结果做一下偏移即可和os.time()做对比。有个问题是上面的函数居然调用了三次系统调用，开销是比较大的。</p>
 <blockquote>
 <p>在 OpenResty 的世界里，不推荐使用这里的标准时间函数，因为这些函数通常会引发不止一个昂贵的系统调用，同时无法为 LuaJIT JIT 编译，对性能造成较大影响。推荐使用 ngx_lua 模块提供的带缓存的时间接口，如 <code>ngx.today</code>, <code>ngx.time</code>, <code>ngx.utctime</code>, <code>ngx.localtime</code>, <code>ngx.now</code>, <code>ngx.http_time</code>，以及 <code>ngx.cookie_time</code> 等。</p>
 </blockquote>
-<p><a href="https://github.com/stevedonovan/Penlight/blob/master/lua/pl/Date.lua" target="_blank" rel="external">Penlight</a>库也有很多日期相关的函数封装，不过大多也都使用了os相关函数。为了避免多次调用get_timezone_offset_with_utc我使用了Kong里面自带的cache相关函数做一下缓存：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><div class="line"><span class="comment">-- 缓存上面的时区差，减少系统调用</span></div><div class="line"><span class="keyword">local</span> offset_with_cst, err =</div><div class="line">  cache.get_or_set(<span class="string">"timezone_offset"</span>, <span class="literal">nil</span>, get_timezone_offset_with_utc, <span class="literal">nil</span>)</div></pre></td></tr></table></figure>
+<p><a href="https://github.com/stevedonovan/Penlight/blob/master/lua/pl/Date.lua" target="_blank" rel="noopener">Penlight</a>库也有很多日期相关的函数封装，不过大多也都使用了os相关函数。为了避免多次调用get_timezone_offset_with_utc我使用了Kong里面自带的cache相关函数做一下缓存：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 缓存上面的时区差，减少系统调用</span></span><br><span class="line"><span class="keyword">local</span> offset_with_cst, err =</span><br><span class="line">  cache.get_or_set(<span class="string">"timezone_offset"</span>, <span class="literal">nil</span>, get_timezone_offset_with_utc, <span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
 </section>
     <!-- Tags START -->
     
@@ -311,7 +311,7 @@
 </div>
     <footer class="app-footer" id="footer">
     <p class="copyright">
-        &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
         with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>

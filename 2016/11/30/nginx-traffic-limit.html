@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+  <head><meta name="generator" content="Hexo 3.9.0">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -27,8 +27,8 @@
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
   </div>
 
   
@@ -154,15 +154,15 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Nginx 限流可以通过几种方式实现：</p>
-<h2 id="1-Nginx自带的流量控制模块"><a href="#1-Nginx自带的流量控制模块" class="headerlink" title="1. Nginx自带的流量控制模块"></a>1. Nginx自带的流量控制模块</h2><p><a href="http://nginx.org/en/docs/http/ngx_http_limit_req_module.html" target="_blank" rel="external">ngx_http_limit_req 根据特定的key(通常为IP) 控制访问频率</a></p>
-<p><a href="http://nginx.org/en/docs/http/ngx_http_limit_req_module.html" target="_blank" rel="external">ngx_http_limit_req_module 控制连接数</a></p>
-<p>通过修改Nginx的配置文件，然后reload。这种方式配置比较简单，然而 reload 对于当前访问量比较大的服务器开销也有一些。<br> 根据<a href="http://www.toutiao.com/a6254279391729139970/" target="_blank" rel="external">新浪的经验</a>，每一次的 reload 对 Nginx 的 QPS 与耗时的影响通常会持续 8~10s，考虑到一次扩容会有频繁的变更，这对在线业务来说是不堪承受之重。因此，要避免对 Nginx 进行 reload。</p>
-<h2 id="2-使用lua-resty-limit-traffic-流量控制"><a href="#2-使用lua-resty-limit-traffic-流量控制" class="headerlink" title="2. 使用lua-resty-limit-traffic 流量控制"></a>2. 使用lua-resty-limit-traffic 流量控制</h2><p><a href="https://github.com/openresty/lua-resty-limit-traffic" target="_blank" rel="external">代码和文档</a>。这个库分为limit_conn 和 limit_req模块，limit_req限制某个 ip 或者 server 的访问频率，limit_conn 限制连接数。lua-resty-limit-traffic 的原理是使用 Nginx 的 shared_dict，建立一个 hashtable，根据目前连接数或者访问请求记录相关信息。对于每一个Nginx请求都有<a href="https://moonbingbing.gitbooks.io/openresty-best-practices/content/ngx_lua/phase.html" target="_blank" rel="external">一系列执行阶段</a>，每个阶段可以增加 hook，access_by_lua是处理前调用的hook, log_by_lua 是处理完成后调用的 hook。进入的时候通过 ip 作为 key 找到share_dict 里面的连接数，增加1。处理完之后找到连接数， 减去1。 通俗的理解就是顾客进入试衣间前持一个牌子，出来后归还牌子。当前的正在使用的牌子数目可以配置，以达到限流目的。</p>
+<h2 id="1-Nginx自带的流量控制模块"><a href="#1-Nginx自带的流量控制模块" class="headerlink" title="1. Nginx自带的流量控制模块"></a>1. Nginx自带的流量控制模块</h2><p><a href="http://nginx.org/en/docs/http/ngx_http_limit_req_module.html" target="_blank" rel="noopener">ngx_http_limit_req 根据特定的key(通常为IP) 控制访问频率</a></p>
+<p><a href="http://nginx.org/en/docs/http/ngx_http_limit_req_module.html" target="_blank" rel="noopener">ngx_http_limit_req_module 控制连接数</a></p>
+<p>通过修改Nginx的配置文件，然后reload。这种方式配置比较简单，然而 reload 对于当前访问量比较大的服务器开销也有一些。<br> 根据<a href="http://www.toutiao.com/a6254279391729139970/" target="_blank" rel="noopener">新浪的经验</a>，每一次的 reload 对 Nginx 的 QPS 与耗时的影响通常会持续 8~10s，考虑到一次扩容会有频繁的变更，这对在线业务来说是不堪承受之重。因此，要避免对 Nginx 进行 reload。</p>
+<h2 id="2-使用lua-resty-limit-traffic-流量控制"><a href="#2-使用lua-resty-limit-traffic-流量控制" class="headerlink" title="2. 使用lua-resty-limit-traffic 流量控制"></a>2. 使用lua-resty-limit-traffic 流量控制</h2><p><a href="https://github.com/openresty/lua-resty-limit-traffic" target="_blank" rel="noopener">代码和文档</a>。这个库分为limit_conn 和 limit_req模块，limit_req限制某个 ip 或者 server 的访问频率，limit_conn 限制连接数。lua-resty-limit-traffic 的原理是使用 Nginx 的 shared_dict，建立一个 hashtable，根据目前连接数或者访问请求记录相关信息。对于每一个Nginx请求都有<a href="https://moonbingbing.gitbooks.io/openresty-best-practices/content/ngx_lua/phase.html" target="_blank" rel="noopener">一系列执行阶段</a>，每个阶段可以增加 hook，access_by_lua是处理前调用的hook, log_by_lua 是处理完成后调用的 hook。进入的时候通过 ip 作为 key 找到share_dict 里面的连接数，增加1。处理完之后找到连接数， 减去1。 通俗的理解就是顾客进入试衣间前持一个牌子，出来后归还牌子。当前的正在使用的牌子数目可以配置，以达到限流目的。</p>
 <p>依据系统状态动态改变限流的配置，可以考虑两种方案：</p>
 <pre><code>a. limit_conn 和 limit_delay 存放在 Redis内，在 access_by_lua_block 的部分去取出当前限制，这个方案的弊端在于对每个 request 多了一次 redis 请求。
 b. limit_conn存放在 Nginx 的 shared_dict内，通过 Nginx 的配置增加一个 location，专门用来请求来修改其值，任何一个 Nginx worker 修改成功后，其他 worker 都可见。
-</code></pre><h2 id="3-使用nginx-upsync-module"><a href="#3-使用nginx-upsync-module" class="headerlink" title="3. 使用nginx-upsync-module"></a>3. 使用nginx-upsync-module</h2><p><a href="https://github.com/weibocom/nginx-upsync-module" target="_blank" rel="external">nginx-upsync-module</a>是新浪的开源库，也是依赖 openresty 的。 这套工具可以修改 backend 的各种属性，weight, max_fails等。为了避免 reload，可以使用Consul或者Etcd 进行动态配置。</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>为了做一些自动限流，可以考虑分析 nginx 日志，或者系统负载信息。<br>系统负载分析工具，ruby gem 包usagewatch可以获取系统目前的 CPU 使用率，Memory使用率，系统 load 等相关信息，<br>日志分析工具<a href="https://github.com/allinurl/goaccess，使用goaccess，可以实时分析rails" target="_blank" rel="external">https://github.com/allinurl/goaccess，使用goaccess，可以实时分析rails</a> app日志。</p>
+</code></pre><h2 id="3-使用nginx-upsync-module"><a href="#3-使用nginx-upsync-module" class="headerlink" title="3. 使用nginx-upsync-module"></a>3. 使用nginx-upsync-module</h2><p><a href="https://github.com/weibocom/nginx-upsync-module" target="_blank" rel="noopener">nginx-upsync-module</a>是新浪的开源库，也是依赖 openresty 的。 这套工具可以修改 backend 的各种属性，weight, max_fails等。为了避免 reload，可以使用Consul或者Etcd 进行动态配置。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>为了做一些自动限流，可以考虑分析 nginx 日志，或者系统负载信息。<br>系统负载分析工具，ruby gem 包usagewatch可以获取系统目前的 CPU 使用率，Memory使用率，系统 load 等相关信息，<br>日志分析工具<a href="https://github.com/allinurl/goaccess，使用goaccess，可以实时分析rails" target="_blank" rel="noopener">https://github.com/allinurl/goaccess，使用goaccess，可以实时分析rails</a> app日志。</p>
 </section>
     <!-- Tags START -->
     
@@ -307,7 +307,7 @@ b. limit_conn存放在 Nginx 的 shared_dict内，通过 Nginx 的配置增加�
 </div>
     <footer class="app-footer" id="footer">
     <p class="copyright">
-        &copy; 2020 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
         with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
