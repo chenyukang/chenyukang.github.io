@@ -17,7 +17,7 @@
    }
 
   if(catalog.length != 0) {
-      app.css("maxWidth", "980px");
+      app.css("maxWidth", "1040px");
   }
 
   if(detectmob()) {
