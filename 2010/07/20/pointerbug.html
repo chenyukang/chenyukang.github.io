@@ -153,8 +153,10 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><br>今天由一个函数加深了对指针的理解，是这么一个函数：<br><pre class="src"><span style="color: #98fb98;">void</span> <span style="color: #87cefa;">BST_Delete</span>(<span style="color: #98fb98;">BITREE</span> <span style="color: #eedd82;">y</span>) <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">删除节点y<br></span>{<br>    <span style="color: #00ffff;">if</span> (y-&gt;lch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;rch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;p)<br>    {<br>        <span style="color: #00ffff;">if</span>(y==(y-&gt;p)-&gt;lch) (y-&gt;p)-&gt;lch=<span style="color: #7fffd4;">NULL</span>;<br>        <span style="color: #00ffff;">else</span> (y-&gt;p)-&gt;rch=<span style="color: #7fffd4;">NULL</span>;<br>    }<br>    <span style="color: #00ffff;">else</span> <span style="color: #00ffff;">if</span> (y-&gt;rch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;p)<br>    {<br>        <span style="color: #00ffff;">if</span>(y==y-&gt;p-&gt;lch) y-&gt;p-&gt;lch=y-&gt;lch;<br>        <span style="color: #00ffff;">else</span> y-&gt;p-&gt;rch=y-&gt;lch;<br>    }<br>    <span style="color: #00ffff;">else</span> <span style="color: #00ffff;">if</span> (y-&gt;lch==<span style="color: #7fffd4;">NULL</span> &amp;&amp; y-&gt;p){<br>        <span style="color: #00ffff;">if</span>(y==y-&gt;p-&gt;lch) y-&gt;p-&gt;lch=y-&gt;rch;<br>        <span style="color: #00ffff;">else</span> y-&gt;p-&gt;rch=y-&gt;rch;<br>    }<br>    <span style="color: #00ffff;">else</span>    {<br>        <span style="color: #98fb98;">BITREE</span> <span style="color: #eedd82;">t</span>=BST_Successor(y);<br>        y-&gt;data=t-&gt;data;<br>        BST_Delete(t);<br>        y=t;<span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">y=NULL<br><br></span>    }<br>    free(y);<br>}</pre><br></p><br><p><br>在最后一个else内，如果二叉搜索树中有左右孩子，那么找这个删除节点的后继，把内容互换，然后删除后继 节点，因为后继节点一定只有一个孩子或者没有孩子。最后只有一个free()操作其实是为了代码简洁,可以把前面每一个else if后面加一个free， 最后不写free()操作。但是这么写运行起来会有问题，y=t,就是所指向的地址相同，但是因为是 递归操作，t指向的地址在调用BST_Delete(t)的时候已经被free掉了，所以如果再删除一次就会 出现内存错误，修改方法是y=NULL,或者修改函数参数，用指针引用的形式 void BST_Delete( BITREE&amp; y)，然后再在free(y)后面增加一句y=NULL。以前以为两次调用free(p)是不会出现问题的，free()在释放掉p指向的内存以后，会 自动将p赋值为NULL，其实没有这部分操作。<br></p><br><p><br><br>前些天还看到一个面试题目，malloc申请的空间用delete删除会有什么问题？一般来说没有问题， 内存会释放掉，而且即使是有析构函数的对象指针，用delete删除的时候同样会调用析构函数。这说明 c++的delete操作其实是在c的基础增加了一些操作，先调用析构函数，然后释放空间。良好的编程风格 就是free/malloc，new/delete一一对应，甚至不要出现一次调用，多次释放，像上面那样的因为递归 而产生的多次释放并不是很好发现<br></p>
-
+    <section class="markdown-content"><p></p><p></p><br>今天由一个函数加深了对指针的理解，是这么一个函数：<p></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BST_Delete</span><span class="params">(BITREE y)</span> <span class="comment">//删除节点y</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (y-&gt;lch==<span class="literal">NULL</span> &amp;&amp; y-&gt;rch==<span class="literal">NULL</span> &amp;&amp; y-&gt;p)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(y==(y-&gt;p)-&gt;lch) (y-&gt;p)-&gt;lch=<span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">else</span> (y-&gt;p)-&gt;rch=<span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (y-&gt;rch==<span class="literal">NULL</span> &amp;&amp; y-&gt;p)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(y==y-&gt;p-&gt;lch) y-&gt;p-&gt;lch=y-&gt;lch;</span><br><span class="line">        <span class="keyword">else</span> y-&gt;p-&gt;rch=y-&gt;lch;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (y-&gt;lch==<span class="literal">NULL</span> &amp;&amp; y-&gt;p)&#123;</span><br><span class="line">        <span class="keyword">if</span>(y==y-&gt;p-&gt;lch) y-&gt;p-&gt;lch=y-&gt;rch;</span><br><span class="line">        <span class="keyword">else</span> y-&gt;p-&gt;rch=y-&gt;rch;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>    &#123;</span><br><span class="line">        BITREE t=BST_Successor(y);</span><br><span class="line">        y-&gt;data=t-&gt;data;</span><br><span class="line">        BST_Delete(t);</span><br><span class="line">        y=t;<span class="comment">//y=NULL</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">free</span>(y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在最后一个else内，如果二叉搜索树中有左右孩子，那么找这个删除节点的后继，把内容互换，然后删除后继 节点，因为后继节点一定只有一个孩子或者没有孩子。最后只有一个free()操作其实是为了代码简洁,可以把前面每一个else if后面加一个free， 最后不写free()操作。但是这么写运行起来会有问题，y=t,就是所指向的地址相同，但是因为是 递归操作，t指向的地址在调用BST_Delete(t)的时候已经被free掉了，所以如果再删除一次就会 出现内存错误，修改方法是y=NULL,或者修改函数参数，用指针引用的形式 void BST_Delete( BITREE&amp; y)，然后再在free(y)后面增加一句y=NULL。以前以为两次调用free(p)是不会出现问题的，free()在释放掉p指向的内存以后，会 自动将p赋值为NULL，其实没有这部分操作。</p>
+<p>前些天还看到一个面试题目，malloc申请的空间用delete删除会有什么问题？一般来说没有问题， 内存会释放掉，而且即使是有析构函数的对象指针，用delete删除的时候同样会调用析构函数。这说明 c++的delete操作其实是在c的基础增加了一些操作，先调用析构函数，然后释放空间。良好的编程风格 就是free/malloc，new/delete一一对应，甚至不要出现一次调用，多次释放，像上面那样的因为递归 而产生的多次释放并不是很好发现</p>
 </section>
     <!-- Tags START -->
     
@@ -177,17 +179,17 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/2010/07/20/c-deep.html">
+      <a class="nav-left" href="/2010/07/20/concrete-abstractions.html">
         <span class="nav-arrow">← </span>
         
-          《C深度探索》笔记
+          《Concrete Abstractions》的一些解答
         
       </a>
     
     
-      <a class="nav-right" href="/2010/07/20/concrete-abstractions.html">
+      <a class="nav-right" href="/2010/07/20/the-game-of-life.html">
         
-          《Concrete Abstractions》的一些解答
+          The Game of Life
         
         <span class="nav-arrow"> →</span>
       </a>
