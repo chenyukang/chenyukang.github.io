@@ -218,10 +218,17 @@
     
     <!-- 二维码 END -->
     
-      <!-- Gitment START -->
-      <div id="comments"></div>
-      <!-- Gitment END -->
+      <!-- No Comment -->
     
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="preferred-color-scheme"
+      crossorigin="anonymous"
+      async>
+    </script>
+
   </article>
   <!-- Article END -->
   <!-- Catalog START -->
@@ -283,32 +290,6 @@
       value: document.location.href
     });
 
-    // gitment
-    var gitmentConfig = "chenyukang";
-    if (gitmentConfig !== 'undefined') {
-      var gitment = new Gitment({
-        id: "GDB调试动态链接库",
-        owner: "chenyukang",
-        repo: "chenyukang.github.io",
-        oauth: {
-          client_id: "ccc45f6f66c60934e41a",
-          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
-        },
-        theme: {
-          render(state, instance) {
-            const container = document.createElement('div')
-            container.lang = "en-US"
-            container.className = 'gitment-container gitment-root-container'
-            container.appendChild(instance.renderHeader(state, instance))
-            container.appendChild(instance.renderEditor(state, instance))
-            container.appendChild(instance.renderComments(state, instance))
-            container.appendChild(instance.renderFooter(state, instance))
-            return container;
-          }
-        }
-      })
-      gitment.render(document.getElementById('comments'))
-    }
   })();
 </script>
 
