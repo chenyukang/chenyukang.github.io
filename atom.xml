@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://chenyukang.github.io/"/>
-  <updated>2021-07-02T15:36:31.143Z</updated>
+  <updated>2021-09-07T15:20:04.515Z</updated>
   <id>http://chenyukang.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>最好的学习是输出</title>
+    <link href="http://chenyukang.github.io/2021/09/07/learning-by-contribute.html"/>
+    <id>http://chenyukang.github.io/2021/09/07/learning-by-contribute.html</id>
+    <published>2021-09-07T21:49:24.000Z</published>
+    <updated>2021-09-07T15:20:04.515Z</updated>
+    
+    <content type="html"><![CDATA[<p>因为换了工作之后，最近半年有了很多时间来学习自己感兴趣的东西。我每天通常是十点到公司，下午五点半左右到六点之间离开公司。晚上陪小孩，洗漱哄睡完毕之后大概是九点钟。所以每天早上和晚上加上周末，我都有一段时间可以用来自己安排。</p><p>这段时间我参与了好几个开源项目，大多都是 Rust 相关的，顺着自己感兴趣的领域参与的：</p><ol><li><p>因为自己的业余项目接触到了 WebAssembly, 所以看了很多 wasm 相关的内容。然后我参与到了 wamser.io。这是一个 Rust 写的 WebAssembly Runtime， 还包括各种语言的 SDK 之类的。我开始从一些简单的 <a href="https://github.com/wasmerio/wasmer/pulls?q=is%3Apr+author%3Achenyukang+is%3Aclosed" target="_blank" rel="noopener">PR 到一些 Bug 修复</a>。通过这些投入我大概也熟悉了这个项目的代码。这个项目 Star 数目虽然有1W+，但是其实日常维护者已经只有两位了，其背后是一个公司在支撑。这公司之前是在 YC 孵化的，但是据我观察是没找到合适的商业化途径。</p></li><li><p>帮 <a href="https://github.com/WasmEdge/WasmEdge" target="_blank" rel="noopener">WasmEdge</a> 做了一些和 <a href="https://dapr.io/" target="_blank" rel="noopener">Dapr</a> 的集成 Demo，花了大概两周的业余时间来学习 Dapr 和 WasmEdge 相关的技术，最终完成项目 <a href="https://github.com/second-state/dapr-wasm" target="_blank" rel="noopener">dapr-wasm</a>。</p></li><li><p>玩了一段时间 K8S 和 Linkerd 之后，我对容器相关技术又有一些兴趣。仍然记得 2014 年刚接触到 Docker 时的震撼，所以我想看看容器到底是怎么做的。后来找到了 Rust 实现的 Container Runtime <a href="https://github.com/containers/youki" target="_blank" rel="noopener">Youki</a>。这个项目主要是一群日本年轻人在开发，项目发起人还是 96 年的。真是后生可畏! 我陆陆续续大概提交了十来个 PR，主要是改进一些测试脚本、参考 runc 来实现一些功能，通过容器的基准测试等。在 discord 偶尔和项目发起者聊聊天，交流一些中日的 IT 相关感受也挺有意思。贡献了几个 PR 之后，他邀请我成为项目的 maintainer。我觉得这是一个很好的锻炼、提高自己的机会，所以就欣然接受了。</p></li><li><p>在使用 Rust 过程中，发现 lint 会重复报告某些提示。经过搜索发现已经有人提出了同样的问题。虽然我曾经好几次尝试过看看 Rust 的源码，但一直没沉下心有所得。这个 Bug 看起来并不难排查，也许是一个很好的契机。我花了大概几个小时时间从理解 lint 相关的逻辑，到复现这个 Bug，找到代码里的问题，然后做出一个初步修复。这个过程中，感觉比较困难的是编译一次 Rust 代码库大概需要半个小时，跑测试则需要更久。另外通过 gdb 虽然可以调试代码，但是还是有某些限制。提交了<a href="https://github.com/containers/youki/pulls?q=is%3Apr+author%3Achenyukang+is%3Aclosed" target="_blank" rel="noopener">一些 PR</a> 之后才只是开始，后来又经过了一周多时间和子模块维护者讨论更细节的问题，来回 20 多 comments 才最终完成了<a href="https://github.com/rust-lang/rust/pull/88493" target="_blank" rel="noopener">修复</a>。</p></li></ol><p>从 2011 年开始使用 Github，这些年一直在 Github 上做一些自己的开源小项目。只有最近大半年才比较多地参与到一些大的开源项目。这个过程收获很多：</p><ul><li>最好的学习方式是贡献和输出。不管是在公司、或者是在开源社区做出贡献才是技术的价值。看书、看资料能学会一些，但是只有实践才能提高自己的能力。比如我学 Rust，肯定不花时间去看 Rust quiz 之类的东西，因为日常开发中常用到的语言特性并不是那些细节。在使用过程中不懂再去看就行了。</li><li>做开源很多人都是在“用爱发电”，但是确实因为热爱所以代码质量才高。</li><li>有了足够的业余时间，以及纯粹的爱好，才静下心来持续投入到免费的开源中。996 肯定是不行的。</li><li>在投入到开源的过程中，除了自己能力的提升，也可以获得精神上的满足感。即使修复是一个小问题，其他人也会因为自己的投入而受益。</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;因为换了工作之后，最近半年有了很多时间来学习自己感兴趣的东西。我每天通常是十点到公司，下午五点半左右到六点之间离开公司。晚上陪小孩，洗漱哄睡完毕之后大概是九点钟。所以每天早上和晚上加上周末，我都有一段时间可以用来自己安排。&lt;/p&gt;
+&lt;p&gt;这段时间我参与了好几个开源项目，大多
+      
+    
+    </summary>
+    
+    
+      <category term="Programming" scheme="http://chenyukang.github.io/tags/Programming/"/>
+    
+      <category term="Rust" scheme="http://chenyukang.github.io/tags/Rust/"/>
+    
+  </entry>
   
   <entry>
     <title>案例分析-程序员如何站着赚钱</title>
@@ -213,29 +239,6 @@
     
     
       <category term="Notes" scheme="http://chenyukang.github.io/tags/Notes/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Rust 的 dbg! 宏</title>
-    <link href="http://chenyukang.github.io/2019/01/18/rust-dbg.html"/>
-    <id>http://chenyukang.github.io/2019/01/18/rust-dbg.html</id>
-    <published>2019-01-18T00:23:24.000Z</published>
-    <updated>2021-07-02T15:36:31.147Z</updated>
-    
-    <content type="html"><![CDATA[<p>前几天在群里看到有人讨论 dbg! 宏已经在 Nightly 可以使用了，最近发布的 stable 版本 1.32.0 也可以使用了。 翻看了一下并玩了玩，这个简单的宏确实是调试好帮手，特别是适合我这样的喜欢打印调试的开发者。这个提议从 2017 年 10 月开始，从 <a href="https://github.com/rust-lang/rfcs/pull/2173" target="_blank" rel="noopener">https://github.com/rust-lang/rfcs/pull/2173</a> 可以看到，为了增加这个宏很多贡献者经过了无数次的讨论和回复。真是太佩服 Rust Team 的开发者，付出了这么多时间来增加这个看似很小又实用的功能。</p><h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>先看看这个调试宏是怎么使用的，目前使用这个宏需要切换到 Nightly 版本或者最新的稳定版，已经安装了 rustup 的话就很简单了：</p><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rustup default nightly</span><br><span class="line">rustup update</span><br></pre></td></tr></table></figure><p>然后很简单就是把一个表达式当作参数传入:</p><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">factorial</span></span>(n: <span class="built_in">u32</span>) -&gt; <span class="built_in">u32</span> &#123;</span><br><span class="line">     <span class="keyword">if</span> dbg!(n &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">         dbg!(<span class="number">1</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         dbg!(n * factorial(n - <span class="number">1</span>))</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">main</span></span>() &#123;</span><br><span class="line">    dbg!(factorial(<span class="number">5</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>运行结果如下：</p><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[src/main.rs:4] n &lt;= 1 = false</span><br><span class="line">[src/main.rs:4] n &lt;= 1 = false</span><br><span class="line">[src/main.rs:4] n &lt;= 1 = false</span><br><span class="line">[src/main.rs:4] n &lt;= 1 = false</span><br><span class="line">[src/main.rs:4] n &lt;= 1 = true</span><br><span class="line">[src/main.rs:5] 1 = 1</span><br><span class="line">[src/main.rs:7] n * factorial(n - 1) = 2</span><br><span class="line">[src/main.rs:7] n * factorial(n - 1) = 6</span><br><span class="line">[src/main.rs:7] n * factorial(n - 1) = 24</span><br><span class="line">[src/main.rs:7] n * factorial(n - 1) = 120</span><br><span class="line">[src/main.rs:12] factorial(5) = 120</span><br></pre></td></tr></table></figure><h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>原理当然也就是把表达式和位置打印出来，但是这里有个技巧，在宏里面使用 match，这是为了避免参数被调用多次，因为宏在编译之前会被展开。Rust 的宏比较复杂，也不可避免会有些 hacky，对于喜欢爱折腾的程序员还是有吸引力。再看看这个宏是怎么实现的，代码很少。：</p><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line"><span class="built_in">macro_rules!</span> dbg &#123;</span><br><span class="line">    ($val:expr) =&gt; &#123;</span><br><span class="line">        <span class="keyword">match</span> $val &#123;</span><br><span class="line">            tmp =&gt; &#123;</span><br><span class="line">                eprintln!(<span class="string">"[&#123;&#125;:&#123;&#125;] &#123;&#125; = &#123;:#?&#125;"</span>,</span><br><span class="line">                          <span class="built_in">file!</span>(), <span class="built_in">line!</span>(), <span class="built_in">stringify!</span>($val), &amp;tmp);</span><br><span class="line">                tmp</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>可以看到目前这个实现是只支持一个参数的，如果传入的参数类型没有实现 Copy Trait，可以传入引用。另外如果想同时打印多个参数，可以使用类似这样的做法：</p><figure class="highlight rust"><table><tr><td class="code"><pre><span class="line">dbg!((exp1, exp2))</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;前几天在群里看到有人讨论 dbg! 宏已经在 Nightly 可以使用了，最近发布的 stable 版本 1.32.0 也可以使用了。 翻看了一下并玩了玩，这个简单的宏确实是调试好帮手，特别是适合我这样的喜欢打印调试的开发者。这个提议从 2017 年 10 月开始，从 &lt;a
-      
-    
-    </summary>
-    
-    
-      <category term="Rust" scheme="http://chenyukang.github.io/tags/Rust/"/>
     
   </entry>
   
