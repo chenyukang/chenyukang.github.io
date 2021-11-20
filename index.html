@@ -148,6 +148,64 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2021/11/20/my-notes-taking-tools-and-experience.html">我的知识管理工具和经验</a>
+      </h2>
+      <p class="article-date">November 20, 2021
+          
+              
+  <a href="/tags#工具" >
+    <span class="tag-code">工具</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <p>近两年笔记软件这个领域出现了两个很重要的革新：</p>
+<p>一个是双向链接，开山鼻祖是 roam research ，一个是一切皆对象的设计，也就是 Notion。</p>
+<p>因为这两个大方向上的创新，现在笔记类软件和系统百发齐放，这是真是最好的时代了。作为程序员我分享一下自己在这类工具上的使用经验、感受以及建议。</p>
+<p>大概十多年前，还在学校的时候，博客文化刚兴起，所以很多记录类的东西我都写在博客里了。那些常见的博客系统我基本都用过，后来很多都倒闭了。当然 Wordpress 现在在非程序员中都非常流行。</p>
+<p>后来很长一段时间我都是用 Evernote ，国内版本叫做印象笔记。用的人多了各种周边的工具也非常多，比如浏览器插件之类的。这类笔记软件也非常多。</p>
+<p>后来我又渐渐不使用印象笔记了，因为我用了很多年 Emacs，所以尝试了 org-mode。这东西结合 GTD 可玩的方式可太多了。可以自己写一些脚本，自己定义各种模板，甚至自动同步到各种其他系统。我有一段时间维护一个英文 Wordpress 站点都是在 org-mode 里写完，一个快捷键推送到服务器。org-mode 是更适合我记录的习惯的，在我要记录的时候可以通过快捷键和定制的模板快速记录，不用像 Evernote 一样得找个目录，然后新建文档。另外 org-mode 日程管理，日志，文档都在本地，一切都是纯文本的 org 格式，我通过 Github 来做数据存储。虽然是纯文本的格式，我也可以很方便地到导出成 PDF , 甚至是做演示。很多人是为了使用 org-mode 才一直用 Emacs，我也曾经认为自己找到了以后一直用的记录工具和方式。但是，我因为换工作的原因不怎么使用 Emacs了。</p>
+<p>最近一年多，因为工作内容变了，自己日常开发和业务时间使用 Windows 更多了。业余时间基本是用的 WSL ，配合 VsCode 日常开发体验很好。 而 Emacs 在 Windows 上使用体验很不好，虽然最近 WSL 也支持 Linux Gui 了，但我已经懒得折腾，因为我已经离不开 VsCode 了。</p>
+<p>因此我需要重新找一个笔记类工具。我的需求是：</p>
+<ol>
+<li>本地存储文件</li>
+<li>编辑的快捷键能够定义到符合自己的使用习惯</li>
+<li>支持 Markdown</li>
+<li>支持双向链接</li>
+</ol>
+<p>这个需求其实满足绝大部分程序员用户，一个文件夹加 Typora 估计都差不多了，但是我觉得双链这个设计确实有一些价值，所以也变成刚需了。</p>
+<p>在摸索的过程中我试过 Notion，Wolai，Logseq，Obsidian。</p>
+<p>Notion 确实有耳目一新的感觉，而且 UI 的审美很好，用户做出来的笔记可以很美观整洁。而内嵌 Database 可以打造出来很多好玩的东西，甚至可以用来做站点。缺点是服务器在国外，不太稳定。</p>
+<p>Wolai 提供 Notion 类似的块编辑，而且很早就有双链接，服务器在国内所以速度上也很快。版本更新很快，有很多针对中文用户的细节优化。如果不想折腾用 Wolai 也挺好的。</p>
+<p>Logseq 是 roam research 的模仿品，但是提供本地存储的方式，也有桌面版软件。很多人赞赏 roam research ，不过我没有觉得 roam research 的方式完全适合我。 roam research 的正常方式是每天都在日志页面记录，然后写的过程中加上适合的链接，这样你的文档渐渐构成一个网络。如果你日常中经常用到的概念，自然就会经常被链接，那么就会是网络中的一个密集点。所以即使你不建文件目录，这种文档之间的关系也会自然而然形成，并且比目录这种单线的关系更符合直觉。</p>
+<p><img src="/images/20211120225233.png" width="80%" hegiht="80%" align="center"></p>
+<p>最终我一直保持使用的是 Obsidian。Obsidian 支持本地存储数据的方式（也可选择付费远程同步）。我使用一个 Git 的插件自动同步到 Github。Obsidian 的的客户端做得如此出色，而且扩张性极好，已经形成很成熟的插件生态。这是我的记录汇成的网状。</p>
+<p><img src="/images/20211120225329.png" width="70%" hegiht="70%" align="center"></p>
+<p>在使用一段时间后我又体验了 Flomo，这是一个不错的软件让我们迅速把日常的想法记录下来。我想如果 Flomo 的数据能够同步到 Obsidian 就好了。</p>
+<p>然后我就动手自己实现了一个 Web 应用 <a href="https://github.com/chenyukang/obweb" target="_blank" rel="noopener">obweb</a>，然后部署在自己的服务器上。这个应用提供一些简单的页面来记录日常的想法，数据提交后也是同步到 GitHub。这个 SPA 页面可以内嵌在微信浏览器，所以使用体验和一个小程序差不多。而后我又增加了一些搜索的接口，这样我所有 Obsidian 的数据都可以在手机端检索，而且能做一些简单的编辑。最近我又新增了一个 Rss 阅读的功能，会自动抓取我的订阅列表，甚至会尝试把网页和图片都下载下来，这样即使是一些不能直接访问的文章也可以在手机端阅读。在这个过程中我学会了 svelte 这个前端框架和 Rust 写服务端接口这些东西。虽然我的前端技能简直就是渣，但是这就是符合我使用习惯的软件，我可以做到所有细节的定制化。</p>
+<p><img src="/images/20211120234708.png" width="300px" hegiht="300px" align="center"></p>
+<p>折腾这么多年这类软件后，我的感受是工具的使用都是非常私人化的选择，作为程序员我们有能力使用自己的技术来定制化工具来提高效率。所以数据本地纯文本的方式是更好的，你可以自己写程序来处理这些数据，而不是完全依靠软件或者第三方的功能。这就像是住房子一样，如果你自己是设计师，估计不会满足商家提供的统一装修，而是根据自己的喜好和满足来仔细设计。</p>
+<p>即使我们现在有很多华丽的工具来用，也不要让自己变成一个信息的收藏者。数字花园不是一股脑地往里面搬东西就行，需要精心打理和修剪。工具并不能本质地解决问题，难地是日复一日坚持记录自己的想法和理解，整理知识。柳比歇夫使用纸和笔记录了自己奇特的一生，并且完成大量研究工作。</p>
+<p>记录的过程并不是学习本身，而是思考。通过记录这种形式，把自己的理解写下来促进思考，才能产生最大的价值。</p>
+<hr>
+<p>题外:</p>
+<p>一个有趣的事是，除了 Roam Research，目前兴起的这些笔记类软件和服务大多是中国人开发的，包括 Notion、Obsidian、Logseq 等。我们可能真的比较喜欢这类东西，“好记性不如烂笔头” 乃我族真传。</p>
+<p>另一个事实，Roam Research，Logseq，以及另外一个开源的类似产品 athens research 都使用了 Clojure 这门编程语言来实现。Clojure 作为一门 JVM 上的 Lisp，其热度还没进过前 30 吧。</p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2021/11/20/my-notes-taking-tools-and-experience.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2021/09/07/learning-by-contribute.html">最好的学习是输出</a>
       </h2>
       <p class="article-date">September 7, 2021
@@ -167,31 +225,13 @@
         
         
             
-                <p>之前我设想如果有了足够多时间，会做这些事：到处逛逛，锻炼英文写作，​投入到开源社区中。最近一年有了一些空余时间来做这些。我通常是十点到公司，下午五点半左右到六点之间离开公司。晚上陪小孩，洗漱哄睡完毕之后大概是九点钟。所以每天早上、晚上，加上周末，我都有一段时间可以用来自己安排。</p>
-<p>​这半年时间我参与了好几个开源项目，基本是顺着自己感兴趣的领域来的：</p>
-<ol start="0">
-<li><p>3 月左右，微软有个 FHL(Fix/Hack/Learning) 活动，基本有两周左右时间可以做自己感兴趣的项目，或者是学习点什么技术。那段时间我在琢磨怎么下好五子棋，因为和老婆经常比赛赌输赢。所以我写了个程序来下五子棋 <a href="https://github.com/chenyukang/gomoku" target="_blank" rel="noopener">gomoku</a>，顺便学了一些技术相关的，比如 Rust，WebAssembly，Azure function，monte carlo，minimax 算法等。可能是我很久没从头到尾写个项目的原因，这个项目写得很来劲，顺便掉入 WebAssembly 的坑里。</p>
-</li>
-<li><p>接触到了 WebAssembly 发现有些意思, 所以看了很多相关的内容。然后我参与到了 wamser.io。这是一个 Rust 写的 WebAssembly Runtime，还包括各种语言的 SDK 之类的。我开始从一些简单的 <a href="https://github.com/wasmerio/wasmer/pulls?q=is%3Apr+author%3Achenyukang+is%3Aclosed" target="_blank" rel="noopener">PR 到一些 Bug 修复</a>。通过这些投入我大概也熟悉了这个项目的代码。这个项目 Star 数目虽然有1W+，但是其实日常维护者已经只有两位了，其背后是一个公司在支撑。这公司之前是在 YC 孵化的，但是据我观察是没找到合适的商业化途径。当年 Docker 是找不到合适的盈利方式，所以最终选择开源。不过短短几年，现在这些技术型创业公司，基本都是默认开始干开源的，比如那些开源数据库之类的项目。</p>
-</li>
-<li><p>帮 <a href="https://github.com/WasmEdge/WasmEdge" target="_blank" rel="noopener">WasmEdge</a> 做了一些和 <a href="https://dapr.io/" target="_blank" rel="noopener">Dapr</a> 的集成 Demo，花了大概两周的业余时间来学习 Dapr 和 WasmEdge 相关的技术，最终完成项目 <a href="https://github.com/second-state/dapr-wasm" target="_blank" rel="noopener">dapr-wasm</a>。这也是我第一次尝试收费帮人做开源，虽然不多但是也算是个不错的开头。既能赚钱又能学点新东西，何乐不为。</p>
-</li>
-<li><p>玩了一段时间 K8S 和 Linkerd 之后，我对容器相关技术又有一些兴趣。仍然记得 2014 年刚接触到 Docker 时的震撼，所以我想看看容器到底是怎么做的。后来找到了 Rust 实现的 Container Runtime <a href="https://github.com/containers/youki" target="_blank" rel="noopener">youki</a>。这个项目主要是一群日本年轻人在开发，项目发起人还是 96 年的。真是后生可畏! 我陆陆续续大概提交了十来个 PR，主要是改进一些测试脚本、参考 runc 来实现一些功能，通过容器的基准测试等。在 discord 偶尔和项目发起者聊聊天，交流一些中日的 IT 相关感受也挺有意思。贡献了<a href="https://github.com/containers/youki/pulls?q=is%3Apr+author%3Achenyukang+is%3Aclosed" target="_blank" rel="noopener">几个 PR</a> 之后，他邀请我成为项目的 maintainer。我觉得这是一个很好的锻炼、提高自己的机会，所以就欣然接受了。其实容器底层都是一些什么权限管理，namespace，cgroup，file system 等基于操作系统的抽象层做了隔离，跑起来就是进程而已。在开发容器的过程中，有时候会把自己的 Host OS 搞跪，所以最好是在 wsl 或者 VM 里面开发。</p>
-</li>
-<li><p>最近在使用 Rust 过程中，发现 lint 会重复报告某些提示。经过搜索发现已经有人提出了同样的问题。我曾经好几次尝试过看看 Rust 的源码，但一直没沉下心有所得。这个 Bug 看起来并不难排查，也许是一个很好的契机。我花了大概几个小时时间从理解 lint 相关的逻辑，到复现这个 Bug，找到代码里的问题，然后做出一个初步修复。这个过程中，感觉比较困难的是编译一次 Rust 代码库大概需要半个小时，跑测试则需要更久。另外通过 gdb 虽然可以调试代码，但是还是有某些限制。提交了 PR 之后才只是开始，后来又经过了一周多时间和子模块维护者讨论更细节的问题，来回 20 多 comments 才最终完成了<a href="https://github.com/rust-lang/rust/pull/88493" target="_blank" rel="noopener">修复</a>。</p>
-</li>
-</ol>
-<p>从 2011 年开始使用 Github，这些年一直在 Github 上做一些自己的开源小项目。只有最近大半年才比较多地参与到一些大的开源项目。这个过程收获很多。</p>
-<p>最好的学习方式是贡献和输出。不管是在公司、或者是在开源社区做出贡献才是技术的价值。看书、看资料能学会一些，但是只有实践才能提高自己的能力。比如我学 Rust，肯定不花时间去看 Rust quiz 之类的东西，因为日常开发中常用到的语言特性并不是那些细节。很多领域更重要或者更有价值的是领域知识，编程语言在使用过程中不懂再去看就行了。</p>
-<p>有了足够的业余时间，以及纯粹的爱好，才静下心来持续投入到免费的开源中。996 肯定是不行的。做开源很多人都是在 “用爱发电”。很多开发者大多是有一份本职工作，做开源也算是眼望星空吧。但是确实因为热爱，所以代码质量反而比公司代码高。工作中看多了十多年的历史代码，看点优秀的开源代码有洗眼效果。</p>
-<p>Github 现在开始在某些国家支持 <a href="https://github.com/sponsors" target="_blank" rel="noopener">Sponsor</a> 项目，可是中国不在试用范围内。我认为这是一个很好的趋势，做开源的程序员如果创造出来价值，应该得到一些资金上的支持。这使得有些程序员可以为了自己的项目，依赖这些资金全职投入到开发中，比如 <a href="https://github.com/sponsors/cart" target="_blank" rel="noopener">Bevy 的作者</a>，来不及等到筹集 7000 美金一个月的筹款就辞职投入了。</p>
-<p>在投入到开源的过程中，除了自己能力的提升，也可以获得精神上的满足感。即使修复是一个小问题，其他人也会因为自己的投入而受益。而因为开源以及其带来的共同协作模式，程序员的学习、生产资料都极大丰富。这真是个好时代。</p>
-
+                之前我设想如果有了足够多时间，会做这些事：到处逛逛，锻炼英文写作，​投入到开源社区中。最近一年有了一些空余时间来做这些。我通常是十点到公司，下午五点半左右到六点之间离开公司。晚上陪小孩，洗漱哄睡完毕之后大概是九点钟。所以每天早上、晚上，加上周末，我都有一段时间可以用来自己安排。
+​这半年 .....
             
         
       </div>
       
-          <a class="more" href="/2021/09/07/learning-by-contribute.html#footer">发表评论</a>
+          <a class="more" href="/2021/09/07/learning-by-contribute.html">阅读全文</a>
       
     </article>
   
@@ -376,33 +416,6 @@ M-x start-kbd-macro
       </div>
       
           <a class="more" href="/2019/06/23/2019-06-23-random-notes.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2019/01/23/2019-wishes.html">2019，愿你也健康</a>
-      </h2>
-      <p class="article-date">January 23, 2019
-          
-              
-  <a href="/tags#Notes" >
-    <span class="tag-code">Notes</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                坚持最近在坚持养成每天尽量花一小时锻炼的习惯，因为我想在 2019 年有个更健康、有活力的身体。
-随着年纪的增长，身体的一些反馈还是如实地告诉自己在变老。衰老就是能力不断地退化、消失。之前打球能蹦蹦跳跳的，现在多跑跑就会喘气；之前精力更好、更喜欢到处走动，现在更倾向于静静休息。去年有的时 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2019/01/23/2019-wishes.html">阅读全文</a>
       
     </article>
   
