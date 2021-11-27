@@ -148,6 +148,60 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2021/11/28/intro-to-obweb.html">Obweb 介绍</a>
+      </h2>
+      <p class="article-date">November 28, 2021
+          
+              
+  <a href="/tags#工具，Obweb" >
+    <span class="tag-code">工具，Obweb</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <p>在文章<a href="http://chenyukang.github.io/2021/11/23/my-notes-taking-tools-and-experience.html">我的知识管理工具和经验</a>中我介绍了自己开发的 Obsidian 配合 Web 应用 <a href="https://github.com/chenyukang/obweb" target="_blank" rel="noopener">obweb</a>。</p>
+<p>下面详细介绍一下自己对每个功能的使用场景，以及其中的一点技术细节。后端使用 <code>Rust</code> 开发的，因为后端逻辑并不复杂，所以使用什么语言区别不大。我最近在练手 <code>Rust</code>，所以就用了 <a href="https://github.com/seanmonstar/warp" target="_blank" rel="noopener">Warp</a> 这个框架来实现。</p>
+<p>我是一个前端新手，顺便借这个项目在学习一些 JavaScript 和 Svelte 相关的技能。第一次实现的时候是纯 HTML 加 JQuery，后来又加上了 Svelte 。Svelte 这个前端框架对新手来说也不难，我是边看教程边照着做的。</p>
+<p><img src="/images/ob_Pasted_image_20211127144951.png" alt="/images/ob_Pasted_image_20211127144951.png"></p>
+<p>Obweb 是一个典型的前后端分离的 Web 应用，没什么技术上的难度。可忽略直男的 UI 设计(貌似根本无设计😂)，我们着重看看我日常用的这些功能。</p>
+<h2 id="想法记录"><a href="#想法记录" class="headerlink" title="想法记录"></a>想法记录</h2><p>这是我做 Obweb 的初衷，我想在手机端把一些想法和灵感记录下来。之前一直使用 [[flomo]] 这款应用，这个应用功能很少，就是让你打开记录想法，但是会使用标签来把这些想法串联起立。随着我使用 Obsidian 的时间越来越多，我就想把这些数据同步到自己的 Obsidian 中。</p>
+<p>这个界面很简单，就是一个输入框，可以加入标签或者 Link。但是这里面隐藏了一些逻辑：</p>
+<ul>
+<li>如果 Link 为空，这个记录则为一个每日的想法，会追加在每天的 Daily 文件后</li>
+<li>如果 Link 是 Todo，则会在我的 Todo.md 在文件头部增加一个记录。 </li>
+<li>如果 Link 是一个其他的文件名，如果数据中没有这个文件则会创建，否则就会在现有的文件后追加这条记录。这种使用场景是我在手机上看 Kindle，有的摘抄就会记录下来，最终每一本书阅读后摘抄就会在一个文件里面。这也是为什么这个 Link 除非手动清除，否则会一直记录在 localStorage 里面。因为一段时间内我看的都是一本书。如果要清除缓存则可以使用 <code>Reset</code> 按钮。</li>
+</ul>
+<p>可以在想法中加上图片，但是限制只能加一张。因为我习惯了使用这个记录页面之后，我也想在 PC 端使用。因此增加了从剪切板中存储图片的功能，方便我在 PC 端想同步一些内容到手机上以备后续查看。</p>
+<p><img src="/images/ob_Pasted_image_20211127133255.png" alt="/images/ob_Pasted_image_20211127133255.png"></p>
+<h2 id="每日回顾"><a href="#每日回顾" class="headerlink" title="每日回顾"></a>每日回顾</h2><p>想法中记录的内容，可以使用 <code>Day</code> 来回顾，目前只有按照日期每日来回地切。如果要大量地查阅内容我肯定使用 PC 端。这里也可以进行一些轻度编辑。</p>
+<p><img src="/images/ob_Pasted_image_20211127134715.png" alt="/images/ob_Pasted_image_20211127134715.png"></p>
+<h2 id="搜索和编辑"><a href="#搜索和编辑" class="headerlink" title="搜索和编辑"></a>搜索和编辑</h2><p>我在手机端使用场景主要记录想法，但也有一定的查阅需求。比如我在外面办事可能需要看公司的保险需要哪些材料，这些我都会截图或者记录下来。所以，搜索是刚需。</p>
+<p>目前搜索使用的就是粗暴的关键词匹配，我感觉已经够用了。后续可能可以增加分词等复杂一些的逻辑。作为程序员，文件中的代码高亮肯定是需要支持的，使用 <code>highlight.js</code> 就好了。</p>
+<p><img src="/images/ob_Pasted_image_20211122123826.png" alt="/images/ob_Pasted_image_20211122123826.png"></p>
+<h2 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h2><p>Todo 也是一个 Markdown 格式的文件，而且这个文件只有记录了创建这个 todo 项的时间。我养成习惯每天早上都会看一看然后选择一些 todo 干掉。虽然目前很简陋，看起来就像是一个备忘录而已。对我来说也是足够了，我没有很多细小的事情需要赶 deadline。</p>
+<p><img src="/images/ob_Pasted_image_20211127135356.png" alt="/images/ob_Pasted_image_20211127135356.png"></p>
+<h2 id="RSS-阅读"><a href="#RSS-阅读" class="headerlink" title="RSS 阅读"></a>RSS 阅读</h2><p>我已经有一段时间没有使用 RSS 阅读器了。原因只能在 PC 端看，可能 IOS 上能找到一些精美的 RSS 阅读器，我目前在安卓上没找到。越来越多的人对 RSS 阅读不感兴趣了，国内的很多人使用公众号或，知乎，或者很多空闲时间用来看抖音了。国外很多人继续使用 Newsletter 的形式来订阅，内容创作者也喜欢让你通过邮件订阅，因为邮件订阅是一种双向的关系，他也可以通过邮件联系你，这样后续就可以推广产品之类的。</p>
+<p>互联网上还是有很多独立博客，他们不是为了商业利益，纯粹是为了自己的爱好和分享精神，坚持写一些高质量的内容。在没找到合适的工具的情况下，我自己实现了一个简单的 RSS 爬虫，和这个 RSS 阅读界面。爬虫部署在我的服务器上，每隔几十分钟就会遍历我的订阅列表，抓取内容推送到 Github 私人仓库。服务端的爬虫使用的数据库是 <code>SQLite</code> 来存储文章的其他一些元数据。</p>
+<p>有的作者 RSS feed 里面只提供摘要。为了营造沉入式的阅读感受，我尝试把文章的内容都抓取过来，包括图片也会拷贝一份到我自己的服务器上。这样每一篇文章打开都是全文，而不是摘要。</p>
+<p><img src="/images/ob_Pasted_image_20211122123722.png" alt="/images/ob_Pasted_image_20211122123722.png"></p>
+<p>我最近发现一个新的使用场景，这种里面带有 Podcast 的语音内容，在开车时候打开听很方便。</p>
+<p><img src="/images/ob_Pasted_image_20211123171216.png" alt="/images/ob_Pasted_image_20211123171216.png"></p>
+<h2 id="后续的改进"><a href="#后续的改进" class="headerlink" title="后续的改进"></a>后续的改进</h2><p>我目前觉得这个应用在移动端使用起来很符合习惯，后面可能会继续优化 RSS 阅读的一些细节，因为我现在使用这个功能的时间越来越多了。另外前端代码现在比较乱，后面会继续学习一些前端技能，把代码优化得更优雅简洁。</p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2021/11/28/intro-to-obweb.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2021/11/23/my-notes-taking-tools-and-experience.html">我的知识管理工具和经验</a>
       </h2>
       <p class="article-date">November 23, 2021
@@ -167,52 +221,14 @@
         
         
             
-                <p>知识管理是近些年出来的逼格称呼，通俗点说就是写笔记或者写作，讲究一点可以说成“打造第二大脑”，英文中可以诗意地称之为 “Digital Garden”。看看，同样一个事怎么说出来格局完全不同了。</p>
-<p>近两年笔记软件这个领域出现了两个很重要的创新：</p>
-<p>一个是双向链接，开山鼻祖是 <a href="https://roamresearch.com/" target="_blank" rel="noopener">Roam Research</a> ，一个是一切皆对象和可无限嵌套的设计，也就是 <a href="https://www.notion.so/" target="_blank" rel="noopener">Notion</a>。</p>
-<p>因为这两个大方向上的微创新，现在笔记类软件和系统百发齐放，这是真是最好的时代了。</p>
-<p>作为程序员我分享一下自己在这类工具上的使用经验、感受以及建议。</p>
-<p>大概十多年前，还在学校的时候，博客文化刚兴起，所以很多记录类的东西我都写在博客里了。那些常见的博客系统我基本都用过，后来很多都倒闭了。当然 Wordpress 现在在非程序员中都非常流行。</p>
-<p>后来很长一段时间我都是用 Evernote ，国内版本叫做印象笔记。用的人多了各种周边的工具也非常多，比如浏览器插件之类的。这类笔记软件也非常多。</p>
-<p>三四年后我又渐渐不使用印象笔记了，因为我用了很多年 Emacs，所以偶然尝试了 org-mode。这东西结合 GTD 可玩的方式可太多了。 org-mode 日程管理，日志，文档都在本地，一切都是纯文本的 org 格式，我通过 Github 来做数据存储。一切都是文本并且本地化就可以自动化，我可以自己写一些脚本，自己定义各种模板等等。虽然是纯文本的格式，我也可以很方便地到导出成 PDF , 甚至是做演示。很多人是为了使用 org-mode 才一直用 Emacs，我也曾经认为自己找到了以后一直用的记录工具和方式。</p>
-<p>在这段时间，我养成的一个很好的习惯是使用  Github 来存储自己的数据。Github 已经成为最基础的互联网设施，我信任这个平台胜过其他服务。Joe Armstrong 在去世前一年，把自己的文章迁移到 Github，感兴趣的可以看看这篇不错的文章 <a href="https://laike9m.com/blog/people-die-but-long-live-github,122/" target="_blank" rel="noopener">People Die, but Long Live GitHub</a>。</p>
-<p>后来，我因为换工作的原因不怎么使用 Emacs了。最近一年工作内容变了，自己日常开发和业务时间使用 Windows 更多。业余时间基本是用的 WSL ，配合 VsCode 日常开发体验很棒。 而 Emacs 在 Windows 上使用体验很不好，我也没找到合适的移动端解决方案。虽然最近 WSL 也支持 Linux Gui 了，但我已经懒得折腾，因为我已经离不开 VS Code 。</p>
-<p>我需要重新找一个笔记类工具，我的需求是：</p>
-<ol>
-<li>本地存储文件</li>
-<li>足够的自定义</li>
-<li>支持 Markdown</li>
-<li>支持双向链接</li>
-</ol>
-<p>这个需求其实满足了绝大部分程序员用户，一个文件夹加 Typora 估计都差不多了，但是我觉得双链这个设计确实有一些价值，所以也变成刚需了。</p>
-<p>在摸索的过程中我试过 Notion，Wolai，Logseq，Obsidian。</p>
-<p>Notion 确实有耳目一新的感觉，而且 UI 的审美很好，用户做出来的笔记可以很美观整洁。而内嵌 Database 可以打造出来很多好玩的东西，甚至可以用来做站点。缺点是服务器在国外，不太稳定。</p>
-<p>Wolai 提供 Notion 类似的块编辑以及大部分功能，而且很早就有双链接，服务器在国内所以速度上也很快。版本更新很快，有很多针对中文用户的细节优化。如果不想折腾用 Wolai 也挺好的。Wolai 和 Notion 是比较重的工具，已经超过了通常我们理解的笔记管理软件的范畴。</p>
-<p>Logseq 是 Roam Research 的模仿品，但是提供本地存储的方式，也有桌面版软件。很多人赞赏 Roam Research ，不过我没有觉得这种方式完全适合我。 Roam Research 的正常方式是每天都在日志页面记录，然后写的过程中加上适合的链接，这样你的文档渐渐构成一个网络。如果你日常中经常用到的概念，自然就会经常被链接，那么就会是网络中的一个密集点。所以即使你不建文件目录，这种文档之间的关系也会自然而然形成，并且比目录这种单线的关系更符合直觉。</p>
-<p><img src="/images/ob_Pasted_image_20211120225233.png" alt="/images/ob_Pasted_image_20211120225233.png"></p>
-<p>最终我一直保持使用的是 Obsidian。Obsidian 支持本地存储数据的方式（也可选择付费远程同步）。我使用一个 Git 的插件自动同步到 Github。Obsidian 的客户端做得如此出色，而且扩张性极好，已经形成很成熟的插件生态。这是我的记录汇成的网状。</p>
-<p><img src="/images/ob_Pasted_image_20211120225329.png" alt="/images/ob_Pasted_image_20211120225329.png"></p>
-<p>在使用 Obsidian 一段时间后我又体验了 Flomo，这是一个不错的软件让我们迅速把日常的想法记录下来。我想如果 Flomo 的数据能够同步到 Obsidian 就好了。</p>
-<p>看了一下 Flomo 的接口，我觉得干脆还不如自己动手重新实现来练练手。我就动手自己实现了一个 Web 单页应用 <a href="https://github.com/chenyukang/obweb" target="_blank" rel="noopener">obweb</a>，然后部署在自己的服务器上。这个应用提供一个简单的页面来记录日常的想法，文字或者图片都能迅速提交。数据提交后同步到 GitHub。这个 SPA 页面可以内嵌在微信浏览器，所以使用体验和一个小程序差不多。</p>
-<p>而后我又增加了搜索的接口，这样我所有 Obsidian 的数据都可以在手机端检索和查看，而且我也能做一些简单的编辑。实际使用下来这真的比一个独立的手机应用更方便。</p>
-<p>最近我又新增了一个 Rss 阅读的功能，后台会自动根据我的订阅列表抓取 Feed，甚至会尝试把网页和图片都下载下来，这样即使是一些”内网”不能直接访问的文章也可以在手机端无障碍阅读。</p>
-<p>在这个过程中我学会了 svelte 这个前端框架和 Rust 写服务端接口这些东西。虽然我的 UI 设计和前端技能简直就是渣渣，但是这就是完全贴合我的使用习惯的软件，我可以做到所有细节的定制化。</p>
-<p><img src="/images/ob_Pasted_image_20211123190603.png" alt="/images/ob_Pasted_image_20211123190603.png"></p>
-<p>这是一种渐进式的开发体验，每隔一段时间我会在使用过程中摸索一个需求，然后我会稍微等一等，如果这个需求还是存在并且我考虑好了如何实现，我就会加上去。</p>
-<p>折腾这么多年这类软件后，我的感受是工具的使用都是非常私人化的选择，作为程序员我们有能力使用自己的技术来定制化工具来提高效率。最近看到这篇文章 <a href="https://www.swyx.io/make-your-own-tools/" target="_blank" rel="noopener">You’re Allowed To Make Your Own Tools</a> 很好的阐述了这个观念。这就像是住房子一样，如果你自己是设计师，估计不会满足房地产商提供的统一装修，而是根据自己的喜好和习惯来重新设计。房子也不是越富丽堂皇就越好，简单但实用即可。</p>
-<p>所以在文档和写作这块，数据本地纯文本的方式是对程序员更好的方式，你可以自己写程序来处理这些数据，而不是完全依靠软件或者第三方的功能。比如这篇文章就是我在陪小孩上课的过程中，用手机在 obweb 上敲出来，服务器上的脚本会自动转成 Hexo 文件，提交发布到我的博客。</p>
-<p>最后，我们现在有很多华丽的工具来用，也要避免让自己变成一个纯粹信息的收藏者。’数字花园’不是一股脑地往后院搬东西就行，需要花时间精心打理和修剪。工具并不能本质地解决问题，难的是日复一日坚持记录自己的想法和理解，整理知识。柳比歇夫使用纸和笔记录了自己奇特的一生，并且完成大量研究工作。</p>
-<p>记录的过程并不是学习本身，而是思考。通过记录这种形式，把自己的理解写下来促进思考，才能产生最大的价值。</p>
-<hr>
-<p>题外画:</p>
-<p>一个有趣的事是，除了 Roam Research 和大厂的传统产品，目前兴起的这些笔记类软件和服务大多是中国人开发的，包括 Notion、Obsidian、Logseq 等。我们可能真的比较喜欢这类东西，“好记性不如烂笔头” 乃民族真传。</p>
-<p>另一个事实，Roam Research，Logseq，以及另外一个开源的类似产品 <a href="https://www.athensresearch.org/" target="_blank" rel="noopener">Athens Research</a> 都使用了 Clojure 这门编程语言来实现。Clojure 作为一门 JVM 上的 Lisp，其热度还没进过前 30 吧。这门语言对于数据处理这样的项目是比较合适的，只是不太适合大团队使用。</p>
-
+                知识管理是近些年出来的逼格称呼，通俗点说就是写笔记或者写作，讲究一点可以说成“打造第二大脑”，英文中可以诗意地称之为 “Digital Garden”。看看，同样一个事怎么说出来格局完全不同了。
+近两年笔记软件这个领域出现了两个很重要的创新：
+一个是双向链接，开山鼻祖是 Roam Res .....
             
         
       </div>
       
-          <a class="more" href="/2021/11/23/my-notes-taking-tools-and-experience.html#footer">发表评论</a>
+          <a class="more" href="/2021/11/23/my-notes-taking-tools-and-experience.html">阅读全文</a>
       
     </article>
   
@@ -393,41 +409,6 @@ org-mode作为一个近十二年的 Emacs 用户，最近开始使用 org-mode �
       </div>
       
           <a class="more" href="/2019/07/31/details_matter.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2019/06/23/2019-06-23-random-notes.html">保存 kmacro </a>
-      </h2>
-      <p class="article-date">June 23, 2019
-          
-              
-  <a href="/tags#Notes" >
-    <span class="tag-code">Notes</span>
-  </a>
-
-  <a href="/tags#Emacs" >
-    <span class="tag-code">Emacs</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                宏是很强大的编辑方法，如果要长久保存一些宏可以使用下面的办法：
-M-x start-kbd-macro
-开始记录宏，通常快捷键为”C-x (“, 结束的快捷键为 “C-x )”。
- 然后使用命令: 
- M-x kmacro-name-last-macro
-  可以把这条宏给命名，如果要保 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2019/06/23/2019-06-23-random-notes.html">阅读全文</a>
       
     </article>
   

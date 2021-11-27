@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          Obweb 介绍 | Yukang&#39;s Page
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+
+  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+      <img src="/css/images/logo.png" width="400px" height="400px">
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Yukang's Page</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Obweb 介绍</h2>
+  <p class="post-date">2021-11-28</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>在文章<a href="http://chenyukang.github.io/2021/11/23/my-notes-taking-tools-and-experience.html">我的知识管理工具和经验</a>中我介绍了自己开发的 Obsidian 配合 Web 应用 <a href="https://github.com/chenyukang/obweb" target="_blank" rel="noopener">obweb</a>。</p>
+<p>下面详细介绍一下自己对每个功能的使用场景，以及其中的一点技术细节。后端使用 <code>Rust</code> 开发的，因为后端逻辑并不复杂，所以使用什么语言区别不大。我最近在练手 <code>Rust</code>，所以就用了 <a href="https://github.com/seanmonstar/warp" target="_blank" rel="noopener">Warp</a> 这个框架来实现。</p>
+<p>我是一个前端新手，顺便借这个项目在学习一些 JavaScript 和 Svelte 相关的技能。第一次实现的时候是纯 HTML 加 JQuery，后来又加上了 Svelte 。Svelte 这个前端框架对新手来说也不难，我是边看教程边照着做的。</p>
+<p><img src="/images/ob_Pasted_image_20211127144951.png" alt="/images/ob_Pasted_image_20211127144951.png"></p>
+<p>Obweb 是一个典型的前后端分离的 Web 应用，没什么技术上的难度。可忽略直男的 UI 设计(貌似根本无设计😂)，我们着重看看我日常用的这些功能。</p>
+<h2 id="想法记录"><a href="#想法记录" class="headerlink" title="想法记录"></a>想法记录</h2><p>这是我做 Obweb 的初衷，我想在手机端把一些想法和灵感记录下来。之前一直使用 [[flomo]] 这款应用，这个应用功能很少，就是让你打开记录想法，但是会使用标签来把这些想法串联起立。随着我使用 Obsidian 的时间越来越多，我就想把这些数据同步到自己的 Obsidian 中。</p>
+<p>这个界面很简单，就是一个输入框，可以加入标签或者 Link。但是这里面隐藏了一些逻辑：</p>
+<ul>
+<li>如果 Link 为空，这个记录则为一个每日的想法，会追加在每天的 Daily 文件后</li>
+<li>如果 Link 是 Todo，则会在我的 Todo.md 在文件头部增加一个记录。 </li>
+<li>如果 Link 是一个其他的文件名，如果数据中没有这个文件则会创建，否则就会在现有的文件后追加这条记录。这种使用场景是我在手机上看 Kindle，有的摘抄就会记录下来，最终每一本书阅读后摘抄就会在一个文件里面。这也是为什么这个 Link 除非手动清除，否则会一直记录在 localStorage 里面。因为一段时间内我看的都是一本书。如果要清除缓存则可以使用 <code>Reset</code> 按钮。</li>
+</ul>
+<p>可以在想法中加上图片，但是限制只能加一张。因为我习惯了使用这个记录页面之后，我也想在 PC 端使用。因此增加了从剪切板中存储图片的功能，方便我在 PC 端想同步一些内容到手机上以备后续查看。</p>
+<p><img src="/images/ob_Pasted_image_20211127133255.png" alt="/images/ob_Pasted_image_20211127133255.png"></p>
+<h2 id="每日回顾"><a href="#每日回顾" class="headerlink" title="每日回顾"></a>每日回顾</h2><p>想法中记录的内容，可以使用 <code>Day</code> 来回顾，目前只有按照日期每日来回地切。如果要大量地查阅内容我肯定使用 PC 端。这里也可以进行一些轻度编辑。</p>
+<p><img src="/images/ob_Pasted_image_20211127134715.png" alt="/images/ob_Pasted_image_20211127134715.png"></p>
+<h2 id="搜索和编辑"><a href="#搜索和编辑" class="headerlink" title="搜索和编辑"></a>搜索和编辑</h2><p>我在手机端使用场景主要记录想法，但也有一定的查阅需求。比如我在外面办事可能需要看公司的保险需要哪些材料，这些我都会截图或者记录下来。所以，搜索是刚需。</p>
+<p>目前搜索使用的就是粗暴的关键词匹配，我感觉已经够用了。后续可能可以增加分词等复杂一些的逻辑。作为程序员，文件中的代码高亮肯定是需要支持的，使用 <code>highlight.js</code> 就好了。</p>
+<p><img src="/images/ob_Pasted_image_20211122123826.png" alt="/images/ob_Pasted_image_20211122123826.png"></p>
+<h2 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h2><p>Todo 也是一个 Markdown 格式的文件，而且这个文件只有记录了创建这个 todo 项的时间。我养成习惯每天早上都会看一看然后选择一些 todo 干掉。虽然目前很简陋，看起来就像是一个备忘录而已。对我来说也是足够了，我没有很多细小的事情需要赶 deadline。</p>
+<p><img src="/images/ob_Pasted_image_20211127135356.png" alt="/images/ob_Pasted_image_20211127135356.png"></p>
+<h2 id="RSS-阅读"><a href="#RSS-阅读" class="headerlink" title="RSS 阅读"></a>RSS 阅读</h2><p>我已经有一段时间没有使用 RSS 阅读器了。原因只能在 PC 端看，可能 IOS 上能找到一些精美的 RSS 阅读器，我目前在安卓上没找到。越来越多的人对 RSS 阅读不感兴趣了，国内的很多人使用公众号或，知乎，或者很多空闲时间用来看抖音了。国外很多人继续使用 Newsletter 的形式来订阅，内容创作者也喜欢让你通过邮件订阅，因为邮件订阅是一种双向的关系，他也可以通过邮件联系你，这样后续就可以推广产品之类的。</p>
+<p>互联网上还是有很多独立博客，他们不是为了商业利益，纯粹是为了自己的爱好和分享精神，坚持写一些高质量的内容。在没找到合适的工具的情况下，我自己实现了一个简单的 RSS 爬虫，和这个 RSS 阅读界面。爬虫部署在我的服务器上，每隔几十分钟就会遍历我的订阅列表，抓取内容推送到 Github 私人仓库。服务端的爬虫使用的数据库是 <code>SQLite</code> 来存储文章的其他一些元数据。</p>
+<p>有的作者 RSS feed 里面只提供摘要。为了营造沉入式的阅读感受，我尝试把文章的内容都抓取过来，包括图片也会拷贝一份到我自己的服务器上。这样每一篇文章打开都是全文，而不是摘要。</p>
+<p><img src="/images/ob_Pasted_image_20211122123722.png" alt="/images/ob_Pasted_image_20211122123722.png"></p>
+<p>我最近发现一个新的使用场景，这种里面带有 Podcast 的语音内容，在开车时候打开听很方便。</p>
+<p><img src="/images/ob_Pasted_image_20211123171216.png" alt="/images/ob_Pasted_image_20211123171216.png"></p>
+<h2 id="后续的改进"><a href="#后续的改进" class="headerlink" title="后续的改进"></a>后续的改进</h2><p>我目前觉得这个应用在移动端使用起来很符合习惯，后面可能会继续优化 RSS 阅读的一些细节，因为我现在使用这个功能的时间越来越多了。另外前端代码现在比较乱，后面会继续学习一些前端技能，把代码优化得更优雅简洁。</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#工具，Obweb" >
+    <span class="tag-code">工具，Obweb</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/2021/11/23/my-notes-taking-tools-and-experience.html">
+        
+          我的知识管理工具和经验
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#想法记录"><span class="toc-nav-text">想法记录</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#每日回顾"><span class="toc-nav-text">每日回顾</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#搜索和编辑"><span class="toc-nav-text">搜索和编辑</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Todo"><span class="toc-nav-text">Todo</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#RSS-阅读"><span class="toc-nav-text">RSS 阅读</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#后续的改进"><span class="toc-nav-text">后续的改进</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://chenyukang.github.io/2021/11/28/intro-to-obweb.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'ba1315646a61cc7bd6f574a6b5221640';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
