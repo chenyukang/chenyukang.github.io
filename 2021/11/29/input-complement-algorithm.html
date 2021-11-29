@@ -10,7 +10,7 @@
   
   <title>
       
-          补全算法 | Yukang&#39;s Page
+          自动补全算法 | Yukang&#39;s Page
       
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -144,7 +144,7 @@
 </header>
 
     <div id="article-banner">
-  <h2>补全算法</h2>
+  <h2>自动补全算法</h2>
   <p class="post-date">2021-11-29</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -153,7 +153,7 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>周末在和一个日本小伙一直讨论一个 Obsidian 的 <a href="https://github.com/tadashi-aikawa/obsidian-various-complements-plugin" target="_blank" rel="noopener">补全插件</a>，经过一个周末的努力，最终这个插件完善了不少。我很喜欢用这个来写输入英文。 </p>
+    <section class="markdown-content"><p>周末在和一个日本小伙一直讨论一个 Obsidian 的 <a href="https://github.com/tadashi-aikawa/obsidian-various-complements-plugin" target="_blank" rel="noopener">补全插件</a>，经过一个周末的努力，最终这个插件完善了不少。我很喜欢用这个来输入英文。 </p>
 <p>我主要想用这个插件来补全英文输入，这个插件目前没有自带的词典。我在互联网上搜索了一圈，最终在 Github 上找了这个 <a href="https://github.com/first20hours/google-10000-english" target="_blank" rel="noopener">Google 10000 English</a>，也就是最长使用的搜索单词。实际上，前 7000 个英语单词覆盖了日常的 90% 使用场景。</p>
 <h3 id="中文输入"><a href="#中文输入" class="headerlink" title="中文输入"></a>中文输入</h3><p>首先我碰到的问题是，输入中文的时候插件也在补全英文。然后我提了第一个 issue。作者很快就回复了，给了我一个开发版本尝试，很完美的修复了这个问题。<br><img src="/images/ob_Pasted_image_20211128185804.png" alt="/images/ob_Pasted_image_20211128185804.png"><br>然后在使用过程中发现另一个小问题，比如我的字典里面有 <code>apple</code>，但是如果我是在句子头部输入 <code>Ap</code> ，这个单词并没有出现在补全列表。我们当然可以把字典的单词都进行首字母大写的处理，但是这就会让字典翻倍。</p>
 <p>我看了看源码，果然如自己猜想的那样，匹配的时候没有考虑首字母大写的问题。我花了一些时间做了一个 PR：<a href="https://github.com/chenyukang/obsidian-various-complements-plugin/commit/935d7de1633b9a7685349a97302a0e908e10b215" target="_blank" rel="noopener">fix issue #30, take care of uppercase </a>。</p>
@@ -199,6 +199,13 @@
     
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2021/11/30/using-git-in-github-action.html">
+        <span class="nav-arrow">← </span>
+        
+          在 Github Action 使用 Git
+        
+      </a>
     
     
       <a class="nav-right" href="/2021/11/28/intro-to-obweb.html">
