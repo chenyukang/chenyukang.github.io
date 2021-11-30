@@ -156,7 +156,7 @@
     <section class="markdown-content"><p>在文章<a href="http://chenyukang.github.io/2021/11/23/my-notes-taking-tools-and-experience.html">我的知识管理工具和经验</a>中我介绍了自己开发的 Obsidian 配合 Web 应用 <a href="https://github.com/chenyukang/obweb" target="_blank" rel="noopener">obweb</a>。</p>
 <p>下面详细介绍一下自己对每个功能的使用场景，以及其中的一点技术细节。后端使用 <code>Rust</code> 开发的，因为后端逻辑并不复杂，所以使用什么语言区别不大。我最近在练手 <code>Rust</code>，所以就用了 <a href="https://github.com/seanmonstar/warp" target="_blank" rel="noopener">Warp</a> 这个框架来实现。</p>
 <p>我是一个前端新手，顺便借这个项目在学习一些 JavaScript 和 Svelte 相关的技能。第一次实现的时候是纯 HTML 加 JQuery，后来又加上了 Svelte 。Svelte 这个前端框架对新手来说也不难，我是边看教程边照着做的。</p>
-<p><img src="/images/ob_Pasted_image_20211127144951.png" alt="/images/ob_Pasted_image_20211127144951.png"></p>
+<p><img src="/images/ob_pasted-image-20211127144951.png" alt="/images/ob_pasted-image-20211127144951.png"></p>
 <p>Obweb 是一个典型的前后端分离的 Web 应用，没什么技术上的难度。可忽略直男的 UI 设计(貌似根本无设计😂)，我们着重看看我日常用的这些功能。</p>
 <h2 id="想法记录"><a href="#想法记录" class="headerlink" title="想法记录"></a>想法记录</h2><p>这是我做 Obweb 的初衷，我想在手机端把一些想法和灵感记录下来。之前一直使用 [[flomo]] 这款应用，这个应用功能很少，就是让你打开记录想法，但是会使用标签来把这些想法串联起立。随着我使用 Obsidian 的时间越来越多，我就想把这些数据同步到自己的 Obsidian 中。</p>
 <p>这个界面很简单，就是一个输入框，可以加入标签或者 Link。但是这里面隐藏了一些逻辑：</p>
@@ -166,20 +166,20 @@
 <li>如果 Link 是一个其他的文件名，如果数据中没有这个文件则会创建，否则就会在现有的文件后追加这条记录。这种使用场景是我在手机上看 Kindle，有的摘抄就会记录下来，最终每一本书阅读后摘抄就会在一个文件里面。这也是为什么这个 Link 除非手动清除，否则会一直记录在 localStorage 里面。因为一段时间内我看的都是一本书。如果要清除缓存则可以使用 <code>Reset</code> 按钮。</li>
 </ul>
 <p>可以在想法中加上图片，但是限制只能加一张。因为我习惯了使用这个记录页面之后，我也想在 PC 端使用。因此增加了从剪切板中存储图片的功能，以方便我在 PC 端想同步一些内容到手机上以备后续查看。</p>
-<p><img src="/images/ob_Pasted_image_20211127133255.png" alt="/images/ob_Pasted_image_20211127133255.png"></p>
+<p><img src="/images/ob_pasted-image-20211127133255.png" alt="/images/ob_pasted-image-20211127133255.png"></p>
 <h2 id="每日回顾"><a href="#每日回顾" class="headerlink" title="每日回顾"></a>每日回顾</h2><p>想法中记录的内容，可以使用 <code>Day</code> 来回顾，目前只有按照日期每日来回地切换。如果要大量地查阅内容我肯定使用 PC 端。这里也可以进行一些轻度编辑。</p>
-<p><img src="/images/ob_Pasted_image_20211127134715.png" alt="/images/ob_Pasted_image_20211127134715.png"></p>
+<p><img src="/images/ob_pasted-image-20211127134715.png" alt="/images/ob_pasted-image-20211127134715.png"></p>
 <h2 id="搜索和编辑"><a href="#搜索和编辑" class="headerlink" title="搜索和编辑"></a>搜索和编辑</h2><p>我在手机端使用场景主要记录想法，但也有一定的查阅需求。比如我在外面办事可能需要看公司的保险需要哪些材料，这些我都会截图或者记录下来。所以，搜索是刚需。</p>
 <p>目前搜索使用的就是粗暴的关键词匹配，我感觉已经够用了。后续可能可以增加分词等复杂一些的逻辑。作为程序员，文件中的代码高亮肯定是需要支持的，使用 <code>highlight.js</code> 就好了。</p>
-<p><img src="/images/ob_Pasted_image_20211122123826.png" alt="/images/ob_Pasted_image_20211122123826.png"></p>
+<p><img src="/images/ob_pasted-image-20211122123826.png" alt="/images/ob_pasted-image-20211122123826.png"></p>
 <h2 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h2><p>Todo 也是一个 Markdown 格式的文件，而且这个文件只有记录了创建这个 todo 项的时间。我养成习惯每天早上都会看一看然后选择一些 todo 干掉。虽然目前很简陋，看起来就像是一个备忘录而已。对我来说也是足够了，我没有很多细小的事情需要赶 deadline。</p>
-<p><img src="/images/ob_Pasted_image_20211127135356.png" alt="/images/ob_Pasted_image_20211127135356.png"></p>
+<p><img src="/images/ob_pasted-image-20211127135356.png" alt="/images/ob_pasted-image-20211127135356.png"></p>
 <h2 id="RSS-阅读"><a href="#RSS-阅读" class="headerlink" title="RSS 阅读"></a>RSS 阅读</h2><p>我已经有一段时间没有使用 RSS 阅读器了，其中一个原因是我没找到合适的安卓客户端。可能 IOS 上能找到一些精美的 RSS 阅读器，越来越多的人对 RSS 阅读不感兴趣了，国内的很多人使用公众号或，知乎，或者很多空闲时间用来看抖音了。国外很多人继续使用 Newsletter 的形式来订阅，内容创作者也喜欢让你通过邮件订阅，因为邮件订阅是一种双向的关系，他也可以通过邮件联系你，这样后续就可以推广产品之类的。所以说 RSS 是反商业的模式，通过 Feed 订阅似乎成为怀旧行为。</p>
 <p>互联网上还是有很多独立博客，他们不是为了商业利益，纯粹是为了自己的爱好和分享精神，坚持写一些高质量的内容。在没找到合适的工具的情况下，我自己实现了一个简单的 RSS 爬虫，和这个 RSS 阅读界面。爬虫部署在我的服务器上，每隔几十分钟就会遍历我的订阅列表，抓取内容推送到 Github 私人仓库。服务端的爬虫使用的数据库是 <code>SQLite</code> 来存储文章的其他一些元数据。</p>
 <p>有的作者 RSS feed 里面只提供摘要。为了营造沉入式的阅读感受，我尝试把文章的内容都抓取过来，包括图片也会拷贝一份到我自己的服务器上。这样每一篇文章打开都是全文，而不是摘要。</p>
-<p><img src="/images/ob_Pasted_image_20211122123722.png" alt="/images/ob_Pasted_image_20211122123722.png"></p>
-<p>我最近发现一个新的使用场景，这种里面带有 Podcast 的语音内容，在开车时候打开听很方便。</p>
-<p><img src="/images/ob_Pasted_image_20211123171216.png" alt="/images/ob_Pasted_image_20211123171216.png"></p>
+<p><img src="/images/ob_pasted-image-20211122123722.png" alt="/images/ob_pasted-image-20211122123722.png"></p>
+<p>我最近发现一个新的使用场景，这种里面带有  Podcast 的语音内容，在开车时候打开听很方便。</p>
+<p><img src="/images/ob_pasted-image-20211123171216.png" alt="/images/ob_pasted-image-20211123171216.png"></p>
 <h2 id="后续的改进"><a href="#后续的改进" class="headerlink" title="后续的改进"></a>后续的改进</h2><p>因为现在使用 RSS 阅读的时间越来越多了，后面可能会继续优化 RSS 阅读的一些细节。另外前端代码现在比较乱，后面会继续学习一些前端技能，把代码优化得更优雅简洁。</p>
 </section>
     <!-- Tags START -->

@@ -159,7 +159,6 @@
 </li>
 <li><p>配置更为方便，想要修改一下只需要提交配置文件就可以了，不用登录到服务器上。</p>
 </li>
-<li></li>
 </ol>
 <p>基于以上几点考虑，我花了一些时间来把之前的一些 Ruby、Shell 脚本变成 Github Action 配置。有的脚本做的事情是定时拉去某个 repo，如果有改动则会根据规则生成新的内容，然后自动提交到远程仓库。所以我需要在 Github Action 中使用 Git 提交数据。要达到这个目的得在 Github 中配置 Git 的权限和账户信息。有以下两种方式：</p>
 <h2 id="使用-Github-Access-token"><a href="#使用-Github-Access-token" class="headerlink" title="使用 Github Access token"></a>使用 Github Access token</h2><p>首先需要在 Settings 页面生成一个 Access Token. 然后添加到要配置 Github Action 的仓库的 Settings 页面中，假设我的 token 取名为<code>PAT</code>，在 Action 中我们可以通过 <code>secrets.PAT</code> 获取和使用该 Token。</p>
@@ -191,6 +190,13 @@
     
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2021/12/01/sidecar-design-pattern.html">
+        <span class="nav-arrow">← </span>
+        
+          Sidecar 架构模式
+        
+      </a>
     
     
       <a class="nav-right" href="/2021/11/29/input-complement-algorithm.html">
