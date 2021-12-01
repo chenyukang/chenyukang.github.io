@@ -148,6 +148,58 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2021/12/02/obsidian-plugin-dev.html">Obsidian 插件开发</a>
+      </h2>
+      <p class="article-date">December 2, 2021
+          
+              
+  <a href="/tags#工具" >
+    <span class="tag-code">工具</span>
+  </a>
+
+  <a href="/tags#obsidian" >
+    <span class="tag-code">obsidian</span>
+  </a>
+
+  <a href="/tags#TypeScript" >
+    <span class="tag-code">TypeScript</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <p>昨天花了点时间下学习 Obsidian 的插件开发。我想了一下目前自己有点不爽的是图片插入的时候，图片的名称中间有空格，这虽然也不是什么大问题，只是在 Linux 环境下显示的时候看起来特别别扭。而且这看起来也是一个很好的入门小插件，可以接触 Obsidian 里面的文件管理和编辑操作，我需要把图片在文件系统里的名称改掉，也要修改 markdown 里的路径。</p>
+<p>所有代码都在这里了： <a href="https://github.com/chenyukang/obsidian-rename-image" target="_blank" rel="noopener">chenyukang/obsidian-rename-image (github.com)</a>。</p>
+<h3 id="开发步骤"><a href="#开发步骤" class="headerlink" title="开发步骤"></a>开发步骤</h3><ol>
+<li>从 plugin sample repo 克隆一个仓库</li>
+<li>修改其中的 manifest.json 文件，其中 plugin id 是最重要的。</li>
+<li>修改主文件 main.ts，使用 <code>npm install</code> 安装依赖库</li>
+<li>使用命令 <code>npm run dev</code>  编译出 main.js </li>
+<li>在 Obsidian  的 vault 目录 .obsidian/plugins/ 创建一个插件名称的文件夹，拷贝 manifest.json  和 main.js 到该目录，有的插件可能还有 style.css 等文件。</li>
+<li>在 settings 页面加载插件</li>
+</ol>
+<p>在开发过程中，可以通过 <code>Ctrl-Shift-i</code> 来打开调试页面，在代码中加入调试信息。</p>
+<h3 id="API-相关"><a href="#API-相关" class="headerlink" title="API 相关"></a>API 相关</h3><p>在插件项目里执行了 <code>npm install</code> 之后，文件 <code>node_modules/obsidian/obsidian.d.ts</code> 就是 Obsidian 的 API ，里面有很详细的注释。</p>
+<p>作为补充可以看看 <a href="https://liamca.in/Obsidian+API" target="_blank" rel="noopener">Obsidian API - Liam Cain</a>。API 分为这几个主要部分。</p>
+<p><img src="/images/ob_pasted-image-20211201194355.png" alt="/images/ob_pasted-image-20211201194355.png"></p>
+<p>其中文件编辑部分使用了这个<a href="https://codemirror.net/" target="_blank" rel="noopener">CodeMirror</a>。</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>之前有那么一会我会想，Obsidian 这样一个软件为什么不开源？如果开源我们是不是可以做更多的自由探索。通过折腾插件这么一段体验，我认为不开源问题也不大，其实通过插件我们其实可以在插件里面跑任何自己的代码。这里面的可扩展性对于绝大部分用户来说绰绰有余。</p>
+<p>Obsidian 模块化做得很好，而且 API 的粒度很细。在 VsCode 中写 TypeScript 插件体验比在 Emacs 中写 elisp 开发插件好很多，并且 JavaScript 的相关文档可太丰富了。</p>
+<p>所以，真没必要抱着上古时代的软件不放 😁</p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2021/12/02/obsidian-plugin-dev.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2021/12/01/sidecar-design-pattern.html">Sidecar 架构模式</a>
       </h2>
       <p class="article-date">December 1, 2021
@@ -167,56 +219,14 @@
         
         
             
-                <p>如果你最近经常看一些技术型的文章，可能会看到这个技术名词：Sidecar 模式。中文译名为：挎斗模式。这个名字为直译，挎斗就是这样的一种摩托车：</p>
-<p><img src="/images/ob_2021-11-30-12-57-48.png" alt="/images/ob_2021-11-30-12-57-48.png"></p>
-<p>如果理解了这种模式，就会明白这个名字其实取得特别好。Sidecar 模式就是指在原来的业务逻辑上再新加一个抽象层。这种模式很好的印证了那个计算机的名言：</p>
-<blockquote>
-<p> “计算机科学领域的任何问题都可以通过增加一个简介的中间层来解决。”</p>
-<p>“Any problem in computer science can be solved by another layer of indirection.”</p>
-</blockquote>
-<p>如果一个抽象层不够，那来两个。这种模式也不是近些年新发明的，我们可以理解 Nginx 的反向代理其实也算一种 sidecar 模式。只是近些年，随着微服务和容器化在实践中越来越多，这种模式的使用范围也更广了。</p>
-<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在微服务架构中，如果应用多了就会形成一些共有的需求。特别是流量控制方面，包括限流、流量分发和监控、灰度等等。通常我们对一类需求可以实现一个抽象层，然后在这个抽象层上实现具体的业务逻辑。比如很多公司都有服务网关，然后使用各种语言的 SDK 来集成到应用中。</p>
-<p><img src="/images/ob_pasted-image-20211130163700.png" alt="/images/ob_pasted-image-20211130163700.png"><br>这是通常我们会选择的一种方式，这过程中会有这样的一些问题需要考虑：</p>
-<ol>
-<li>SDK 的维护成本是很高</li>
-<li>SDK 集成到代码中，其中一个组件发生故障就可能会影响到其他组件，SDK 和应用程序之间是保持着相互依赖的关系的。</li>
-</ol>
-<p>在应用层和基础服务没有解耦的情况下，我们对基础服务做改动会增加很多风险和复杂度。例如，我之前所在的部门整个电商的应用做灰度改造，所有应用都需要做对应的改动。</p>
-<h2 id="sidecar-架构"><a href="#sidecar-架构" class="headerlink" title="sidecar 架构"></a>sidecar 架构</h2><p>那我们是否可以提供一个统一的抽象层来做这些基础的重复工作？将基础服务抽象、解耦到应用层都感知不到的程度？</p>
-<p>这是现在的趋势，特别是现在很多架构都跑在容器这样的环境了，统一的抽象层能大大减少架构上的复杂度。 sidecar 模式在不改变主应用的情况下，会起来一个辅助应用，来辅助主应用做一些基础性的甚至是额外的工作。这个 sidecar 通常是和主应用部署在一起，所以在同样的运行环境下。这其中还有一些性能上的考虑，sidecar 如果和主程序网络通信上有延迟就会造成性能问题。例如在 K8s 下一个 pod 里的所有子应用共享一个 sidecar 服务。</p>
-<p>这个辅助应用不一定属于应用程序的一部分，而只是与应用相连接。这就像是挎斗摩托车，每个摩托车都有自己独立的辅助部分，它随着主应用启动或停止。因为 sidecar 其实是一个独立的服务，我们可以在上面做很多东西，例如 sidecar 之间相互通信、或者通过统一的节点控制 sidecar ，从而达到 Service Mesh。</p>
-<p><img src="/images/ob_sidecar-mode-20211130170923.png" alt="/images/ob_sidecar-mode-20211130170923.png"></p>
-<p>这样的好处在于：</p>
-<ol>
-<li>应用层和基础服务层解耦</li>
-<li>基础服务统一维护，SDK 统一集成，减少复杂度，减少应用服务中的重复部分</li>
-<li>可以在不改变原有应用的情况下，为应用扩展新的功能</li>
-</ol>
-<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>我们可以来看看业界典型的使用 sidecar 模式的框架。</p>
-<h3 id="DAPR"><a href="#DAPR" class="headerlink" title="DAPR"></a>DAPR</h3><p><a href="https://docs.microsoft.com/en-us/dotnet/architecture/dapr-for-net-developers/dapr-at-20000-feet" target="_blank" rel="noopener">Dapr: Distributed Application Runtime</a> 是微软开源的一套分布式程序开发框架，其目标是：“Build distributed applications with any language, any framework, run anywhere”。既然任何编程语言，任何框架都要支持，sidercar 是一个必然的选择。DAPR 把很多常见的分布式程序的公共组件抽象出来成为’building blocks’，然后通过 gRPC 或者 HTTP 统一出接口。应用程序通过 sidecar 来访问。</p>
-<p><img src="/images/ob_pasted-image-20211130172044.png" alt="/images/ob_pasted-image-20211130172044.png"><br>这样多了一层抽象之后，即使是某个 Component 做了一些改变，应用层也是无感知的。除了在容器化的环境下运行，用户也可以在非容器化环境以 sidecar 模式启动任何应用，例如我们启动一个图片接口服务 <code>image-api-service</code>，该服务会监听端口 8080，而 sidecar 会通过 3500 端口来代理该服务接受请求：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dapr run --app-id image-api \</span><br><span class="line">         --app-protocol http \</span><br><span class="line">         --app-port 8080 \</span><br><span class="line">         --dapr-http-port 3500 \</span><br><span class="line">         --components-path ../config \</span><br><span class="line">         --<span class="built_in">log</span>-level debug \</span><br><span class="line">         ./image-api-service</span><br></pre></td></tr></table></figure>
-<p>其他服务组件可以通过 sidecar 去请求该服务：</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Dapr api format: http://localhost:&lt;daprPort&gt;/v1.0/invoke/&lt;appId&gt;/method/&lt;method-</span></span><br><span class="line">uri = <span class="string">"http://localhost:3500/v1.0/invoke/image-api/method/api/image"</span></span><br><span class="line">req, err := http.NewRequest(<span class="string">"POST"</span>, uri, bytes.NewBuffer(image))</span><br></pre></td></tr></table></figure>
-<h3 id="lstio"><a href="#lstio" class="headerlink" title="lstio"></a>lstio</h3><p><a href="https://istio.io/latest/zh/about/service-mesh/" target="_blank" rel="noopener">Istio 服务网格</a> 是一个开源的服务网格，提供了统一的方式来实现连接、监控、负载均衡等公共服务和流量管理。单个服务的所有传入和传出网络流量均通过 Sidecar 代理，完成微服务之间的流量管理、遥测数据收集以及策略的执行等。</p>
-<p><img src="/images/ob_pasted-image-20211130173530.png" alt="/images/ob_pasted-image-20211130173530.png"></p>
-<p>在 lstio 中，我们需要了解 Data Plane 和 Control Plane 两个概念——  </p>
-<ul>
-<li>Data Plane 的作用是处理网格内服务间的通信，并完成服务发现、负载均衡、流量管理、健康检查等功能；数据平面的作用是处理网格内服务之间的通信，并负责实现服务发现、负载平衡、流量管理、健康检查等功能；</li>
-<li>Control Plane 的作用是管理和配置 Sidecar 来执行策略并收集遥测</li>
-</ul>
-<p>lstio 中使用了 Lyft 开源的 Envoy 来做流量代理，Envoy 和应用程序一起在一个独立的进程中运行，应用与 localhost 收发信息，对网络的拓扑结构无感知。</p>
-<h2 id="其他考虑"><a href="#其他考虑" class="headerlink" title="其他考虑"></a>其他考虑</h2><ul>
-<li>更适合在容器化的环境使用</li>
-<li>简单系统就没有必要使用这种重型武器了</li>
-<li>哪些部分可以放到 sidercar 里面需要慎重考虑</li>
-</ul>
+                如果你最近经常看一些技术型的文章，可能会看到这个技术名词：Sidecar 模式。中文译名为：挎斗模式。这个名字为直译，挎斗就是这样的一种摩托车：
 
+如果理解了这种模式，就会明白这个名字其实取得特别好。Sidecar 模式就是指在原来的业务逻辑上再新加一个抽象层。这种模式很好的印证了那个计 .....
             
         
       </div>
       
-          <a class="more" href="/2021/12/01/sidecar-design-pattern.html#footer">发表评论</a>
+          <a class="more" href="/2021/12/01/sidecar-design-pattern.html">阅读全文</a>
       
     </article>
   
@@ -273,8 +283,8 @@
         
         
             
-                周末在和一个日本小伙一直讨论一个 Obsidian 的 补全插件，经过一个周末的努力，最终这个插件完善了不少。我很喜欢用这个来输入英文。 
-我主要想用这个插件来补全英文输入，这个插件目前没有自带的词典。我在互联网上搜索了一圈，最终在 Github 上找了这个 Google 10000 E .....
+                周末在和一个日本小伙一直讨论一个 Obsidian 的 补全插件，经过一个周末的努力，最终这个插件完善了不少。
+我主要想用这个插件来补全英文输入，这个插件目前没有自带的词典。我在互联网上搜索了一圈，最终在 Github 上找了这个 Google 10000 English，也就是最长使用 .....
             
         
       </div>
@@ -435,26 +445,6 @@ APR 欺骗ARP 欺骗是一种在局域网中常用的攻击手段，目的是让
       </div>
       
           <a class="more" href="/2020/09/08/networking-notes.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2019/11/07/improve-english-writing-as-progammer.html">程序员如何提高英文写作</a>
-      </h2>
-      <p class="article-date">November 7, 2019
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                最近几个月坚持了一段时间英文写作，兴趣和自信心都大为增强。为什么突然想锻炼自己的英文写作能力呢，是因为工作中要写个什么英文的白皮书，然后发现懂技术的不太会写，会写英文的不太懂技术。最后找了团队中的一个留学生帮忙，大家跌跌撞撞把工作完成了。仔细想想这就是稀缺能力啊，按照刻意练习的套路，我应 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2019/11/07/improve-english-writing-as-progammer.html">阅读全文</a>
       
     </article>
   
