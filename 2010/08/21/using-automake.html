@@ -173,7 +173,7 @@
 <p><span style="color: #ffd700;"># Checks</span> <span style="color: #00bfff; font-weight: bold;">for</span> typedefs, structures, <span style="color: #00bfff; font-weight: bold;">and</span> compiler characteristics.<br>AC_HEADER_STDBOOL<br>AC_C_CONST<br>AC_C_INLINE<br><span style="color: #98f5ff;">AC_TYPE_SIZE_T</span></p>
 <p><span style="color: #ffd700;"># Checks</span> <span style="color: #00bfff; font-weight: bold;">for</span> library functions.</p>
 <p><span style="color: #daa520; font-weight: bold;">AC_CHECK_FUNCS</span>([sqrt])<br><span style="color: #ffd700;">#AC_CONFIG_FILES</span>([makefile])<br>AC_OUTPUT(Makefile)<br></p>
-<ol start="2">
+<ol>
 <li>编写Makefile.am,如下面这样。和makefile一样,写上可执行文件依赖于的源文件,_LDADD是要链接的库文件名。<blockquote><br><pre class="src">AUTOMAKE_OPTIONS=foreign<br>bin_PROGRAMS=TSPdemo<br>TSPdemo_SOURCES= Elastic_Alg.cpp  MyMap.cpp   mathlib.cpp \<br>Elastic_Alg.h    MyMap.h      mathlib.h \<br>LaoMan.cpp       SOM.cpp        pointdef.h \<br>LaoMan.h         SOM.h      main.cpp<br>TSPdemo_LDADD = -lglut</pre><br></blockquote></li>
 <li>然后执行aclocal,和autoconf，最后automake —add-missing 生成configure文件。这就完成了,下面就是unix下编译安装软件的三个步骤了,<br>./configure，make,makeinstall等。</li>
 </ol>

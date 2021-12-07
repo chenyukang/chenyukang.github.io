@@ -156,11 +156,11 @@
 <pre><code>
 <blockquote>1. 地图为一个无向图，玩家控制一个人物在图中行走，目的是寻找潜伏在节点中的一个怪兽。其中要边走边推理，得出怪兽在哪个节点。
 
-2. 还有其他角色，有的节点隐藏着超级蝙蝠，它能把你扔到图的任何位置。节点之间的边可能有警察。
+1. 还有其他角色，有的节点隐藏着超级蝙蝠，它能把你扔到图的任何位置。节点之间的边可能有警察。
 
-3. 如果你推测出怪兽的位置，向那里射箭，如果射中则胜利，否则输掉。如果你不小心从有警察的边通过了，也死掉。
+2. 如果你推测出怪兽的位置，向那里射箭，如果射中则胜利，否则输掉。如果你不小心从有警察的边通过了，也死掉。
 
-4. 在怪兽的附近两个距离范围内，会有血气。如果一个点的某条边有警察，这个点会有光晕。</blockquote>
+3. 在怪兽的附近两个距离范围内，会有血气。如果一个点的某条边有警察，这个点会有光晕。</blockquote>
 </code></pre>
 
 <p><br>说起来复杂，来看副图。有点像挖地雷那种小游戏。有？符号的为没访问过的点，*为当前点，从14到15遇到警察死掉了。<br></p><br><p style="text-align: center;"><a href="/images/known-city.dot_.png"><img class="aligncenter size-full wp-image-614" title="known-city.dot" src="/images/known-city.dot_.png" alt="" width="416" height="332"></a></p><br>上周末玩了好几个小时，还挺难胜，主要还是图比较大，游戏一开是整个地图是已经生成了的，要偷懒可以看看。<br><br><a href="/images/city.dot_.png"><img src="/images/city.dot_.png" alt="" title="city.dot" width="690" height="430" class="aligncenter size-full wp-image-617"></a><br><br><p><br>来看看如何用Lisp代码来实现这个程序，程序比较短。首先是如何生成图，需要生成一个随机的连通图。设定节点数目和边的数目，以编号代表节点。random-node:随机地选一个节点。edge-pair:连接两个点表示边。make-edge-list: 重复N次，生成N条边的集合。这个随机图可能不是连通的，下面的代码找出孤立的点集，用一些边连接起来这些孤立的点集，随机图产生完成。第二步向某些点之间加警察，随机的。这其中用了各种mapcar和Lambda，这样的效果使得Lisp程序看起来全是括号。mapcar的意思就是我要在这个列表上面所有的元素上都执行这个Lambda函数。visited列表保存已经访问过的节点，know-city-nodes更新(不是纯函数式编程的风格)，know-city-edges根据访问的节点，生成已知的路径，当前已知的用dot画出来。<em>graphviz</em>是个好东西，最近也在学习用这个来画一些流程图，效果挺好的。<br></p>
