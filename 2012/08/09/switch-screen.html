@@ -68,7 +68,8 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
   <body>
     <header class="header fixed-header">
@@ -155,9 +156,67 @@
 <p>在办公室工作的时候一般面对两个显示器，大部分时候左边用来看代码，右边用来写程序。双显示屏还是有助于提高工作效率的。有一点困扰我的是如果要切换屏幕一般得用鼠标，这对于<br>Emacs党是有些不能忍受的，右手离开键盘总是得停顿一下的感觉。今天找到一个解决办法。</p>
 <p>最终找到的是这个号称Linux下键盘精灵的一个程序:<a href="http://www.semicomplete.com/projects/xdotool/" target="_blank" rel="noopener">xdotool</a>，下载下来编译安装。这个东西可以模拟鼠标和键盘的行为：</p>
 <p>比如：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">xdotool search "Mozilla Firefox" windowactivate --sync key --clearmodifiers ctrl+l </span><br><span class="line">(快速切换倒firefox,并focus在地址输入栏)</span><br><span class="line"></span><br><span class="line">xdotool getmouselocation --shell  (获取当前鼠标位置等信息)</span><br><span class="line">X=880</span><br><span class="line">Y=443</span><br><span class="line">SCREEN=0</span><br><span class="line">WINDOW=16777250</span><br><span class="line"></span><br><span class="line">xdotool getactivewindow windowmove 100 100    # Moves to 100,100</span><br><span class="line">xdotool getactivewindow windowmove x 100      # Moves to x,100</span><br><span class="line">xdotool getactivewindow windowmove 100 y      # Moves to 100,y</span><br><span class="line">xdotool getactivewindow windowmove 100 y      # Moves to 100,y</span><br><span class="line">xdotool mousemove --screen 0 100 100          # Moves to screen 0 pos at 100,100</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-shell"><code class="language-shell">xdotool search "Mozilla Firefox" windowactivate --sync key --clearmodifiers ctrl+l 
+(快速切换倒firefox,并focus在地址输入栏)
+
+xdotool getmouselocation --shell  (获取当前鼠标位置等信息)
+X=880
+Y=443
+SCREEN=0
+WINDOW=16777250
+
+xdotool getactivewindow windowmove 100 100    # Moves to 100,100
+xdotool getactivewindow windowmove x 100      # Moves to x,100
+xdotool getactivewindow windowmove 100 y      # Moves to 100,y
+xdotool getactivewindow windowmove 100 y      # Moves to 100,y
+xdotool mousemove --screen 0 100 100          # Moves to screen 0 pos at 100,100
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>有了上面windowmove命令，屏幕的切换就好实现了。写个丑陋的python脚本来保存当前的位置，切换到另外一个屏幕，再次调用的时候返回到原来的位置，<br>保存为mouse.py。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> commands</span><br><span class="line"></span><br><span class="line">data_f = <span class="string">"/tmp/window_data"</span></span><br><span class="line">now_info = commands.getoutput(<span class="string">"xdotool getmouselocation --shell"</span>).split(<span class="string">'\n'</span>)</span><br><span class="line">x = (now_info[<span class="number">1</span>])[<span class="number">2</span>:]</span><br><span class="line">y = (now_info[<span class="number">2</span>])[<span class="number">2</span>:]</span><br><span class="line">screen = (now_info[<span class="number">3</span>])[<span class="number">7</span>:]</span><br><span class="line">window = (now_info[<span class="number">4</span>])[<span class="number">7</span>:]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_store</span><span class="params">()</span>:</span></span><br><span class="line">    data = open(data_f, <span class="string">"w+"</span>)</span><br><span class="line">    content = screen+<span class="string">"\n"</span>+x+<span class="string">"\n"</span>+y+<span class="string">"\n"</span>+window</span><br><span class="line">    data.write(content)</span><br><span class="line">    data.close()</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">do_update</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">if</span> screen == <span class="string">"1"</span>:</span><br><span class="line">        new_sc = <span class="string">"0"</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        new_sc = <span class="string">"1"</span></span><br><span class="line">    cmd = <span class="string">"xdotool mousemove --screen "</span> + new_sc +  <span class="string">" 0 0"</span></span><br><span class="line">    commands.getoutput(cmd)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> os.path.exists(data_f):</span><br><span class="line">    data = open(data_f, <span class="string">"r+"</span>)</span><br><span class="line">    content = data.readlines()</span><br><span class="line">    data.close()</span><br><span class="line">    screen = content[<span class="number">0</span>][<span class="number">0</span>:<span class="number">-1</span>]</span><br><span class="line">    old_x = content[<span class="number">1</span>][<span class="number">0</span>:<span class="number">-1</span>]</span><br><span class="line">    old_y = content[<span class="number">2</span>][<span class="number">0</span>:<span class="number">-1</span>]</span><br><span class="line">    old_window = content[<span class="number">3</span>]</span><br><span class="line">    <span class="keyword">if</span> old_window != window:</span><br><span class="line">        cmd = <span class="string">"xdotool mousemove -w "</span> + old_window + <span class="string">" "</span> + old_x + <span class="string">" "</span> + old_y</span><br><span class="line">        commands.getoutput(cmd)</span><br><span class="line">        do_store()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        do_store()</span><br><span class="line">        do_update()</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    do_store()</span><br><span class="line">    do_update()</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-python"><code class="language-python"><span class="token comment" spellcheck="true">#!/usr/bin/python</span>
+<span class="token keyword">import</span> os
+<span class="token keyword">import</span> sys
+<span class="token keyword">import</span> commands
+
+data_f <span class="token operator">=</span> <span class="token string">"/tmp/window_data"</span>
+now_info <span class="token operator">=</span> commands<span class="token punctuation">.</span>getoutput<span class="token punctuation">(</span><span class="token string">"xdotool getmouselocation --shell"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">)</span>
+x <span class="token operator">=</span> <span class="token punctuation">(</span>now_info<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+y <span class="token operator">=</span> <span class="token punctuation">(</span>now_info<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+screen <span class="token operator">=</span> <span class="token punctuation">(</span>now_info<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+window <span class="token operator">=</span> <span class="token punctuation">(</span>now_info<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+
+<span class="token keyword">def</span> <span class="token function">do_store</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    data <span class="token operator">=</span> open<span class="token punctuation">(</span>data_f<span class="token punctuation">,</span> <span class="token string">"w+"</span><span class="token punctuation">)</span>
+    content <span class="token operator">=</span> screen<span class="token operator">+</span><span class="token string">"\n"</span><span class="token operator">+</span>x<span class="token operator">+</span><span class="token string">"\n"</span><span class="token operator">+</span>y<span class="token operator">+</span><span class="token string">"\n"</span><span class="token operator">+</span>window
+    data<span class="token punctuation">.</span>write<span class="token punctuation">(</span>content<span class="token punctuation">)</span>
+    data<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">do_update</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> screen <span class="token operator">==</span> <span class="token string">"1"</span><span class="token punctuation">:</span>
+        new_sc <span class="token operator">=</span> <span class="token string">"0"</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        new_sc <span class="token operator">=</span> <span class="token string">"1"</span>
+    cmd <span class="token operator">=</span> <span class="token string">"xdotool mousemove --screen "</span> <span class="token operator">+</span> new_sc <span class="token operator">+</span>  <span class="token string">" 0 0"</span>
+    commands<span class="token punctuation">.</span>getoutput<span class="token punctuation">(</span>cmd<span class="token punctuation">)</span>
+
+<span class="token keyword">if</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>exists<span class="token punctuation">(</span>data_f<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    data <span class="token operator">=</span> open<span class="token punctuation">(</span>data_f<span class="token punctuation">,</span> <span class="token string">"r+"</span><span class="token punctuation">)</span>
+    content <span class="token operator">=</span> data<span class="token punctuation">.</span>readlines<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    data<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    screen <span class="token operator">=</span> content<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+    old_x <span class="token operator">=</span> content<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+    old_y <span class="token operator">=</span> content<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+    old_window <span class="token operator">=</span> content<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span>
+    <span class="token keyword">if</span> old_window <span class="token operator">!=</span> window<span class="token punctuation">:</span>
+        cmd <span class="token operator">=</span> <span class="token string">"xdotool mousemove -w "</span> <span class="token operator">+</span> old_window <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> old_x <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> old_y
+        commands<span class="token punctuation">.</span>getoutput<span class="token punctuation">(</span>cmd<span class="token punctuation">)</span>
+        do_store<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        do_store<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        do_update<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+    do_store<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    do_update<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>最后，通过Emacs下绑定快捷键来调用这个脚本即可实现两个屏幕之间的切换，又可以远离鼠标了。哈哈。</p>
 <pre class="prettyprint lang-lisp">
 (defun switch-screen()

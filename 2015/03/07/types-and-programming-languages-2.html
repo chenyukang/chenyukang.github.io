@@ -68,7 +68,8 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
   <body>
     <header class="header fixed-header">
@@ -155,7 +156,9 @@
 <p>In particular, besides just yielding results, evaluation of terms in these languages may assign to mutable variables (reference cells, arrays, mutable record fields, etc.), perform input and output to files, displays, or network connections, make non-local transfers of control via exceptions, jumps, or continuations, engage in inter-process synchronization and communication, and so on. In the literature on programming languages, such “side effects” of computation are more generally referred to as computational effects.</p>
 </blockquote>
 <p>引用指向的对象可以是基本类型、组合类型，甚至是函数，把指向函数的ref放进对应的record，就变成一个简单的object，OOP的原型就出来了。</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><span class="line">update = λa:<span class="type">NatArray</span>. λm:<span class="type">Nat</span>. λv:<span class="type">Nat</span>.</span><br><span class="line">     a := (λn:<span class="type">Nat</span>. <span class="keyword">if</span> equal m n <span class="keyword">then</span> v <span class="keyword">else</span> (!a) n);</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-ocaml"><code class="language-ocaml">update <span class="token operator">=</span> λa<span class="token punctuation">:</span>NatArray<span class="token punctuation">.</span> λm<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span> λv<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span>
+     a <span class="token operator">:=</span> <span class="token punctuation">(</span>λn<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span> <span class="token keyword">if</span> equal m n <span class="token keyword">then</span> v <span class="token keyword">else</span> <span class="token punctuation">(</span><span class="token operator">!</span>a<span class="token punctuation">)</span> n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>通过这个习题的例子可以看出ref引进的副作用。</p>
 <h2 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a>Garbage Collection</h2><h3 id="GC-or-not"><a href="#GC-or-not" class="headerlink" title="GC or not"></a>GC or not</h3><blockquote>
 <p>This is not just a question of taste in language design: it is extremely difficult to achieve type safety in the presence of an explicit deallocation operation.</p>
@@ -168,7 +171,17 @@
 </blockquote>
 <p>Store typings: 引入引用后类型系统需要处理Cyclic reference structures，比如double linked list。Store typings就是一个locations到typings的映射。</p>
 <p>实现fullref： 引用部分的实现非常简单，</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><span class="line">| <span class="type">TmRef</span>(fi,t1) -&gt;</span><br><span class="line">    <span class="type">TyRef</span>(typeof ctx t1)</span><br><span class="line">| <span class="type">TmLoc</span>(fi,l) -&gt;</span><br><span class="line">    error fi <span class="string">"locations are not supposed to occur in source programs!"</span></span><br><span class="line">| <span class="type">TmDeref</span>(fi,t1) -&gt;</span><br><span class="line">    (<span class="keyword">match</span> simplifyty ctx (typeof ctx t1) <span class="keyword">with</span></span><br><span class="line">        <span class="type">TyRef</span>(tyT1) -&gt; tyT1</span><br><span class="line">      | <span class="type">TyBot</span> -&gt; <span class="type">TyBot</span></span><br><span class="line">      | <span class="type">TySource</span>(tyT1) -&gt; tyT1</span><br><span class="line">      | _ -&gt; error fi <span class="string">"argument of ! is not a Ref or Source"</span>)</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmRef<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">)</span> <span class="token operator">-></span>
+    TyRef<span class="token punctuation">(</span>typeof ctx t1<span class="token punctuation">)</span>
+<span class="token operator">|</span> TmLoc<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>l<span class="token punctuation">)</span> <span class="token operator">-></span>
+    error fi <span class="token string">"locations are not supposed to occur in source programs!"</span>
+<span class="token operator">|</span> TmDeref<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">)</span> <span class="token operator">-></span>
+    <span class="token punctuation">(</span><span class="token keyword">match</span> simplifyty ctx <span class="token punctuation">(</span>typeof ctx t1<span class="token punctuation">)</span> <span class="token keyword">with</span>
+        TyRef<span class="token punctuation">(</span>tyT1<span class="token punctuation">)</span> <span class="token operator">-></span> tyT1
+      <span class="token operator">|</span> TyBot <span class="token operator">-></span> TyBot
+      <span class="token operator">|</span> TySource<span class="token punctuation">(</span>tyT1<span class="token punctuation">)</span> <span class="token operator">-></span> tyT1
+      <span class="token operator">|</span> <span class="token punctuation">_</span> <span class="token operator">-></span> error fi <span class="token string">"argument of ! is not a Ref or Source"</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </section>
     <!-- Tags START -->
     

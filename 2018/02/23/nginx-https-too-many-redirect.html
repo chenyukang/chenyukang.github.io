@@ -68,7 +68,8 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
   <body>
     <header class="header fixed-header">
@@ -152,15 +153,22 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">return</span> <span class="number">302</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>; </span><br><span class="line"><span class="comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-nginx"><code class="language-nginx"><span class="token keyword">return</span> <span class="token number">302</span> <span class="token keyword">https</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token variable">$host</span><span class="token variable">$request_uri</span><span class="token punctuation">;</span> 
+<span class="token comment" spellcheck="true">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>但是如果是多层Nginx，前面的Nginx需要把用户原始请求的scheme传递到后端，可以加上头部设置： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-nginx"><code class="language-nginx"><span class="token keyword">proxy_set_header</span> X<span class="token operator">-</span>Forwarded<span class="token operator">-</span>Proto <span class="token variable">$scheme</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>后面的Nginx再判断一次:</p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">if</span> ( <span class="variable">$http_x_forwarded_proto</span> != <span class="string">'https'</span> ) &#123;</span><br><span class="line">  <span class="attribute">return</span> <span class="number">301</span> https://<span class="variable">$host</span><span class="variable">$request_uri</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-nginx"><code class="language-nginx"><span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token variable">$http_x_forwarded_proto</span> <span class="token operator">!=</span> <span class="token string">'https'</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token number">301</span> <span class="token keyword">https</span><span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span><span class="token variable">$host</span><span class="token variable">$request_uri</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>否则强制https经常会出现类似<code>ERR_TOO_MANY_REDIRECTS 将您重定向的次数过多</code>这样的问题。</p>
 <p>可是在实践过程中偶尔也碰到过一些ELB会丢掉scheme的问题，比如在这样的请求链路情况下<code>elb =&gt; nginx =&gt; nginx =&gt; application</code>第二层Nginx获取的scheme就有问题了，这也可能会导致<code>too many redirects</code>问题。</p>
 <p>可以尝试在第二层Nginx上这样解决： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">proxy_set_header</span>   X-Forwarded-Proto <span class="variable">$http_x_forwarded_proto</span>;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-nginx"><code class="language-nginx"> <span class="token keyword">proxy_set_header</span>   X<span class="token operator">-</span>Forwarded<span class="token operator">-</span>Proto <span class="token variable">$http_x_forwarded_proto</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>当然强制https这样的跳转逻辑尽量放在请求链路的最外层，这样问题会少一些。</p>
 </section>
     <!-- Tags START -->

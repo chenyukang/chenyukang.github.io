@@ -68,7 +68,8 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
   <body>
     <header class="header fixed-header">
@@ -154,7 +155,48 @@
     <section class="markdown-content"><h3 id="peco"><a href="#peco" class="headerlink" title="peco"></a>peco</h3><p><a href="https://github.com/peco/peco" target="_blank" rel="noopener">peco</a> 是一个能做交互式 filte 的工具，是 <a href="https://github.com/mooz/percol" target="_blank" rel="noopener">percol</a> 的 Go 实现。特别适合在 shell 里做一些过滤操作，当然适合做日志方面的过滤。典型的使用方法是：</p>
 <p><img src="https://camo.githubusercontent.com/6ed15cca08fd6972d12e67ee1f1fe84caa14744b/687474703a2f2f7065636f2e6769746875622e696f2f696d616765732f7065636f2d64656d6f2d70732e676966" alt="gif"></p>
 <h3 id="zsh-配置"><a href="#zsh-配置" class="headerlink" title="zsh 配置"></a>zsh 配置</h3><p>下面这个配置主要增强了 zsh 的 history 补全，以及<code>pwdf</code>可以用来迅速找一个文件，并拷贝其全路径：</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> exists &#123; which <span class="variable">$1</span> &amp;&gt; /dev/null &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> exists peco; then</span><br><span class="line">    <span class="keyword">function</span> peco_select_history() &#123;</span><br><span class="line">        local tac</span><br><span class="line">        exists gtac &amp;&amp; tac=<span class="string">"gtac"</span> || &#123; exists tac &amp;&amp; tac=<span class="string">"tac"</span> || &#123; tac=<span class="string">"tail -r"</span> &#125; &#125;</span><br><span class="line">        BUFFER=$(fc -l -n <span class="number">1</span> | eval <span class="variable">$tac</span> | peco --query <span class="string">"<span class="variable">$LBUFFER</span>"</span> --layout=bottom-up)</span><br><span class="line">        CURSOR=$<span class="comment">#BUFFER         # move cursor</span></span><br><span class="line">        zle -R -c               <span class="comment"># refresh</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    zle -N peco_select_history</span><br><span class="line">    bindkey <span class="string">'^R'</span> peco_select_history</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">OS_NAME=`uname`</span><br><span class="line"><span class="keyword">function</span> pclip() &#123;</span><br><span class="line">    <span class="keyword">if</span> [ <span class="variable">$OS_NAME</span> = <span class="string">"CYGWIN"</span> ]; then</span><br><span class="line">	      putclip <span class="string">"$@"</span>;</span><br><span class="line">    elif [ <span class="variable">$OS_NAME</span> = <span class="string">"Darwin"</span> ]; then</span><br><span class="line">	      pbcopy <span class="string">"$@"</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">	      <span class="keyword">if</span> [ -x /usr/bin/xsel ]; then</span><br><span class="line">	          xsel -ib <span class="string">"$@"</span>;</span><br><span class="line">	      <span class="keyword">else</span></span><br><span class="line">	          <span class="keyword">if</span> [ -x /usr/bin/xclip ]; then</span><br><span class="line">		            xclip -selection c <span class="string">"$@"</span>;</span><br><span class="line">	          <span class="keyword">else</span></span><br><span class="line">		            echo <span class="string">"Neither xsel or xclip is installed!"</span></span><br><span class="line">	          fi</span><br><span class="line">	      fi</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> pwdf() &#123;</span><br><span class="line">    local current_dir=`pwd`</span><br><span class="line">    local copied_file=`find <span class="variable">$current_dir</span> -type f -print | peco --layout=bottom-up`</span><br><span class="line">    echo -n <span class="variable">$copied_file</span> |pclip;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-powershell"><code class="language-powershell"><span class="token keyword">function</span> exists <span class="token punctuation">{</span> which <span class="token variable">$1</span> &amp;> <span class="token operator">/</span>dev<span class="token operator">/</span>null <span class="token punctuation">}</span>
+
+<span class="token keyword">if</span> exists peco<span class="token punctuation">;</span> then
+    <span class="token keyword">function</span> peco_select_history<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        local tac
+        exists gtac &amp;&amp; tac=<span class="token string">"gtac"</span> <span class="token punctuation">|</span><span class="token punctuation">|</span> <span class="token punctuation">{</span> exists tac &amp;&amp; tac=<span class="token string">"tac"</span> <span class="token punctuation">|</span><span class="token punctuation">|</span> <span class="token punctuation">{</span> tac=<span class="token string">"tail -r"</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span>
+        BUFFER=$<span class="token punctuation">(</span><span class="token function">fc</span> <span class="token operator">-</span>l <span class="token operator">-</span>n 1 <span class="token punctuation">|</span> eval <span class="token variable">$tac</span> <span class="token punctuation">|</span> peco <span class="token operator">--</span>query <span class="token string">"<span class="token variable">$LBUFFER</span>"</span> <span class="token operator">--</span>layout=bottom<span class="token operator">-</span>up<span class="token punctuation">)</span>
+        CURSOR=$<span class="token comment" spellcheck="true">#BUFFER         # move cursor</span>
+        zle <span class="token operator">-</span>R <span class="token operator">-</span>c               <span class="token comment" spellcheck="true"># refresh</span>
+    <span class="token punctuation">}</span>
+
+    zle <span class="token operator">-</span>N peco_select_history
+    bindkey <span class="token string">'^R'</span> peco_select_history
+fi
+
+OS_NAME=`uname`
+<span class="token keyword">function</span> pclip<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token variable">$OS_NAME</span> = <span class="token string">"CYGWIN"</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> then
+          putclip <span class="token string">"$@"</span><span class="token punctuation">;</span>
+    elif <span class="token punctuation">[</span> <span class="token variable">$OS_NAME</span> = <span class="token string">"Darwin"</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> then
+          pbcopy <span class="token string">"$@"</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+          <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token operator">-</span>x <span class="token operator">/</span>usr<span class="token operator">/</span>bin<span class="token operator">/</span>xsel <span class="token punctuation">]</span><span class="token punctuation">;</span> then
+              xsel <span class="token operator">-</span>ib <span class="token string">"$@"</span><span class="token punctuation">;</span>
+          <span class="token keyword">else</span>
+              <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token operator">-</span>x <span class="token operator">/</span>usr<span class="token operator">/</span>bin<span class="token operator">/</span>xclip <span class="token punctuation">]</span><span class="token punctuation">;</span> then
+                    xclip <span class="token operator">-</span>selection c <span class="token string">"$@"</span><span class="token punctuation">;</span>
+              <span class="token keyword">else</span>
+                    <span class="token function">echo</span> <span class="token string">"Neither xsel or xclip is installed!"</span>
+              fi
+          fi
+    fi
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> pwdf<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    local current_dir=`<span class="token function">pwd</span>`
+    local copied_file=`find <span class="token variable">$current_dir</span> <span class="token operator">-</span><span class="token function">type</span> f <span class="token operator">-</span>print <span class="token punctuation">|</span> peco <span class="token operator">--</span>layout=bottom<span class="token operator">-</span>up`
+    <span class="token function">echo</span> <span class="token operator">-</span>n <span class="token variable">$copied_file</span> <span class="token punctuation">|</span>pclip<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </section>
     <!-- Tags START -->
     

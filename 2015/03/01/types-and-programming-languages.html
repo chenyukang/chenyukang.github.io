@@ -68,7 +68,8 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
   <body>
     <header class="header fixed-header">
@@ -175,9 +176,27 @@
 <p> Well-typed programs cannot “go wrong.” —Robin Milner (1978)</p>
 </blockquote>
 <h4 id="An-ML-Implementation-of-Simple-Types"><a href="#An-ML-Implementation-of-Simple-Types" class="headerlink" title="An ML Implementation of Simple Types"></a>An ML Implementation of Simple Types</h4><p>simplebool是一个只有bool类型的解释器，但是加上了函数。typeof挺简单，主要是函数这里注意处理形参和实参:</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><span class="line">| <span class="type">TmAbs</span>(fi,x,tyT1,t2) -&gt;</span><br><span class="line">    <span class="keyword">let</span> ctx' = addbinding ctx x (<span class="type">VarBind</span>(tyT1)) <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> tyT2 = typeof ctx' t2 <span class="keyword">in</span></span><br><span class="line">    <span class="type">TyArr</span>(tyT1, tyT2)</span><br><span class="line">| <span class="type">TmApp</span>(fi,t1,t2) -&gt;</span><br><span class="line">    <span class="keyword">let</span> tyT1 = typeof ctx t1 <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">let</span> tyT2 = typeof ctx t2 <span class="keyword">in</span></span><br><span class="line">    (<span class="keyword">match</span> tyT1 <span class="keyword">with</span></span><br><span class="line">        <span class="type">TyArr</span>(tyT11, tyT12) -&gt;</span><br><span class="line">          <span class="keyword">if</span> (=) tyT2 tyT11 <span class="keyword">then</span> tyT12</span><br><span class="line">          <span class="keyword">else</span> error fi <span class="string">"parameter type mismatch"</span></span><br><span class="line">      | _ -&gt; error fi <span class="string">"arrow type expected"</span>)</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-ocaml"><code class="language-ocaml">  <span class="token operator">|</span> TmAbs<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>x<span class="token punctuation">,</span>tyT1<span class="token punctuation">,</span>t2<span class="token punctuation">)</span> <span class="token operator">-></span>
+      <span class="token keyword">let</span> ctx' <span class="token operator">=</span> addbinding ctx x <span class="token punctuation">(</span>VarBind<span class="token punctuation">(</span>tyT1<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">in</span>
+      <span class="token keyword">let</span> tyT2 <span class="token operator">=</span> typeof ctx' t2 <span class="token keyword">in</span>
+      TyArr<span class="token punctuation">(</span>tyT1<span class="token punctuation">,</span> tyT2<span class="token punctuation">)</span>
+  <span class="token operator">|</span> TmApp<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">,</span>t2<span class="token punctuation">)</span> <span class="token operator">-></span>
+      <span class="token keyword">let</span> tyT1 <span class="token operator">=</span> typeof ctx t1 <span class="token keyword">in</span>
+      <span class="token keyword">let</span> tyT2 <span class="token operator">=</span> typeof ctx t2 <span class="token keyword">in</span>
+      <span class="token punctuation">(</span><span class="token keyword">match</span> tyT1 <span class="token keyword">with</span>
+          TyArr<span class="token punctuation">(</span>tyT11<span class="token punctuation">,</span> tyT12<span class="token punctuation">)</span> <span class="token operator">-></span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">=</span><span class="token punctuation">)</span> tyT2 tyT11 <span class="token keyword">then</span> tyT12
+            <span class="token keyword">else</span> error fi <span class="token string">"parameter type mismatch"</span>
+        <span class="token operator">|</span> <span class="token punctuation">_</span> <span class="token operator">-></span> error fi <span class="token string">"arrow type expected"</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>if的判断部分必须为bool，而且两个分支必须为同一类型:</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><span class="line">| <span class="type">TmIf</span>(fi,t1,t2,t3) -&gt;</span><br><span class="line">   <span class="keyword">if</span> (=) (typeof ctx t1) <span class="type">TyBool</span> <span class="keyword">then</span></span><br><span class="line">     <span class="keyword">let</span> tyT2 = typeof ctx t2 <span class="keyword">in</span></span><br><span class="line">     <span class="keyword">if</span> (=) tyT2 (typeof ctx t3) <span class="keyword">then</span> tyT2</span><br><span class="line">     <span class="keyword">else</span> error fi <span class="string">"arms of conditional have different types"</span></span><br><span class="line">     <span class="keyword">else</span> error fi <span class="string">"guard of conditional not a boolean"</span></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-ocaml"><code class="language-ocaml">  <span class="token operator">|</span> TmIf<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">,</span>t2<span class="token punctuation">,</span>t3<span class="token punctuation">)</span> <span class="token operator">-></span>
+     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">=</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>typeof ctx t1<span class="token punctuation">)</span> TyBool <span class="token keyword">then</span>
+       <span class="token keyword">let</span> tyT2 <span class="token operator">=</span> typeof ctx t2 <span class="token keyword">in</span>
+       <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">=</span><span class="token punctuation">)</span> tyT2 <span class="token punctuation">(</span>typeof ctx t3<span class="token punctuation">)</span> <span class="token keyword">then</span> tyT2
+       <span class="token keyword">else</span> error fi <span class="token string">"arms of conditional have different types"</span>
+       <span class="token keyword">else</span> error fi <span class="token string">"guard of conditional not a boolean"</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="Simple-Extensions"><a href="#Simple-Extensions" class="headerlink" title="Simple Extensions"></a>Simple Extensions</h4><p>在上一章的基础上，加上各种Drived Form。</p>
 <ul>
 <li><p>Sequencing:</p>
@@ -192,7 +211,7 @@
 <p>因为加上了好多种类型，fullsimple这个解释器复杂多了。</p>
 </li>
 </ul>
-<h4 id="Type-Dynamic"><a href="#Type-Dynamic" class="headerlink" title="Type Dynamic"></a>Type Dynamic</h4><pre><code>Even in statically typed languages, there is often the need to deal with data whose type cannot be determined at compile time. This occurs in particular when the lifetime of the data spans multiple machines or many runs of the compiler—when, for example, the data is stored in an external file system or database, or communicated across a network. To handle such situations safely, many languages offer facilities for inspecting the types of values at run time.
+<h4 id="Type-Dynamic"><a href="#Type-Dynamic" class="headerlink" title="Type Dynamic"></a>Type Dynamic</h4><pre><code> Even in statically typed languages, there is often the need to deal with data whose type cannot be determined at compile time. This occurs in particular when the lifetime of the data spans multiple machines or many runs of the compiler—when, for example, the data is stored in an external file system or database, or communicated across a network. To handle such situations safely, many languages offer facilities for inspecting the types of values at run time.
 </code></pre><h4 id="General-Recursion"><a href="#General-Recursion" class="headerlink" title="General Recursion"></a>General Recursion</h4><p>typed lambda-calculus加上fix combinator就是一门极小的但是是full abstraction的语言。Ocaml里面的letrec可以用来定义递归函数。fix point的概念需要继续理解。</p>
 </section>
     <!-- Tags START -->
