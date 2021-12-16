@@ -68,8 +68,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -160,7 +159,7 @@
 
 <p><pre class="src"><span style="color: #98f5ff;">CString</span> <span style="color: #daa520; font-weight: bold;">getProcPath</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">PID</span>)<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回pid进程的可执行程序名称<br></span>{<br>        <span style="color: #98f5ff;">HANDLE</span> <span style="color: #4eee94;">hModule</span>;<br>        <span style="color: #98f5ff;">MODULEENTRY32</span>* <span style="color: #4eee94;">minfo</span>=<span style="color: #00bfff; font-weight: bold;">new</span> <span style="color: #98f5ff;">MODULEENTRY32</span>;<br>        minfo-&gt;dwSize=<span style="color: #00bfff; font-weight: bold;">sizeof</span>(MODULEENTRY32);<br>        hModule=CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,PID);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">对系统进程进行拍照</span></pre></p>
 <p>        Module32First(hModule, minfo);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回与进程相关的第一个模块信息<br></span><br>        <span style="color: #98f5ff;">CString</span> <span style="color: #4eee94;">str</span>;<br>        str=CString(minfo-&gt;szExePath);<br>        CloseHandle(hModule);<br>        <span style="color: #00bfff; font-weight: bold;">if</span>(minfo) <span style="color: #00bfff; font-weight: bold;">delete</span> minfo;</p>
-<pre><code>    &lt;span style=&quot;color: #00bfff; font-weight: bold;&quot;&gt;return&lt;/span&gt; str;
+<pre><code>&lt;span style=&quot;color: #00bfff; font-weight: bold;&quot;&gt;return&lt;/span&gt; str;
 </code></pre><p>}<br><a id="more"></a></p>
 <p>得到了当前活动的程序名称就比较好办了，其实经常用的就是那么几个程序，稍加分析然后分类就能统计到我的时间分布。我这里分为了四类：编程、上网、看文档、QQ。用个定时器记录下来即可。实现个托盘最小化，就可以了。</p>
 <p><pre class="src"><span style="color: #98f5ff;">void</span> <span style="color: #ffd700;">Report</span>::<span style="color: #daa520; font-weight: bold;">Init</span>()<br>{<br>        m_Programming.push_back(_T(<span style="color: #deb887;">“devenv.exe”</span>));<br>        m_Programming.push_back(_T(<span style="color: #deb887;">“Microsoft Visual Studio”</span>));<br>        m_Programming.push_back(_T(<span style="color: #deb887;">“vim”</span>));<br>        m_Programming.push_back(_T(<span style="color: #deb887;">“matlab”</span>));<br>        m_Programming.push_back(_T(<span style="color: #deb887;">“MATLAB”</span>));<br>        m_OnWeb.push_back(_T(<span style="color: #deb887;">“firefox”</span>));<br>        m_OnWeb.push_back(_T(<span style="color: #deb887;">“Chrome”</span>));<br>        m_OnWeb.push_back(_T(<span style="color: #deb887;">“IEXPLORE”</span>));<br>        m_OnWeb.push_back(_T(<span style="color: #deb887;">“opera”</span>));<br>        m_QQ.push_back(_T(<span style="color: #deb887;">“QQ”</span>));<br>        m_QQ.push_back(_T(<span style="color: #deb887;">“Tecent”</span>));<br>        m_Document.push_back(_T(<span style="color: #deb887;">“WINWORD”</span>));<br>        m_Document.push_back(_T(<span style="color: #deb887;">“Office”</span>));<br>        m_Document.push_back(_T(<span style="color: #deb887;">“CAJView”</span>));<br>        m_Document.push_back(_T(<span style="color: #deb887;">“hh.exe”</span>));<br>        m_Document.push_back(_T(<span style="color: #deb887;">“FOXITR”</span>));</pre></p>

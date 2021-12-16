@@ -68,8 +68,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -170,26 +169,12 @@
 </ol>
 <h2 id="C-C-gt-wasm"><a href="#C-C-gt-wasm" class="headerlink" title="C/C++ =&gt; wasm"></a>C/C++ =&gt; wasm</h2><p>首先需要安装 Emscripten  SDK:<br><a href="https://emscripten.org/docs/getting_started/downloads.html" target="_blank" rel="noopener">https://emscripten.org/docs/getting_started/downloads.html</a></p>
 <p>移植一个 C/C++ 项目到 WebAssembly , 最简单的办法是把类似 gcc 命令换成 emcc，难点在于动态链接的第三方库，我们需要改成静态链接。一些常用的库已经被移植了，例如<em>libc</em>, <em>libc++</em> and <em>SDL</em>，这些我们不需要手动处理。不在 emcc 预装里的库，我们只需要在编译的过程中加一些额外的参数，例如我下面这个项目就用到了 PNG，JPEG 这些库：</p>
-<pre class="line-numbers language-shell"><code class="language-shell">emcc -c dbgutil.c -o dbgutil.o
-emcc -c qrtest.c -o qrtest.o
-emcc -c decode.c -o decode.o
-emcc -c identify.c -o identify.o
-emcc -c quirc.c -o quirc.o
-emcc -c version_db.c -o version_db.o
-emcc -g -Oz --llvm-lto 1  -s STANDALONE_WASM decode.o identify.o version_db.o quirc.o qrtest.o dbgutil.o -o qrtest.wasm  -lm  -s USE_LIBJPEG -s USE_LIBPNG 
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">emcc -c dbgutil.c -o dbgutil.o</span><br><span class="line">emcc -c qrtest.c -o qrtest.o</span><br><span class="line">emcc -c decode.c -o decode.o</span><br><span class="line">emcc -c identify.c -o identify.o</span><br><span class="line">emcc -c quirc.c -o quirc.o</span><br><span class="line">emcc -c version_db.c -o version_db.o</span><br><span class="line">emcc -g -Oz --llvm-lto 1  -s STANDALONE_WASM decode.o identify.o version_db.o quirc.o qrtest.o dbgutil.o -o qrtest.wasm  -lm  -s USE_LIBJPEG -s USE_LIBPNG</span><br></pre></td></tr></table></figure>
 <p>另外 emcc 编译出来的 wasm 模块默认只能做纯计算，没有网络、系统文件等。如果有系统调用则需要运行在浏览器中，用浏览器的接口来模拟某些 C 函数调用，例如 C 语言中的系统调用 <code>time</code> 在 emcc 中被替成为了 JavaScript  代码：</p>
-<pre class="line-numbers language-javascript"><code class="language-javascript">clock<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>_clock<span class="token punctuation">.</span>start <span class="token operator">===</span> undefined<span class="token punctuation">)</span> _clock<span class="token punctuation">.</span>start <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> _clock<span class="token punctuation">.</span>start<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">{</span><span class="token punctuation">{</span> <span class="token function">cDefine</span><span class="token punctuation">(</span><span class="token string">'CLOCKS_PER_SEC'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">}</span> <span class="token operator">/</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token number">0</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">clock: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (_clock.start === <span class="literal">undefined</span>) _clock.start = <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">return</span> ((<span class="built_in">Date</span>.now() - _clock.start) * (&#123;&#123;&#123; cDefine(<span class="string">'CLOCKS_PER_SEC'</span>) &#125;&#125;&#125; / <span class="number">1000</span>))|<span class="number">0</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 <h2 id="Rust-gt-wasm"><a href="#Rust-gt-wasm" class="headerlink" title="Rust =&gt; wasm"></a>Rust =&gt; wasm</h2><p>Rust 是对 WebAssembly  支持得特别好的编程语言。我们可以使用 wasm-pack，或者安装 target:</p>
-<pre class="line-numbers language-bash"><code class="language-bash">rustup target add wasm32-wasi
-<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>然后在编译命令后面加参数：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">cargo build --target wasm32-wasi
-<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rustup target add wasm32-wasi</span><br></pre></td></tr></table></figure>
+<p>然后在编译命令后面加参数：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cargo build --target wasm32-wasi</span><br></pre></td></tr></table></figure></p>
 <p>系统函数同样是个问题，有的第三方库可能会支持 wasm 格式，例如<a href="https://docs.rs/getrandom/latest/getrandom/#webassembly-support" target="_blank" rel="noopener">getrandom - Rust (docs.rs)</a>。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://emscripten.org/" target="_blank" rel="noopener">Main — Emscripten 3.0.1-git (dev) documentation</a><br><a href="https://marcoselvatici.github.io/WASM_tutorial/" target="_blank" rel="noopener">WASM Tutorial (marcoselvatici.github.io)</a><br><a href="https://rustwasm.github.io/docs/book/" target="_blank" rel="noopener">Introduction - Rust and WebAssembly (rustwasm.github.io)</a></p>
 </section>

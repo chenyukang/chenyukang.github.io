@@ -68,8 +68,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -153,37 +152,9 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p><a href="http://oj.leetcode.com/problems/anagrams/" target="_blank" rel="noopener">LeetCode这个题目</a>想出来一个好办法，题目的意思是输入一组字符串，把他们按照Anagrams归组出来，<br>Anagrams的意思是字母相同，排列不同的两个字符串。</p>
-<pre class="line-numbers language-sh"><code class="language-sh">比如：
-aabc
-baac
-cbaa
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">比如：</span><br><span class="line">aabc</span><br><span class="line">baac</span><br><span class="line">cbaa</span><br></pre></td></tr></table></figure>
 <p>这些都是anagrams的。如果两个字符串是满足这种关系的，那么把字符串排序后的结果一定相同。因此想到用一个map去存来。</p>
-<pre class="line-numbers language-c++"><code class="language-c++">class Solution {
-public:
-    vector<string> anagrams(vector<string> &strs) {
-        typedef map<string, vector<string> > Dict;
-        vector<string> res;
-        Dict S;
-        for(int i=0; i<strs.size(); i++) {
-            string tmp = strs[i];
-            sort(tmp.begin(), tmp.end());
-            if(S.find(tmp) == S.end()) {
-                S[tmp] = vector<string>(1, strs[i]);
-            } else {
-                S[tmp].push_back(strs[i]);
-            }
-        }
-
-        for(Dict::iterator it = S.begin(); it != S.end(); ++it) {
-            vector<string>& vec = it->second;
-            if(vec.size() <= 1) continue;
-            res.insert(res.begin(), vec.begin(), vec.end());
-        }
-        return res;
-    }
-};
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; anagrams(<span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; &amp;strs) &#123;</span><br><span class="line">        <span class="keyword">typedef</span> <span class="built_in">map</span>&lt;<span class="built_in">string</span>, <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; &gt; Dict;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; res;</span><br><span class="line">        Dict S;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;strs.size(); i++) &#123;</span><br><span class="line">            <span class="built_in">string</span> tmp = strs[i];</span><br><span class="line">            sort(tmp.begin(), tmp.end());</span><br><span class="line">            <span class="keyword">if</span>(S.find(tmp) == S.end()) &#123;</span><br><span class="line">                S[tmp] = <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;(<span class="number">1</span>, strs[i]);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                S[tmp].push_back(strs[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(Dict::iterator it = S.begin(); it != S.end(); ++it) &#123;</span><br><span class="line">            <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; vec = it-&gt;second;</span><br><span class="line">            <span class="keyword">if</span>(vec.size() &lt;= <span class="number">1</span>) <span class="keyword">continue</span>;</span><br><span class="line">            res.insert(res.begin(), vec.begin(), vec.end());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 </section>
     <!-- Tags START -->
     

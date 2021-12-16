@@ -68,8 +68,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -155,62 +154,7 @@
     <section class="markdown-content"><p>下班之前同事BigBird给我show他的一段C++代码，对于我等拿C++当作C来用的未入门者实看起来实在是炫丽。虽然比较冗长晦涩，不过还是能看懂个大概，然后觉得这对于动态语言是非常容易实现的。 于是晚上回来用Ruby来搞搞，弄出下面这么段代码。</p>
 <p>C++版本在这里<a href="https://gist.github.com/3900077" target="_blank" rel="noopener">https://gist.github.com/3900077</a>。<br>可见动态语言和编译型语言实现起来效率还是好太多了，同时代码也好理解。<br>再次我讨厌C++类型推导，^_^。</p>
 <p>Ruby实现这个方式很多，另外Ruby的库包含SimpleDelegator的，将调用的方法直接传递到其他对象。</p>
-<pre class="line-numbers language-ruby"><code class="language-ruby"><span class="token comment" spellcheck="true">#!/usr/bin/ruby</span>
-
-<span class="token keyword">class</span> <span class="token class-name">Delegate</span>
-  attr_reader <span class="token symbol">:proc_list</span>
-
-  <span class="token keyword">def</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-    <span class="token variable">@proc_list</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-  <span class="token keyword">end</span>
-
-  <span class="token keyword">def</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token operator">*</span>proc<span class="token punctuation">)</span>
-    proc_list<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>proc<span class="token punctuation">)</span>
-  <span class="token keyword">end</span>
-
-  <span class="token keyword">def</span> <span class="token function">eval</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span>
-    <span class="token keyword">for</span> e <span class="token keyword">in</span> proc_list<span class="token punctuation">:</span>
-        <span class="token keyword">if</span> obj<span class="token punctuation">.</span>respond_to<span class="token operator">?</span><span class="token punctuation">(</span>e<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-          <span class="token keyword">if</span> e<span class="token punctuation">.</span>size <span class="token operator">==</span> <span class="token number">1</span>
-            obj<span class="token punctuation">.</span><span class="token function">__send__</span><span class="token punctuation">(</span>e<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-          <span class="token keyword">else</span>
-            obj<span class="token punctuation">.</span><span class="token function">__send__</span><span class="token punctuation">(</span>e<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> e<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-          <span class="token keyword">end</span>
-        <span class="token keyword">else</span>
-          printf <span class="token string">"ERROR:%s is not defined\n"</span><span class="token punctuation">,</span> e<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
-        <span class="token keyword">end</span>
-    <span class="token keyword">end</span>
-  <span class="token keyword">end</span>
-
-<span class="token keyword">end</span>
-
-<span class="token keyword">class</span> <span class="token class-name">Demo</span>
-  attr_writer <span class="token symbol">:value</span>
-
-public
-  <span class="token keyword">def</span> <span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-    printf <span class="token string">"value:%d\n"</span><span class="token punctuation">,</span> <span class="token variable">@value</span>
-  <span class="token keyword">end</span>
-
-  <span class="token keyword">def</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-    printf <span class="token string">"Hello world!\n"</span>
-  <span class="token keyword">end</span>
-
-  <span class="token keyword">def</span> <span class="token function">set</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span>
-    <span class="token variable">@value</span> <span class="token operator">=</span> val
-  <span class="token keyword">end</span>
-<span class="token keyword">end</span>
-
-delegate <span class="token operator">=</span> <span class="token constant">Delegate</span><span class="token punctuation">.</span><span class="token keyword">new</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-delegate<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"print"</span><span class="token punctuation">)</span>
-delegate<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"set"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
-delegate<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"print"</span><span class="token punctuation">)</span>
-delegate<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"hello"</span><span class="token punctuation">)</span>
-delegate<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"nodefine"</span><span class="token punctuation">)</span>
-
-d <span class="token operator">=</span> <span class="token constant">Demo</span><span class="token punctuation">.</span><span class="token keyword">new</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-delegate<span class="token punctuation">.</span><span class="token function">eval</span><span class="token punctuation">(</span>d<span class="token punctuation">)</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/ruby</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Delegate</span></span></span><br><span class="line">  <span class="keyword">attr_reader</span> <span class="symbol">:proc_list</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">initialize</span><span class="params">()</span></span></span><br><span class="line">    @proc_list = []</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(*proc)</span></span></span><br><span class="line">    proc_list.push(proc)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">eval</span><span class="params">(obj)</span></span></span><br><span class="line">    <span class="keyword">for</span> e <span class="keyword">in</span> <span class="symbol">proc_list:</span></span><br><span class="line">        <span class="keyword">if</span> obj.respond_to?(e[<span class="number">0</span>])</span><br><span class="line">          <span class="keyword">if</span> e.size == <span class="number">1</span></span><br><span class="line">            obj.__send_<span class="number">_</span>(e[<span class="number">0</span>])</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">            obj.__send_<span class="number">_</span>(e[<span class="number">0</span>], e[<span class="number">1</span>])</span><br><span class="line">          <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          printf <span class="string">"ERROR:%s is not defined\n"</span>, e[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line">  <span class="keyword">attr_writer</span> <span class="symbol">:value</span></span><br><span class="line"></span><br><span class="line">public</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">print</span><span class="params">()</span></span></span><br><span class="line">    printf <span class="string">"value:%d\n"</span>, @value</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">hello</span><span class="params">()</span></span></span><br><span class="line">    printf <span class="string">"Hello world!\n"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">set</span><span class="params">(val)</span></span></span><br><span class="line">    @value = val</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">delegate = Delegate.new()</span><br><span class="line">delegate.add(<span class="string">"print"</span>)</span><br><span class="line">delegate.add(<span class="string">"set"</span>, <span class="number">1</span>)</span><br><span class="line">delegate.add(<span class="string">"print"</span>)</span><br><span class="line">delegate.add(<span class="string">"hello"</span>)</span><br><span class="line">delegate.add(<span class="string">"nodefine"</span>)</span><br><span class="line"></span><br><span class="line">d = Demo.new()</span><br><span class="line">delegate.eval(d)</span><br></pre></td></tr></table></figure>
 </section>
     <!-- Tags START -->
     

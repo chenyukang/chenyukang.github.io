@@ -68,8 +68,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -155,19 +154,7 @@
     <section class="markdown-content"><p>Keep writing some simple thing in English, for I will have less chance for writing English words in daily working.</p>
 <p>I will always run eshell for shell tasks, because this is really like the normal buffer in Emacs, so all the command for Emacs will keep working for this buffer. This is convenient for some actions.</p>
 <p>The problem annoying me is that if the size of buffer for eshell is too big, Emacs will gets more and more slow. Emacs essentially is a sole process program. So I have some digg and written a trivial elisp code like this solved the problem.</p>
-<pre class="line-numbers language-lisp"><code class="language-lisp">(defun clear-and-send-input()
-  (interactive)
-  (if (> (count-lines 1 (point)) 800)
-      (let ((inhibit-read-only t))
-        (message "Clear the eshell now !")
-    (erase-buffer)))
-  (eshell-send-input))
-
-(add-hook 'eshell-mode-hook
-      (lambda ()
-      (local-set-key (kbd "<return>") 'clear-and-send-input)))
-
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">defun</span> clear-and-send-input()</span><br><span class="line">  (<span class="name">interactive</span>)</span><br><span class="line">  (<span class="name">if</span> (<span class="name">&gt;</span> (<span class="name">count-lines</span> <span class="number">1</span> (<span class="name">point</span>)) <span class="number">800</span>)</span><br><span class="line">      (<span class="name">let</span> ((<span class="name">inhibit-read-only</span> <span class="literal">t</span>))</span><br><span class="line">        (<span class="name">message</span> <span class="string">"Clear the eshell now !"</span>)</span><br><span class="line">	(<span class="name">erase-buffer</span>)))</span><br><span class="line">  (<span class="name">eshell-send-input</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">add-hook</span> 'eshell-mode-hook</span><br><span class="line">	  (<span class="name">lambda</span> ()</span><br><span class="line">	  (<span class="name">local-set-key</span> (<span class="name">kbd</span> <span class="string">"&lt;return&gt;"</span>) 'clear-and-send-input)))</span><br></pre></td></tr></table></figure>
 <p>clear-and-send-input is a wrapper for eshell-send-input, I set the maximal number of eshell buffer to 800, and I bind this function to <return>, so every time if the buffer size is too big, this wrapper will automatically clean up the buffer.</return></p>
 <p>And yesterday I found this article <a href="https://github.com/redguardtoo/mastering-emacs-in-one-year-guide" target="_blank" rel="noopener">Mastering Emacs in one year guide</a>is really thought-provoking, Hope this may help you.</p>
 </section>

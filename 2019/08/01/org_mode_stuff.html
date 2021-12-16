@@ -68,8 +68,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -154,20 +153,7 @@
   <article class="post-article">
     <section class="markdown-content"><p> I switched to org-mode from EverNote recently, and the experience imrpoved much for note and journal writing, especially for technical notes. After the whole tool is set appropriately, I am even addicted to writing. During my setting up for org-mode and related tools, I found these code snippets are really handy, so let’s have a share.</p>
 <h3 id="Insert-Pic-from-paste"><a href="#Insert-Pic-from-paste" class="headerlink" title="Insert Pic from paste"></a>Insert Pic from paste</h3><p> You need to install <strong>pngpaste</strong> first, then with this elisp function, we can copy the picture from paste very quickly, the picture will store on current directory’s img sub-directory, it will create it if img directory is not exists.</p>
-<pre class="line-numbers language-lisp"><code class="language-lisp">   (defun org-insert-image ()
-     (interactive)
-     (let* ((path (concat default-directory "img/"))
-            (image-file (concat
-                         path
-                         (buffer-name)
-                         (format-time-string "_%Y%m%d_%H%M%S.png"))))
-       (if (not (file-exists-p path))
-           (mkdir path))
-       (shell-command (concat "pngpaste " image-file))
-       (org-insert-link nil (concat "file:" image-file) ""))
-       ;; (org-display-inline-images) ;; show inline picture
-     )
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">defun</span> org-insert-image ()</span><br><span class="line">  (<span class="name">interactive</span>)</span><br><span class="line">  (<span class="name">let*</span> ((<span class="name">path</span> (<span class="name">concat</span> default-directory <span class="string">"img/"</span>))</span><br><span class="line">         (<span class="name">image-file</span> (<span class="name">concat</span></span><br><span class="line">                      path</span><br><span class="line">                      (<span class="name">buffer-name</span>)</span><br><span class="line">                      (<span class="name">format-time-string</span> <span class="string">"_%Y%m%d_%H%M%S.png"</span>))))</span><br><span class="line">    (<span class="name">if</span> (<span class="name">not</span> (<span class="name">file-exists-p</span> path))</span><br><span class="line">        (<span class="name">mkdir</span> path))</span><br><span class="line">    (<span class="name">shell-command</span> (<span class="name">concat</span> <span class="string">"pngpaste "</span> image-file))</span><br><span class="line">    (<span class="name">org-insert-link</span> <span class="literal">nil</span> (<span class="name">concat</span> <span class="string">"file:"</span> image-file) <span class="string">""</span>))</span><br><span class="line">    <span class="comment">;; (org-display-inline-images) ;; show inline picture</span></span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
 <h3 id="Using-org-ruby-for-Hexo-publishing"><a href="#Using-org-ruby-for-Hexo-publishing" class="headerlink" title="Using org-ruby for Hexo publishing"></a>Using org-ruby for Hexo publishing</h3><p> I using Hexo for blogging, the default format is markdown in Hexo, so I need to convert org format to markdown format very conveniently, and finally org-ruby solve it. I did some dirty hacks on the codebase, <a href="https://github.com/chenyukang/org-ruby/pull/1/files" target="_blank" rel="noopener">please have a look at this PR</a>, this PR solve three issues.</p>
 <ul>
 <li>Add title and path attributes in org file, and the ruby script will extract it for dumping markdown file.</li>
@@ -175,84 +161,11 @@
 <li>Copy the images to proper directory for Hexo, support image size attributes.</li>
 </ul>
 <p> Then I added an elisp function for auto publish it after saving file whenever “#MD_TITLE:” is founded in buffer:</p>
-<pre class="line-numbers language-lisp"><code class="language-lisp">   (defun org-publish-to-hexo ()
-     (interactive)
-     (shell-command (concat
-                     "org-ruby " "--translate " "markdown " "-a "
-                     (buffer-name))))
-   (defalias 'op 'org-publish-to-hexo)
-
-   (defun buffer-contains-substring (string)
-     (save-excursion
-       (save-match-data
-         (goto-char (point-min))
-         (search-forward string nil t))))
-
-   (defun org-auto-publish-save-hook ()
-     (when (and (eq major-mode 'org-mode)
-                (buffer-contains-substring "#+MD_TITLE:")
-                (buffer-contains-substring "#+MD_PATH:"))
-       (message "publishing to Hexo markdown")
-       (org-publish-to-hexo)))
-
-   (add-hook 'after-save-hook #'org-auto-publish-save-hook)
-
-   (defun org-before-save-hook ()
-     (when (eq major-mode 'org-mode)
-       (message "saving org-file")
-       (pangu-spacing-space-current-buffer)
-       ;;(fill-region (point-min) (point-max))
-       ))
-   (add-hook 'before-save-hook #'org-before-save-hook)
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">defun</span> org-publish-to-hexo ()</span><br><span class="line">  (<span class="name">interactive</span>)</span><br><span class="line">  (<span class="name">shell-command</span> (<span class="name">concat</span></span><br><span class="line">                  <span class="string">"org-ruby "</span> <span class="string">"--translate "</span> <span class="string">"markdown "</span> <span class="string">"-a "</span></span><br><span class="line">                  (<span class="name">buffer-name</span>))))</span><br><span class="line">(<span class="name">defalias</span> 'op 'org-publish-to-hexo)</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> buffer-contains-substring (<span class="name">string</span>)</span><br><span class="line">  (<span class="name">save-excursion</span></span><br><span class="line">    (<span class="name">save-match-data</span></span><br><span class="line">      (<span class="name">goto-char</span> (<span class="name">point-min</span>))</span><br><span class="line">      (<span class="name">search-forward</span> string <span class="literal">nil</span> <span class="literal">t</span>))))</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> org-auto-publish-save-hook ()</span><br><span class="line">  (<span class="name">when</span> (<span class="name">and</span> (<span class="name">eq</span> major-mode 'org-mode)</span><br><span class="line">             (<span class="name">buffer-contains-substring</span> <span class="string">"#+MD_TITLE:"</span>)</span><br><span class="line">             (<span class="name">buffer-contains-substring</span> <span class="string">"#+MD_PATH:"</span>))</span><br><span class="line">    (<span class="name">message</span> <span class="string">"publishing to Hexo markdown"</span>)</span><br><span class="line">    (<span class="name">org-publish-to-hexo</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name">add-hook</span> 'after-save-hook #'org-auto-publish-save-hook)</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> org-before-save-hook ()</span><br><span class="line">  (<span class="name">when</span> (<span class="name">eq</span> major-mode 'org-mode)</span><br><span class="line">    (<span class="name">message</span> <span class="string">"saving org-file"</span>)</span><br><span class="line">    (<span class="name">pangu-spacing-space-current-buffer</span>)</span><br><span class="line">    <span class="comment">;;(fill-region (point-min) (point-max))</span></span><br><span class="line">    ))</span><br><span class="line">(<span class="name">add-hook</span> 'before-save-hook #'org-before-save-hook)</span><br></pre></td></tr></table></figure>
 <h3 id="pangu-spacing"><a href="#pangu-spacing" class="headerlink" title="pangu-spacing"></a>pangu-spacing</h3><p> This package will add spacing between Chinese word and English word, so I hooked it before save org file:</p>
-<pre class="line-numbers language-lisp"><code class="language-lisp">   (require 'pangu-spacing)
-   (global-pangu-spacing-mode 1)
-   ;;(setq pangu-spacing-real-insert-separtor t)
-
-   (defun org-before-save-hook ()
-     (when (eq major-mode 'org-mode)
-       (message "saving org-file")
-       (pangu-spacing-space-current-buffer)
-       ))
-
-   (add-hook 'before-save-hook #'org-before-save-hook)
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">require</span> 'pangu-spacing)</span><br><span class="line">(<span class="name">global-pangu-spacing-mode</span> <span class="number">1</span>)</span><br><span class="line"><span class="comment">;;(setq pangu-spacing-real-insert-separtor t)</span></span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> org-before-save-hook ()</span><br><span class="line">  (<span class="name">when</span> (<span class="name">eq</span> major-mode 'org-mode)</span><br><span class="line">    (<span class="name">message</span> <span class="string">"saving org-file"</span>)</span><br><span class="line">    (<span class="name">pangu-spacing-space-current-buffer</span>)</span><br><span class="line">    ))</span><br><span class="line"></span><br><span class="line">(<span class="name">add-hook</span> 'before-save-hook #'org-before-save-hook)</span><br></pre></td></tr></table></figure>
 <h3 id="org-capture"><a href="#org-capture" class="headerlink" title="org-capture"></a>org-capture</h3><p> And the best thing is org-capture, with this we can write all kinds of tempaltes, for journal writing, I need to generate file according to date and time:</p>
-<pre class="line-numbers language-lisp"><code class="language-lisp">   (defun create-code-file ()
-     (interactive)
-     (let ((name (concat (format-time-string "%Y_%m_%d_")
-                          (read-string "file-name: "))))
-       (expand-file-name (format "%s.org" name) "~/Dropbox/org/snippets/")))
-
-   (defun gen-date-file ()
-     "Create an org file in ~/notes/snippets."
-     (format-time-string "~/Dropbox/org/journals/%Y_%m_%d.org"))
-
-   (setq org-capture-templates
-         '(("t" "Todo" entry (file+datetree "~/Dropbox/org/work.org")
-            "** TODO %?\n  %i\n " :empty-lines 1)
-           ("x" "Task" entry (file+datetree "~/Dropbox/org/work.org")
-            "** TODO %^{priority|[#A]|[#B]|[#C]} %?\n")
-           ("e" "Task" entry (file+datetree "~/Dropbox/org/life.org")
-            "** TODO %^{priority|[#A]|[#B]|[#C]} %?\n" :empty-lines 1)
-           ("l" "Todo" entry (file+datetree "~/Dropbox/org/learn.org")
-            "** TODO %?\nEntered on %U\n  %i\n\n " :kill-buffer t :empty-lines 1)
-           ("k" "Todo" entry (file+datetree "~/Dropbox/org/learn.org")
-            "* TODO %?\n  %i\n %f\n %a" :empty-lines 1)
-           ("j" "Journal" entry (file+datetree "~/Dropbox/org/_journal.org" )
-            "** %?\nEntered on %U\n  %i\n" :empty-lines 1)
-           ("J" "Journal" entry (file gen-date-file)
-            "** %?\nEntered on %U\n  %i\n" :empty-lines 1)
-           ("c" "Code snippet" entry (file+headline "~/Dropbox/org/_code.org" "Code")
-            "** %^{desc}\n#+BEGIN_SRC %^{language|ruby|shell|c|rust|emacs-lisp}\n%?\n#+END_SRC" 
-             :empty-lines 1)
-           ("C" "Notes" entry (file create-code-file)
-            "** %^{desc}\n#+BEGIN_SRC %^{language|ruby|shell|c|rust|emacs-lisp}\n%?\n#+END_SRC" 
-             :empty-lines 1)
-           ))
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</section>
+<figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line">(<span class="name">defun</span> create-code-file ()</span><br><span class="line">  (<span class="name">interactive</span>)</span><br><span class="line">  (<span class="name">let</span> ((<span class="name">name</span> (<span class="name">concat</span> (<span class="name">format-time-string</span> <span class="string">"%Y_%m_%d_"</span>)</span><br><span class="line">                       (<span class="name">read-string</span> <span class="string">"file-name: "</span>))))</span><br><span class="line">    (<span class="name">expand-file-name</span> (<span class="name">format</span> <span class="string">"%s.org"</span> name) <span class="string">"~/Dropbox/org/snippets/"</span>)))</span><br><span class="line"></span><br><span class="line">(<span class="name">defun</span> gen-date-file ()</span><br><span class="line">  <span class="string">"Create an org file in ~/notes/snippets."</span></span><br><span class="line">  (<span class="name">format-time-string</span> <span class="string">"~/Dropbox/org/journals/%Y_%m_%d.org"</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">setq</span> org-capture-templates</span><br><span class="line">      '((<span class="string">"t"</span> <span class="string">"Todo"</span> entry (file+datetree <span class="string">"~/Dropbox/org/work.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %?\n  %i\n "</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"x"</span> <span class="string">"Task"</span> entry (file+datetree <span class="string">"~/Dropbox/org/work.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n"</span>)</span><br><span class="line">        (<span class="string">"e"</span> <span class="string">"Task"</span> entry (file+datetree <span class="string">"~/Dropbox/org/life.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"l"</span> <span class="string">"Todo"</span> entry (file+datetree <span class="string">"~/Dropbox/org/learn.org"</span>)</span><br><span class="line">         <span class="string">"** TODO %?\nEntered on %U\n  %i\n\n "</span> :kill-buffer <span class="literal">t</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"k"</span> <span class="string">"Todo"</span> entry (file+datetree <span class="string">"~/Dropbox/org/learn.org"</span>)</span><br><span class="line">         <span class="string">"* TODO %?\n  %i\n %f\n %a"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"j"</span> <span class="string">"Journal"</span> entry (file+datetree <span class="string">"~/Dropbox/org/_journal.org"</span> )</span><br><span class="line">         <span class="string">"** %?\nEntered on %U\n  %i\n"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"J"</span> <span class="string">"Journal"</span> entry (file gen-date-file)</span><br><span class="line">         <span class="string">"** %?\nEntered on %U\n  %i\n"</span> :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"c"</span> <span class="string">"Code snippet"</span> entry (file+headline <span class="string">"~/Dropbox/org/_code.org"</span> <span class="string">"Code"</span>)</span><br><span class="line">         <span class="string">"** %^&#123;desc&#125;\n#+BEGIN_SRC %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC"</span> </span><br><span class="line">          :empty-lines <span class="number">1</span>)</span><br><span class="line">        (<span class="string">"C"</span> <span class="string">"Notes"</span> entry (file create-code-file)</span><br><span class="line">         <span class="string">"** %^&#123;desc&#125;\n#+BEGIN_SRC %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC"</span> </span><br><span class="line">          :empty-lines <span class="number">1</span>)</span><br><span class="line">        ))</span><br></pre></td></tr></table></figure></section>
     <!-- Tags START -->
     
     <!-- Tags END -->

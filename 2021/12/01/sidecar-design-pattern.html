@@ -68,8 +68,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -180,19 +179,9 @@
 <h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>我们可以来看看业界典型的使用 sidecar 模式的框架。</p>
 <h3 id="DAPR"><a href="#DAPR" class="headerlink" title="DAPR"></a>DAPR</h3><p><a href="https://docs.microsoft.com/en-us/dotnet/architecture/dapr-for-net-developers/dapr-at-20000-feet" target="_blank" rel="noopener">Dapr: Distributed Application Runtime</a> 是微软开源的一套分布式程序开发框架，其目标是：“Build distributed applications with any language, any framework, run anywhere”。既然任何编程语言，任何框架都要支持，sidercar 是一个必然的选择。DAPR 把很多常见的分布式程序的公共组件抽象出来成为’building blocks’，然后通过 gRPC 或者 HTTP 统一出接口。应用程序通过 sidecar 来访问。</p>
 <p><img src="/images/ob_pasted-image-20211130172044.png" alt="/images/ob_pasted-image-20211130172044.png"><br>这样多了一层抽象之后，即使是某个 Component 做了一些改变，应用层也是无感知的。除了在容器化的环境下运行，用户也可以在非容器化环境以 sidecar 模式启动任何应用，例如我们启动一个图片接口服务 <code>image-api-service</code>，该服务会监听端口 8080，而 sidecar 会通过 3500 端口来代理该服务接受请求：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">dapr run --app-id image-api \
-         --app-protocol http \
-         --app-port 8080 \
-         --dapr-http-port 3500 \
-         --components-path <span class="token punctuation">..</span>/config \
-         --log-level debug \
-         ./image-api-service
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dapr run --app-id image-api \</span><br><span class="line">         --app-protocol http \</span><br><span class="line">         --app-port 8080 \</span><br><span class="line">         --dapr-http-port 3500 \</span><br><span class="line">         --components-path ../config \</span><br><span class="line">         --<span class="built_in">log</span>-level debug \</span><br><span class="line">         ./image-api-service</span><br></pre></td></tr></table></figure>
 <p>其他服务组件可以通过 sidecar 去请求该服务：</p>
-<pre class="line-numbers language-go"><code class="language-go"><span class="token comment" spellcheck="true">// Dapr api format: http://localhost:&lt;daprPort>/v1.0/invoke/&lt;appId>/method/&lt;method-</span>
-uri <span class="token operator">=</span> <span class="token string">"http://localhost:3500/v1.0/invoke/image-api/method/api/image"</span>
-req<span class="token punctuation">,</span> err <span class="token operator">:=</span> http<span class="token punctuation">.</span><span class="token function">NewRequest</span><span class="token punctuation">(</span><span class="token string">"POST"</span><span class="token punctuation">,</span> uri<span class="token punctuation">,</span> bytes<span class="token punctuation">.</span><span class="token function">NewBuffer</span><span class="token punctuation">(</span>image<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Dapr api format: http://localhost:&lt;daprPort&gt;/v1.0/invoke/&lt;appId&gt;/method/&lt;method-</span></span><br><span class="line">uri = <span class="string">"http://localhost:3500/v1.0/invoke/image-api/method/api/image"</span></span><br><span class="line">req, err := http.NewRequest(<span class="string">"POST"</span>, uri, bytes.NewBuffer(image))</span><br></pre></td></tr></table></figure>
 <h3 id="lstio"><a href="#lstio" class="headerlink" title="lstio"></a>lstio</h3><p><a href="https://istio.io/latest/zh/about/service-mesh/" target="_blank" rel="noopener">Istio 服务网格</a> 是一个开源的服务网格，提供了统一的方式来实现连接、监控、负载均衡等公共服务和流量管理。单个服务的所有传入和传出网络流量均通过 Sidecar 代理，完成微服务之间的流量管理、遥测数据收集以及策略的执行等。</p>
 <p><img src="/images/ob_pasted-image-20211130173530.png" alt="/images/ob_pasted-image-20211130173530.png"></p>
 <p>在 lstio 中，我们需要了解 Data Plane 和 Control Plane 两个概念——  </p>
