@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -151,7 +159,7 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p></p><h2>cflow</h2><br><a href="http://www.gnu.org/software/cflow/" target="_blank" rel="noopener">cflow</a>是个比较古老的程序(好像比我老一岁)，主要是用来打印C程序的函数调用关系，通过函数调用关系能大概看一下程序的流程。最近看了一下这个程序的代码，主要分为两个小程序组成。首先是prcc.c这个程序，作用是读源文件，提取出函数名称，然后生成一个函数列表。第一列是调用函数，第二列是被调用的函数名称(如果是函数声明则这两列相同)。第二个程序prcg.c是读取函数关系，里面建起一个有向无环图。根据这个图加上缩进打印出函数调用轮廓，<a href="http://www.gnu.org/software/cflow/sample.html" target="_blank" rel="noopener">这里</a>有一个例子。最后是一个脚本cflow.sh，其核心代码就是。<p></p>
+    <section class="markdown-content"><p><h2>cflow</h2><br><a target="_blank" rel="noopener" href="http://www.gnu.org/software/cflow/">cflow</a>是个比较古老的程序(好像比我老一岁)，主要是用来打印C程序的函数调用关系，通过函数调用关系能大概看一下程序的流程。最近看了一下这个程序的代码，主要分为两个小程序组成。首先是prcc.c这个程序，作用是读源文件，提取出函数名称，然后生成一个函数列表。第一列是调用函数，第二列是被调用的函数名称(如果是函数声明则这两列相同)。第二个程序prcg.c是读取函数关系，里面建起一个有向无环图。根据这个图加上缩进打印出函数调用轮廓，<a target="_blank" rel="noopener" href="http://www.gnu.org/software/cflow/sample.html">这里</a>有一个例子。最后是一个脚本cflow.sh，其核心代码就是。</p>
 <pre class="src">prcc demo.c | prcg</pre>
 这是典型的通过管道把小程序组起来的例子。
 <h2>life is short , use Python</h2>
@@ -191,12 +199,12 @@ find  *.c | xargs prcc| python drawfuncs.py 来处理多个程序。
     <span class="tag-code">Programming</span>
   </a>
 
-  <a href="/tags#Linux" >
-    <span class="tag-code">Linux</span>
-  </a>
-
   <a href="/tags#C" >
     <span class="tag-code">C</span>
+  </a>
+
+  <a href="/tags#Linux" >
+    <span class="tag-code">Linux</span>
   </a>
 
       </div>
@@ -252,7 +260,7 @@ find  *.c | xargs prcc| python drawfuncs.py 来处理多个程序。
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-text">cflow</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#null"><span class="toc-nav-text">life is short , use Python</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link"><span class="toc-nav-text">cflow</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link"><span class="toc-nav-text">life is short , use Python</span></a></li></ol>
     
   </div>
 </aside>
@@ -324,7 +332,7 @@ find  *.c | xargs prcc| python drawfuncs.py 来处理多个程序。
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -377,7 +385,9 @@ find  *.c | xargs prcc| python drawfuncs.py 来处理多个程序。
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

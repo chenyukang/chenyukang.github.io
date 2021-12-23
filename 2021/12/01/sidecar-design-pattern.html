@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -177,12 +185,12 @@
 <li>可以在不改变原有应用的情况下，为应用扩展新的功能</li>
 </ol>
 <h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>我们可以来看看业界典型的使用 sidecar 模式的框架。</p>
-<h3 id="DAPR"><a href="#DAPR" class="headerlink" title="DAPR"></a>DAPR</h3><p><a href="https://docs.microsoft.com/en-us/dotnet/architecture/dapr-for-net-developers/dapr-at-20000-feet" target="_blank" rel="noopener">Dapr: Distributed Application Runtime</a> 是微软开源的一套分布式程序开发框架，其目标是：“Build distributed applications with any language, any framework, run anywhere”。既然任何编程语言，任何框架都要支持，sidercar 是一个必然的选择。DAPR 把很多常见的分布式程序的公共组件抽象出来成为’building blocks’，然后通过 gRPC 或者 HTTP 统一出接口。应用程序通过 sidecar 来访问。</p>
+<h3 id="DAPR"><a href="#DAPR" class="headerlink" title="DAPR"></a>DAPR</h3><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/dotnet/architecture/dapr-for-net-developers/dapr-at-20000-feet">Dapr: Distributed Application Runtime</a> 是微软开源的一套分布式程序开发框架，其目标是：“Build distributed applications with any language, any framework, run anywhere”。既然任何编程语言，任何框架都要支持，sidercar 是一个必然的选择。DAPR 把很多常见的分布式程序的公共组件抽象出来成为’building blocks’，然后通过 gRPC 或者 HTTP 统一出接口。应用程序通过 sidecar 来访问。</p>
 <p><img src="/images/ob_pasted-image-20211130172044.png" alt="/images/ob_pasted-image-20211130172044.png"><br>这样多了一层抽象之后，即使是某个 Component 做了一些改变，应用层也是无感知的。除了在容器化的环境下运行，用户也可以在非容器化环境以 sidecar 模式启动任何应用，例如我们启动一个图片接口服务 <code>image-api-service</code>，该服务会监听端口 8080，而 sidecar 会通过 3500 端口来代理该服务接受请求：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dapr run --app-id image-api \</span><br><span class="line">         --app-protocol http \</span><br><span class="line">         --app-port 8080 \</span><br><span class="line">         --dapr-http-port 3500 \</span><br><span class="line">         --components-path ../config \</span><br><span class="line">         --<span class="built_in">log</span>-level debug \</span><br><span class="line">         ./image-api-service</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dapr run --app-id image-api \</span><br><span class="line">         --app-protocol http \</span><br><span class="line">         --app-port 8080 \</span><br><span class="line">         --dapr-http-port 3500 \</span><br><span class="line">         --components-path ../config \</span><br><span class="line">         --log-level debug \</span><br><span class="line">         ./image-api-service</span><br></pre></td></tr></table></figure>
 <p>其他服务组件可以通过 sidecar 去请求该服务：</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Dapr api format: http://localhost:&lt;daprPort&gt;/v1.0/invoke/&lt;appId&gt;/method/&lt;method-</span></span><br><span class="line">uri = <span class="string">"http://localhost:3500/v1.0/invoke/image-api/method/api/image"</span></span><br><span class="line">req, err := http.NewRequest(<span class="string">"POST"</span>, uri, bytes.NewBuffer(image))</span><br></pre></td></tr></table></figure>
-<h3 id="lstio"><a href="#lstio" class="headerlink" title="lstio"></a>lstio</h3><p><a href="https://istio.io/latest/zh/about/service-mesh/" target="_blank" rel="noopener">Istio 服务网格</a> 是一个开源的服务网格，提供了统一的方式来实现连接、监控、负载均衡等公共服务和流量管理。单个服务的所有传入和传出网络流量均通过 Sidecar 代理，完成微服务之间的流量管理、遥测数据收集以及策略的执行等。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Dapr api format: http://localhost:&lt;daprPort&gt;/v1.0/invoke/&lt;appId&gt;/method/&lt;method-</span></span><br><span class="line">uri = <span class="string">&quot;http://localhost:3500/v1.0/invoke/image-api/method/api/image&quot;</span></span><br><span class="line">req, err := http.NewRequest(<span class="string">&quot;POST&quot;</span>, uri, bytes.NewBuffer(image))</span><br></pre></td></tr></table></figure>
+<h3 id="lstio"><a href="#lstio" class="headerlink" title="lstio"></a>lstio</h3><p><a target="_blank" rel="noopener" href="https://istio.io/latest/zh/about/service-mesh/">Istio 服务网格</a> 是一个开源的服务网格，提供了统一的方式来实现连接、监控、负载均衡等公共服务和流量管理。单个服务的所有传入和传出网络流量均通过 Sidecar 代理，完成微服务之间的流量管理、遥测数据收集以及策略的执行等。</p>
 <p><img src="/images/ob_pasted-image-20211130173530.png" alt="/images/ob_pasted-image-20211130173530.png"></p>
 <p>在 lstio 中，我们需要了解 Data Plane 和 Control Plane 两个概念——  </p>
 <ul>
@@ -262,7 +270,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#场景"><span class="toc-nav-text">场景</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#sidecar-架构"><span class="toc-nav-text">sidecar 架构</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#案例分析"><span class="toc-nav-text">案例分析</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#DAPR"><span class="toc-nav-text">DAPR</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#lstio"><span class="toc-nav-text">lstio</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#其他考虑"><span class="toc-nav-text">其他考虑</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%9C%BA%E6%99%AF"><span class="toc-nav-text">场景</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#sidecar-%E6%9E%B6%E6%9E%84"><span class="toc-nav-text">sidecar 架构</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="toc-nav-text">案例分析</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#DAPR"><span class="toc-nav-text">DAPR</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#lstio"><span class="toc-nav-text">lstio</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96%E8%80%83%E8%99%91"><span class="toc-nav-text">其他考虑</span></a></li></ol>
     
   </div>
 </aside>
@@ -334,7 +342,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -387,7 +395,9 @@
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

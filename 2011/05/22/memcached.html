@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -159,20 +167,20 @@
 <p>stats.c:负责统计信息，记录get、set、delete、hits的数目。以前缀作为key。</p>
 <p>slabs.c：负责管理内存申请和释放，slabs主要是为了避免内存碎片问题，同时提高申请内存的速度，其基本原理是大块地申请内存，根据不同的slabclass块大小分给slabclass，申请内存的时候根据地址选择最适合的slabclass，从中去下内存返回指针，释放的时候只是放在其空闲指针列表中(不少地方都用到这样的方式)。slab_list没什么用，因为释放的指针放在了slots里面啊！slabs贪婪地使用内存，整个这东西的作用就是用内存空间来换时间效率的。</p>
 <p>memcached.c：主程序，分析设置参数默认值，分析参数根据参数修改配置参数。初始化stats，assoc，conn，slabs等。thread_init启动线程，每一个线程都有自己的struct event_base，setup_thread函数初始化这些，最重要的设置thread_libevent_process来处理新的连接。一直到：</p>
-<p><pre class="src">  <span style="color: #5f9ea0; font-style: italic;">/<em> </em></span><span style="color: #5f9ea0; font-style: italic;">Create threads after we’ve done all the libevent setup. </span><span style="color: #5f9ea0; font-style: italic;">/</span><br>    <span style="color: #00bfff; font-weight: bold;">for</span> (i = 0; i &lt; nthreads; i++) {<br>        create_worker(worker_libevent, &amp;threads[i]);<br>    }</pre><br>每个线程进入自己的event_loop。<br></p><p></p>
-<p>当请求来临的时候对于每一个连接，增加一个事件来调用处理函数event_handler。每个连接的处理过程是一个状态机，drive_machine(conn* c)来处理，由even_handler来调用，状态转移这部分代码比较复杂，conn_listening —&gt; conn_new_cmd —&gt; conn_parse_cmd —&gt; conn_mwrite —&gt; conn_closing。process_command来处理各种命令。<br></p><p></p>
+<p><pre class="src">  <span style="color: #5f9ea0; font-style: italic;">/<em> </span><span style="color: #5f9ea0; font-style: italic;">Create threads after we’ve done all the libevent setup. </span><span style="color: #5f9ea0; font-style: italic;"></em>/</span><br>    <span style="color: #00bfff; font-weight: bold;">for</span> (i = 0; i &lt; nthreads; i++) {<br>        create_worker(worker_libevent, &amp;threads[i]);<br>    }</pre><br>每个线程进入自己的event_loop。<br></p></p>
+<p>当请求来临的时候对于每一个连接，增加一个事件来调用处理函数event_handler。每个连接的处理过程是一个状态机，drive_machine(conn* c)来处理，由even_handler来调用，状态转移这部分代码比较复杂，conn_listening —&gt; conn_new_cmd —&gt; conn_parse_cmd —&gt; conn_mwrite —&gt; conn_closing。process_command来处理各种命令。<br></p></p>
 </section>
     <!-- Tags START -->
     
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Linux" >
-    <span class="tag-code">Linux</span>
-  </a>
-
   <a href="/tags#C" >
     <span class="tag-code">C</span>
+  </a>
+
+  <a href="/tags#Linux" >
+    <span class="tag-code">Linux</span>
   </a>
 
   <a href="/tags#Backup" >
@@ -298,7 +306,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -351,7 +359,9 @@
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

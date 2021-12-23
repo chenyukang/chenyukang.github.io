@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -151,13 +159,13 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>最近一年经常接触了 WebAssembly , 我把一些老的 C/C++ 代码通过 <a href="https://emscripten.org/docs/getting_started/downloads.html" target="_blank" rel="noopener">emcc</a> 编译为 wasm 模块，也可以把 Rust 代码编译为 wasm。</p>
+    <section class="markdown-content"><p>最近一年经常接触了 WebAssembly , 我把一些老的 C/C++ 代码通过 <a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/downloads.html">emcc</a> 编译为 wasm 模块，也可以把 Rust 代码编译为 wasm。</p>
 <p>这里做一个简单的总结，以及我在编译过程中碰到的问题。</p>
 <h2 id="WebAssembly-的优势"><a href="#WebAssembly-的优势" class="headerlink" title="WebAssembly 的优势"></a>WebAssembly 的优势</h2><p><img src="/images/ob_pasted-image-20211215191320.png" alt="/images/ob_pasted-image-20211215191320.png"></p>
-<p>WebAsembly 定义了一个<a href="https://www.wasm.com.cn/docs/portability/" target="_blank" rel="noopener">可移植</a>、体积小、加载快的<a href="https://www.wasm.com.cn/docs/mvp/#binary-format" target="_blank" rel="noopener">二进制格式</a>作为编译结果。通过充分发挥通用硬件的能力（包括<a href="https://en.wikipedia.org/wiki/Mobile_device" target="_blank" rel="noopener">移动设备</a>以及<a href="https://en.wikipedia.org/wiki/Internet_of_Things" target="_blank" rel="noopener">物联网</a>），使其在大多数平台上能达到原生的执行效率。借助 wasi，WebAssembly 还可能运行在服务端。WebAssembly 的目标包括：</p>
+<p>WebAsembly 定义了一个<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/portability/">可移植</a>、体积小、加载快的<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/mvp/#binary-format">二进制格式</a>作为编译结果。通过充分发挥通用硬件的能力（包括<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Mobile_device">移动设备</a>以及<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Internet_of_Things">物联网</a>），使其在大多数平台上能达到原生的执行效率。借助 wasi，WebAssembly 还可能运行在服务端。WebAssembly 的目标包括：</p>
 <ol>
-<li>现有的 <a href="https://www.wasm.com.cn/docs/web/" target="_blank" rel="noopener">Web 平台</a>完美结合并在其中运行：<ul>
-<li>维护无版本、<a href="https://www.wasm.com.cn/docs/feature-test/" target="_blank" rel="noopener">特性可测试</a>、向后兼容的 Web 演变过程；</li>
+<li>现有的 <a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/web/">Web 平台</a>完美结合并在其中运行：<ul>
+<li>维护无版本、<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/feature-test/">特性可测试</a>、向后兼容的 Web 演变过程；</li>
 <li>和 JavaScript 执行在相同的语意环境中；</li>
 <li>允许和 JavaScript 相互的同步调用；</li>
 <li>严格遵守同源策略以及浏览器安全策略；</li>
@@ -165,18 +173,18 @@
 <li>定义一个可与二进制格式相互转化的人类可编辑的文本格式，并且支持查看源码的功能。</li>
 </ul>
 </li>
-<li>被设计为也可以支持<a href="https://www.wasm.com.cn/docs/non-web/" target="_blank" rel="noopener">非浏览器嵌入</a>的运行形式，这样就可能在某些场景下替代 Docker。</li>
+<li>被设计为也可以支持<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/non-web/">非浏览器嵌入</a>的运行形式，这样就可能在某些场景下替代 Docker。</li>
 </ol>
-<h2 id="C-C-gt-wasm"><a href="#C-C-gt-wasm" class="headerlink" title="C/C++ =&gt; wasm"></a>C/C++ =&gt; wasm</h2><p>首先需要安装 Emscripten  SDK:<br><a href="https://emscripten.org/docs/getting_started/downloads.html" target="_blank" rel="noopener">https://emscripten.org/docs/getting_started/downloads.html</a></p>
+<h2 id="C-C-gt-wasm"><a href="#C-C-gt-wasm" class="headerlink" title="C/C++ =&gt; wasm"></a>C/C++ =&gt; wasm</h2><p>首先需要安装 Emscripten  SDK:<br><a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/downloads.html">https://emscripten.org/docs/getting_started/downloads.html</a></p>
 <p>移植一个 C/C++ 项目到 WebAssembly , 最简单的办法是把类似 gcc 命令换成 emcc，难点在于动态链接的第三方库，我们需要改成静态链接。一些常用的库已经被移植了，例如<em>libc</em>, <em>libc++</em> and <em>SDL</em>，这些我们不需要手动处理。不在 emcc 预装里的库，我们只需要在编译的过程中加一些额外的参数，例如我下面这个项目就用到了 PNG，JPEG 这些库：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">emcc -c dbgutil.c -o dbgutil.o</span><br><span class="line">emcc -c qrtest.c -o qrtest.o</span><br><span class="line">emcc -c decode.c -o decode.o</span><br><span class="line">emcc -c identify.c -o identify.o</span><br><span class="line">emcc -c quirc.c -o quirc.o</span><br><span class="line">emcc -c version_db.c -o version_db.o</span><br><span class="line">emcc -g -Oz --llvm-lto 1  -s STANDALONE_WASM *.o -o qrtest.wasm  -lm  -s USE_LIBJPEG -s USE_LIBPNG</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">emcc -c dbgutil.c -o dbgutil.o</span><br><span class="line">emcc -c qrtest.c -o qrtest.o</span><br><span class="line">emcc -c decode.c -o decode.o</span><br><span class="line">emcc -c identify.c -o identify.o</span><br><span class="line">emcc -c quirc.c -o quirc.o</span><br><span class="line">emcc -c version_db.c -o version_db.o</span><br><span class="line">emcc -g -Oz --llvm-lto 1  -s STANDALONE_WASM *.o -o qrtest.wasm  -lm  -s USE_LIBJPEG -s USE_LIBPNG </span><br></pre></td></tr></table></figure>
 <p>另外 emcc 编译出来的 wasm 模块默认只能做纯计算，没有网络、系统文件等。如果有系统调用则需要运行在浏览器中，用浏览器的接口来模拟某些 C 函数调用，例如 C 语言中的系统调用 <code>time</code> 在 emcc 中被替成为了 JavaScript  代码：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">clock: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (_clock.start === <span class="literal">undefined</span>) _clock.start = <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">return</span> ((<span class="built_in">Date</span>.now() - _clock.start) * (&#123;&#123;&#123; cDefine(<span class="string">'CLOCKS_PER_SEC'</span>) &#125;&#125;&#125; / <span class="number">1000</span>))|<span class="number">0</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">clock: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (_clock.start === <span class="literal">undefined</span>) _clock.start = <span class="built_in">Date</span>.now();</span><br><span class="line">    <span class="keyword">return</span> ((<span class="built_in">Date</span>.now() - _clock.start) * (&#123;&#123;&#123; cDefine(<span class="string">&#x27;CLOCKS_PER_SEC&#x27;</span>) &#125;&#125;&#125; / <span class="number">1000</span>))|<span class="number">0</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 <h2 id="Rust-gt-wasm"><a href="#Rust-gt-wasm" class="headerlink" title="Rust =&gt; wasm"></a>Rust =&gt; wasm</h2><p>Rust 是对 WebAssembly  支持得特别好的编程语言。我们可以使用 wasm-pack，或者安装 target:</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">rustup target add wasm32-wasi</span><br></pre></td></tr></table></figure>
 <p>然后在编译命令后面加参数：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cargo build --target wasm32-wasi</span><br></pre></td></tr></table></figure></p>
-<p>系统函数同样是个问题，有的第三方库可能会支持 wasm 格式，例如<a href="https://docs.rs/getrandom/latest/getrandom/#webassembly-support" target="_blank" rel="noopener">getrandom - Rust (docs.rs)</a>。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://emscripten.org/" target="_blank" rel="noopener">Main — Emscripten 3.0.1-git (dev) documentation</a><br><a href="https://marcoselvatici.github.io/WASM_tutorial/" target="_blank" rel="noopener">WASM Tutorial (marcoselvatici.github.io)</a><br><a href="https://rustwasm.github.io/docs/book/" target="_blank" rel="noopener">Introduction - Rust and WebAssembly (rustwasm.github.io)</a></p>
+<p>系统函数同样是个问题，有的第三方库可能会支持 wasm 格式，例如<a target="_blank" rel="noopener" href="https://docs.rs/getrandom/latest/getrandom/#webassembly-support">getrandom - Rust (docs.rs)</a>。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://emscripten.org/">Main — Emscripten 3.0.1-git (dev) documentation</a><br><a target="_blank" rel="noopener" href="https://marcoselvatici.github.io/WASM_tutorial/">WASM Tutorial (marcoselvatici.github.io)</a><br><a target="_blank" rel="noopener" href="https://rustwasm.github.io/docs/book/">Introduction - Rust and WebAssembly (rustwasm.github.io)</a></p>
 </section>
     <!-- Tags START -->
     
@@ -237,7 +245,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#WebAssembly-的优势"><span class="toc-nav-text">WebAssembly 的优势</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#C-C-gt-wasm"><span class="toc-nav-text">C/C++ =&gt; wasm</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Rust-gt-wasm"><span class="toc-nav-text">Rust =&gt; wasm</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参考"><span class="toc-nav-text">参考</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#WebAssembly-%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-nav-text">WebAssembly 的优势</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#C-C-gt-wasm"><span class="toc-nav-text">C&#x2F;C++ &#x3D;&gt; wasm</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Rust-gt-wasm"><span class="toc-nav-text">Rust &#x3D;&gt; wasm</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%8F%82%E8%80%83"><span class="toc-nav-text">参考</span></a></li></ol>
     
   </div>
 </aside>
@@ -309,7 +317,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -362,7 +370,9 @@
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

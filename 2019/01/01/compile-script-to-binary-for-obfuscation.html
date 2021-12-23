@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -151,17 +159,17 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h3 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h3><p>因为自己习惯使用 expect 脚本登录各种服务器，有一段时间因为要登录的服务器太多了，所以之前写过一个程序来管理各种 expect 脚本。实现思路是根据配置文件，用一个程序来动态生成脚本，执行完之后再删除。这样临时生成的文件里也是包含密码等信息的。最近突然想是不是可以直接写一个程序，把所有脚本类的程序转换为二进制可执行文件<a href="https://www.slideshare.net/LizBaillie/rustconf-2016-illustrated-adventure-guide-65894363" target="_blank" rel="noopener">^image</a>。我不想把密码之类的直接写在固定的脚本里面，所以密码也是被编译在可执行的二进制文件里的，这样能达到一些代码混淆的目的。</p>
-<p><img src="/images/image-20190101234053094.png" width="70%" hegiht="70%" align="center"></p>
-<h3 id="rshc-的开发"><a href="#rshc-的开发" class="headerlink" title="rshc 的开发"></a>rshc 的开发</h3><p>这个程序看起来有些好玩，所以先我先搜了一下是否之前有其他人这样做过。于是找到了 <a href="https://github.com/neurobin/shc" target="_blank" rel="noopener">shc</a> 这个开源程序，这个最初版本是 96 年用 C 写的，最终执行的时候还是用 execvp 调用解释器执行各种脚本。我使用了一下发现居然不支持 expect 之类的。然后想着自己写个玩玩，顺便再动手用用最近看得又心痒的 Rust，最后用搞出来一个初版: <a href="https://github.com/chenyukang/rshc" target="_blank" rel="noopener">rhsc</a>。</p>
-<p>目前我这个程序只是能把脚本程序，转换为 Rust 代码，然后使用 rustc 来编译为二进制，为了做一些代码混淆，其中也类似 shc 使用了 RC4 算法来做了一个简单的转换，加密用的 key 是随机生成的。然后也做了另外一个增加密码的模式，这样可以为任何脚本增加密码校验功能，最终使用 <a href="https://doc.rust-lang.org/beta/std/process/struct.Command.html" target="_blank" rel="noopener">Process</a> 来执行解释器。当然也谈不上多安全，如果要破解可以使用一些类似 ptrace 或者<a href="https://github.com/neurobin/shc/issues/63" target="_blank" rel="noopener">其他方式</a>来试试。以后我会继续完善这方面的防御。另外，为了在生成代码之后尽量减少依赖，所以目前密码输入时还未做到隐藏输入。</p>
+    <section class="markdown-content"><h3 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h3><p>因为自己习惯使用 expect 脚本登录各种服务器，有一段时间因为要登录的服务器太多了，所以之前写过一个程序来管理各种 expect 脚本。实现思路是根据配置文件，用一个程序来动态生成脚本，执行完之后再删除。这样临时生成的文件里也是包含密码等信息的。最近突然想是不是可以直接写一个程序，把所有脚本类的程序转换为二进制可执行文件<a target="_blank" rel="noopener" href="https://www.slideshare.net/LizBaillie/rustconf-2016-illustrated-adventure-guide-65894363">^image</a>。我不想把密码之类的直接写在固定的脚本里面，所以密码也是被编译在可执行的二进制文件里的，这样能达到一些代码混淆的目的。</p>
+<p><img src="/images/image-20190101234053094.png" width="70%" hegiht="70%" align=center /></p>
+<h3 id="rshc-的开发"><a href="#rshc-的开发" class="headerlink" title="rshc 的开发"></a>rshc 的开发</h3><p>这个程序看起来有些好玩，所以先我先搜了一下是否之前有其他人这样做过。于是找到了 <a target="_blank" rel="noopener" href="https://github.com/neurobin/shc">shc</a> 这个开源程序，这个最初版本是 96 年用 C 写的，最终执行的时候还是用 execvp 调用解释器执行各种脚本。我使用了一下发现居然不支持 expect 之类的。然后想着自己写个玩玩，顺便再动手用用最近看得又心痒的 Rust，最后用搞出来一个初版: <a target="_blank" rel="noopener" href="https://github.com/chenyukang/rshc">rhsc</a>。</p>
+<p>目前我这个程序只是能把脚本程序，转换为 Rust 代码，然后使用 rustc 来编译为二进制，为了做一些代码混淆，其中也类似 shc 使用了 RC4 算法来做了一个简单的转换，加密用的 key 是随机生成的。然后也做了另外一个增加密码的模式，这样可以为任何脚本增加密码校验功能，最终使用 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/beta/std/process/struct.Command.html">Process</a> 来执行解释器。当然也谈不上多安全，如果要破解可以使用一些类似 ptrace 或者<a target="_blank" rel="noopener" href="https://github.com/neurobin/shc/issues/63">其他方式</a>来试试。以后我会继续完善这方面的防御。另外，为了在生成代码之后尽量减少依赖，所以目前密码输入时还未做到隐藏输入。</p>
 <h3 id="安装使用"><a href="#安装使用" class="headerlink" title="安装使用"></a>安装使用</h3><p>使用方式非常简单，先安装：</p>
 <figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">cargo install rshc</span><br></pre></td></tr></table></figure>
 <p>然后使用命令： </p>
 <figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">rshc -f demo.sh -o demo.rs</span><br><span class="line"></span><br><span class="line">/<span class="regexp">/ add a passowrd when compile it, </span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ then binary will prompt for correct password before execution</span></span><br><span class="line"><span class="regexp">rshc -f demo.sh -o demo.rs -p</span></span><br></pre></td></tr></table></figure>
 <h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>时隔两年再用 Rust 写一些小项目，发现整个语言还是成熟很多：</p>
 <ul>
-<li>工具链很好用，特别是 cargo 之类的，<a href="https://crates.io/crates/rshc" target="_blank" rel="noopener">从开发到发布都非常方便</a></li>
+<li>工具链很好用，特别是 cargo 之类的，<a target="_blank" rel="noopener" href="https://crates.io/crates/rshc">从开发到发布都非常方便</a></li>
 <li>相关的库和文档也多了起来，相对来说更加容易上手写一些东西了</li>
 <li>编译器的错误提示特别好，可以通过错误索引号找到示例</li>
 </ul>
@@ -228,7 +236,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#缘由"><span class="toc-nav-text">缘由</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#rshc-的开发"><span class="toc-nav-text">rshc 的开发</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装使用"><span class="toc-nav-text">安装使用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#其他"><span class="toc-nav-text">其他</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%BC%98%E7%94%B1"><span class="toc-nav-text">缘由</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#rshc-%E7%9A%84%E5%BC%80%E5%8F%91"><span class="toc-nav-text">rshc 的开发</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8"><span class="toc-nav-text">安装使用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-nav-text">其他</span></a></li></ol>
     
   </div>
 </aside>
@@ -300,7 +308,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -353,7 +361,9 @@
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -152,16 +160,16 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><h3 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h3><p>最近在工作上接触了<a href="">Kong</a>这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一些涉及各个系统的功能就很困难。比如我们前段时间实现的灰度系统就把人折腾得很惨。因为我们的设计中有一些http header 需要在各个系统之间传递。每个项目的 Nginx 里面都用了 Lua 写一些授权逻辑，最终这些逻辑分散在各个项目的 Nginx 层，维护困难。除了灰度，其他的一些比较基础的Nginx层功能也是各自为政。所以我们的教训是: 在做微服务化之前，需要统一的、可扩张的API网关。我们希望网关性能好，并且扩张性足够好。使用OpenResty是很自然的选择，我们希望有一层 Nginx 是所有请求都会经过的，这层 Nginx 会负责做一些基础操作，当然最重要的是做流量转发。</p>
-<p>调研了一阵子之后，我们所面临的是两条路，一是自己写一个类似于<a href="http://www.infoq.com/cn/articles/JD-Nignx-JEN" target="_blank" rel="noopener">京东JEN</a>的系统，在调研一圈之后我们发现 Kong 是比较适合自身业务需求的。二是在 Kong 的基础上做一些插件开发，然后集群部署Kong即可。</p>
+<p>调研了一阵子之后，我们所面临的是两条路，一是自己写一个类似于<a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/JD-Nignx-JEN">京东JEN</a>的系统，在调研一圈之后我们发现 Kong 是比较适合自身业务需求的。二是在 Kong 的基础上做一些插件开发，然后集群部署Kong即可。</p>
 <p>我之前稍微看了一下介绍，认为 Kong 可能对我们来说太重了些。后来又仔细看了一阵源码，自己认为代码质量挺好，而且模块化和可扩张性做得很好，因此决定采用。</p>
 <h3 id="Kong简介"><a href="#Kong简介" class="headerlink" title="Kong简介"></a>Kong简介</h3><p>Kong 项目的目的是这样一幅图<a href="/images/kong-intro.png">kong-intro</a>：</p>
-<p><img src="/images/kong-intro.png" alt="kong-intro" class="img-center" style="width:320px;height:300px;"></p>
+<p><img src="/images/kong-intro.png" alt="kong-intro" class="img-center" style="width:320px;height:300px;"/></p>
 <p>可以看到这正是我们要做的事情。使用Kong的优势在于：</p>
 <ol>
-<li>可扩展性，Kong依赖一个数据库来实现配置存储，依赖 <a href="https://www.serf.io" target="_blank" rel="noopener">serf</a> 来实现 instance 之间的通信。任何一个节点修改了其他节点会收到通知并重新reload配置。</li>
+<li>可扩展性，Kong依赖一个数据库来实现配置存储，依赖 <a target="_blank" rel="noopener" href="https://www.serf.io">serf</a> 来实现 instance 之间的通信。任何一个节点修改了其他节点会收到通知并重新reload配置。</li>
 <li>模块化，Kong 可以方便地增加新的插件，并且插件可以通过 Restful API 进行管理</li>
 </ol>
-<h3 id="主要代码模块"><a href="#主要代码模块" class="headerlink" title="主要代码模块"></a>主要代码模块</h3><p>Kong的使用方法这里不做介绍，<a href="https://getkong.org/docs/" target="_blank" rel="noopener">这里</a>有非常详细的文档和示例。我主要分析一下其<a href="https://github.com/Mashape/kong" target="_blank" rel="noopener">源码</a>和原理。</p>
+<h3 id="主要代码模块"><a href="#主要代码模块" class="headerlink" title="主要代码模块"></a>主要代码模块</h3><p>Kong的使用方法这里不做介绍，<a target="_blank" rel="noopener" href="https://getkong.org/docs/">这里</a>有非常详细的文档和示例。我主要分析一下其<a target="_blank" rel="noopener" href="https://github.com/Mashape/kong">源码</a>和原理。</p>
 <ol>
 <li>core目录里面是一些基础框架代码，包括hooks，事件，插件基础</li>
 <li>plugins目录包括所有kong自带的插件，kong的插件扩展有一套自己的规范，按照规范来非常容易地就能扩展kong</li>
@@ -233,7 +241,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#缘由"><span class="toc-nav-text">缘由</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Kong简介"><span class="toc-nav-text">Kong简介</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#主要代码模块"><span class="toc-nav-text">主要代码模块</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%BC%98%E7%94%B1"><span class="toc-nav-text">缘由</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Kong%E7%AE%80%E4%BB%8B"><span class="toc-nav-text">Kong简介</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%BB%E8%A6%81%E4%BB%A3%E7%A0%81%E6%A8%A1%E5%9D%97"><span class="toc-nav-text">主要代码模块</span></a></li></ol>
     
   </div>
 </aside>
@@ -305,7 +313,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -358,7 +366,9 @@
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

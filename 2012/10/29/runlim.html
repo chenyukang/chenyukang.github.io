@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -151,7 +159,7 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>在公司有同事用这个小程序<a href="http://fmv.jku.at/runlim/" target="_blank" rel="noopener">RunLim</a>来调试程序的内存问题。刚开始以为是我们上海的一个同事写的，就弄来看了看。后来发现是公司一个早期同事<a href="http://fmv.jku.at/biere/index.html" target="_blank" rel="noopener">Armin Biere</a>写的，还开源了，debian的源里有这个东西。我在公司维护的一部分代码是这个人写的，据说厉害的程序员，他现在在学术圈里。</p>
+    <section class="markdown-content"><p>在公司有同事用这个小程序<a target="_blank" rel="noopener" href="http://fmv.jku.at/runlim/">RunLim</a>来调试程序的内存问题。刚开始以为是我们上海的一个同事写的，就弄来看了看。后来发现是公司一个早期同事<a target="_blank" rel="noopener" href="http://fmv.jku.at/biere/index.html">Armin Biere</a>写的，还开源了，debian的源里有这个东西。我在公司维护的一部分代码是这个人写的，据说厉害的程序员，他现在在学术圈里。</p>
 <p>用这个小程序来测试程序跑的时间和内存，用法很简单:</p>
 <pre class="prettyprint lang-sh">
 ./runlim prog.exe
@@ -177,7 +185,7 @@ kang@ubuntu:~/download/runlim-1.7$ ./runlim sleep  1
 
 </pre>
 
-<p>查看help，这个工具还可以指定time limit和space limit,在指定的时间和内存限制内强制退出程序，其功能很像那些<a href="http://poj.org/" target="_blank" rel="noopener">Online Judge</a>，只是没有检测结果输出是否正确。</p>
+<p>查看help，这个工具还可以指定time limit和space limit,在指定的时间和内存限制内强制退出程序，其功能很像那些<a target="_blank" rel="noopener" href="http://poj.org/">Online Judge</a>，只是没有检测结果输出是否正确。</p>
 <p>发现代码里有一个小小的Bug，根据源代码如果没有指定space limit， space limit那栏应该是当前的空闲内存大小，但是<br>看我上面运行的命令，显示的4294966090 MB明显偏大，是其中的一个获取系统内存大小的函数溢出了。这里应该是这样：</p>
 <pre class="prettyprint lang-sh">
 static unsigned
@@ -190,7 +198,7 @@ get_physical_mb ()
 }
 </pre>
 
-<p>sysconf获取页大小和页数目，具体看这里<a href="http://www.gnu.org/software/libc/manual/html_node/Query-Memory-Parameters.html" target="_blank" rel="noopener">How to get information about the memory subsystem?</a>。</p>
+<p>sysconf获取页大小和页数目，具体看这里<a target="_blank" rel="noopener" href="http://www.gnu.org/software/libc/manual/html_node/Query-Memory-Parameters.html">How to get information about the memory subsystem?</a>。</p>
 <p>这个小工具还是查询/proc下的进程统计信息的，根据fork出来的子进程pid，递归地查询统计信息。</p>
 <p>时间的统计可能会稍显粗略，如果需要更精确的时间统计该如何实现。</p>
 </section>
@@ -322,7 +330,7 @@ get_physical_mb ()
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -375,7 +383,9 @@ get_physical_mb ()
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

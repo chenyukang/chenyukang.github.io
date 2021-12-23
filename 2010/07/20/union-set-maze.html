@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -153,7 +161,7 @@
   <article class="post-article">
     <section class="markdown-content"><h3>好书好书</h3>
 
-<p>在看<a href="http://book.douban.com/subject/1971825/" target="_blank" rel="noopener">《数据结构与算法分析》</a>这本书的时候看到后面的一个关于并查集的有趣应用，是个生成迷宫的算法，看起来非常有趣，所以就实现了一下。顺便把几种走迷宫的算法都整了 进去。八卦一下，这本书的作者是<a href="http://users.cis.fiu.edu/%7Eweiss/#adspc++2" target="_blank" rel="noopener">Mark Weiss</a>,这牛写了几本数据结构和算法的书，各种语言版本(C,C++,Java)，原来是师出名门啊，在他的主页上一看，原来是<a href="http://www.cs.princeton.edu/%7Ers/" target="_blank" rel="noopener">Robert Sedgewick</a> 的学生。Sedgewick更是师出名门，在Princeton跟高纳德神牛读的博士，也写了N本算法和数据结构的书。这两人写的书都还不错，对于初学者和中等水平来说很好，覆盖了一般的数据结构和算法，同时带有一定的理论分析还有特定的语言实现。<br></p><p></p>
+<p>在看<a target="_blank" rel="noopener" href="http://book.douban.com/subject/1971825/">《数据结构与算法分析》</a>这本书的时候看到后面的一个关于并查集的有趣应用，是个生成迷宫的算法，看起来非常有趣，所以就实现了一下。顺便把几种走迷宫的算法都整了 进去。八卦一下，这本书的作者是<a target="_blank" rel="noopener" href="http://users.cis.fiu.edu/%7Eweiss/#adspc++2">Mark Weiss</a>,这牛写了几本数据结构和算法的书，各种语言版本(C,C++,Java)，原来是师出名门啊，在他的主页上一看，原来是<a target="_blank" rel="noopener" href="http://www.cs.princeton.edu/%7Ers/">Robert Sedgewick</a> 的学生。Sedgewick更是师出名门，在Princeton跟高纳德神牛读的博士，也写了N本算法和数据结构的书。这两人写的书都还不错，对于初学者和中等水平来说很好，覆盖了一般的数据结构和算法，同时带有一定的理论分析还有特定的语言实现。<br></p></p>
 <h3>并查集</h3>
 
 <p>可能一般的大学教材上面没有说这个数据结构，这是个很有趣的东西。《算法导论》上面用这个来作为均摊分析的例子吧。在ACM/ICPC中这个数据结构经常出现，有可能是一个小题 （难点的就是要维护节点之间关系的那种），或者是有的图论算法中实现要用,比如实现Kruskar算法求最小生成树。<br>并查集本身比较简单，主要是用来操作元素集合，支持的操作有：</p>
@@ -161,11 +169,11 @@
 
 <p>一并一查，所以叫作并查集。实现时候可以通过按秩合并(union by rank)，和路径压缩(path compression)来增加效率，可以获得几乎与总操作数m成线性关系的运行时间。</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> rank[MAXSIZE];    <span class="comment">// 节点高度的上界</span></span><br><span class="line"><span class="keyword">int</span> parent[MAXSIZE]; <span class="comment">// 根节点</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Init</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="built_in">memset</span>(rank, <span class="number">0</span>, <span class="keyword">sizeof</span>(rank));</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i &lt; MAXSIZE; ++i )</span><br><span class="line">    parent[i] = i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindSet</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;<span class="comment">// 查找+递归的路径压缩</span></span><br><span class="line">  <span class="keyword">if</span>( x != parent[x] )</span><br><span class="line">    parent[x] = FindSet(parent[x]);</span><br><span class="line">  <span class="keyword">return</span> parent[x];</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UnionSet</span><span class="params">(<span class="keyword">int</span> root1, <span class="keyword">int</span> root2)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> x = FindSet(root1), y = FindSet(root2);</span><br><span class="line">  <span class="keyword">if</span>( x == y ) <span class="keyword">return</span> ;</span><br><span class="line">  <span class="keyword">if</span>( rank[x] &gt; rank[y] ) parent[y] = x;</span><br><span class="line">  <span class="keyword">else</span>&#123;</span><br><span class="line">    parent[x] = y;</span><br><span class="line">    <span class="keyword">if</span>( rank[x] == rank[y] ) ++rank[y];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p></p><h3>迷宫的实现</h3><p></p>
+<p><h3>迷宫的实现</h3></p>
 <p><br>上面那本书上的习题上给了提示，比如首先所有的墙都没有去掉，那么是一个一个的方格，每一个方格为并查集合的一个元素，已经连通的元素是在并查集的一个集合中，有相同的根节点。 随机的选择一个墙，在并查集中查询这两个元素是否已经连通，如果已经连通则另选一个墙，如果不连通，union两个节点的根节点，这样操作以后这两个方格已经连通。继续上面的操作， 直到入口和出口连通位置，那么这就形成了一个只有一条合法路径的迷宫，称为单迷宫。如下图所示。<br></p>
 
 <p>左上角起点 右下角终点</p>
-<p><br></p><p><a href="/images/maze.png"><img class="size-full wp-image-34" title="maze" src="/images/maze.png" alt="" width="579" height="438" align="center"></a></p><br><p style="text-align: center;"></p><br><p style="text-align: center;"></p><br><p></p>
+<p><br><p><a href="/images/maze.png"><img class="size-full wp-image-34" title="maze" src="/images/maze.png" alt="" width="579" height="438" align="center"></a></p><br><p style="text-align: center;"></p><br><p style="text-align: center;"></p><br></p>
 
 </section>
     <!-- Tags START -->
@@ -234,7 +242,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-text">好书好书</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-text">并查集</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#null"><span class="toc-nav-text">迷宫的实现</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">好书好书</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">并查集</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">迷宫的实现</span></a></li></ol>
     
   </div>
 </aside>
@@ -306,7 +314,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -359,7 +367,9 @@
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

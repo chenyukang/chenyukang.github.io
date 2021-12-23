@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -152,7 +160,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>昨天花了点时间下学习 Obsidian 的插件开发。我想了一下目前自己有点不爽的是图片插入的时候，图片的名称中间有空格，这虽然也不是什么大问题，只是在 Linux 环境下显示的时候看起来特别别扭。而且这看起来也是一个很好的入门小插件，可以接触 Obsidian 里面的文件管理和编辑操作，我需要把图片在文件系统里的名称改掉，也要修改 markdown 里的路径。</p>
-<p>所有代码都在这里了： <a href="https://github.com/chenyukang/obsidian-rename-image" target="_blank" rel="noopener">chenyukang/obsidian-rename-image (github.com)</a>。</p>
+<p>所有代码都在这里了： <a target="_blank" rel="noopener" href="https://github.com/chenyukang/obsidian-rename-image">chenyukang/obsidian-rename-image (github.com)</a>。</p>
 <h3 id="开发步骤"><a href="#开发步骤" class="headerlink" title="开发步骤"></a>开发步骤</h3><ol>
 <li>从 plugin sample repo 克隆一个仓库</li>
 <li>修改其中的 manifest.json 文件，其中 plugin id 是最重要的。</li>
@@ -163,9 +171,9 @@
 </ol>
 <p>在开发过程中，可以通过 <code>Ctrl-Shift-i</code> 来打开调试页面，在代码中加入调试信息。</p>
 <h3 id="API-相关"><a href="#API-相关" class="headerlink" title="API 相关"></a>API 相关</h3><p>在插件项目里执行了 <code>npm install</code> 之后，文件 <code>node_modules/obsidian/obsidian.d.ts</code> 就是 Obsidian 的 API ，里面有很详细的注释。</p>
-<p>作为补充可以看看 <a href="https://liamca.in/Obsidian+API" target="_blank" rel="noopener">Obsidian API - Liam Cain</a>。API 分为这几个主要部分。</p>
+<p>作为补充可以看看 <a target="_blank" rel="noopener" href="https://liamca.in/Obsidian+API">Obsidian API - Liam Cain</a>。API 分为这几个主要部分。</p>
 <p><img src="/images/ob_pasted-image-20211201194355.png" alt="/images/ob_pasted-image-20211201194355.png"></p>
-<p>其中文件编辑部分使用了这个<a href="https://codemirror.net/" target="_blank" rel="noopener">CodeMirror</a>。</p>
+<p>其中文件编辑部分使用了这个<a target="_blank" rel="noopener" href="https://codemirror.net/">CodeMirror</a>。</p>
 <h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>之前有那么一会我会想，Obsidian 这样一个软件为什么不开源？如果开源我们是不是可以做更多的自由探索。通过折腾插件这么一段体验，我认为不开源问题也不大，其实通过插件我们其实可以在插件里面跑任何自己的代码。这里面的可扩展性对于绝大部分用户来说绰绰有余。</p>
 <p>一个技巧是多看看已有的插件是如何实现的。打开 Settings 页面的 community plugins，选择某个感兴趣的插件看看里面的代码：<br><img src="/images/ob_pasted-image-20211203110506.png" alt="/images/ob_pasted-image-20211203110506.png"></p>
 <p>Obsidian 模块化做得很好，而且 API 的粒度很细。在 VsCode 中写 TypeScript 插件体验比在 Emacs 中写 elisp 开发插件好很多，并且 JavaScript 的相关文档可太丰富了。</p>
@@ -241,7 +249,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#开发步骤"><span class="toc-nav-text">开发步骤</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#API-相关"><span class="toc-nav-text">API 相关</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#其他"><span class="toc-nav-text">其他</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%BC%80%E5%8F%91%E6%AD%A5%E9%AA%A4"><span class="toc-nav-text">开发步骤</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#API-%E7%9B%B8%E5%85%B3"><span class="toc-nav-text">API 相关</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-nav-text">其他</span></a></li></ol>
     
   </div>
 </aside>
@@ -313,7 +321,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -366,7 +374,9 @@
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

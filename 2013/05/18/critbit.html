@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -152,7 +160,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>最近了解到有这么一种数据结构，想拿来在工作中做一些事情，结果效果不好。原来我的理解有一些不对。在这里记录一下。</p>
-<p><a href="http://cr.yp.to/critbit.html" target="_blank" rel="noopener">Crit-bit tree</a>是一种特别的树结构，一般用于存放字符串。Critbit tree是一种<a href="http://en.wikipedia.org/wiki/Trie#Bitwise_tries" target="_blank" rel="noopener">BitWise tries</a>，其树的深度为O(longest-length)，有点像二叉树，不过对于字符串做分支检测的时候代价很小。</p>
+<p><a target="_blank" rel="noopener" href="http://cr.yp.to/critbit.html">Crit-bit tree</a>是一种特别的树结构，一般用于存放字符串。Critbit tree是一种<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Trie#Bitwise_tries">BitWise tries</a>，其树的深度为O(longest-length)，有点像二叉树，不过对于字符串做分支检测的时候代价很小。</p>
 <p>Crit-bit快速高效的支持下面的一些操作：</p>
 <ul>
 <li>插入一个字符串</li>
@@ -160,7 +168,7 @@
 <li>删除一个字符串</li>
 <li>查找出树中所有以某个字符串开始的所有字符串</li>
 </ul>
-<p>和hash有点像，不过hash对于第四点没这么方便。<br>我做了一些性能对比，测试数据是<code>/usr/share/dict/words</code>里面的所有单词，同时做插入和查询的操作。具体测试代码看<a href="https://github.com/chenyukang/critbit-perf" target="_blank" rel="noopener">这里</a>，结果是：</p>
+<p>和hash有点像，不过hash对于第四点没这么方便。<br>我做了一些性能对比，测试数据是<code>/usr/share/dict/words</code>里面的所有单词，同时做插入和查询的操作。具体测试代码看<a target="_blank" rel="noopener" href="https://github.com/chenyukang/critbit-perf">这里</a>，结果是：</p>
 <table>
 <thead>
 <tr>
@@ -184,10 +192,10 @@
 </table>
 <p>从中可以看到trie树的内存消耗是比较大的，但是查找速度最好。critbit的内存消耗真的非常小，如果只是把这里所有的单词存下来都要4MB的内存，其查找的速度虽然和trie树比起来差一些，但还是相当不错。</p>
 <p>好好的研读了crit-bit的实现和这篇文章，里面技巧挺多的。<br>critbit的结构很简单:</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="keyword">void</span>* child[<span class="number">2</span>];</span><br><span class="line">    uint32 byte;</span><br><span class="line">    uint8 otherbits;</span><br><span class="line">&#125;critbit0_node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="keyword">void</span>* root;</span><br><span class="line">&#125;critbit0_tree;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="keyword">void</span>* child[<span class="number">2</span>];</span><br><span class="line">    uint32 byte;</span><br><span class="line">    uint8 otherbits;</span><br><span class="line">&#125;critbit0_node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="keyword">void</span>* root;</span><br><span class="line">&#125;critbit0_tree;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>其中child是void*指针，对于树的内部节点其指向的是子节点，对于叶子节点其指向的是字符串。<br>byte用来表示当前节点匹配的长度，otherbits是一个mask，可以用来快速的取得不同最高位，在查询的过程中用这个来做branch。</p>
-<p>具体的代码分析这里比较少，最复杂的函数是critbit0_insert。在插入过程中需要记录下来byte和otherbits,<br>并且更新前面的父节点。<br>​<br><img src="/images/critbit.png" alt="critbit" class="img-center" height="400" width="400"></p>
-<p>然后再继续插入后的结构变化是:<br><img src="/images/critbit_insert.png" alt="critbit" class="img-center" height="400" width="400"></p>
+<p>具体的代码分析这里比较少，最复杂的函数是critbit0_insert。在插入过程中需要记录下来byte和otherbits,<br>并且更新前面的父节点。<br>​<br><img src="/images/critbit.png" alt="critbit" class="img-center" height="400" width="400" /></p>
+<p>然后再继续插入后的结构变化是:<br><img src="/images/critbit_insert.png" alt="critbit" class="img-center" height="400" width="400" /></p>
 <p>下面记录一下其中的几个技巧。</p>
 <h4 id="align指针最后一位用来做标志"><a href="#align指针最后一位用来做标志" class="headerlink" title="align指针最后一位用来做标志"></a>align指针最后一位用来做标志</h4><p>树的结构需要一个标志变量来表示是否是内部节点或者是叶子节点。这个变量如何能省掉？<br>看上面的void<em> root和void</em> child, 都是即可以用来指向字符串又可以指向节点，一般申请过来的指针变量都是align好的，所以最低位为0，这是可以拿来用的。因此对于内部节点我们可以在这个位上设置为1，只是要注意在通过这个指针取值的时候需要减回去。</p>
 <p><code>a = (posix_memalign((void**)&amp;x, sizeof(void*), ulen+1))</code></p>
@@ -198,10 +206,10 @@
 <p><code>newotherbits = p[newbyte]^ubytes[newbyte];</code></p>
 <p>其实也可以用一个for循环来计算，不过这里是这样实现的:</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">1</span>;</span><br><span class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">2</span>;</span><br><span class="line">newotherbits |= newotherbits&gt;&gt;<span class="number">4</span>;</span><br></pre></td></tr></table></figure>
-<p>这相当于是计算不小于它的2的整数次幂，对于32bit的代码可以看看<a href="http://blog.codingnow.com/cloud/CodeCollection" target="_blank" rel="noopener">这里</a>的<code>next_pow_of_2</code>。</p>
+<p>这相当于是计算不小于它的2的整数次幂，对于32bit的代码可以看看<a target="_blank" rel="noopener" href="http://blog.codingnow.com/cloud/CodeCollection">这里</a>的<code>next_pow_of_2</code>。</p>
 <hr>
-<p><a href="https://github.com/agl/critbit" target="_blank" rel="noopener">文章和代码</a>，其中那篇文章有详细分析。</p>
-<p><a href="https://github.com/chenyukang/critbit-perf" target="_blank" rel="noopener">我的测试代码,trie/set等</a>。 </p>
+<p><a target="_blank" rel="noopener" href="https://github.com/agl/critbit">文章和代码</a>，其中那篇文章有详细分析。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/chenyukang/critbit-perf">我的测试代码,trie/set等</a>。 </p>
 </section>
     <!-- Tags START -->
     
@@ -269,7 +277,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#align指针最后一位用来做标志"><span class="toc-nav-text">align指针最后一位用来做标志</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#取最高位的非0bit"><span class="toc-nav-text">取最高位的非0bit</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#align%E6%8C%87%E9%92%88%E6%9C%80%E5%90%8E%E4%B8%80%E4%BD%8D%E7%94%A8%E6%9D%A5%E5%81%9A%E6%A0%87%E5%BF%97"><span class="toc-nav-text">align指针最后一位用来做标志</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%8F%96%E6%9C%80%E9%AB%98%E4%BD%8D%E7%9A%84%E9%9D%9E0bit"><span class="toc-nav-text">取最高位的非0bit</span></a></li></ol>
     
   </div>
 </aside>
@@ -341,7 +349,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -394,7 +402,9 @@
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

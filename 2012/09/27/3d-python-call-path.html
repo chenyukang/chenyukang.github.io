@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -151,15 +159,15 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h2 id="UbiGraph显示环境"><a href="#UbiGraph显示环境" class="headerlink" title="UbiGraph显示环境"></a>UbiGraph显示环境</h2><p> <a href="http://www.ubietylab.net/ubigraph/content/Docs/index.html" target="_blank" rel="noopener">UbiGraph</a>是一个显示平台，可以非常方便地使用Python/C/Ruby来控制渲染，只需要制定节点和边还有其他相关属性，其余的都不用管了。其使用XML-RPC服务于客户端，所以甚至可以在一台机器上开server，在另外一台机器上用渲染代码控制，这个环境对于算法和数据的可视化很有用。 比如：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> ubigraph</span><br><span class="line"></span><br><span class="line">U = ubigraph.Ubigraph()</span><br><span class="line">U.clear()</span><br><span class="line"></span><br><span class="line">x = U.newVertex(shape=<span class="string">"sphere"</span>, color=<span class="string">"#ffff00"</span>)</span><br><span class="line"></span><br><span class="line">smallRed = U.newVertexStyle(shape=<span class="string">"sphere"</span>, color=<span class="string">"#ff0000"</span>, size=<span class="string">"0.2"</span>)</span><br><span class="line"></span><br><span class="line">previous_r = <span class="keyword">None</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">10</span>):</span><br><span class="line">  r = U.newVertex(style=smallRed, label=str(i))</span><br><span class="line">  U.newEdge(x,r,arrow=<span class="keyword">True</span>)</span><br><span class="line">  <span class="keyword">if</span> previous_r != <span class="keyword">None</span>:</span><br><span class="line">   U.newEdge(r,previous_r,spline=<span class="keyword">True</span>,stroke=<span class="string">"dashed"</span>)</span><br><span class="line">  previous_r = r</span><br></pre></td></tr></table></figure>
-<p>显示效果如下：<br><img src="/images/ubigraph_py.png" alt="ubigraph_python" class="img-center"></p>
+    <section class="markdown-content"><h2 id="UbiGraph显示环境"><a href="#UbiGraph显示环境" class="headerlink" title="UbiGraph显示环境"></a>UbiGraph显示环境</h2><p> <a target="_blank" rel="noopener" href="http://www.ubietylab.net/ubigraph/content/Docs/index.html">UbiGraph</a>是一个显示平台，可以非常方便地使用Python/C/Ruby来控制渲染，只需要制定节点和边还有其他相关属性，其余的都不用管了。其使用XML-RPC服务于客户端，所以甚至可以在一台机器上开server，在另外一台机器上用渲染代码控制，这个环境对于算法和数据的可视化很有用。 比如：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> ubigraph</span><br><span class="line"></span><br><span class="line">U = ubigraph.Ubigraph()</span><br><span class="line">U.clear()</span><br><span class="line"></span><br><span class="line">x = U.newVertex(shape=<span class="string">&quot;sphere&quot;</span>, color=<span class="string">&quot;#ffff00&quot;</span>)</span><br><span class="line"></span><br><span class="line">smallRed = U.newVertexStyle(shape=<span class="string">&quot;sphere&quot;</span>, color=<span class="string">&quot;#ff0000&quot;</span>, size=<span class="string">&quot;0.2&quot;</span>)</span><br><span class="line"></span><br><span class="line">previous_r = <span class="literal">None</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>,<span class="number">10</span>):</span><br><span class="line">  r = U.newVertex(style=smallRed, label=<span class="built_in">str</span>(i))</span><br><span class="line">  U.newEdge(x,r,arrow=<span class="literal">True</span>)</span><br><span class="line">  <span class="keyword">if</span> previous_r != <span class="literal">None</span>:</span><br><span class="line">   U.newEdge(r,previous_r,spline=<span class="literal">True</span>,stroke=<span class="string">&quot;dashed&quot;</span>)</span><br><span class="line">  previous_r = r</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>显示效果如下：<br><img src="/images/ubigraph_py.png" alt="ubigraph_python" class="img-center"/></p>
 <p>只是这个软件是免费的但不是开源的，另外还没有支持Windows平台。</p>
-<h2 id="使用Ubigraph显示Python函数调用"><a href="#使用Ubigraph显示Python函数调用" class="headerlink" title="使用Ubigraph显示Python函数调用"></a>使用Ubigraph显示Python函数调用</h2><p>这是在<a href="http://pyevolve.sourceforge.net/wordpress/?p=210" target="_blank" rel="noopener">这里</a>看到的，貌似需要翻墙。代码比较简单，在点击查看<a href="http://cyukang.com/images/prof3d.py" target="_blank" rel="noopener">prof3d.py</a>。</p>
+<h2 id="使用Ubigraph显示Python函数调用"><a href="#使用Ubigraph显示Python函数调用" class="headerlink" title="使用Ubigraph显示Python函数调用"></a>使用Ubigraph显示Python函数调用</h2><p>这是在<a target="_blank" rel="noopener" href="http://pyevolve.sourceforge.net/wordpress/?p=210">这里</a>看到的，貌似需要翻墙。代码比较简单，在点击查看<a target="_blank" rel="noopener" href="http://cyukang.com/images/prof3d.py">prof3d.py</a>。</p>
 <p>使用方法是先启动Ubigraph的server，然后运行下面的代码：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> prof3d</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_main</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="comment"># your code</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">   prof3d.profile_me()</span><br><span class="line">   run_main()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> prof3d</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run_main</span>():</span></span><br><span class="line">  <span class="comment"># your code</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">   prof3d.profile_me()</span><br><span class="line">   run_main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>这段Python的代码函数调用关系就显示出来了，而且还是动态的。</p>
-<p>效果如下：<br><img src="/images/python_call.png" alt="ubigraph_python" class="img-center"></p>
+<p>效果如下：<br><img src="/images/python_call.png" alt="ubigraph_python" class="img-center"/></p>
 </section>
     <!-- Tags START -->
     
@@ -227,7 +235,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#UbiGraph显示环境"><span class="toc-nav-text">UbiGraph显示环境</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#使用Ubigraph显示Python函数调用"><span class="toc-nav-text">使用Ubigraph显示Python函数调用</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#UbiGraph%E6%98%BE%E7%A4%BA%E7%8E%AF%E5%A2%83"><span class="toc-nav-text">UbiGraph显示环境</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8Ubigraph%E6%98%BE%E7%A4%BAPython%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8"><span class="toc-nav-text">使用Ubigraph显示Python函数调用</span></a></li></ol>
     
   </div>
 </aside>
@@ -299,7 +307,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -352,7 +360,9 @@
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

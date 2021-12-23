@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -151,20 +159,20 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p></p><h4>centos 环境变量</h4><p></p>
+    <section class="markdown-content"><p><h4>centos 环境变量</h4></p>
 <p class="first">在配服务器web环境的时候，因为这个问题花费了不少时间。tomcat找不到java的其他开发包，开始以为是服务器是64位的问题。<br>最后因为在/etc/profile文件里面设置为export CLASSPATH=…,这个export貌似不能少。<br>或者是因为命令prelink -a的作用起了效果，这个命令好像只是起到加速到作用。orz，我是被ubuntu宠坏了，什么linux命令都没怎么用咯。</p>
 
-<p></p><h4>mysql</h4><p></p>
+<p><h4>mysql</h4></p>
 <p class="first">mysql配置局域网内都能访问。</p>
 
-<p><pre class="src">1 mysql -h localhost -u root<br>2 mysql&gt;GRANT ALL PRIVILEGES ON <em>.</em> TO <span style="color: #deb887;">‘root’</span>@<span style="color: #deb887;">‘%’</span>WITH GRANT OPTION<br>3 mysql&gt;FLUSH PRIVILEGES<br>4 mysql&gt;EXIT</pre></p>
-<p>这样就可以在其它任何的主机上以root登录，其他用户类似。但是连上以后速度比较慢，在my.cnf文件里面配置一下啊，</p>
+<p><pre class="src">1 mysql -h localhost -u root<br>2 mysql&gt;GRANT ALL PRIVILEGES ON <em>.</em> TO <span style="color: #deb887;">‘root’</span>@<span style="color: #deb887;">‘%’</span>WITH GRANT OPTION<br>3 mysql&gt;FLUSH PRIVILEGES<br>4 mysql&gt;EXIT</p>
+<p>这样就可以在其它任何的主机上以root登录，其他用户类似。但是连上以后速度比较慢，在my.cnf文件里面配置一下啊，</pre></p>
 <p><pre class="src">把缓存那些改大一些，加上这么一行：skip-name-resolve。</pre></p>
-<p></p><h4>centos 双网卡路由问题</h4><p></p>
+<p><h4>centos 双网卡路由问题</h4></p>
 <p class="first">centos能ping通局域网，但是不能上外网，最后查处是因为双网卡到问题，添加一个默认的网关就可以了。<br>使用命令：</p>
 
 <p><pre class="src">route add <span style="color: #98f5ff;">defualt</span> <span style="color: #4eee94;">gw</span> 192.168.1.1</pre><br>netstat -nr 查看内核iP路由表。</p>
-<p></p><h4>two or more data types in declaration specifiers</h4><p></p>
+<p><h4>two or more data types in declaration specifiers</h4></p>
 <p class="first">C编译器这个错误指向到行会不准确，有一种情况最容易出现这样的错误，那就是在你的程序里少了个”;”号，有可能在你的头文件里，也有可能在本文件中。</p>
 </section>
     <!-- Tags START -->
@@ -233,7 +241,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-text">centos 环境变量</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-text">mysql</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-text">centos 双网卡路由问题</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#null"><span class="toc-nav-text">two or more data types in declaration specifiers</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">centos 环境变量</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">mysql</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">centos 双网卡路由问题</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">two or more data types in declaration specifiers</span></a></li></ol>
     
   </div>
 </aside>
@@ -305,7 +313,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -358,7 +366,9 @@
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

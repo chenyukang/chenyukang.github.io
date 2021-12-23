@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head><meta name="generator" content="Hexo 3.9.0">
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
@@ -15,20 +15,28 @@
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
   <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
   <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
-  <script src="/js/qrious.js"></script>
+  
+<script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 
-  <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
-      <img src="/css/images/logo.png" width="400px" height="400px">
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
   
@@ -68,7 +76,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-</head>
+<meta name="generator" content="Hexo 5.4.0"></head>
 
   <body>
     <header class="header fixed-header">
@@ -151,7 +159,7 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>之前看EOPL感觉收获挺大，最近又花业余时间看了看编译相关的东西，这是我看lcc的时候顺手记下的一些自己的理解。这本书<a href="http://book.douban.com/subject/1610344/" target="_blank" rel="noopener">《A Retargetable C Compiler》</a>还挺大头的。lcc代码量不是特别大，更复杂的是tinyCC，tinyCC甚至可以直接运行C代码。</p>
+    <section class="markdown-content"><p>之前看EOPL感觉收获挺大，最近又花业余时间看了看编译相关的东西，这是我看lcc的时候顺手记下的一些自己的理解。这本书<a target="_blank" rel="noopener" href="http://book.douban.com/subject/1610344/">《A Retargetable C Compiler》</a>还挺大头的。lcc代码量不是特别大，更复杂的是tinyCC，tinyCC甚至可以直接运行C代码。</p>
 <h2 id="alloc-c"><a href="#alloc-c" class="headerlink" title="alloc.c"></a>alloc.c</h2><p>为了尽量的少调用系统调用，在alloc基础上封装了一下。</p>
 <h2 id="sym-c"><a href="#sym-c" class="headerlink" title="sym.c"></a>sym.c</h2><p>用来存储symbol，注意scope的表示方法。</p>
 <h2 id="input-c"><a href="#input-c" class="headerlink" title="input.c"></a>input.c</h2><p>为了减少读取文件的开销，用一个buffer来缓存源文件内容。cp表示当前读取出来的字符位置，limit表示缓存的结尾字符位置，如果fillbuf一次以后仍然<code>cp == limit</code>则表示读取文件到EOF了。</p>
@@ -174,8 +182,7 @@
 <p>不用运行Erlang的dialyzer就可以发现这里面的死循环，因为可以通过上面的定义推断出fact的参数是non_neg_integer,而-5是不符合的，所以报出来一个错误：</p>
 <p><code>fact(-5) will never return</code>。</p>
 <h2 id="stmt-c"><a href="#stmt-c" class="headerlink" title="stmt.c"></a>stmt.c</h2><p>codelist为双向列表，遇到新的执行块就加到这个列表上。在处理control-flow的过程中有的死代码块是可以被编译器发现的，只是我们平时都被忽略了。</p>
-<p>比如C代码:<br><figure class="highlight erlang"><table><tr><td class="code"><pre><span class="line">int loop() &#123;</span><br><span class="line"> Loop:</span><br><span class="line">    goto Loop;</span><br><span class="line">    return -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    printf(<span class="string">"loop: %d\n"</span>, loop());</span><br><span class="line">    return <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>loop永远不会返回，Gcc选项<code>-Wsuggest-attribute=noreturn</code>可以报出一个warning。</p>
+<p>比如C代码:<br><figure class="highlight erlang"><table><tr><td class="code"><pre><span class="line">int loop() &#123;</span><br><span class="line"> Loop:</span><br><span class="line">    goto Loop;</span><br><span class="line">    return -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    printf(<span class="string">&quot;loop: %d\n&quot;</span>, loop());</span><br><span class="line">    return <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>loop永远不会返回，Gcc选项<code>-Wsuggest-attribute=noreturn</code>可以报出一个warning。</p>
 <h2 id="decl-c"><a href="#decl-c" class="headerlink" title="decl.c"></a>decl.c</h2><p>声明是C语言中最难解析的部分，原因是声明涉及到变量和类型，而从C声明中弄出类型信息还是挺复杂的。另外声明还分局部，全局，其中还涉及到函数参数，结构体等。decl.c可能是最复杂的文件了，1100多行代码，里面的函数之间又相互调用。finalize()函数最后检查是否有重复定义的变量。</p>
 <h2 id="dag-c"><a href="#dag-c" class="headerlink" title="dag.c"></a>dag.c</h2><p>lcc的intermediate code是用listnodes把前面parser的tree转换为DAG，最终整个程序会经过转换变成由多个DAG组合成的森林。listnodes还负责把一些公共的sub-expression简化。</p>
 <p>接口为gencode,emitcode。后面每一个代码生成的后端都是一个Interface结构，在function函数里面调用这两个函数生成汇编代码，其中还包含一个Xinterface成员，这是平台相关的接口。</p>
@@ -247,7 +254,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#alloc-c"><span class="toc-nav-text">alloc.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#sym-c"><span class="toc-nav-text">sym.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#input-c"><span class="toc-nav-text">input.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#lex-c"><span class="toc-nav-text">lex.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#error-c"><span class="toc-nav-text">error.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#tree-c"><span class="toc-nav-text">tree.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#expr-c-enode-c"><span class="toc-nav-text">expr.c enode.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#stmt-c"><span class="toc-nav-text">stmt.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#decl-c"><span class="toc-nav-text">decl.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#dag-c"><span class="toc-nav-text">dag.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#小结"><span class="toc-nav-text">小结</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#alloc-c"><span class="toc-nav-text">alloc.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#sym-c"><span class="toc-nav-text">sym.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#input-c"><span class="toc-nav-text">input.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#lex-c"><span class="toc-nav-text">lex.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#error-c"><span class="toc-nav-text">error.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#tree-c"><span class="toc-nav-text">tree.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#expr-c-enode-c"><span class="toc-nav-text">expr.c enode.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#stmt-c"><span class="toc-nav-text">stmt.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#decl-c"><span class="toc-nav-text">decl.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#dag-c"><span class="toc-nav-text">dag.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-nav-text">小结</span></a></li></ol>
     
   </div>
 </aside>
@@ -319,7 +326,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy; 2021 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
   </p>
 </footer>
 
@@ -372,7 +379,9 @@
     })();
 </script>
 
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>
