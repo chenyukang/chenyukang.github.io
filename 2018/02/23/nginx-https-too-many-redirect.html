@@ -160,15 +160,15 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">return</span> <span class="number">302</span> https://$host$request_uri; </span><br><span class="line"><span class="comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">return</span> <span class="hljs-number">302</span> https://$host$request_uri; <br><span class="hljs-comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span><br></code></pre></td></tr></table></figure>
 <p>但是如果是多层Nginx，前面的Nginx需要把用户原始请求的scheme传递到后端，可以加上头部设置： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">proxy_set_header</span> X-Forwarded-Proto $scheme;</span><br></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">proxy_set_header</span> X-Forwarded-Proto $scheme;<br></code></pre></td></tr></table></figure>
 <p>后面的Nginx再判断一次:</p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">if</span> ( $http_x_forwarded_proto != <span class="string">&#x27;https&#x27;</span> ) &#123;</span><br><span class="line">  <span class="attribute">return</span> <span class="number">301</span> https://$host$request_uri;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">if</span> ( $http_x_forwarded_proto != <span class="hljs-string">&#x27;https&#x27;</span> ) &#123;<br>  <span class="hljs-attribute">return</span> <span class="hljs-number">301</span> https://$host$request_uri;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>否则强制https经常会出现类似<code>ERR_TOO_MANY_REDIRECTS 将您重定向的次数过多</code>这样的问题。</p>
 <p>可是在实践过程中偶尔也碰到过一些ELB会丢掉scheme的问题，比如在这样的请求链路情况下<code>elb =&gt; nginx =&gt; nginx =&gt; application</code>第二层Nginx获取的scheme就有问题了，这也可能会导致<code>too many redirects</code>问题。</p>
 <p>可以尝试在第二层Nginx上这样解决： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">proxy_set_header</span>   X-Forwarded-Proto $http_x_forwarded_proto;</span><br></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-Proto $http_x_forwarded_proto;<br></code></pre></td></tr></table></figure>
 <p>当然强制https这样的跳转逻辑尽量放在请求链路的最外层，这样问题会少一些。</p>
 </section>
     <!-- Tags START -->
