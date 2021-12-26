@@ -154,6 +154,39 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2021/12/27/baidu-die-for-reason.html">百度是如何死掉的</a>
+      </h2>
+      <p class="article-date">December 27, 2021
+          
+              
+  <a href="/tags#胡写" >
+    <span class="tag-code">胡写</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <p>让我重新思考这个问题的是一件小事。</p>
+<p>我有一个英文小站点，写了一些技术类的文章。这一年来已经有一些稳定的流量，大部分都是从Google来的。我曾经学了点 Amazon 推广的东西，把几篇文章的链接换成了亚马逊的推广链接，然后每个月都能从亚马逊收到一笔小钱，数额大概 10 来块美金吧。</p>
+<p>这个数额很小，但是这种模式确实就是很多中小网站的盈利模式。有的站点能做到几万美金一个月。 对于他们来说，有高质量的内容就能从 Google 得到流量，流量就能通过各种方式兑换成钱。所以这些内容创作者就会不断创造高质量的内容，争取能做到 Google 的搜索排名靠前。</p>
+<p>Google 和百度类似，都是属于互联网上的信息中间商。作为中间商最重要的是<strong>信任</strong>，用户相信在 Google 上能找到<em>可靠的、高质量的内容</em>。内容创作者相信高质量的内容可可以通过 Google 吸引到用户。这样就形成了一个正向闭环。</p>
+<p>百度这些年来渐渐的沦为互联网公司的度量单位，一个原因是没有拿到移动互联网的门票，另一个更根本的原因就是丢掉了自己根本的盈利模式。因为过于短视，竭泽而渔做竞价排名，最终破坏了这种用户、内容创作者对百度的信任。魏则西事件后大众对百度口诛笔伐，而一些高质量的中文内容站点，比如 <a target="_blank" rel="noopener" href="https://coolshell.cn/articles/9308.html">CoolShell</a> 从来不期望百度能带流量，而且做了anti-baidu 插件。你要是想在百度上查个什么病，看几页搜索结果就会觉得自己命不久矣。</p>
+<p>结果就是中文的高质量内容越来越少，用户搜索分割到了各个垂直领域的 App。这些 App 可没那么好心，直接对搜索引擎是封闭的，比如微信公众号，整个就是一个大的封闭生态。</p>
+<p>除了百度的一些核心高管，外界估计无法知晓为什么百度会坚持做竞价排名。也许这东西就像是毒品一般，用上了之后就在资本的压力下再也无法回头。百度这些年来转头做 AI，作为普通用户我也是不看好的。这些年所有百度的产品能绕开就坚决不用，少给自己添麻烦。</p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2021/12/27/baidu-die-for-reason.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2021/12/16/compiling-to-wasm.html">编译 WebAssembly 模块</a>
       </h2>
       <p class="article-date">December 16, 2021
@@ -173,38 +206,15 @@
         
         
             
-                <p>最近一年经常接触了 WebAssembly , 我把一些老的 C/C++ 代码通过 <a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/downloads.html">emcc</a> 编译为 wasm 模块，也可以把 Rust 代码编译为 wasm。</p>
-<p>这里做一个简单的总结，以及我在编译过程中碰到的问题。</p>
-<h2 id="WebAssembly-的优势"><a href="#WebAssembly-的优势" class="headerlink" title="WebAssembly 的优势"></a>WebAssembly 的优势</h2><p><img src="/images/ob_pasted-image-20211215191320.png" alt="/images/ob_pasted-image-20211215191320.png"></p>
-<p>WebAsembly 定义了一个<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/portability/">可移植</a>、体积小、加载快的<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/mvp/#binary-format">二进制格式</a>作为编译结果。通过充分发挥通用硬件的能力（包括<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Mobile_device">移动设备</a>以及<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Internet_of_Things">物联网</a>），使其在大多数平台上能达到原生的执行效率。借助 wasi，WebAssembly 还可能运行在服务端。WebAssembly 的目标包括：</p>
-<ol>
-<li>现有的 <a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/web/">Web 平台</a>完美结合并在其中运行：<ul>
-<li>维护无版本、<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/feature-test/">特性可测试</a>、向后兼容的 Web 演变过程；</li>
-<li>和 JavaScript 执行在相同的语意环境中；</li>
-<li>允许和 JavaScript 相互的同步调用；</li>
-<li>严格遵守同源策略以及浏览器安全策略；</li>
-<li>和 JavaScript 一样，可以访问相同的 Web API 去调用浏览器的功能；以及</li>
-<li>定义一个可与二进制格式相互转化的人类可编辑的文本格式，并且支持查看源码的功能。</li>
-</ul>
-</li>
-<li>被设计为也可以支持<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/non-web/">非浏览器嵌入</a>的运行形式，这样就可能在某些场景下替代 Docker。</li>
-</ol>
-<h2 id="C-C-gt-wasm"><a href="#C-C-gt-wasm" class="headerlink" title="C/C++ =&gt; wasm"></a>C/C++ =&gt; wasm</h2><p>首先需要安装 Emscripten  SDK:<br><a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/downloads.html">https://emscripten.org/docs/getting_started/downloads.html</a></p>
-<p>移植一个 C/C++ 项目到 WebAssembly , 最简单的办法是把类似 gcc 命令换成 emcc，难点在于动态链接的第三方库，我们需要改成静态链接。一些常用的库已经被移植了，例如<em>libc</em>, <em>libc++</em> and <em>SDL</em>，这些我们不需要手动处理。不在 emcc 预装里的库，我们只需要在编译的过程中加一些额外的参数，例如我下面这个项目就用到了 PNG，JPEG 这些库：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">emcc -c dbgutil.c -o dbgutil.o<br>emcc -c qrtest.c -o qrtest.o<br>emcc -c decode.c -o decode.o<br>emcc -c identify.c -o identify.o<br>emcc -c quirc.c -o quirc.o<br>emcc -c version_db.c -o version_db.o<br>emcc -g -Oz --llvm-lto 1  -s STANDALONE_WASM *.o -o qrtest.wasm  -lm  -s USE_LIBJPEG -s USE_LIBPNG <br></code></pre></td></tr></table></figure>
-<p>另外 emcc 编译出来的 wasm 模块默认只能做纯计算，没有网络、系统文件等。如果有系统调用则需要运行在浏览器中，用浏览器的接口来模拟某些 C 函数调用，例如 C 语言中的系统调用 <code>time</code> 在 emcc 中被替成为了 JavaScript  代码：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript">clock: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">if</span> (_clock.start === <span class="hljs-literal">undefined</span>) _clock.start = <span class="hljs-built_in">Date</span>.now();<br>    <span class="hljs-keyword">return</span> ((<span class="hljs-built_in">Date</span>.now() - _clock.start) * (&#123;&#123;&#123; cDefine(<span class="hljs-string">&#x27;CLOCKS_PER_SEC&#x27;</span>) &#125;&#125;&#125; / <span class="hljs-number">1000</span>))|<span class="hljs-number">0</span>;<br>  &#125;<br></code></pre></td></tr></table></figure>
-<h2 id="Rust-gt-wasm"><a href="#Rust-gt-wasm" class="headerlink" title="Rust =&gt; wasm"></a>Rust =&gt; wasm</h2><p>Rust 是对 WebAssembly  支持得特别好的编程语言。我们可以使用 wasm-pack，或者安装 target:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">rustup target add wasm32-wasi<br></code></pre></td></tr></table></figure>
-<p>然后在编译命令后面加参数：<br><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">cargo build --target wasm32-wasi<br></code></pre></td></tr></table></figure></p>
-<p>系统函数同样是个问题，有的第三方库可能会支持 wasm 格式，例如 <a target="_blank" rel="noopener" href="https://docs.rs/getrandom/latest/getrandom/#webassembly-support">getrandom - Rust (docs.rs)</a>。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://emscripten.org/">Main — Emscripten 3.0.1-git (dev) documentation</a><br><a target="_blank" rel="noopener" href="https://marcoselvatici.github.io/WASM_tutorial/">WASM Tutorial (marcoselvatici.github.io)</a><br><a target="_blank" rel="noopener" href="https://rustwasm.github.io/docs/book/">Introduction - Rust and WebAssembly (rustwasm.github.io)</a></p>
-
+                最近一年经常接触了 WebAssembly , 我把一些老的 C/C++ 代码通过 emcc 编译为 wasm 模块，也可以把 Rust 代码编译为 wasm。
+这里做一个简单的总结，以及我在编译过程中碰到的问题。
+WebAssembly 的优势
+WebAsembly 定义了一个可移植、 .....
             
         
       </div>
       
-          <a class="more" href="/2021/12/16/compiling-to-wasm.html#footer">发表评论</a>
+          <a class="more" href="/2021/12/16/compiling-to-wasm.html">阅读全文</a>
       
     </article>
   
@@ -449,38 +459,6 @@
       </div>
       
           <a class="more" href="/2021/11/28/intro-to-obweb.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2021/11/23/my-notes-taking-tools-and-experience.html">我的知识管理工具和经验</a>
-      </h2>
-      <p class="article-date">November 23, 2021
-          
-              
-  <a href="/tags#工具" >
-    <span class="tag-code">工具</span>
-  </a>
-
-  <a href="/tags#开发" >
-    <span class="tag-code">开发</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                知识管理是近些年出来的逼格称呼，通俗点说就是写笔记或者写作，讲究一点可以说成“打造第二大脑”，英文中可以诗意地称之为 “Digital Garden”。看看，同样一个事怎么说出来格局完全不同了。
-近两年笔记软件这个领域出现了两个很重要的创新：
-一个是双向链接，开山鼻祖是 Roam Res .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2021/11/23/my-notes-taking-tools-and-experience.html">阅读全文</a>
       
     </article>
   
