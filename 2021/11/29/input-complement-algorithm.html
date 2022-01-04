@@ -177,7 +177,7 @@
 <h3 id="中文分词"><a href="#中文分词" class="headerlink" title="中文分词"></a>中文分词</h3><p>在日常使用过程中，我又发现了还存在这个 <a target="_blank" rel="noopener" href="https://github.com/tadashi-aikawa/obsidian-various-complements-plugin/issues/34">问题</a>。如果我尝试去修改中文句子的某个部分，这个插件会补全当前句子，就像这样：</p>
 <p><img src="/images/ob_pasted-image-20211128194301.png" alt="/images/ob_pasted-image-20211128194301.png"><br>这当然是完全没有意义的。我看了一下代码发现是没有进行中文分词，所以现在的补全把这个中文句子当作一个连续的字符串在补全。</p>
 <p>我自己尝试这想做一个 PR，但是没找到合适的中文分割 JavaScript 库。Obsidian 不能使用 Node 的库（移动端方面的考虑），所以也就不能使用这个 <a target="_blank" rel="noopener" href="https://github.com/yanyiwu/nodejieba/blob/master/README_EN.md">NodeJieba</a>。虽然还没完成这个分词功能，不过我也在这个过程中学着写了点 TypeScript。</p>
-<h3 id="一些感想"><a href="#一些感想" class="headerlink" title="一些感想"></a>一些感想</h3><p>这个看似简单的功能，如果要做到日常可用其实有很多细节需要完善。这个算法问题看起来不难，很适合用来进行面试。这是日常中很常见的一个需求场景，而且优化这个算法思路也可以很开放。</p>
+<h3 id="一些感想"><a href="#一些感想" class="headerlink" title="一些感想"></a>一些感想</h3><p>这个看似简单的功能，如果要做到日常可用其实有很多细节需要完善。这个算法问题看起来不难，很适合用来进行面试，因为这是日常中很常见的一个需求场景，而且优化这个算法思路也可以很开放。</p>
 <p>TypeScript 真强，虽然我只是简单用了一下，一些常见的 JavaScript 错误比如 enum 忘记补全之类的问题都能找出来。<a target="_blank" rel="noopener" href="https://www.electronjs.org/">Electron</a> 真猛，VSCode、Obsidian、Slack 这类工具都是 Electron 开发的。</p>
 <p>开源软件的好处在于很多代码的作者对自己的成果有一种成就感，所以会想办法来完善，而用户也可以帮着来想办法。在这个过程中，不仅可以让其他人受益，自己也得到了一些学习和提高😘。</p>
 </section>
