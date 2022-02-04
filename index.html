@@ -161,6 +161,73 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/2022/02/04/on-alphacode.html">DeepMind 发布 AlphaCode ，技术奇点要到来了？</a>
+      </h2>
+      <p class="article-date">February 4, 2022
+          
+              
+  <a href="/tags#技术" >
+    <span class="tag-code">技术</span>
+  </a>
+
+  <a href="/tags#写作" >
+    <span class="tag-code">写作</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <p>今天看到一个新闻，DeepMind 的 AlphaCode 发布: <a target="_blank" rel="noopener" href="https://deepmind.com/blog/article/Competitive-programming-with-AlphaCode">Competitive programming with AlphaCode</a>，并且在 Codeforces 的编程比赛中模拟参加比赛，居然能达到中等竞赛者水平。</p>
+<p><img src="/images/ob_pasted-image-20220204083843.png" alt="/images/ob_pasted-image-20220204083843.png"></p>
+<p>我对此有些震惊，因为在我看来编程竞赛是绝对是有<strong>创造性</strong>的人类智慧活动，现在 AI 竟然已经发展到了程序能自动生成一些有意义的完整程序。</p>
+<p>当我们谈到人工智能的创造性时，通常会想到人工智能来创造艺术作品，比如下面这副 AI 画出来的：</p>
+<p><img src="/images/ob_pasted-image-20220204081921.png" alt="/images/ob_pasted-image-20220204081921.png"></p>
+<p>因为在艺术上，很难有一个绝对的标准来衡量这东西到底是好还是坏。但是 AI 生成程序是由绝对的衡量标准，就是生成的程序是否是对的。</p>
+<p>AlphaCode 和以前的 AlphaGo 也不同，围棋的规则是简单而确定的，只是在下棋过程中搜索空间是巨大的，AlphaGo 做的事是在每一步下棋的时候从巨大的搜索空间中尽量选择合理的下一步。</p>
+<p>你可以说生成代码也是一个搜索问题，在生成每一个字符串时我们都要从 52 个字母加符号中选择下一个字符，其目标是生成一个可以编译运行、解决问题的程序。</p>
+<p>其中的细微差别是，在围棋的中间步骤中，我们都可以通过<strong>评估函数</strong>来衡量当前局势对于目标的距离(就是判断当前局势对谁更有利)。</p>
+<p>而在代码自动生成中，这种评估函数并不存在，目前已经生成的代码片段即使包含部分错误，也可以在后续代码片段中修复，所以不到整个程序生成完整，我们没法知道目前做的是对还是错。</p>
+<p>这看起来是一个 Copilot 的更强本版，因为 Copilot 是根据目前写的代码片段，补充新的代码片段，但是 AlphaCode 的输入完全是问题的描述，输出是解决问题的完整代码。</p>
+<p>比如例子中的这个编程问题，上面是输入，下面是输出：</p>
+<p><img src="/images/ob_pasted-image-20220204083502.png" alt="/images/ob_pasted-image-20220204083502.png"><br>另外 Copilot 可能是会生成训练集里面的某些代码片段，简单说就是 AI 之前看过某个代码片段，所以在某些场景下背出了这个代码。而从 <a target="_blank" rel="noopener" href="https://storage.googleapis.com/deepmind-media/AlphaCode/competition_level_code_generation_with_alphacode.pdf">DeepMind 发布的论文</a>看，AlphaCode 不会完全重复生成训练集中的训练代码。</p>
+<p>那这种工具如果更完善后是否会彻底改变编程？难道我们已经快到<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Technological_singularity">技术奇点</a>了么？</p>
+<blockquote>
+<p>技术奇点（英语：Technological Singularity），出自奇点理论；根据技术发展史总结出的观点，认为人类正在接近一个使得现有技术被完全抛弃或者人类文明被完全颠覆的事件点。例如，意识上传技术可能使人类的意识摆脱有机体的约束，或者人来开发出可以自我进化、有自由意识的人工智能，在这个奇点之后的人类文明将发展到当今完全无法理解的水准。</p>
+<p>之所以被称为奇点，因为它是一个临界点。当我们越来越接近这个临界点，它会对人类的事物产生越来越大的影响，直到它成为人类的共识。但当它最终来临的时候，也许仍会出人意料并且难以想象。</p>
+</blockquote>
+<p>我仔细思考了好一会儿，我的结论是<strong>这种工具也许能极大的拓展编程的范围，也可能会改变程序员的工作内容，但离自动编程还差很远</strong>。</p>
+<p>首先，AlphaCode 也许会提高程序员的工作效率，改变人类学习编程的过程。</p>
+<p>我之前对 Copilot 之类的工具持悲观的态度，甚至认为除了酷炫估计对日常开发没什么帮助，参考<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/468950598/answer/1971619358">我关于 Copilot 的知乎回答</a>。</p>
+<p>后来我感觉自己被打脸。收到 Copilot 试用邀请后，我在实际开发中使用了大概半年，结果还是超乎我的意料。Copilot 和之前我用的代码补全类工具有一些差别，它看起来能猜测我的编码意图，从而进行有意义的补全。</p>
+<p>特别是我使用一个不是很熟悉的编程语言时，我敲一些关键词 Copilot 可以帮我补全剩下的代码，这节省了我自己去 Google 搜索的时间。即使这没有从根本上解决编程的难点，也能很大程度上让编程变得更愉悦。</p>
+<p>如果有完美的 AlphaCode，它就是一个 Transformer，输入是英语，输出是程序。</p>
+<p>作为程序员我们的日常工作可能会变成向这个 Transformer 表述我们的意图，所以一个会说英文的人，也许就能生成一些有意义的程序，这就是为什么我说编程的范围，或者改变我们学习编程的方式。</p>
+<p>比如 <a target="_blank" rel="noopener" href="https://openai.com/blog/openai-codex/">OpenAI Codex</a> ，我们只需要输入想要的 HTML 效果，Codex 自动生成对应的 JavaScript 代码。</p>
+<p><img src="/images/ob_pasted-image-20220204092609.png" alt="/images/ob_pasted-image-20220204092609.png"></p>
+<p>但是，它也终究只是一个输入不同的 Transformer，我们现在的编译器或者解释器也可以理解为 Transformer,  只是输入的是某个编程语言的源代码，这个源代码是程序员按照编程语言的语法写出来的，程序员是个智能的 Transformer。</p>
+<p><img src="/images/ob_pasted-image-20220204090555.png" alt="/images/ob_pasted-image-20220204090555.png"></p>
+<p>自然语言是比编程语言更大的一个集合和维度，所以同样目的的代码，如果从自然语言角度来直接生成，会变得更为繁琐，而且不精准。</p>
+<p>在 DeepMind 的论文中也提到了，AlphaCode 的一个问题就是:</p>
+<blockquote>
+<p>Sensitivity to problem descriptions<br>….<br>solve rate goes down dramatically when  given related but different problems, and is not very affected by different ways of describing the same  the problem.</p>
+</blockquote>
+<p>现有的代码生成技术，我们通常会限制输入语言的范围或者规则，这样就是一个<a href="https: //zh.wikipedia.org/wiki/%E9%A2%86%E5%9F%9F%E7%89%B9%E5%AE%9A%E8%AF%AD%E8%A8%80">领域特定语言 : DSL</a>。</p>
+<p>作为一个程序员，我也许会使用这种自然语言生成代码的技术来辅助编程，但不可能完全使用这个写代码，我还不担心自己会因此失业。</p>
+<p><img src="/images/ob_pasted-image-20220204093409.png" alt="/images/ob_pasted-image-20220204093409.png"></p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/2022/02/04/on-alphacode.html#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/2022/02/02/musks-jet.html">Elon Musk, 不想让大家看到你的飞行路线？请支付 5 万美金。</a>
       </h2>
       <p class="article-date">February 2, 2022
@@ -176,44 +243,14 @@
         
         
             
-                <p>你想知道 Elon Musk 的实时位置么？</p>
-<p>关注 <a target="_blank" rel="noopener" href="https://twitter.com/elonjet">Elon Musk’s Jet (@ElonJet) / Twitter</a> 就行了，这个 Twitter 账号每天都会发布 Elon Musk 的每一次私人飞机的行踪，详细到每次飞行的起飞时间、落地时间、和降落机场。</p>
-<p>这不，Musk 最近降落在 Brownsville，Texas。</p>
-<p><img src="/images/ob_pasted-image-20220202113030.png" alt="/images/ob_pasted-image-20220202113030.png"></p>
-<p>这个 Twitter 账户是一个名叫作 Jack Sweeney 的 19 岁大学生维护的。他不止维护了 Musk 的飞行跟踪数据，也维护了 <a target="_blank" rel="noopener" href="https://twitter.com/gatesjets">Bill Gates’ Jets (@GatesJets) / Twitter</a> 和 <a target="_blank" rel="noopener" href="https://twitter.com/bezosjets">Jeff Bezos’ Jets (@BezosJets) / Twitter</a> 等其他富豪的数据。</p>
-<p>不过 Musk 的数据是人们最感兴趣的，这个 Twitter 账户的粉丝数已经接近 30 万。作为亿万富豪，自然不想让自己的隐私暴露在公开场合。Musk 去年也关注到了这个 Twitter，然后直接给 Jack Sweeney 发消息：</p>
-<ul>
-<li>Musk: Can you take this down? It is a security risk. I don’t love the idea of being shot by a nutcase,</li>
-<li>Jack:  Yes I can but it’ll cost you a Model 3 only joking unless?<br>………</li>
-<li>Musk：Ok, how about $5K for this account and generally helping make it slightly harder for crazy people to track me?</li>
-<li>Jack: Any chance to up that to $50k? It would be great support in college and would possibly allow me to get a car maybe even a Model 3.</li>
-<li>Musk: I’d think about it</li>
-</ul>
-<p>中间 Jack 解释了如何获取这些数据的，如果不要钱给个实习机会也是可以的。</p>
-<p>虽然 5w 美金对于 Musk 也是九牛一毛吧，不过估计是感觉自己被敲诈了，他最后回复说 “Doesn’t feel right to pay to shut this down”，然后把 Jack 同学拉黑了。</p>
-<p>我就比较好奇 Jack 是如何获取这些信息的，于是搜索了一把。</p>
-<p>Jack 的父亲在航空行业工作，所以从小耳濡目染，他对这些也很感兴趣，喜欢识别飞机型号和跟踪飞机轨迹。他刚刚高中毕业，大学选择的专业也是航空航天工程。因此他对这些了如指掌。</p>
-<p><img src="/images/ob_pasted-image-20220202191124.png" alt="/images/ob_pasted-image-20220202191124.png"></p>
-<p>美国联邦航空管理局提供<a target="_blank" rel="noopener" href="https://ladd.faa.gov/">LADD (匿名化的飞机数据显示)</a>，这些数据是公开的，只是富豪们的个人信息是被脱敏的，Jack 需要根据更多信息来交叉验证。</p>
-<p>目前他主要使用 ADS-B (Automatic dependent surveillance – broadcast), 飞机通过卫星导航系统确定其位置，并进行定期广播，使得飞机可以可被追踪。数据来源这两个网站：</p>
-<ul>
-<li>ADS-B Exchange data：<a target="_blank" rel="noopener" href="https://www.adsbexchange.com/">Serving the Flight Tracking Enthusiast - ADS-B Exchange</a>，社区维护的飞行跟踪数据平台，非盈利。</li>
-<li>OpenSky ： <a target="_blank" rel="noopener" href="https://opensky-network.org/">The OpenSky Network - Free ADS-B and Mode S data for Research</a>，2012 年开始，由几个大学、政府组织联合创建的飞行数据收集平台，主要用于优化和改进飞行管控和研究。</li>
-</ul>
-<p>甚至他的代码也是公开的，感兴趣的可以看看这个代码项目：<a target="_blank" rel="noopener" href="https://github.com/Jxck-S/plane-notify">Jxck-S/plane-notify</a>。</p>
-<p>有的人指责 Jack 同学干的事情不地道，侵犯他人隐私。 Jack 反驳到他获取数据的途径都是合法的，并且这些数据也是可以被公开分享，该指责的是 ADS-B 不够安全。</p>
-<p><img src="/images/ob_pasted-image-20220202123934.png" alt="/images/ob_pasted-image-20220202123934.png"></p>
-<p>这个事情虽然有点小八卦，我觉得可以从事件学到两点。</p>
-<ul>
-<li>个人兴趣是最好的老师，Jack 说自己通过这个项目来学习编程，而且目前自己也乐于其中，这里面的满足感超过 5w 美金。</li>
-<li>数据公开程度超过很多人想象，个人隐私是个难以解决的问题。</li>
-</ul>
-
+                你想知道 Elon Musk 的实时位置么？
+关注 Elon Musk’s Jet (@ElonJet) / Twitter 就行了，这个 Twitter 账号每天都会发布 Elon Musk 的每一次私人飞机的行踪，详细到每次飞行的起飞时间、落地时间、和降落机场。
+这不，Musk 最近 .....
             
         
       </div>
       
-          <a class="more" href="/2022/02/02/musks-jet.html#footer">发表评论</a>
+          <a class="more" href="/2022/02/02/musks-jet.html">阅读全文</a>
       
     </article>
   
@@ -454,37 +491,6 @@ P .....
       </div>
       
           <a class="more" href="/2022/01/12/fakerjs-is-deleted.html">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/2022/01/12/a-book-on-programming-language.html">花 10 年写一本编程语言实现的书</a>
-      </h2>
-      <p class="article-date">January 12, 2022
-          
-              
-  <a href="/tags#技术" >
-    <span class="tag-code">技术</span>
-  </a>
-
-  <a href="/tags#写作" >
-    <span class="tag-code">写作</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Robert Nystrom 是一位拥有 20 年工作经验的软件工程师，之前在 EA 做了 9 年多，2010 年入职 Google ，目前工作在 Dart 项目。
-2009 年开始写一本设计模式方面的书，叫 Game Programming Patterns，写到一半发现自己对编程语言 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/2022/01/12/a-book-on-programming-language.html">阅读全文</a>
       
     </article>
   
