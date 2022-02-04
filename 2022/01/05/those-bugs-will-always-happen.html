@@ -166,16 +166,16 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><img src="/images/ob_pasted-image-20220103215102.png" alt="/images/ob_pasted-image-20220103215102.png"></p>
+    <section class="markdown-content"><p><img src="/images/ob_pasted-image-20220103215102.png" alt=""></p>
 <p>2022 年的新年钟声刚敲响，时钟从 2021 年 12 月 31 日跳转到 2022 年 1  月 1 日，微软 Exchange 准时给大家带来了第一个世界范围内的 Bug。人们写好的新年祝福等邮件，突然发不出去了！大量用户在 Reddit 、Twitter 上亮出新年第一骂。</p>
 <p>那些正准备休假的倒霉的 IT 管理员，被紧急电话呼进公司，排查后发现邮件队列卡住了，日志里显示的是：</p>
-<p><img src="/images/ob_pasted-image-20220103215401.png" alt="/images/ob_pasted-image-20220103215401.png"></p>
+<p><img src="/images/ob_pasted-image-20220103215401.png" alt=""></p>
 <p>随后微软官方确认了这个 Bug。 这些错误是由 Microsoft Exchange Server 检查 FIP-FS 防病毒扫描引擎的版本，并试图将日期存储在带符号的 int32 变量中引起的。</p>
-<p><img src="/images/ob_pasted-image-20220103214745.png" alt="/images/ob_pasted-image-20220103214745.png"></p>
+<p><img src="/images/ob_pasted-image-20220103214745.png" alt=""></p>
 <p>在这个变量中使用了 <code>yymmddHHMM</code> 这种格式的约定，我们知道 int32 能表示的最大值是 2,147,483,647，但是到了 2020.01.01  这个值将是 2,201,010,001，所以就溢出了！</p>
 <p>这是一个典型的类似<code>千年虫</code> 问题，即由于时间的数据格式不对导致溢出或者日期逻辑错误，进而导致大量软件出现 Bug。千年虫的问题很多是因为很多老程序使用了两位来表示年份，比如 99 代表 1999 年，那 2000 年只能用 <code>00</code> 来表示了，但是 00 在程序里本意指的是 1900。</p>
 <p>可能现在的新生代程序员会感叹，这些老古董为什么会犯这样低级的错误？</p>
-<p><img src="/images/ob_pasted-image-20220104122103.png" alt="/images/ob_pasted-image-20220104122103.png"></p>
+<p><img src="/images/ob_pasted-image-20220104122103.png" alt=""></p>
 <p>这就牵扯到一些更复杂的问题：</p>
 <p>一个是约定习俗，1931 年后很多人在写年份的时候，自然就开始用两位来代表年份，因为 1931 年后年和日已经不重合了，例如写成 35 ，任何人看了都是理解为 1935 年。 </p>
 <p>另一个原因是内存曾经又贵又稀缺，早期核心内存的价格是每比特 1 美元，老一辈程序员在写代码的时候都是按 bit 抠的。 前美联储主席 Alan Greenspan 曾经也写过程序：</p>
@@ -185,16 +185,16 @@
 <p>我们从来没有想到，这些项目会持续几年以上。</p>
 </blockquote>
 <p>“过早优化是万恶之源”，高老头真是诚不我欺：</p>
-<p><img src="/images/ob_pasted-image-20220104114834.png" alt="/images/ob_pasted-image-20220104114834.png"></p>
+<p><img src="/images/ob_pasted-image-20220104114834.png" alt=""></p>
 <p>这种类型的 Bug 是可以预测的，比如千年虫问题，其实在 1985 年左右就已经有计算机专家发现了。问题是代码已经写好并且运行了，甚至因为早期的系统和软件通用性不高，有很多固化在芯片内部的程序，所以要解决也是大费周折。而且日期的问题与各个地方的不同习俗也有关系，比如台湾某些程序在 2011 年出现了日期溢出问题，大家考虑一下为什么😉？</p>
 <p>总而言之，这些 Bug 就很神奇，我们知道在某些年份这类 Bug 必然会发生，但是我们无法完全消除，我们可以简称为 <strong>那些年，我们终将碰上的 Bug</strong>。</p>
 <p>我们可以列举一下今后会碰到 Bug 的重要年份：</p>
 <h3 id="GPS-星期技术归零"><a href="#GPS-星期技术归零" class="headerlink" title="GPS 星期技术归零"></a>GPS 星期技术归零</h3><p>GPS(全球定位系统) 广播时采用周计数(WN) + 周内时(TOW)的方式组合发布，早期的 GPS 采用 10bits 存储 WN，所以当计数达到 1024 时会翻转为 0。因此每 1024 周(也就是 19.6年) 会轮回一次。</p>
 <p>最近几年发生是 1999，2019，下一次预计就是 2038 年。</p>
-<p><img src="/images/ob_pasted-image-20220104232522.png" alt="/images/ob_pasted-image-20220104232522.png"></p>
+<p><img src="/images/ob_pasted-image-20220104232522.png" alt=""></p>
 <p>2019 年的这次看起来没有发生特别严重的事故，霍尼韦尔的飞行管理和导航软件因为没有及时打上补丁导致航班延误。一些 2012 年之前生产的 iPhone 和 iPad 可能因此连不上网络。</p>
 <p>为了解决这一问题，现代化的 GPS 导航消息使用 13 位字段，该字段重复周期变成了 8,192 周（157岁），也就是说会直到 2137 年附近才清零。</p>
-<h2 id="Unix-系统-time-溢出"><a href="#Unix-系统-time-溢出" class="headerlink" title="Unix 系统 time 溢出"></a>Unix 系统 time 溢出</h2><p><img src="/images/ob_pasted-image-20220104235957.png" alt="/images/ob_pasted-image-20220104235957.png"></p>
+<h2 id="Unix-系统-time-溢出"><a href="#Unix-系统-time-溢出" class="headerlink" title="Unix 系统 time 溢出"></a>Unix 系统 time 溢出</h2><p><img src="/images/ob_pasted-image-20220104235957.png" alt=""></p>
 <p><strong>2038 年将是软件历史上史诗级别的灾难年。</strong></p>
 <p>因为 Unix 系统最初实现的时候采用的是有符号整数 int 来保存时间，而时间系统是由 Epoch 开始计算起，单位为秒，Epoch 则是指定为 1970 年 1 月 1 日凌晨 00:00:00，格林威治时间。</p>
 <p>很多古老的 UNIX 系统都是用 32 位元来记录时间，正值表示为 1970 以后，负值则表示 1970 年以前。也就是说最大为 0xFFFFFFFF 的一半，除以一天 86400 秒的话，就是 68 年。1970 年往后延 68 年刚好是 2038 年。</p>
@@ -206,7 +206,7 @@
 <p>这种类型的 Bug 其实还有很多，时间和日期是程序和系统中非常重要的一个概念，在分布式系统中时间也很容易造成 Bug。我们作为程序员在写代码的时候，<strong>尽量眼光放远一点</strong>，多想想自己的程序一千年以后还在跑🤣，这样大概就没这类问题了。</p>
 <p>不过一千年后还在运行的代码，得多伟大。这时候我脑海里回想起来那首歌：</p>
 <figure class="highlight"><table><tr><td class="code"><pre><code class="hljs">别等到 一千年以后<br>所有人都遗忘了我<br>那时红色黄昏的沙漠<br>能有谁 解开缠绕千年的寂寞<br></code></pre></td></tr></table></figure>
-<p><img src="/images/ob_pasted-image-20220105001744.png" alt="/images/ob_pasted-image-20220105001744.png"></p>
+<p><img src="/images/ob_pasted-image-20220105001744.png" alt=""></p>
 </section>
     <!-- Tags START -->
     

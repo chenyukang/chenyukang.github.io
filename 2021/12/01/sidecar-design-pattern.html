@@ -167,7 +167,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>如果你最近看一些容器相关的技术文章，可能会看到这个技术名词：Sidecar 模式。中文译名为：挎斗模式。这个名字为直译，挎斗就是这样的一种摩托车：</p>
-<p><img src="/images/ob_2021-11-30-12-57-48.png" alt="/images/ob_2021-11-30-12-57-48.png"></p>
+<p><img src="/images/ob_2021-11-30-12-57-48.png" alt=""></p>
 <p>如果理解了这种模式，就会明白这个名字其实取得特别好。Sidecar 模式就是指在原来的业务逻辑上再新加一个抽象层。这种模式很好的印证了那个计算机的名言：</p>
 <blockquote>
 <p> “计算机科学领域的任何问题都可以通过增加一个简介的中间层来解决。”</p>
@@ -175,7 +175,7 @@
 </blockquote>
 <p>如果一个抽象层不够，那来两个。这种模式也不是近些年新发明的，我们可以理解 Nginx 的反向代理其实也算一种 sidecar 模式，应用前面的 Nginx 可以实现一些常用的流量功能、鉴权、静态文件访问等基础功能。只是近些年，随着微服务和容器化在实践中越来越多，这种模式的使用范围也更广、粒度更细了。在非容器的环境下，一个 Nginx 可能会服务多个物理机(或者虚拟机)，在容器环境下我们可以单独起 <a target="_blank" rel="noopener" href="https://aws.amazon.com/blogs/compute/nginx-reverse-proxy-sidecar-container-on-amazon-ecs/">Nginx 容器来服务单个应用</a>。</p>
 <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在微服务架构中，如果应用多了就会形成一些共有的需求。特别是流量控制方面，包括限流、流量分发和监控、灰度等等。通常我们对一类需求可以实现一个抽象层，然后在这个抽象层上实现具体的业务逻辑。比如很多公司都有服务网关，然后使用各种语言的 SDK 来集成到应用中。</p>
-<p><img src="/images/ob_pasted-image-20211130163700.png" alt="/images/ob_pasted-image-20211130163700.png"><br>这是通常我们会选择的一种方式，这过程中会有这样的一些问题需要考虑：</p>
+<p><img src="/images/ob_pasted-image-20211130163700.png" alt=""><br>这是通常我们会选择的一种方式，这过程中会有这样的一些问题需要考虑：</p>
 <ol>
 <li>SDK 的维护成本是很高</li>
 <li>SDK 集成到代码中，其中一个组件发生故障就可能会影响到其他组件，SDK 和应用程序之间是保持着相互依赖的关系的。</li>
@@ -184,7 +184,7 @@
 <h2 id="sidecar-架构"><a href="#sidecar-架构" class="headerlink" title="sidecar 架构"></a>sidecar 架构</h2><p>那我们是否可以提供一个统一的抽象层来做这些基础的重复工作？将基础服务抽象、解耦到应用层都感知不到的程度？</p>
 <p>这是现在的趋势，特别是现在很多架构都跑在容器这样的环境了，统一的抽象层能大大减少架构上的复杂度。 sidecar 模式在不改变主应用的情况下，会起来一个辅助应用，来辅助主应用做一些基础性的甚至是额外的工作。这个 sidecar 通常是和主应用部署在一起，所以在同样的运行环境下。这其中还有一些性能上的考虑，sidecar 如果和主程序网络通信上有延迟就会造成性能问题。例如在 K8s 下一个 pod 里的所有子应用共享一个 sidecar 服务。</p>
 <p>这个辅助应用不一定属于应用程序的一部分，而只是与应用相连接。这就像是挎斗摩托车，每个摩托车都有自己独立的辅助部分，它随着主应用启动或停止。因为 sidecar 其实是一个独立的服务，我们可以在上面做很多东西，例如 sidecar 之间相互通信、或者通过统一的节点控制 sidecar ，从而达到 Service Mesh。</p>
-<p><img src="/images/ob_sidecar-mode-20211130170923.png" alt="/images/ob_sidecar-mode-20211130170923.png"></p>
+<p><img src="/images/ob_sidecar-mode-20211130170923.png" alt=""></p>
 <p>这样的好处在于：</p>
 <ol>
 <li>应用层和基础服务层解耦</li>
@@ -193,12 +193,12 @@
 </ol>
 <h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>我们可以来看看业界典型的使用 sidecar 模式的框架。</p>
 <h3 id="DAPR"><a href="#DAPR" class="headerlink" title="DAPR"></a>DAPR</h3><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/dotnet/architecture/dapr-for-net-developers/dapr-at-20000-feet">Dapr: Distributed Application Runtime</a> 是微软开源的一套分布式程序开发框架，其目标是：“Build distributed applications with any language, any framework, run anywhere”。既然任何编程语言，任何框架都要支持，sidercar 是一个必然的选择。DAPR 把很多常见的分布式程序的公共组件抽象出来成为’building blocks’，然后通过 gRPC 或者 HTTP 统一出接口。应用程序通过 sidecar 来访问。</p>
-<p><img src="/images/ob_pasted-image-20211130172044.png" alt="/images/ob_pasted-image-20211130172044.png"><br>这样多了一层抽象之后，即使是某个 Component 做了一些改变，应用层也是无感知的。除了在容器化的环境下运行，用户也可以在非容器化环境以 sidecar 模式启动任何应用，例如我们启动一个图片接口服务 <code>image-api-service</code>，该服务会监听端口 8080，而 sidecar 会通过 3500 端口来代理该服务接受请求：</p>
+<p><img src="/images/ob_pasted-image-20211130172044.png" alt=""><br>这样多了一层抽象之后，即使是某个 Component 做了一些改变，应用层也是无感知的。除了在容器化的环境下运行，用户也可以在非容器化环境以 sidecar 模式启动任何应用，例如我们启动一个图片接口服务 <code>image-api-service</code>，该服务会监听端口 8080，而 sidecar 会通过 3500 端口来代理该服务接受请求：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">dapr run --app-id image-api \<br>         --app-protocol http \<br>         --app-port 8080 \<br>         --dapr-http-port 3500 \<br>         --components-path ../config \<br>         --log-level debug \<br>         ./image-api-service<br></code></pre></td></tr></table></figure>
 <p>其他服务组件可以通过 sidecar 去请求该服务：</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// Dapr api format: http://localhost:&lt;daprPort&gt;/v1.0/invoke/&lt;appId&gt;/method/&lt;method-</span><br>uri = <span class="hljs-string">&quot;http://localhost:3500/v1.0/invoke/image-api/method/api/image&quot;</span><br>req, err := http.NewRequest(<span class="hljs-string">&quot;POST&quot;</span>, uri, bytes.NewBuffer(image))<br></code></pre></td></tr></table></figure>
 <h3 id="lstio"><a href="#lstio" class="headerlink" title="lstio"></a>lstio</h3><p><a target="_blank" rel="noopener" href="https://istio.io/latest/zh/about/service-mesh/">Istio 服务网格</a> 是一个开源的服务网格，提供了统一的方式来实现连接、监控、负载均衡等公共服务和流量管理。单个服务的所有传入和传出网络流量均通过 Sidecar 代理，完成微服务之间的流量管理、遥测数据收集以及策略的执行等。</p>
-<p><img src="/images/ob_pasted-image-20211130173530.png" alt="/images/ob_pasted-image-20211130173530.png"></p>
+<p><img src="/images/ob_pasted-image-20211130173530.png" alt=""></p>
 <p>在 lstio 中，我们需要了解 Data Plane 和 Control Plane 两个概念——  </p>
 <ul>
 <li>Data Plane 的作用是处理网格内服务间的通信，并完成服务发现、负载均衡、流量管理、健康检查等功能；数据平面的作用是处理网格内服务之间的通信，并负责实现服务发现、负载平衡、流量管理、健康检查等功能；</li>
