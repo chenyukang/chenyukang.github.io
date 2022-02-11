@@ -79,14 +79,14 @@
         }, 500)
     })
 
-    $('.toc-nav a').on('click', function(e) {
+    $('.toc-main a').on('click', function(e) {
         e.preventDefault()
         var catalogTarget = e.currentTarget
-        var scrollTarget = $(catalogTarget.getAttribute('href'))
+        var scrollTarget = $(decodeURIComponent(catalogTarget.getAttribute('href')))
         var top = scrollTarget.offset().top
         if (top > 0) {
             $('html,body').animate({
-                scrollTop: top - 65
+                scrollTop: top - header.height()
             }, 500)
         }
     })
