@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          A*算法解决kth-shortest路径问题(2) | 程序员的喵
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+
+  <!-- <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  -->
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin: 0;">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>A*算法解决kth-shortest路径问题(2)</h2>
+  <p class="post-date">2012-09-18</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>我之前写过<a target="_blank" rel="noopener" href="http://cyukang.com/2010/08/02/astart-k-shortest-path.html">一篇图文并茂的文章</a>来介绍这个算法，有好几次有朋友反馈说对自己有帮助，深感荣幸。这次再次写这个也是因为帮忙于一个朋友解决这类问题，这里再成一篇，稍显罗嗦。</p>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>无向图G，需要求出S-&gt;T点的前k短路径，要求路径中没有环。(所有的边的权值不为负)</p>
+<h2 id="A-算法求解kth-shortest问题"><a href="#A-算法求解kth-shortest问题" class="headerlink" title="A*算法求解kth-shortest问题"></a>A*算法求解kth-shortest问题</h2><p><code>A*</code>算法已经被广泛运用于路径规划问题中，同时<code>A*</code>算法作为一种启发式算法的框架，可用于多种搜索问题，还是先回顾一下<code>A*</code>的基本符号：</p>
+<hr>
+<p><code>f(s)=g(s)+h(s)</code>，其中<code>h(s)&lt;=h*(s)</code>，<code>h*(s)</code>是某点到终点的真实代价，<code>h(s)</code>是估计代价，<br>并且对s的任意后继t有：<code>h(t)+w(s,t)&gt;=h(s)</code>，其中<code>w(s,t)</code>是从s转移到t的代价，符合这条件的评估函数<code>f(s)</code>可以得到正确的最短路径。</p>
+<hr>
+<p>而这里评估函数<code>f(s)</code>是<code>A*</code>算法的关键，其效率都取决于此,退化的<code>A*</code>算法就是宽度搜索(即启发函数h(s)为常数)。另外<code>A*</code>算法的最优性证明在<a target="_blank" rel="noopener" href="http://www.cs.auckland.ac.nz/compsci767s2c/projectReportExamples.d/astarNilsson.pdf">这篇论文</a>里有阐述。</p>
+<p>所以如果能确切的计算出来<code>h*(s)</code>，那么评估函数f(s)将是s点的最短路径，这可算是一个最优的启发函数。可以利用Dijkstra算法来求解出各个点到T点的最短路径，假设第i个节点到T的最短路径计为<code>Dist_T(i)</code>，<code>Dist_T(i)</code>作为<code>A*</code>函数中的启发函数<code>h(s)</code>，从S开始搜索，因此算法描述如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">Astar</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-keyword">if</span>(dist[S]==INF) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    priority_queue&lt;Node&gt; Q;      <span class="hljs-comment">//极小堆，定点为f(s)=g(s)+h(s)最小的节点</span><br>    Q.<span class="hljs-built_in">push</span>(<span class="hljs-built_in">Node</span>(S,<span class="hljs-number">0</span>));           <span class="hljs-comment">//源点S加入堆，估计代价为0</span><br>    <span class="hljs-keyword">while</span>(!Q.<span class="hljs-built_in">empty</span>())&#123;<br>        <span class="hljs-keyword">int</span> len=Q.<span class="hljs-built_in">top</span>().len;<br>        <span class="hljs-keyword">int</span> u=Q.<span class="hljs-built_in">top</span>().v;<br>        Q.<span class="hljs-built_in">pop</span>();<br>        cnt[u]++;       <span class="hljs-comment">//节点u访问一次</span><br>        <span class="hljs-keyword">if</span>(cnt[T]==K)<br>            <span class="hljs-keyword">return</span> len; <span class="hljs-comment">//第K次从队列弹出的值为kth-shortest的值</span><br>        <span class="hljs-keyword">if</span>(cnt[u]&gt;K)<br>            <span class="hljs-keyword">continue</span>;<br>        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;Adj[u].<span class="hljs-built_in">size</span>();i++) &#123;<span class="hljs-comment">//取v节点的临接节点计算评估函数并加入优先队列</span><br>            <span class="hljs-keyword">int</span> v = Adj[u][i].v;<br>            <span class="hljs-keyword">int</span> eval = len + <span class="hljs-built_in">Dist</span>(u,v) + <span class="hljs-built_in">Dist_T</span>(v);<br>            Q.<span class="hljs-built_in">push</span>(<span class="hljs-built_in">Node</span>(v, eval));<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>因为没有标识哪些节点访问过哪些节点没有访问过，所以这种方法计算出来的结果路径可能含有环，即可能出现1-&gt;2-&gt;3-&gt;2-&gt;5，为了避免这样的情况可以在每个扩张Node里面增加当前路径已经访问过的点，在进行下一次扩张的时候可以避免访问这些已经在路径中的节点。但是这样所需要的空间复杂度是巨大的，所以需要再次用一些剪枝办法来避免过多的扩展。</p>
+<h2 id="一个优化"><a href="#一个优化" class="headerlink" title="一个优化"></a>一个优化</h2><p><code>A*</code>算法在扩展节点的时候，如果我们能筛除掉更多无用的节点，那么都可以利于减少搜索的空间复杂度和时间复杂度。当k取值较小的时候，即当我们并不需要知道所有路径长度和其排序，而只需要知道前k(假设k&lt;=10)段的路径，这里加上一个剪枝会有很大的优化。 假设我们事前知道kth-shortest的最大值，就能在扩张的时候加入这个限制，避免大部分的无用的节点扩张。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;Adj[u].<span class="hljs-built_in">size</span>();i++) &#123;<span class="hljs-comment">//取v节点的临接节点计算评估函数并加入优先队列</span><br>    <span class="hljs-keyword">int</span> v = Adj[u][i].v;<br>    <span class="hljs-keyword">int</span> eval = len + <span class="hljs-built_in">Dist</span>(u,v) + <span class="hljs-built_in">Dist_T</span>(v);<br>    <span class="hljs-keyword">if</span>(eval &gt; max_dist)<br>        <span class="hljs-keyword">continue</span>;<br>    <span class="hljs-keyword">else</span><br>        Q.<span class="hljs-built_in">push</span>(<span class="hljs-built_in">Node</span>(v, eval));<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如何知道kth-shortest的最大值这个临界点呢？ 假设我们知道某条经过点v的S-&gt;T路径的最短长度，即对于所有的点v1,v2,v3,….vn,有dist(v1)为S-&gt;…-&gt;v1-&gt; …-&gt;路径的长度，一共n个dist，把这n个dist排序以后，取第k小的dist(v_kth_smallest)即为kth-shortest。如何计算出dist(v)，通过Dijkstra(T)可以计算出v到T的最短路径，同样可以通过Dijkstra(S)可以计算出S到v的最短路径Dist_S(v)，这里有如下定理：</p>
+<p>对于任意最短路径S-&gt;K中，假设经过点v，则必有: min(S-&gt;v)和min(v-&gt;T)。<br>因此要计算经过v的从S-&gt;K的最短路径可以用: min_dist(v) = Dist_S(v) + Dist_T(v)</p>
+<p>因此如果我们用这种方法计算出Dist(v)，那么最后第k小的dist(v_kth_smallest) &gt;= kth-shortest。这对于<code>A*</code>算法的最后结果没有影响，但是同样可以作为一个条件来删除掉大部分不符合条件的节点，因此得到一个很好的优化方案。这个优化可以用于<code>k&lt;N</code>时的kth最短路径问题，可以预见k越小剪枝效果越好。</p>
+<p>据我实现在18600个节点的图上，这个算法比<a target="_blank" rel="noopener" href="http://mansci.journal.informs.org/content/17/11/712.abstract">Yen’s算法</a>快了很多倍，甚至在我的PC(3G内存)机上，后者在算到k=3的时候内存就支持不住了。</p>
+<h2 id="算法复杂度分析"><a href="#算法复杂度分析" class="headerlink" title="算法复杂度分析"></a>算法复杂度分析</h2><p>假设图G有m条边和n个节点，Dijkstra算法的复杂度为<code>((m+n)log n)</code>(二叉树实现的优先队列)。<code>A*</code>算法的时间复杂度取决于启发函数，事实我还不清楚如何分析这样的算法的时间复杂度和空间复杂度，根据<a target="_blank" rel="noopener" href="http://richardxx.yo2.cn/articles/%E6%9C%80%E7%9F%AD%E8%B7%AFdijkstra%E7%AE%97%E6%B3%95%E7%9A%84%E4%B8%80%E4%BA%9B%E6%89%A9%E5%B1%95%E9%97%AE%E9%A2%98.html">这篇文章</a>来说是<code>O(delta*V^2*(lgV+lg(delta)))</code>的。</p>
+<p>如果哪位知道如何分析A*算法的复杂度，劳烦请教。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Algorithms" >
+    <span class="tag-code">Algorithms</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/3d-python-call-path/">
+        <span class="nav-arrow">← </span>
+        
+          UbiGraph动态显示Python函数调用
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/p/change-domain-name/">
+        
+          换域名了cyukang.com
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-nav-text">问题描述</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#A-%E7%AE%97%E6%B3%95%E6%B1%82%E8%A7%A3kth-shortest%E9%97%AE%E9%A2%98"><span class="toc-nav-text">A*算法求解kth-shortest问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%80%E4%B8%AA%E4%BC%98%E5%8C%96"><span class="toc-nav-text">一个优化</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%AE%97%E6%B3%95%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="toc-nav-text">算法复杂度分析</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/a-start-k-shortest/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!-- Baidu Tongji -->
+
+        
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          SQL Injection attack | 程序员的喵
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+
+  <!-- <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  -->
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin: 0;">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>SQL Injection attack</h2>
+  <p class="post-date">2018-03-10</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="注入原理"><a href="#注入原理" class="headerlink" title="注入原理"></a>注入原理</h3><p>SQL注入一直是 Web 应用的一大安全隐患，注入的基本原理是通过修改输入的参数来操作后台执行的 SQL，注入可能会导致数据库被恶意修改、数据被恶意读取等严重行为。所以如果一个参数有漏洞，通过小心的构造注入点即可利用，这里的<a target="_blank" rel="noopener" href="https://paper.seebug.org/15/">渗透攻防Web篇-SQL注入攻击初级</a>有一些编写注入点的教程。</p>
+<p>最初的时候我在一个用 C 写后台的项目里待过，现在回想起来我们当时根本没注意SQL 注入，C 拼接处 SQL 的字符串很常见。不过现在大多数 Web 框架都已经有 ORM 了，ORM 可以在很大程度上避免注入的产生，因为程序员通常来说不用写纯的 SQL 了， 在最佳实践的前提下 ORM 会生成安全的 SQL。当然什么工具最终还是依赖程序员，比如下面的 Ruby 代码即会有问题: </p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><code class="hljs ruby">User.where(<span class="hljs-string">&quot;email = <span class="hljs-subst">#&#123;params[<span class="hljs-symbol">:email</span>]&#125;</span>&quot;</span>).first<br></code></pre></td></tr></table></figure>
+<p>更多作死的办法可以参考： <a target="_blank" rel="noopener" href="https://rails-sqli.org/">https://rails-sqli.org/</a></p>
+<h3 id="WAF"><a href="#WAF" class="headerlink" title="WAF"></a>WAF</h3><p>通常我们会使用一些 WAF 来阻挡 一些SQL 注入，但是 WAF 也有其局限性。WAF 一般是通用的，不会局限于某个特定的框架。我们可以实现在 Nginx 上，或者使用一些商用的 WAF，通常来说对于应用也不用修改其代码。不过 WAF 的问题在于其实基于规则的，而 SQL 本省是比较复杂的，可以看看<a target="_blank" rel="noopener" href="https://github.com/ronsavage/SQL/blob/master/sql-2003-2.bnf">2003 SQL BNF</a> 的描述有多么的长。所以 WAF 的规则大多数是一大堆较难维护的正则表达式，比如： <a target="_blank" rel="noopener" href="https://github.com/unixhot/waf/blob/master/waf/rule-config/args.rule">Nginx Waf示例</a>，注意这个项目用不太成熟，初步看会有比较严重的<a target="_blank" rel="noopener" href="https://github.com/unixhot/waf/issues/12">性能问题</a>。正因为规则是固定的，会导致存在很多误拦截的情况，所以我在 Kong 上实现的 WAF 就还不敢用起来。例如现实情况中出现过<a target="_blank" rel="noopener" href="https://store.dji.com/select">包含select的 uri</a>被拦的情况，一脸忧伤。</p>
+<h3 id="静态代码扫描"><a href="#静态代码扫描" class="headerlink" title="静态代码扫描"></a>静态代码扫描</h3><p>静态代码扫描会发现一些 SQL 注入，比如  Brakeman 之类的。不过通常静态代码扫描的问题也是分析得不够精准，会漏报、也会出现误报比较多，扫描的结果需要进行人工审计。当然这些工具也在逐步改进。</p>
+<h3 id="RASP-工具"><a href="#RASP-工具" class="headerlink" title="RASP 工具"></a>RASP 工具</h3><p>RASP 的意思是<a target="_blank" rel="noopener" href="https://www.veracode.com/security/runtime-application-self-protection-rasp">Runtime Application Self Protection</a>，这个概念近些年才提出，目前已经有一些安全公司做出了对应的产品，比如<a target="_blank" rel="noopener" href="http://www.sqreen.io">Sqreen</a>, 百度最近也新开一个开源项目叫做<a target="_blank" rel="noopener" href="https://github.com/baidu/openrasp">OpenRASP</a>，目前来说只支持 Java，开发者可以自己使用 Javascript 编写自己的插件。RASP 除了自己的规则还会依据请求时候的上下文来进行分析，这篇文章里有<a target="_blank" rel="noopener" href="https://blog.sqreen.io/block-sql-injections-not-customers/">一些描述</a>，这样误报的问题会大大减少。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#security" >
+    <span class="tag-code">security</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/compile-script-to-binary-for-obfuscation/">
+        <span class="nav-arrow">← </span>
+        
+          编译脚本到二进制
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/p/kong-cluster-left-node/">
+        
+          Kong集群Left Cluster Node问题
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%B3%A8%E5%85%A5%E5%8E%9F%E7%90%86"><span class="toc-nav-text">注入原理</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#WAF"><span class="toc-nav-text">WAF</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E6%89%AB%E6%8F%8F"><span class="toc-nav-text">静态代码扫描</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#RASP-%E5%B7%A5%E5%85%B7"><span class="toc-nav-text">RASP 工具</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/sql-injection-attack/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!-- Baidu Tongji -->
+
+        
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

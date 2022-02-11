@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          分支预测优化 | 程序员的喵
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+
+  <!-- <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  -->
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin: 0;">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>分支预测优化</h2>
+  <p class="post-date">2012-07-11</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>Stack_overflow上有这么一个<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-an-unsorted-array">帖子:为什么排序后会快很多</a>，说是下面这段代码比较诡异，引发了比较多的回复，一起来看看。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;algorithm&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;ctime&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// generate data</span><br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> arraySize = <span class="hljs-number">32768</span>;<br>    <span class="hljs-keyword">int</span> data[arraySize];<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">unsigned</span> c = <span class="hljs-number">0</span>; c &lt; arraySize; ++c)<br>        data[c] = std::<span class="hljs-built_in">rand</span>() % <span class="hljs-number">256</span>;<br><br>    std::<span class="hljs-built_in">sort</span>(data, data + arraySize); <span class="hljs-comment">//排序这行不注释掉下面的for循环会快得多</span><br><br>    <span class="hljs-comment">// test</span><br>    <span class="hljs-keyword">clock_t</span> start = <span class="hljs-built_in">clock</span>();<br>    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> sum = <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">unsigned</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100000</span>; ++i) &#123;<br>        <span class="hljs-comment">// primary loop</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">unsigned</span> c = <span class="hljs-number">0</span>; c &lt; arraySize; ++c) &#123;<br>            <span class="hljs-keyword">if</span> (data[c] &gt;= <span class="hljs-number">128</span>)<br>                sum += data[c];<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">double</span> elapsedTime = <span class="hljs-keyword">static_cast</span>&lt;<span class="hljs-keyword">double</span>&gt;(<span class="hljs-built_in">clock</span>() - start) / CLOCKS_PER_SEC;<br>    std::cout &lt;&lt; elapsedTime &lt;&lt; std::endl;<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;sum = &quot;</span> &lt;&lt; sum &lt;&lt; std::endl;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li>如果把std::sort(data, data + arraySize);注释掉，下面那段for循环所花费的时间是11.54秒。</li>
+<li>如果不注释掉，即排序后下面那段所用的时间是1.93秒。</li>
+</ul>
+<p>相差比较大。那个for循环总是要执行完的，为什么排序后会快不少?</p>
+<h2 id="分支预测"><a href="#分支预测" class="headerlink" title="分支预测"></a>分支预测</h2><p>  下面的获得票数最多的回复质量非常高，很生动细致地说明了cpu的分支预测技术。</p>
+<p><img src="/images/train.jpg" alt="Black Cube Theme" class="img-center" width="500px" /></p>
+<p>  看上面这情形，如果在没有通讯设备的年代，如果你是这个火车枢纽的操作人员，<br>是不是要让火车驾驶员把车停下来，然后告诉你他需要往哪个方向行驶，等你完成转向操作的时候再继续行驶火车呢。也许有一些更好的办法，你可以猜测火车要往哪边行驶。</p>
+<ul>
+<li>如果你猜对了，那么节省了不少时间。</li>
+<li>如果猜错了，火车停下来，等你撤销刚才的操作，再往前走，这会比较耗费时间。</li>
+</ul>
+<p>同样在执行指令的时候，cpu也能做这样类似的工作。现代cpu都采用 <strong>指令流水线技术</strong> ，即处理器会预取下面要执行的一些指令，如果下面的指令正是需要被执行的那就节省了时间，如果在概率上大部分能猜对下面要运行的指令，那就提高了cpu的运行效率。更详细的图文介绍可以参考<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Branch_predictor">wiki</a>。简单的说明就是cpu会根据前面所执行的指令的历史，归纳出相应的模式，把预测的指令预取进来，然后继续沿着预测的指令执行。如果发现预测错误，则倒过来重新初始化预测表、刷新指令管道然后继续执行。所以看上面的例子：</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown">T = branch taken<br>N = branch not taken<br><br>data[] = 0, 1, 2, 3, 4, ... 126, 127, 128, 129, 130, ... 250, 251, 252, ...<br>branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...<br><br><span class="hljs-code">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)</span><br></code></pre></td></tr></table></figure>
+<p> 后面作者又加了一条hack，把这段代码重新改写一下：</p>
+<pre><code>if (data[c] &gt;= 128)       ====&gt;              int t = (data[c] - 128) &gt;&gt; 31; 
+   sum += data[c];        ====&gt;              sum += ~t &amp; data[c];
+</code></pre><p> 那么前面是否排序就对这段代码效率没有影响了，同样是2秒多。 这和编译器的优化非常相关，不同的编译器的结果不一样，4.6.1 GCC 加上-O3或者-ftree-vectorize编译选项可以对这种情况进行优化，所以排序与否没有关系，而VC++2010却不能进行类似优化(GCC果然强大)。</p>
+<h2 id="一个优化例子"><a href="#一个优化例子" class="headerlink" title="一个优化例子"></a>一个优化例子</h2><p> 在Linux kernel里面会看到类似likely和unlikely这样的代码，从其名字就很直观的解释了其意义。看其定义为两个宏。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c">include/linux/compiler.h<br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> likely(x) __builtin_expect   (!!(x), 1)</span><br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> unlikely(x) __builtin_expect (!!(x), 0)</span><br></code></pre></td></tr></table></figure>
+<p> Linux内核开发者使用这两个宏来通过编译器提示cpu：某一段代码很可能会执行，应该被预测，而有的情况出现的概率比较小，不必预测。类似这样的代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span>(likely(some_cond)) &#123; <span class="hljs-comment">//this is often happen!</span><br>    <span class="hljs-comment">/* Do something */</span><br>&#125;<br><br><span class="hljs-keyword">if</span> (unlikely(some_cond)) &#123; <span class="hljs-comment">//this is rare!</span><br>    <span class="hljs-comment">/* Do something */</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>关于这个方面，在这篇论文<a target="_blank" rel="noopener" href="http://www.akkadia.org/drepper/cpumemory.pdf">What every Programmer should know about Memory</a>里面有更详细的讲述。分支预测在现代cpu上如此通用，竟然还有人利用这个来尝试破解RSA的，看这个<a target="_blank" rel="noopener" href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.80.1438&amp;rep=rep1&amp;type=pdf">On the Power of Simple Branch Prediction Analysis</a>。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#优化" >
+    <span class="tag-code">优化</span>
+  </a>
+
+  <a href="/tags#分支预测" >
+    <span class="tag-code">分支预测</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/switch-screen/">
+        <span class="nav-arrow">← </span>
+        
+          Linux下快捷切换屏幕
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/p/gdb-with-libso/">
+        
+          GDB调试动态链接库
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-nav-text">问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B"><span class="toc-nav-text">分支预测</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%80%E4%B8%AA%E4%BC%98%E5%8C%96%E4%BE%8B%E5%AD%90"><span class="toc-nav-text">一个优化例子</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/branch_prediction/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!-- Baidu Tongji -->
+
+        
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

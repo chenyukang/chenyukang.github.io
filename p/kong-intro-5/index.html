@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          Kong源码分析: 事件 | 程序员的喵
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+
+  <!-- <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  -->
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin: 0;">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Kong源码分析: 事件</h2>
+  <p class="post-date">2017-07-23</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>Kong的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。</p>
+<h3 id="worker模型"><a href="#worker模型" class="headerlink" title="worker模型"></a>worker模型</h3><p>假设我们对Kong做了一个更改的请求，这个请求通常是通过admin_api这个路由处理的。也就是说最终执行数据库操作的动作是在一个Nginx worker进程里。因为操作了数据库所以我们需要刷新这个Kong节点的所有worker的缓存，而且要把事件分发给其他Kong节点，让其他Kong节点刷新所有worker的缓存。</p>
+<p><img src="/images/kong-message.png" alt="kong-message" class="img-center"></p>
+<p>这就涉及到两部分:</p>
+<ol>
+<li>Kong节点之间的消息通信, 这是使用<a target="_blank" rel="noopener" href="https://www.serf.io/">serf</a>来实现的</li>
+<li>Kong每个节点内部，也就是Nginx worker之间的通信，这是使用<a target="_blank" rel="noopener" href="https://github.com/Mashape/lua-resty-worker-events">lua-resty-worker-events</a>来进行。</li>
+</ol>
+<h3 id="发布订阅模式"><a href="#发布订阅模式" class="headerlink" title="发布订阅模式"></a>发布订阅模式</h3><p>发布订阅是实现事件的一种经典设计模式，主要需要有两类操作：</p>
+<ol>
+<li>发布消息</li>
+<li>订阅消息，收到消息后触发指定的函数。</li>
+</ol>
+<p>Kong使用的是一个<a target="_blank" rel="noopener" href="https://github.com/Olivine-Labs/mediator_lua">叫作mediator_lua</a>，mediator中文意思为”中间人”，很符合项目的意思。可以看到kong/core/events.lua里面实现如下：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Events:subscribe</span><span class="hljs-params">(event_name, fn)</span></span><br>  <span class="hljs-keyword">if</span> fn <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">self</span>._mediator:subscribe(&#123;event_name&#125;, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message_t)</span></span><br>      fn(message_t)<br>      <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, <span class="hljs-literal">true</span> <span class="hljs-comment">-- Required to tell mediator to continue processing other events</span><br>    <span class="hljs-keyword">end</span>)<br>  <span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Events:publish</span><span class="hljs-params">(event_name, message_t)</span></span><br>  <span class="hljs-keyword">if</span> event_name <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">self</span>._mediator:publish(&#123;<span class="hljs-built_in">string</span>.<span class="hljs-built_in">upper</span>(event_name)&#125;, message_t)<br>  <span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br></code></pre></td></tr></table></figure>
+<p>Kong.init初始化的时候会调用一个叫做attach_hooks的函数:</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">attach_hooks(events, <span class="hljs-built_in">require</span> <span class="hljs-string">&quot;kong.core.hooks&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p>在load插件的时候也会把插件对应hooks绑定上：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- Attaching hooks</span><br><span class="hljs-keyword">local</span> ok, hooks = utils.load_module_if_exists(<span class="hljs-string">&quot;kong.plugins.&quot;</span> .. plugin .. <span class="hljs-string">&quot;.hooks&quot;</span>)<br><span class="hljs-keyword">if</span> ok <span class="hljs-keyword">then</span><br>  attach_hooks(events, hooks)<br><span class="hljs-keyword">end</span><br></code></pre></td></tr></table></figure>
+<h3 id="事件的来源"><a href="#事件的来源" class="headerlink" title="事件的来源"></a>事件的来源</h3><p>上面说过，Kong节点之间通信是通过<a target="_blank" rel="noopener" href="https://www.serf.io/">serf</a>发送的。我们来看看事件是如何触发发出通知的。<br>事件来于源数据库的修改，那就应该在数据库代码部分有触发事件的代码，查看dao/dao.lua这个文件里的代码，我们可以看到在insert、update、insert执行的时候都调用了一行代码</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">event(<span class="hljs-built_in">self</span>, event_types.ENTITY_DELETED, k, v.schema, entity)<br></code></pre></td></tr></table></figure>
+<p>这个函数的实现如下，这里做了数据的序列化，然后发布了一种叫做CLUSTER_PROGATE类型的消息：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua"><span class="hljs-keyword">local</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">event</span><span class="hljs-params">(self, type, table, schema, data_t)</span></span><br>  <span class="hljs-keyword">if</span> <span class="hljs-built_in">self</span>.events_handler <span class="hljs-keyword">then</span><br>    .....  执行数据序列化<br>    <span class="hljs-built_in">self</span>.events_handler:publish(<span class="hljs-built_in">self</span>.events_handler.TYPES.CLUSTER_PROPAGATE, payload)<br>  <span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br></code></pre></td></tr></table></figure>
+<p>在core/hooks.lua接受消息部分，events.TYPES.CLUSTER_PROPAGATE对应的处理部分是singletons.serf:event(message_t)，所以我们看serf.lua这个源文件，最终event调用了invoke_signal，这个函数会运行一个serf命令，类似于这样：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">serf event -coalesce=<span class="hljs-literal">false</span> -rpc-addr=<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">7373</span>  kong <span class="hljs-string">&#x27;&#123;&quot;type&quot;:&quot;ENTITY_UPDATED&quot;,&quot;primary_key&quot;:[&quot;id&quot;],&quot;collection&quot;:&quot;apis&quot;,&quot;entity&quot;:&#123;&quot;id&quot;:&quot;94acca76-d61a-429e-86a9-5abf2c61ee31&quot;&#125;&#125;&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>这就出发了一个serf event，其他Kong节点会收到此消息。</p>
+<h3 id="serf-Kong节点之间通信"><a href="#serf-Kong节点之间通信" class="headerlink" title="serf: Kong节点之间通信"></a>serf: Kong节点之间通信</h3><p>那么Kong节点收到消息之后是如何处理的呢？Kong在启动的时候会在后台执行一个serf进程，类似这样：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">serf agent -profile wan -bind 0.0.0.0:7946 -log-level err -rpc-addr 127.0.0.1:7373 -event-handler member-join,member-leave,member-failed,member-update,member-reap,user:kong=/usr/local/kong/serf/serf_event.sh -node Kang.local_0.0.0.0:7946_be3b9352808e4839a272f30ca6025650<br></code></pre></td></tr></table></figure>
+<p>可以看看serf_event.sh这个脚本，内容如下：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">PAYLOAD=`cat` # Read from <span class="hljs-built_in">stdin</span><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;$SERF_EVENT&quot;</span> != <span class="hljs-string">&quot;user&quot;</span> ]; <span class="hljs-keyword">then</span><br>  PAYLOAD=<span class="hljs-string">&quot;&#123;\&quot;type\&quot;:\&quot;$&#123;SERF_EVENT&#125;\&quot;,\&quot;entity\&quot;: \&quot;$&#123;PAYLOAD&#125;\&quot;&#125;&quot;</span><br>fi<br><br>CMD=<span class="hljs-string">&quot;\</span><br><span class="hljs-string">local http = require &#x27;resty.http&#x27; \</span><br><span class="hljs-string">local client = http.new() \</span><br><span class="hljs-string">client:set_timeout(5000) \</span><br><span class="hljs-string">client:connect(&#x27;127.0.0.1&#x27;, 8001) \</span><br><span class="hljs-string">client:request &#123; \</span><br><span class="hljs-string">  method = &#x27;POST&#x27;, \</span><br><span class="hljs-string">  path = &#x27;/cluster/events/&#x27;, \</span><br><span class="hljs-string">  body = [=[$&#123;PAYLOAD&#125;]=], \</span><br><span class="hljs-string">  headers = &#123; \</span><br><span class="hljs-string">    [&#x27;content-type&#x27;] = &#x27;application/json&#x27; \</span><br><span class="hljs-string">  &#125; \</span><br><span class="hljs-string">&#125;&quot;</span><br><br>/usr/<span class="hljs-keyword">local</span>/openresty/bin/resty -e <span class="hljs-string">&quot;$CMD&quot;</span><br></code></pre></td></tr></table></figure>
+<p>可以看到serf收到消息后会触发这个脚本，然后把消息发送到本节点的/cluster/events这个路由。api/routes/cluster.lua这个文件里有收到消息后的处理代码，其中最关键的是：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua"><span class="hljs-comment">-- Trigger event in the node</span><br>ev.post(constants.CACHE.CLUSTER, message_t.<span class="hljs-built_in">type</span>, message_t)<br></code></pre></td></tr></table></figure>
+<p>就是通过resty.worker.events publish出收到的消息，本节点的worker会处理这些消息。</p>
+<h3 id="worker刷新缓存"><a href="#worker刷新缓存" class="headerlink" title="worker刷新缓存"></a>worker刷新缓存</h3><p>假设当前Kong节点收到一个消息，这个消息是如何分发给各个worker的？从代码看出，在Kong初始化的时候有调用一个叫做kong.lua里面的Kong.init_worker()函数，其中有一段代码注册了event handler:<br><figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua"><span class="hljs-keyword">local</span> worker_events = <span class="hljs-built_in">require</span> <span class="hljs-string">&quot;resty.worker.events&quot;</span><br><br><span class="hljs-keyword">local</span> handler = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data, event, source, pid)</span></span>  <br>  <span class="hljs-keyword">if</span> data <span class="hljs-keyword">and</span> data.collection == <span class="hljs-string">&quot;apis&quot;</span> <span class="hljs-keyword">then</span>    <br>    <span class="hljs-built_in">assert</span>(core.build_router())<br><br>  <span class="hljs-keyword">elseif</span> source <span class="hljs-keyword">and</span> source == constants.CACHE.CLUSTER <span class="hljs-keyword">then</span>    <br>    singletons.events:publish(event, data)<br>  <span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br><br>worker_events.register(handler)<br><br></code></pre></td></tr></table></figure></p>
+<p>可以从上面的handler代码看到，一个worker接收到消息之后执行的是：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">singletons.events:publish(event, data)<br></code></pre></td></tr></table></figure>
+<p>也就是通过mediator_lua再把消息publish。之前初始化的时候已经attach_hooks了各种handler，这时候那些注册的函数才会被最终执行，比如核心的刷新缓存部分代码在core/hooks.lua的invalidate函数里面。</p>
+<h3 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h3><p>总的来说Kong事件部分的代码相当精妙，也很统一。比如当前worker做了修改，这个事件会发送给各个节点，包括当前自己所在的节点。通过发布订阅模式，写代码的时候只需关心消息发送、接受消息索要处理的逻辑。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Lua" >
+    <span class="tag-code">Lua</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/migrate-to-hexo/">
+        <span class="nav-arrow">← </span>
+        
+          从 Jekyll换成Hexo
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/p/kong-intro-4/">
+        
+          Kong源码分析: 缓存
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#worker%E6%A8%A1%E5%9E%8B"><span class="toc-nav-text">worker模型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">发布订阅模式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BA%8B%E4%BB%B6%E7%9A%84%E6%9D%A5%E6%BA%90"><span class="toc-nav-text">事件的来源</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#serf-Kong%E8%8A%82%E7%82%B9%E4%B9%8B%E9%97%B4%E9%80%9A%E4%BF%A1"><span class="toc-nav-text">serf: Kong节点之间通信</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#worker%E5%88%B7%E6%96%B0%E7%BC%93%E5%AD%98"><span class="toc-nav-text">worker刷新缓存</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%9B%9E%E9%A1%BE"><span class="toc-nav-text">回顾</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/kong-intro-5/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!-- Baidu Tongji -->
+
+        
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

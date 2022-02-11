@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          百度是如何死掉的 | 程序员的喵
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+
+  <!-- <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  -->
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin: 0;">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>百度是如何死掉的</h2>
+  <p class="post-date">2021-12-27</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="/images/ob_pasted-image-20211229221005.png" alt=""></p>
+<p>“百度已死” 几年前就已经被广泛讨论过，好像现在大家都不怎么讨论了。即使百度仍是最大的中文搜索引擎，但已沦为互联网度量单位，短短数年间的变化不由让人惋惜。</p>
+<p>今天让我重新思考这个问题的是两件小事。</p>
+<h3 id="事件一："><a href="#事件一：" class="headerlink" title="事件一："></a>事件一：</h3><p>我有一个英文小站点，断断续续写了一些技术类的文章。这一年来已经有一些稳定的流量，大部分都是从Google 来的自然流量。我曾经学了点 Amazon 推广的东西，当时把几篇文章的链接换成了亚马逊的推广链接，然后现在隔段时间就能从亚马逊收到一笔小钱，平均每个月大概 10 来块美金吧。</p>
+<p>这个数额很小，但是这种模式确实就是很多小网站的盈利模式。这是已经被验证可行的创造被动收入的可靠方式，有的站点能做到几万美金一个月。</p>
+<h3 id="事件二："><a href="#事件二：" class="headerlink" title="事件二："></a>事件二：</h3><p>我老婆想找一个房屋出租合同模板，结果她在百度上花了十来分钟，我看她已经开始在注册某下载网站的账号，她说要下载就得付费。我大为震惊！这个年代这种免费中文信息居然如此难以获取。然后我打开 Google 输入关键词立马解决。</p>
+<p><img src="/images/ob_pasted-image-20211229165531.png" alt=""></p>
+<hr>
+<p>从这两件小事上，我分别从内容创作者、互联网普通用户两个角色体验到了百度为什么会死。</p>
+<p>百度这些年来渐渐的沦为互联网公司的度量单位，一个原因是没有拿到移动互联网的门票，另一个更根本的原因就是丢掉了信任，甚至是作恶太多。其结果不只是一个公司发展不好，甚至可以说是阻碍了中文信息的分享，并且让很多初创企业无法生存。</p>
+<p>不知道大家有没有体会，现在互联网上的免费的、好的中文信息越来越少。曾经流行过一段时间独立站点，但是你看现在活下来的，还在好好创作内容的中小站点还有多少？</p>
+<p>但是英文就完全不同，我们可以通过 Google 搜索到的很多结果来自中小站点，而且内容质量很高。</p>
+<p>因为用户相信在 Google 上能找到<em>可靠的、高质量的内容</em>，内容创作者相信高质量的内容可以通过 Google 吸引到用户，有流量就可以通过各种方式来变现。所以创作者就会不断创造高质量的内容，争取能做到 Google 的搜索排名靠前。还衍生了 SEO (Search Engine Optimization ) 这样的行业，有提供咨询和服务的，有提供工具的，有提供数据的等等。这样就形成了一个正向闭环。这种的商业模式对于用户、创作者、Google 三方有益的。可以说 Google  通过搜索打造了一个超级印钞机。</p>
+<p>但是百度选择另外一条路，因为过于短视，竭泽而渔去做竞价排名，最终破坏了这种用户、内容创作者对百度的信任。反正写得好也没流量，结果就是整个开放的互联网上，中文的高质量内容越来越少。而一些高质量的站点，比如 <a target="_blank" rel="noopener" href="https://coolshell.cn/articles/9308.html">CoolShell</a> 从来不期望百度能带流量，而且做了anti-baidu 插件来提醒读者不要使用百度。用户搜索行为被分流到了各个垂直领域的 App。这些 App 很多都是对搜索引擎是封闭的，比如微信公众号，整个就是一个大的封闭生态，这样百度可以使用的信息也越来越少。</p>
+<p>2010 年的时候，我的一个师兄在成都创业，做的是房产相关的网站。我当时快毕业了，跟着在里面实习打杂。我印象比较深的一点是，我隔壁座位的师兄时不时叹息：<em>百度账号上的钱又快没了</em>。实际上我们的业务都还没跑上正轨，但是百度已经开始收割了。很多人可能没开过做过初创公司，不信你可以试试，以公司的名义上线一个网站，要不了几个礼拜百度的销售会联系过来，问你要不要充钱。那你说我们可以不充钱啊，不充的结果就是几乎没有任何自然增长的机会 。</p>
+<p>一个公平有效的互联网搜索引擎，应当会给这些中小企业生存机会，而不是一味的凭借自己手握流量来抢夺和豪取，吃自己的饭让别人没饭可吃。理想情况下，如果一个初创企业或个人能够提供好的信息和服务，那就应该被人们搜索到，然后逐渐成长起来。比如 <a target="_blank" rel="noopener" href="https://flaviocopes.com/">Flavio Copes</a>，这是一个意大利开发者的个人站点，写的东西简单明了，Google 每天给他带来几万的自然流量，这样他可以开始自己卖电子书，逐渐摸索出了自己的业务。</p>
+<p>当一个公司掌握了流量分发大权时，有太多的手段可以立马来钱，所以抵抗这种诱惑需要克制和智慧。</p>
+<p>在 Google 2004 年首次公开募股的招股说明书中，包含了这几个字：“<strong>不作恶</strong>，我们坚信，从长远来看，即使我们放弃一些短期收益，作为股东，以及在其他方面，作为一家为世界做好事的公司，我们也会得到更好的服务“。</p>
+<p>很遗憾，百度在我看来就是在作恶。从我上面的第二个例子可以看出百度已经把免费的信息拿来换钱了，其他的恶还有把卖百度贴吧，百度全家桶等等，罄竹难书。 我想如果没有百度也许我们会有一个更好的中文互联网环境。</p>
+<p>除了百度的一些核心高管，外界估计无法知晓为什么百度这么多年都坚持做竞价排名。也许这东西就像是毒品一般，用上了之后就在资本的压力下再也无法回头。百度这些年来转头做 AI，作为普通用户我也是不抱任何期待。魏则西事件后大众对百度口诛笔伐，但是现在还是原来那个卵样。你要是想在百度上查个什么病，看几页搜索结果就会觉得自己命不久矣。</p>
+<p>所以，百度的产品能绕开就建议不用，少给自己添麻烦。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#胡写" >
+    <span class="tag-code">胡写</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/best-english-tech-sites/">
+        <span class="nav-arrow">← </span>
+        
+          我欣赏的英文技术站
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/p/compiling-to-wasm/">
+        
+          编译 WebAssembly 模块
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BA%8B%E4%BB%B6%E4%B8%80%EF%BC%9A"><span class="toc-nav-text">事件一：</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BA%8B%E4%BB%B6%E4%BA%8C%EF%BC%9A"><span class="toc-nav-text">事件二：</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/baidu-die-for-reason/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!-- Baidu Tongji -->
+
+        
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

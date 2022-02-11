@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          关于随机数 | 程序员的喵
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+
+  <!-- <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  -->
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin: 0;">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>关于随机数</h2>
+  <p class="post-date">2014-03-06</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="/images/dilbert.jpg" alt="dicker" class="img-center" /></p>
+<p>随机数代表着不确定性，其在计算机中广泛使用，比如用作加密的key、密码的生成、模拟，扑克游戏中，还有一些经典的算法(比如<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Monte_Carlo_method">Monte Carlo</a>)依赖随机数的产生。以下是一些随机数相关的问题简单总结。</p>
+<h2 id="随机数产生，真随机数和伪随机数生成器"><a href="#随机数产生，真随机数和伪随机数生成器" class="headerlink" title="随机数产生，真随机数和伪随机数生成器"></a>随机数产生，真随机数和伪随机数生成器</h2><p>随机数的产生是一个很有趣的问题。我们希望只通过计算机来产生随机数的时候会有一些困难，计算机擅长做确定的事情，按照制定的指令去依次执行。<br>有两种产生随机数的方法，真随机数和伪随机数，这两种有各自的优点和缺点。</p>
+<p>伪随机数生成器(PRNG)，顾名思义产生的不是严格意义上的随机数，一般是通过一些数学公式(或者计算好的表)来产生。比如简单的<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Linear_congruential_generator">Linear congruential generator</a>，可以用来产生伪随机数。伪随机数的行为是可被预测的，但是在统计意义上来说是随机的。因为这个特点其所以使用范围有限，比如一些模拟程序。而且伪随机数有可能出现固定的周期，比如下面<a target="_blank" rel="noopener" href="http://www.random.org/analysis/#visual">这两幅图</a>分别是通过真正的随机数产生器和Windows下面的PHP的伪随机数生成器产生的Bitmap，可以清楚地看到右边的那副图有规律可循。</p>
+<p>另外如Borland随机数生成器Random的实现:<br><figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> RandSeed = #### ;<br><span class="hljs-function"><span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-title">Random</span><span class="hljs-params">(<span class="hljs-keyword">long</span> max)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> x ;<br>    <span class="hljs-keyword">double</span> i ;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">final</span> ;<br>    x = <span class="hljs-number">0xffffffff</span>;<br>    x += <span class="hljs-number">1</span> ;<br><br>    RandSeed *= ((<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span>)<span class="hljs-number">134775813</span>);<br>    RandSeed += <span class="hljs-number">1</span> ;<br>    RandSeed = RandSeed % x ;<br>    i = ((<span class="hljs-keyword">double</span>)RandSeed) / (<span class="hljs-keyword">double</span>)<span class="hljs-number">0xffffffff</span> ;<br>    <span class="hljs-keyword">final</span> = (<span class="hljs-keyword">long</span>) (max * i) ;<br><br>    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>)<span class="hljs-keyword">final</span>;<br>&#125;<br></code></pre></td></tr></table></figure><br>可以看到Random的最初一个随机数依赖于seed，后一个随机数依赖前一个随机数。</p>
+<p>真随机数生成器(RNG)，通过向计算机中引入一些不可预测的物理信息，比如键盘敲击和鼠标移动等。所以真随机数才是很难预测的或者根本来说不可预测。每个操作系统的实现有各自的区别，<br>比如Linux中产生随机数引入了物理噪音作为输入，比如mac地址可以用来初始化entropy pool，随机源可以加入中断时间，硬盘的寻址时间等等。<br>接口是/dev/random、/dev/urandom、get_random_bytes()，其中get_random_bytes在内核中使用。<br>/dev/random和/dev/urandom的区别是/dev/random强度更大并且是阻塞的，因为要收集更多熵。</p>
+<h2 id="随机数的使用"><a href="#随机数的使用" class="headerlink" title="随机数的使用"></a>随机数的使用</h2><p>涉及到随机数的程序要特别小心。比如一个很简单的程序，我们知道C语言中的rand()产生的随机数是有范围的，0～32767，如果我要生成范围在0～10的随机数如何做？<br>可能你会简单认为rand()%10可以得到(惭愧我以前也这样用的)，但是这真的是随机的吗？如果你把0～32767的所有数字依次%10，统计一下可以发现有的数出现的次数要大一些，因此最后出现某些数的概率相应的要大一些。</p>
+<p>另外一个思考题，给一个rand()可以产生[1, 5]之间的随机整数，利用这个rand产生[1, 7]之间的随机整数？</p>
+<p>另写一个抽奖程序，从30w个用户中随机抽取10w个中奖用户？</p>
+<h2 id="写个好的洗牌程序不容易"><a href="#写个好的洗牌程序不容易" class="headerlink" title="写个好的洗牌程序不容易"></a>写个好的洗牌程序不容易</h2><p><img src="/images/dicker.jpg" alt="dicker" class="img-center" /></p>
+<p>写一个对的洗牌程序看起来很容易，其实不然。Robert Sedgewick说过：</p>
+<pre><code>&quot;That&apos;s a pretty tough thing to have happen if you&apos;re implementing online poker.
+ You might want to make sure that if you&apos;re advertising that you&apos;re doing a random
+ shuffle that you go ahead and do so.&quot;
+  —Robert Sedgewick, Professor of Computer Science, Princeton
+</code></pre><p>比如ASF Software在多年前写的一个流行的网上扑克游戏，其中的洗牌程序是这段Pascal代码：</p>
+<figure class="highlight pascal"><table><tr><td class="code"><pre><code class="hljs pascal"><span class="hljs-function"><span class="hljs-keyword">procedure</span> <span class="hljs-title">TDeck</span>.<span class="hljs-title">Shuffle</span>;</span><br><span class="hljs-keyword">var</span><br>   ctr: Byte;<br>   tmp: Byte;<br>   random_number: Byte;<br><span class="hljs-keyword">begin</span><br>   <span class="hljs-comment">&#123; Fill the deck with unique cards &#125;</span><br>   <span class="hljs-keyword">for</span> ctr := <span class="hljs-number">1</span> <span class="hljs-keyword">to</span> <span class="hljs-number">52</span> <span class="hljs-keyword">do</span><br>      Card[ctr] := ctr;<br>   <span class="hljs-comment">&#123; Generate a new seed based on the system clock &#125;</span><br>   randomize;<br>   <span class="hljs-comment">&#123; Randomly rearrange each card &#125;</span><br>   <span class="hljs-keyword">for</span> ctr := <span class="hljs-number">1</span> <span class="hljs-keyword">to</span> <span class="hljs-number">52</span> <span class="hljs-keyword">do</span> <span class="hljs-keyword">begin</span><br>      random_number := random(<span class="hljs-number">51</span>)+<span class="hljs-number">1</span>;<br>      tmp := card[random_number];<br>      card[random_number] := card[ctr];<br>      card[ctr] := tmp;<br>   <span class="hljs-keyword">end</span>;<br>   CurrentCard := <span class="hljs-number">1</span>;<br>   JustShuffled := True;<br><span class="hljs-keyword">end</span>;<br></code></pre></td></tr></table></figure>
+<p>可以分析一下这里的好几处问题，这里的洗牌算法也有问题，52!个排列出现的概率不一样。拿三张牌来作为例子就明白了。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">for</span> (i is <span class="hljs-number">1</span> to N)<br>    Swap i with random position between <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> N<br></code></pre></td></tr></table></figure>
+<p><img src="/images/poker.gif" alt="dicker" class="img-center" /><br>可以看出231, 213, 132出现的次数要多一些，因此相对应的概率也大。</p>
+<p>正确的洗牌程序算法是：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">for</span> (i is <span class="hljs-number">1</span> to N)<br>    Swap i with random position between i+<span class="hljs-number">1</span> <span class="hljs-keyword">and</span> N<br></code></pre></td></tr></table></figure>
+<p>一个32位的数作为seed，对于伪随机长生器是有问题的，因为如果给定seed伪随机产生器的行为是可以预测的。<br>32的seed的所有可能值的个数为2^32个，这相比52!(8.0658 * 10 ^ 67)小得很多。所以对于32位的seed，甚至可以用蛮力法来攻破。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>摘自&lt;&lt;思考的乐趣&gt;&gt;10个人坐在一起谈天，突然他们想知道他们的平均年薪是多少，但每个人都不愿意透露自己的工资数额，有没有什么办法让他们能够得到答案，并不用担心自己的年薪被曝光？<br>一个简单的协议模型，当然与随机数有点关系。</p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Random_number_generation">Wiki: Random number generation</a>。</p>
+<p><a target="_blank" rel="noopener" href="http://www.cigital.com/papers/download/developer_gambling.php">How We Learned to Cheat at Online Poker: A Study in Software Security</a>。</p>
+<p><a target="_blank" rel="noopener" href="http://book.douban.com/subject/10779597/">顾森, 思考的乐趣</a>。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Algorithms" >
+    <span class="tag-code">Algorithms</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/eopl/">
+        <span class="nav-arrow">← </span>
+        
+          另一本魔法书: EOPL
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/p/leetcode-anagrams/">
+        
+          LeetCode: anagrams
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%95%B0%E4%BA%A7%E7%94%9F%EF%BC%8C%E7%9C%9F%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%92%8C%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8"><span class="toc-nav-text">随机数产生，真随机数和伪随机数生成器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-nav-text">随机数的使用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%86%99%E4%B8%AA%E5%A5%BD%E7%9A%84%E6%B4%97%E7%89%8C%E7%A8%8B%E5%BA%8F%E4%B8%8D%E5%AE%B9%E6%98%93"><span class="toc-nav-text">写个好的洗牌程序不容易</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-nav-text">其他</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/random-number/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!-- Baidu Tongji -->
+
+        
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

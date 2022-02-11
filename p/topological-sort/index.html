@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          拓扑排序 | 程序员的喵
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+
+  <!-- <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  -->
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin: 0;">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>拓扑排序</h2>
+  <p class="post-date">2013-11-20</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>最近在看一些图算法，发现拓扑排序频繁出现，这里写一下自己的一些总结。</p>
+<p>拓扑排序是对于有向无环图而言的(DAG)，就是对于这个图所有的点(V1, V2, … Vn)找到一个点序列使得任意边(u, v)， u出现在v的前面。很容易证明，如果一个有向图中有环那么不存在拓扑排序。</p>
+<h2 id="现实中的问题"><a href="#现实中的问题" class="headerlink" title="现实中的问题"></a>现实中的问题</h2><p>首先来看现实中哪些问题需要拓扑排序的，课程排序，编译依赖问题，类似的凡是涉及到相关顺序的时间安排，比如Rails里面的初始化调用了库<a target="_blank" rel="noopener" href="http://ruby-doc.org/stdlib-2.0/libdoc/tsort/rdoc/TSort.html">Tsort</a>来进行排序。Unix中有个命令也叫<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Tsort_(Unix">tsort</a>)，在有的makefile里面还直接使用了这个命令来解决依赖问题。</p>
+<h2 id="O-V-E-的算法"><a href="#O-V-E-的算法" class="headerlink" title="O(V+E)的算法"></a>O(V+E)的算法</h2><p><img src="/images/topologicalsort.png" alt="topologicalsort" class="img-center" width="250" height="250"/></p>
+<p>拓扑排序的基本算法是用DFS，我们希望把有出度的点尽量排在前面，所以这里需要注意和DFS的区别。比如上面图中的一个DFS访问顺序是: 5 2 3 1 0 4, 但是这不是一个拓扑排序，4需要排在0的前面，5, 4, 0, 2, 3, 1。<br>拓扑排序中需要等迭代完节点的连接邻点后再把当前点压入栈。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;list&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stack&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Graph</span> &#123;</span><br>    <span class="hljs-keyword">int</span> V;<br>    list&lt;<span class="hljs-keyword">int</span>&gt;* adj;<br>    <span class="hljs-keyword">void</span> _topological_sort(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">bool</span> visited[], stack&lt;<span class="hljs-keyword">int</span>&gt;&amp; stack);<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">Graph</span>(<span class="hljs-keyword">int</span> v);<br>    ~<span class="hljs-built_in">Graph</span>();<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">addEdge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> w)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Topological_sort</span><span class="hljs-params">()</span></span>;<br>&#125;;<br><br>Graph::<span class="hljs-built_in">Graph</span>(<span class="hljs-keyword">int</span> v):<span class="hljs-built_in">V</span>(v) &#123;<br>    adj = <span class="hljs-keyword">new</span> list&lt;<span class="hljs-keyword">int</span>&gt;[V];<br>&#125;<br><br>Graph::~<span class="hljs-built_in">Graph</span>() &#123;<br>    <span class="hljs-keyword">delete</span> [] adj;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Graph::addEdge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">int</span> w)</span> </span>&#123;<br>    adj[v].<span class="hljs-built_in">push_back</span>(w);<br>&#125;<br><br><span class="hljs-keyword">void</span> Graph::_topological_sort(<span class="hljs-keyword">int</span> v, <span class="hljs-keyword">bool</span> visited[], stack&lt;<span class="hljs-keyword">int</span>&gt;&amp; stack) &#123;<br>    visited[v] = <span class="hljs-literal">true</span>;<br>    <span class="hljs-keyword">for</span>(list&lt;<span class="hljs-keyword">int</span>&gt;::iterator it = adj[v].<span class="hljs-built_in">begin</span>(); it != adj[v].<span class="hljs-built_in">end</span>(); ++it) &#123;<br>        <span class="hljs-keyword">int</span> u = *it;<br>        <span class="hljs-keyword">if</span>(visited[u] == <span class="hljs-literal">false</span>)<br>            _topological_sort(u, visited, stack);<br>    &#125;<br>    stack.<span class="hljs-built_in">push</span>(v);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">Graph::Topological_sort</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">bool</span> visited[V];<br>    stack&lt;<span class="hljs-keyword">int</span>&gt; stack;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; i&lt;V; i++)<br>        visited[i] = <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=V<span class="hljs-number">-1</span>; i&gt;=<span class="hljs-number">0</span>; i--) &#123;<br>        <span class="hljs-keyword">if</span>(visited[i] == <span class="hljs-literal">false</span>) &#123;<br>            _topological_sort(i, visited, stack);<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">while</span>(!stack.<span class="hljs-built_in">empty</span>()) &#123;<br>        <span class="hljs-keyword">int</span> v = stack.<span class="hljs-built_in">top</span>();<br>        stack.<span class="hljs-built_in">pop</span>();<br>        std::cout &lt;&lt; <span class="hljs-string">&quot; &quot;</span> &lt;&lt; v &lt;&lt; <span class="hljs-string">&quot; &quot;</span>;<br>    &#125;<br>    std::cout &lt;&lt; std::endl;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">Graph <span class="hljs-title">g</span><span class="hljs-params">(<span class="hljs-number">6</span>)</span></span>;<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">5</span>, <span class="hljs-number">2</span>);<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">5</span>, <span class="hljs-number">0</span>);<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">4</span>, <span class="hljs-number">0</span>);<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">4</span>, <span class="hljs-number">1</span>);<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>);<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">3</span>, <span class="hljs-number">1</span>);<br>    cout &lt;&lt; <span class="hljs-string">&quot;Following is topological sort result: \n&quot;</span>;<br>    g.<span class="hljs-built_in">Topological_sort</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
+<h2 id="唯一性"><a href="#唯一性" class="headerlink" title="唯一性"></a>唯一性</h2><p>如果一个DAG的拓扑排序中任意连续的两点都是可连通的，那么这个序列也就是DAG的Hamiltonian路径，而且如果DAG图的Hamiltonian路径存在，那么拓扑排序就是唯一的。否则如果一个拓扑排序结果不是Hamiltonian路径，那么就存在多个拓扑排序结果。</p>
+<h2 id="其他图算法的预处理"><a href="#其他图算法的预处理" class="headerlink" title="其他图算法的预处理"></a>其他图算法的预处理</h2><ul>
+<li><p>DAG的强连通分支问题<br>先得到拓扑排序，形成逆向图(所有边与原来方向相反)，然后根据拓扑排序依次再进行DFS。</p>
+</li>
+<li><p>DAG的最短路径问题，这可以在O(V+E)复杂度解决最短路径问题。同样类似的算法适用与DAG的最长路径问题，给定一个点求DAG中的各个点与给定点之间的最长路径。最长路径问题要比最短路径问题难，因为最长路径问题没有最优子结构，<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Longest_path_problem">对于通用的图的最长路径算法还是NP难的问题</a>。</p>
+</li>
+</ul>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Algorithms" >
+    <span class="tag-code">Algorithms</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/kernel-analysis-process-defunct/">
+        <span class="nav-arrow">← </span>
+        
+          Kernel analysis: Defunct Process
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/p/do-presentation-like-a-geek/">
+        
+          Do Presentation like a Geek
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%8E%B0%E5%AE%9E%E4%B8%AD%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-nav-text">现实中的问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#O-V-E-%E7%9A%84%E7%AE%97%E6%B3%95"><span class="toc-nav-text">O(V+E)的算法</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%94%AF%E4%B8%80%E6%80%A7"><span class="toc-nav-text">唯一性</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96%E5%9B%BE%E7%AE%97%E6%B3%95%E7%9A%84%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-nav-text">其他图算法的预处理</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/topological-sort/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!-- Baidu Tongji -->
+
+        
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

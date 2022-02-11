@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          《C深度探索》笔记 | 程序员的喵
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+
+  <!-- <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  -->
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin: 0;">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>《C深度探索》笔记</h2>
+  <p class="post-date">2010-07-20</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3>最名不副实的关键字 static</h3><br>这个关键字在C语言里面有两个作用，C++对这个关键词进行了扩展。<br><br>1：修饰变量，又分为局部变量和全局变量，被修饰的变量都存储在静态的内存区域。 修饰静态变量，那么只有在这个文件内可以引用它，在其他文件里面即使使用extern也不能进行访问。所以一般是放在文件头部分。 修饰局部变量，只有在定义的函数内访问，函数外不能访问，即使是在同文件内。<br><br>2：修饰函数，在函数前面添加static，那么这个函数只能在该文件内使用。这样，不同人编写的函数，如果不在同文件内，可以不用担心函数名字 相同。<br><br><figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c">main.<span class="hljs-function">c</span><br><span class="hljs-function"></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>   Func();<br>   reutrn <span class="hljs-number">0</span>;<br>&#125;<br><br>Def.<span class="hljs-function">c</span><br><span class="hljs-function"></span><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Func</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Func called\n&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure><br><br>编译: gcc main.c Def.c -o main 链接错误</pre><br><h3><a id="sec2" name="sec2"></a>变量的命名</h3><br>min-length&amp;&amp;max-information<br><br>低精度数据向高精度数据扩展。<br><br><strong>被冤枉的关键字 sizeof 用法：sizeof(int), sizeof(i), sizeof i;</strong><br><br><strong></strong>if ,else float类型值与0值比较，定义一个很小的数，在某个范围内。同时不要在一个很大的浮点数和很小的浮点数之间进行运算。<br><h3><a id="sec3" name="sec3"></a>循环注意点</h3><br>嵌套循环中，长循环放在内，短循环放在外面，这样可以减少cpu跨切循环层的次数，利用cpu cache。 循环里面的代码尽量短，一般不超过20行。如果不行就改为循环调用函数。<br><h3><a id="sec4" name="sec4"></a>void</h3><br>主要作用在于对函数参数的限定和函数返回值的限定。不能对void进行算法操作。<br><h3><a id="sec5" name="sec5"></a>const</h3><br>修饰指针的时候的记法，就近原则。 const int <em>p ; p可变，指向的对象不可变 int const </em>p ; p可变，指向的对象不可变 int* const p; p不可变，指向的对象可变<br><h3><a id="sec6" name="sec6"></a>struct 和class的区别</h3><br>在C++中struct关键字与class一般可以通用，一个区别就是struct的成员默认情况下是public的，而class的是private的。<br><h3><a id="sec7" name="sec7"></a>union</h3><br>一个union只配置一个足够大的空间来容纳最大的数据成员，union的作用在于压缩空间。<br><br>存储的大小端：<br><br><figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">union</span></span><br><span class="hljs-class">&#123;</span><br>  <span class="hljs-keyword">int</span> i;<br>  <span class="hljs-keyword">char</span> a[<span class="hljs-number">2</span>];<br>&#125;*p,u;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>  p=&amp;amp;u;<br>  p-&amp;gt;a[<span class="hljs-number">0</span>]=<span class="hljs-number">0x39</span>;<br>  p-&amp;gt;a[<span class="hljs-number">1</span>]=<span class="hljs-number">0x38</span>;<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>,p-&amp;gt;i);<br>  PrintBinary(<span class="hljs-number">14393</span>);<br>  PrintBinary(<span class="hljs-number">56</span>);<br>  PrintBinary(<span class="hljs-number">57</span>);<br>  <span class="hljs-keyword">if</span>(CheckSystem()==<span class="hljs-number">1</span>)<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Little endian\n&quot;</span>);<br>  <span class="hljs-keyword">else</span><br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Big endian\n&quot;</span>);<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><br><span class="hljs-number">11100000111001</span><br><span class="hljs-number">111000</span><br><span class="hljs-number">111001</span><br>Little endian  低字节存储在低地址<br></code></pre></td></tr></table></figure><br><br><h3><a id="sec8" name="sec8"></a>指针，访问内存的钥匙</h3><br>前段时间听过一个面试题，就是如何读写某人地址，答案就是指针？<br><br><figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">int</span><br>    pp=&amp;i;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%x\n&quot;</span>,pp);<br>    <span class="hljs-keyword">int</span> p=(<span class="hljs-keyword">int</span>)<span class="hljs-number">0x12ff60</span>;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%x\n&quot;</span>,p);<br>    *p=<span class="hljs-number">1</span>;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>,i);<br>    getchar();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure><br><br>这段代码在vc中编译是能够运行的，但是在gcc中不行，gcc中编译后i的地址并不是固定的，这样直接给指针赋值，写指向的地址出现访问越界。<br><h3><a id="sec9" name="sec9"></a>a和&amp;a的区别</h3>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-keyword">int</span> a[<span class="hljs-number">5</span>]=&#123;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>&#125;;<br>  <span class="hljs-keyword">int</span>* ptr=(<span class="hljs-keyword">int</span>*)(&amp;amp;a+<span class="hljs-number">1</span>);<br>  <span class="hljs-keyword">int</span>* p=(<span class="hljs-keyword">int</span>*)(&amp;amp;a);<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%x\n&quot;</span>,ptr);<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%x\n&quot;</span>,p);<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d,%d\n&quot;</span>,*(a+<span class="hljs-number">1</span>),*(ptr<span class="hljs-number">-1</span>));<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>bfeae860 bfeae84c 2,5 说明ptr和a的地址相差5*4=20个byte。 定义数组int a<sup><a name="fnr.5" href="file:///home/heipang/document/wiki/Home_Page/Computer/%E6%B7%B1%E5%BA%A6%E6%8E%A2%E7%B4%A2C.html#fn.5">5</a></sup>; a表示的是数组中首元素的地址，&amp;a才是数组的首地址，两者的值是一样的，但是意义却不同。</p>
+<p><h3><a id="sec10" name="sec10"></a>数组当作函数参数传递</h3><br>传递的是指针，也就是数组的地址，但注意如果把指针本身传递进函数的时候进行了数组的拷贝，传递的是一个拷贝。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func</span><span class="hljs-params">(<span class="hljs-keyword">char</span>* p)</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-keyword">char</span> c=p[<span class="hljs-number">3</span>];<br>  *(p+<span class="hljs-number">3</span>)=<span class="hljs-string">&#x27;X&#x27;</span>;<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%c\n&quot;</span>,c);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-comment">//char* p=&quot;abcdef&quot;;</span><br>  <span class="hljs-keyword">char</span> p[]=<span class="hljs-string">&quot;abcdefg&quot;</span>;<br>  func(p);<br>  <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>,p);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>注意上面的区别，如果是char* p=”abcdef”，那么p为main函数的局部变量，”abcdef”的存储空间在静态内存中，func函数中可以通过指针p去访问其内容， 但如果改变其内容会发生访问越界。而char p[]=”abcdefg”，其数组的内容是在栈上。</p>
+<p><h3><a id="sec11" name="sec11"></a>内存管理</h3><br>静态区:保存自动全局变量和 static 变量(包括 static 全局和局部变量)。静态区的内容 在总个程序的生命周期内都存在,由编译器在编译的时候分配。 栈(堆栈):保存局部变量。栈上的内容只在函数的范围内存在,当函数运行结束,这些内容 也会自动被销毁。其特点是效率高,但空间大小有限。 堆:由 malloc 系列函数或 new 操作符分配的内存。其生命周期由 free 或 delete 决定。 在没有释放之前一直存在,直到程序结束。其特点是使用灵活,空间比较大,但容易出错。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#C" >
+    <span class="tag-code">C</span>
+  </a>
+
+  <a href="/tags#Books" >
+    <span class="tag-code">Books</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/maze/">
+        <span class="nav-arrow">← </span>
+        
+          走出迷宫-路径搜索
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/p/concrete-abstractions/">
+        
+          《Concrete Abstractions》的一些解答
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">最名不副实的关键字 static</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">变量的命名</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">循环注意点</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">void</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">const</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">struct 和class的区别</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">union</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">指针，访问内存的钥匙</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">a和&amp;a的区别</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">数组当作函数参数传递</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">内存管理</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/c-deep/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!-- Baidu Tongji -->
+
+        
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          一种更快的字符串匹配算法-源自Python2.5 | 程序员的喵
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+
+  <!-- <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  -->
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin: 0;">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>一种更快的字符串匹配算法-源自Python2.5</h2>
+  <p class="post-date">2011-07-30</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>Python2.5的实现中有一个字符串匹配算法，在s中查找p是否存在，s的长度为n，p的长度为m。这个算法符合以下要求：</p>
+<ul>
+<li>任何情况下都要比brute-force算法快</li>
+<li>O(1)的空间，O(m)的初始化复杂度</li>
+<li>O(n/m)的查找复杂度</li>
+<li>最坏情况下不能比O(nm)时间复杂度差</li>
+<li>实现简单，对于实际中的查找大部分表现良好，最坏情况出现概率小</li>
+</ul>
+<p>标准的字符串查找算法不满足这些要求，KMP的时间复杂度为O(m+n)(初始化O(m)加第二部分O(n)， Boyer-Moore和其变形要求额外的空间，Python2.5里面增加了这个结合了Boyer-Moore和Sunday的思想的变形实现。来看看这是怎么个神奇的算法，KMP的思想是在每一次不匹配的情况下尽量的向右边移动，所以计算一个Next的移动下标数组。如果不匹配，最理想的情况下是向右边移动多长?应该是m，这样就能尽量减少对比的次数。所以每次比较的时候先比较p的最后一个字符，比如s=”aaaaaaad”，p=”aae”，如果从s的开头查找，只要发现第3个和p的第三个不一样，移动指标，移动多少？如果发现没有e，最长能移动p的长度，就是3。如果最后一个不匹配并且s[i+m]不是p中的字符就移动m，否则移动1。这里有两个问题：</p>
+<blockquote>
+<p>如何知道s中的某一个字符是否是p中的一部分?<br>如何尽量移动m而不出现少找的情况? </p>
+</blockquote>
+<p>第一个问题，可以用某个存储空间存下是否有p中的某个字符出现过，方便以后查找。Hash的思想，但是这里字符串查找里面再弄个Hash太无语了吧。一个简单的Bloom-filter，这里是这样实现的。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/*计算mask*/</span> <br>mlast = m<span class="hljs-number">-1</span>;<br><span class="hljs-keyword">for</span> (mask = i = <span class="hljs-number">0</span>; i &lt;= mlast; i++) &#123;<br>    mask |= (<span class="hljs-number">1</span> &lt;&lt; (p[i] &amp; <span class="hljs-number">0x1F</span>));<br>&#125;<br><br><span class="hljs-comment">/*判断s[i]不是p中的一个字符串*/</span> <br><span class="hljs-keyword">if</span>(!(mask &amp; (<span class="hljs-number">1</span> &lt;&lt; (s[i] &amp; <span class="hljs-number">0x1F</span>))))<br>     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;s[i] is not in pattern&quot;</span>);<br><span class="hljs-keyword">else</span> <br>     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;s[i] is in pattern&quot;</span>);<br></code></pre></td></tr></table></figure>
+<p>其实我们是要判断一个s中的一个字符串没有出现在p中，取低5位不是可能产生冲突么？产生冲突也没问题，就像一个Hash只要一个元素算出来的Key指定的slot没元素不就能确定这个元素不在里面了么。</p>
+<p>第二个问题，有些巧妙。上面那个例子是因为s的最后一个字符没被匹配，所以能移动m的长度。如果这个例子s=”aaacaaaacaa”，p=”aacaa”，第5个位置都为a，最后一个匹配，但是s里面前几个其实不为aacaa，所以需要移动，但是移动多少呢?如果移动p的长度，那从第2个位置开始的aacaa就没被检查到。所以需要一个变量记录在每次最后一个字母匹配的情况下向右移动的合理偏移量，在这里为skip，初始化的时候计算出来，这最偏移量其实是计算的最小偏移量，就是移动skip个位置到第一个s[m-1]的位置。 整个实现既节省空间又速度快，强大。</p>
+<p>具体实现如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//如果mode为FAST_COUNT，则查找pattern出现的次数</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> FAST_COUNT 1</span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">fastsearch</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s, <span class="hljs-keyword">size_t</span> n,</span></span><br><span class="hljs-params"><span class="hljs-function">           <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* p, <span class="hljs-keyword">size_t</span> m,</span></span><br><span class="hljs-params"><span class="hljs-function">           <span class="hljs-keyword">int</span> mode)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">long</span> mask;<br>    <span class="hljs-keyword">size_t</span> skip, count = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">size_t</span> i, j, mlast, w;<br><br>    w = n - m;<br><br>    <span class="hljs-keyword">if</span> (w &lt; <span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br><br>    <span class="hljs-comment">/* 如果m=1，特例，扫描一遍解决*/</span> <br>    <span class="hljs-keyword">if</span> (m &lt;= <span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">if</span> (m &lt;= <span class="hljs-number">0</span>)<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>        <span class="hljs-keyword">if</span> (mode == FAST_COUNT) &#123;<br>            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; n; i++)<br>                <span class="hljs-keyword">if</span> (s[i] == p[<span class="hljs-number">0</span>])<br>                    count++;<br>            <span class="hljs-keyword">return</span> count;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; n; i++)<br>                <span class="hljs-keyword">if</span> (s[i] == p[<span class="hljs-number">0</span>])<br>                    <span class="hljs-keyword">return</span> i;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br><br>    mlast = m - <span class="hljs-number">1</span>;<br><br>    skip = mlast - <span class="hljs-number">1</span>;<br>    <span class="hljs-comment">/*计算mask*/</span> <br>    <span class="hljs-keyword">for</span> (mask = i = <span class="hljs-number">0</span>; i &lt; mlast; i++) &#123;<br>        mask |= (<span class="hljs-number">1</span> &lt;&lt; (p[i] &amp; <span class="hljs-number">0x1F</span>));<br>        <span class="hljs-keyword">if</span> (p[i] == p[mlast])<br>            skip = mlast - i - <span class="hljs-number">1</span>;<br>    &#125;<br>    mask |= (<span class="hljs-number">1</span> &lt;&lt; (p[mlast] &amp; <span class="hljs-number">0x1F</span>));<br><br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt;= w; i++) &#123;<br>        <span class="hljs-keyword">if</span> (s[i+m<span class="hljs-number">-1</span>] == p[m<span class="hljs-number">-1</span>]) &#123;<span class="hljs-comment">//pattern末尾匹配</span><br>            <span class="hljs-comment">/* candidate match */</span> <br>            <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; mlast; j++)<br>                <span class="hljs-keyword">if</span> (s[i+j] != p[j])<br>                    <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">if</span> (j == mlast) &#123;<span class="hljs-comment">//一个匹配成功</span><br>                <span class="hljs-keyword">if</span> (mode != FAST_COUNT)<br>                    <span class="hljs-keyword">return</span> i;<br>                count++;<br>                i = i + mlast;<br>                <span class="hljs-keyword">continue</span>;<br>            &#125;<br>            <span class="hljs-comment">/*移动多少?,根据mask*/</span> <br>            <span class="hljs-keyword">if</span> (!(mask &amp; (<span class="hljs-number">1</span> &lt;&lt; (s[i+m] &amp; <span class="hljs-number">0x1F</span>))))<br>                i = i + m;<br>            <span class="hljs-keyword">else</span> <br>                i = i + skip;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">/* skip: check if next character is part of pattern */</span> <br>            <span class="hljs-keyword">if</span> (!(mask &amp; (<span class="hljs-number">1</span> &lt;&lt; (s[i+m] &amp; <span class="hljs-number">0x1F</span>))))<br>                i = i + m;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (mode != FAST_COUNT)<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    <span class="hljs-keyword">return</span> count;<br>&#125;<br></code></pre></td></tr></table></figure>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+  <a href="/tags#Algorithms" >
+    <span class="tag-code">Algorithms</span>
+  </a>
+
+  <a href="/tags#C" >
+    <span class="tag-code">C</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/ooc_in_python/">
+        <span class="nav-arrow">← </span>
+        
+          C的面向对象风格代码
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/p/emacssleep/">
+        
+          让Emacs提醒睡觉
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/fastsearch-in-python2/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!-- Baidu Tongji -->
+
+        
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

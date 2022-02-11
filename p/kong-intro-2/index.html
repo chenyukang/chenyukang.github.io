@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          Kong源码分析: 启动 | 程序员的喵
+      
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+
+  <!-- <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  -->
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin: 0;">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Kong源码分析: 启动</h2>
+  <p class="post-date">2017-07-07</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="Kong的初始化过程"><a href="#Kong的初始化过程" class="headerlink" title="Kong的初始化过程"></a>Kong的初始化过程</h3><p>安装好Kong之后我们是用命令<code>sudo ./bin/kong start -c kong.conf -vv</code>来启动。其中kong.conf为配置文件，<code>-vv</code>选项打印出一些重要信息展示出来，方便发现问题。</p>
+<p>可以看到<code>./bin/kong</code>是一个脚本，是用的<code>#!/usr/local/openresty/bin/resty</code>程序来执行，而resty是OpenResty的一个Perl可执行脚本。kong的内容很简单，就是一个入口函数调用：<br><code>require(&quot;kong.cmd.init&quot;)(arg)</code></p>
+<p>所以我们可以从cmd/init.lua这个文件开始入手看启动过程。一翻开init.lua这个文件，发现其实不过是个wrapper，解析了args之后就是调用start，stop，quit等命令。然后我们顺藤摸瓜找cmd/start.lua文件，整个启动过程就在这里了：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua"><span class="hljs-keyword">local</span> conf = <span class="hljs-built_in">assert</span>(conf_loader(args.conf, &#123;<br>  prefix = args.prefix<br>&#125;))<br><br><span class="hljs-keyword">local</span> err<br><span class="hljs-keyword">local</span> dao = <span class="hljs-built_in">assert</span>(DAOFactory.new(conf))<br><span class="hljs-built_in">xpcall</span>(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span><br>  <span class="hljs-built_in">assert</span>(prefix_handler.prepare_prefix(conf, args.nginx_conf))<br>  <span class="hljs-built_in">assert</span>(dao:run_migrations())<br>  <span class="hljs-built_in">assert</span>(serf_signals.start(conf, dao))<br>  <span class="hljs-built_in">assert</span>(nginx_signals.start(conf))<br>  <span class="hljs-built_in">log</span>(<span class="hljs-string">&quot;Kong started&quot;</span>)<br><span class="hljs-keyword">end</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span></span><br>  err = e <span class="hljs-comment">-- cannot throw from this function</span><br><span class="hljs-keyword">end</span>)  <br></code></pre></td></tr></table></figure>
+<p>从代码上来看很直观，首先conf_loader载入配置文件，DAOFactory构建数据库连接层，prefix_handler.prepare_prefix是准备一些由程序生成的配置文件。dao:run_migrations是迁移表结构到数据库，类似其他 Web 框架。serf_signals是启动serf程序，nginx_signals是启动nginx进程。</p>
+<h3 id="读取配置文件conf-loader"><a href="#读取配置文件conf-loader" class="headerlink" title="读取配置文件conf_loader"></a>读取配置文件conf_loader</h3><p>conf_loader读取的当然是命令行里面传入的kong.conf文件，打开conf_loader.lua看了看，是是用一个lua第三方库来做文件解析的。<code>local pl_config = require &quot;pl.config&quot;</code>，最开始不太知道这个pl是什么，经过搜索后才知道是这里<a target="_blank" rel="noopener" href="https://github.com/stevedonovan/Penlight/tree/master/lua/pl">定义的</a>，在kong.rockspec里面有定义了该库的依赖<code>&quot;penlight == 1.4.1&quot;</code>。读取配置的整个过程比较琐碎，最后回构建一个解析好的conf表。这里学到了Lua里面的setmetatable设置元表的方法，table作为Lua里面的最基本数据结构，setmetatable可以方便的绑定一个key和其对应的方法。看起来也像是面向对象的风格，在conf_loader的最后部分是:</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua"><span class="hljs-keyword">return</span> <span class="hljs-built_in">setmetatable</span>(&#123;<br>  <span class="hljs-built_in">load</span> = <span class="hljs-built_in">load</span>,<br>  add_default_path = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(path)</span></span><br>    DEFAULT_PATHS[#DEFAULT_PATHS+<span class="hljs-number">1</span>] = <span class="hljs-built_in">path</span><br>  <span class="hljs-keyword">end</span>,<br>  ......<br>&#125;, &#123;<br>  <span class="hljs-built_in">__call</span> = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_, ...)</span></span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">load</span>(...)<br>  <span class="hljs-keyword">end</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+<p>这样其他地方调用的时候<code>local conf, err, errors = conf_loader(args.conf)</code>自然就把args.conf传入load，返回解析后的结果。</p>
+<h3 id="prepare-prefix动态生成Nginx和serf的配置"><a href="#prepare-prefix动态生成Nginx和serf的配置" class="headerlink" title="prepare_prefix动态生成Nginx和serf的配置"></a>prepare_prefix动态生成Nginx和serf的配置</h3><p>prefix_handler.lua这个文件主要在准备一些Nginx的配置文件和serf的配置文件。prepare_prefix函数前半部分在创建各个子目录，logs、serf、pids、以及各个日志文件。关于Kong的config部分需要参考一下<a target="_blank" rel="noopener" href="https://getkong.org/docs/0.10.x/configuration/">这里</a>。这个函数比较长，重要的部分是生成Nginx的配置文件。<br>可以看到compile_kong_conf函数其实是是用kong/templates目录下的nginx_kong.lua和nginx.lua分别生成两个文件，其中nginx_kong.lua里面包含了嵌入Kong的Lua代码的逻辑。</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">init_by_lua_block &#123;<br>    <span class="hljs-built_in">require</span> <span class="hljs-string">&#x27;luarocks.loader&#x27;</span><br>    <span class="hljs-built_in">require</span> <span class="hljs-string">&#x27;resty.core&#x27;</span><br>    kong = <span class="hljs-built_in">require</span> <span class="hljs-string">&#x27;kong&#x27;</span><br>    kong.init()<br>&#125;<br><br>location / &#123; <br>  rewrite_by_lua_block &#123;<br>      kong.rewrite()<br>  &#125;<br><br>  access_by_lua_block &#123;<br>      kong.access()<br>  &#125;<br><br>  header_filter_by_lua_block &#123;<br>      kong.header_filter()<br>  &#125;<br><br>  body_filter_by_lua_block &#123;<br>      kong.body_filter()<br>  &#125;<br><br>  log_by_lua_block &#123;<br>      kong.<span class="hljs-built_in">log</span>()<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>因此我们可以知道Kong每次reload或者启动的时候会生成新的Nginx配置文件，所以我们如果要加入自己的配置可以直接修改nginx_kong.lua文件。另外我在使用的时候发现一个小问题，Kong把serf的node_id存在一个文件里，如果我们把之前跑过Kong的机器做了镜像，然后再启动一个新的实例时，这个node_id文件既然存在则没有重新生成，最终导致两台kong实例并没有相互通信形成一个集群。我认为这里其实可以再检查一下node_id的文件和本机的ip是否一致，如果不一致则重新生成。</p>
+<h3 id="dao-run-migrations"><a href="#dao-run-migrations" class="headerlink" title="dao:run_migrations()"></a>dao:run_migrations()</h3><p>初始化过程的下一步则是执行数据库操作，Kong目前只支持cassandra和Postgres，个人认为应该增加Redis的支持。</p>
+<h3 id="serf-signals-start"><a href="#serf-signals-start" class="headerlink" title="serf_signals.start"></a>serf_signals.start</h3><p>之前提到过serf是用来保证kong instance之间的通信的，启动的时候的一个很重要参数是<code>--event-handler</code>，参数的内容是一个可执行脚本(通常叫做serf_event.sh)，文件的内容是前面生成配置文件的时候写入的。默认情况下serf会监听在7946端口，如果多台server需要形成一个集群，这个端口之间需要能相互通信。这里就有一个问题，在一个新的server刚启动的时候，该server是如何发现其他节点的呢？我们可以看到serf_signals.lua里的start函数调用了serf:autojoin()函数，跟踪到autojoin里面看代码，其实是从数据库里读取出其他nodes的信息，然后依次告诉对方新同志加入了，然后把自己的节点信息写入到数据库里。自然如果要退出也需要把自己的信息从数据库里删掉。</p>
+<h3 id="nginx-signals-start"><a href="#nginx-signals-start" class="headerlink" title="nginx_signals.start"></a>nginx_signals.start</h3><p>启动的最后一步即是Nginx的启动，其实最终执行的命令就是:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">/usr/local/openresty/nginx/sbin/nginx -p /usr/local/kong -c nginx.conf<br></code></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过上面的分析，可以总结Kong的启动过程即是：解析输入参数，验证参数合法性并生成必要的目录和配置文件，执行数据库操作，启动serf，启动Nginx。最终其实就是一个OpenResty启动过程，嵌入Kong里面的core部分的Lua代码。后面继续分析其可扩展的插件机制。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Lua" >
+    <span class="tag-code">Lua</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/kong-intro-3/">
+        <span class="nav-arrow">← </span>
+        
+          Kong源码分析: 插件
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/p/kong-intro/">
+        
+          Kong源码分析
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Kong%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B"><span class="toc-nav-text">Kong的初始化过程</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E8%AF%BB%E5%8F%96%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6conf-loader"><span class="toc-nav-text">读取配置文件conf_loader</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#prepare-prefix%E5%8A%A8%E6%80%81%E7%94%9F%E6%88%90Nginx%E5%92%8Cserf%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-nav-text">prepare_prefix动态生成Nginx和serf的配置</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#dao-run-migrations"><span class="toc-nav-text">dao:run_migrations()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#serf-signals-start"><span class="toc-nav-text">serf_signals.start</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#nginx-signals-start"><span class="toc-nav-text">nginx_signals.start</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/kong-intro-2/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!-- Baidu Tongji -->
+
+        
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
