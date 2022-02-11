@@ -175,8 +175,10 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><h2 id="Subtyping"><a href="#Subtyping" class="headerlink" title="Subtyping"></a>Subtyping</h2><p>subtyping解决的问题是多态，OO的一个基本要素。</p>
-<pre><code>we say that S is a subtype of T, written S &lt;: T, to mean that any term of type S can safely be used in a context where a term of type T is expected. This view of subtyping is often called the principle of safe substitution.
-</code></pre><p>这章只是以record来作为例子说明，直白的所一个类型S是另外一个类型的T的子类型，意思是任何使用T的context，我们可以安全的使用S。对于record类型来说，field数量多的是field数量少的子类型，因为这样任何从T要取得的field都可以从子类型里面取到。</p>
+<blockquote>
+<p>we say that S is a subtype of T, written S &lt;: T, to mean that any term of type S can safely be used in a context where a term of type T is expected. This view of subtyping is often called the principle of safe substitution.</p>
+</blockquote>
+<p>这章只是以record来作为例子说明，直白的所一个类型S是另外一个类型的T的子类型，意思是任何使用T的context，我们可以安全的使用S。对于record类型来说，field数量多的是field数量少的子类型，因为这样任何从T要取得的field都可以从子类型里面取到。</p>
 <p>对于函数类型来说，如果<code>S1-&gt;S2</code>, <code>T1-&gt;T2</code>, S1是T1的子类型，S2是T2的子类行，那么<code>S1-&gt;S2</code>是<code>T1-&gt;T2</code>的子类型。</p>
 <p>引入Top类型，是所有类型的父类，对应很多编程语言里面的Object(OOP里面常见的伎俩)，Go里面我就这样定义：</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Object <span class="hljs-keyword">interface</span>&#123;&#125;<br></code></pre></td></tr></table></figure>
@@ -186,8 +188,10 @@
 <figure class="highlight ocaml"><table><tr><td class="code"><pre><code class="hljs ocaml">f = λ(x:<span class="hljs-type">Top</span>) (x <span class="hljs-keyword">as</span> &#123;a:<span class="hljs-type">Nat</span>&#125;).a;<br></code></pre></td></tr></table></figure>
 <p>这个函数接收任何类型的参数，但是隐含一个假设，必须是一个有成员变量为数字类型的a，如果传递一个错误的参数typechecker也不报错，但运行的时候就会有错误了。所以含有down-cast的类型系统应该遵循： <code>trust, but verify</code>，编译的时候不报错，但是留着运行的时候检查。为了避免down-cast引起的复杂问题，ML等语言选择的是<code>down-cast with type tags</code>。</p>
 <p><code>channels</code>:</p>
-<pre><code>The key observation is that, from the point of view of typing, a communication channel behaves exactly like a reference cell: it can be used for both reading and writing, and, since it is difficult to determine statically which reads correspond to which writes, the only simple way to ensure type safety is to require that all the values passed along the channel must belong to the same type.
-</code></pre><p>subtyping的引入导致分支多的情况下类型检查麻烦，因此引入了Join和Meet的概念，实现可参考代码里面的:</p>
+<blockquote>
+<p>The key observation is that, from the point of view of typing, a communication channel behaves exactly like a reference cell: it can be used for both reading and writing, and, since it is difficult to determine statically which reads correspond to which writes, the only simple way to ensure type safety is to require that all the values passed along the channel must belong to the same type.</p>
+</blockquote>
+<p>subtyping的引入导致分支多的情况下类型检查麻烦，因此引入了Join和Meet的概念，实现可参考代码里面的:</p>
 <figure class="highlight ocaml"><table><tr><td class="code"><pre><code class="hljs ocaml"><span class="hljs-keyword">let</span> <span class="hljs-keyword">rec</span> join ctx tyS tyT =<br>  <span class="hljs-keyword">if</span> subtype ctx tyS tyT <span class="hljs-keyword">then</span> tyT <span class="hljs-keyword">else</span><br>  <span class="hljs-keyword">if</span> subtype ctx tyT tyS <span class="hljs-keyword">then</span> tyS <span class="hljs-keyword">else</span><br>  <span class="hljs-keyword">let</span> tyS = simplifyty ctx tyS <span class="hljs-keyword">in</span><br>  <span class="hljs-keyword">let</span> tyT = simplifyty ctx tyT <span class="hljs-keyword">in</span><br>  <span class="hljs-keyword">match</span> (tyS,tyT) <span class="hljs-keyword">with</span><br>    (<span class="hljs-type">TyArr</span>(tyS1,tyS2),<span class="hljs-type">TyArr</span>(tyT1,tyT2)) -&gt;<br>      <span class="hljs-type">TyArr</span>(meet ctx  tyS1 tyT1, join ctx tyS2 tyT2)<br>  | _ -&gt;<br>      <span class="hljs-type">TyTop</span><br><br><span class="hljs-keyword">and</span> meet ctx tyS tyT =<br>  .......<br><br></code></pre></td></tr></table></figure>
 <h2 id="Case-Study-Imperative-Objects"><a href="#Case-Study-Imperative-Objects" class="headerlink" title="Case Study: Imperative Objects"></a>Case Study: Imperative Objects</h2><p>不考虑实现效率和语法简洁的条件下，目前为止学到的语言特性已经足够来模拟实现OOP。最简单的例子就是一个counter:</p>
 <figure class="highlight ocaml"><table><tr><td class="code"><pre><code class="hljs ocaml">c = <span class="hljs-keyword">let</span> x = <span class="hljs-built_in">ref</span> <span class="hljs-number">1</span> <span class="hljs-keyword">in</span><br>    &#123;get = λ_:<span class="hljs-type">Unit</span>. !x,<br>    inc = λ_:<span class="hljs-type">Unit</span>. x:=succ(!x)&#125;;<br></code></pre></td></tr></table></figure>
