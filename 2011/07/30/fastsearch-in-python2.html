@@ -193,6 +193,16 @@
 <p>具体实现如下：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//如果mode为FAST_COUNT，则查找pattern出现的次数</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> FAST_COUNT 1</span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">fastsearch</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* s, <span class="hljs-keyword">size_t</span> n,</span></span><br><span class="hljs-params"><span class="hljs-function">           <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* p, <span class="hljs-keyword">size_t</span> m,</span></span><br><span class="hljs-params"><span class="hljs-function">           <span class="hljs-keyword">int</span> mode)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">long</span> mask;<br>    <span class="hljs-keyword">size_t</span> skip, count = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">size_t</span> i, j, mlast, w;<br><br>    w = n - m;<br><br>    <span class="hljs-keyword">if</span> (w &lt; <span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br><br>    <span class="hljs-comment">/* 如果m=1，特例，扫描一遍解决*/</span> <br>    <span class="hljs-keyword">if</span> (m &lt;= <span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">if</span> (m &lt;= <span class="hljs-number">0</span>)<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>        <span class="hljs-keyword">if</span> (mode == FAST_COUNT) &#123;<br>            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; n; i++)<br>                <span class="hljs-keyword">if</span> (s[i] == p[<span class="hljs-number">0</span>])<br>                    count++;<br>            <span class="hljs-keyword">return</span> count;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; n; i++)<br>                <span class="hljs-keyword">if</span> (s[i] == p[<span class="hljs-number">0</span>])<br>                    <span class="hljs-keyword">return</span> i;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br><br>    mlast = m - <span class="hljs-number">1</span>;<br><br>    skip = mlast - <span class="hljs-number">1</span>;<br>    <span class="hljs-comment">/*计算mask*/</span> <br>    <span class="hljs-keyword">for</span> (mask = i = <span class="hljs-number">0</span>; i &lt; mlast; i++) &#123;<br>        mask |= (<span class="hljs-number">1</span> &lt;&lt; (p[i] &amp; <span class="hljs-number">0x1F</span>));<br>        <span class="hljs-keyword">if</span> (p[i] == p[mlast])<br>            skip = mlast - i - <span class="hljs-number">1</span>;<br>    &#125;<br>    mask |= (<span class="hljs-number">1</span> &lt;&lt; (p[mlast] &amp; <span class="hljs-number">0x1F</span>));<br><br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt;= w; i++) &#123;<br>        <span class="hljs-keyword">if</span> (s[i+m<span class="hljs-number">-1</span>] == p[m<span class="hljs-number">-1</span>]) &#123;<span class="hljs-comment">//pattern末尾匹配</span><br>            <span class="hljs-comment">/* candidate match */</span> <br>            <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; mlast; j++)<br>                <span class="hljs-keyword">if</span> (s[i+j] != p[j])<br>                    <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">if</span> (j == mlast) &#123;<span class="hljs-comment">//一个匹配成功</span><br>                <span class="hljs-keyword">if</span> (mode != FAST_COUNT)<br>                    <span class="hljs-keyword">return</span> i;<br>                count++;<br>                i = i + mlast;<br>                <span class="hljs-keyword">continue</span>;<br>            &#125;<br>            <span class="hljs-comment">/*移动多少?,根据mask*/</span> <br>            <span class="hljs-keyword">if</span> (!(mask &amp; (<span class="hljs-number">1</span> &lt;&lt; (s[i+m] &amp; <span class="hljs-number">0x1F</span>))))<br>                i = i + m;<br>            <span class="hljs-keyword">else</span> <br>                i = i + skip;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">/* skip: check if next character is part of pattern */</span> <br>            <span class="hljs-keyword">if</span> (!(mask &amp; (<span class="hljs-number">1</span> &lt;&lt; (s[i+m] &amp; <span class="hljs-number">0x1F</span>))))<br>                i = i + m;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (mode != FAST_COUNT)<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    <span class="hljs-keyword">return</span> count;<br>&#125;<br></code></pre></td></tr></table></figure>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -236,12 +246,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

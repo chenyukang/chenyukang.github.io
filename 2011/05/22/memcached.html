@@ -185,6 +185,16 @@
 <p><pre class="src">  <span style="color: #5f9ea0; font-style: italic;">/<em> </span><span style="color: #5f9ea0; font-style: italic;">Create threads after we’ve done all the libevent setup. </span><span style="color: #5f9ea0; font-style: italic;"></em>/</span><br>    <span style="color: #00bfff; font-weight: bold;">for</span> (i = 0; i &lt; nthreads; i++) {<br>        create_worker(worker_libevent, &amp;threads[i]);<br>    }</pre><br>每个线程进入自己的event_loop。<br></p></p>
 <p>当请求来临的时候对于每一个连接，增加一个事件来调用处理函数event_handler。每个连接的处理过程是一个状态机，drive_machine(conn* c)来处理，由even_handler来调用，状态转移这部分代码比较复杂，conn_listening —&gt; conn_new_cmd —&gt; conn_parse_cmd —&gt; conn_mwrite —&gt; conn_closing。process_command来处理各种命令。<br></p></p>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -232,12 +242,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

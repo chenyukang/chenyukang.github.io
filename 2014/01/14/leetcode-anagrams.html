@@ -179,6 +179,16 @@
 <p>这些都是anagrams的。如果两个字符串是满足这种关系的，那么把字符串排序后的结果一定相同。因此想到用一个map去存来。</p>
 <figure class="highlight c++"><table><tr><td class="code"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span> &#123;</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">vector&lt;string&gt; <span class="hljs-title">anagrams</span><span class="hljs-params">(vector&lt;string&gt; &amp;strs)</span> </span>&#123;<br>        <span class="hljs-keyword">typedef</span> map&lt;string, vector&lt;string&gt; &gt; Dict;<br>        vector&lt;string&gt; res;<br>        Dict S;<br>        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; i&lt;strs.<span class="hljs-built_in">size</span>(); i++) &#123;<br>            string tmp = strs[i];<br>            <span class="hljs-built_in">sort</span>(tmp.<span class="hljs-built_in">begin</span>(), tmp.<span class="hljs-built_in">end</span>());<br>            <span class="hljs-keyword">if</span>(S.<span class="hljs-built_in">find</span>(tmp) == S.<span class="hljs-built_in">end</span>()) &#123;<br>                S[tmp] = vector&lt;string&gt;(<span class="hljs-number">1</span>, strs[i]);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                S[tmp].<span class="hljs-built_in">push_back</span>(strs[i]);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">for</span>(Dict::iterator it = S.<span class="hljs-built_in">begin</span>(); it != S.<span class="hljs-built_in">end</span>(); ++it) &#123;<br>            vector&lt;string&gt;&amp; vec = it-&gt;second;<br>            <span class="hljs-keyword">if</span>(vec.<span class="hljs-built_in">size</span>() &lt;= <span class="hljs-number">1</span>) <span class="hljs-keyword">continue</span>;<br>            res.<span class="hljs-built_in">insert</span>(res.<span class="hljs-built_in">begin</span>(), vec.<span class="hljs-built_in">begin</span>(), vec.<span class="hljs-built_in">end</span>());<br>        &#125;<br>        <span class="hljs-keyword">return</span> res;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -218,12 +228,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

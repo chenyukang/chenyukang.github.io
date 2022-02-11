@@ -185,6 +185,16 @@
 <p><pre class="example">1.用于存储内存信息的空间是用数组的，其大小运行时候就固定。<br>2.不适合多线程程序。</pre></p>
 <p><br>如果用上面所有的url向服务器发送完毕后，再来检查输出文件不可行，因为运行中超过了数组的最大记录数后面的检测就没办法记录下来了。对于第二个问题，这个服务器模型是一种简单的多线程并发，启动时设定其启动线程的数目，多个线程排队，一个线程处理一个请求所以之间并无过多的交互。如果保证一个线程运行过程中不会出现内存泄漏，那应该就没问题了。调试的时候在每一个线程开始跑的时候就启动清空上面的记录内存申请和释放的数组，如果某个一个url请求产生了泄漏就停下来查看生成的meminfo.xls。这样跑完几万个url后，发现一些代码问题。这些bug要是通过人来审查代码不可能查出来，所以测试还是非常重要。其中一部分代码错误是使用了C写了一些基本的数据结构，这些里面有的使用了malloc来动态调整空间大小，用起来倒是比较方便，但是用完后必须显式地释放掉。这和指针的问题是一样的:何时何地释放。调试后会在代码中加入了很多语句，打印信息、脚手架位置等等，这可以用下面这些命令来替换成空白或者注释。<br><pre class="src"> grep debug_str -rl ./*.c | xargs sed -i <span style="color: #deb887;">“s/debug_str/substr/g”</span></pre><br></p>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -228,12 +238,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

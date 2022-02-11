@@ -179,6 +179,16 @@
 <p>Ruby实现这个方式很多，另外Ruby的库包含SimpleDelegator的，将调用的方法直接传递到其他对象。</p>
 <figure class="highlight ruby"><table><tr><td class="code"><pre><code class="hljs ruby"><span class="hljs-meta">#!/usr/bin/ruby</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Delegate</span></span><br>  <span class="hljs-keyword">attr_reader</span> <span class="hljs-symbol">:proc_list</span><br><br>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">initialize</span><span class="hljs-params">()</span></span><br>    <span class="hljs-variable">@proc_list</span> = []<br>  <span class="hljs-keyword">end</span><br><br>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add</span><span class="hljs-params">(*<span class="hljs-built_in">proc</span>)</span></span><br>    proc_list.push(<span class="hljs-built_in">proc</span>)<br>  <span class="hljs-keyword">end</span><br><br>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">eval</span><span class="hljs-params">(obj)</span></span><br>    <span class="hljs-keyword">for</span> e <span class="hljs-keyword">in</span> <span class="hljs-symbol">proc_list:</span><br>        <span class="hljs-keyword">if</span> obj.respond_to?(e[<span class="hljs-number">0</span>])<br>          <span class="hljs-keyword">if</span> e.size == <span class="hljs-number">1</span><br>            obj.__send__(e[<span class="hljs-number">0</span>])<br>          <span class="hljs-keyword">else</span><br>            obj.__send__(e[<span class="hljs-number">0</span>], e[<span class="hljs-number">1</span>])<br>          <span class="hljs-keyword">end</span><br>        <span class="hljs-keyword">else</span><br>          printf <span class="hljs-string">&quot;ERROR:%s is not defined\n&quot;</span>, e[<span class="hljs-number">0</span>]<br>        <span class="hljs-keyword">end</span><br>    <span class="hljs-keyword">end</span><br>  <span class="hljs-keyword">end</span><br><br><span class="hljs-keyword">end</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span></span><br>  <span class="hljs-keyword">attr_writer</span> <span class="hljs-symbol">:value</span><br><br>public<br>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">print</span><span class="hljs-params">()</span></span><br>    printf <span class="hljs-string">&quot;value:%d\n&quot;</span>, <span class="hljs-variable">@value</span><br>  <span class="hljs-keyword">end</span><br><br>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">hello</span><span class="hljs-params">()</span></span><br>    printf <span class="hljs-string">&quot;Hello world!\n&quot;</span><br>  <span class="hljs-keyword">end</span><br><br>  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">set</span><span class="hljs-params">(val)</span></span><br>    <span class="hljs-variable">@value</span> = val<br>  <span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br><br>delegate = Delegate.new()<br>delegate.add(<span class="hljs-string">&quot;print&quot;</span>)<br>delegate.add(<span class="hljs-string">&quot;set&quot;</span>, <span class="hljs-number">1</span>)<br>delegate.add(<span class="hljs-string">&quot;print&quot;</span>)<br>delegate.add(<span class="hljs-string">&quot;hello&quot;</span>)<br>delegate.add(<span class="hljs-string">&quot;nodefine&quot;</span>)<br><br>d = Demo.new()<br>delegate.eval(d)<br></code></pre></td></tr></table></figure>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -222,12 +232,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

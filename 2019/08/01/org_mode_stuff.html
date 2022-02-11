@@ -189,6 +189,16 @@
 <figure class="highlight lisp"><table><tr><td class="code"><pre><code class="hljs lisp">(<span class="hljs-name">require</span> &#x27;pangu-spacing)<br>(<span class="hljs-name">global-pangu-spacing-mode</span> <span class="hljs-number">1</span>)<br><span class="hljs-comment">;;(setq pangu-spacing-real-insert-separtor t)</span><br><br>(<span class="hljs-name">defun</span> org-before-save-hook ()<br>  (<span class="hljs-name">when</span> (<span class="hljs-name">eq</span> major-mode &#x27;org-mode)<br>    (<span class="hljs-name">message</span> <span class="hljs-string">&quot;saving org-file&quot;</span>)<br>    (<span class="hljs-name">pangu-spacing-space-current-buffer</span>)<br>    ))<br><br>(<span class="hljs-name">add-hook</span> &#x27;before-save-hook #&#x27;org-before-save-hook)<br></code></pre></td></tr></table></figure>
 <h3 id="org-capture"><a href="#org-capture" class="headerlink" title="org-capture"></a>org-capture</h3><p> And the best thing is org-capture, with this we can write all kinds of tempaltes, for journal writing, I need to generate file according to date and time:</p>
 <figure class="highlight lisp"><table><tr><td class="code"><pre><code class="hljs lisp">(<span class="hljs-name">defun</span> create-code-file ()<br>  (<span class="hljs-name">interactive</span>)<br>  (<span class="hljs-name">let</span> ((<span class="hljs-name">name</span> (<span class="hljs-name">concat</span> (<span class="hljs-name">format-time-string</span> <span class="hljs-string">&quot;%Y_%m_%d_&quot;</span>)<br>                       (<span class="hljs-name">read-string</span> <span class="hljs-string">&quot;file-name: &quot;</span>))))<br>    (<span class="hljs-name">expand-file-name</span> (<span class="hljs-name">format</span> <span class="hljs-string">&quot;%s.org&quot;</span> name) <span class="hljs-string">&quot;~/Dropbox/org/snippets/&quot;</span>)))<br><br>(<span class="hljs-name">defun</span> gen-date-file ()<br>  <span class="hljs-string">&quot;Create an org file in ~/notes/snippets.&quot;</span><br>  (<span class="hljs-name">format-time-string</span> <span class="hljs-string">&quot;~/Dropbox/org/journals/%Y_%m_%d.org&quot;</span>))<br><br>(<span class="hljs-name">setq</span> org-capture-templates<br>      &#x27;((<span class="hljs-string">&quot;t&quot;</span> <span class="hljs-string">&quot;Todo&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/work.org&quot;</span>)<br>         <span class="hljs-string">&quot;** TODO %?\n  %i\n &quot;</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;x&quot;</span> <span class="hljs-string">&quot;Task&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/work.org&quot;</span>)<br>         <span class="hljs-string">&quot;** TODO %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n&quot;</span>)<br>        (<span class="hljs-string">&quot;e&quot;</span> <span class="hljs-string">&quot;Task&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/life.org&quot;</span>)<br>         <span class="hljs-string">&quot;** TODO %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n&quot;</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;l&quot;</span> <span class="hljs-string">&quot;Todo&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/learn.org&quot;</span>)<br>         <span class="hljs-string">&quot;** TODO %?\nEntered on %U\n  %i\n\n &quot;</span> :kill-buffer <span class="hljs-literal">t</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;k&quot;</span> <span class="hljs-string">&quot;Todo&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/learn.org&quot;</span>)<br>         <span class="hljs-string">&quot;* TODO %?\n  %i\n %f\n %a&quot;</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;j&quot;</span> <span class="hljs-string">&quot;Journal&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/_journal.org&quot;</span> )<br>         <span class="hljs-string">&quot;** %?\nEntered on %U\n  %i\n&quot;</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;J&quot;</span> <span class="hljs-string">&quot;Journal&quot;</span> entry (file gen-date-file)<br>         <span class="hljs-string">&quot;** %?\nEntered on %U\n  %i\n&quot;</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;c&quot;</span> <span class="hljs-string">&quot;Code snippet&quot;</span> entry (file+headline <span class="hljs-string">&quot;~/Dropbox/org/_code.org&quot;</span> <span class="hljs-string">&quot;Code&quot;</span>)<br>         <span class="hljs-string">&quot;** %^&#123;desc&#125;\n#+BEGIN_SRC %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC&quot;</span> <br>          :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;C&quot;</span> <span class="hljs-string">&quot;Notes&quot;</span> entry (file create-code-file)<br>         <span class="hljs-string">&quot;** %^&#123;desc&#125;\n#+BEGIN_SRC %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC&quot;</span> <br>          :empty-lines <span class="hljs-number">1</span>)<br>        ))<br></code></pre></td></tr></table></figure></section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
     <!-- Tags END -->
@@ -215,12 +225,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

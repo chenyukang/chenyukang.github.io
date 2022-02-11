@@ -177,6 +177,16 @@
     <section class="markdown-content"><p>这个操作好像经常要用到，拷贝当前光标连续的一段字符串(除了空白和换行), 写了个小函数来实现。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs elisp">(defun get-continue-string ()<br>  (interactive)<br>  (skip-chars-backward &quot;^ \n&quot;)<br>  (setq low (point))<br>  (skip-chars-forward &quot;^ \n&quot;)<br>  (setq high (point))<br>  (copy-region-as-kill low high)<br>  (message (buffer-substring low high)))<br><br>(global-set-key (kbd &quot;C-x y&quot;) &#x27;get-continue-string)<br></code></pre></td></tr></table></figure>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -216,12 +226,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

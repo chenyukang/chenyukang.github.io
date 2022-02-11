@@ -179,6 +179,16 @@
 <h3 id="zsh-配置"><a href="#zsh-配置" class="headerlink" title="zsh 配置"></a>zsh 配置</h3><p>下面这个配置主要增强了 zsh 的 history 补全，以及<code>pwdf</code>可以用来迅速找一个文件，并拷贝其全路径：</p>
 <figure class="highlight powershell"><table><tr><td class="code"><pre><code class="hljs powershell"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">exists</span></span> &#123; which <span class="hljs-variable">$1</span> &amp;&gt; /dev/null &#125;<br><br><span class="hljs-keyword">if</span> exists peco; then<br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">peco_select_history</span><span class="hljs-params">()</span></span> &#123;<br>        local tac<br>        exists gtac &amp;&amp; tac=<span class="hljs-string">&quot;gtac&quot;</span> || &#123; exists tac &amp;&amp; tac=<span class="hljs-string">&quot;tac&quot;</span> || &#123; tac=<span class="hljs-string">&quot;tail -r&quot;</span> &#125; &#125;<br>        BUFFER=<span class="hljs-variable">$</span>(<span class="hljs-built_in">fc</span> <span class="hljs-literal">-l</span> <span class="hljs-literal">-n</span> <span class="hljs-number">1</span> | eval <span class="hljs-variable">$tac</span> | peco -<span class="hljs-literal">-query</span> <span class="hljs-string">&quot;<span class="hljs-variable">$LBUFFER</span>&quot;</span> -<span class="hljs-literal">-layout</span>=bottom<span class="hljs-literal">-up</span>)<br>        CURSOR=<span class="hljs-variable">$</span><span class="hljs-comment">#BUFFER         # move cursor</span><br>        zle <span class="hljs-literal">-R</span> <span class="hljs-literal">-c</span>               <span class="hljs-comment"># refresh</span><br>    &#125;<br><br>    zle <span class="hljs-literal">-N</span> peco_select_history<br>    bindkey <span class="hljs-string">&#x27;^R&#x27;</span> peco_select_history<br>fi<br><br>OS_NAME=`uname`<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pclip</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$OS_NAME</span> = <span class="hljs-string">&quot;CYGWIN&quot;</span> ]; then<br>        putclip <span class="hljs-string">&quot;<span class="hljs-variable">$</span>@&quot;</span>;<br>    elif [ <span class="hljs-variable">$OS_NAME</span> = <span class="hljs-string">&quot;Darwin&quot;</span> ]; then<br>        pbcopy <span class="hljs-string">&quot;<span class="hljs-variable">$</span>@&quot;</span>;<br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-keyword">if</span> [ -<span class="hljs-type">x</span> /<span class="hljs-type">usr</span>/<span class="hljs-type">bin</span>/<span class="hljs-type">xsel</span> ]; then<br>            xsel <span class="hljs-literal">-ib</span> <span class="hljs-string">&quot;<span class="hljs-variable">$</span>@&quot;</span>;<br>        <span class="hljs-keyword">else</span><br>            <span class="hljs-keyword">if</span> [ -<span class="hljs-type">x</span> /<span class="hljs-type">usr</span>/<span class="hljs-type">bin</span>/<span class="hljs-type">xclip</span> ]; then<br>                xclip <span class="hljs-literal">-selection</span> c <span class="hljs-string">&quot;<span class="hljs-variable">$</span>@&quot;</span>;<br>            <span class="hljs-keyword">else</span><br>                <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Neither xsel or xclip is installed!&quot;</span><br>            fi<br>        fi<br>    fi<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pwdf</span><span class="hljs-params">()</span></span> &#123;<br>    local current_dir=`pwd`<br>    local copied_file=`find <span class="hljs-variable">$current_dir</span> <span class="hljs-literal">-type</span> f <span class="hljs-literal">-print</span> | peco -<span class="hljs-literal">-layout</span>=bottom<span class="hljs-literal">-up</span>`<br>    <span class="hljs-built_in">echo</span> <span class="hljs-literal">-n</span> <span class="hljs-variable">$copied_file</span> |pclip;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -214,12 +224,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

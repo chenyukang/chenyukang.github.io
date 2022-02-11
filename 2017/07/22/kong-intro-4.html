@@ -186,6 +186,16 @@
 <h3 id="如何避免缓存失效风暴"><a href="#如何避免缓存失效风暴" class="headerlink" title="如何避免缓存失效风暴"></a>如何避免缓存失效风暴</h3><p>我们在实现缓存的时候<a target="_blank" rel="noopener" href="http://www.sobstel.org/blog/preventing-dogpile-effect/">缓存失效风暴问题</a>需要谨慎考虑。agentzh在这里详细描述了<a target="_blank" rel="noopener" href="https://github.com/openresty/lua-resty-lock">加锁解决的策略</a>，<a target="_blank" rel="noopener" href="https://github.com/mtourne/ngx.shcache">ngx.shcache</a>这里也使用了相同的方法，具体可以好好研究一下那个图。</p>
 <p>主要注意的是在加锁后，再尝试去读取一次key，因为可能在加锁之前其他worker刚好把数据更新到了缓存里。</p>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -221,12 +231,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

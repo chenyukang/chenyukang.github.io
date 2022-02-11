@@ -192,6 +192,16 @@
 <p><span style="color: #5f9ea0; font-style: italic;">;;</span><span style="color: #5f9ea0; font-style: italic;">在my-c-mode-common-hook下面加上这么一句，表示把回车键绑定在上面那个函数上。<br></span>  (define-key c-mode-base-map [(<span style="color: #00bfff; font-weight: bold;">return</span>)] ‘my-new-line-and-beautyfly)<br></pre><br></blockquote><br>下面就剩下这两个函数了，写的太过复杂，可惜不会用高级一点的正则表达式，所以显得不好看。其想法比较简单，按照上面那个列表，一次查找，我要找一个两员操作符，其两边都是空格，在其两边加上空格，注意排除掉++,—操作。然后识别+=,-=,*=等符号，再两边加上空格。用起来还可以。逐渐写了些elisp，感觉特别适合自底向上的方式进行，通过一些小函数，逐步累积成一个功能，再最后只用一个上层函数来调用这个功能。每个小函数除了返回结果不改变函数外的其他变量(无副作用)。同时写一个小的函数可以马上写一个测试函数，保证其正确无误。</p>
 <p>最后bueatifly_line的代码有点点长，不贴咯。</p>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -235,12 +245,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

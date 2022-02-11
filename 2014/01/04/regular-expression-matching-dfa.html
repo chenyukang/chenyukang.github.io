@@ -189,6 +189,16 @@
 <figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">State* <span class="hljs-title">construct_dfa</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* pattern)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span>(pattern == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* p = pattern;<br>    State* start = <span class="hljs-keyword">new</span> <span class="hljs-built_in">State</span>(ANY_ONE, Num, <span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-literal">NULL</span>);<br>    State* cur   = start;<br>    State* next  = <span class="hljs-literal">NULL</span>;<br>    <span class="hljs-keyword">char</span>   prev  = <span class="hljs-string">&#x27;.&#x27;</span>;<br>    Num = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">while</span>(*p &amp;&amp; *p != <span class="hljs-string">&#x27;\0&#x27;</span>) &#123;<br>        <span class="hljs-keyword">if</span>(*(p+<span class="hljs-number">1</span>) != <span class="hljs-string">&#x27;*&#x27;</span>) &#123;<br>            OpType type;<br>            <span class="hljs-keyword">char</span> value;<br>            <span class="hljs-keyword">if</span>(*p == <span class="hljs-string">&#x27;*&#x27;</span>) &#123;<br>                type = ZERO_PLUS_ONE; <span class="hljs-comment">//匹配0个或者多个</span><br>                value = prev;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                value = *p;<br>                type = *p == <span class="hljs-string">&#x27;.&#x27;</span>? ANY_ONE : MUST_ONE; <span class="hljs-comment">//匹配任意一个. 或者指定的字符</span><br>            &#125;<br>            next = <span class="hljs-keyword">new</span> <span class="hljs-built_in">State</span>(type, Num, value, cur);<br>            prev = *p, p++;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            next = <span class="hljs-keyword">new</span> <span class="hljs-built_in">State</span>(ZERO_PLUS_ONE, Num, *p, cur);<br>            prev = <span class="hljs-string">&#x27;*&#x27;</span>, p+=<span class="hljs-number">2</span>;<br>        &#125;<br>        cur-&gt;<span class="hljs-built_in">add</span>(next);<br>        cur = next;<br>        Num++;<br>    &#125;<br>    cur-&gt;end = <span class="hljs-literal">true</span>;<br>    <span class="hljs-comment">// 例如  ab*a*c*  对于 &quot;a&quot;， 即使后面几个*, &quot;a&quot;也算是一个end，</span><br>    <span class="hljs-keyword">while</span>(cur-&gt;type == ZERO_PLUS_ONE) &#123;<br>        cur = cur-&gt;prev;<br>        cur-&gt;end = <span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> start;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>匹配的过程就是一个搜索的过程，需要注意避免重复访问，另外如果下一层要访问的为空就可以退出整个搜索过程了，整个代码看这个<a target="_blank" rel="noopener" href="https://gist.github.com/chenyukang/8265615">Gist</a>。</p>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -228,12 +238,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

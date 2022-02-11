@@ -190,6 +190,16 @@
 <p><a target="_blank" rel="noopener" href="https://github.com/stevedonovan/Penlight/blob/master/lua/pl/Date.lua">Penlight</a>库也有很多日期相关的函数封装，不过大多也都使用了os相关函数。为了避免多次调用get_timezone_offset_with_utc我使用了Kong里面自带的cache相关函数做一下缓存：</p>
 <figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs Lua"><span class="hljs-comment">-- 缓存上面的时区差，减少系统调用</span><br><span class="hljs-keyword">local</span> offset_with_cst, err =<br>  cache.get_or_set(<span class="hljs-string">&quot;timezone_offset&quot;</span>, <span class="hljs-literal">nil</span>, get_timezone_offset_with_utc, <span class="hljs-literal">nil</span>)<br></code></pre></td></tr></table></figure>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -225,12 +235,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

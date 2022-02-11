@@ -185,6 +185,16 @@
 <p>实现fullref： 引用部分的实现非常简单，</p>
 <figure class="highlight ocaml"><table><tr><td class="code"><pre><code class="hljs ocaml">| <span class="hljs-type">TmRef</span>(fi,t1) -&gt;<br>    <span class="hljs-type">TyRef</span>(typeof ctx t1)<br>| <span class="hljs-type">TmLoc</span>(fi,l) -&gt;<br>    error fi <span class="hljs-string">&quot;locations are not supposed to occur in source programs!&quot;</span><br>| <span class="hljs-type">TmDeref</span>(fi,t1) -&gt;<br>    (<span class="hljs-keyword">match</span> simplifyty ctx (typeof ctx t1) <span class="hljs-keyword">with</span><br>        <span class="hljs-type">TyRef</span>(tyT1) -&gt; tyT1<br>      | <span class="hljs-type">TyBot</span> -&gt; <span class="hljs-type">TyBot</span><br>      | <span class="hljs-type">TySource</span>(tyT1) -&gt; tyT1<br>      | _ -&gt; error fi <span class="hljs-string">&quot;argument of ! is not a Ref or Source&quot;</span>)<br></code></pre></td></tr></table></figure>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -228,12 +238,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

@@ -183,6 +183,16 @@
 <figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">do_notify_parent</span><span class="hljs-params">(struct task_struct *tsk, <span class="hljs-keyword">int</span> sig)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">siginfo</span> <span class="hljs-title">info</span>;</span><br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> flags;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sighand_struct</span> *<span class="hljs-title">psig</span>;</span><br>    <span class="hljs-keyword">bool</span> autoreap = <span class="hljs-literal">false</span>;<br><br>    <span class="hljs-comment">/* .... */</span><br><br>    <span class="hljs-keyword">if</span> (!tsk-&gt;ptrace &amp;&amp; sig == SIGCHLD &amp;&amp;<br>        (psig-&gt;action[SIGCHLD<span class="hljs-number">-1</span>].sa.sa_handler == SIG_IGN ||<br>         (psig-&gt;action[SIGCHLD<span class="hljs-number">-1</span>].sa.sa_flags &amp; SA_NOCLDWAIT))) &#123;<br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * We are exiting and our parent doesn&#x27;t care.  POSIX.1</span><br><span class="hljs-comment">         * defines special semantics for setting SIGCHLD to SIG_IGN</span><br><span class="hljs-comment">         * or setting the SA_NOCLDWAIT flag: we should be reaped</span><br><span class="hljs-comment">         * automatically and not left for our parent&#x27;s wait4 call.</span><br><span class="hljs-comment">         * Rather than having the parent do it as a magic kind of</span><br><span class="hljs-comment">         * signal handler, we just set this to tell do_exit that we</span><br><span class="hljs-comment">         * can be cleaned up without becoming a zombie.  Note that</span><br><span class="hljs-comment">         * we still call __wake_up_parent in this case, because a</span><br><span class="hljs-comment">         * blocked sys_wait4 might now return -ECHILD.</span><br><span class="hljs-comment">         *</span><br><span class="hljs-comment">         * Whether we send SIGCHLD or not for SA_NOCLDWAIT</span><br><span class="hljs-comment">         * is implementation-defined: we do (if you don&#x27;t want</span><br><span class="hljs-comment">         * it, just use SIG_IGN instead).</span><br><span class="hljs-comment">         */</span><br>        autoreap = <span class="hljs-literal">true</span>;<br>        <span class="hljs-keyword">if</span> (psig-&gt;action[SIGCHLD<span class="hljs-number">-1</span>].sa.sa_handler == SIG_IGN)<br>            sig = <span class="hljs-number">0</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">valid_signal</span>(sig) &amp;&amp; sig)<br>        __group_send_sig_info(sig, &amp;info, tsk-&gt;parent);<br><br>    __wake_up_parent(tsk, tsk-&gt;parent);<br>  <span class="hljs-keyword">return</span> autoreap;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>可以看到如果父进程对子进程的生死不关心，那么设置autoreap为TRUE，甚至这个信号也可以不发送了。</p>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -222,12 +232,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->

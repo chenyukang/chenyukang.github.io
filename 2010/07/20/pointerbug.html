@@ -179,6 +179,16 @@
 <p>在最后一个else内，如果二叉搜索树中有左右孩子，那么找这个删除节点的后继，把内容互换，然后删除后继 节点，因为后继节点一定只有一个孩子或者没有孩子。最后只有一个free()操作其实是为了代码简洁,可以把前面每一个else if后面加一个free， 最后不写free()操作。但是这么写运行起来会有问题，y=t,就是所指向的地址相同，但是因为是 递归操作，t指向的地址在调用BST_Delete(t)的时候已经被free掉了，所以如果再删除一次就会 出现内存错误，修改方法是y=NULL,或者修改函数参数，用指针引用的形式 void BST_Delete( BITREE&amp; y)，然后再在free(y)后面增加一句y=NULL。以前以为两次调用free(p)是不会出现问题的，free()在释放掉p指向的内存以后，会 自动将p赋值为NULL，其实没有这部分操作。</p>
 <p>前些天还看到一个面试题目，malloc申请的空间用delete删除会有什么问题？一般来说没有问题， 内存会释放掉，而且即使是有析构函数的对象指针，用delete删除的时候同样会调用析构函数。这说明 c++的delete操作其实是在c的基础增加了一些操作，先调用析构函数，然后释放空间。良好的编程风格 就是free/malloc，new/delete一一对应，甚至不要出现一次调用，多次释放，像上面那样的因为递归 而产生的多次释放并不是很好发现</p>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -218,12 +228,7 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
       <!-- No Comment -->
