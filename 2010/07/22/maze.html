@@ -177,16 +177,16 @@
     <section class="markdown-content"><p>上次把那个迷宫弄出来，然后想了想解法，找了些资料。再把界面上弄了一下，右边迷宫大小，然后有一个选项percent，是代表要推倒的墙占的总百分比，如果数字越小生成的迷宫就越稀疏,有可能有多条 通路从起点到终点,数字大那么生成的迷宫就越密集，但至少有一条通路。</p>
 <p style="text-align: center;"><a href="/images/gui.jpg"><img class="aligncenter size-full wp-image-45" title="gui" src="/images/gui.jpg" alt="" width="800" height="460" /></a></p>
 
-<p><h4>单迷宫解法</h4><br>迷宫第一定律：一般而言，只要在出发点单手摸住一面墙出发，手始终不离开墙面，总可以找到迷宫的出口。对于单迷宫而言，这一种万能的破解方法，即沿着某一面墙壁走。 或者换句话说，你在走的时候，左（右）手一直摸着左（右）边的墙壁，这种方法可能费时最长，也可能会使你走遍迷宫的每一个角落和每一条死路，但你绝不会永远困在里面。 直觉上好像是可以，实现一下也确实能找到终点的，也就是靠着墙，一直靠左或者一直靠右。实现的时候甚至都不用记录哪些点已经访问过了，哪些点还没访问过。 这也是一种人能来做的算法，毕竟人不可能像计算机一样dfs、bfs。</p>
+<p><h4>单迷宫解法</h4><br>迷宫第一定律：一般而言，只要在出发点单手摸住一面墙出发，手始终不离开墙面，总可以找到迷宫的出口。对于单迷宫而言，这一种万能的破解方法，即沿着某一面墙壁走。 或者换句话说，你在走的时候，左（右）手一直摸着左（右）边的墙壁，这种方法可能费时最长，也可能会使你走遍迷宫的每一个角落和每一条死路，但你绝不会永远困在里面。 直觉上好像是可以，实现一下也确实能找到终点的，也就是靠着墙，一直靠左或者一直靠右。实现的时候甚至都不用记录哪些点已经访问过了，哪些点还没访问过。 这也是一种人能来做的算法，毕竟人不可能像计算机一样 DFS、BFS。</p>
 <p style="text-align: center;"><a href="/images/r_dfs.jpg"><img class="aligncenter size-full wp-image-47" title="r_dfs" src="/images/r_dfs.jpg" alt="" width="485" height="374" /></a></p>
 
-<p><h4>BFS</h4><br>用BFS肯定也是可以的，如果是单路径的迷宫，用BFS实在是太慢了,它会把大部分的点都遍历一边。感觉就像是一颗石子掉到水中，要找岸边的终点那得等波纹波及到岸边。 非常之慢。但如果是有多条通路的迷宫，BFS是能保证找到最短路径的。也许双向BFS会好一点，不过猜想对于单迷宫，也提高不了多少。</p>
+<p><h4>BFS</h4><br>用 BFS 肯定也是可以的，如果是单路径的迷宫，用BFS实在是太慢了,它会把大部分的点都遍历一边。感觉就像是一颗石子掉到水中，要找岸边的终点那得等波纹波及到岸边。 非常之慢。但如果是有多条通路的迷宫，BFS是能保证找到最短路径的。也许双向BFS会好一点，不过猜想对于单迷宫，也提高不了多少。</p>
 <p style="text-align: center;"><a href="/images/bfa.jpg"><img class="aligncenter size-full wp-image-49" title="bfa" src="/images/bfa.jpg" alt="" width="485" height="374" /></a></p>
 
-<p><h4>DFS</h4><br>那用DFS也是可以的。不过效率还是很差，像苍蝇一般在迷宫的各个角落转悠，直到大部分点都遍历了。稍微改变一下DFS优先搜索的方向会有一些提高，比如我这个图优先走下方或者优先走左方。</p>
+<p><h4>DFS</h4><br>那用 DFS 也是可以的。不过效率还是很差，像苍蝇一般在迷宫的各个角落转悠，直到大部分点都遍历了。稍微改变一下 DFS 优先搜索的方向会有一些提高，比如我这个图优先走下方或者优先走左方。</p>
 <p style="text-align: center;"><a href="/images/dfs.jpg"><img class="aligncenter size-full wp-image-46" title="dfs" src="/images/dfs.jpg" alt="" width="492" height="377" /></a></p>
 
-<p><h4>A<em></h4><br>A</em>是一种启发式搜索算法，在这里我用点与点的曼哈顿距离来作为启发函数，效果不好，因为曼哈顿距离也就大概的告诉了搜索路径现在应该往哪个方向走比较好。不过总得来说 这么一点启发得到的效果还是要比BFS和DFS要好些。评估函数选择合适也是能找到最短路径的，曼哈顿是可以的。如果墙比较稀疏(肯定有多条路径)，那么A*算法会快得许多。</p>
+<p><h4>A* 算法</h4><br>A* 是一种启发式搜索算法，在这里我用点与点的曼哈顿距离来作为启发函数，效果不好，因为曼哈顿距离也就大概的告诉了搜索路径现在应该往哪个方向走比较好。不过总得来说 这么一点启发得到的效果还是要比BFS和 DFS 要好些。评估函数选择合适也是能找到最短路径的，曼哈顿是可以的。如果墙比较稀疏(肯定有多条路径)，那么 A* 算法会快得许多。</p>
 <p><h4>用键盘走</h4><br>呵呵，对于小点的迷宫用键盘来移动可以比较快解决，人是有直觉和经验的，在合适复杂度上面这种直觉给的启发可比上面好，但是如果迷宫太大了就不行咯。或者还有其他算法去走出迷宫么？</p>
 </section>
 
@@ -264,7 +264,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">单迷宫解法</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">BFS</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">DFS</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">A</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">用键盘走</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">单迷宫解法</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">BFS</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">DFS</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">A* 算法</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">用键盘走</span></a></li></ol>
     
   </div>
 </aside>
