@@ -169,6 +169,39 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/p/workingtime/">在显示器前干了什么</a>
+      </h2>
+      <p class="article-date">February 22, 2011
+          
+              
+  <a href="/tags#Backup" >
+    <span class="tag-code">Backup</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+          <p><h4>时间啊时间</h4></p>
+<p class="first">写论文头大，翻资料找到一个以前写的小东西。有段时间在实验室，一坐就是一整天，经常在网上找找资料，找着找着就从一个链接点到另一链接，从豆瓣到Hoop，再弹出个QQ，一整个上午就过去了。天天对这显示器，于是就想我整天呆在这大部分时间在干什么了，要是有个记录就好了。就想写这么一个小程序，来记录我一天在电脑前花的时间分布。</p>
+
+<p><h4>方法</h4></p>
+<p class="first">怎么实现呢。要知道现在在干什么，就应该要知道我现在在活动程序，编辑或者鼠标点击的。如何知道现在活动的程序名，如果能获得当前活动的程序的可执行文件的路径就比较好办了。于是在网上找了找，在Windows下可以这样实现。</p>
+
+<p><pre class="src"><span style="color: #98f5ff;">CString</span> <span style="color: #daa520; font-weight: bold;">getProcPath</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">PID</span>)<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回pid进程的可执行程序名称<br></span>{<br>        <span style="color: #98f5ff;">HANDLE</span> <span style="color: #4eee94;">hModule</span>;<br>        <span style="color: #98f5ff;">MODULEENTRY32</span>* <span style="color: #4eee94;">minfo</span>=<span style="color: #00bfff; font-weight: bold;">new</span> <span style="color: #98f5ff;">MODULEENTRY32</span>;<br>        minfo-&gt;dwSize=<span style="color: #00bfff; font-weight: bold;">sizeof</span>(MODULEENTRY32);<br>        hModule=CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,PID);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">对系统进程进行拍照</p>
+<p></span>        Module32First(hModule, minfo);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回与进程相关的第一个模块信息<br></span><br>        <span style="color: #98f5ff;">CString</span> <span style="color: #4eee94;">str</span>;<br>        str=CString(minfo-&gt;szExePath);<br>        CloseHandle(hModule);<br>        <span style="color: #00bfff; font-weight: bold;">if</span>(minfo) <span style="color: #00bfff; font-weight: bold;">delete</span> minfo;</p>
+<pre><code>&lt;span style=&quot;color: #00bfff; font-weight: bold;&quot;&gt;return&lt;/span&gt; str;
+</code></pre><p>}</pre><br>
+        
+      </div>
+      
+          <a class="more" href="/p/workingtime/">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/p/theprophet/">《先知》- 纪伯伦</a>
       </h2>
       <p class="article-date">December 29, 2010
@@ -436,36 +469,6 @@ Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方�
       </div>
       
           <a class="more" href="/p/beizidaoshui/">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/forjob/">找工作小结</a>
-      </h2>
-      <p class="article-date">September 30, 2010
-          
-              
-  <a href="/tags#Notes" >
-    <span class="tag-code">Notes</span>
-  </a>
-
-  <a href="/tags#Backup" >
-    <span class="tag-code">Backup</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                又是很久没更新了，这段时间比较忙碌，各种笔试面试各种奔波，终于体会到了找工作到艰辛。而这还只是开始。国庆这些天应该要轻松一点，很多公司都是国庆后再来学校。总得来说最近这两个月还算比较充实，即将面临走出校园，还是得去考虑各种选择。另外，尝试着离开实验室后又淡定了不少，哈哈。虽然还没完全结束 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/p/forjob/">阅读全文</a>
       
     </article>
   
