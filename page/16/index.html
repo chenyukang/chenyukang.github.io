@@ -184,12 +184,12 @@
         
         
           <p><h4>时间啊时间</h4></p>
-<p class="first">写论文头大，翻资料找到一个以前写的小东西。有段时间在实验室，一坐就是一整天，经常在网上找找资料，找着找着就从一个链接点到另一链接，从豆瓣到Hoop，再弹出个QQ，一整个上午就过去了。天天对这显示器，于是就想我整天呆在这大部分时间在干什么了，要是有个记录就好了。就想写这么一个小程序，来记录我一天在电脑前花的时间分布。</p>
+<p class="first">写论文头大，翻资料找到一个以前写的小东西。有段时间在实验室，一坐就是一整天，经常在网上找找资料，找着找着就从一个链接点到另一链接，从豆瓣到 Hoop，再弹出个 QQ，一整个上午就过去了。天天对这显示器，于是就想我整天呆在这大部分时间在干什么了，要是有个记录就好了。就想写这么一个小程序，来记录我一天在电脑前花的时间分布。</p>
 
 <p><h4>方法</h4></p>
-<p class="first">怎么实现呢。要知道现在在干什么，就应该要知道我现在在活动程序，编辑或者鼠标点击的。如何知道现在活动的程序名，如果能获得当前活动的程序的可执行文件的路径就比较好办了。于是在网上找了找，在Windows下可以这样实现。</p>
+<p class="first">怎么实现呢。要知道现在在干什么，就应该要知道我现在在活动程序，编辑或者鼠标点击的。如何知道现在活动的程序名，如果能获得当前活动的程序的可执行文件的路径就比较好办了。于是在网上找了找，在 Windows 下可以这样实现。</p>
 
-<p><pre class="src"><span style="color: #98f5ff;">CString</span> <span style="color: #daa520; font-weight: bold;">getProcPath</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">PID</span>)<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回pid进程的可执行程序名称<br></span>{<br>        <span style="color: #98f5ff;">HANDLE</span> <span style="color: #4eee94;">hModule</span>;<br>        <span style="color: #98f5ff;">MODULEENTRY32</span>* <span style="color: #4eee94;">minfo</span>=<span style="color: #00bfff; font-weight: bold;">new</span> <span style="color: #98f5ff;">MODULEENTRY32</span>;<br>        minfo-&gt;dwSize=<span style="color: #00bfff; font-weight: bold;">sizeof</span>(MODULEENTRY32);<br>        hModule=CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,PID);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">对系统进程进行拍照</p>
+<p><pre class="src"><span style="color: #98f5ff;">CString</span> <span style="color: #daa520; font-weight: bold;">getProcPath</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">PID</span>)<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回 pid 进程的可执行程序名称<br></span>{<br>        <span style="color: #98f5ff;">HANDLE</span> <span style="color: #4eee94;">hModule</span>;<br>        <span style="color: #98f5ff;">MODULEENTRY32</span>* <span style="color: #4eee94;">minfo</span>=<span style="color: #00bfff; font-weight: bold;">new</span> <span style="color: #98f5ff;">MODULEENTRY32</span>;<br>        minfo-&gt;dwSize=<span style="color: #00bfff; font-weight: bold;">sizeof</span>(MODULEENTRY32);<br>        hModule=CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,PID);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">对系统进程进行拍照</p>
 <p></span>        Module32First(hModule, minfo);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回与进程相关的第一个模块信息<br></span><br>        <span style="color: #98f5ff;">CString</span> <span style="color: #4eee94;">str</span>;<br>        str=CString(minfo-&gt;szExePath);<br>        CloseHandle(hModule);<br>        <span style="color: #00bfff; font-weight: bold;">if</span>(minfo) <span style="color: #00bfff; font-weight: bold;">delete</span> minfo;</p>
 <pre><code>&lt;span style=&quot;color: #00bfff; font-weight: bold;&quot;&gt;return&lt;/span&gt; str;
 </code></pre><p>}</pre><br>
@@ -281,7 +281,7 @@
         
         
             
-                昨晚上正准备睡觉时手贱点随便点击了个链接，然后就在这个《老罗全国巡回演讲完结篇：海淀剧场》里一直跟着欢乐到2点钟。大学时有一段经常听老罗语录，胖子嬉笑怒骂、语言犀利、愤世嫉俗、玩世不恭、理性的愤青，听来很过瘾。那时很流行的一句是：“彪悍的人生不需要解释”。时不时我们寝室几个人吃完饭就那么 .....
+                昨晚上正准备睡觉时手贱点随便点击了个链接，然后就在这个《老罗全国巡回演讲完结篇：海淀剧场》里一直跟着欢乐到 2 点钟。大学时有一段经常听老罗语录，胖子嬉笑怒骂、语言犀利、愤世嫉俗、玩世不恭、理性的愤青，听来很过瘾。那时很流行的一句是：“彪悍的人生不需要解释”。时不时我们寝室几个人吃完饭就 .....
             
         
       </div>
@@ -310,9 +310,9 @@
       <div class="article-summary">
         
         
-          <p><h2>POJ 2714</h2><br>最近又在POJ上做题，碰上<a target="_blank" rel="noopener" href="http://poj.org/problem?id=2714">2714</a>，题意是：</p>
-<p>输入N，和N个点(x,y)，从原点开始一共可以走N步，每一步可以随机选择移动(x,y)，或者(-x,-y)。N的范围为1-100。<br>输出最远能走到离开原点多远的地方，输出其距离。</p>
-<p>分析一下，用迭代肯定可以，不过2^N的复杂度肯定太高了。每步有两种选择，其本质是求一个长度为N的0、1序列使得最后的值最大，为一个优化问 题。这里贪心不能求到最优解，稍微证明一下就能得出。如果不贪心，或者把贪心的范围扩大一点，求出每一步完后的凸包呢，然后再在这步的基础上继续扩展下一 些节点，再求凸包，继续如此，最后求得凸包中距离最远的。求凸包的复杂度位O(nlgn)，即最后的复杂度为O(N^2lgN)，是可以接受的。</p>
+          <p><h2>POJ 2714</h2><br>最近又在 POJ 上做题，碰上<a target="_blank" rel="noopener" href="http://poj.org/problem?id=2714">2714</a>，题意是：</p>
+<p>输入 N，和 N 个点 (x,y)，从原点开始一共可以走 N 步，每一步可以随机选择移动 (x,y)，或者 (-x,-y)。N 的范围为 1-100。<br>输出最远能走到离开原点多远的地方，输出其距离。</p>
+<p>分析一下，用迭代肯定可以，不过 2^N 的复杂度肯定太高了。每步有两种选择，其本质是求一个长度为 N 的 0、1 序列使得最后的值最大，为一个优化问 题。这里贪心不能求到最优解，稍微证明一下就能得出。如果不贪心，或者把贪心的范围扩大一点，求出每一步完后的凸包呢，然后再在这步的基础上继续扩展下一 些节点，再求凸包，继续如此，最后求得凸包中距离最远的。求凸包的复杂度位 O(nlgn)，即最后的复杂度为 O(N^2lgN)，是可以接受的。</p>
 <p><h2>随机搜索</h2><br>以前看过《集体智慧编程》这本书，这里有一章是说的优化。稍微回顾一下其中的几个算法。对于优化问题，首先得找到一个评价函数，对于其某个方案评价函数能给出某个值评估方案的优劣。至于返回值越大还是越好没有规定，对于特定的问题选择特定的评价函数。 随机搜索不是一种好的优化算法，但是却是后面的算法的根源。其基本思想是，我们随机长生一些解，看是否好，如果比当前更好，替换当前最优解，直到收敛了，或者猜测了足够的次数了。</p>
 <p><pre class="src"><span style="color: #00ffff;">do</span>{<br>   solution=rand_solution;<br>   value=eval(solution);<br>   <span style="color: #00ffff;">if</span>(value&gt;best)<br>       best=value;<br>   times++;<br>   <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">测试是否收敛<br></span>}<span style="color: #00ffff;">while</span>(times&lt;max_iter&amp;&amp;(!limit_flag));</pre><br>这种盲目的猜测虽然有机会在某一次猜中最优解，但是效率肯定不怎么好。随机算法还是有一些问题可以适用，比如素数判定，如果能保证错误率很低很低也是可行的算法。<br>
         
@@ -324,7 +324,7 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
-        <a href="/p/emacs-muse/">Emacs Muse的使用</a>
+        <a href="/p/emacs-muse/">Emacs Muse 的使用</a>
       </h2>
       <p class="article-date">November 15, 2010
           
@@ -343,9 +343,9 @@
         
         
             
-                  Muse简介   Muse的配置   Muse中源代码高亮显示   Muse 来写主页和博客  
-Muse简介
-Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括html,pdf，latex等等。Muse的编辑规则很简单， .....
+                  Muse 简介   Muse 的配置   Muse 中源代码高亮显示   Muse 来写主页和博客  
+Muse 简介
+Muse 是由 EmacsWiki 衍生的，为 emacs 下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括 html,pdf，latex 等等。Muse  .....
             
         
       </div>
@@ -371,7 +371,7 @@ Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方�
         
         
             
-                实验室的机子要被占，要搬出来，所以得把资料整理一下。发现一个原来研一英语课上做representation的ppt,题目是介绍一位自己喜欢的歌手。那次第一次上台做英报告，呵呵。我喜欢缓慢而伤感，有些沉重的歌。在一位同学日记上看到介绍Damien Rice的，然后喜欢上了他的歌。研一那一年 .....
+                实验室的机子要被占，要搬出来，所以得把资料整理一下。发现一个原来研一英语课上做 representation 的 ppt，题目是介绍一位自己喜欢的歌手。那次第一次上台做英报告，呵呵。我喜欢缓慢而伤感，有些沉重的歌。在一位同学日记上看到介绍 Damien Rice 的，然后喜欢上了他的歌。 .....
             
         
       </div>
@@ -382,7 +382,7 @@ Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方�
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
-        <a href="/p/forc/">给C瓜同学吧</a>
+        <a href="/p/forc/">给 C 瓜同学吧</a>
       </h2>
       <p class="article-date">October 27, 2010
           
@@ -403,9 +403,9 @@ Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方�
             
                 C瓜同学一直关注这个我这个小地方，下面是一些我面试中或者和同学讨论的一些不错的面试题，备份一下，也希望对你有用。
 
-1：C++的多态是如何实现的？如果你用C如何来实现面向对象的多态？
+1：C++ 的多态是如何实现的？如果你用 C 如何来实现面向对象的多态？
 
-2：判断一个有向图中是否有环。上篇文章里面写的那个杯子倒水问题。给一个都是正整数的数组，和一个正整数s .....
+2：判断一个有向图中是否有环。上篇文章里面写的那个杯子倒水问题。给一个都是正整数的数组，和一个正 .....
             
         
       </div>
@@ -461,9 +461,9 @@ Muse 是由 EmacsWiki 衍生的，为emacs下的一个扩展模式，可以方�
         
         
             
-                前些天纳拓的面试有一道题目:
-给你一个3升的杯子和一个5升的(杯子是没有刻度的)，要你取4升水来(水可以无限取)，请问该如何操作。这个题目今年面试出现了很多次,不过这次变化了一些。如何抽象出一个模型,如果写程序如何解,如果要求得杯子倒水的过程如何做?
-当时并没有一下想出来,看起来有点像取 .....
+                前些天纳拓的面试有一道题目：
+给你一个 3 升的杯子和一个 5 升的 (杯子是没有刻度的)，要你取 4 升水来 (水可以无限取)，请问该如何操作。这个题目今年面试出现了很多次，不过这次变化了一些。如何抽象出一个模型，如果写程序如何解，如果要求得杯子倒水的过程如何做？
+当时并没有一下想出来 .....
             
         
       </div>

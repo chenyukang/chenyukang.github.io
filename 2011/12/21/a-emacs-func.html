@@ -174,7 +174,7 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>这个操作好像经常要用到，拷贝当前光标连续的一段字符串(除了空白和换行), 写了个小函数来实现。</p>
+    <section class="markdown-content"><p>这个操作好像经常要用到，拷贝当前光标连续的一段字符串 (除了空白和换行), 写了个小函数来实现。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><code class="hljs elisp">(defun get-continue-string ()<br>  (interactive)<br>  (skip-chars-backward &quot;^ \n&quot;)<br>  (setq low (point))<br>  (skip-chars-forward &quot;^ \n&quot;)<br>  (setq high (point))<br>  (copy-region-as-kill low high)<br>  (message (buffer-substring low high)))<br><br>(global-set-key (kbd &quot;C-x y&quot;) &#x27;get-continue-string)<br></code></pre></td></tr></table></figure>
 </section>
 

@@ -10,7 +10,7 @@
   
   <title>
       
-          让Emacs提醒睡觉 | 程序员的喵
+          让 Emacs 提醒睡觉 | 程序员的喵
       
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -165,7 +165,7 @@
 </header>
 
     <div id="article-banner">
-  <h2>让Emacs提醒睡觉</h2>
+  <h2>让 Emacs 提醒睡觉</h2>
   <p class="post-date">2011-07-24</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -174,7 +174,7 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>最近都睡的比较晚，对身体不好啊。写了几行恶趣味的elisp，晚上10点40开始提醒提醒我准备睡觉，如果10点50还没动，我的上下移动键就不能用了，下面会有一条提示：太晚了，该睡觉了。不过这时可以用方向键盘来移动。但过十分钟后快捷键又恢复正常，因为过了11点表示我确实要再待晚点，下个小时40分钟继续提醒，50分锁死快捷键盘。12点过后emacs彻底对我无语了。真是egg hurt…</p>
+    <section class="markdown-content"><p>最近都睡的比较晚，对身体不好啊。写了几行恶趣味的 elisp，晚上 10 点 40 开始提醒提醒我准备睡觉，如果 10 点 50 还没动，我的上下移动键就不能用了，下面会有一条提示：太晚了，该睡觉了。不过这时可以用方向键盘来移动。但过十分钟后快捷键又恢复正常，因为过了 11 点表示我确实要再待晚点，下个小时 40 分钟继续提醒，50 分锁死快捷键盘。12 点过后 emacs 彻底对我无语了。真是 egg hurt…</p>
 <pre class="src">
 (<span style="color: #00ffff; font-weight: bold;">defun</span> <span style="color: #87cefa; font-weight: bold;">is-late-now</span>()
   <span style="color: #ffa07a;">"Check if it is now late, emmm, go to sleep"</span>
@@ -200,9 +200,9 @@
 (global-set-key (kbd <span style="color: #ffa07a;">"C-n"</span>) 'my-next-line)
 (global-set-key (kbd <span style="color: #ffa07a;">"C-p"</span>) 'my-prev-line)</pre>
 
-<p>这样写不好看，更好的办法是用defadvice，那就不用重新绑定C-n和C-p了，defadvice可以直接在运行next-line和previous-line之前检查一下。</p>
+<p>这样写不好看，更好的办法是用 defadvice，那就不用重新绑定 C-n 和 C-p 了，defadvice 可以直接在运行 next-line 和 previous-line 之前检查一下。</p>
 <p><pre class="src"><br>(<span style="color: #00ffff; font-weight: bold;">defadvice</span> <span style="color: #87cefa; font-weight: bold;">previous-line</span> (before check-is-later)<br>  (<span style="color: #00ffff; font-weight: bold;">if</span> (is-late-now)<br>      (<span style="color: #00ffff; font-weight: bold;">progn</span><br>        (message <span style="color: #ffa07a;">“late now”</span>)<br>        (sleep-for 1)))) ;;just sleep 1 second</p>
-<p>(ad-activate ‘previous-line)<br></pre><br>这样后只要执行previous-line这个函数之前都会执行我这个defadvice定义的代码，但是这样连方向键也不能移动了，因为向上这个按钮是绑定的previous-line这个函数。</p>
+<p>(ad-activate ‘previous-line)<br></pre><br>这样后只要执行 previous-line 这个函数之前都会执行我这个 defadvice 定义的代码，但是这样连方向键也不能移动了，因为向上这个按钮是绑定的 previous-line 这个函数。</p>
 </section>
 
     <p></p>
@@ -234,7 +234,7 @@
       <a class="nav-left" href="/2011/07/30/fastsearch-in-python2.html">
         <span class="nav-arrow">← </span>
         
-          一种更快的字符串匹配算法-源自Python2.5
+          一种更快的字符串匹配算法 - 源自 Python2.5
         
       </a>
     

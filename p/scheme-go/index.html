@@ -83,7 +83,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.1"></head>
 
   <body>
     <header class="header fixed-header">
@@ -177,12 +177,12 @@
     <section class="markdown-content"><p><center><img src="/images/schemed-brained-hare.jpg" ALT="figure: hare" height="320" width="320"></center></p>
 <p><center>Scheme-Brained Hare</center></p>
 
-<p>在我学Go的时候开始了一个自己的业余小项目，就是这个<a target="_blank" rel="noopener" href="https://github.com/chenyukang/GoScheme">GoScheme</a>，打算用Go来写一个Scheme解释器，因为重写轮子是学习新东西的好手段。<br>现在基本完成了，当然只是一些基本的语法支持，没有宏。</p>
-<p>我只是用这个项目来熟悉Go的语法，Go来做这种项目没有特别大的优势，这个项目用C来实现代码量会更少一些。比如这里个里面的基本数据对象包括各种类型，boolean, symbol, fixnum, proc等等，又都是一个Object类型。如果是C可以用union类型来表示，然后通过Object*实现接口上的统一操作各种数据，类似的代码像这样子：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">object</span> &#123;</span><br>    object_type type;<br>    <span class="hljs-class"><span class="hljs-keyword">union</span> &#123;</span><br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>            <span class="hljs-keyword">char</span> value;<br>        &#125; boolean;<br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>            <span class="hljs-keyword">char</span> *value;<br>        &#125; symbol;<br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>            <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">object</span> *<span class="hljs-title">car</span>;</span><br>            <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">object</span> *<span class="hljs-title">cdr</span>;</span><br>        &#125; <span class="hljs-built_in">pair</span>;<br>    <span class="hljs-comment">// ..........</span><br>    &#125; data;<br>&#125; object;<br><br></code></pre></td></tr></table></figure>
-<p>Go里面没有Union这种类型，所以我用了<a target="_blank" rel="noopener" href="https://github.com/chenyukang/GoScheme/blob/master/src/eval/data.go">reflect</a>来实现这些东西，看起来还不是那么简洁。Go的自带的一些toolset还可以，比如testing，format，coverage等，可以减少一些琐碎的事。</p>
-<p>另外，以后项目里配一下travis-CI可以做集成测试。</p>
-<p>Go更适合做一些需要并发的任务，比如服务端的事情。</p>
+<p>在我学 Go 的时候开始了一个自己的业余小项目，就是这个<a target="_blank" rel="noopener" href="https://github.com/chenyukang/GoScheme">GoScheme</a>，打算用 Go 来写一个 Scheme 解释器，因为重写轮子是学习新东西的好手段。<br>现在基本完成了，当然只是一些基本的语法支持，没有宏。</p>
+<p>我只是用这个项目来熟悉 Go 的语法，Go 来做这种项目没有特别大的优势，这个项目用 C 来实现代码量会更少一些。比如这里个里面的基本数据对象包括各种类型，boolean, symbol, fixnum, proc 等等，又都是一个 Object 类型。如果是 C 可以用 union 类型来表示，然后通过 Object*实现接口上的统一操作各种数据，类似的代码像这样子：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">object</span> &#123;</span><br>    object_type type;<br>    <span class="hljs-class"><span class="hljs-keyword">union</span> &#123;</span><br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>            <span class="hljs-type">char</span> value;<br>        &#125; boolean;<br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>            <span class="hljs-type">char</span> *value;<br>        &#125; symbol;<br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>            <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">object</span> *<span class="hljs-title">car</span>;</span><br>            <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">object</span> *<span class="hljs-title">cdr</span>;</span><br>        &#125; <span class="hljs-built_in">pair</span>;<br>    <span class="hljs-comment">// ..........</span><br>    &#125; data;<br>&#125; object;<br><br></code></pre></td></tr></table></figure>
+<p>Go 里面没有 Union 这种类型，所以我用了<a target="_blank" rel="noopener" href="https://github.com/chenyukang/GoScheme/blob/master/src/eval/data.go">reflect</a>来实现这些东西，看起来还不是那么简洁。Go 的自带的一些 toolset 还可以，比如 testing，format，coverage 等，可以减少一些琐碎的事。</p>
+<p>另外，以后项目里配一下 travis-CI 可以做集成测试。</p>
+<p>Go 更适合做一些需要并发的任务，比如服务端的事情。</p>
 </section>
 
     <p></p>
@@ -225,7 +225,7 @@
     
       <a class="nav-right" href="/p/go-dev/">
         
-          最近在用Go
+          最近在用 Go
         
         <span class="nav-arrow"> →</span>
       </a>

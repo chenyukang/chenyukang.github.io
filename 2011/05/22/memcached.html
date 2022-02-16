@@ -10,7 +10,7 @@
   
   <title>
       
-          读memcached | 程序员的喵
+          读 memcached | 程序员的喵
       
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -165,7 +165,7 @@
 </header>
 
     <div id="article-banner">
-  <h2>读memcached</h2>
+  <h2>读 memcached</h2>
   <p class="post-date">2011-05-22</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -174,16 +174,16 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>最近在看memcached的源代码，边看边随手记录了一下。</p>
-<p>assoc.c: 记录一个item是否存在于缓存中，这里使用了power 2扩展，primary_hashtable,和old_hashtable分别存新申请的hashtable和旧的hashtable。这里起了个线程来做拷贝的工作，当需要扩展hashtable的时候就触发assoc_expand函数，但是这个函数做的工作是备份primary_hashtable，即old_hashtable=primary_hashtable；然后申请新的空间，标识expanding为true，如果申请空间失败则交换回来。通过条件信号量，assoc_maintenance_thread把old_hashtable的数据逐步拷贝到新的hashtable中，当拷贝完了后释放old_hashtable的空间。耗时的操作用另外一个线程逐步来处理，不过查询和插入都要注意是否是在扩展状态，判断是去old还是primary里面去操作。</p>
-<p>cache.c: 在malloc和free的基础上封装了一层，多线程安全的。维持了一个指针列表，释放的时候并没有一下就把内存还给系统，而是在列表中保存了下来，申请时如果列表中有没用的指针就直接返回给出来。能这么因为这个cache模块只是负责申请和释放size相同的内存块。</p>
-<p>thread.c: 维持连接列表相关的内容。为一个队列，cq_push、cq_pop，维持一个LRU机制。cqi_new函数返回一个新的CQ_ITEM指针，同样维持了一个cqi_freelist，当有空闲指针的时候直接返回，当没有空闲的时候申请一个列表，从第二个开始连结成链表形式，返回第一个元素的指针。create_worker，创建一个处理线程。Item为memcached中处理的主要对象，item_alloc、item_get、item_link、item_unlink、item_remove方法，处理的时候都要锁住cache_lock。threadlocal_stats_reset、threadlocal_stats_aggregate：统计信息相关。slab_stats_aggregate：统计一个线程使用的slab信息。threadlocal_stats_reset：清空统计信息。</p>
-<p>thread_init：主程序中调用的创建多线程函数，包括初始化互斥锁(cache_lock,stats_lock)，条件锁，空闲连接列表等。nthreads为初始化的线程数目，继续调用setup_thread启动每一个线程，调用create_worker创建处理线程。</p>
-<p>stats.c:负责统计信息，记录get、set、delete、hits的数目。以前缀作为key。</p>
-<p>slabs.c：负责管理内存申请和释放，slabs主要是为了避免内存碎片问题，同时提高申请内存的速度，其基本原理是大块地申请内存，根据不同的slabclass块大小分给slabclass，申请内存的时候根据地址选择最适合的slabclass，从中去下内存返回指针，释放的时候只是放在其空闲指针列表中(不少地方都用到这样的方式)。slab_list没什么用，因为释放的指针放在了slots里面啊！slabs贪婪地使用内存，整个这东西的作用就是用内存空间来换时间效率的。</p>
-<p>memcached.c：主程序，分析设置参数默认值，分析参数根据参数修改配置参数。初始化stats，assoc，conn，slabs等。thread_init启动线程，每一个线程都有自己的struct event_base，setup_thread函数初始化这些，最重要的设置thread_libevent_process来处理新的连接。一直到：</p>
-<p><pre class="src">  <span style="color: #5f9ea0; font-style: italic;">/<em> </span><span style="color: #5f9ea0; font-style: italic;">Create threads after we’ve done all the libevent setup. </span><span style="color: #5f9ea0; font-style: italic;"></em>/</span><br>    <span style="color: #00bfff; font-weight: bold;">for</span> (i = 0; i &lt; nthreads; i++) {<br>        create_worker(worker_libevent, &amp;threads[i]);<br>    }</pre><br>每个线程进入自己的event_loop。<br></p></p>
-<p>当请求来临的时候对于每一个连接，增加一个事件来调用处理函数event_handler。每个连接的处理过程是一个状态机，drive_machine(conn* c)来处理，由even_handler来调用，状态转移这部分代码比较复杂，conn_listening —&gt; conn_new_cmd —&gt; conn_parse_cmd —&gt; conn_mwrite —&gt; conn_closing。process_command来处理各种命令。<br></p></p>
+    <section class="markdown-content"><p>最近在看 memcached 的源代码，边看边随手记录了一下。</p>
+<p>assoc.c: 记录一个 item 是否存在于缓存中，这里使用了 power 2 扩展，primary_hashtable，和 old_hashtable 分别存新申请的 hashtable 和旧的 hashtable。这里起了个线程来做拷贝的工作，当需要扩展 hashtable 的时候就触发 assoc_expand 函数，但是这个函数做的工作是备份 primary_hashtable，即 old_hashtable=primary_hashtable；然后申请新的空间，标识 expanding 为 true，如果申请空间失败则交换回来。通过条件信号量，assoc_maintenance_thread 把 old_hashtable 的数据逐步拷贝到新的 hashtable 中，当拷贝完了后释放 old_hashtable 的空间。耗时的操作用另外一个线程逐步来处理，不过查询和插入都要注意是否是在扩展状态，判断是去 old 还是 primary 里面去操作。</p>
+<p>cache.c: 在 malloc 和 free 的基础上封装了一层，多线程安全的。维持了一个指针列表，释放的时候并没有一下就把内存还给系统，而是在列表中保存了下来，申请时如果列表中有没用的指针就直接返回给出来。能这么因为这个 cache 模块只是负责申请和释放 size 相同的内存块。</p>
+<p>thread.c: 维持连接列表相关的内容。为一个队列，cq_push、cq_pop，维持一个 LRU 机制。cqi_new 函数返回一个新的 CQ_ITEM 指针，同样维持了一个 cqi_freelist，当有空闲指针的时候直接返回，当没有空闲的时候申请一个列表，从第二个开始连结成链表形式，返回第一个元素的指针。create_worker，创建一个处理线程。Item 为 memcached 中处理的主要对象，item_alloc、item_get、item_link、item_unlink、item_remove 方法，处理的时候都要锁住 cache_lock。threadlocal_stats_reset、threadlocal_stats_aggregate：统计信息相关。slab_stats_aggregate：统计一个线程使用的 slab 信息。threadlocal_stats_reset：清空统计信息。</p>
+<p>thread_init：主程序中调用的创建多线程函数，包括初始化互斥锁 (cache_lock,stats_lock)，条件锁，空闲连接列表等。nthreads 为初始化的线程数目，继续调用 setup_thread 启动每一个线程，调用 create_worker 创建处理线程。</p>
+<p>stats.c:负责统计信息，记录 get、set、delete、hits 的数目。以前缀作为 key。</p>
+<p>slabs.c：负责管理内存申请和释放，slabs 主要是为了避免内存碎片问题，同时提高申请内存的速度，其基本原理是大块地申请内存，根据不同的 slabclass 块大小分给 slabclass，申请内存的时候根据地址选择最适合的 slabclass，从中去下内存返回指针，释放的时候只是放在其空闲指针列表中 (不少地方都用到这样的方式)。slab_list 没什么用，因为释放的指针放在了 slots 里面啊！slabs 贪婪地使用内存，整个这东西的作用就是用内存空间来换时间效率的。</p>
+<p>memcached.c：主程序，分析设置参数默认值，分析参数根据参数修改配置参数。初始化 stats，assoc，conn，slabs 等。thread_init 启动线程，每一个线程都有自己的 struct event_base，setup_thread 函数初始化这些，最重要的设置 thread_libevent_process 来处理新的连接。一直到：</p>
+<p><pre class="src">  <span style="color: #5f9ea0; font-style: italic;">/<em> </span><span style="color: #5f9ea0; font-style: italic;">Create threads after we’ve done all the libevent setup. </span><span style="color: #5f9ea0; font-style: italic;"></em>/</span><br>    <span style="color: #00bfff; font-weight: bold;">for</span> (i = 0; i &lt; nthreads; i++) {<br>        create_worker(worker_libevent, &amp;threads[i]);<br>    }</pre><br>每个线程进入自己的 event_loop。<br></p></p>
+<p>当请求来临的时候对于每一个连接，增加一个事件来调用处理函数 event_handler。每个连接的处理过程是一个状态机，drive_machine(conn* c) 来处理，由 even_handler 来调用，状态转移这部分代码比较复杂，conn_listening —&gt; conn_new_cmd —&gt; conn_parse_cmd —&gt; conn_mwrite —&gt; conn_closing。process_command 来处理各种命令。<br></p></p>
 </section>
 
     <p></p>
@@ -227,7 +227,7 @@
       <a class="nav-left" href="/2011/06/07/554.html">
         <span class="nav-arrow">← </span>
         
-          从豆瓣FM下载喜欢的音乐
+          从豆瓣 FM 下载喜欢的音乐
         
       </a>
     

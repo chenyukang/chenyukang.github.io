@@ -10,7 +10,7 @@
   
   <title>
       
-          GDB调试动态链接库 | 程序员的喵
+          GDB 调试动态链接库 | 程序员的喵
       
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -83,7 +83,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.1"></head>
 
   <body>
     <header class="header fixed-header">
@@ -165,7 +165,7 @@
 </header>
 
     <div id="article-banner">
-  <h2>GDB调试动态链接库</h2>
+  <h2>GDB 调试动态链接库</h2>
   <p class="post-date">2012-06-25</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -174,16 +174,16 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>今天解决了一个长期会碰到的问题，就是用GDB如何来调试动态链接库。我这个问题的难点是我的需要调试代码是在动态链接库里面，但是启动的不是普通的可以调试的二进制文件，换句话说这不是我所能控制的代码所编译出来的，甚至可能是由脚本程序来控制启动的。这个问题时不时地困扰着我，总结一下尝试过几种调试方式：</p>
-<p> 1 使用print来打印log，有时候有用，不好的地方是有时候定位出问题的代码位置还是稍显麻烦。很常用的会定义一对宏，进入函数和退出某个函数的时候都相应调用。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> APP_LOG(X)                                  \</span><br><span class="hljs-meta">    fprintf(stderr, <span class="hljs-meta-string">&quot;log: %s %d %s %s\n&quot;</span>,           \</span><br><span class="hljs-meta">            __FILE__, __LINE__, __FUNCTION__, X);   \</span><br><span class="hljs-meta"></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LOG_ENTER     \</span><br><span class="hljs-meta">    APP_LOG(<span class="hljs-meta-string">&quot;enter&quot;</span>)</span><br>    <br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LOG_LEAVE \</span><br><span class="hljs-meta">    APP_LOG(<span class="hljs-meta-string">&quot;leave&quot;</span>)</span><br><br></code></pre></td></tr></table></figure>
-<p> 2 对于crash掉的bug，打印出来调用栈是非常有用的。使用<a target="_blank" rel="noopener" href="http://www.gnu.org/software/libc/manual/html_node/Backtraces.html#Backtraces">libc提供的Backtraces函数</a>来获取调用栈。这是在不能提供GDB环境下拿到调用栈的不错方法。不过经过我的实验这对于动态链接库有一定的问题。</p>
+    <section class="markdown-content"><p>今天解决了一个长期会碰到的问题，就是用 GDB 如何来调试动态链接库。我这个问题的难点是我的需要调试代码是在动态链接库里面，但是启动的不是普通的可以调试的二进制文件，换句话说这不是我所能控制的代码所编译出来的，甚至可能是由脚本程序来控制启动的。这个问题时不时地困扰着我，总结一下尝试过几种调试方式：</p>
+<p> 1 使用 print 来打印 log，有时候有用，不好的地方是有时候定位出问题的代码位置还是稍显麻烦。很常用的会定义一对宏，进入函数和退出某个函数的时候都相应调用。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">define</span> APP_LOG(X)                                  \</span><br><span class="hljs-meta">    fprintf(stderr, <span class="hljs-string">&quot;log: %s %d %s %s\n&quot;</span>,           \</span><br><span class="hljs-meta">            __FILE__, __LINE__, __FUNCTION__, X);   \</span><br><span class="hljs-meta"></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG_ENTER     \</span><br><span class="hljs-meta">    APP_LOG(<span class="hljs-string">&quot;enter&quot;</span>)</span><br>    <br><span class="hljs-meta">#<span class="hljs-keyword">define</span> LOG_LEAVE \</span><br><span class="hljs-meta">    APP_LOG(<span class="hljs-string">&quot;leave&quot;</span>)</span><br><br></code></pre></td></tr></table></figure>
+<p> 2 对于 crash 掉的 bug，打印出来调用栈是非常有用的。使用<a target="_blank" rel="noopener" href="http://www.gnu.org/software/libc/manual/html_node/Backtraces.html#Backtraces">libc 提供的 Backtraces 函数</a>来获取调用栈。这是在不能提供 GDB 环境下拿到调用栈的不错方法。不过经过我的实验这对于动态链接库有一定的问题。</p>
 <p> 3 最后就是今天试用的比较通用办法。</p>
-<p> 我们不管是如何调用到动态链接库文件的，但是肯定会调用进来。所以需要想办法让代码在库代码处停下来，然后把找机会把GDB弄进去。于是乎有这么一个变态的办法，在动态链接库入口处来这么一段，就是执行到这里停住，等待GDB attach这个进程，然后在GDB里设置一个断点，touch创建当前文件夹debug文件就跳出死循环，接下来就是一切在GDB控制下了。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">wait_attach</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Waiting attach pid: %d\n&quot;</span>, getpid());<br>    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">if</span>((access(<span class="hljs-string">&quot;./debug&quot;</span>, F_OK)) != <span class="hljs-number">-1</span>) &#123;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-keyword">else</span><br>            ;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>这是一个stupid and work的方法，不过我总觉得还有更好的办法来在这种情况下调试。</p>
-<p>在查找资料的过程中有点意外收获，顺便推荐GDB一个选项，gdb -tui, 以texture gui方式启动GDB，这是非常方便的文字界面。如果不用这个选项也可以在运行GDB以后按下快捷键盘C-x C-a(怎么这么像Emacs快捷键)来进行gui和非gui的切换。CLI爱好者可以试用一下，DDD什么的可以放下了，嘿嘿。</p>
-<p>另外一些有用的GDB命令：</p>
+<p> 我们不管是如何调用到动态链接库文件的，但是肯定会调用进来。所以需要想办法让代码在库代码处停下来，然后把找机会把 GDB 弄进去。于是乎有这么一个变态的办法，在动态链接库入口处来这么一段，就是执行到这里停住，等待 GDB attach 这个进程，然后在 GDB 里设置一个断点，touch 创建当前文件夹 debug 文件就跳出死循环，接下来就是一切在 GDB 控制下了。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-type">void</span> <span class="hljs-title function_">wait_attach</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">&quot;Waiting attach pid: %d\n&quot;</span>, getpid());<br>    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">if</span>((access(<span class="hljs-string">&quot;./debug&quot;</span>, F_OK)) != <span class="hljs-number">-1</span>) &#123;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-keyword">else</span><br>            ;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这是一个 stupid and work 的方法，不过我总觉得还有更好的办法来在这种情况下调试。</p>
+<p>在查找资料的过程中有点意外收获，顺便推荐 GDB 一个选项，gdb -tui，以 texture gui 方式启动 GDB，这是非常方便的文字界面。如果不用这个选项也可以在运行 GDB 以后按下快捷键盘 C-x C-a(怎么这么像 Emacs 快捷键) 来进行 gui 和非 gui 的切换。CLI 爱好者可以试用一下，DDD 什么的可以放下了，嘿嘿。</p>
+<p>另外一些有用的 GDB 命令：</p>
 <blockquote>
 <p>rbreak:              break on function matching regular expression<br>where:               Line number currently being executed<br>tbreak:              Break once, and then remove the breakpoint<br>watch:               Suspend the process when a certain condition is met<br>finish:              Continue till end of function<br>info locals:         View all local variables<br>backtrace full:      Complete backtrace with local variables<br>up, down, frame:     Move through frames<br>set print pretty on: Prints out prettily formatted C source code<br>set print array on:  Pretty array printing<br>enable and disable:  Enable/disable breakpoints<br>set logging on:      Log debugging session to show to others for support</p>
 </blockquote>
@@ -233,7 +233,7 @@
     
       <a class="nav-right" href="/p/bsfl-bitmap/">
         
-          bsfl指令和Bitmap的一个优化
+          bsfl 指令和 Bitmap 的一个优化
         
         <span class="nav-arrow"> →</span>
       </a>

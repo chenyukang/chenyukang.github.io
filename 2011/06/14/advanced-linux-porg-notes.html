@@ -180,12 +180,12 @@
 
 <h3><a name="sec2" id="sec2"></a><br>Archives</h3>
 
-<p class="first">archive(静态链接)为目标文件的集合，linker从archive文件中找到obj文件进行链接。</p>
+<p class="first">archive(静态链接) 为目标文件的集合，linker 从 archive 文件中找到 obj 文件进行链接。</p>
 
 <pre class="example">
 % ar cr libtest.a test1.o test2.o
 </pre>
-创建库文件libtest.a(类似windows下test.lib)，当linker处理archive文件的时候，将在库文件中查找当前已经处理但是还没定义的symbols。所以库文件应该出现在命令的最后。
+创建库文件 libtest.a(类似 windows 下 test.lib)，当 linker 处理 archive 文件的时候，将在库文件中查找当前已经处理但是还没定义的 symbols。所以库文件应该出现在命令的最后。
 
 <pre class="example">
 % gcc -o app app.o -L. -ltest
@@ -194,28 +194,28 @@
 
 <h3><a name="sec3" id="sec3"></a><br>Shared Library</h3>
 
-<p class="first">Shared lib和archive的两个区别： 1，当进行的是动态链接，最后得到的可执行程序中不包含实际库中的执行代码，只是一个对库的引用。所以动态链接最后得到的可执行程序要小一些。 2 多个程序可以共享动态链接库，动态链接库不只是obj文件的集合，其中是单一的一个obj文件，包含了库中所有的信息，所以一个程序动态加载shared lib的时候是把库中所有的东西都加载了，而不是所引用的那部分。</p>
+<p class="first">Shared lib 和 archive 的两个区别： 1，当进行的是动态链接，最后得到的可执行程序中不包含实际库中的执行代码，只是一个对库的引用。所以动态链接最后得到的可执行程序要小一些。 2 多个程序可以共享动态链接库，动态链接库不只是 obj 文件的集合，其中是单一的一个 obj 文件，包含了库中所有的信息，所以一个程序动态加载 shared lib 的时候是把库中所有的东西都加载了，而不是所引用的那部分。</p>
 
 <pre class="example">
 % gcc -c -fPIC test1.c
 % gcc -shared - fPIC libtest.so test1.o test2.o
 </pre>
--fPIC选项指编译为位置独立的执行代码，这样可以动态加载，产生libtest.so文件。
+-fPIC 选项指编译为位置独立的执行代码，这样可以动态加载，产生 libtest.so 文件。
 
 <p>默认的库文件寻找路径变量：LD_LIBRARY_PATH
-库文件之间的依赖关系：如果是动态链接，链接库会自动寻找到自己所依赖的其他库文件，如果是静态链接，必须为linker提供所有依赖的库文件名称。</p>
+库文件之间的依赖关系：如果是动态链接，链接库会自动寻找到自己所依赖的其他库文件，如果是静态链接，必须为 linker 提供所有依赖的库文件名称。</p>
 
 <pre class="example">
 % gcc -static -o tifftest tifftest.c -ltiff -ljpeg -lz -lm
 </pre>
-上面例子中tiff依赖jpeg库，因为是-static链接，必须指明所有依赖的库文件。
+上面例子中 tiff 依赖 jpeg 库，因为是-static 链接，必须指明所有依赖的库文件。
 
 
 <h3><a name="sec4" id="sec4"></a>
 Pros and Cons</h3>
 
-<p class="first">动态链接的优势：可以减少可执行文件的size，如果库文件进行升级，原程序可以不用重新链接。如果是静态链接，库文件改变了程序要重新进行link。
-也有一些特殊情况必须使用static link。</p>
+<p class="first">动态链接的优势：可以减少可执行文件的 size，如果库文件进行升级，原程序可以不用重新链接。如果是静态链接，库文件改变了程序要重新进行 link。
+也有一些特殊情况必须使用 static link。</p>
 
 
 <h3><a name="sec5" id="sec5"></a>
@@ -228,7 +228,7 @@ Pros and Cons</h3>
 (*test)();
 dlclose (handle);
 </pre>
-上面例子中打开libtest.so动态链接库，找到my_function定义，执行，然后卸载库文件。
+上面例子中打开 libtest.so 动态链接库，找到 my_function 定义，执行，然后卸载库文件。
 
 <h2><a name="sec6" id="sec6"></a>
 进程</h2>
@@ -248,36 +248,36 @@ dlclose (handle);
 }
 
 </pre>
-system将执行/bin/sh,然后执行命令，因为不同系统中/bin/sh所链接的shell不同，所以会导致执行差异，同时这种方式存在安全隐患。
+system 将执行/bin/sh，然后执行命令，因为不同系统中/bin/sh 所链接的 shell 不同，所以会导致执行差异，同时这种方式存在安全隐患。
 
 
 <h4>using fork and exec</h4>
 
-<p class="first">fork创建一个子进程，fork的返回值用来区别父进程和子进程。子进程将和拷贝父进程一些信息，更详细的东西在这本书内没说明。</p>
+<p class="first">fork 创建一个子进程，fork 的返回值用来区别父进程和子进程。子进程将和拷贝父进程一些信息，更详细的东西在这本书内没说明。</p>
 
-<p>exec函数家族，fork创建一个子进程，用exec在子进程中执行命令。</p>
+<p>exec 函数家族，fork 创建一个子进程，用 exec 在子进程中执行命令。</p>
 
 
 <h4>process scheduling</h4>
 
-<p class="first">nice命令可以调节process的优先权值。
-niceness value越大，进程的优先权越低，越小进程的优先权越高。一般进程的niceness value为0。只有root的进程可以减少一个进程的niceness value。</p>
+<p class="first">nice 命令可以调节 process 的优先权值。
+niceness value 越大，进程的优先权越低，越小进程的优先权越高。一般进程的 niceness value 为 0。只有 root 的进程可以减少一个进程的 niceness value。</p>
 
 <h3><a name="sec8" id="sec8"></a>
 signal</h3>
 
 <p class="first">signal is asynchronous:进程收到信号的时候会立即处理信号，处理信号的一般方式分为几类：忽略，执行默认处理，执行特定的处理程序。
-因为信号处理是异步的，所以在信号处理程序中尽量不要执行IO，或者调用库函数。信号处理函数应该作最少量的工作，尽快返回到主流程中，或者干脆结束掉程序。一般只是设置变量表明某个信号发生了，主程序定时检查变量再处理。SIGTERM和SIGKILL区别，前一个可能被忽略，后一个不能被忽略。
-改变sig_atomic_t的值的操作是原子性的。</p>
+因为信号处理是异步的，所以在信号处理程序中尽量不要执行 IO，或者调用库函数。信号处理函数应该作最少量的工作，尽快返回到主流程中，或者干脆结束掉程序。一般只是设置变量表明某个信号发生了，主程序定时检查变量再处理。SIGTERM 和 SIGKILL 区别，前一个可能被忽略，后一个不能被忽略。
+改变 sig_atomic_t的值的操作是原子性的。</p>
 
 
 <h3><a name="sec9" id="sec9"></a>
 process exit</h3>
 
-<p class="first">exit(int return_value)函数退出一个进程，并把exit_code告诉父进车。kill(pid_t,KILL_TYPE)向某个进程发送相应的退出信号。
-wait函数家族，让父进程等待某个子进程的结束。WIFEXITED宏判断子进程是否正常退出或者是由于其他原因意外退出。
-zombie process(僵死进程)为一个进程已经退出，但是没有进行善后处理。一个父进程有责任处理子进程的善后处理，wait函数即为此用，父进程调用wait一直被阻塞(当子进程没有退出的时候),子进程退出后wait函数返回。如果父进程没有为已经退出的子进程处理善后，子进程将变为init的子进程，然后被处理删除。
-一种更好的处理方法是当子进程退出的时候发信号通知父进程，有几种方式可以实现(进程间通信),其中一种比较方便的方式是父进程处理SIGCHLD信号。</p>
+<p class="first">exit(int return_value) 函数退出一个进程，并把 exit_code 告诉父进车。kill(pid_t,KILL_TYPE) 向某个进程发送相应的退出信号。
+wait 函数家族，让父进程等待某个子进程的结束。WIFEXITED 宏判断子进程是否正常退出或者是由于其他原因意外退出。
+zombie process(僵死进程) 为一个进程已经退出，但是没有进行善后处理。一个父进程有责任处理子进程的善后处理，wait 函数即为此用，父进程调用 wait 一直被阻塞 (当子进程没有退出的时候),子进程退出后 wait 函数返回。如果父进程没有为已经退出的子进程处理善后，子进程将变为 init 的子进程，然后被处理删除。
+一种更好的处理方法是当子进程退出的时候发信号通知父进程，有几种方式可以实现 (进程间通信),其中一种比较方便的方式是父进程处理 SIGCHLD 信号。</p>
 
 
 
@@ -289,7 +289,7 @@ Threads</h2>
 
 <p>创建线程：pthread_create (&amp;thread_id, NULL(pointer_to_thread_info), &amp;thread_func, NULL(argument))
 线程的执行顺序是异步的，不能假设其执行顺序。
-向thread传递数据：可以通过pthread_create的地四个参数，传递一个void* 的指针，指针指向一个数据结构体。注意在多线程中的数据空间的销毁。
+向 thread 传递数据：可以通过 pthread_create 的地四个参数，传递一个 void* 的指针，指针指向一个数据结构体。注意在多线程中的数据空间的销毁。
 More about thread_id:</p>
 
 <pre class="src">
@@ -298,13 +298,13 @@ More about thread_id:</p>
   pthread_join (other_thread, <span style="color: #7fffd4;">NULL</span>);
 </pre>
 
-<p>Thread Attributes,为了设定线程的某些属性，detach线程退出后自动回首资源，joinable则等到另一个线程调用pthread_jion获得其返回值。</p>
+<p>Thread Attributes，为了设定线程的某些属性，detach 线程退出后自动回首资源，joinable 则等到另一个线程调用 pthread_jion 获得其返回值。</p>
 
 <p>Thread-specific data:每个线程都有一份自己的拷贝，修改自己的数据不会影响到其他线程。</p>
 
-<p>Cleanup Handlers:使用pthread_cleanup_push(function,param)和pthread_cleanup_pop(int)在线程退出的时候自动调用清理函数，释放资源。</p>
+<p>Cleanup Handlers:使用 pthread_cleanup_push(function,param) 和 pthread_cleanup_pop(int) 在线程退出的时候自动调用清理函数，释放资源。</p>
 
-<p>多线程程序可能出现的问题：竞争，需要使用atomic操作。</p>
+<p>多线程程序可能出现的问题：竞争，需要使用 atomic 操作。</p>
 
 
 <h3><a name="sec11" id="sec11"></a><br>互斥锁</h3>
@@ -322,7 +322,7 @@ pthread_mutex_init(&amp;mutex,<span style="color: #7fffd4;">NULL</span>);
 
 <h3><a name="sec12" id="sec12"></a><br>Semaphores for Threads</h3>
 
-<p class="first">sem_t 可以作为一个share counter 来使用，</p>
+<p class="first">sem_t 可以作为一个 share counter 来使用，</p>
 
 <pre class="src">
 
@@ -352,11 +352,11 @@ pthread_mutex_init(&amp;mutex,<span style="color: #7fffd4;">NULL</span>);
 
 <p>2，因为多个线程共享相同的虚拟内存地址，所以一个线程的错误可能会影响到其他线程，而多进程程序中一个进程的错误不会影响到其他进程。</p>
 
-<p>3，为新进程拷贝内存将增加开销，但是只有在新进程写其内存的时候才会进行拷贝(写拷贝)。</p>
+<p>3，为新进程拷贝内存将增加开销，但是只有在新进程写其内存的时候才会进行拷贝 (写拷贝)。</p>
 
 <p>4，多线程适用于多个相似的执行任务，而多进程可以执行不同类型的任务。</p>
 
-<p>5，多个线程中共享数据要容一些，但是也会产生相关问题(条件竞争，死锁)，多个进程共享数据难一些，使用IPC机制，虽然实现要难一些，但是不容易出现并发bug。</p>
+<p>5，多个线程中共享数据要容一些，但是也会产生相关问题 (条件竞争，死锁)，多个进程共享数据难一些，使用 IPC 机制，虽然实现要难一些，但是不容易出现并发 bug。</p>
 
 <h2><a name="sec14" id="sec14"></a><br>Interprocess Communication</h2>
 
@@ -367,7 +367,7 @@ pthread_mutex_init(&amp;mutex,<span style="color: #7fffd4;">NULL</span>);
 
 <h4>Allocation</h4>
 
-<p class="first">shmget函数创建或者访问一个已经存在的share mem。</p>
+<p class="first">shmget 函数创建或者访问一个已经存在的 share mem。</p>
 
 <pre class="src">
 <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">segment_id</span> = shmget (shm_key, getpagesize (),
@@ -378,7 +378,7 @@ pthread_mutex_init(&amp;mutex,<span style="color: #7fffd4;">NULL</span>);
 
 <h4>Attachment and Detachment</h4>
 
-<p class="first">函数shmat(SHMID,pointer to address,flag)使得一个进程attach到一个共享内存。进程通过fork创建的子进程也将继承这一共享内存。<br>函数shmdt(address)将detach共享内存。</p>
+<p class="first">函数 shmat(SHMID,pointer to address,flag) 使得一个进程 attach 到一个共享内存。进程通过 fork 创建的子进程也将继承这一共享内存。<br>函数 shmdt(address) 将 detach 共享内存。</p>
 
 <pre class="src">
   <span style="color: #98fb98;">int</span> <span style="color: #eedd82;">segment_size</span>;
@@ -396,18 +396,18 @@ pthread_mutex_init(&amp;mutex,<span style="color: #7fffd4;">NULL</span>);
 
 <h4>Control share mem</h4>
 
-<p class="first">函数调用exit或者exec 可以detach一个共享内存，但是并没有释放它。<br>必须调用shmctl去释放其空间。ipcs -m 命令可以查看系统中当前的share mem的信息，如果没有删除遗留的shared mem，其nattch为0。可以使用ipcrm shm segment_id删除。</p>
+<p class="first">函数调用 exit 或者 exec 可以 detach 一个共享内存，但是并没有释放它。<br>必须调用 shmctl 去释放其空间。ipcs -m 命令可以查看系统中当前的 share mem 的信息，如果没有删除遗留的 shared mem，其 nattch 为 0。可以使用 ipcrm shm segment_id 删除。</p>
 
 
 
 <h3><a name="sec16" id="sec16"></a><br>Process Semaphores</h3>
 
-<p class="first">semaphore和shared memory的使用方式类似，可以通过semget,shmctl创建和删除，提供的参数表明要创建semaphore。<br>没详细说，查看其他书。</p>
+<p class="first">semaphore 和 shared memory 的使用方式类似，可以通过 semget,shmctl 创建和删除，提供的参数表明要创建 semaphore。<br>没详细说，查看其他书。</p>
 
 
 <h3><a name="sec17" id="sec17"></a><br>Mapped memory</h3>
 
-<p class="first">Mapped memory是不同进程可以通过一个公用的共享文件进行交流。Mapped mem在进程是进程和文件的一个桥梁，linux通过把文件映射到虚拟内存，这样进程可以像访问普通内存一样访问该文件。<br>void* mmap(address,LENGTH,prot_option,option,file_rp,pos) //将一个文件映射到address，如果不提供系统将映射到合适的地址<br>munmap(file_memory,FILE_LENGTH);// 释放memory<br>设置了MAP_SHARED,多个进程可以通过同一文件访问该内存区。</p>
+<p class="first">Mapped memory 是不同进程可以通过一个公用的共享文件进行交流。Mapped mem 在进程是进程和文件的一个桥梁，linux 通过把文件映射到虚拟内存，这样进程可以像访问普通内存一样访问该文件。<br>void* mmap(address,LENGTH,prot_option,option,file_rp,pos) //将一个文件映射到 address，如果不提供系统将映射到合适的地址<br>munmap(file_memory,FILE_LENGTH);// 释放 memory<br>设置了 MAP_SHARED，多个进程可以通过同一文件访问该内存区。</p>
 
 
 <h3><a name="sec18" id="sec18"></a><br>管道</h3>
@@ -423,16 +423,16 @@ pipe (pipe_fds);
 read_fd = pipe_fds[0];
 write_fd = pipe_fds[1];
 </pre>
-pipe_fds[0] 为reading file desc,pipe_fds<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup>为writing file desc。
-Pipe只能用于同一个进程的子进程之间。
-dup2重定向标准输入输出符。
+pipe_fds[0] 为 reading file desc,pipe_fds<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup>为 writing file desc。
+Pipe 只能用于同一个进程的子进程之间。
+dup2 重定向标准输入输出符。
 
-<p>popen,pclose很方便，FILE* stream=popen(&quot;progam&quot;,&quot;w&quot;)向program发送。pclose(stream)关闭。</p>
+<p>popen,pclose 很方便，FILE* stream=popen(&quot;progam&quot;,&quot;w&quot;) 向 program 发送。pclose(stream) 关闭。</p>
 
 
 <h4>FIFO</h4>
 
-<p class="first">为有名字的pipe，任何不相关的两个进程可以通过fifo来进行数据传递。mkfifo函数创建FIFO。</p>
+<p class="first">为有名字的 pipe，任何不相关的两个进程可以通过 fifo 来进行数据传递。mkfifo 函数创建 FIFO。</p>
 
 
 
@@ -450,7 +450,7 @@ listen -- Configures a socket to accept conditions
 accept -- Accepts a connection and creates a new socket for the connection
 </pre>
 
-<p>Unix-domain sockets能用于同一机器上的进程通信。Internet-domain sockets用于不同机子上的通信。<br>struct sockaddr_in  addr类型变量为其地址结构。<br>addr.sin_family=AF_INET<br>addr.sin_addr 存储一个32bit的IP地址。</p>
+<p>Unix-domain sockets 能用于同一机器上的进程通信。Internet-domain sockets 用于不同机子上的通信。<br>struct sockaddr_in  addr 类型变量为其地址结构。<br>addr.sin_family=AF_INET<br>addr.sin_addr 存储一个 32bit 的 IP 地址。</p>
 
 <p>只是给了两个程序例子，详细内容看网络编程相关书籍。</p>
 
@@ -464,9 +464,9 @@ accept -- Accepts a connection and creates a new socket for the connection
 
 <h3><a name="sec22" id="sec22"></a><br>Device Entry</h3>
 
-<p class="first">只有root的进程可以通过mknod创建新的Device Entry。<br>mknod name b/c 主设备号 从设备号</p>
+<p class="first">只有 root 的进程可以通过 mknod 创建新的 Device Entry。<br>mknod name b/c 主设备号 从设备号</p>
 
-<p>linux目录/dev 下面是系统所支持的Device Entry。<br>字符设备可以像一般文件一样访问，甚至可以用重定向去访问。</p>
+<p>linux 目录/dev 下面是系统所支持的 Device Entry。<br>字符设备可以像一般文件一样访问，甚至可以用重定向去访问。</p>
 
 <pre class="example">
 cat somefile &gt; /dev/audio
@@ -474,38 +474,38 @@ cat somefile &gt; /dev/audio
 
 </pre>
 
-<p>特殊设备：/dev/null /dev/zero /dev/full /dev/random /dev/urandom<br>Loopback Devices:环回设备，在文件系统上新建一个普通文件，可用于模拟特定设备，比如软盘。<br>也可把实际设备中的内容拷贝到其中，比如把光盘中的内容拷贝到新建的一个cdrom-image中。</p>
+<p>特殊设备：/dev/null /dev/zero /dev/full /dev/random /dev/urandom<br>Loopback Devices:环回设备，在文件系统上新建一个普通文件，可用于模拟特定设备，比如软盘。<br>也可把实际设备中的内容拷贝到其中，比如把光盘中的内容拷贝到新建的一个 cdrom-image 中。</p>
 
 
 <h3><a name="sec23" id="sec23"></a><br>/proc</h3>
 
-<p class="first">mount命令可以看到一行输出：proc on /proc type proc (rw,noexec,nosuid,nodev)<br>/proc包含系统的一些配置信息，不和任何设备相关联。</p>
+<p class="first">mount 命令可以看到一行输出：proc on /proc type proc (rw,noexec,nosuid,nodev)<br>/proc 包含系统的一些配置信息，不和任何设备相关联。</p>
 
 <pre class="example">
 $cat /proc/version 查看内核版本
-$cat /proc/cpuinfo 查看cpu信息
+$cat /proc/cpuinfo 查看 cpu 信息
 </pre>
 
-<p>/proc目录下同时包含系统中当前的进程信息，由于权限设置，有的只能由进程本身访问。可以通过访问文件获取系统中进程的相关信息，<br>比如参数，运行环境,内存使用信息等等。</p>
+<p>/proc 目录下同时包含系统中当前的进程信息，由于权限设置，有的只能由进程本身访问。可以通过访问文件获取系统中进程的相关信息，<br>比如参数，运行环境，内存使用信息等等。</p>
 
 
 <h2><a name="sec24" id="sec24"></a><br>Linux system call</h2>
 
-<p class="first">system call和一般的C库函数的区别：系统调用一般通过门陷入实现，是系统内核和用户程序的接口，运行过程中会进入系统内核。C库函数一般和普通的函数没有区别。</p>
+<p class="first">system call 和一般的 C 库函数的区别：系统调用一般通过门陷入实现，是系统内核和用户程序的接口，运行过程中会进入系统内核。C 库函数一般和普通的函数没有区别。</p>
 
-<p class="verse"><br><br><br>strace:该命令可以追踪一个程序执行过程中的调用的system call。<br><br><br>access:测试进程对于一个文件的权限。 int access(path,bit_flag),注意返回值和errno。<br><br>fcntl:锁住文件和控制文件操作。<br><br>fsync,fdatasync:flush disk buffer。<br><br>getrlimit,setrlimit:资源限制设置。<br><br>getusage:获取进程的统计信息。<br><br>gettimeofday:获取wall_clock time。<br><br>mlock:锁住一段物理内存，使得该内存不能因为swap换出，一些速度要求很高的和安全性要求很高的代码会使用这个功能。 mlock(address,mem_length)<br><br>mprotect:设置内存的权限。<br><br>nanosleep:高分辨率睡眠函数。<br><br><br>readlink:read symbolic links。<br><br>sendfile:Fast file Transfer。<br><br>setitimer:定时器。<br><br>sysinfo:获取系统统计信息。<br><br>uname:获取系统版本信息和硬件信息。<br><br></p>
+<p class="verse"><br><br><br>strace:该命令可以追踪一个程序执行过程中的调用的 system call。<br><br><br>access:测试进程对于一个文件的权限。 int access(path,bit_flag),注意返回值和 errno。<br><br>fcntl:锁住文件和控制文件操作。<br><br>fsync,fdatasync:flush disk buffer。<br><br>getrlimit,setrlimit:资源限制设置。<br><br>getusage:获取进程的统计信息。<br><br>gettimeofday:获取 wall_clock time。<br><br>mlock:锁住一段物理内存，使得该内存不能因为 swap 换出，一些速度要求很高的和安全性要求很高的代码会使用这个功能。 mlock(address,mem_length)<br><br>mprotect:设置内存的权限。<br><br>nanosleep:高分辨率睡眠函数。<br><br><br>readlink:read symbolic links。<br><br>sendfile:Fast file Transfer。<br><br>setitimer:定时器。<br><br>sysinfo:获取系统统计信息。<br><br>uname:获取系统版本信息和硬件信息。<br><br></p>
 
 
 <h2><a name="sec25" id="sec25"></a><br>Inline Assembly Code</h2>
 
-<p class="first">/usr/include/asm/io.h 定义了汇编代码中能够直接访问的端口。<br>/usr/src/linux/include/asm and /usr/src/linux/include/asm-i386 linux内核中汇编代码头文件<br>/usr/src/linux/arch/i386/ and /usr/src/linux/drivers/  汇编代码<br>当使用特定平台的汇编代码时使用宏和函数来简化兼容问题。</p>
+<p class="first">/usr/include/asm/io.h 定义了汇编代码中能够直接访问的端口。<br>/usr/src/linux/include/asm and /usr/src/linux/include/asm-i386 linux 内核中汇编代码头文件<br>/usr/src/linux/arch/i386/ and /usr/src/linux/drivers/  汇编代码<br>当使用特定平台的汇编代码时使用宏和函数来简化兼容问题。</p>
 
 
 <h2><a name="sec26" id="sec26"></a><br>Security</h2>
 
 <h3><a name="sec27" id="sec27"></a><br>用户组 文件 进程权限</h3>
 
-<p class="verse"><br><br><br>用户和组的概念<br><br>超级用户 无穷权力<br><br><br>proccess user id和proccess group id。进程开始的时候其id和启动该程序的用户信息相同。<br><br>文件权限 chmod stat(filename,&amp;(struct stat))<br><br>program without Execution Permissions: a security hole。 其他用户能够拷贝该文件，然后修改其权限。<br><br>Sticky bit:用于文件夹，当一个文件夹的sticky bit设置了后，要删除该文件夹下的一个文件必须拥有对该文件的拥有权，即使已经拥有该文件夹访问权。Linux下的/tmp设置了sticky bit。<br><br>Real and Effective ID::EID代表进程所具有的系统权限，如果是非root用户，EID=RID；只有root用户可以改变它的EID为任何有效的用户ID。<br><br>su命令：是一个setuid程序，当程序执行的时候其EID是文件的拥有者，而不是启动程序的用户号。chmod a+s使得文件有这个属性。<br><br></p>
+<p class="verse"><br><br><br>用户和组的概念<br><br>超级用户 无穷权力<br><br><br>proccess user id 和 proccess group id。进程开始的时候其 id 和启动该程序的用户信息相同。<br><br>文件权限 chmod stat(filename,&amp;(struct stat))<br><br>program without Execution Permissions: a security hole。 其他用户能够拷贝该文件，然后修改其权限。<br><br>Sticky bit:用于文件夹，当一个文件夹的 sticky bit 设置了后，要删除该文件夹下的一个文件必须拥有对该文件的拥有权，即使已经拥有该文件夹访问权。Linux 下的/tmp 设置了 sticky bit。<br><br>Real and Effective ID::EID 代表进程所具有的系统权限，如果是非 root 用户，EID=RID；只有 root 用户可以改变它的 EID 为任何有效的用户 ID。<br><br>su 命令：是一个 setuid 程序，当程序执行的时候其 EID 是文件的拥有者，而不是启动程序的用户号。chmod a+s 使得文件有这个属性。<br><br></p>
 
 
 <h3><a name="sec28" id="sec28"></a><br><br>缓冲区漏洞</h3>
@@ -516,12 +516,12 @@ $cat /proc/cpuinfo 查看cpu信息
 <p><span style="color: #ff7f24;">/<em> </span><span style="color: #ff7f24;">Read a line of input. </span><span style="color: #ff7f24;"></em>/</span><br>gets (username);<br><span style="color: #ff7f24;">/<em> </span><span style="color: #ff7f24;">Do other things here… </span><span style="color: #ff7f24;"></em>/</span><br></pre><br>攻击者可以故意使得缓冲区读满，然后在超出的区域植入想执行的代码段，获得控制权。</p>
 <h3><a name="sec29" id="sec29"></a><br>Race Conditions in /tmp</h3>
 
-<p class="first">攻击者先创建一个链接，如果应用程序在/tmp下创建打开一个相同名称的文件，所有写入的数据将传送到链接所指向的文件里。<br>解决方法：在文件名称内使用Random，open函数使用O_EXCL参数，如果文件存在则失败，打开一个文件后用lstat查看是否是链接文件，检查文件的所有者是否和进程所有者一样。<br>/tmp文件不能挂载在NFS下，因为O_EXCL不能在NFS文件系统下使用。</p>
+<p class="first">攻击者先创建一个链接，如果应用程序在/tmp 下创建打开一个相同名称的文件，所有写入的数据将传送到链接所指向的文件里。<br>解决方法：在文件名称内使用 Random，open 函数使用 O_EXCL 参数，如果文件存在则失败，打开一个文件后用 lstat 查看是否是链接文件，检查文件的所有者是否和进程所有者一样。<br>/tmp 文件不能挂载在 NFS 下，因为 O_EXCL 不能在 NFS 文件系统下使用。</p>
 
 
-<h3><a name="sec30" id="sec30"></a><br>system ,popen函数的危险</h3>
+<h3><a name="sec30" id="sec30"></a><br>system ,popen 函数的危险</h3>
 
-<p><p class="first">替代使用exec族函数。</p><br><!-- Page published by Emacs Muse ends here --></p>
+<p><p class="first">替代使用 exec 族函数。</p><br><!-- Page published by Emacs Muse ends here --></p>
 </section>
 
     <p></p>
@@ -564,7 +564,7 @@ $cat /proc/cpuinfo 查看cpu信息
     
       <a class="nav-right" href="/2011/06/07/554.html">
         
-          从豆瓣FM下载喜欢的音乐
+          从豆瓣 FM 下载喜欢的音乐
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -624,7 +624,7 @@ Security</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-lev
 
 缓冲区漏洞</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">
 Race Conditions in &#x2F;tmp</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">
-system ,popen函数的危险</span></a></li></ol></li></ol>
+system ,popen 函数的危险</span></a></li></ol></li></ol>
     
   </div>
 </aside>

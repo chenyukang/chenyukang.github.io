@@ -10,7 +10,7 @@
   
   <title>
       
-          调优的小工具RunLim | 程序员的喵
+          调优的小工具 RunLim | 程序员的喵
       
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -165,7 +165,7 @@
 </header>
 
     <div id="article-banner">
-  <h2>调优的小工具RunLim</h2>
+  <h2>调优的小工具 RunLim</h2>
   <p class="post-date">2012-10-29</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -174,8 +174,8 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>在公司有同事用这个小程序<a target="_blank" rel="noopener" href="http://fmv.jku.at/runlim/">RunLim</a>来调试程序的内存问题。刚开始以为是我们上海的一个同事写的，就弄来看了看。后来发现是公司一个早期同事<a target="_blank" rel="noopener" href="http://fmv.jku.at/biere/index.html">Armin Biere</a>写的，还开源了，debian的源里有这个东西。我在公司维护的一部分代码是这个人写的，据说厉害的程序员，他现在在学术圈里。</p>
-<p>用这个小程序来测试程序跑的时间和内存，用法很简单:</p>
+    <section class="markdown-content"><p>在公司有同事用这个小程序<a target="_blank" rel="noopener" href="http://fmv.jku.at/runlim/">RunLim</a>来调试程序的内存问题。刚开始以为是我们上海的一个同事写的，就弄来看了看。后来发现是公司一个早期同事<a target="_blank" rel="noopener" href="http://fmv.jku.at/biere/index.html">Armin Biere</a>写的，还开源了，debian 的源里有这个东西。我在公司维护的一部分代码是这个人写的，据说厉害的程序员，他现在在学术圈里。</p>
+<p>用这个小程序来测试程序跑的时间和内存，用法很简单：</p>
 <pre class="prettyprint lang-sh">
 ./runlim prog.exe
 
@@ -200,8 +200,8 @@ kang@ubuntu:~/download/runlim-1.7$ ./runlim sleep  1
 
 </pre>
 
-<p>查看help，这个工具还可以指定time limit和space limit,在指定的时间和内存限制内强制退出程序，其功能很像那些<a target="_blank" rel="noopener" href="http://poj.org/">Online Judge</a>，只是没有检测结果输出是否正确。</p>
-<p>发现代码里有一个小小的Bug，根据源代码如果没有指定space limit， space limit那栏应该是当前的空闲内存大小，但是<br>看我上面运行的命令，显示的4294966090 MB明显偏大，是其中的一个获取系统内存大小的函数溢出了。这里应该是这样：</p>
+<p>查看 help，这个工具还可以指定 time limit 和 space limit，在指定的时间和内存限制内强制退出程序，其功能很像那些<a target="_blank" rel="noopener" href="http://poj.org/">Online Judge</a>，只是没有检测结果输出是否正确。</p>
+<p>发现代码里有一个小小的 Bug，根据源代码如果没有指定 space limit， space limit 那栏应该是当前的空闲内存大小，但是<br>看我上面运行的命令，显示的 4294966090 MB 明显偏大，是其中的一个获取系统内存大小的函数溢出了。这里应该是这样：</p>
 <pre class="prettyprint lang-sh">
 static unsigned
 get_physical_mb ()
@@ -213,8 +213,8 @@ get_physical_mb ()
 }
 </pre>
 
-<p>sysconf获取页大小和页数目，具体看这里<a target="_blank" rel="noopener" href="http://www.gnu.org/software/libc/manual/html_node/Query-Memory-Parameters.html">How to get information about the memory subsystem?</a>。</p>
-<p>这个小工具还是查询/proc下的进程统计信息的，根据fork出来的子进程pid，递归地查询统计信息。</p>
+<p>sysconf 获取页大小和页数目，具体看这里<a target="_blank" rel="noopener" href="http://www.gnu.org/software/libc/manual/html_node/Query-Memory-Parameters.html">How to get information about the memory subsystem?</a>。</p>
+<p>这个小工具还是查询/proc 下的进程统计信息的，根据 fork 出来的子进程 pid，递归地查询统计信息。</p>
 <p>时间的统计可能会稍显粗略，如果需要更精确的时间统计该如何实现。</p>
 </section>
 

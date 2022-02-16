@@ -10,7 +10,7 @@
   
   <title>
       
-          lcc阅读记录 | 程序员的喵
+          lcc 阅读记录 | 程序员的喵
       
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -83,7 +83,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.1"></head>
 
   <body>
     <header class="header fixed-header">
@@ -165,7 +165,7 @@
 </header>
 
     <div id="article-banner">
-  <h2>lcc阅读记录</h2>
+  <h2>lcc 阅读记录</h2>
   <p class="post-date">2014-09-14</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -174,34 +174,34 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>之前看EOPL感觉收获挺大，最近又花业余时间看了看编译相关的东西，这是我看lcc的时候顺手记下的一些自己的理解。这本书<a target="_blank" rel="noopener" href="http://book.douban.com/subject/1610344/">《A Retargetable C Compiler》</a>还挺大头的。lcc代码量不是特别大，更复杂的是tinyCC，tinyCC甚至可以直接运行C代码。</p>
-<h2 id="alloc-c"><a href="#alloc-c" class="headerlink" title="alloc.c"></a>alloc.c</h2><p>为了尽量的少调用系统调用，在alloc基础上封装了一下。</p>
-<h2 id="sym-c"><a href="#sym-c" class="headerlink" title="sym.c"></a>sym.c</h2><p>用来存储symbol，注意scope的表示方法。</p>
-<h2 id="input-c"><a href="#input-c" class="headerlink" title="input.c"></a>input.c</h2><p>为了减少读取文件的开销，用一个buffer来缓存源文件内容。cp表示当前读取出来的字符位置，limit表示缓存的结尾字符位置，如果fillbuf一次以后仍然<code>cp == limit</code>则表示读取文件到EOF了。</p>
-<p>注意这里的fread读取的时候是通过stdin的，但是在main.c/main_init函数的时候通过freopen将源文件重定向到了stdin。</p>
-<p>fillbuf其实读取的时候是永远先把内容读取到buffer[MAXLINE+1]的位置，如果发现<code>cp &lt; limit</code>就把前面剩下的内容往前移动，这样永远保证buffer足够下一次预读取,这里有点巧妙。</p>
-<p>比较复杂的部分是处理resynch，input处理的内容是经过C语言预处理器的，这部分没有包含在这个编译器内。</p>
-<h2 id="lex-c"><a href="#lex-c" class="headerlink" title="lex.c"></a>lex.c</h2><p>一个完全是手写的C语言Parser，虽然只是兼容C99，但手写还是比较复杂的。<code>码农约架比写Parser是个体现实力的比赛。</code></p>
-<p>getchr逐个字符读取，cp就是input.c里面的当前字符。跳过BLANK，如果碰到NEWLINE则调用input.c读取下一行。</p>
-<p>token.h看起来有很多列，这个文件被多个地方用到。是用宏来生成一些Enum里面的代码。比如token type和expr type。</p>
-<p>gettok顾名思义在lex运行的时候不断提供一个一个的token，这主要是通过cp匹配map来判断，条件分支很多(依据当前的第一个字符)。<code>register unsigned char* rpc</code>存储当前字符。<code>register作为一个对编译器的提示，尽量用register来存储变量。事实上现在的编译器很多都能做auto register allocation，有的时候编译器的选择可能比人的选择更好。register在老的C代码里面可能更为常见。</code></p>
-<p>这个函数里面很多地方都用到了goto，主要是在匹配关键字的时候区分identifier。主要几大类是: number, keyword, identifier, string。 icon处理数字的前缀，fcon处理浮点数。</p>
-<p>Lexical analyzer基本理论是自动状态机，没一个token可以根据相应的正则表达式来表示。有一些工具可以用来自动生成这些繁琐的代码，比如LEX，更新一些的有Flex和re2c。</p>
-<h2 id="error-c"><a href="#error-c" class="headerlink" title="error.c"></a>error.c</h2><p>终于来到Parser部分了，lcc使用的是recursive-descent，很多商业的编译器都是用的这种直观的算法，事实上对于大部分语言都足够了。recursive-descent是自上而下的递归的，依据当前的token匹配语法结构。一个重要的问题是如何在处理的过程中给出适当的错误信息。error.c里面的函数test和expect用来测试下一个token是否是预期的,expect可以打印出错误信息。</p>
-<h2 id="tree-c"><a href="#tree-c" class="headerlink" title="tree.c"></a>tree.c</h2><p>最重要的数据结构struct tree，AST中的基本节点，包含子节点，和operator类型(比如AND，OR，NOT等）。在构建AST的时候root函数经常被用到。</p>
-<h2 id="expr-c-enode-c"><a href="#expr-c-enode-c" class="headerlink" title="expr.c enode.c"></a>expr.c enode.c</h2><p>parser的一部分，用来识别表达式。代码好复杂，和paresr有些类似，整个过程是构建AST。编译器的前端最重要的事情就是这了，后面的操作都是在这个基础上做的。为什么Scheme/Lisp的front部分比较简单，因为这货代码就和AST有些类似了，括号把一个一个的节点组合了起来。初看起来很难看，其实习惯了还好。</p>
-<p>上面说的是语法的识别，在构建AST的过程中另外一个事情就是语意的分析。包括类型检查，类型的转换，操作符优先级等，这些也在构建AST的时候顺便做了。比如在遇到expr1 ? expr2 : expr3的时候，expr1的值最后被cast成一个bool。指针之间的隐式转换也比较复杂。function call比较复杂，这里还做了函数参数的写法是否是老的风格，类型说明放在函数头的最后。assignments和binary operator的分析相对来说简单一些，需要做各种cast。</p>
-<p>前些天稍微看了一些Erlang，发现里面的类型推导比较好玩，甚至可以发现一些代码里面的逻辑错误：</p>
+    <section class="markdown-content"><p>之前看 EOPL 感觉收获挺大，最近又花业余时间看了看编译相关的东西，这是我看 lcc 的时候顺手记下的一些自己的理解。这本书<a target="_blank" rel="noopener" href="http://book.douban.com/subject/1610344/">《A Retargetable C Compiler》</a>还挺大头的。lcc 代码量不是特别大，更复杂的是 tinyCC，tinyCC 甚至可以直接运行 C 代码。</p>
+<h2 id="alloc-c"><a href="#alloc-c" class="headerlink" title="alloc.c"></a>alloc.c</h2><p>为了尽量的少调用系统调用，在 alloc 基础上封装了一下。</p>
+<h2 id="sym-c"><a href="#sym-c" class="headerlink" title="sym.c"></a>sym.c</h2><p>用来存储 symbol，注意 scope 的表示方法。</p>
+<h2 id="input-c"><a href="#input-c" class="headerlink" title="input.c"></a>input.c</h2><p>为了减少读取文件的开销，用一个 buffer 来缓存源文件内容。cp 表示当前读取出来的字符位置，limit 表示缓存的结尾字符位置，如果 fillbuf 一次以后仍然<code>cp == limit</code>则表示读取文件到 EOF 了。</p>
+<p>注意这里的 fread 读取的时候是通过 stdin 的，但是在 main.c/main_init 函数的时候通过 freopen 将源文件重定向到了 stdin。</p>
+<p>fillbuf 其实读取的时候是永远先把内容读取到 buffer[MAXLINE+1] 的位置，如果发现<code>cp &lt; limit</code>就把前面剩下的内容往前移动，这样永远保证 buffer 足够下一次预读取，这里有点巧妙。</p>
+<p>比较复杂的部分是处理 resynch，input 处理的内容是经过 C 语言预处理器的，这部分没有包含在这个编译器内。</p>
+<h2 id="lex-c"><a href="#lex-c" class="headerlink" title="lex.c"></a>lex.c</h2><p>一个完全是手写的 C 语言 Parser，虽然只是兼容 C99，但手写还是比较复杂的。<code>码农约架比写 Parser 是个体现实力的比赛。</code></p>
+<p>getchr 逐个字符读取，cp 就是 input.c 里面的当前字符。跳过 BLANK，如果碰到 NEWLINE 则调用 input.c 读取下一行。</p>
+<p>token.h 看起来有很多列，这个文件被多个地方用到。是用宏来生成一些 Enum 里面的代码。比如 token type 和 expr type。</p>
+<p>gettok 顾名思义在 lex 运行的时候不断提供一个一个的 token，这主要是通过 cp 匹配 map 来判断，条件分支很多 (依据当前的第一个字符)。<code>register unsigned char* rpc</code>存储当前字符。<code>register 作为一个对编译器的提示，尽量用 register 来存储变量。事实上现在的编译器很多都能做 auto register allocation，有的时候编译器的选择可能比人的选择更好。register 在老的 C 代码里面可能更为常见。</code></p>
+<p>这个函数里面很多地方都用到了 goto，主要是在匹配关键字的时候区分 identifier。主要几大类是: number, keyword, identifier, string。 icon 处理数字的前缀，fcon 处理浮点数。</p>
+<p>Lexical analyzer 基本理论是自动状态机，没一个 token 可以根据相应的正则表达式来表示。有一些工具可以用来自动生成这些繁琐的代码，比如 LEX，更新一些的有 Flex 和 re2c。</p>
+<h2 id="error-c"><a href="#error-c" class="headerlink" title="error.c"></a>error.c</h2><p>终于来到 Parser 部分了，lcc 使用的是 recursive-descent，很多商业的编译器都是用的这种直观的算法，事实上对于大部分语言都足够了。recursive-descent 是自上而下的递归的，依据当前的 token 匹配语法结构。一个重要的问题是如何在处理的过程中给出适当的错误信息。error.c 里面的函数 test 和 expect 用来测试下一个 token 是否是预期的，expect 可以打印出错误信息。</p>
+<h2 id="tree-c"><a href="#tree-c" class="headerlink" title="tree.c"></a>tree.c</h2><p>最重要的数据结构 struct tree，AST 中的基本节点，包含子节点，和 operator 类型 (比如 AND，OR，NOT 等）。在构建 AST 的时候 root 函数经常被用到。</p>
+<h2 id="expr-c-enode-c"><a href="#expr-c-enode-c" class="headerlink" title="expr.c enode.c"></a>expr.c enode.c</h2><p>parser 的一部分，用来识别表达式。代码好复杂，和 paresr 有些类似，整个过程是构建 AST。编译器的前端最重要的事情就是这了，后面的操作都是在这个基础上做的。为什么 Scheme/Lisp 的 front 部分比较简单，因为这货代码就和 AST 有些类似了，括号把一个一个的节点组合了起来。初看起来很难看，其实习惯了还好。</p>
+<p>上面说的是语法的识别，在构建 AST 的过程中另外一个事情就是语意的分析。包括类型检查，类型的转换，操作符优先级等，这些也在构建 AST 的时候顺便做了。比如在遇到 expr1 ? expr2 : expr3 的时候，expr1 的值最后被 cast 成一个 bool。指针之间的隐式转换也比较复杂。function call 比较复杂，这里还做了函数参数的写法是否是老的风格，类型说明放在函数头的最后。assignments 和 binary operator 的分析相对来说简单一些，需要做各种 cast。</p>
+<p>前些天稍微看了一些 Erlang，发现里面的类型推导比较好玩，甚至可以发现一些代码里面的逻辑错误：</p>
 <p>比如：</p>
 <figure class="highlight erlang"><table><tr><td class="code"><pre><code class="hljs erlang"><span class="hljs-function"><span class="hljs-title">fact</span><span class="hljs-params">(<span class="hljs-number">0</span>)</span> -&gt;</span> <span class="hljs-number">1</span>;<br><span class="hljs-function"><span class="hljs-title">fact</span><span class="hljs-params">(N)</span> -&gt;</span> N * fact(N-<span class="hljs-number">1</span>).<br><br><span class="hljs-function"><span class="hljs-title">test</span><span class="hljs-params">()</span> -&gt;</span> fact(-<span class="hljs-number">5</span>).<br></code></pre></td></tr></table></figure>
-<p>不用运行Erlang的dialyzer就可以发现这里面的死循环，因为可以通过上面的定义推断出fact的参数是non_neg_integer,而-5是不符合的，所以报出来一个错误：</p>
+<p>不用运行 Erlang 的 dialyzer 就可以发现这里面的死循环，因为可以通过上面的定义推断出 fact 的参数是 non_neg_integer，而-5 是不符合的，所以报出来一个错误：</p>
 <p><code>fact(-5) will never return</code>。</p>
-<h2 id="stmt-c"><a href="#stmt-c" class="headerlink" title="stmt.c"></a>stmt.c</h2><p>codelist为双向列表，遇到新的执行块就加到这个列表上。在处理control-flow的过程中有的死代码块是可以被编译器发现的，只是我们平时都被忽略了。</p>
-<p>比如C代码:<br><figure class="highlight erlang"><table><tr><td class="code"><pre><code class="hljs erlang">int loop() &#123;<br> Loop:<br>    goto Loop;<br>    return -<span class="hljs-number">1</span>;<br>&#125;<br><br>int main() &#123;<br>    printf(<span class="hljs-string">&quot;loop: %d\n&quot;</span>, loop());<br>    return <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><br>loop永远不会返回，Gcc选项<code>-Wsuggest-attribute=noreturn</code>可以报出一个warning。</p>
-<h2 id="decl-c"><a href="#decl-c" class="headerlink" title="decl.c"></a>decl.c</h2><p>声明是C语言中最难解析的部分，原因是声明涉及到变量和类型，而从C声明中弄出类型信息还是挺复杂的。另外声明还分局部，全局，其中还涉及到函数参数，结构体等。decl.c可能是最复杂的文件了，1100多行代码，里面的函数之间又相互调用。finalize()函数最后检查是否有重复定义的变量。</p>
-<h2 id="dag-c"><a href="#dag-c" class="headerlink" title="dag.c"></a>dag.c</h2><p>lcc的intermediate code是用listnodes把前面parser的tree转换为DAG，最终整个程序会经过转换变成由多个DAG组合成的森林。listnodes还负责把一些公共的sub-expression简化。</p>
-<p>接口为gencode,emitcode。后面每一个代码生成的后端都是一个Interface结构，在function函数里面调用这两个函数生成汇编代码，其中还包含一个Xinterface成员，这是平台相关的接口。</p>
-<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>到现在我只是大概看了了前端和中间层，后面lcc跨平台的指令生成还没来得及研究，这本书的电子版不是很清晰，还是买个中文版来再稍微看看。总的来说，lcc是的Parsing和语义分析是同时进行的，就是所谓的one-pass方法。现在很多编译器所用的方法是先建立AST，后面可能要多次遍历整个AST进行分析，LLVM好像就是采用的这种方案。另外代码的优化是一个trade-off，作为教学用途的lcc没有过多做代码优化，这样lcc代码还是可以花不多的时间来一个大概的学习。</p>
+<h2 id="stmt-c"><a href="#stmt-c" class="headerlink" title="stmt.c"></a>stmt.c</h2><p>codelist 为双向列表，遇到新的执行块就加到这个列表上。在处理 control-flow 的过程中有的死代码块是可以被编译器发现的，只是我们平时都被忽略了。</p>
+<p>比如 C 代码：<br><figure class="highlight erlang"><table><tr><td class="code"><pre><code class="hljs erlang">int loop() &#123;<br> Loop:<br>    goto Loop;<br>    return -<span class="hljs-number">1</span>;<br>&#125;<br><br>int main() &#123;<br>    printf(<span class="hljs-string">&quot;loop: %d\n&quot;</span>, loop());<br>    return <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure><br>loop 永远不会返回，Gcc 选项<code>-Wsuggest-attribute=noreturn</code>可以报出一个 warning。</p>
+<h2 id="decl-c"><a href="#decl-c" class="headerlink" title="decl.c"></a>decl.c</h2><p>声明是 C 语言中最难解析的部分，原因是声明涉及到变量和类型，而从 C 声明中弄出类型信息还是挺复杂的。另外声明还分局部，全局，其中还涉及到函数参数，结构体等。decl.c 可能是最复杂的文件了，1100 多行代码，里面的函数之间又相互调用。finalize() 函数最后检查是否有重复定义的变量。</p>
+<h2 id="dag-c"><a href="#dag-c" class="headerlink" title="dag.c"></a>dag.c</h2><p>lcc 的 intermediate code 是用 listnodes 把前面 parser 的 tree 转换为 DAG，最终整个程序会经过转换变成由多个 DAG 组合成的森林。listnodes 还负责把一些公共的 sub-expression 简化。</p>
+<p>接口为 gencode,emitcode。后面每一个代码生成的后端都是一个 Interface 结构，在 function 函数里面调用这两个函数生成汇编代码，其中还包含一个 Xinterface 成员，这是平台相关的接口。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>到现在我只是大概看了了前端和中间层，后面 lcc 跨平台的指令生成还没来得及研究，这本书的电子版不是很清晰，还是买个中文版来再稍微看看。总的来说，lcc 是的 Parsing 和语义分析是同时进行的，就是所谓的 one-pass 方法。现在很多编译器所用的方法是先建立 AST，后面可能要多次遍历整个 AST 进行分析，LLVM 好像就是采用的这种方案。另外代码的优化是一个 trade-off，作为教学用途的 lcc 没有过多做代码优化，这样 lcc 代码还是可以花不多的时间来一个大概的学习。</p>
 </section>
 
     <p></p>

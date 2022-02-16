@@ -83,7 +83,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.1"></head>
 
   <body>
     <header class="header fixed-header">
@@ -179,11 +179,11 @@
 <ol start="0">
 <li><p>3 月左右，微软有个 FHL(Fix/Hack/Learning) 活动，基本有两周左右时间可以做自己感兴趣的项目，或者是学习点什么技术。那段时间我在琢磨怎么下好五子棋，因为和老婆经常比赛赌输赢。所以我写了个程序来下五子棋 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/gomoku">gomoku</a>，顺便学了一些技术相关的，比如 Rust，WebAssembly，Azure function，monte carlo，minimax 算法等。可能是我很久没从头到尾写个项目的原因，这个项目写得很来劲，顺便掉入 WebAssembly 的坑里。</p>
 </li>
-<li><p>接触到了 WebAssembly 发现有些意思, 所以看了很多相关的内容。然后我参与到了 wamser.io。这是一个 Rust 写的 WebAssembly Runtime，还包括各种语言的 SDK 之类的。我开始从一些简单的 <a target="_blank" rel="noopener" href="https://github.com/wasmerio/wasmer/pulls?q=is%3Apr+author%3Achenyukang+is%3Aclosed">PR 到一些 Bug 修复</a>。通过这些投入我大概也熟悉了这个项目的代码。这个项目 Star 数目虽然有1W+，但是其实日常维护者已经只有两位了，其背后是一个公司在支撑。这公司之前是在 YC 孵化的，但是据我观察是没找到合适的商业化途径。当年 Docker 是找不到合适的盈利方式，所以最终选择开源。不过短短几年，现在这些技术型创业公司，基本都是默认开始干开源的，比如那些开源数据库之类的项目。</p>
+<li><p>接触到了 WebAssembly 发现有些意思，所以看了很多相关的内容。然后我参与到了 wamser.io。这是一个 Rust 写的 WebAssembly Runtime，还包括各种语言的 SDK 之类的。我开始从一些简单的 <a target="_blank" rel="noopener" href="https://github.com/wasmerio/wasmer/pulls?q=is%3Apr+author%3Achenyukang+is%3Aclosed">PR 到一些 Bug 修复</a>。通过这些投入我大概也熟悉了这个项目的代码。这个项目 Star 数目虽然有 1W+，但是其实日常维护者已经只有两位了，其背后是一个公司在支撑。这公司之前是在 YC 孵化的，但是据我观察是没找到合适的商业化途径。当年 Docker 是找不到合适的盈利方式，所以最终选择开源。不过短短几年，现在这些技术型创业公司，基本都是默认开始干开源的，比如那些开源数据库之类的项目。</p>
 </li>
 <li><p>帮 <a target="_blank" rel="noopener" href="https://github.com/WasmEdge/WasmEdge">WasmEdge</a> 做了一些和 <a target="_blank" rel="noopener" href="https://dapr.io/">Dapr</a> 的集成 Demo，花了大概两周的业余时间来学习 Dapr 和 WasmEdge 相关的技术，最终完成项目 <a target="_blank" rel="noopener" href="https://github.com/second-state/dapr-wasm">dapr-wasm</a>。这也是我第一次尝试收费帮人做开源，虽然不多但是也算是个不错的开头。既能赚钱又能学点新东西，何乐不为。</p>
 </li>
-<li><p>玩了一段时间 K8S 和 Linkerd 之后，我对容器相关技术又有一些兴趣。仍然记得 2014 年刚接触到 Docker 时的震撼，所以我想看看容器到底是怎么做的。后来找到了 Rust 实现的 Container Runtime <a target="_blank" rel="noopener" href="https://github.com/containers/youki">youki</a>。这个项目主要是一群日本年轻人在开发，项目发起人还是 96 年的。真是后生可畏! 我陆陆续续大概提交了十来个 PR，主要是改进一些测试脚本、参考 runc 来实现一些功能，通过容器的基准测试等。在 discord 偶尔和项目发起者聊聊天，交流一些中日的 IT 相关感受也挺有意思。贡献了<a target="_blank" rel="noopener" href="https://github.com/containers/youki/pulls?q=is%3Apr+author%3Achenyukang+is%3Aclosed">几个 PR</a> 之后，他邀请我成为项目的 maintainer。我觉得这是一个很好的锻炼、提高自己的机会，所以就欣然接受了。其实容器底层都是一些什么权限管理，namespace，cgroup，file system 等基于操作系统的抽象层做了隔离，跑起来就是进程而已。在开发容器的过程中，有时候会把自己的 Host OS 搞跪，所以最好是在 wsl 或者 VM 里面开发。</p>
+<li><p>玩了一段时间 K8S 和 Linkerd 之后，我对容器相关技术又有一些兴趣。仍然记得 2014 年刚接触到 Docker 时的震撼，所以我想看看容器到底是怎么做的。后来找到了 Rust 实现的 Container Runtime <a target="_blank" rel="noopener" href="https://github.com/containers/youki">youki</a>。这个项目主要是一群日本年轻人在开发，项目发起人还是 96 年的。真是后生可畏！我陆陆续续大概提交了十来个 PR，主要是改进一些测试脚本、参考 runc 来实现一些功能，通过容器的基准测试等。在 discord 偶尔和项目发起者聊聊天，交流一些中日的 IT 相关感受也挺有意思。贡献了<a target="_blank" rel="noopener" href="https://github.com/containers/youki/pulls?q=is%3Apr+author%3Achenyukang+is%3Aclosed">几个 PR</a> 之后，他邀请我成为项目的 maintainer。我觉得这是一个很好的锻炼、提高自己的机会，所以就欣然接受了。其实容器底层都是一些什么权限管理，namespace，cgroup，file system 等基于操作系统的抽象层做了隔离，跑起来就是进程而已。在开发容器的过程中，有时候会把自己的 Host OS 搞跪，所以最好是在 wsl 或者 VM 里面开发。</p>
 </li>
 <li><p>最近在使用 Rust 过程中，发现 lint 会重复报告某些提示。经过搜索发现已经有人提出了同样的问题。我曾经好几次尝试过看看 Rust 的源码，但一直没沉下心有所得。这个 Bug 看起来并不难排查，也许是一个很好的契机。我花了大概几个小时时间从理解 lint 相关的逻辑，到复现这个 Bug，找到代码里的问题，然后做出一个初步修复。这个过程中，感觉比较困难的是编译一次 Rust 代码库大概需要半个小时，跑测试则需要更久。另外通过 gdb 虽然可以调试代码，但是还是有某些限制。提交了 PR 之后才只是开始，后来又经过了一周多时间和子模块维护者讨论更细节的问题，来回 20 多 comments 才最终完成了<a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/88493">修复</a>。</p>
 </li>

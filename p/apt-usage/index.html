@@ -83,7 +83,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.1"></head>
 
   <body>
     <header class="header fixed-header">
@@ -174,23 +174,23 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>包管理器是Linux上一个经常用的东西，我觉得下面这几个命令是非常有用的，便于查询包的状态，或者搜索我该安装哪些包。</p>
-<h2 id="apt-cache"><a href="#apt-cache" class="headerlink" title="apt-cache"></a>apt-cache</h2><p>用来根据名字查询软件包，比如apt-cache search vim查询vim相关的。</p>
-<h2 id="apt-file"><a href="#apt-file" class="headerlink" title="apt-file"></a>apt-file</h2><p>用来根据某个文件查询软件包，这在编译程序的时候非常有用，可以通过所需要的头文件去查询要安装的东西，可以避免去Google了。注意使用之前需要安装并update。</p>
+    <section class="markdown-content"><p>包管理器是 Linux 上一个经常用的东西，我觉得下面这几个命令是非常有用的，便于查询包的状态，或者搜索我该安装哪些包。</p>
+<h2 id="apt-cache"><a href="#apt-cache" class="headerlink" title="apt-cache"></a>apt-cache</h2><p>用来根据名字查询软件包，比如 apt-cache search vim 查询 vim 相关的。</p>
+<h2 id="apt-file"><a href="#apt-file" class="headerlink" title="apt-file"></a>apt-file</h2><p>用来根据某个文件查询软件包，这在编译程序的时候非常有用，可以通过所需要的头文件去查询要安装的东西，可以避免去 Google 了。注意使用之前需要安装并 update。</p>
 <pre><code>sudo apt-get install apt-file
 sudo apt-file update
 </code></pre><p>比如我在编译某个软件的时候找不到&lt;readline/readline.h&gt;，使用下面的命令来查询一下：</p>
 <pre><code>sudo apt-file readline.h
-</code></pre><p>结果中有这么一行，那么我就知道继续安装libreadline5-dev库就行了。</p>
-<h2 id="dpkg"><a href="#dpkg" class="headerlink" title="dpkg"></a>dpkg</h2><p>apt是基于dpkg开发的，dpkg是更古老更底层的一套工具，Debian系统管理器的基础。</p>
+</code></pre><p>结果中有这么一行，那么我就知道继续安装 libreadline5-dev 库就行了。</p>
+<h2 id="dpkg"><a href="#dpkg" class="headerlink" title="dpkg"></a>dpkg</h2><p>apt 是基于 dpkg 开发的，dpkg 是更古老更底层的一套工具，Debian 系统管理器的基础。</p>
 <pre><code>dpkg -l 列出所有已经安装的包
-dpkg -s vim 列出包vim的状态
-dpkg -L vim 列出本地所有vim相关联系的文件
+dpkg -s vim 列出包 vim 的状态
+dpkg -L vim 列出本地所有 vim 相关联系的文件
 dpkg -S vim 搜索所属包的内容
-</code></pre><h2 id="brew"><a href="#brew" class="headerlink" title="brew"></a>brew</h2><p>Mac下推荐Brew来替代apt，大部分的开源包都有对应的地址源了。我没使用过MacPorts，无法比较这两套的差别。<br>不过我个人很喜欢的一点是brew所有安装的东西都在<code>brew -prefix</code>/Cellar这个统一目录下，</p>
-<p>brew相关的命令：</p>
+</code></pre><h2 id="brew"><a href="#brew" class="headerlink" title="brew"></a>brew</h2><p>Mac 下推荐 Brew 来替代 apt，大部分的开源包都有对应的地址源了。我没使用过 MacPorts，无法比较这两套的差别。<br>不过我个人很喜欢的一点是 brew 所有安装的东西都在<code>brew -prefix</code>/Cellar 这个统一目录下，</p>
+<p>brew 相关的命令：</p>
 <pre><code>brew list   — 列出已安装的软件
-brew update — 更新Homebrew
+brew update — 更新 Homebrew
 brew home   — 用浏览器打开
 brew info   — 显示软件内容信息
 brew deps   - 显示包依赖
@@ -225,14 +225,14 @@ brew deps   - 显示包依赖
       <a class="nav-left" href="/p/git-command/">
         <span class="nav-arrow">← </span>
         
-          迁移到Git
+          迁移到 Git
         
       </a>
     
     
       <a class="nav-right" href="/p/xor_link_list/">
         
-          巧妙的XOR Link List
+          巧妙的 XOR Link List
         
         <span class="nav-arrow"> →</span>
       </a>

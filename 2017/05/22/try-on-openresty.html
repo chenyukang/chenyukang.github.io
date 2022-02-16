@@ -10,7 +10,7 @@
   
   <title>
       
-          OpenResty使用总结 | 程序员的喵
+          OpenResty 使用总结 | 程序员的喵
       
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -165,7 +165,7 @@
 </header>
 
     <div id="article-banner">
-  <h2>OpenResty使用总结</h2>
+  <h2>OpenResty 使用总结</h2>
   <p class="post-date">2017-05-22</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -174,25 +174,25 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h2 id="OpenResty"><a href="#OpenResty" class="headerlink" title="OpenResty"></a>OpenResty</h2><p>最近用OpenResty比较多，除了一些业务逻辑的实现也做了AB组灰度相关的实现。OpenResty是在Nginx基础上做的扩展，应该算是国人开源项目中很成功的一个。在做的过程中写了不少Lua代码，写Lua代码的体验就是库好少，语言好简单。</p>
-<h2 id="OpenResty-lua编程相关参考"><a href="#OpenResty-lua编程相关参考" class="headerlink" title="OpenResty lua编程相关参考"></a>OpenResty lua编程相关参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://moonbingbing.gitbooks.io/openresty-best-practices/lua/main.html">OpenResty最佳实践</a></li>
+    <section class="markdown-content"><h2 id="OpenResty"><a href="#OpenResty" class="headerlink" title="OpenResty"></a>OpenResty</h2><p>最近用 OpenResty 比较多，除了一些业务逻辑的实现也做了 AB 组灰度相关的实现。OpenResty 是在 Nginx 基础上做的扩展，应该算是国人开源项目中很成功的一个。在做的过程中写了不少 Lua 代码，写 Lua 代码的体验就是库好少，语言好简单。</p>
+<h2 id="OpenResty-lua-编程相关参考"><a href="#OpenResty-lua-编程相关参考" class="headerlink" title="OpenResty lua 编程相关参考"></a>OpenResty lua 编程相关参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://moonbingbing.gitbooks.io/openresty-best-practices/lua/main.html">OpenResty 最佳实践</a></li>
 <li><a target="_blank" rel="noopener" href="https://github.com/openresty/lua-nginx-module#name">OpenResty Readme</a></li>
 </ul>
-<p>其中Readme要看完，大概会有一个全局的了解。最佳实践辅助看看。<br>理解Nginx处理的几个阶段： <a target="_blank" rel="noopener" href="http://www.nginxguts.com/2011/01/phases/">http://www.nginxguts.com/2011/01/phases/</a></p>
-<h2 id="处理Response-Body"><a href="#处理Response-Body" class="headerlink" title="处理Response Body"></a>处理Response Body</h2><p>在我们的实现中有一步需要给后端返回的结果里面加一段水印(也就是一段JS代码)，这步可以在body_filter这个里面做。不过需要注意body_filter是按流式方式处理的，需要把各个buffer存下来然后拼接起来。<br>而且后端返回的结果可能是zip压缩过的，<a target="_blank" rel="noopener" href="https://groups.google.com/forum/#!topic/openresty-en/q-dcQNxpwTA">所以需要解压，然后才能做替换或者拼接的操作</a>。</p>
+<p>其中 Readme 要看完，大概会有一个全局的了解。最佳实践辅助看看。<br>理解 Nginx 处理的几个阶段： <a target="_blank" rel="noopener" href="http://www.nginxguts.com/2011/01/phases/">http://www.nginxguts.com/2011/01/phases/</a></p>
+<h2 id="处理-Response-Body"><a href="#处理-Response-Body" class="headerlink" title="处理 Response Body"></a>处理 Response Body</h2><p>在我们的实现中有一步需要给后端返回的结果里面加一段水印 (也就是一段 JS 代码)，这步可以在 body_filter 这个里面做。不过需要注意 body_filter 是按流式方式处理的，需要把各个 buffer 存下来然后拼接起来。<br>而且后端返回的结果可能是 zip 压缩过的，<a target="_blank" rel="noopener" href="https://groups.google.com/forum/#!topic/openresty-en/q-dcQNxpwTA">所以需要解压，然后才能做替换或者拼接的操作</a>。</p>
 <figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua"><span class="hljs-keyword">local</span> chunk, eof = ngx.<span class="hljs-built_in">arg</span>[<span class="hljs-number">1</span>], ngx.<span class="hljs-built_in">arg</span>[<span class="hljs-number">2</span>] <br><span class="hljs-keyword">local</span> buffered = ngx.ctx.buffered <br><span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> buffered <span class="hljs-keyword">then</span> <br>   buffered = &#123;&#125;  <span class="hljs-comment">-- XXX we can use table.new here </span><br>   ngx.ctx.buffered = buffered <br><span class="hljs-keyword">end</span><br><br><span class="hljs-keyword">if</span> chunk ~= <span class="hljs-string">&quot;&quot;</span> <span class="hljs-keyword">then</span> <br>   buffered[#buffered + <span class="hljs-number">1</span>] = chunk <br>   ngx.<span class="hljs-built_in">arg</span>[<span class="hljs-number">1</span>] = <span class="hljs-literal">nil</span> <br><span class="hljs-keyword">end</span><br><br><span class="hljs-keyword">if</span> eof <span class="hljs-keyword">then</span> <br>   <span class="hljs-keyword">local</span> whole = <span class="hljs-built_in">table</span>.<span class="hljs-built_in">concat</span>(buffered) <br>   ngx.ctx.buffered = <span class="hljs-literal">nil</span><br><br>   <span class="hljs-comment">-- try to unzip</span><br>   <span class="hljs-keyword">local</span> <span class="hljs-built_in">status</span>, debody = <span class="hljs-built_in">pcall</span>(com.decode, whole)<br>   <br>   <span class="hljs-keyword">if</span> <span class="hljs-built_in">status</span> <span class="hljs-keyword">then</span> whole = debody <span class="hljs-keyword">end</span><br>   <span class="hljs-comment">-- try to add or replace response body</span><br>   <span class="hljs-keyword">local</span> js_code = ....<br>   whole = whole .. js_code<br>   <br>   ngx.<span class="hljs-built_in">arg</span>[<span class="hljs-number">1</span>] = whole <br><span class="hljs-keyword">end</span><br></code></pre></td></tr></table></figure>
-<p>最后因为修改了response body，所以需要修改header filter里面的部分:<br><figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">ngx.header.content_length = <span class="hljs-literal">nil</span><br>ngx.header.content_encoding = <span class="hljs-literal">nil</span><br></code></pre></td></tr></table></figure></p>
-<h2 id="容易出现的bug"><a href="#容易出现的bug" class="headerlink" title="容易出现的bug"></a>容易出现的bug</h2><ol>
-<li><p>尽量使用local变量： <a target="_blank" rel="noopener" href="https://moonbingbing.gitbooks.io/openresty-best-practices/lua/local.html">具体的解释</a>，我在实践的过程中出现过变量乱窜的情况，结果发现是没有是用local。</p>
+<p>最后因为修改了 response body，所以需要修改 header filter 里面的部分：<br><figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">ngx.header.content_length = <span class="hljs-literal">nil</span><br>ngx.header.content_encoding = <span class="hljs-literal">nil</span><br></code></pre></td></tr></table></figure></p>
+<h2 id="容易出现的-bug"><a href="#容易出现的-bug" class="headerlink" title="容易出现的 bug"></a>容易出现的 bug</h2><ol>
+<li><p>尽量使用 local 变量： <a target="_blank" rel="noopener" href="https://moonbingbing.gitbooks.io/openresty-best-practices/lua/local.html">具体的解释</a>，我在实践的过程中出现过变量乱窜的情况，结果发现是没有是用 local。</p>
 </li>
-<li><p>ngx.ctx 比 ngx.var 性能要好很多，但是在执行了ngx.exec后在子请求里ctx不一样，在我们的项目里大部分是用的是ngx.var。使用ngx.var需要注意的是需要在Nginx配置文件里面提前声明。另外<a target="_blank" rel="noopener" href="https://groups.google.com/forum/#!topic/openresty/uv5zhqEdxCY">ngx.ctx在使用的时候也有需要注意的地方</a></p>
+<li><p>ngx.ctx 比 ngx.var 性能要好很多，但是在执行了 ngx.exec 后在子请求里 ctx 不一样，在我们的项目里大部分是用的是 ngx.var。使用 ngx.var 需要注意的是需要在 Nginx 配置文件里面提前声明。另外<a target="_blank" rel="noopener" href="https://groups.google.com/forum/#!topic/openresty/uv5zhqEdxCY">ngx.ctx 在使用的时候也有需要注意的地方</a></p>
 </li>
 <li><p><a target="_blank" rel="noopener" href="https://moonbingbing.gitbooks.io/openresty-best-practices/openresty/share_var.html">不同阶段共享变量</a></p>
 </li>
-<li><p>不要使用错误码来做内部跳转，使用ngx.exec很方便。</p>
+<li><p>不要使用错误码来做内部跳转，使用 ngx.exec 很方便。</p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://moonbingbing.gitbooks.io/openresty-best-practices/lua/not_use_module.html">是用推荐的方法来实现module</a></p>
+<li><p><a target="_blank" rel="noopener" href="https://moonbingbing.gitbooks.io/openresty-best-practices/lua/not_use_module.html">是用推荐的方法来实现 module</a></p>
 </li>
 </ol>
 </section>
@@ -254,7 +254,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#OpenResty"><span class="toc-nav-text">OpenResty</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#OpenResty-lua%E7%BC%96%E7%A8%8B%E7%9B%B8%E5%85%B3%E5%8F%82%E8%80%83"><span class="toc-nav-text">OpenResty lua编程相关参考</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A4%84%E7%90%86Response-Body"><span class="toc-nav-text">处理Response Body</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84bug"><span class="toc-nav-text">容易出现的bug</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#OpenResty"><span class="toc-nav-text">OpenResty</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#OpenResty-lua-%E7%BC%96%E7%A8%8B%E7%9B%B8%E5%85%B3%E5%8F%82%E8%80%83"><span class="toc-nav-text">OpenResty lua 编程相关参考</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A4%84%E7%90%86-Response-Body"><span class="toc-nav-text">处理 Response Body</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84-bug"><span class="toc-nav-text">容易出现的 bug</span></a></li></ol>
     
   </div>
 </aside>

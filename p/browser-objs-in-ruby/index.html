@@ -83,7 +83,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.1"></head>
 
   <body>
     <header class="header fixed-header">
@@ -174,9 +174,9 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>Ruby里一切都是对象，如何能看到Ruby内建的对象模型呢。这里有个小程序来查看Ruby内部构建好的的对象和类。ObjectSpace可以迭代所有对象。</p>
+    <section class="markdown-content"><p>Ruby 里一切都是对象，如何能看到 Ruby 内建的对象模型呢。这里有个小程序来查看 Ruby 内部构建好的的对象和类。ObjectSpace 可以迭代所有对象。</p>
 <figure class="highlight ruby"><table><tr><td class="code"><pre><code class="hljs ruby"> set = Set.new()<br> ObjectSpace.each_object <span class="hljs-keyword">do</span> <span class="hljs-params">|x|</span><br>   set.add(x.<span class="hljs-keyword">class</span>)<br> <span class="hljs-keyword">end</span><br><br>set.each <span class="hljs-keyword">do</span> <span class="hljs-params">|x|</span><br>  puts x<br><span class="hljs-keyword">end</span><br><br></code></pre></td></tr></table></figure>
-<p>下面这段就能根据对象，取得class对象，建立起类的继承图。</p>
+<p>下面这段就能根据对象，取得 class 对象，建立起类的继承图。</p>
 <figure class="highlight ruby"><table><tr><td class="code"><pre><code class="hljs ruby"><br><span class="hljs-comment"># Creates or updates a klass_tree.</span><br><span class="hljs-comment"># When updating no classes or objects are removed</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">object_browser</span><span class="hljs-params">(classtree = ClassTreeNode.new(Kernel)</span></span>)<br>  ObjectSpace.each_object <span class="hljs-keyword">do</span> <span class="hljs-params">| x |</span><br>    classnode = classtree<br>    x.<span class="hljs-keyword">class</span>.ancestors.reverse[<span class="hljs-number">1</span>..-<span class="hljs-number">1</span>] \<br>      .inject(classtree)&#123; <span class="hljs-params">| classnode, klass |</span><br>      classnode.add_class(klass)<br>    &#125;.add_object(x)<br>  <span class="hljs-keyword">end</span><br>  classtree<br><span class="hljs-keyword">end</span><br><br></code></pre></td></tr></table></figure>
 <p>use this command to get image:</p>
 <p>  $ruby prog.rb &gt; class.dot; dot -Tpng class.dot -o class.png</p>

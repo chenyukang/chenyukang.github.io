@@ -10,7 +10,7 @@
   
   <title>
       
-          Linux下快捷切换屏幕 | 程序员的喵
+          Linux 下快捷切换屏幕 | 程序员的喵
       
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -165,7 +165,7 @@
 </header>
 
     <div id="article-banner">
-  <h2>Linux下快捷切换屏幕</h2>
+  <h2>Linux 下快捷切换屏幕</h2>
   <p class="post-date">2012-08-09</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -175,13 +175,13 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p><img src="/images/screen.jpg" alt="screen" class="img-center" width="500px" /></p>
-<p>在办公室工作的时候一般面对两个显示器，大部分时候左边用来看代码，右边用来写程序。双显示屏还是有助于提高工作效率的。有一点困扰我的是如果要切换屏幕一般得用鼠标，这对于<br>Emacs党是有些不能忍受的，右手离开键盘总是得停顿一下的感觉。今天找到一个解决办法。</p>
-<p>最终找到的是这个号称Linux下键盘精灵的一个程序:<a target="_blank" rel="noopener" href="http://www.semicomplete.com/projects/xdotool/">xdotool</a>，下载下来编译安装。这个东西可以模拟鼠标和键盘的行为：</p>
+<p>在办公室工作的时候一般面对两个显示器，大部分时候左边用来看代码，右边用来写程序。双显示屏还是有助于提高工作效率的。有一点困扰我的是如果要切换屏幕一般得用鼠标，这对于<br>Emacs 党是有些不能忍受的，右手离开键盘总是得停顿一下的感觉。今天找到一个解决办法。</p>
+<p>最终找到的是这个号称 Linux 下键盘精灵的一个程序：<a target="_blank" rel="noopener" href="http://www.semicomplete.com/projects/xdotool/">xdotool</a>，下载下来编译安装。这个东西可以模拟鼠标和键盘的行为：</p>
 <p>比如：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">xdotool search &quot;Mozilla Firefox&quot; windowactivate --sync key --clearmodifiers ctrl+l <br>(快速切换倒firefox,并focus在地址输入栏)<br><br>xdotool getmouselocation --shell  (获取当前鼠标位置等信息)<br>X=880<br>Y=443<br>SCREEN=0<br>WINDOW=16777250<br><br>xdotool getactivewindow windowmove 100 100    # Moves to 100,100<br>xdotool getactivewindow windowmove x 100      # Moves to x,100<br>xdotool getactivewindow windowmove 100 y      # Moves to 100,y<br>xdotool getactivewindow windowmove 100 y      # Moves to 100,y<br>xdotool mousemove --screen 0 100 100          # Moves to screen 0 pos at 100,100<br></code></pre></td></tr></table></figure>
-<p>有了上面windowmove命令，屏幕的切换就好实现了。写个丑陋的python脚本来保存当前的位置，切换到另外一个屏幕，再次调用的时候返回到原来的位置，<br>保存为mouse.py。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/python</span><br><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">import</span> commands<br><br>data_f = <span class="hljs-string">&quot;/tmp/window_data&quot;</span><br>now_info = commands.getoutput(<span class="hljs-string">&quot;xdotool getmouselocation --shell&quot;</span>).split(<span class="hljs-string">&#x27;\n&#x27;</span>)<br>x = (now_info[<span class="hljs-number">1</span>])[<span class="hljs-number">2</span>:]<br>y = (now_info[<span class="hljs-number">2</span>])[<span class="hljs-number">2</span>:]<br>screen = (now_info[<span class="hljs-number">3</span>])[<span class="hljs-number">7</span>:]<br>window = (now_info[<span class="hljs-number">4</span>])[<span class="hljs-number">7</span>:]<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">do_store</span>():</span><br>    data = <span class="hljs-built_in">open</span>(data_f, <span class="hljs-string">&quot;w+&quot;</span>)<br>    content = screen+<span class="hljs-string">&quot;\n&quot;</span>+x+<span class="hljs-string">&quot;\n&quot;</span>+y+<span class="hljs-string">&quot;\n&quot;</span>+window<br>    data.write(content)<br>    data.close()<br>    <br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">do_update</span>():</span><br>    <span class="hljs-keyword">if</span> screen == <span class="hljs-string">&quot;1&quot;</span>:<br>        new_sc = <span class="hljs-string">&quot;0&quot;</span><br>    <span class="hljs-keyword">else</span>:<br>        new_sc = <span class="hljs-string">&quot;1&quot;</span><br>    cmd = <span class="hljs-string">&quot;xdotool mousemove --screen &quot;</span> + new_sc +  <span class="hljs-string">&quot; 0 0&quot;</span><br>    commands.getoutput(cmd)<br><br><span class="hljs-keyword">if</span> os.path.exists(data_f):<br>    data = <span class="hljs-built_in">open</span>(data_f, <span class="hljs-string">&quot;r+&quot;</span>)<br>    content = data.readlines()<br>    data.close()<br>    screen = content[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>:-<span class="hljs-number">1</span>]<br>    old_x = content[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>:-<span class="hljs-number">1</span>]<br>    old_y = content[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>:-<span class="hljs-number">1</span>]<br>    old_window = content[<span class="hljs-number">3</span>]<br>    <span class="hljs-keyword">if</span> old_window != window:<br>        cmd = <span class="hljs-string">&quot;xdotool mousemove -w &quot;</span> + old_window + <span class="hljs-string">&quot; &quot;</span> + old_x + <span class="hljs-string">&quot; &quot;</span> + old_y<br>        commands.getoutput(cmd)<br>        do_store()<br>    <span class="hljs-keyword">else</span>:<br>        do_store()<br>        do_update()<br><span class="hljs-keyword">else</span>:<br>    do_store()<br>    do_update()<br></code></pre></td></tr></table></figure>
-<p>最后，通过Emacs下绑定快捷键来调用这个脚本即可实现两个屏幕之间的切换，又可以远离鼠标了。哈哈。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">xdotool search &quot;Mozilla Firefox&quot; windowactivate --sync key --clearmodifiers ctrl+l <br>(快速切换倒 firefox，并 focus 在地址输入栏)<br><br>xdotool getmouselocation --shell  (获取当前鼠标位置等信息)<br>X=880<br>Y=443<br>SCREEN=0<br>WINDOW=16777250<br><br>xdotool getactivewindow windowmove 100 100    # Moves to 100,100<br>xdotool getactivewindow windowmove x 100      # Moves to x,100<br>xdotool getactivewindow windowmove 100 y      # Moves to 100,y<br>xdotool getactivewindow windowmove 100 y      # Moves to 100,y<br>xdotool mousemove --screen 0 100 100          # Moves to screen 0 pos at 100,100<br></code></pre></td></tr></table></figure>
+<p>有了上面 windowmove 命令，屏幕的切换就好实现了。写个丑陋的 python 脚本来保存当前的位置，切换到另外一个屏幕，再次调用的时候返回到原来的位置，<br>保存为 mouse.py。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/python</span><br><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">import</span> commands<br><br>data_f = <span class="hljs-string">&quot;/tmp/window_data&quot;</span><br>now_info = commands.getoutput(<span class="hljs-string">&quot;xdotool getmouselocation --shell&quot;</span>).split(<span class="hljs-string">&#x27;\n&#x27;</span>)<br>x = (now_info[<span class="hljs-number">1</span>])[<span class="hljs-number">2</span>:]<br>y = (now_info[<span class="hljs-number">2</span>])[<span class="hljs-number">2</span>:]<br>screen = (now_info[<span class="hljs-number">3</span>])[<span class="hljs-number">7</span>:]<br>window = (now_info[<span class="hljs-number">4</span>])[<span class="hljs-number">7</span>:]<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">do_store</span>():<br>    data = <span class="hljs-built_in">open</span>(data_f, <span class="hljs-string">&quot;w+&quot;</span>)<br>    content = screen+<span class="hljs-string">&quot;\n&quot;</span>+x+<span class="hljs-string">&quot;\n&quot;</span>+y+<span class="hljs-string">&quot;\n&quot;</span>+window<br>    data.write(content)<br>    data.close()<br>    <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">do_update</span>():<br>    <span class="hljs-keyword">if</span> screen == <span class="hljs-string">&quot;1&quot;</span>:<br>        new_sc = <span class="hljs-string">&quot;0&quot;</span><br>    <span class="hljs-keyword">else</span>:<br>        new_sc = <span class="hljs-string">&quot;1&quot;</span><br>    cmd = <span class="hljs-string">&quot;xdotool mousemove --screen &quot;</span> + new_sc +  <span class="hljs-string">&quot; 0 0&quot;</span><br>    commands.getoutput(cmd)<br><br><span class="hljs-keyword">if</span> os.path.exists(data_f):<br>    data = <span class="hljs-built_in">open</span>(data_f, <span class="hljs-string">&quot;r+&quot;</span>)<br>    content = data.readlines()<br>    data.close()<br>    screen = content[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>:-<span class="hljs-number">1</span>]<br>    old_x = content[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>:-<span class="hljs-number">1</span>]<br>    old_y = content[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>:-<span class="hljs-number">1</span>]<br>    old_window = content[<span class="hljs-number">3</span>]<br>    <span class="hljs-keyword">if</span> old_window != window:<br>        cmd = <span class="hljs-string">&quot;xdotool mousemove -w &quot;</span> + old_window + <span class="hljs-string">&quot; &quot;</span> + old_x + <span class="hljs-string">&quot; &quot;</span> + old_y<br>        commands.getoutput(cmd)<br>        do_store()<br>    <span class="hljs-keyword">else</span>:<br>        do_store()<br>        do_update()<br><span class="hljs-keyword">else</span>:<br>    do_store()<br>    do_update()<br></code></pre></td></tr></table></figure>
+<p>最后，通过 Emacs 下绑定快捷键来调用这个脚本即可实现两个屏幕之间的切换，又可以远离鼠标了。哈哈。</p>
 <pre class="prettyprint lang-lisp">
 (defun switch-screen()
   (interactive)
@@ -191,7 +191,7 @@
 (global-set-key (kbd "C-x q") 'switch-screen)
 </pre>
 
-<p>Jekyll下写点东西快多了。</p>
+<p>Jekyll 下写点东西快多了。</p>
 </section>
 
     <p></p>
@@ -227,7 +227,7 @@
       <a class="nav-left" href="/2012/08/19/os-dev-debug.html">
         <span class="nav-arrow">← </span>
         
-          OS dev的Bochs调试
+          OS dev 的 Bochs 调试
         
       </a>
     

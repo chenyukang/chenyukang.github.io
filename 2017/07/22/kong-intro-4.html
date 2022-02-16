@@ -10,7 +10,7 @@
   
   <title>
       
-          Kong源码分析: 缓存 | 程序员的喵
+          Kong 源码分析：缓存 | 程序员的喵
       
   </title>
   <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -165,7 +165,7 @@
 </header>
 
     <div id="article-banner">
-  <h2>Kong源码分析: 缓存</h2>
+  <h2>Kong 源码分析：缓存</h2>
   <p class="post-date">2017-07-22</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
@@ -174,17 +174,17 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h3 id="Nginx里的缓存使用"><a href="#Nginx里的缓存使用" class="headerlink" title="Nginx里的缓存使用"></a>Nginx里的缓存使用</h3><p>在Kong里面我们缓存的内容大部分是配置，不管是API本身的配置还是插件相关的配置，缓存之后就存储在内存中。</p>
-<p>Kong里的缓存基础代码在tools/database_cache.lua文件里面。这里又分两种类型的缓存，一种是<a target="_blank" rel="noopener" href="https://github.com/openresty/lua-nginx-module#ngxshareddict">shared dict</a>, 一种是使用<br><a target="_blank" rel="noopener" href="https://github.com/openresty/lua-resty-lrucache">lua-resty-lrucache</a>。这两者之间是有区别的: shared dict如同其名字一样是Nginx worker之间共享的，而lrucache是worker级别的，内存空间在Lua VM里由GC管理，不能在进程之间共享，自然也不会在Nginx worker之间共享。</p>
-<p>具体我们开发中使用哪一种由具体场景分析，比如在Kong的插件rate-limiting里就使用了共享缓存，因为我们需要针对一个Nginx所有的worker做请求数统计。</p>
-<p>share dict最常规的使用方法是:</p>
+    <section class="markdown-content"><h3 id="Nginx-里的缓存使用"><a href="#Nginx-里的缓存使用" class="headerlink" title="Nginx 里的缓存使用"></a>Nginx 里的缓存使用</h3><p>在 Kong 里面我们缓存的内容大部分是配置，不管是 API 本身的配置还是插件相关的配置，缓存之后就存储在内存中。</p>
+<p>Kong 里的缓存基础代码在 tools/database_cache.lua 文件里面。这里又分两种类型的缓存，一种是<a target="_blank" rel="noopener" href="https://github.com/openresty/lua-nginx-module#ngxshareddict">shared dict</a>, 一种是使用<br><a target="_blank" rel="noopener" href="https://github.com/openresty/lua-resty-lrucache">lua-resty-lrucache</a>。这两者之间是有区别的: shared dict 如同其名字一样是 Nginx worker 之间共享的，而 lrucache 是 worker 级别的，内存空间在 Lua VM 里由 GC 管理，不能在进程之间共享，自然也不会在 Nginx worker 之间共享。</p>
+<p>具体我们开发中使用哪一种由具体场景分析，比如在 Kong 的插件 rate-limiting 里就使用了共享缓存，因为我们需要针对一个 Nginx 所有的 worker 做请求数统计。</p>
+<p>share dict 最常规的使用方法是：</p>
 <figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">http &#123;<br>    lua_shared_dict dogs <span class="hljs-number">10</span>m;<br>    server &#123;<br>        location /set &#123;<br>            content_by_lua_block &#123;<br>                <span class="hljs-keyword">local</span> dogs = ngx.shared.dogs<br>                dogs:set(<span class="hljs-string">&quot;Jim&quot;</span>, <span class="hljs-number">8</span>)<br>                ngx.say(<span class="hljs-string">&quot;STORED&quot;</span>)<br>            &#125;<br>        &#125;<br>        location /get &#123;<br>            content_by_lua_block &#123;<br>                <span class="hljs-keyword">local</span> dogs = ngx.shared.dogs<br>                ngx.say(dogs:get(<span class="hljs-string">&quot;Jim&quot;</span>))<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-<p>lrucache的使用方法如<a target="_blank" rel="noopener" href="https://github.com/openresty/lua-resty-lrucache">文档所示</a>。</p>
-<h3 id="Kong里的多级缓存实现"><a href="#Kong里的多级缓存实现" class="headerlink" title="Kong里的多级缓存实现"></a>Kong里的多级缓存实现</h3><p>有了上面的了解，看database_cache.lua这个文件就比较直观了，这里Kong会分多类缓存: apis, consumers, plugins等。具体这样分是因为如果我们对配置做了修改，需要发出serf消息来指名这次改动涉及到哪些，其他Kong节点收到消息后自然只更新对应的缓存部分。所以Kong里申明了一个列表CACHE_KEYS来存要缓存的数据类别，同时写了不少生成缓存key的方法，比如: api_key，plugin_key等。</p>
-<p>仔细查看database_cache.lua，我们发现其实这里是做了两级缓存。Kong要从缓存里取出一个key/value，首先从lrucache里取，如果有则返回。如果没有则从share dict里去取，如果取到则deserialize然后存储在lrucache里，然后返回。如果shared dict里也没有，则返回nil。标准的两级缓存流程，这样做的好处在于减少deserialize的次数，而且shared dict可能被多个worker同时修改，要修改的时候需要加互斥锁。</p>
-<p>这里最常用的方法是get_or_set，尝试获取一个key的值，如果没有就执行对应的callback，返回结果当做value设置到缓存里，并把value作为最后的返回结果。这里的callback函数通常做的当然是从数据库里读取内容。</p>
-<h3 id="如何避免缓存失效风暴"><a href="#如何避免缓存失效风暴" class="headerlink" title="如何避免缓存失效风暴"></a>如何避免缓存失效风暴</h3><p>我们在实现缓存的时候<a target="_blank" rel="noopener" href="http://www.sobstel.org/blog/preventing-dogpile-effect/">缓存失效风暴问题</a>需要谨慎考虑。agentzh在这里详细描述了<a target="_blank" rel="noopener" href="https://github.com/openresty/lua-resty-lock">加锁解决的策略</a>，<a target="_blank" rel="noopener" href="https://github.com/mtourne/ngx.shcache">ngx.shcache</a>这里也使用了相同的方法，具体可以好好研究一下那个图。</p>
-<p>主要注意的是在加锁后，再尝试去读取一次key，因为可能在加锁之前其他worker刚好把数据更新到了缓存里。</p>
+<p>lrucache 的使用方法如<a target="_blank" rel="noopener" href="https://github.com/openresty/lua-resty-lrucache">文档所示</a>。</p>
+<h3 id="Kong-里的多级缓存实现"><a href="#Kong-里的多级缓存实现" class="headerlink" title="Kong 里的多级缓存实现"></a>Kong 里的多级缓存实现</h3><p>有了上面的了解，看 database_cache.lua 这个文件就比较直观了，这里 Kong 会分多类缓存: apis, consumers, plugins 等。具体这样分是因为如果我们对配置做了修改，需要发出 serf 消息来指名这次改动涉及到哪些，其他 Kong 节点收到消息后自然只更新对应的缓存部分。所以 Kong 里申明了一个列表 CACHE_KEYS 来存要缓存的数据类别，同时写了不少生成缓存 key 的方法，比如: api_key，plugin_key 等。</p>
+<p>仔细查看 database_cache.lua，我们发现其实这里是做了两级缓存。Kong 要从缓存里取出一个 key/value，首先从 lrucache 里取，如果有则返回。如果没有则从 share dict 里去取，如果取到则 deserialize 然后存储在 lrucache 里，然后返回。如果 shared dict 里也没有，则返回 nil。标准的两级缓存流程，这样做的好处在于减少 deserialize 的次数，而且 shared dict 可能被多个 worker 同时修改，要修改的时候需要加互斥锁。</p>
+<p>这里最常用的方法是 get_or_set，尝试获取一个 key 的值，如果没有就执行对应的 callback，返回结果当做 value 设置到缓存里，并把 value 作为最后的返回结果。这里的 callback 函数通常做的当然是从数据库里读取内容。</p>
+<h3 id="如何避免缓存失效风暴"><a href="#如何避免缓存失效风暴" class="headerlink" title="如何避免缓存失效风暴"></a>如何避免缓存失效风暴</h3><p>我们在实现缓存的时候<a target="_blank" rel="noopener" href="http://www.sobstel.org/blog/preventing-dogpile-effect/">缓存失效风暴问题</a>需要谨慎考虑。agentzh 在这里详细描述了<a target="_blank" rel="noopener" href="https://github.com/openresty/lua-resty-lock">加锁解决的策略</a>，<a target="_blank" rel="noopener" href="https://github.com/mtourne/ngx.shcache">ngx.shcache</a>这里也使用了相同的方法，具体可以好好研究一下那个图。</p>
+<p>主要注意的是在加锁后，再尝试去读取一次 key，因为可能在加锁之前其他 worker 刚好把数据更新到了缓存里。</p>
 </section>
 
     <p></p>
@@ -216,14 +216,14 @@
       <a class="nav-left" href="/2017/07/23/kong-intro-5.html">
         <span class="nav-arrow">← </span>
         
-          Kong源码分析: 事件
+          Kong 源码分析：事件
         
       </a>
     
     
       <a class="nav-right" href="/2017/07/16/kong-intro-3.html">
         
-          Kong源码分析: 插件
+          Kong 源码分析：插件
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -253,7 +253,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Nginx%E9%87%8C%E7%9A%84%E7%BC%93%E5%AD%98%E4%BD%BF%E7%94%A8"><span class="toc-nav-text">Nginx里的缓存使用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Kong%E9%87%8C%E7%9A%84%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%AE%9E%E7%8E%B0"><span class="toc-nav-text">Kong里的多级缓存实现</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E7%BC%93%E5%AD%98%E5%A4%B1%E6%95%88%E9%A3%8E%E6%9A%B4"><span class="toc-nav-text">如何避免缓存失效风暴</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Nginx-%E9%87%8C%E7%9A%84%E7%BC%93%E5%AD%98%E4%BD%BF%E7%94%A8"><span class="toc-nav-text">Nginx 里的缓存使用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Kong-%E9%87%8C%E7%9A%84%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%AE%9E%E7%8E%B0"><span class="toc-nav-text">Kong 里的多级缓存实现</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E7%BC%93%E5%AD%98%E5%A4%B1%E6%95%88%E9%A3%8E%E6%9A%B4"><span class="toc-nav-text">如何避免缓存失效风暴</span></a></li></ol>
     
   </div>
 </aside>

@@ -83,7 +83,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.1"></head>
 
   <body>
     <header class="header fixed-header">
@@ -174,17 +174,17 @@
 <main class="app-body flex-box">
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>Http请求在经过多层Nginx的时候，通常强制http跳转到https的时候会这样配置: </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">return</span> <span class="hljs-number">302</span> https://$host$request_uri; <br><span class="hljs-comment">## 需要注意这里是request_uri而不是uri，否则会引起安全问题</span><br></code></pre></td></tr></table></figure>
-<p>但是如果是多层Nginx，前面的Nginx需要把用户原始请求的scheme传递到后端，可以加上头部设置： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">proxy_set_header</span> X-Forwarded-Proto $scheme;<br></code></pre></td></tr></table></figure>
-<p>后面的Nginx再判断一次:</p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">if</span> ( $http_x_forwarded_proto != <span class="hljs-string">&#x27;https&#x27;</span> ) &#123;<br>  <span class="hljs-attribute">return</span> <span class="hljs-number">301</span> https://$host$request_uri;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>否则强制https经常会出现类似<code>ERR_TOO_MANY_REDIRECTS 将您重定向的次数过多</code>这样的问题。</p>
-<p>可是在实践过程中偶尔也碰到过一些ELB会丢掉scheme的问题，比如在这样的请求链路情况下<code>elb =&gt; nginx =&gt; nginx =&gt; application</code>第二层Nginx获取的scheme就有问题了，这也可能会导致<code>too many redirects</code>问题。</p>
-<p>可以尝试在第二层Nginx上这样解决： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-Proto $http_x_forwarded_proto;<br></code></pre></td></tr></table></figure>
-<p>当然强制https这样的跳转逻辑尽量放在请求链路的最外层，这样问题会少一些。</p>
+    <section class="markdown-content"><p>Http 请求在经过多层 Nginx 的时候，通常强制 http 跳转到 https 的时候会这样配置：</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">return</span> <span class="hljs-number">302</span> https://<span class="hljs-variable">$host</span><span class="hljs-variable">$request_uri</span>; <br><span class="hljs-comment">## 需要注意这里是 request_uri 而不是 uri，否则会引起安全问题</span><br></code></pre></td></tr></table></figure>
+<p>但是如果是多层 Nginx，前面的 Nginx 需要把用户原始请求的 scheme 传递到后端，可以加上头部设置： </p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">proxy_set_header</span> X-Forwarded-Proto <span class="hljs-variable">$scheme</span>;<br></code></pre></td></tr></table></figure>
+<p>后面的 Nginx 再判断一次：</p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">if</span> ( <span class="hljs-variable">$http_x_forwarded_proto</span> != <span class="hljs-string">&#x27;https&#x27;</span> ) &#123;<br>  <span class="hljs-attribute">return</span> <span class="hljs-number">301</span> https://<span class="hljs-variable">$host</span><span class="hljs-variable">$request_uri</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>否则强制 https 经常会出现类似<code>ERR_TOO_MANY_REDIRECTS 将您重定向的次数过多</code>这样的问题。</p>
+<p>可是在实践过程中偶尔也碰到过一些 ELB 会丢掉 scheme 的问题，比如在这样的请求链路情况下<code>elb =&gt; nginx =&gt; nginx =&gt; application</code>第二层 Nginx 获取的 scheme 就有问题了，这也可能会导致<code>too many redirects</code>问题。</p>
+<p>可以尝试在第二层 Nginx 上这样解决： </p>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-Proto <span class="hljs-variable">$http_x_forwarded_proto</span>;<br></code></pre></td></tr></table></figure>
+<p>当然强制 https 这样的跳转逻辑尽量放在请求链路的最外层，这样问题会少一些。</p>
 </section>
 
     <p></p>
@@ -216,7 +216,7 @@
       <a class="nav-left" href="/p/overcommit/">
         <span class="nav-arrow">← </span>
         
-          使用overcommit生成git hooks
+          使用 overcommit 生成 git hooks
         
       </a>
     
