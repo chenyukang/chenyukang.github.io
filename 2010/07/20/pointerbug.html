@@ -5,16 +5,16 @@
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
   <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
-  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+    <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
       
           指针指针 | 程序员的喵
       
   </title>
-  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -27,33 +27,44 @@
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
 
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-
-    
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
-<script src="/js/jquery.min.js"></script>
-<script src="/js/geopattern.min.js"></script>
-<script src="/js/nprogress.min.js"></script>
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
 
 <meta name="generator" content="Hexo 5.4.1"></head>
 
@@ -69,6 +80,12 @@
         <li class="list-item">
           
             <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
           
         </li>
       
@@ -90,17 +107,7 @@
           
         </li>
       
-
-       <li class="list-item" style="margin-left: 3px">
-        <a class="icon-small" href="/atom.xml">
-         <span class="fa-stack fa-lg">
-           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
-         </span>
-        </a>
-       </li>
     </ul>
-
-    
     <div class="menu">
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -112,6 +119,12 @@
           <li class="menu-item">
             
               <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
             
           </li>
         
@@ -153,16 +166,6 @@
 <p>在最后一个 else 内，如果二叉搜索树中有左右孩子，那么找这个删除节点的后继，把内容互换，然后删除后继 节点，因为后继节点一定只有一个孩子或者没有孩子。最后只有一个 free() 操作其实是为了代码简洁，可以把前面每一个 else if 后面加一个 free， 最后不写 free() 操作。但是这么写运行起来会有问题，y=t，就是所指向的地址相同，但是因为是 递归操作，t 指向的地址在调用 BST_Delete(t) 的时候已经被 free 掉了，所以如果再删除一次就会 出现内存错误，修改方法是 y=NULL，或者修改函数参数，用指针引用的形式 void BST_Delete( BITREE&amp; y)，然后再在 free(y) 后面增加一句 y=NULL。以前以为两次调用 free(p) 是不会出现问题的，free() 在释放掉 p 指向的内存以后，会 自动将 p 赋值为 NULL，其实没有这部分操作。</p>
 <p>前些天还看到一个面试题目，malloc 申请的空间用 delete 删除会有什么问题？一般来说没有问题， 内存会释放掉，而且即使是有析构函数的对象指针，用 delete 删除的时候同样会调用析构函数。这说明 c++ 的 delete 操作其实是在 c 的基础增加了一些操作，先调用析构函数，然后释放空间。良好的编程风格 就是 free/malloc，new/delete 一一对应，甚至不要出现一次调用，多次释放，像上面那样的因为递归 而产生的多次释放并不是很好发现</p>
 </section>
-
-    <p></p>
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="125" width="125">
-            <figcaption>公号同步更新，欢迎关注👻</figcaption>
-      </div>
-    
-
     <!-- Tags START -->
     
       <div class="tags">
@@ -202,20 +205,18 @@
   </div>
 
     <!-- NAV END -->
-
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
     <!-- 二维码 END -->
     
-      <!-- No Comment -->
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
     
-
-    <script src="https://utteranc.es/client.js"
-      repo="chenyukang/chenyukang.github.io"
-      issue-term="pathname"
-      theme="github-light"
-      crossorigin="anonymous"
-      async>
-    </script>
-
   </article>
   <!-- Article END -->
   <!-- Catalog START -->
@@ -277,6 +278,32 @@
       value: document.location.href
     });
 
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "指针指针",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
   })();
 </script>
 
@@ -285,55 +312,51 @@
 </div>
     <footer class="app-footer" id="footer">
     <p class="copyright">
-        &copy;
-        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
-    </p>
+        &copy; 2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
 </footer>
 
 <script>
-    function async(u, c) {
-        var d = document,
-            t = 'script',
-            o = d.createElement(t),
-            s = d.getElementsByTagName(t)[0];
-        o.src = u;
-        if (c) {
-            o.addEventListener('load', function(e) {
-                c(null, e);
-            }, false);
-        }
-        s.parentNode.insertBefore(o, s);
-    }
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
 </script>
 <script>
-    async("//catcoding.me/js/fastclick.min.js", function() {
-        FastClick.attach(document.body);
-    })
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
 </script>
 
 <script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
 </script>
 <!-- Baidu Tongji -->
 
-        
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

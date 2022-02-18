@@ -5,16 +5,16 @@
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
   <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
-  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+    <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
       
           姓氏的消失 | 程序员的喵
       
   </title>
-  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -27,33 +27,44 @@
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
 
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-
-    
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
-<script src="/js/jquery.min.js"></script>
-<script src="/js/geopattern.min.js"></script>
-<script src="/js/nprogress.min.js"></script>
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
 
 <meta name="generator" content="Hexo 5.4.1"></head>
 
@@ -69,6 +80,12 @@
         <li class="list-item">
           
             <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
           
         </li>
       
@@ -90,17 +107,7 @@
           
         </li>
       
-
-       <li class="list-item" style="margin-left: 3px">
-        <a class="icon-small" href="/atom.xml">
-         <span class="fa-stack fa-lg">
-           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
-         </span>
-        </a>
-       </li>
     </ul>
-
-    
     <div class="menu">
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -112,6 +119,12 @@
           <li class="menu-item">
             
               <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
             
           </li>
         
@@ -154,16 +167,6 @@
 <p>初始化每种姓氏都有一个，最后只剩下一个姓氏，具体是哪个不确定，要花费多少代的演化也不确定，这一切都是随机的。那可以从上面的模型看出，如果在某个代中某个姓氏所占的比例相对而言比较大，那这个姓成为最后剩下的那个的概率也更大，我觉得这是个合理的结论。就我国目前的姓氏分布来说，这一个结论看起来是被验证了， 据统计我国大小姓的悬殊是十分明显的，这种悬殊还在有逐步增大的趋势，其发展的结果可能是大姓人口越来越多，很多小姓越来越少甚至被淘汰。我国目前使用着 3000 多个姓氏，但经常使用的仅有 500 个左右，占人口总数 87％以上的人只使用 100 个姓氏，”王”姓最多占了 7.25%，”张”占了 6.7%。原来和同学讨论这个问题，对方一副自己将会儿孙满堂的模样”我们姓’王’”的是最多的，这看来是有依据的，而且很有可能会有更多。<br></p></p>
 <p><br>继续想想，这也是进化的一个简单模型吧。不论进化论到底是真是假 (进化论本身也只是个假说而已)，事实中会有这么一个现象：基数大的物种在下一代会有增大的趋势。而且姓氏看来比其他东西遗传得更坚固，对于单个人而言，后代随着父亲姓的概率应该远远大于身高随着父亲的概率吧，所以理论上看来姓氏的消失应该是比较快的。那到底是哪个姓氏会坚持到最后呢？这个不确定，而且也许在多少年内这都不会发生。我国目前的姓氏分布有地域关系，比如湖南可能姓陈的比例比较大，北方姓王的比例很大，这种不是完全随机的分布可以延缓姓氏的消失吧。<br></p><br><p><br>张学友有首歌叫做《你的名字我的姓氏》里面的歌词是“可用你的名字和我姓氏 ，成就这故事，从此以后无忧无求”，可见，男人对于自己的姓氏留下来的愿望是多么强烈！哈哈，一点浪漫感都没了。<br></p>
 </section>
-
-    <p></p>
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="125" width="125">
-            <figcaption>公号同步更新，欢迎关注👻</figcaption>
-      </div>
-    
-
     <!-- Tags START -->
     
       <div class="tags">
@@ -199,20 +202,18 @@
   </div>
 
     <!-- NAV END -->
-
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
     <!-- 二维码 END -->
     
-      <!-- No Comment -->
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
     
-
-    <script src="https://utteranc.es/client.js"
-      repo="chenyukang/chenyukang.github.io"
-      issue-term="pathname"
-      theme="github-light"
-      crossorigin="anonymous"
-      async>
-    </script>
-
   </article>
   <!-- Article END -->
   <!-- Catalog START -->
@@ -274,6 +275,32 @@
       value: document.location.href
     });
 
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "姓氏的消失",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
   })();
 </script>
 
@@ -282,55 +309,51 @@
 </div>
     <footer class="app-footer" id="footer">
     <p class="copyright">
-        &copy;
-        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
-    </p>
+        &copy; 2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
 </footer>
 
 <script>
-    function async(u, c) {
-        var d = document,
-            t = 'script',
-            o = d.createElement(t),
-            s = d.getElementsByTagName(t)[0];
-        o.src = u;
-        if (c) {
-            o.addEventListener('load', function(e) {
-                c(null, e);
-            }, false);
-        }
-        s.parentNode.insertBefore(o, s);
-    }
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
 </script>
 <script>
-    async("//catcoding.me/js/fastclick.min.js", function() {
-        FastClick.attach(document.body);
-    })
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
 </script>
 
 <script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
 </script>
 <!-- Baidu Tongji -->
 
-        
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>

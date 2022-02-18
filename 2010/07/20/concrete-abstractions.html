@@ -5,16 +5,16 @@
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
   <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
-  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+    <link rel="shortcut icon" href="/css/images/logo.png">
   
   <title>
       
           《Concrete Abstractions》的一些解答 | 程序员的喵
       
   </title>
-  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -27,33 +27,44 @@
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
 
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-
-    
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
-<script src="/js/jquery.min.js"></script>
-<script src="/js/geopattern.min.js"></script>
-<script src="/js/nprogress.min.js"></script>
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  
+  
+    <!-- MathJax support START -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!-- MathJax support END -->
+  
+
+
 
 <meta name="generator" content="Hexo 5.4.1"></head>
 
@@ -69,6 +80,12 @@
         <li class="list-item">
           
             <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
           
         </li>
       
@@ -90,17 +107,7 @@
           
         </li>
       
-
-       <li class="list-item" style="margin-left: 3px">
-        <a class="icon-small" href="/atom.xml">
-         <span class="fa-stack fa-lg">
-           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
-         </span>
-        </a>
-       </li>
     </ul>
-
-    
     <div class="menu">
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -112,6 +119,12 @@
           <li class="menu-item">
             
               <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
             
           </li>
         
@@ -150,16 +163,6 @@
   <article class="post-article">
     <section class="markdown-content"><p><br></p><br><p><br><p><a href="/images/concrete.gif"><img class="img-center size-full wp-image-23" title="concrete" src="/images/concrete.gif" alt="" width="241" height="300" /></a></p><br>这本书名中文名字叫什么呢，有本《具体数学》，那么这本书“具体抽象”，矛盾了。副标题是An Introduction to <a href="file:///home/heipang/document/wiki/Home_Page/Computer/index.html">Computer</a> Science Using Scheme。可以看出这是本引论性质的计算机理论书籍。《冒号课堂》里面说过，编程中最重要的能力是抽象的能力，这本书也在培养这么一种能力，并且能代 码实现去辅助说明。这本书是美国一个大学用的一本教材(具体哪个忘记了，可以到书的主页上去看看),貌似很多大学都使用scheme作为第一门程序设计语 言，历史悠久，属于Lisp变种。像这种函数式语言虽然效率不是很高，但是语法简单，而且功能强大，支持多种程序设计方法。在这里程序就是数据，数据就是 程序，在sicp中一段不长的scheme代码就能成为一个scheme解释器。Scheme很简单，和下棋一样，人们能很快就学会其语法，这里有个很好 的教程<a target="_blank" rel="noopener" href="http://www.ccs.neu.edu/home/dorai/t-y-scheme/t-y-scheme.html">t-y-scheme</a>。 貌似以前美国很多大学都是用这个作为第一门程序设计语言来教学，现在用Python的更多了，函数式语言还是在渐渐被遗忘。作为引论性质的课程，广度和高 度都达到一定程度，甚至让学生站了语言设计者的角度去思考问题。其中的主线是：过程抽象，数据抽象，和状态抽象。内容涉及:递归和推导，迭代，高阶函数， 数据结构，泛型操作，实现程序设计语言，动态规划，面向对象范型等等。<br></p><br><p><br>SICP包含这些内容，并且思想上更深入。所以先大概看看这本书对于阅读SICP(<a target="_blank" rel="noopener" href="http://www.douban.com/subject/1148282/">《计算机程序的构造和解释》</a>)有很大的帮助。</blockquote><br><blockquote>大学的时候看到第五章，做了其中大部分习题，有些题目很有启发。我大四的时候做的1~5章的练习题。在<a href="/images/concrete.zip">这里</a>下载。不保证所有的解法都是正确并最好的，网上这本书的相关资料比较少，而SICP的解答到是有比较多可以参考。<br></p>
 </section>
-
-    <p></p>
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="125" width="125">
-            <figcaption>公号同步更新，欢迎关注👻</figcaption>
-      </div>
-    
-
     <!-- Tags START -->
     
       <div class="tags">
@@ -199,20 +202,18 @@
   </div>
 
     <!-- NAV END -->
-
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="120" width="120">
+      </div>
+    
     <!-- 二维码 END -->
     
-      <!-- No Comment -->
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
     
-
-    <script src="https://utteranc.es/client.js"
-      repo="chenyukang/chenyukang.github.io"
-      issue-term="pathname"
-      theme="github-light"
-      crossorigin="anonymous"
-      async>
-    </script>
-
   </article>
   <!-- Article END -->
   <!-- Catalog START -->
@@ -274,6 +275,32 @@
       value: document.location.href
     });
 
+    // gitment
+    var gitmentConfig = "chenyukang";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "《Concrete Abstractions》的一些解答",
+        owner: "chenyukang",
+        repo: "chenyukang.github.io",
+        oauth: {
+          client_id: "ccc45f6f66c60934e41a",
+          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
   })();
 </script>
 
@@ -282,55 +309,51 @@
 </div>
     <footer class="app-footer" id="footer">
     <p class="copyright">
-        &copy;
-        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
-    </p>
+        &copy; 2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+  </p>
 </footer>
 
 <script>
-    function async(u, c) {
-        var d = document,
-            t = 'script',
-            o = d.createElement(t),
-            s = d.getElementsByTagName(t)[0];
-        o.src = u;
-        if (c) {
-            o.addEventListener('load', function(e) {
-                c(null, e);
-            }, false);
-        }
-        s.parentNode.insertBefore(o, s);
-    }
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
 </script>
 <script>
-    async("//catcoding.me/js/fastclick.min.js", function() {
-        FastClick.attach(document.body);
-    })
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
 </script>
 
 <script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
+  var hasLine = 'false';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
 </script>
 <!-- Baidu Tongji -->
 
-        
+
 <script src="/js/script.js"></script>
+
 
   </body>
 </html>
