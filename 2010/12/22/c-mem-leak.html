@@ -5,16 +5,16 @@
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="description" content="All about coding and software">
   <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/logo.png">
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
       
           内存泄漏 | 程序员的喵
       
   </title>
-  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -27,44 +27,33 @@
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
 
-  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
-  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
   
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+
+    
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
       <img src="/css/images/logo.png" width='400px' height='400px'/>
   </div>
 
-  
-  
-    <!-- MathJax support START -->
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <!-- MathJax support END -->
-  
-
-
+  gtag('config', 'UA-77282254-1');
+</script>
 
 <meta name="generator" content="Hexo 5.4.1"></head>
 
@@ -80,12 +69,6 @@
         <li class="list-item">
           
             <a href="/" class="item-link">Home</a>
-          
-        </li>
-      
-        <li class="list-item">
-          
-            <a href="/tags/" class="item-link">Tags</a>
           
         </li>
       
@@ -107,7 +90,17 @@
           
         </li>
       
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
     </ul>
+
+    
     <div class="menu">
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -119,12 +112,6 @@
           <li class="menu-item">
             
               <a href="/" class="menu-link">Home</a>
-            
-          </li>
-        
-          <li class="menu-item">
-            
-              <a href="/tags/" class="menu-link">Tags</a>
             
           </li>
         
@@ -164,6 +151,16 @@
     <section class="markdown-content"><p>以前写的一些程序运行一段时间后占用的内存越来越多，估计是内存泄露了。服务端的程序要长时间的运行，内存泄露是个很严重的问题。于是再检查程序，很崩溃的是还有另外一个模块不是自己写的，看起来很麻烦。看了半小时后发现一些问题，但是还是不能保证是否完全解决了。同事让我用以前他们写的一些函数，对应的为 MALLOC 和 FREE。仔细看了一下觉得很不错，其实就是把 malloc 和 free 函数封装了一下，用来记录申请空间的文件和代码位置，使用方法就是用 MALLOC 和 FREE 替代原来的函数。主要的数据结构是：</p>
 <div><br><pre><span style="color: #0000ff;">typedef</span> <span style="color: #0000ff;">struct</span><br>{<br>    <span style="color: #0000ff;">long</span> pcode;                          <span style="color: #008000;">//指针</span><br>    <span style="color: #0000ff;">char</span> filename[128];                  <span style="color: #008000;">//申请空间的源文件名称</span><br>    <span style="color: #0000ff;">int</span> line;              <span style="color: #008000;">//申请空间的代码所在的行</span><br>    <span style="color: #0000ff;">int</span> ct;                   <span style="color: #008000;">//内存状态: 0-未闭合，1-闭合，2-log/脚手架</span><br>}mem_info;<br><br>mem_info mem_in[MEM_SIZE];  <span style="color: #008000;">//MEM_SIZE 最大指针数目</span></pre><br><pre><span style="color: #0000ff;">int</span> mem_in_id; <span style="color: #008000;">//数组中已经占有的 mem_info 数目</span></pre><br><pre><span style="color: #0000ff;">int</span> mem_check_statue; <span style="color: #008000;">//是否进行内存泄露检查</span></pre><br>然后有两个函数，一个是初始化函数 mem_check_init(),另一个为 mem_check_write(),这样就能检查者两个函数之间的代码是否有内存泄露，mem_check_write() 可以打印成一个表，所有申请了空间的代码的文件名称和代码所在的行数，以及运行到 mem_check_write() 这里的时候所有申请空间的状态，1 表示已经释放，0 表示申请未释放，2 表示的是脚手架的位置（用来方便检查哪一小段代码是否有内存泄露）。<br><pre>#define MALLOC(size)  <strong>ck_malloc(size,</strong>FILE__,<strong>LINE</strong>)　<span style="color: #008000;">//<strong>FILE</strong> 文件 <strong>LINE</strong> 代码所在行</span></pre><br><pre><span style="color: #0000ff;">void</span>   <em>__ck_malloc(<span style="color: #0000ff;">int</span> size,<span style="color: #0000ff;">char</span> </em>file,<span style="color: #0000ff;">int</span> line)<br>{<br>    <span style="color: #0000ff;">void</span> <em>p=<span style="color: #0000ff;">malloc</span>(size);<br><br>    <span style="color: #0000ff;">if</span> (mem_check_statue)    <span style="color: #0000ff;">return</span> p;<br>    <span style="color: #0000ff;">if</span> (mem_in_id&gt;=MEM_SIZE) <span style="color: #0000ff;">return</span> p;<br><br>    mem_in[mem_in_id].pcode=(<span style="color: #0000ff;">long</span>)p;<br>    <span style="color: #0000ff;">strcpy</span>(mem_in[mem_in_id].filename,file);<br>    mem_in[mem_in_id].line=line;<br>    mem_in[mem_in_id].ct=0; <span style="color: #008000;">// 状态: 0-未闭合</span></pre><br></div><br><div><br><pre>    mem_in_id++;<br><br>    <span style="color: #0000ff;">return</span> p;<br>}</pre><br>那么 FREE(p)，进行的操作就是现在数组中找到是否有这个 p，如果有就改变状态，变为 1 表示闭合了，也就是释放掉了。CALLOC 和 MALLOC 类似，是调用 calloc，函数 malloc() 和函数 calloc() 的主要区别是前者不能初始化所分配的内存空间，而后者能。REALLOC 有点不一样，调用 void</em> np=realloc(p,size)，这里要注意 np 和原来的 p 有可能不一样，有可能一样，比较一下进行相应处理。最后 mem_check_write() 遍历上上面的数组打印出来表，其顺序就是按照代码执行的顺序了，其中脚手架可以比较方便的定位于申请了没有释放的代码行，也就是查找两个 2 之间的 0 所对应的行。<br><br>这是一个很不错的方法，今天用这个办法找到了好多处不易发现的内存泄露错误。但这也有其缺点，即使完全通过也不能保证就完全没内存泄露了，除非测试时运行代码的覆盖率要保证所有代码都运行到了，这也是正规的、高质量的测试所要做到的程度。我们现在没有时间来做足够好的测试，以后再好好规范一下。<br><br></div>
 </section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
     <!-- Tags START -->
     
       <div class="tags">
@@ -207,18 +204,20 @@
   </div>
 
     <!-- NAV END -->
-    <!-- 二维码 START -->
-    
-        <div class="qrcode">
-            <img src="/images/wechat-qr-code.png" height="120" width="120">
-      </div>
-    
+
     <!-- 二维码 END -->
     
-      <!-- Gitment START -->
-      <div id="comments"></div>
-      <!-- Gitment END -->
+      <!-- No Comment -->
     
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
   </article>
   <!-- Article END -->
   <!-- Catalog START -->
@@ -280,32 +279,6 @@
       value: document.location.href
     });
 
-    // gitment
-    var gitmentConfig = "chenyukang";
-    if (gitmentConfig !== 'undefined') {
-      var gitment = new Gitment({
-        id: "内存泄漏",
-        owner: "chenyukang",
-        repo: "chenyukang.github.io",
-        oauth: {
-          client_id: "ccc45f6f66c60934e41a",
-          client_secret: "84f77bd89f8dfbd1bf77dcd696f2a66b1afe7587"
-        },
-        theme: {
-          render(state, instance) {
-            const container = document.createElement('div')
-            container.lang = "en-US"
-            container.className = 'gitment-container gitment-root-container'
-            container.appendChild(instance.renderHeader(state, instance))
-            container.appendChild(instance.renderEditor(state, instance))
-            container.appendChild(instance.renderComments(state, instance))
-            container.appendChild(instance.renderFooter(state, instance))
-            return container;
-          }
-        }
-      })
-      gitment.render(document.getElementById('comments'))
-    }
   })();
 </script>
 
@@ -314,51 +287,55 @@
 </div>
     <footer class="app-footer" id="footer">
     <p class="copyright">
-        &copy; 2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
-        with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
-  </p>
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
 </footer>
 
 <script>
-  function async(u, c) {
-    var d = document, t = 'script',
-      o = d.createElement(t),
-      s = d.getElementsByTagName(t)[0];
-    o.src = u;
-    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-    s.parentNode.insertBefore(o, s);
-  }
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
 </script>
 <script>
-  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
-    FastClick.attach(document.body);
-  })
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
 </script>
 
 <script>
-  var hasLine = 'false';
-  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
-    $('figure pre').each(function(i, block) {
-      var figure = $(this).parents('figure');
-      if (hasLine === 'false') {
-        figure.find('.gutter').hide();
-      }
-      var lang = figure.attr('class').split(' ')[1] || 'code';
-      var codeHtml = $(this).html();
-      var codeTag = document.createElement('code');
-      codeTag.className = lang;
-      codeTag.innerHTML = codeHtml;
-      $(this).attr('class', '').empty().html(codeTag);
-      figure.attr('data-lang', lang.toUpperCase());
-      hljs.highlightBlock(block);
-    });
-  })
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
 </script>
 <!-- Baidu Tongji -->
 
-
+        
 <script src="/js/script.js"></script>
-
 
   </body>
 </html>
