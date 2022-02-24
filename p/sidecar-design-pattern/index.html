@@ -155,7 +155,7 @@
 <p> “计算机科学领域的任何问题都可以通过增加一个简介的中间层来解决。”</p>
 <p>“Any problem in computer science can be solved by another layer of indirection.”</p>
 </blockquote>
-<p>如果一个抽象层不够，那来两个。这种模式也不是近些年新发明的，我们可以理解 Nginx 的反向代理其实也算一种 sidecar 模式，应用前面的 Nginx 可以实现一些常用的流量功能、鉴权、静态文件访问等基础功能。只是近些年，随着微服务和容器化在实践中越来越多，这种模式的使用范围也更广、粒度更细了。在非容器的环境下，一个 Nginx 可能会服务多个物理机(或者虚拟机)，在容器环境下我们可以单独起 <a target="_blank" rel="noopener" href="https://aws.amazon.com/blogs/compute/nginx-reverse-proxy-sidecar-container-on-amazon-ecs/">Nginx 容器来服务单个应用</a>。</p>
+<p>如果一个抽象层不够，那来两个。这种模式也不是近些年新发明的，我们可以理解 Nginx 的反向代理其实也算一种 sidecar 模式，应用前面的 Nginx 可以实现一些常用的流量功能、鉴权、静态文件访问等基础功能。只是近些年，随着微服务和容器化在实践中越来越多，这种模式的使用范围也更广、粒度更细了。在非容器的环境下，一个 Nginx 可能会服务多个物理机 (或者虚拟机)，在容器环境下我们可以单独起 <a target="_blank" rel="noopener" href="https://aws.amazon.com/blogs/compute/nginx-reverse-proxy-sidecar-container-on-amazon-ecs/">Nginx 容器来服务单个应用</a>。</p>
 <h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在微服务架构中，如果应用多了就会形成一些共有的需求。特别是流量控制方面，包括限流、流量分发和监控、灰度等等。通常我们对一类需求可以实现一个抽象层，然后在这个抽象层上实现具体的业务逻辑。比如很多公司都有服务网关，然后使用各种语言的 SDK 来集成到应用中。</p>
 <p><img src="/images/ob_pasted-image-20211130163700.png" alt=""><br>这是通常我们会选择的一种方式，这过程中会有这样的一些问题需要考虑：</p>
 <ol>
