@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and software">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          好的抽象和设计就像积木 | 程序员的喵
+      
+  </title>
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+
+    
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>好的抽象和设计就像积木</h2>
+  <p class="post-date">2022-02-24</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>这是我的 Newsletter 第 2 篇。</p>
+<p>我很喜欢玩乐高，我发现很多好的抽象、设计的使用体验就像玩积木，比如现在这些迅猛发展的云服务、比如 Notion。每个组件都不复杂，掌握规律后很容易组合成我们想要的作品。</p>
+<h2 id="云服务架构节省成本"><a href="#云服务架构节省成本" class="headerlink" title="云服务架构节省成本"></a>云服务架构节省成本</h2><ul>
+<li>以不到 400 美元处理每月 80TB 和 500 万的访问量</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://blog.polyhaven.com/how-we-handle-80tb-and-5m-page-views-a-month-for-under-400/">How we handle 80TB and 5M page views a month for under $400 – Poly Haven Blog</a></p>
+<p>云服务这些东西用起来虽然方便，但是很容易出现资源浪费。我之前的公司一直使用 AWS，后来管理层觉得钱花得实在有点多，后来我们部门稍微优化一段时间，成本降下 1/3。</p>
+<p>这篇文章详细讲述了 Poly haven 如何通过各种云服务来应对大量数据请求。</p>
+<p>Poly haven 是一个专门用来让游戏开发者共享资源的网站，比如模型、纹理等等。这个组织非常透明，他们接受捐赠，然后把所有的花费都显示在个页面上：<a target="_blank" rel="noopener" href="https://polyhaven.com/finance-reports">Finance Reports • Poly Haven</a>。</p>
+<p>节省成本的方法简而言之就是缓存一切能缓存的东西，让缓存的命中率尽量地高。</p>
+<p>缓存主要使用 Cloudflare 当 CDN，Cloudflare 和用来替代 S3 的 Backblaze 之间有流量联盟，一起用的话存储就不要钱了。</p>
+<p><a target="_blank" rel="noopener" href="https://firebase.google.com/products/firestore">Google Firestore</a> 用来作 Database，Vercel 用来跑 Web Server，系统中还有个 Vultr 服务器专门跑 API。我觉得这个 Vultr 跑的 API 是不是可以换成 AWS Lambda 一类的东西？至少没有单点问题，不过费用上不知道会不会更贵点。</p>
+<p>顺便分享一下，我最近把自己的站点从 Vultr 迁移了出来，因为我的服务器跑了很久了，一个偶然的因素我重启了一下服务器，然后就 …… 再也起不来了，我的网站也处于停服状态。</p>
+<p>我立马给 Vultr 发个 Ticket，这是我得到的回复：<br><img src="/images/ob_pasted-image-20220218223308.png" alt=""></p>
+<p>我看了头大，一狠心就往 Github Pages 上移。过了不到一个小时他们客服问我解决了么，我回答说：Yes, What I’m doing is migrating to Github Pages, and I’m almost done.</p>
+<p>原本我认为搞什么 ssl 证书会麻烦点，没想到 Github Pages 已经和 Let’s encrypt 集成了，不用管服务器真是香！</p>
+<p>未来做业务的大部分公司，可能更需要的是对各种云服务非常了解的架构师，这种架构就有点类似自由式乐高，我们需要对组件了如指掌才能搭出节省成本的作品。</p>
+<h2 id="Notion-创始人的一个访谈"><a href="#Notion-创始人的一个访谈" class="headerlink" title="Notion 创始人的一个访谈"></a>Notion 创始人的一个访谈</h2><p><a target="_blank" rel="noopener" href="https://linmi.cc/15951.html">Notion CEO Ivan 专访：即使不会编程，人人都可以成为工作达人 - Linmi</a></p>
+<p>Notion 的“积木感”在于页面无限嵌套，也在于一个简单的 ‘/‘ 让你选择下一个零件。</p>
+<p>Notion 是由华人 Ivan 创建的，好像很多人都不知道这点，毕竟大家都还在吐槽 Notion 的中文支持得不够好和国内访问都不稳定。</p>
+<p>这是创始人 Ivan 两年前接受韩国媒体的访谈，如果你对 Notion 感兴趣应该去看看。其中谈到了 Notion 的设计原则：</p>
+<blockquote>
+<p>Q：有人说 Notion 简洁和直观性和苹果公司很像。</p>
+<p>A：简洁是 Notion 的重要价值。用户们应该感到轻松和易于操作。品牌也是如此，我们希望用户想到 Notion 的话就能想到‘铅笔’。要像身体的一部分一样，成为自然而熟悉的工具。即使不会编程，也要让每个人都能直观地用鼠标解决所有问题。我们觉得自己是制作工艺品（craft）等工具的艺术家。</p>
+</blockquote>
+<blockquote>
+<p>Q：Notion 的简洁感的哲学基础是什么？</p>
+<p>A：我出生在中国，儿时移居加拿大。所以很熟悉东亚的儒学。Notion 的设计和开发哲学也与‘中庸’的概念有着深刻的共鸣。比起过分强调功能或追求变化，更保守地包含了克制。比起华丽，我们更愿意把注意力集中在本质问题上，我们提供有需要的东西用在很多人遇到的共同问题上。</p>
+<p>2013 年，曾是 Zhao 的朋友的 Simon Last 在美国旧金山创立了 Notion 公司。最初开发的项目是‘代码制作应用’，但最终还是失败了。他回忆道：“当时只集中于想展现给世人的东西，但并不知道世界想要什么”。之后，他于 2015 年和 Last 一起来到日本东京并在那里停留了 1 年，构想了现在的 Notion。他在解释选择日本的理由时说：”需要一个语言不通的地方来一整天的集中精力去编程。”</p>
+</blockquote>
+<p>我的感受是，很多好的产品都是非科班出生的人创造出来的，他们可能是学艺术、设计、心理学的等等，而经过了科班训练的人似乎更难找到世界的真实需求，大概是因为很多时候大家在拿着锤子找钉子。</p>
+<p>这让我想到吴军地<a target="_blank" rel="noopener" href="https://china.googleblog.com/2009/01/blog-post_3651.html">浪潮之巅</a>里描述到的 ：</p>
+<blockquote>
+<p>一个进入了麻省理工学院的高中毕业生很明确是为了学习理工的，而他们周围的同学也是如此。这些年轻人在一起不断交流，彼此在技术上越来越精深，内境逾宽、外延逾窄。</p>
+<p>我和麻省理工学院的一些博士生谈论过各种浏览器的好坏，他们不和你谈微软的 IE 或者 Mozilla 的火狐，而是 Unix 用户更常用的字处理器 Emacs 下一个很小的浏览网页的功能，这个东西不仅不好用，而且在全世界用它的网民连万分之一都不到。他们和你谈的是里面技术上谁实现的好。</p>
+<p>这些人以后可以是很好的科学家和工程师，但是很难创业。</p>
+</blockquote>
+<h2 id="Linux-复杂么"><a href="#Linux-复杂么" class="headerlink" title="Linux 复杂么"></a>Linux 复杂么</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://cstdspace.quora.com/Why-is-Linux-so-complicated-16?ch=10&amp;oid=301698375&amp;share=d44c0f9c&amp;srid=uPh8&amp;target_type=answer">Why is Linux so complicated? - quora.com</a></li>
+</ul>
+<p>Linux 为什么如此复杂？这个 Quora 回答得很好，Linux 对比起来可能没有大多数用户熟悉的 GUI，命令行需要一段时间来学习如何使用。</p>
+<p>但这只是表面的复杂，在内核设计上 Linux 相比  Windows 更简单。这是 2008 年某个安全人员绘制的 Windows 上运行 MS web-server (IIS) 和 Linux 上运行 Apache 的函数调用图：</p>
+<p><img src="/images/ob_pasted-image-20220223001541.png" alt="IIS on Windows"></p>
+<p><img src="/images/ob_pasted-image-20220223001556.png" alt="Apache on Linux"></p>
+<p>如果这是积木说明书，我当然更愿意玩第二个！</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><a target="_blank" rel="noopener" href="https://github.com/huacnlee/autocorrect">huacnlee/autocorrect</a>: 我的文档里中英文之间必须加空格，如果你也有这种偏执的话就试试这个工具。我把这个工具加到了 CI 里，这样我发布的文章都没有空格问题了。</p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=bxmDnn7lrnk&amp;list=PL4cUxeGkcC9gpXORlEHjc5bgnIi5HEGhw">Tailwind CSS Tutorial -  YouTube</a>: 学习 Tailwind CSS，这周我看完了这系列视频。在这个视频里作者从开始如何安装介绍，做了一个食谱的前端页面，过程非常详细。我理解 TailwindCss 主要还是一个更好用的原子化 CSS，感觉用起来很方便，借助 VSCode 的补全，用熟了会很有效率。</p>
+<p><a target="_blank" rel="noopener" href="https://cook.aiurs.co/">程序员做饭指南 | HowToCook</a> : 偶然发现我司这位同事维护了一个程序员做菜指南，这段时间突然就火了。去年我去玩过他放在办公室的微软模拟飞行器，他还给我好好上了一节飞行课。他对飞行了解好多，讲解非常非常详细，他还考了一些飞行相关的证书，没想到对做菜也这么痴迷。这个 Github Repo 真是程序员居家办公，解决日常饮食的好手册🤣。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.png" height="125" width="125">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#weekly" >
+    <span class="tag-code">weekly</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/p/wlb-shenzhen/">
+        
+          深圳 WLB 的 IT 公司
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BA%91%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E8%8A%82%E7%9C%81%E6%88%90%E6%9C%AC"><span class="toc-nav-text">云服务架构节省成本</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Notion-%E5%88%9B%E5%A7%8B%E4%BA%BA%E7%9A%84%E4%B8%80%E4%B8%AA%E8%AE%BF%E8%B0%88"><span class="toc-nav-text">Notion 创始人的一个访谈</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Linux-%E5%A4%8D%E6%9D%82%E4%B9%88"><span class="toc-nav-text">Linux 复杂么</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-nav-text">其他</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/weekly-2/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!-- Baidu Tongji -->
+
+        
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

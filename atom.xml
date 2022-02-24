@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://catcoding.me/"/>
-  <updated>2022-02-20T14:45:06.510Z</updated>
+  <updated>2022-02-24T02:38:07.015Z</updated>
   <id>http://catcoding.me/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>好的抽象和设计就像积木</title>
+    <link href="http://catcoding.me/p/weekly-2/"/>
+    <id>http://catcoding.me/p/weekly-2/</id>
+    <published>2022-02-24T10:38:06.000Z</published>
+    <updated>2022-02-24T02:38:07.015Z</updated>
+    
+    <content type="html"><![CDATA[<p>这是我的 Newsletter 第 2 篇。</p><p>我很喜欢玩乐高，我发现很多好的抽象、设计的使用体验就像玩积木，比如现在这些迅猛发展的云服务、比如 Notion。每个组件都不复杂，掌握规律后很容易组合成我们想要的作品。</p><h2 id="云服务架构节省成本"><a href="#云服务架构节省成本" class="headerlink" title="云服务架构节省成本"></a>云服务架构节省成本</h2><ul><li>以不到 400 美元处理每月 80TB 和 500 万的访问量</li></ul><p><a href="https://blog.polyhaven.com/how-we-handle-80tb-and-5m-page-views-a-month-for-under-400/">How we handle 80TB and 5M page views a month for under $400 – Poly Haven Blog</a></p><p>云服务这些东西用起来虽然方便，但是很容易出现资源浪费。我之前的公司一直使用 AWS，后来管理层觉得钱花得实在有点多，后来我们部门稍微优化一段时间，成本降下 1/3。</p><p>这篇文章详细讲述了 Poly haven 如何通过各种云服务来应对大量数据请求。</p><p>Poly haven 是一个专门用来让游戏开发者共享资源的网站，比如模型、纹理等等。这个组织非常透明，他们接受捐赠，然后把所有的花费都显示在个页面上：<a href="https://polyhaven.com/finance-reports">Finance Reports • Poly Haven</a>。</p><p>节省成本的方法简而言之就是缓存一切能缓存的东西，让缓存的命中率尽量地高。</p><p>缓存主要使用 Cloudflare 当 CDN，Cloudflare 和用来替代 S3 的 Backblaze 之间有流量联盟，一起用的话存储就不要钱了。</p><p><a href="https://firebase.google.com/products/firestore">Google Firestore</a> 用来作 Database，Vercel 用来跑 Web Server，系统中还有个 Vultr 服务器专门跑 API。我觉得这个 Vultr 跑的 API 是不是可以换成 AWS Lambda 一类的东西？至少没有单点问题，不过费用上不知道会不会更贵点。</p><p>顺便分享一下，我最近把自己的站点从 Vultr 迁移了出来，因为我的服务器跑了很久了，一个偶然的因素我重启了一下服务器，然后就 …… 再也起不来了，我的网站也处于停服状态。</p><p>我立马给 Vultr 发个 Ticket，这是我得到的回复：<br><img src="/images/ob_pasted-image-20220218223308.png" alt=""></p><p>我看了头大，一狠心就往 Github Pages 上移。过了不到一个小时他们客服问我解决了么，我回答说：Yes, What I’m doing is migrating to Github Pages, and I’m almost done.</p><p>原本我认为搞什么 ssl 证书会麻烦点，没想到 Github Pages 已经和 Let’s encrypt 集成了，不用管服务器真是香！</p><p>未来做业务的大部分公司，可能更需要的是对各种云服务非常了解的架构师，这种架构就有点类似自由式乐高，我们需要对组件了如指掌才能搭出节省成本的作品。</p><h2 id="Notion-创始人的一个访谈"><a href="#Notion-创始人的一个访谈" class="headerlink" title="Notion 创始人的一个访谈"></a>Notion 创始人的一个访谈</h2><p><a href="https://linmi.cc/15951.html">Notion CEO Ivan 专访：即使不会编程，人人都可以成为工作达人 - Linmi</a></p><p>Notion 的“积木感”在于页面无限嵌套，也在于一个简单的 ‘/‘ 让你选择下一个零件。</p><p>Notion 是由华人 Ivan 创建的，好像很多人都不知道这点，毕竟大家都还在吐槽 Notion 的中文支持得不够好和国内访问都不稳定。</p><p>这是创始人 Ivan 两年前接受韩国媒体的访谈，如果你对 Notion 感兴趣应该去看看。其中谈到了 Notion 的设计原则：</p><blockquote><p>Q：有人说 Notion 简洁和直观性和苹果公司很像。</p><p>A：简洁是 Notion 的重要价值。用户们应该感到轻松和易于操作。品牌也是如此，我们希望用户想到 Notion 的话就能想到‘铅笔’。要像身体的一部分一样，成为自然而熟悉的工具。即使不会编程，也要让每个人都能直观地用鼠标解决所有问题。我们觉得自己是制作工艺品（craft）等工具的艺术家。</p></blockquote><blockquote><p>Q：Notion 的简洁感的哲学基础是什么？</p><p>A：我出生在中国，儿时移居加拿大。所以很熟悉东亚的儒学。Notion 的设计和开发哲学也与‘中庸’的概念有着深刻的共鸣。比起过分强调功能或追求变化，更保守地包含了克制。比起华丽，我们更愿意把注意力集中在本质问题上，我们提供有需要的东西用在很多人遇到的共同问题上。</p><p>2013 年，曾是 Zhao 的朋友的 Simon Last 在美国旧金山创立了 Notion 公司。最初开发的项目是‘代码制作应用’，但最终还是失败了。他回忆道：“当时只集中于想展现给世人的东西，但并不知道世界想要什么”。之后，他于 2015 年和 Last 一起来到日本东京并在那里停留了 1 年，构想了现在的 Notion。他在解释选择日本的理由时说：”需要一个语言不通的地方来一整天的集中精力去编程。”</p></blockquote><p>我的感受是，很多好的产品都是非科班出生的人创造出来的，他们可能是学艺术、设计、心理学的等等，而经过了科班训练的人似乎更难找到世界的真实需求，大概是因为很多时候大家在拿着锤子找钉子。</p><p>这让我想到吴军地<a href="https://china.googleblog.com/2009/01/blog-post_3651.html">浪潮之巅</a>里描述到的 ：</p><blockquote><p>一个进入了麻省理工学院的高中毕业生很明确是为了学习理工的，而他们周围的同学也是如此。这些年轻人在一起不断交流，彼此在技术上越来越精深，内境逾宽、外延逾窄。</p><p>我和麻省理工学院的一些博士生谈论过各种浏览器的好坏，他们不和你谈微软的 IE 或者 Mozilla 的火狐，而是 Unix 用户更常用的字处理器 Emacs 下一个很小的浏览网页的功能，这个东西不仅不好用，而且在全世界用它的网民连万分之一都不到。他们和你谈的是里面技术上谁实现的好。</p><p>这些人以后可以是很好的科学家和工程师，但是很难创业。</p></blockquote><h2 id="Linux-复杂么"><a href="#Linux-复杂么" class="headerlink" title="Linux 复杂么"></a>Linux 复杂么</h2><ul><li><a href="https://cstdspace.quora.com/Why-is-Linux-so-complicated-16?ch=10&amp;oid=301698375&amp;share=d44c0f9c&amp;srid=uPh8&amp;target_type=answer">Why is Linux so complicated? - quora.com</a></li></ul><p>Linux 为什么如此复杂？这个 Quora 回答得很好，Linux 对比起来可能没有大多数用户熟悉的 GUI，命令行需要一段时间来学习如何使用。</p><p>但这只是表面的复杂，在内核设计上 Linux 相比  Windows 更简单。这是 2008 年某个安全人员绘制的 Windows 上运行 MS web-server (IIS) 和 Linux 上运行 Apache 的函数调用图：</p><p><img src="/images/ob_pasted-image-20220223001541.png" alt="IIS on Windows"></p><p><img src="/images/ob_pasted-image-20220223001556.png" alt="Apache on Linux"></p><p>如果这是积木说明书，我当然更愿意玩第二个！</p><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><a href="https://github.com/huacnlee/autocorrect">huacnlee/autocorrect</a>: 我的文档里中英文之间必须加空格，如果你也有这种偏执的话就试试这个工具。我把这个工具加到了 CI 里，这样我发布的文章都没有空格问题了。</p><p><a href="https://www.youtube.com/watch?v=bxmDnn7lrnk&amp;list=PL4cUxeGkcC9gpXORlEHjc5bgnIi5HEGhw">Tailwind CSS Tutorial -  YouTube</a>: 学习 Tailwind CSS，这周我看完了这系列视频。在这个视频里作者从开始如何安装介绍，做了一个食谱的前端页面，过程非常详细。我理解 TailwindCss 主要还是一个更好用的原子化 CSS，感觉用起来很方便，借助 VSCode 的补全，用熟了会很有效率。</p><p><a href="https://cook.aiurs.co/">程序员做饭指南 | HowToCook</a> : 偶然发现我司这位同事维护了一个程序员做菜指南，这段时间突然就火了。去年我去玩过他放在办公室的微软模拟飞行器，他还给我好好上了一节飞行课。他对飞行了解好多，讲解非常非常详细，他还考了一些飞行相关的证书，没想到对做菜也这么痴迷。这个 Github Repo 真是程序员居家办公，解决日常饮食的好手册🤣。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;这是我的 Newsletter 第 2 篇。&lt;/p&gt;
+&lt;p&gt;我很喜欢玩乐高，我发现很多好的抽象、设计的使用体验就像玩积木，比如现在这些迅猛发展的云服务、比如 Notion。每个组件都不复杂，掌握规律后很容易组合成我们想要的作品。&lt;/p&gt;
+&lt;h2 id=&quot;云服务架构节省成本&quot;
+      
+    
+    </summary>
+    
+    
+      <category term="weekly" scheme="http://catcoding.me/tags/weekly/"/>
+    
+  </entry>
   
   <entry>
     <title>深圳 WLB 的 IT 公司</title>
@@ -231,30 +256,6 @@
     
     
       <category term="写作，公众号" scheme="http://catcoding.me/tags/%E5%86%99%E4%BD%9C%EF%BC%8C%E5%85%AC%E4%BC%97%E5%8F%B7/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>学习编程难？先解决量的问题</title>
-    <link href="http://catcoding.me/p/entry-for-learning-programming/"/>
-    <id>http://catcoding.me/p/entry-for-learning-programming/</id>
-    <published>2022-01-29T11:24:27.000Z</published>
-    <updated>2022-02-16T02:47:05.818Z</updated>
-    
-    <content type="html"><![CDATA[<p>今天分享一下自己这些年来学习编程的一些体会，来阐述一个朴素的道理和原则。而好多初学者并不太明白这个道理，所以在学习过程中会有迷茫感。</p><p>我是 2004 年上的大学，当时读的是信息安全专业。在上大学之前我没怎么用过计算机，可以说是完全的小白，而且我觉得自己的数学一般，算是一个资质平平的小白。</p><p>当年我们学校还规定大一新生不准自己带电脑进宿舍，所以大学第一年我也没怎么写过代码。我记得当时我们上 C 语言的课，每周大概有一两次去学校机房敲代码，机房里装的是 Turbo C，至今印象深刻。</p><p><img src="/images/ob_pasted-image-20220128151154.png" alt=""></p><p>因为我完全是小白，键盘都不太熟悉，所以我是完全照着书上面的例子敲的。</p><p>而后的三四年里，我买了自己的台式机，平时也写了一些简单程序，但我花费了更多的时间去折腾 Linux 系统。那时候 Linux 发行版本 ubuntu 会免费给学生邮寄光盘，我每年都申请一个新版本，所以毕业时一袋子 Linux 系统光盘。</p><p>我本科期间因为各种原因蹉跎了很多时间，可以说编程并未入门。那是什么感觉呢？就是看起来都好像懂点，自己写起程序来就没底。比如数据结构和算法，我虽然知道很重要，但就是没太学懂，考试过了却不知道实际应用。看相关的书籍，如果没有现成的代码我就总感觉少了点什么，有些困难。</p><p>后来我就考研了，当时我也没太想明白为什么要读研，算是还没准备好参加工作，还想在学校待两年。读研期间我在实验室跟着做一些科研项目，编程做得也不算多。</p><p>2009 年一次偶然的事情改变了我。那天我大概是看到了一个介绍 <a href="http://poj.org/">PKU JudgeOnline - POJ</a> 的网页，然后想起自己 2006 年注册过账号，我就重新登录了进去，没想到从此的一年多时间里，我基本天天泡在上面写程序。</p><p>我不是为了参加比赛，而只是偶然陷入了进去，然后就变得沉迷。我基本从早上九点到实验室，到晚上十一点左右离开实验室。我从一些简单的算法开始写，有时候是按照某些分类去做，实在想不出来就去评论区和别人的博客看解题报告。</p><p>现在回想起来那一年算是自己最专注的学习编程的一段时间，我记得有一次神奇的体验，有次我一直在想一个算法问题，然后在梦里还在做，第二天醒来后居然能回忆起梦里的方法，最后实现出来居然是对的。</p><p>这种忘我的、愉悦的<a href="https://www.zhihu.com/question/24428474">心流</a>体验非常难得，以至于在十年之后，当我遭遇焦虑时仍用这种办法来解决。</p><p>在这一年多的时间里，我基本刷完了 <a href="http://poj.org/userstatus?user_id=chenyukang">500 道题目</a>。其实每个程序通常都比较短，算 100 行每道题的话我也就写了 5 万行代码。</p><p><img src="/images/ob_pasted-image-20220129122255.png" alt=""></p><p>就是这 5 万行代码彻底提高了我的编程能力，感觉就好像就是突然上道了。我对算法和数据结构没有了恐惧感，变得更有耐心，我看其他技术书籍也没任何困难，学习编程语言，框架类的东西快多了。</p><p>在  POJ 上做编程题和自己学习数据结构、算法有什么区别呢？后来我明白，其实我经过了一年多<strong>刻意的有效练习</strong>，这种在线编程的练习有几个好处：</p><ul><li>可以获得即时反馈，一个程序是否通过都是确定的，到底是 Wrong Answer、Memory Limit Exceeded、还是 Time Limit Exceeded</li><li>可以跟踪和量化，我学会了哪些，比如 DFS、BFS、DP、Tree、Graph 等都是可以追踪和量化的</li><li>可以和其他人交流</li></ul><p>在这种练习中，我通过写获得了编程的“语感”，也提高了阅读源码的能力。写代码和写作差不多，编程无非是通过代码来表述自己的想法，需要不断地练习。</p><p>关于这一点我后来看到硅谷王川的表述非常好：</p><blockquote><p>所有的我们以为的质量问题，大多本质是数量问题。因为数量不够，差几个数量级而已。</p><p>数量就是最重要的质量。大部分质量问题，在微观上看，就是某个地方的数量不够。</p><p>最大的误区是，明明是数量不够的问题，因为错误地以为瓶颈在于质量，幻想在不增加数量的前提下，用某种奇技淫巧，偷工减料达到目的。这时候玄学，迷信和各种无病呻吟就出现了。数量不够，底子不够厚时，很多事情时做不到的。即使有时看似有捷径，欠的账迟早是要还的。</p></blockquote><p>有的初学者在量没达到的情况下，怀疑自己的学习方法有问题，然后再怀疑是不是编程语言没选对，试其他的办法又没法长久坚持，最终导致自己好像一直没上道。如果没有写到足够的量，任何方法都是无法阶段性提高自己。</p><p>这个量就像是一个门槛。</p><p>任何复杂技艺的学习都是有门槛的，<strong>通过这个门意味着构建了做这行的韧性和耐心，也可以说是找到了里面的乐趣和成就感，这些是深入下去的基础</strong>。</p><p>在纪录片<a href="https://www.youtube.com/watch?v=r9kX_tPQkNA">寿司之神</a>中有一个片段：</p><blockquote><p>在小野二郎的店里做学徒，先要学会的是拧毛巾。毛巾是刚从开水中蒸出来的，温度骇人，食客使用都需要晾凉。而在这之前，学徒要将其捞出，并拧至全干。</p><p>这种训练非常辛苦，但如果学不会的话，就不能去碰鱼。接着，学徒要学会用刀料理鱼，10 年后才会被允许去煎蛋。</p><p>资深学徒苦修 4 个多月，失败 200 多次，终于做出了人生第一个“合格”的玉子烧。</p></blockquote><p><img src="/images/ob_pasted-image-20220129121542.png" alt=""></p><p>训练和衡量一个飞行员，我们说他累计飞行时间多长；训练长跑运动员，衡量标准是每天跑多少公里；那衡量一个编程初学者，有效编程行数就是一个很好的指标。</p><p><strong>编程中的有效练习不是拷贝粘贴代码，也不只是读代码，而是自己从头到尾去思考，去写出来，然后出了问题自己去调试。</strong></p><p>在 LeetCode 上写也很不错，你可能对算法不感兴趣，那可以去做游戏、 Web 应用开发、后台开发等等项目，找到自己感兴趣的方向作为突破口，然后持续积累到一定程度的代码量，比如三万行代码，那编程自然就入门了。</p><p>就编程来说，三万行代码这么明确的一个指标，实际上大部分人做不到。<strong>以大多数人的努力程度之低，根本轮不到拼天赋</strong>。不信你可以问问，即使是大学计算机专业的学生，很多人毕业的时候并未完成过 3 万行有效编程的这个量。</p><p>有了这种体验，我培养出了作为普通人学习掌握技能的耐心。类似编程，那些难以获得、需要不断锤炼的技能，例如写作、英语、钢琴、绘画等，前期都需要一定量的积累，<strong>我们要做的是找到有效练习的方式，持续投入再阶段性回顾</strong>。 </p><p>这个月我在锻炼写作能力，因此我一个月写了接近 15 篇文章，自我感觉确实有提高了不少，而且在这段时间里我克服了心理问题，解决了写作的流程、和工具的问题，所以我也不感觉到迷茫。</p><hr><p>总而言之，编程初学者不要想着捷径。每个人的方法都可能会有所差别，他人的路径不一定适合你。唯一的共同点是得有量的积累，先在键盘前敲起来，敲几万行代码后你就没有入门学习这类的疑问了，下一阶段是如何写得更好，如何用编程解决现实问题了。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;今天分享一下自己这些年来学习编程的一些体会，来阐述一个朴素的道理和原则。而好多初学者并不太明白这个道理，所以在学习过程中会有迷茫感。&lt;/p&gt;
-&lt;p&gt;我是 2004 年上的大学，当时读的是信息安全专业。在上大学之前我没怎么用过计算机，可以说是完全的小白，而且我觉得自己的数学一
-      
-    
-    </summary>
-    
-    
-      <category term="写作，编程" scheme="http://catcoding.me/tags/%E5%86%99%E4%BD%9C%EF%BC%8C%E7%BC%96%E7%A8%8B/"/>
     
   </entry>
   
