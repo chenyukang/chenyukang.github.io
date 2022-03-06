@@ -177,14 +177,14 @@
 <p>如果系统对正确性要求高，必须加大量单元测试和集成测试，并且每修复一个 Bug 都引入对应的测试，因为随着代码的不断演进，没人能保证新加的代码不会破坏掉原来的代码。测试能最大程度自动化地帮我们发现一些潜在问题。</p>
 <p>我工作的第一家公司是做 EDA 相关软件的，因为 EDA 软件不像互联网这样的系统，crash 了就是发生在客户的机器上，很多时候都没法 debug，因此公司对代码质量要求极高，他们在自动化测试这块就做得非常棒，测试覆盖率几乎 100%，还有很多 fuzzy testing。</p>
 <p>代码上的问题没法完全避免，那如何减少风险？微软有个实践就是大量运用 killswitch，本质上就是开关，每个新加的功能和代码，建议都是加上类似这样一个嵌套：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (!killswitch-active(uuid)) &#123;<br>   <span class="hljs-comment">// your new code ...</span><br>&#125; <span class="hljs-keyword">else</span> &#123;<br>   <span class="hljs-comment">// old code ...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span>(!killswitch-active(uuid)) &#123;<br>   <span class="hljs-comment">// your new code ...</span><br>&#125; <span class="hljs-keyword">else</span> &#123;<br>   <span class="hljs-comment">// old code ...</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <p>这样的好处在于如果新的代码出现了问题，可以迅速把对应的 killswitch 打开，这样老的代码就继续跑了，也就是不用发新版本就能快速回滚。不得不说这个办法虽然有点土和笨，但是非常有用，因为这也救过我，而且让人发代码压力不至于那么大。坏处也很明显，当 killswitch 多了之后代码就很难读，所以要去定期清理那些老的开关。</p>
 <p>工作经验丰富一些了之后 (掉入坑里足够多次)，自然会对容易出现问题的部分有风险意识，这需要不断积累和总结。</p>
 <h3 id="工作习惯"><a href="#工作习惯" class="headerlink" title="工作习惯"></a>工作习惯</h3><p>安全是第一位的，我们在工作中对敏感信息、公司资产要有一定的安全意识。完全按照公司的安全准则来工作，否则提桶跑路可能是小事，被追究法律责任就麻烦了。</p>
 <p>任何线上操作都是危险的，如非必要不要进行手动的线上操作。操作的时候尽量慢，然后想清楚如果错了如何恢复。比如删东西尽量软删除，把要删的东西移动目录或者设置状态。</p>
 <p>如果一个动作是有危险的，应该思考如何把这动作自动化，如果是必须有人给输入，那需要一定的流程来进行 Review 和批准。</p>
 <p>微软还有个好实践就是所有的线上命令，如果是写入型的命令默认不能运行，需要手动地运行命令提升权限。</p>
-<p>运维方面，如果有条件和时间尽量往 Infrastructure as Code 方向上靠，减少人工进行操作。</p>
+<p>运维方面，如果有条件和时间尽量往 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/devops/deliver/what-is-infrastructure-as-code">Infrastructure as Code</a> 方向上靠，减少人工进行操作。</p>
 <hr>
 <p>写到最后，觉得写得不够系统和全面，这个题目范围太大，开发、运维、规范、安全等很多方面都涉及到，而且有很多细节问题。</p>
 <p>一句话建议是：<strong>保持对工作的敬畏之心，特别是你的代码和工作会影响到很多用户时，即使一个小的错误也会造成大量损失</strong>。</p>
