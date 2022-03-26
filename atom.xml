@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://catcoding.me/"/>
-  <updated>2022-03-22T14:38:06.019Z</updated>
+  <updated>2022-03-26T02:07:05.740Z</updated>
   <id>http://catcoding.me/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>创造者和实施者</title>
+    <link href="http://catcoding.me/p/weekly-6/"/>
+    <id>http://catcoding.me/p/weekly-6/</id>
+    <published>2022-03-26T10:07:05.000Z</published>
+    <updated>2022-03-26T02:07:05.740Z</updated>
+    
+    <content type="html"><![CDATA[<p>我每周会分享一下我这周看到的好内容，加上我自己的一些个人理解和评注，这算是一种比较轻的持续输出方式，前三期为：</p><p><a href="https://catcoding.me/p/weekly-3/">#3 Basecamp 的小而美</a></p><p><a href="https://catcoding.me/p/weekly-4/">#4 你对世界足够了解吗</a></p><p><a href="https://catcoding.me/p/weekly-5/">#5 财富的三个车道</a></p><p>这是第 6 期。</p><h2 id="创造者和实施者"><a href="#创造者和实施者" class="headerlink" title="创造者和实施者"></a>创造者和实施者</h2><p><a href="http://home.wangjianshuo.com/cn/20210517_%e5%88%9b%e9%80%a0%e8%80%85%e5%92%8c%e5%ae%9e%e6%96%bd%e8%80%85%e7%9a%84%e5%b7%ae%e5%88%ab.htm">创造者和实施者的差别</a></p><p>这篇文章讲述了这两个角色之间的差别。</p><p>作者认为演员是实施者，作家是创造者；类比起来开发工程师是创造者，而支持工程师算实施者；工程师是创造者，而程序员是实施者。</p><blockquote><p>虽然工程师需要具备一些开发者的技能，比如写代码，但从根本上，工程师的能力，和代码无关，而是创造一个脑子中的世界的能力。当然，这种划分并非完全分开，每个人每天都会同时做一些工程师和程序员的工作。</p></blockquote><blockquote><p>世界需要那些在思维世界不受现实羁绊而翱翔的人，也需要把这些想法变成现实的人。或许我们并没有如此幸运在自己一个人身上在两种能力都无比优秀，或许他们的思维方式本身就是互斥的。理解这种差异，才能知道自己最强的领域，并且和自己互补的人相互欣赏，组成团队达成合作，一起拼出一幅图景。</p></blockquote><p>我仔细想了想，角色决定了身份，也许还有一个维度是深度，上限决定了有的事成与不成。</p><p>比如同样是演员，张国荣演的程蝶衣其他人能表演出来么？同样一个事情达到一定深度之后，也存在创造性。</p><p>所以，我认为关键点在于独创性？比如你做的事情另一个人也能做出来，那大概率是实施者。画家，作曲家，作家，建筑师，工程师，企业家这些人做的事情换一个人也许不能复制，那就是创造者。</p><p><strong>这个世界不缺实施者，但是缺创造者。</strong></p><p>思考一下自己的两种属性的比例，我认为自己在工作上基本还属于实施者，但在写作的过程中我也算个创造者，暂且不论写出来的东西如何，至少这是一种有独创性的活动。</p><h2 id="一个-Linux-漏洞"><a href="#一个-Linux-漏洞" class="headerlink" title="一个 Linux 漏洞"></a>一个 Linux 漏洞</h2><p><a href="https://dirtypipe.cm4all.com/">The Dirty Pipe Vulnerability — The Dirty Pipe Vulnerability documentation</a></p><p>这个文档详细描述了一个 Linux 内核漏洞的发现过程。</p><p>这个 Bug 有个很诡异的现象，每当月底的时候，他们的日志文件压缩后都有几位校验码不对，这导致解压软件就无法解压，作者时不时被这个 Bug 所困扰。</p><p>他先查遍了应用层的代码，使用排除法一层层分析，最终怀疑到是内核的问题。然后写了一个简单的 C 程序去验证果然是内核 Bug：</p><p><img src="/images/ob_pasted-image-20220324183158.png" alt=""></p><p>文中还详细解释了内核中 Pipe 和 page cache 的关联，对比内核版本之间的改动发现是由于一个很简单的 C 语言结构体里变量未初始化造成的，当然修复也就是两行代码：<br><img src="/images/ob_pasted-image-20220324183655.png" alt=""></p><p>作者最后尝试写 POC，可以利用这个漏洞可以去覆盖一个没有读权限的文件，这甚至会影响到 Andriod 设备，不过 Google 也已经合并了这个修复。</p><p>判断程序员水平的一个很好方法就是给个隐藏的 Bug，看他的分析方法和思路、如何使用各种工具，这比靠八股算法靠谱多了。</p><p>看完这篇 Bug 分析我感觉像是看完了一篇侦探小说！🤣</p><h2 id="写博客-10-年得到的经验"><a href="#写博客-10-年得到的经验" class="headerlink" title="写博客 10 年得到的经验"></a>写博客 10 年得到的经验</h2><p><a href="https://ferrucc.io/posts/starting-a-blog/">ferrucc.io | Everything I’ve learned in 10 years of Blogging</a></p><p>这篇文章很长，这第一句就把人吓唬住：</p><blockquote><p>I’m 21, but I’ve been blogging for almost 10 years.</p><p>I grew up doing this.</p></blockquote><p>我完整地看完了这篇文章，不得不说这个小伙写作很好，行文流畅。里面写的很多确实和我的经验是一致的：<br><img src="/images/ob_pasted-image-20220324214153.png" alt=""></p><p>很多人自己建博客，在样式和设计上花了很多时间，折腾完之后就没写几篇，而最难的是长期持续地写出好内容。</p><p>好文章是修改出来的，他这里说 50 % 花费在写上面，其他时间做润色、画图、重写，这些是重要的细节。</p><p>这篇文章虽然长，但是读起来比较容易读，因为作者是意大利人，所以不会用那种俚语之类的，非母语写作有时反而能写出受众范围更大的文章；另外一个原因是每段都相对短，可能就一两句话，这也是现在很多人写长文所采用的方式。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;我每周会分享一下我这周看到的好内容，加上我自己的一些个人理解和评注，这算是一种比较轻的持续输出方式，前三期为：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://catcoding.me/p/weekly-3/&quot;&gt;#3 Basecamp 的小而美&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a 
+      
+    
+    </summary>
+    
+    
+      <category term="写作" scheme="http://catcoding.me/tags/%E5%86%99%E4%BD%9C/"/>
+    
+      <category term="周刊" scheme="http://catcoding.me/tags/%E5%91%A8%E5%88%8A/"/>
+    
+  </entry>
   
   <entry>
     <title>远离内卷和无趣，我选择多元</title>
@@ -256,30 +283,6 @@
     
     
       <category term="职业" scheme="http://catcoding.me/tags/%E8%81%8C%E4%B8%9A/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>你可以创造运气</title>
-    <link href="http://catcoding.me/p/weekly-1/"/>
-    <id>http://catcoding.me/p/weekly-1/</id>
-    <published>2022-02-17T14:04:05.000Z</published>
-    <updated>2022-02-24T11:48:07.599Z</updated>
-    
-    <content type="html"><![CDATA[<p>我在之前的更新计划里提到过想尝试周刊这种方式创作。大概就是每周会分享一下我这周看到的值得分享的内容，加上我自己的一些个人理解和评注。这算是一种比较轻的持续输出方式，我自己平常也会阅读一些这类文章，我觉得有收获，所以我要试试。</p><p>好吧，这是第一次周刊型文章。</p><h2 id="创造运气"><a href="#创造运气" class="headerlink" title="创造运气"></a>创造运气</h2><p><a href="https://www.swyx.io/create-luck">How to Create Luck (swyx.io)</a></p><p>2016 年左右我在深圳一个饭局上，某大佬给我们介绍比特币和以太坊，我们那桌 10 个左右同事只有 1 个人买了点，而且他在大涨之前又卖掉了。有时候我想，运气虽然称之为运气，也与个人有很大关系。我们大多数人好像对新鲜事物的好奇心还不够，或者是没有去实践，去折腾。</p><p>Shawn 的这篇文章解释了关于运气的各种理论和行动指导，还真有一些人严肃地做了一些关于运气的研究：</p><p><strong>Binary Luck</strong>： 二元性运气，比如有的人就生在罗马，含着金钥匙出生。这种没法改变，有就是有，没有就接受。</p><p><strong>Luck Surface Area</strong>： 运气表面积？这个理论阐述的是运气对每个人是公平的，只有扩大自己的运气横截面积，才能让自己运气更好。简而言之，我们需要做更多，并且把自己做的事分享出来。</p><p>这幅图是不是很好理解：</p><p><img src="/images/ob_pasted-image-20220217102743.png" alt="来源 - swyx.io"></p><p>更细化地我们可以培养这些习惯，使用这些策略来创造运气：</p><ul><li>探索、尝试、折腾、模仿</li><li>精通某领域</li><li>经营个人品牌和人脉</li><li>保持好奇心和观察</li></ul><p><img src="/images/ob_pasted-image-20220217103102.png" alt=""></p><h2 id="花-3-个月破解硬件找回-200-万美金"><a href="#花-3-个月破解硬件找回-200-万美金" class="headerlink" title="花 3 个月破解硬件找回 200 万美金"></a>花 3 个月破解硬件找回 200 万美金</h2><p><a href="https://www.youtube.com/watch?v=dT9y-KQbqi4">How I hacked a hardware crypto wallet and recovered $2 million - YouTube</a></p><p>这个幸运的男子几年前买了一些数字货币，后来这个币大涨，价值 200 万美金，他的私钥存在一个移动数字钱包里，要命是他不记得 PIN 码了。</p><p>眼睁睁看着这么一个小小的硬件里存了 200 万美金，而不能拿出来花是什么感受？</p><p><img src="/images/ob_pasted-image-20220216121202.png" alt=""></p><p>如果输入密码错误次数太多，钱包会自动删除里面的内容。</p><p>幸好硬件黑客大神 <a href="https://www.youtube.com/channel/UCqGONXW1ORgz5Y4qK-0JdkQ">Joe Grand</a> 花了近 3 个月时间，外接线路、反复启动钱包、制造噪音 (glitch)、让钱包进入 Debug 模式、然后从 RAM 里读出所有信息、找到密码👏。</p><p>这个 Youtube 视频的观看次数已经达到 400 万次，扶墙推荐你去看看。</p><h2 id="这位独立开发者几乎做错了所有事"><a href="#这位独立开发者几乎做错了所有事" class="headerlink" title="这位独立开发者几乎做错了所有事"></a>这位独立开发者几乎做错了所有事</h2><p><a href="https://www.v2ex.com/t/833951#reply40">8 万变 80 万 - V2EX</a></p><p>原文表达不太好，可以大致浏览看看。</p><p>任何人的努力和梦想都值得鼓励和尊敬，但是当我看到这个人的创业历程后，我真觉得他几乎做错了所有事，除了坚持。</p><p>另一个感受是，如果初入一个行业需要敬畏之心，不要太过自信，觉得什么都看起来容易。</p><p>这位开发者之前教书的，有些开发经验，但没有 IT 行业从业经验，他竟然从学习各种技术栈、设计、一直实践到了去注册美国公司运营，而做出来的东西质量上是半成品……</p><p>关键是在 35 到 40 的这个年龄段这样折腾了 5 年，让家庭生活在困难之中……</p><p>创业不要冲动，尽早做出 MVP 版本，小步快跑，在没找到确定的盈利模式之前节省开支。这位推友总结得非常好：<a href="https://twitter.com/xiqingongzi/status/1493456735180587008">十个错误</a></p><blockquote><p>白宦成： 在 V2ex 看到一个独立开发的哥们，只能说，读书少确实害了他自己，做错了几乎所有事情。得亏是有个好的老婆和岳父，能坚持到现在。 独立开发并非毫无指南，多读书，多看报，会少踩很多坑。不要踩别人踩过的坑。</p></blockquote>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;我在之前的更新计划里提到过想尝试周刊这种方式创作。大概就是每周会分享一下我这周看到的值得分享的内容，加上我自己的一些个人理解和评注。这算是一种比较轻的持续输出方式，我自己平常也会阅读一些这类文章，我觉得有收获，所以我要试试。&lt;/p&gt;
-&lt;p&gt;好吧，这是第一次周刊型文章。&lt;/p
-      
-    
-    </summary>
-    
-    
-      <category term="weekly" scheme="http://catcoding.me/tags/weekly/"/>
     
   </entry>
   
