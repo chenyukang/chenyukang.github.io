@@ -16,10 +16,6 @@
         }
     }
 
-    if (catalog.length != 0) {
-        app.css("maxWidth", "1040px");
-    }
-
     if (detectmob()) {
         $('.nav-container').hide();
     }
@@ -48,7 +44,7 @@
     window.onload = function() {
         setTimeout(function() {
             NProgress.done()
-        }, 200)
+        }, 50)
     }
 
     $('.menu').on('click', function() {
