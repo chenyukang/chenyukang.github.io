@@ -1,5 +1,4 @@
 (function($) {
-    console.log('© Theme-Vexo | https://github.com/yanm1ng/hexo-theme-vexo')
     var app = $('.app-body')
     var header = $('.header')
     var banner = document.getElementById('article-banner') || false
@@ -13,6 +12,7 @@
     var lastScrollTop = 0;
     var delta = 5;
     var navbarHeight = $('header').outerHeight();
+    var tagClick = false;
 
     $(window).scroll(function(event) {
         didScroll = true;
@@ -34,7 +34,7 @@
 
         // If they scrolled down and are past the navbar, add class .nav-up.
         // This is necessary so you never see what is "behind" the navbar.
-        if (st > lastScrollTop && st > navbarHeight) {
+        if (!tagClick && (st > lastScrollTop && st > navbarHeight)) {
             // Scroll Down
             $('header').removeClass('nav-down').addClass('nav-up');
         } else {
@@ -98,10 +98,10 @@
         var list = $('.tag-list')
         var name = $(this).data('name')
         var maoH = list.find('#' + name).offset().top
-
+        tagClick = true;
         $('html,body').animate({
-            scrollTop: maoH - header.height()
-        }, 500)
+            scrollTop: maoH - header.outerHeight()
+        }, 500);
     })
 
     $('.reward-btn').on('click', function() {
@@ -110,7 +110,7 @@
 
     $('.arrow-down').on('click', function() {
         $('html, body').animate({
-            scrollTop: banner.offsetHeight - header.height()
+            scrollTop: banner.offsetHeight - header.outerHeight()
         }, 500)
     })
 
@@ -119,9 +119,10 @@
         var catalogTarget = e.currentTarget
         var scrollTarget = $(decodeURIComponent(catalogTarget.getAttribute('href')))
         var top = scrollTarget.offset().top
+        tagClick = true;
         if (top > 0) {
             $('html,body').animate({
-                scrollTop: top - header.height()
+                scrollTop: top - header.outerHeight()
             }, 500)
         }
     })
@@ -132,7 +133,7 @@
 
     document.addEventListener('scroll', function() {
         var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        var headerH = header.height()
+        var headerH = header.outerHeight()
         if (banner) {
             if (scrollTop > headerH) {
                 header.addClass('fixed-header')
