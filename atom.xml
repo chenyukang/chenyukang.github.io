@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://catcoding.me/"/>
-  <updated>2022-04-06T11:16:06.083Z</updated>
+  <updated>2022-04-09T02:49:06.015Z</updated>
   <id>http://catcoding.me/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Valve，另一种公司</title>
+    <link href="http://catcoding.me/p/weekly-8/"/>
+    <id>http://catcoding.me/p/weekly-8/</id>
+    <published>2022-04-09T10:49:05.000Z</published>
+    <updated>2022-04-09T02:49:06.015Z</updated>
+    
+    <content type="html"><![CDATA[<p>我每周会分享一下这周看到的好内容，加上自己的一些个人理解和评注，这算是一种比较轻的持续输出方式，前三期为：</p><p><a href="https://catcoding.me/p/weekly-5/">#5 财富的三个车道</a></p><p><a href="https://catcoding.me/p/weekly-6/">#6 创造者和实施者</a></p><p><a href="https://catcoding.me/p/weekly-7/">#7 无聊的技术栈</a></p><p>这是第 8 期。</p><h2 id="Faster-sorting-with-Go-generics"><a href="#Faster-sorting-with-Go-generics" class="headerlink" title="Faster sorting with Go generics"></a>Faster sorting with Go generics</h2><p>Eli Bendersky 的技术文章可以作为技术写作的典范，他写这个博客已经 20 年了。</p><p>最近他写了一篇关于 Go 泛型的文章，通过排序算法来探索 Go 的泛型实现：</p><p><a href="https://eli.thegreenplace.net/2022/faster-sorting-with-go-generics/">Faster sorting with Go generics - Eli Bendersky’s website</a></p><p>文中作者实现了两个版本的冒泡排序算法，第一个版本是通过 Interface 实现，第二个版本是用泛型实现的，通过 Benchmark 发现泛型版本要快 20%。</p><p>Go 团队核心成员 Russ Cox 之前写到过：</p><blockquote><p>When a language decides on whether to have generics and how to implement them, it faces the following decision:</p><ul><li>do you want slow programmers, slow compilers and bloated binaries, or slow execution times?</li></ul></blockquote><p>不支持泛型就是 slow programmers，但是目前主流的泛型实现各有各的问题：</p><ul><li><p><strong>Slow compilers and bloated binaries</strong> 是指 C++ 那种 full monomorphization 的方式，编译器为每一处实际的泛型函数调用生成对应的函数代码，导致编译时间过长。写过 C++ 的程序员都有些体会，我以前那个公司的代码量也不至于很大，但是编译一遍得差不多一个小时。</p></li><li><p><strong>Slow execution times</strong> 是指 Java 那种 dynamic dispatch，调用的时候会动态分发，导致运行时开销。</p></li></ul><p>Go 团队采用了介于这两种之间的方法，像 int、string 这些原子型的类型就通过 full monomorphization 而其他复合类型使用 dynamic dispatch。</p><p>作者继续通过性能分析，对比反汇编后的指令来看这两者之间的差别。基于以上原理，上面的例子程序因为要排序的是 string 所以用的是 full monomorphization，这样对比 interface 版本少了 method dispatch 的时间，而且利用了编译器的另一个叫做  <a href="https://go101.org/article/bounds-check-elimination.html">bounds-check elimination</a> 的优化，这样 string 对比的时候没有 bound index 的检查。</p><p>不过既然 Go 采用的是混合的方式，也可能某些情况使用泛型的代码比 Interface 更慢，参考这篇文章： <a href="https://planetscale.com/blog/generics-can-make-your-go-code-slower">Generics can make your Go code slower</a></p><p>看起来 Eli Bendersky 的这篇文章也写了三周左右！他写博文通常会有完整的示例程序，非常严谨。</p><h2 id="180-天，每天做个简单网页"><a href="#180-天，每天做个简单网页" class="headerlink" title="180 天，每天做个简单网页"></a>180 天，每天做个简单网页</h2><p><a href="https://blog.jenniferdewalt.com/post/62998082815/after-180-websites-im-ready-to-start-the-rest-of">After 180 Websites, I’m Ready to Start the Rest of My Life as a Coder</a></p><p><a href="https://jenniferdewalt.com/">Jennifer Dewalt</a></p><p>这位女生学习编程的方式非常独特：</p><ul><li>连续 180 天</li><li>每天都完成一个虽然简单但足够完整的网页，写对应的博文</li><li>所有的代码都是开源在 Github 上</li></ul><p>她是学美术出身的，但是对互联网很感兴趣，所以想自己试着做一些东西来分享美术。我随便选了一些她完成的网页，感觉有些想法和设计不错。</p><p>比如这个 <a href="https://jenniferdewalt.com/window/page">窗户应用</a> 的效果，看起来非常逼真，而且关闭窗户的时候声音也会跟着变。</p><p>在这个过程中她学到的最重要的是：</p><blockquote><p>“Start Small. Keep Building.”</p></blockquote><p>这个女生的学习编程的方法非常好！</p><p>我虽然编程很多年，但是前端开发很少涉及，去年我想做一些东西所以自学了些前端技能。自学时我发现最有用的是这个 repo：<a href="https://github.com/bradtraversy/vanillawebprojects">Mini projects built with HTML5, CSS &amp; JavaScript</a>  ，如果一个前端新手，能把这些例子都看一遍，基本就能上手了。</p><p>有的人在学习编程的时候，会有一种学生思维，比如等我先学 HTML，然后再看完这本 css 的书，然后就可以继续学 JavaScript ，然后再学 Vue 之类的。</p><p>这样很可能会磨灭学习兴趣，特别是对学习偏实际应用的前端技术而言，更好的学习路线就是想一个应用，做出来，然后再接着做更复杂的，在这个过程中边学边做，不懂的时候去补。<strong>我们要掌握的是能力，而不是知识。</strong></p><h2 id="Valve-的员工手册"><a href="#Valve-的员工手册" class="headerlink" title="Valve 的员工手册"></a>Valve 的员工手册</h2><p><a href="https://www.valvesoftware.com/en/publications">Publications - Valve Corporation</a></p><p>这个员工手册有各种语言的版本，手册里面还配有漫画，写得也很简洁，非常用心。</p><p>Valve 的这种企业几乎是独一无二的，这是他们的组织架构随着人数的变化演变：</p><p><img src="/images/ob_pasted-image-20220408230715.png" alt=""></p><p>可以看到里面完全是自由组织的一些项目组，员工自己决定做什么，加入哪个小组，手册里还说明了如何快速移动办公桌，这样你就可以随意搬到自己喜欢的项目组🤣。</p><p>每个组都有一个组长一样的角色，但主要是承担沟通枢纽的职责，而不是纯粹的管理，Valve 认为完全按照等级制度来构建公司会有严重弊端：</p><blockquote><p>等级制度会通过招募更多适合这一制度的人从而实现自我强化，让更多的人来充当下属的角色。最后，原先为客户服务的单纯目的将逐渐被成员利用体制谋求私利的欲望和行动所取代和吞噬。</p></blockquote><p>员工的成长不是等级的攀升，而是能力和收入的提升，Valve 鼓励员工向各个方面多元发展自己的能力。</p><p>这样看起来每个人都在掌握方向盘：</p><p><img src="/images/ob_pasted-image-20220408231451.png" alt=""></p><p>那这样组建公司的前提是什么？</p><p>就是要招聘到<strong>能力强而又协作、沟通足够好的人</strong>，所以他们的第一任务是<strong>招聘</strong>。</p><p>看完他们的员工手册后，引起了我的一些思考，Valve 看起来像是构建了一个乌托邦，居然还运行得如此好。</p><p>等级制度的弊端我们很容易体会到，比如员工为了晋升可能会做一些短期就有成果的事，虽然员工晋升了，但是这些事对公司而言真的是有价值的么？比如我们看到，很多公司的中层管理肆意招聘，因为手下的人多往往意味着 visibility，这在很多快速扩张的公司并不少见，而当危机真正来临的时候，大量裁员就出现了。</p><p>为什么世界上绝大部分公司是按照等级的架构来组织的，我想这几乎是刻在人类基因里的，我们可以看到在动物世界里，大猩猩、猴子、狼群等都有类似的组织形式。</p><p>另一个原因大概是，大量的优秀而又善协作的人才太少了，等级制度可以认为是精英治理，最基层的员工做的活都是单一而细分的，这样员工都是可以随意替换。</p><p>而且世界上大部分公司，所需要做的事大量是实施类工作，而 Valve 这样的游戏公司需要的是很多创意，公司性质的不同也决定了不同的组织模式。</p><p>当然，世界上有 Valve 这样的公司真是太好了！我顺便看了看这篇文章： <a href="https://www.a9vg.com/article/30432">关于 Steam、Valve 和 G 胖 你可能不知道的二三事</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;我每周会分享一下这周看到的好内容，加上自己的一些个人理解和评注，这算是一种比较轻的持续输出方式，前三期为：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://catcoding.me/p/weekly-5/&quot;&gt;#5 财富的三个车道&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;ht
+      
+    
+    </summary>
+    
+    
+      <category term="写作" scheme="http://catcoding.me/tags/%E5%86%99%E4%BD%9C/"/>
+    
+      <category term="周刊" scheme="http://catcoding.me/tags/%E5%91%A8%E5%88%8A/"/>
+    
+  </entry>
   
   <entry>
     <title>写作 12 年，我的经验和技巧</title>
@@ -259,32 +286,6 @@
       <category term="weekly" scheme="http://catcoding.me/tags/weekly/"/>
     
       <category term="周刊" scheme="http://catcoding.me/tags/%E5%91%A8%E5%88%8A/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>谈谈工作中的犯错</title>
-    <link href="http://catcoding.me/p/avoid-mistake/"/>
-    <id>http://catcoding.me/p/avoid-mistake/</id>
-    <published>2022-03-06T20:08:05.000Z</published>
-    <updated>2022-03-11T02:57:05.785Z</updated>
-    
-    <content type="html"><![CDATA[<p>想到这个题目是因为最近我们组出现了一个严重的线上问题，某小哥在进行线上操作的时候传错了一个参数。这种问题在程序员这行很常见，所谓常在河边走，哪有不湿鞋。</p><p><img src="/images/ob_pasted-image-20220306101406.png" alt=""></p><p>工作这么多年我自己犯过错，也看到过身边的删库跑路案例，更有甚者因为泄露敏感信息而锒铛入狱。这里分享一些自己所见的真实案例，以及如何在编程上、工作习惯上避免犯错。</p><h2 id="案例分享"><a href="#案例分享" class="headerlink" title="案例分享"></a>案例分享</h2><h2 id="信息泄露"><a href="#信息泄露" class="headerlink" title="信息泄露"></a>信息泄露</h2><p><a href="https://www.eet-china.com/news/201904281038.html">大疆前员工泄露公司源代码，被罚 20 万、获刑半年</a>，这个安全事故完全是因为员工的安全意识不足造成的。</p><p>这类问题非常多，不信你可以在 Github 上用 password、private key 之类的关键词搜索，很多人会无意识把这些敏感信息推送到 Github 上，而公司又没法完全禁止 Github，只能不断加强安全培训和监控。</p><p>从这个案例来看公司的损失非常非常大，单人力成本这块就难以估计，我也因为这个事故参与到了安全建设中，后面在这里领域工作了两三年左右。真是一人挖坑，无数人救火。</p><h3 id="退款接口"><a href="#退款接口" class="headerlink" title="退款接口"></a>退款接口</h3><p>我在做支付、物流相关的系统时，曾经因为一个诡异的接口造成了直接上的金钱损失。</p><p>我们的支付是通过第三方支付系统做的对接，比如用户通过支付系统向我们预支付了 100 美金，等他收货后第三方把钱给我们。第三方支付有个退款接口，假设他不想要货了于是发起退单，我们的系统就会调用第三方的支付接口去退款。</p><p>因为接口有时候调用失败或者返回不及时，我在写代码的时候默认既然对方预支付了 100 美金，多次发起退款接口自然也没问题，所以我有一些重试的机制来确保退款成功。过了一段时间后发现账目上有点差别，后来经过排查是因为重复调用了退款接口，这个接口如果两次调用就会退给客户退 200 美金！</p><p>最后我们只能发邮件给一些客户，说多退了钱，麻烦能退回来么，有的客户很好心就直接返回了钱。我记得有个客户回复说：我认为这是上帝给我的恩赐，对不起我已经花完了。</p><p>额，我就是那个可怜的上帝好么。</p><h3 id="并发问题"><a href="#并发问题" class="headerlink" title="并发问题"></a>并发问题</h3><p>我前公司所在的部门曾经有个发货系统，当多进程跑起来的时候，有个并发问题没处理好，最终导致用户收到多份相同的货物。</p><p>当程序员经验不足的时候这种错误就很容易出现。代码中哪些部分是可以重入的，哪些部分需要加锁，都需要仔细考虑。但是在业务快速发展，快速堆代码的时候，我们可能不一定有足够的时间把所有细节都考虑清楚。</p><h3 id="配置错误"><a href="#配置错误" class="headerlink" title="配置错误"></a>配置错误</h3><p>我之前出现过的一个最大的错误是因为配置错误。这件事我一直都记得，因为印象实在是深刻，现在对正则表达式都有所恐惧。</p><p>那天我正准备下班回家，我配置了一些安全上的防护规则。然后我的 Leader 说拦截的页面不够好看，我们要不统一个拦截页面。我想了一下觉得很简单，就准备在我们自己定制的网关 (Kong) 上配置一条全局规则，我想通过正则表达式把所有拦截页面 redirect 到订制的错误页面。</p><p>我通过后台 Admin 页面，在一个全局插件上写下了一条正则表达式，提交生效。然后立马就收到了报警，大量系统同时报警！因为有公司很多域名的请求都通过这个网关，而我配置的正则表达式嵌入到 Lua 代码中后有语法错误，导致所有系统的路由处理时都报错。</p><p>最要命的是我们的 Admin 页面也会经过这个网关，所以 Admin 页面也没法访问了，意味着我无法通过页面去回滚配置！我当时已经手心发汗，如热锅上的蚂蚁了。强迫自己镇静下来，马上修改插件的代码，赶紧让运维一起迅速地更新服务器上网关代码。</p><p>整个过程大概花费了  20 分钟，这期间整个公司估计有一半的系统都是不能访问的，包括那些官网、商城等。</p><h2 id="经验总结"><a href="#经验总结" class="headerlink" title="经验总结"></a>经验总结</h2><p>犯错并不可怕，只要是个人就可能会犯错。出现错误往往也不止是个人的问题，也意味着团队有问题，比如对代码质量要求不够，系统设计不够容错，权限划分不够好，安全机制不健全，没有 代码 Review 等等。<strong>错误是个人和团队最好的学习、提高的机会，而且我们已经交了学费</strong>。</p><p>但是随着我们成长，最好避免个人犯一些低级的错误，特别是安全类的问题。写程序、做系统设计的时候就做好防御，把犯错的概率降低到最小。</p><h3 id="防御编程"><a href="#防御编程" class="headerlink" title="防御编程"></a>防御编程</h3><blockquote><p>面包落地的时候，永远是抹黄油的一面着地。</p></blockquote><p>上面配置的问题，我在做网关的时候其实意识到了潜在风险， Admin 路由也经过自己控制那出问题不就嗝屁了吗？当时我自我安慰只要不对这个路由开有问题的全局插件就可以了，所以没有及时处理这个风险，最终导致自己掉入坑里。</p><p>当系统中存在潜在问题时，时间一拉长出现的概率就大了。因此我们编程的时候总要有意识想最坏的情况是什么，哪些是危险操作，比如写数据如果没写入成功会怎样，如果并发运行了会怎样，如果文件错误会怎样，这就是<a href="https://zh.wikipedia.org/wiki/%E9%98%B2%E5%BE%A1%E6%80%A7%E7%BC%96%E7%A8%8B">防御式编程</a>。</p><p>做系统设计时，要考虑敏感的业务逻辑如何测试，如何在系统层面规避错误。对于敏感的资源一定要再从统计的角度进行复查。像我那个退款的问题就是对潜在的风险意识不够，想当然地对接口进行了错误的假设，而对方这个接口不是幂等的。后来我们在系统中加了很多检查，确保及时代码有问题也能尽早发现问题。</p><p>如果系统对正确性要求高，必须加大量单元测试和集成测试，并且每修复一个 Bug 都引入对应的测试，因为随着代码的不断演进，没人能保证新加的代码不会破坏掉原来的代码。测试能最大程度自动化地帮我们发现一些潜在问题。</p><p>我工作的第一家公司是做 EDA 相关软件的，因为 EDA 软件不像互联网这样的系统，crash 了就是发生在客户的机器上，很多时候都没法 debug，因此公司对代码质量要求极高，他们在自动化测试这块就做得非常棒，测试覆盖率几乎 100%，还有很多 fuzzy testing。</p><p>代码上的问题没法完全避免，那如何减少风险？微软有个实践就是大量运用 killswitch，本质上就是开关，每个新加的功能和代码，建议都是加上类似这样一个嵌套：</p><figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span>(!killswitch-active(uuid)) &#123;<br>   <span class="hljs-comment">// your new code ...</span><br>&#125; <span class="hljs-keyword">else</span> &#123;<br>   <span class="hljs-comment">// old code ...</span><br>&#125;<br></code></pre></td></tr></table></figure><p>这样的好处在于如果新的代码出现了问题，可以迅速把对应的 killswitch 打开，这样老的代码就继续跑了，也就是不用发新版本就能快速回滚。不得不说这个办法虽然有点土和笨，但是非常有用，因为这也救过我，而且让人发代码压力不至于那么大。坏处也很明显，当 killswitch 多了之后代码就很难读，所以要去定期清理那些老的开关。</p><p>工作经验丰富一些了之后 (掉入坑里足够多次)，自然会对容易出现问题的部分有风险意识，这需要不断积累和总结。</p><h3 id="工作习惯"><a href="#工作习惯" class="headerlink" title="工作习惯"></a>工作习惯</h3><p>安全是第一位的，我们在工作中对敏感信息、公司资产要有一定的安全意识。完全按照公司的安全准则来工作，否则提桶跑路可能是小事，被追究法律责任就麻烦了。</p><p>任何线上操作都是危险的，如非必要不要进行手动的线上操作。操作的时候尽量慢，然后想清楚如果错了如何恢复。比如删东西尽量软删除，把要删的东西移动目录或者设置状态。</p><p>如果一个动作是有危险的，应该思考如何把这动作自动化，如果是必须有人给输入，那需要一定的流程来进行 Review 和批准。</p><p>微软还有个好实践就是所有的线上命令，如果是写入型的命令默认不能运行，需要手动地运行命令提升权限。</p><p>运维方面，如果有条件和时间尽量往 <a href="https://docs.microsoft.com/en-us/devops/deliver/what-is-infrastructure-as-code">Infrastructure as Code</a> 方向上靠，减少人工进行操作。</p><hr><p>写到最后，觉得写得不够系统和全面，这个题目范围太大，开发、运维、规范、安全等很多方面都涉及到，而且有很多细节问题。</p><p>一句话建议是：<strong>保持对工作的敬畏之心，特别是你的代码和工作会影响到很多用户时，即使一个小的错误也会造成大量损失</strong>。</p><p>先这样吧👻。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;想到这个题目是因为最近我们组出现了一个严重的线上问题，某小哥在进行线上操作的时候传错了一个参数。这种问题在程序员这行很常见，所谓常在河边走，哪有不湿鞋。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/images/ob_pasted-image-20220306101406.png&quot;
-      
-    
-    </summary>
-    
-    
-      <category term="编程" scheme="http://catcoding.me/tags/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="经验分享" scheme="http://catcoding.me/tags/%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/"/>
     
   </entry>
   

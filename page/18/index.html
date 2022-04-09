@@ -143,6 +143,38 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/p/gene-alg/">优化算法</a>
+      </h2>
+      <p class="article-date">November 20, 2010
+          
+              
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Algorithms" >
+    <span class="tag-code">Algorithms</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+          <p><h2>POJ 2714</h2><br>最近又在 POJ 上做题，碰上<a target="_blank" rel="noopener" href="http://poj.org/problem?id=2714">2714</a>，题意是：</p>
+<p>输入 N，和 N 个点 (x,y)，从原点开始一共可以走 N 步，每一步可以随机选择移动 (x,y)，或者 (-x,-y)。N 的范围为 1-100。<br>输出最远能走到离开原点多远的地方，输出其距离。</p>
+<p>分析一下，用迭代肯定可以，不过 2^N 的复杂度肯定太高了。每步有两种选择，其本质是求一个长度为 N 的 0、1 序列使得最后的值最大，为一个优化问 题。这里贪心不能求到最优解，稍微证明一下就能得出。如果不贪心，或者把贪心的范围扩大一点，求出每一步完后的凸包呢，然后再在这步的基础上继续扩展下一 些节点，再求凸包，继续如此，最后求得凸包中距离最远的。求凸包的复杂度位 O(nlgn)，即最后的复杂度为 O(N^2lgN)，是可以接受的。</p>
+<p><h2>随机搜索</h2><br>以前看过《集体智慧编程》这本书，这里有一章是说的优化。稍微回顾一下其中的几个算法。对于优化问题，首先得找到一个评价函数，对于其某个方案评价函数能给出某个值评估方案的优劣。至于返回值越大还是越好没有规定，对于特定的问题选择特定的评价函数。 随机搜索不是一种好的优化算法，但是却是后面的算法的根源。其基本思想是，我们随机长生一些解，看是否好，如果比当前更好，替换当前最优解，直到收敛了，或者猜测了足够的次数了。</p>
+<p><pre class="src"><span style="color: #00ffff;">do</span>{<br>   solution=rand_solution;<br>   value=eval(solution);<br>   <span style="color: #00ffff;">if</span>(value&gt;best)<br>       best=value;<br>   times++;<br>   <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">测试是否收敛<br></span>}<span style="color: #00ffff;">while</span>(times&lt;max_iter&amp;&amp;(!limit_flag));</pre><br>这种盲目的猜测虽然有机会在某一次猜中最优解，但是效率肯定不怎么好。随机算法还是有一些问题可以适用，比如素数判定，如果能保证错误率很低很低也是可行的算法。<br>
+        
+      </div>
+      
+          <a class="more" href="/p/gene-alg/">阅读全文</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/p/emacs-muse/">Emacs Muse 的使用</a>
       </h2>
       <p class="article-date">November 15, 2010
@@ -422,32 +454,6 @@ unix/linux 下面使用相当广泛，对于简单一些的程序，手写 makef
       </div>
       
           <a class="more" href="/p/zheteng/">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/programming-peal/">《编程珠玑》：代码优化</a>
-      </h2>
-      <p class="article-date">August 5, 2010
-          
-              
-  <a href="/tags#Books" >
-    <span class="tag-code">Books</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                编程珠玑里面代码优化这一章。问题1 函数,宏，内联代码#define max(a,b) ((a)&gt;(b)? (a):(b))float max(float a,float b){    return a&gt;b? a:b;}inline float max(float a,flo .....
-            
-        
-      </div>
-      
-          <a class="more" href="/p/programming-peal/">阅读全文</a>
       
     </article>
   

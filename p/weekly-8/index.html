@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+  
+    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+      
+          Valve，另一种公司 | 程序员的喵
+      
+  </title>
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+
+    
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+      <img src="/css/images/logo.png" width='400px' height='400px'/>
+  </div>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-77282254-1');
+</script>
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Valve，另一种公司</h2>
+  <p class="post-date">2022-04-09</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>我每周会分享一下这周看到的好内容，加上自己的一些个人理解和评注，这算是一种比较轻的持续输出方式，前三期为：</p>
+<p><a href="https://catcoding.me/p/weekly-5/">#5 财富的三个车道</a></p>
+<p><a href="https://catcoding.me/p/weekly-6/">#6 创造者和实施者</a></p>
+<p><a href="https://catcoding.me/p/weekly-7/">#7 无聊的技术栈</a></p>
+<p>这是第 8 期。</p>
+<h2 id="Faster-sorting-with-Go-generics"><a href="#Faster-sorting-with-Go-generics" class="headerlink" title="Faster sorting with Go generics"></a>Faster sorting with Go generics</h2><p>Eli Bendersky 的技术文章可以作为技术写作的典范，他写这个博客已经 20 年了。</p>
+<p>最近他写了一篇关于 Go 泛型的文章，通过排序算法来探索 Go 的泛型实现：</p>
+<p><a target="_blank" rel="noopener" href="https://eli.thegreenplace.net/2022/faster-sorting-with-go-generics/">Faster sorting with Go generics - Eli Bendersky’s website</a></p>
+<p>文中作者实现了两个版本的冒泡排序算法，第一个版本是通过 Interface 实现，第二个版本是用泛型实现的，通过 Benchmark 发现泛型版本要快 20%。</p>
+<p>Go 团队核心成员 Russ Cox 之前写到过：</p>
+<blockquote>
+<p>When a language decides on whether to have generics and how to implement them, it faces the following decision:</p>
+<ul>
+<li>do you want slow programmers, slow compilers and bloated binaries, or slow execution times?</li>
+</ul>
+</blockquote>
+<p>不支持泛型就是 slow programmers，但是目前主流的泛型实现各有各的问题：</p>
+<ul>
+<li><p><strong>Slow compilers and bloated binaries</strong> 是指 C++ 那种 full monomorphization 的方式，编译器为每一处实际的泛型函数调用生成对应的函数代码，导致编译时间过长。写过 C++ 的程序员都有些体会，我以前那个公司的代码量也不至于很大，但是编译一遍得差不多一个小时。</p>
+</li>
+<li><p><strong>Slow execution times</strong> 是指 Java 那种 dynamic dispatch，调用的时候会动态分发，导致运行时开销。</p>
+</li>
+</ul>
+<p>Go 团队采用了介于这两种之间的方法，像 int、string 这些原子型的类型就通过 full monomorphization 而其他复合类型使用 dynamic dispatch。</p>
+<p>作者继续通过性能分析，对比反汇编后的指令来看这两者之间的差别。基于以上原理，上面的例子程序因为要排序的是 string 所以用的是 full monomorphization，这样对比 interface 版本少了 method dispatch 的时间，而且利用了编译器的另一个叫做  <a target="_blank" rel="noopener" href="https://go101.org/article/bounds-check-elimination.html">bounds-check elimination</a> 的优化，这样 string 对比的时候没有 bound index 的检查。</p>
+<p>不过既然 Go 采用的是混合的方式，也可能某些情况使用泛型的代码比 Interface 更慢，参考这篇文章： <a target="_blank" rel="noopener" href="https://planetscale.com/blog/generics-can-make-your-go-code-slower">Generics can make your Go code slower</a></p>
+<p>看起来 Eli Bendersky 的这篇文章也写了三周左右！他写博文通常会有完整的示例程序，非常严谨。</p>
+<h2 id="180-天，每天做个简单网页"><a href="#180-天，每天做个简单网页" class="headerlink" title="180 天，每天做个简单网页"></a>180 天，每天做个简单网页</h2><p><a target="_blank" rel="noopener" href="https://blog.jenniferdewalt.com/post/62998082815/after-180-websites-im-ready-to-start-the-rest-of">After 180 Websites, I’m Ready to Start the Rest of My Life as a Coder</a></p>
+<p><a target="_blank" rel="noopener" href="https://jenniferdewalt.com/">Jennifer Dewalt</a></p>
+<p>这位女生学习编程的方式非常独特：</p>
+<ul>
+<li>连续 180 天</li>
+<li>每天都完成一个虽然简单但足够完整的网页，写对应的博文</li>
+<li>所有的代码都是开源在 Github 上</li>
+</ul>
+<p>她是学美术出身的，但是对互联网很感兴趣，所以想自己试着做一些东西来分享美术。我随便选了一些她完成的网页，感觉有些想法和设计不错。</p>
+<p>比如这个 <a target="_blank" rel="noopener" href="https://jenniferdewalt.com/window/page">窗户应用</a> 的效果，看起来非常逼真，而且关闭窗户的时候声音也会跟着变。</p>
+<p>在这个过程中她学到的最重要的是：</p>
+<blockquote>
+<p>“Start Small. Keep Building.”</p>
+</blockquote>
+<p>这个女生的学习编程的方法非常好！</p>
+<p>我虽然编程很多年，但是前端开发很少涉及，去年我想做一些东西所以自学了些前端技能。自学时我发现最有用的是这个 repo：<a target="_blank" rel="noopener" href="https://github.com/bradtraversy/vanillawebprojects">Mini projects built with HTML5, CSS &amp; JavaScript</a>  ，如果一个前端新手，能把这些例子都看一遍，基本就能上手了。</p>
+<p>有的人在学习编程的时候，会有一种学生思维，比如等我先学 HTML，然后再看完这本 css 的书，然后就可以继续学 JavaScript ，然后再学 Vue 之类的。</p>
+<p>这样很可能会磨灭学习兴趣，特别是对学习偏实际应用的前端技术而言，更好的学习路线就是想一个应用，做出来，然后再接着做更复杂的，在这个过程中边学边做，不懂的时候去补。<strong>我们要掌握的是能力，而不是知识。</strong></p>
+<h2 id="Valve-的员工手册"><a href="#Valve-的员工手册" class="headerlink" title="Valve 的员工手册"></a>Valve 的员工手册</h2><p><a target="_blank" rel="noopener" href="https://www.valvesoftware.com/en/publications">Publications - Valve Corporation</a></p>
+<p>这个员工手册有各种语言的版本，手册里面还配有漫画，写得也很简洁，非常用心。</p>
+<p>Valve 的这种企业几乎是独一无二的，这是他们的组织架构随着人数的变化演变：</p>
+<p><img src="/images/ob_pasted-image-20220408230715.png" alt=""></p>
+<p>可以看到里面完全是自由组织的一些项目组，员工自己决定做什么，加入哪个小组，手册里还说明了如何快速移动办公桌，这样你就可以随意搬到自己喜欢的项目组🤣。</p>
+<p>每个组都有一个组长一样的角色，但主要是承担沟通枢纽的职责，而不是纯粹的管理，Valve 认为完全按照等级制度来构建公司会有严重弊端：</p>
+<blockquote>
+<p>等级制度会通过招募更多适合这一制度的人从而实现自我强化，让更多的人来充当下属的角色。最后，原先为客户服务的单纯目的将逐渐被成员利用体制谋求私利的欲望和行动所取代和吞噬。</p>
+</blockquote>
+<p>员工的成长不是等级的攀升，而是能力和收入的提升，Valve 鼓励员工向各个方面多元发展自己的能力。</p>
+<p>这样看起来每个人都在掌握方向盘：</p>
+<p><img src="/images/ob_pasted-image-20220408231451.png" alt=""></p>
+<p>那这样组建公司的前提是什么？</p>
+<p>就是要招聘到<strong>能力强而又协作、沟通足够好的人</strong>，所以他们的第一任务是<strong>招聘</strong>。</p>
+<p>看完他们的员工手册后，引起了我的一些思考，Valve 看起来像是构建了一个乌托邦，居然还运行得如此好。</p>
+<p>等级制度的弊端我们很容易体会到，比如员工为了晋升可能会做一些短期就有成果的事，虽然员工晋升了，但是这些事对公司而言真的是有价值的么？比如我们看到，很多公司的中层管理肆意招聘，因为手下的人多往往意味着 visibility，这在很多快速扩张的公司并不少见，而当危机真正来临的时候，大量裁员就出现了。</p>
+<p>为什么世界上绝大部分公司是按照等级的架构来组织的，我想这几乎是刻在人类基因里的，我们可以看到在动物世界里，大猩猩、猴子、狼群等都有类似的组织形式。</p>
+<p>另一个原因大概是，大量的优秀而又善协作的人才太少了，等级制度可以认为是精英治理，最基层的员工做的活都是单一而细分的，这样员工都是可以随意替换。</p>
+<p>而且世界上大部分公司，所需要做的事大量是实施类工作，而 Valve 这样的游戏公司需要的是很多创意，公司性质的不同也决定了不同的组织模式。</p>
+<p>当然，世界上有 Valve 这样的公司真是太好了！我顺便看了看这篇文章： <a target="_blank" rel="noopener" href="https://www.a9vg.com/article/30432">关于 Steam、Valve 和 G 胖 你可能不知道的二三事</a></p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#写作" >
+    <span class="tag-code">写作</span>
+  </a>
+
+  <a href="/tags#周刊" >
+    <span class="tag-code">周刊</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/p/writing-for-joy/">
+        
+          写作 12 年，我的经验和技巧
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Faster-sorting-with-Go-generics"><span class="toc-nav-text">Faster sorting with Go generics</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#180-%E5%A4%A9%EF%BC%8C%E6%AF%8F%E5%A4%A9%E5%81%9A%E4%B8%AA%E7%AE%80%E5%8D%95%E7%BD%91%E9%A1%B5"><span class="toc-nav-text">180 天，每天做个简单网页</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Valve-%E7%9A%84%E5%91%98%E5%B7%A5%E6%89%8B%E5%86%8C"><span class="toc-nav-text">Valve 的员工手册</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/weekly-8/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script>
+    var hasLine = 'false';
+    async("//catcoding.me/js/highlight.min.js", function() {
+        $('figure pre').each(function(i, block) {
+            var figure = $(this).parents('figure');
+            if (hasLine === 'false') {
+                figure.find('.gutter').hide();
+            }
+            var lang = figure.attr('class').split(' ')[1] || 'code';
+            var codeHtml = $(this).html();
+            var codeTag = document.createElement('code');
+            codeTag.className = lang;
+            codeTag.innerHTML = codeHtml;
+            $(this).attr('class', '').empty().html(codeTag);
+            figure.attr('data-lang', lang.toUpperCase());
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
