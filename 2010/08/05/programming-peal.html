@@ -145,7 +145,10 @@
     <a href="javascript:;"></a>
   </div>
 </div>
+
+
 <main class="app-body flex-box">
+
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p><br>编程珠玑里面代码优化这一章。<br></p><br><h4>问题1 函数,宏，内联代码</h4><br><pre class="src"><span style="color: #ffd700;">#define</span> <span style="color: #daa520; font-weight: bold;">max</span>(<span style="color: #4eee94;">a</span>,<span style="color: #4eee94;">b</span>) ((a)&gt;(b)? (a):(b))<br><br><span style="color: #98f5ff;">float</span> <span style="color: #daa520; font-weight: bold;">max</span>(<span style="color: #98f5ff;">float</span> <span style="color: #4eee94;">a</span>,<span style="color: #98f5ff;">float</span> <span style="color: #4eee94;">b</span>)<br>{<br>    <span style="color: #00bfff; font-weight: bold;">return</span> a&gt;b? a:b;<br>}<br><span style="color: #00bfff; font-weight: bold;">inline</span> <span style="color: #98f5ff;">float</span> <span style="color: #daa520; font-weight: bold;">max</span>(<span style="color: #98f5ff;">float</span> <span style="color: #4eee94;">a</span>,<span style="color: #98f5ff;">float</span> <span style="color: #4eee94;">b</span>)<br>{<br>    <span style="color: #00bfff; font-weight: bold;">return</span> a&gt;b? a:b;<br>}<br></pre><br><p><br>上面这个函数到底哪一个快一些？测试了一下。宏效率是高一点，但是对于加上编译器优化以后基本没什么区别了。<br></p>
