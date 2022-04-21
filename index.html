@@ -143,6 +143,77 @@
   
     <article class="article-card">
       <h2 class="article-head" font-color="red">
+        <a href="/p/my-experience-learning-rust/">我如何学“会”了 Rust</a>
+      </h2>
+      <p class="article-date">April 21, 2022
+          
+              
+  <a href="/tags#编程" >
+    <span class="tag-code">编程</span>
+  </a>
+
+          
+      </p>
+      <div class="article-summary">
+        
+        
+            
+                <p>最近我打算把自己的小项目 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/obweb/">Obweb</a> 后端重新用 JavaScript 重写，之前这个项目的后端是用 Rust 写的。</p>
+<p>重写基于以下考虑：</p>
+<ul>
+<li>Rust 受众少，和 Obsidian 的用户群体重合的就更少了</li>
+<li>Rust 开发 Web 后端确实不便，虽然我也看过其他的 Rust Web Framework，但看起来都还不太成熟</li>
+<li>在使用 Warp 的过程中有很多坑，而且代码看起来异常复杂</li>
+<li>Web 开发这块 JavaScript 有很多现成的库</li>
+<li>这个项目比较简单，性能不敏感，使用 Nodejs 也不会有大的差异</li>
+<li>我想写写 JavaScript </li>
+</ul>
+<p>既然有这么多原因，当初为什么要用 Rust 写这东西？</p>
+<p>这就是我今天想谈的话题，聊聊自己如何跟进这门小众而、难学的编程语言，顺便谈谈这些年我对 Rust 的一些感受。</p>
+<p>我最早关注到 Rust 是 2014 年，当时离 1.0 还比较远，而且 Rust 很多东西都定型，但是核心的概念和设计理念已经定了，那就是不走 GC，通过编译器保证类型和内存安全，兼顾性能和安全。</p>
+<p>接触没多久后我试着实现一个简单的 scheme 解释器，所以我就开始写这个小项目 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/rust-scm">rust-scm</a> 。</p>
+<p>这种几百行的项目就能很好的上手一门编程语言，因为在这个过程中会涉及输入输出、递归、测试，抽象方式等。</p>
+<p>当时我觉得 Rust 用起来还行，但是有些部分很复杂，比如指针还有 Borrow checker，另外当然最大的问题是第三方库太少了。</p>
+<p>那时还有一个印度程序员 ckkashyap 开了一个坑，用 Rust 写一个 Unix-like 的操作系统 <a target="_blank" rel="noopener" href="https://github.com/ckkashyap/rustix">rustix: Unix kernel in rust</a> ，我看有点意思就跟着做了几个 PR。没多久他就弃坑了，转去搞一门更小众的编程语言 Nim，打算重新用 Nim 实现 xv6 <a target="_blank" rel="noopener" href="https://github.com/ckkashyap/nim-xv6">nim-xv6: Translate xv6 to nim</a> 。不过我们一直保持联系，有时候在 gtalk 上聊聊。他工作了大概有 20 年，非常喜欢折腾。后来他从印度移民去了微软，然后随后几年我也去了微软。最近他给我发邮件说又开了新坑 <a target="_blank" rel="noopener" href="https://github.com/lispware/minilisp">lispware/minilisp</a> ，一起来搞啊，哈哈，我们这些 Polyglot Programmer 就是这么容易见异思迁。</p>
+<p>后来几年我也没太关注 Rust 了，只是偶尔看看官方的一些文章之类的。在这期间国内的数据库公司 PingCap 发展起来了，国内也出现了一些 Rust 语言爱好者。</p>
+<p>中间这些年，我有时会在 <a target="_blank" rel="noopener" href="https://exercism.org">https://exercism.org</a> 上写写简单的练习，这些上面的编程题不是算法，而是一些典型的编程挑战，包含测试用例，非常适合用来练手在学的语言。</p>
+<p><img src="/images/ob_pasted-image-20220420174057.png" alt=""></p>
+<p>这个网站更好的地方在于里面有一些各个语言的爱好者当导师，你可以选择让他们 review 你的代码，这样就可以从经验丰富的导师那里学一门语言的最佳实践：</p>
+<p><img src="/images/ob_pasted-image-20220420174816.png" alt=""></p>
+<p>最近一年我重新关注 Rust，发现热度比之前好多了，Github 上不少项目都在用 Rust 写 (当然也可能是我自己之前关注了一些开发者，他们继续在折腾)，相关的生态和工具链也发展起来了，比如 rust-analyzer 加上 VSCode 的开发体验非常好，比如 Cargo 管理包很好用。我关注到 Rust 在区块链和 WebAssembly  两个领域发展得不错。</p>
+<p>回顾起来发现 2021 年我参与的几个项目都和 Rust 相关：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/chenyukang/gomoku">gomoku</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/containers/youki">containers/youki: A container runtime written in Rust</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/wasmerio/wasmer">wasmerio/wasmer: WebAssembly Runtime</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/chenyukang/obweb">obweb: ObWeb = Obsidian on Mobile + Flomo</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/second-state/dapr-wasm/">second-state/dapr-wasm</a></li>
+</ul>
+<p>可以说我学会了 Rust，可以自己写些小项目，能在 Rust 的中大型项目中做贡献，也对 Rust 本身做贡献，但是我对一些语言细节不太清楚，比如我做 <a target="_blank" rel="noopener" href="https://dtolnay.github.io/rust-quiz/">Rust Quiz</a> 发现好多都做不出来。事实上 Rust 因为走了一条独特的路线，导致语言本身也就比较复杂。</p>
+<p>我的学习方法就是时不时地开个坑练手，或者去参与到一些比较活跃的开源项目中。我买了一本中文版本的 Rust 书，但是感觉没时间和耐心看完。</p>
+<p>对于大部分开发任务，我们没有必要掌握一门编程语言的所有细节。好办法是花尽量少的时间去掌握日常开发所需要的 80%，而不是花 80 % 时间去掌握平时比较少见的 20%。我觉得对于 Rust 来说，20% 包括宏、Unsafe，还有一些复杂的 Pointer、Pin 之类的东西，这些需要了解的时候再去看看就行。</p>
+<p>前几天看到 geekplux 写的<a target="_blank" rel="noopener" href="https://geekplux.com/posts/how-i-learned-programming">我是如何学会编程的</a> 有类似的概括：</p>
+<blockquote>
+<p><strong>编程只是一个工具，学习一门技术的时候要快速掌握其最核心的部分，抛弃细枝末节，直接动手实现目标，中途遇到不会的再 Google 即可</strong>。这样才是高效快速的学习方式。</p>
+<p>学会这个思维的<strong>好处</strong>是，我后来学什么都特别快，自我总结出一套<a target="_blank" rel="noopener" href="https://geekplux.com/posts/learning-by-index">学习方法</a>。但<strong>坏处</strong>是知识点掌握的不牢靠，很多细节需要现学现卖，这在日常编程中好像没什么影响，随手 Google 随手写，但面试就很差了，毕竟面试是通过考察细碎的知识点来衡量你的知识面（我不苟同这个面试方式，但确实是现在最流行的）。</p>
+</blockquote>
+<p>学习新东西从来不是线性的，所以如果你看某个人给出了一个最佳的学习路径，比如看完某本书，然后再看另外一本更深入的，然后再买个什么课….</p>
+<p>这种路线也许可以参考，但也别太当真，学会了的标准肯定是能拿来应用。我认为绝大部分书没有官方的文档更有价值，大部分课程还没有直接从开源项目中学习更有效。</p>
+<p>所以我建议不管是新手还是老鸟，要学一门新技术就去看官方文档，然后自己做些小项目，如果还想继续深入就做一些更大的项目，或是参与到开源项目中去。</p>
+<p>通常是技术不难学，但是领域知识比较难学，因为要实践某些领域知识需要相关环境和工作内容。</p>
+<hr>
+<p>好了，以上乱扯写了一篇。2022 我打算好好学一下 JavaScript 😉</p>
+
+            
+        
+      </div>
+      
+          <a class="more" href="/p/my-experience-learning-rust/#footer">发表评论</a>
+      
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head" font-color="red">
         <a href="/p/weekly-9/">理想中的开发者</a>
       </h2>
       <p class="article-date">April 15, 2022
@@ -162,55 +233,19 @@
         
         
             
-                <p>我每周会分享一下这周看到的好内容，加上自己的一些个人理解和评注，这算是一种比较轻的持续输出方式，前三期为：</p>
-<p><a href="https://catcoding.me/p/weekly-6/">#6 创造者和实施者</a></p>
-<p><a href="https://catcoding.me/p/weekly-7/">#7 无聊的技术栈</a></p>
-<p><a href="https://catcoding.me/p/weekly-8/">#8 Valve，另一种公司</a></p>
-<p>这是第 9 期。</p>
-<h2 id="理想中的开发者状态"><a href="#理想中的开发者状态" class="headerlink" title="理想中的开发者状态"></a>理想中的开发者状态</h2><p>你理想中的开发者状态是什么样的？</p>
-<p>肯定不是无尽的会议和摧残的 996。</p>
-<p>看到这位日本开发者的视频之后，我觉得这就是理想中的开发者状态。</p>
-<p>这位独立开发者花了 6 年时间做了一个面向开发人员的 Markdown 编辑器，这里有个产品介绍视频：</p>
-<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=-qBavwqc_mY">How to take notes in Markdown efficiently with Inkdrop</a></p>
-<p>老实说，我已经找到了适合自己的 Markdown 编辑工具，但是我还是被他的视频深深吸引，忍不住试试他的产品。</p>
-<p>他的视频里都没有说一句话，都是通过键盘敲打声音带出字幕，画面从东京街头随拍一直切换到自己临时租的小屋，整整 40 分钟他就在那里默默地使用自己的编辑器，偶尔伸个懒腰或者抿口茶，背景音就是一些好听的键盘声和轻音乐。</p>
-<p><img src="/images/ob_pasted-image-20220415160810.png" alt=""></p>
-<p>这太独特了！我们可以通过视频感受到他对自己产品的执着、自豪、和品味。</p>
-<p>然后我接着看他其他的视频：</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=bSMZgXzC9AA">How to build a portfolio website using Next.js, Chakra UI, Framer Motion, and Three.js</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=GznmPACXBlY">How I built a software agency website with Next.js and Tailwind CSS</a></li>
-</ul>
-<p>里面有从头到尾展示如何做一个好看的主页，跑到深山老林依着山涧泉水给朋友做网站，我想这大概就是程序员界的李子柒吧，他拍出了我理想中的开发者状态。</p>
-<p>现实中独立开发者其实很苦，刚好我这周看到个 v2ex 上关于独立开发者的讨论，<a target="_blank" rel="noopener" href="https://www.v2ex.com/t/846708">个人开发者处境是否越来越困难了</a> ，大家在诉苦国内 Andriod 独立开发者要上线一个产品越来越难。</p>
-<p>这里还有些大环境的原因，<strong>这个年代已经是存量时代</strong>，几乎任何一个领域都存在多个竞品，用户似乎不缺少软件，问题是用户为什么要选择你的产品。</p>
-<p>而作为个人开发者除了能写代码，还需要会营销和宣传，比如上面那位日本开发者的手法，品位、情怀、故事，这些都是代码之外的事，但在这个存量年代这些就很重要。</p>
-<h2 id="Generative-Art"><a href="#Generative-Art" class="headerlink" title="Generative Art"></a>Generative Art</h2><p>这周我不经意间看了一些 Generative Art 相关的东西。</p>
-<p>在我的 Ob 里一直收藏着这个介绍傅里叶的网页地址：<a target="_blank" rel="noopener" href="https://www.jezzamon.com/fourier/zh-cn.html">傅里叶变换交互式入门</a> 。这个文章写得很好，已经被翻译成多国语言，非常生动地解释了傅里叶变换是如何工作的。网页上看到的动画都是通过纯 JavaScript 在 Canvas 上画出来，所有代码都是开源的。</p>
-<p>然后我又在 B 站看到 AnthonyFu 介绍如何实现梅花的动画，<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1wY411n7er?spm_id_from=333.337.search-card.all.click">用 Canvas 做梅花生长动画</a> 。</p>
-<p>我之前看他的个人主页时也注意到了背景里的那个图画效果。他这在视频里介绍这也是递归的一个实现，只是中间加了一些随机性，比如长度、角度上的随机。</p>
-<p>这两个都算是 Code Generative Art 的例子，我们通过这个关键词去搜能找到很多类似、好玩的东西。</p>
-<p>这篇文章 <a target="_blank" rel="noopener" href="https://aiartists.org/generative-art-design">Generative Art: 50 Best Examples, Tools &amp; Artists</a> 非常全面地介绍了这个主题。<br><img src="/images/ob_pasted-image-20220415150359.png" alt=""></p>
-<blockquote>
-<p>“What I enjoy the most is the complex and intricate results you can get from a set of simple rules.” </p>
-<p>— Anders Hoff</p>
-</blockquote>
-<p>想起来我在学校的时候也做过一些简陋的类似东西，比如我这个<a target="_blank" rel="noopener" href="https://github.com/chenyukang/Maze">迷宫生成器</a>:<br><img src="/images/ob_pasted-image-20220415150012.png" alt=""></p>
-<p>动画和可视化都能给观众深刻的印象，简单的规则加上随机性就能做出很多精妙的东西。</p>
-<h2 id="学习-Container"><a href="#学习-Container" class="headerlink" title="学习 Container"></a>学习 Container</h2><p><a target="_blank" rel="noopener" href="https://iximiuz.com/en/posts/container-learning-path/">Learning Containers From The Bottom Up</a></p>
-<p>作者写了很多 Container 相关的文章，质量都非常高。我对这些有兴趣，打算以后如果有时间也写写这个系列。</p>
-<p>如果要学习 Container 的原理和内部实现，不一定要盯着 runc，可以看看后来一个红帽员工用 C 实现的 <a target="_blank" rel="noopener" href="https://github.com/containers/crun">crun，A fast and lightweight fully featured OCI runtime and C library for running containers</a> 。</p>
-<p>我参与的这个项目：Rust 实现容器 <a target="_blank" rel="noopener" href="https://github.com/containers/youki">containers/youki</a>，里面很多都是参考的 crun 的。C 代码其实比 Go、Rust 都精简。</p>
-<hr>
-<p>这就是本周的分享了。</p>
-<p>我本来打算这周离开苏州回老家待着，结果因为疫情的变化，我不敢去车站了，所以继续宅在苏州等等看吧。</p>
-<p>大家保重！😷</p>
-
+                我每周会分享一下这周看到的好内容，加上自己的一些个人理解和评注，这算是一种比较轻的持续输出方式，前三期为：
+#6 创造者和实施者
+#7 无聊的技术栈
+#8 Valve，另一种公司
+这是第 9 期。
+理想中的开发者状态你理想中的开发者状态是什么样的？
+肯定不是无尽的会议和摧残的 996。
+ .....
             
         
       </div>
       
-          <a class="more" href="/p/weekly-9/#footer">发表评论</a>
+          <a class="more" href="/p/weekly-9/">阅读全文</a>
       
     </article>
   
@@ -480,42 +515,6 @@ Donald Knuth: Algorithms, Complexity, and The Art of Computer Programming
       </div>
       
           <a class="more" href="/p/weekly-6/">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/diversity/">远离内卷和无趣，我选择多元</a>
-      </h2>
-      <p class="article-date">March 21, 2022
-          
-              
-  <a href="/tags#写作" >
-    <span class="tag-code">写作</span>
-  </a>
-
-  <a href="/tags#成长" >
-    <span class="tag-code">成长</span>
-  </a>
-
-  <a href="/tags#职场" >
-    <span class="tag-code">职场</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                罗素曾写到：Diversity is essential to happiness，王小波在《思维的乐趣》中引用了这句话，翻译为 参差多态，乃是幸福的本源。
-
-下面结合我自己的一些经验来谈谈，为什么我认为大家应该去尝试拥抱多元。这里的多元指两个方面，组织里的多元，和个人选择、生活里的多元 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/p/diversity/">阅读全文</a>
       
     </article>
   
