@@ -61,7 +61,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<meta name="generator" content="Hexo 5.4.1"></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
   <body>
     <header class="header fixed-header">
@@ -158,7 +158,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要 unset 当前 shell 的环境变量等，</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="language-bash">!/usr/bin/env zsh</span><br><br>if [ -z $http_proxy ]; then<br>    echo &quot;not using proxy, set it now ... &quot;;<br>    export http_proxy=&quot;http://127.0.0.1:1087&quot;;<br>    export https_proxy=&quot;https://127.0.0.1:1087&quot;;<br>    echo $http_proxy;<br>else<br>    echo &quot;using proxy now, unset it now ...&quot;;<br>    unset http_proxy;<br>    unset https_proxy;<br>    echo $http_proxy;<br>fi<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">!/usr/bin/env zsh</span><br><br>if [ -z $http_proxy ]; then<br>    echo &quot;not using proxy, set it now ... &quot;;<br>    export http_proxy=&quot;http://127.0.0.1:1087&quot;;<br>    export https_proxy=&quot;https://127.0.0.1:1087&quot;;<br>    echo $http_proxy;<br>else<br>    echo &quot;using proxy now, unset it now ...&quot;;<br>    unset http_proxy;<br>    unset https_proxy;<br>    echo $http_proxy;<br>fi<br><br></code></pre></td></tr></table></figure>
 <p>这时候需要执行 <code>. ./proxy_toggle.sh</code> 或者 <code>source ./proxy_toggle.sh</code>。</p>
 <p><code>.</code> (a period) is a <a target="_blank" rel="noopener" href="http://www.gnu.org/software/bash/manual/bashref.html#Bourne-Shell-Builtins">bash shell built-in command</a> that executes the commands from a file passed as argument, in the current shell. <code>source</code> is a synonym for <code>.</code></p>
 <p>From Bash man page:</p>

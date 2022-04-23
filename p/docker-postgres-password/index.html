@@ -61,7 +61,7 @@
   gtag('config', 'UA-77282254-1');
 </script>
 
-<meta name="generator" content="Hexo 5.4.1"></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
   <body>
     <header class="header fixed-header">
@@ -162,7 +162,7 @@
 <p>admin 的用户名和密码是可以在 docker-compose.yml 里设置的，通常我们可以配置为： </p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">postgresql:</span><br>  <span class="hljs-attr">image:</span> <span class="hljs-string">postgres:latest</span><br>  <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;5434:5432&quot;</span><br>  <span class="hljs-attr">volumes:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">./data/pgsql:/var/lib/postgresql/data</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">./initialize/pgsql:/docker-entrypoint-initdb.d</span><br>  <span class="hljs-attr">environment:</span><br>    <span class="hljs-attr">POSTGRES_USER:</span> <span class="hljs-string">postgres</span><br>    <span class="hljs-attr">POSTGRES_DB:</span> <span class="hljs-string">postgres</span><br>  <span class="hljs-attr">secrets:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">pg_superuser_password</span><br></code></pre></td></tr></table></figure>
 <p>某个用户的密码可以在<code>./initialize/pgsql</code>目录的脚本里设置：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="language-bash">!/bin/bash</span><br>set -e<br><br>psql -v ON_ERROR_STOP=1 --username &quot;postgres&quot; &lt;&lt;-EOSQL<br>  CREATE USER user WITH PASSWORD &#x27;the-password&#x27;;<br>  ALTER USER user CREATEDB;<br>EOSQL<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">!/bin/bash</span><br>set -e<br><br>psql -v ON_ERROR_STOP=1 --username &quot;postgres&quot; &lt;&lt;-EOSQL<br>  CREATE USER user WITH PASSWORD &#x27;the-password&#x27;;<br>  ALTER USER user CREATEDB;<br>EOSQL<br></code></pre></td></tr></table></figure>
 <p>只是今天碰巧想修改一下这个密码，所以就把这个脚本里的密码修改了，然后执行命令： </p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">docker-compose up --build -d --force-recreate<br></code></pre></td></tr></table></figure>
 <p>而后就一直出现上面的用户授权失败。</p>
