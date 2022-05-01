@@ -246,16 +246,10 @@
       <div class="article-summary">
         
         
-          <p><h4>时间啊时间</h4></p>
-<p class="first">写论文头大，翻资料找到一个以前写的小东西。有段时间在实验室，一坐就是一整天，经常在网上找找资料，找着找着就从一个链接点到另一链接，从豆瓣到 Hoop，再弹出个 QQ，一整个上午就过去了。天天对这显示器，于是就想我整天呆在这大部分时间在干什么了，要是有个记录就好了。就想写这么一个小程序，来记录我一天在电脑前花的时间分布。</p>
-
-<p><h4>方法</h4></p>
-<p class="first">怎么实现呢。要知道现在在干什么，就应该要知道我现在在活动程序，编辑或者鼠标点击的。如何知道现在活动的程序名，如果能获得当前活动的程序的可执行文件的路径就比较好办了。于是在网上找了找，在 Windows 下可以这样实现。</p>
-
-<p><pre class="src"><span style="color: #98f5ff;">CString</span> <span style="color: #daa520; font-weight: bold;">getProcPath</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">PID</span>)<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回 pid 进程的可执行程序名称<br></span>{<br>        <span style="color: #98f5ff;">HANDLE</span> <span style="color: #4eee94;">hModule</span>;<br>        <span style="color: #98f5ff;">MODULEENTRY32</span>* <span style="color: #4eee94;">minfo</span>=<span style="color: #00bfff; font-weight: bold;">new</span> <span style="color: #98f5ff;">MODULEENTRY32</span>;<br>        minfo-&gt;dwSize=<span style="color: #00bfff; font-weight: bold;">sizeof</span>(MODULEENTRY32);<br>        hModule=CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,PID);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">对系统进程进行拍照</p>
-<p></span>        Module32First(hModule, minfo);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回与进程相关的第一个模块信息<br></span><br>        <span style="color: #98f5ff;">CString</span> <span style="color: #4eee94;">str</span>;<br>        str=CString(minfo-&gt;szExePath);<br>        CloseHandle(hModule);<br>        <span style="color: #00bfff; font-weight: bold;">if</span>(minfo) <span style="color: #00bfff; font-weight: bold;">delete</span> minfo;</p>
-<pre><code>    &lt;span style=&quot;color: #00bfff; font-weight: bold;&quot;&gt;return&lt;/span&gt; str;
-</code></pre><p>}</pre><br>
+            
+                时间啊时间
+写论文头大，翻资料找到一个以前写的小东西。有段时间在实验室，一坐就是一整天，经常在网上找找资料，找着找着就从一个链接点到另一链接，从豆瓣到 Hoop，再弹出个 QQ，一整个上午就过去了。天天对这显示器，于是就想我整天呆在这大部分时间在干什么了，要是有个记录就好了。就想写这么一 .....
+            
         
       </div>
       
