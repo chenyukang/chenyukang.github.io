@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          Linux 当前 shell 执行命令 | 程序员的喵
-      
+    
+    Linux 当前 shell 执行命令 |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -158,11 +165,39 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要 unset 当前 shell 的环境变量等，</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">!/usr/bin/env zsh</span><br><br>if [ -z $http_proxy ]; then<br>    echo &quot;not using proxy, set it now ... &quot;;<br>    export http_proxy=&quot;http://127.0.0.1:1087&quot;;<br>    export https_proxy=&quot;https://127.0.0.1:1087&quot;;<br>    echo $http_proxy;<br>else<br>    echo &quot;using proxy now, unset it now ...&quot;;<br>    unset http_proxy;<br>    unset https_proxy;<br>    echo $http_proxy;<br>fi<br><br></code></pre></td></tr></table></figure>
+<pre class="language-shell" data-language="shell"><code class="language-shell"><span class="token shebang important">#!/usr/bin/env zsh</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">[</span> -z <span class="token variable">$http_proxy</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"not using proxy, set it now ... "</span><span class="token punctuation">;</span>
+    <span class="token builtin class-name">export</span> <span class="token assign-left variable">http_proxy</span><span class="token operator">=</span><span class="token string">"http://127.0.0.1:1087"</span><span class="token punctuation">;</span>
+    <span class="token builtin class-name">export</span> <span class="token assign-left variable">https_proxy</span><span class="token operator">=</span><span class="token string">"https://127.0.0.1:1087"</span><span class="token punctuation">;</span>
+    <span class="token builtin class-name">echo</span> <span class="token variable">$http_proxy</span><span class="token punctuation">;</span>
+<span class="token keyword">else</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"using proxy now, unset it now ..."</span><span class="token punctuation">;</span>
+    <span class="token builtin class-name">unset</span> http_proxy<span class="token punctuation">;</span>
+    <span class="token builtin class-name">unset</span> https_proxy<span class="token punctuation">;</span>
+    <span class="token builtin class-name">echo</span> <span class="token variable">$http_proxy</span><span class="token punctuation">;</span>
+<span class="token keyword">fi</span>
+</code></pre>
 <p>这时候需要执行 <code>. ./proxy_toggle.sh</code> 或者 <code>source ./proxy_toggle.sh</code>。</p>
 <p><code>.</code> (a period) is a <a target="_blank" rel="noopener" href="http://www.gnu.org/software/bash/manual/bashref.html#Bourne-Shell-Builtins">bash shell built-in command</a> that executes the commands from a file passed as argument, in the current shell. <code>source</code> is a synonym for <code>.</code></p>
 <p>From Bash man page:</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown">. filename [arguments]<br>source filename [arguments]<br><span class="hljs-code">       Read  and  execute  commands  from filename in the current shell</span><br><span class="hljs-code">       environment and return the exit status of the last command  exe‐</span><br><span class="hljs-code">       cuted from filename.  If filename does not contain a slash, file</span><br><span class="hljs-code">       names in PATH are used to find the  directory  containing  file‐</span><br><span class="hljs-code">       name.   The  file  searched  for in PATH need not be executable.</span><br><span class="hljs-code">       When bash is  not  in  posix  mode,  the  current  directory  is</span><br><span class="hljs-code">       searched  if no file is found in PATH.  If the sourcepath option</span><br><span class="hljs-code">       to the shopt builtin command is turned  off,  the  PATH  is  not</span><br><span class="hljs-code">       searched.   If any arguments are supplied, they become the posi‐</span><br><span class="hljs-code">       tional parameters when  filename  is  executed.   Otherwise  the</span><br><span class="hljs-code">       positional  parameters  are unchanged.  The return status is the</span><br><span class="hljs-code">       status of the last command exited within the  script  (0  if  no</span><br><span class="hljs-code">       commands  are  executed),  and false if filename is not found or</span><br><span class="hljs-code">       cannot be read.</span><br></code></pre></td></tr></table></figure>
+<pre class="language-markdown" data-language="markdown"><code class="language-markdown">. filename [arguments]
+source filename [arguments]
+       Read  and  execute  commands  from filename in the current shell
+       environment and return the exit status of the last command  exe‐
+       cuted from filename.  If filename does not contain a slash, file
+       names in PATH are used to find the  directory  containing  file‐
+       name.   The  file  searched  for in PATH need not be executable.
+       When bash is  not  in  posix  mode,  the  current  directory  is
+       searched  if no file is found in PATH.  If the sourcepath option
+       to the shopt builtin command is turned  off,  the  PATH  is  not
+       searched.   If any arguments are supplied, they become the posi‐
+       tional parameters when  filename  is  executed.   Otherwise  the
+       positional  parameters  are unchanged.  The return status is the
+       status of the last command exited within the  script  (0  if  no
+       commands  are  executed),  and false if filename is not found or
+       cannot be read.</code></pre>
 </section>
 
     <p></p>

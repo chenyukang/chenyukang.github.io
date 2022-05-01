@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          Ruby&#39;s Block and Proc | 程序员的喵
-      
+    
+    Ruby&#39;s Block and Proc |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -158,50 +165,38 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><h3 id="Callable-objects"><a href="#Callable-objects" class="headerlink" title="Callable objects"></a>Callable objects</h3><p>在 Ruby 当中一切都是对象，但是有一个例外，那就是 block。Block 和 Proc 类似，但是还是有稍有差别的，Block 更常用一些。最近在看《Metaprogramming Ruby》，在这节中有个例子是这样的。</p>
-<pre class="prettyprint ruby">
-require 'highline'
-hl = HighLine.new
-friends = hl.ask("Friends?" , lambda {|s| s.split(',' ) })
-puts "You're friends with: #{friends.inspect}"
+<pre class="language-ruby" data-language="ruby"><code class="language-ruby"><span class="token keyword">require</span> <span class="token string-literal"><span class="token string">'highline'</span></span>
+hl <span class="token operator">=</span> <span class="token class-name">HighLine</span><span class="token punctuation">.</span><span class="token keyword">new</span>
+friends <span class="token operator">=</span> hl<span class="token punctuation">.</span>ask<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"Friends?"</span></span> <span class="token punctuation">,</span> lambda <span class="token punctuation">&#123;</span><span class="token operator">|</span>s<span class="token operator">|</span> s<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">','</span></span> <span class="token punctuation">)</span> <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+puts <span class="token string-literal"><span class="token string">"You're friends with: </span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">friends<span class="token punctuation">.</span>inspect</span><span class="token delimiter punctuation">&#125;</span></span><span class="token string">"</span></span>
 ⇒
-Friends?
-Bill,Mirella,Luca
-You're friends with: ["Bill", "Mirella", "Luca"]
-</pre>
-
+Friends<span class="token operator">?</span>
+Bill<span class="token punctuation">,</span>Mirella<span class="token punctuation">,</span>Luca
+You're friends with<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string-literal"><span class="token string">"Bill"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"Mirella"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"Luca"</span></span><span class="token punctuation">]</span></code></pre>
 <p>这里看起来 hl.ask 把 Proc 当作参数来传递，而不是接受了一个 block，接受 Block 是另外一种使用模式：</p>
-<pre class="prettyprint ruby">
-require 'highline'
-hl = HighLine.new
-new_pass = hl.ask("password: ") { |prompt| prompt.echo = false }
-</pre>
-
+<pre class="language-ruby" data-language="ruby"><code class="language-ruby"><span class="token keyword">require</span> <span class="token string-literal"><span class="token string">'highline'</span></span>
+hl <span class="token operator">=</span> <span class="token class-name">HighLine</span><span class="token punctuation">.</span><span class="token keyword">new</span>
+new_pass <span class="token operator">=</span> hl<span class="token punctuation">.</span>ask<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"password: "</span></span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token operator">|</span>prompt<span class="token operator">|</span> prompt<span class="token punctuation">.</span>echo <span class="token operator">=</span> <span class="token boolean">false</span> <span class="token punctuation">&#125;</span></code></pre>
 <p>在 highline 代码可以看到相应的处理方式，第一种方式 lambda 构造成的 Proc 其实传递给了 answer_type，而 yield 来处理 block。</p>
-<pre class="prettyprint ruby">
-    def initialize( question, answer_type )
-      # initialize instance data
-      @question    = question
-      @answer_type = answer_type
+<pre class="language-ruby" data-language="ruby"><code class="language-ruby"><span class="token keyword">def</span> <span class="token method-definition"><span class="token function">initialize</span></span><span class="token punctuation">(</span> question<span class="token punctuation">,</span> answer_type <span class="token punctuation">)</span>
+  <span class="token comment"># initialize instance data</span>
+  <span class="token variable">@question</span>    <span class="token operator">=</span> question
+  <span class="token variable">@answer_type</span> <span class="token operator">=</span> answer_type
 
-      # allow block to override settings
-      yield self if block_given?
-</pre>
-
+  <span class="token comment"># allow block to override settings</span>
+  <span class="token keyword">yield</span> <span class="token keyword">self</span> <span class="token keyword">if</span> block_given<span class="token operator">?</span></code></pre>
 <h3 id="Proc-Lambda-Block"><a href="#Proc-Lambda-Block" class="headerlink" title="Proc, Lambda, Block"></a>Proc, Lambda, Block</h3><p>有三种方式转化 Block 为 Proc, Proc.new、Lambda、&amp;Operator。但是在使用过程中 Block 还是比 Proc 要常见，在给一个函数传递这种 callable objcts 的时候，可以隐式或者显示传递，像这样：</p>
-<pre class="prettyprint ruby">
-def foo(*args)
- yield(args.join(' '))
-end
+<pre class="language-ruby" data-language="ruby"><code class="language-ruby"><span class="token keyword">def</span> <span class="token method-definition"><span class="token function">foo</span></span><span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">)</span>
+ <span class="token keyword">yield</span><span class="token punctuation">(</span>args<span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">' '</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">end</span>
 
-foo('Yukang', 'Chen'){|name| puts "Hello #{name}"} # => "Hello Yukang Chen"
+foo<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">'Yukang'</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">'Chen'</span></span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token operator">|</span>name<span class="token operator">|</span> puts <span class="token string-literal"><span class="token string">"Hello </span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">name</span><span class="token delimiter punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">&#125;</span> <span class="token comment"># => "Hello Yukang Chen"</span>
 
-def foo(*args, &blk)
- blk.call(args.join(' '))
-end
+<span class="token keyword">def</span> <span class="token method-definition"><span class="token function">foo</span></span><span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">&amp;</span>blk<span class="token punctuation">)</span>
+ blk<span class="token punctuation">.</span>call<span class="token punctuation">(</span>args<span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">' '</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">end</span>
 
-foo('Yukang', 'Chen'){|name| puts "Hello #{name}"} # => "Hello Yukang Chen"
-</pre>
-
+foo<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">'Yukang'</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">'Chen'</span></span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token operator">|</span>name<span class="token operator">|</span> puts <span class="token string-literal"><span class="token string">"Hello </span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">name</span><span class="token delimiter punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">&#125;</span> <span class="token comment"># => "Hello Yukang Chen"</span></code></pre>
 <p>隐式传递要比显式传递 performance 要好一些。这很早就有<a target="_blank" rel="noopener" href="http://www.ruby-forum.com/topic/71221">讨论</a>，具体原因是根据 Ruby 的实现一个 Block 在 yield 的时候并没有转换为 Proc 或者其他对象，所以少了一些开销。Ruby 中的函数块是高阶函数的一种特殊形式的语法，Matz 在设计块的时候考虑到： (1) 在高阶函数中，这种只有一个函数参数非常常见，在实际使用中几乎没有必要在一个地方使用多个函数参数，(2) 外观和形式上更直观，Enumerable 利用块写的代码简洁易懂。</p>
 </section>
 

@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="在程序退出的时候获取栈信息" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          获取挂掉程序的栈信息 | 程序员的喵
-      
+    
+    获取挂掉程序的栈信息 |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -159,17 +166,63 @@
   <article class="post-article">
     <section class="markdown-content"><p>在程序挂掉的时候最好还是留点有用的遗言，特别是对于一些比较难重现的 Bug，也许这些信息会成为解决问题的关键。</p>
 <p>下面这个技巧可以让程挂掉的时候打印出来栈信息。这个办法来自<a target="_blank" rel="noopener" href="http://neugierig.org/software/blog/2012/06/backtraces.html">这里</a>, 我觉得把 SIGABRT、SIGBUS 信号加进去也挺好的，在此做了点修改。曾经尝也试过 glibc 的 backtrace 函数，，但是给的信息不全 (没有行号)，对此做得最好的还是 gdb。 在终端可以用 gdb 获取某个进程的当前栈：</p>
-<pre><code>$ gdb -p 5595 -batch -ex bt
-0xb7fb4410 in __kernel_vsyscall ()
-#0  0xb7fb4410 in __kernel_vsyscall ()
-#1  0xb7dc2d50 in nanosleep () from /lib/tls/i686/cmov/libc.so.6
-#2  0xb7dc2b87 in sleep () from /lib/tls/i686/cmov/libc.so.6
-#3  0x0804874f in main () at print_stack.cc:64
-</code></pre><p>那么一个好的办法就是在程序开始的时候设置好信号，绑定 SIGSEGV 和 SIGABRT 到 DumpBackTrace() 函数，DumpBackTrace 函数 fork 出来一个新进程，运行上面的命令来获取调用栈。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;assert.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">DumpBacktrace</span><span class="hljs-params">(<span class="hljs-type">int</span>)</span> </span>&#123;<br>    <span class="hljs-type">pid_t</span> dying_pid = <span class="hljs-built_in">getpid</span>();<br>    <span class="hljs-type">pid_t</span> child_pid = fork();<br>    <span class="hljs-keyword">if</span> (child_pid &lt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;fork() while collecting backtrace:&quot;</span>);<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (child_pid == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-type">char</span> buf[<span class="hljs-number">1024</span>];<br>        <span class="hljs-built_in">sprintf</span>(buf, <span class="hljs-string">&quot;gdb -p %d -batch -ex bt 2&gt;/dev/null | &quot;</span><br>                <span class="hljs-string">&quot;sed &#x27;0,/&lt;signal handler/d&#x27;&quot;</span>, dying_pid);<br>        <span class="hljs-type">const</span> <span class="hljs-type">char</span>* argv[] = &#123;<span class="hljs-string">&quot;sh&quot;</span>, <span class="hljs-string">&quot;-c&quot;</span>, buf, <span class="hljs-literal">NULL</span>&#125;;<br>        <span class="hljs-built_in">execve</span>(<span class="hljs-string">&quot;/bin/sh&quot;</span>, (<span class="hljs-type">char</span>**)argv, <span class="hljs-literal">NULL</span>);<br>        _exit(<span class="hljs-number">1</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-built_in">waitpid</span>(child_pid, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>);<br>    &#125;<br>    _exit(<span class="hljs-number">1</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">BacktraceOnSegv</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">sigaction</span> action = &#123;&#125;;<br>    action.sa_handler = DumpBacktrace;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">sigaction</span>(SIGSEGV, &amp;action, <span class="hljs-literal">NULL</span>) &lt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;sigaction(SEGV)&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">sigaction</span>(SIGABRT, &amp;action, <span class="hljs-literal">NULL</span>) &lt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">perror</span>(<span class="hljs-string">&quot;sigaction(SEGV)&quot;</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">//assert(0);</span><br>    <span class="hljs-type">int</span>* p = <span class="hljs-number">0</span>;<br>    *p = <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">BacktraceOnSegv</span>();<br>    <span class="hljs-built_in">test</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ gdb -p <span class="token number">5595</span> -batch -ex bt
+0xb7fb4410 <span class="token keyword">in</span> __kernel_vsyscall <span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment">#0  0xb7fb4410 in __kernel_vsyscall ()</span>
+<span class="token comment">#1  0xb7dc2d50 in nanosleep () from /lib/tls/i686/cmov/libc.so.6</span>
+<span class="token comment">#2  0xb7dc2b87 in sleep () from /lib/tls/i686/cmov/libc.so.6</span>
+<span class="token comment">#3  0x0804874f in main () at print_stack.cc:64</span></code></pre>
+<p>那么一个好的办法就是在程序开始的时候设置好信号，绑定 SIGSEGV 和 SIGABRT 到 DumpBackTrace() 函数，DumpBackTrace 函数 fork 出来一个新进程，运行上面的命令来获取调用栈。</p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;signal.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sys/types.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sys/wait.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;assert.h></span></span>
+
+<span class="token keyword">void</span> <span class="token function">DumpBacktrace</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    pid_t dying_pid <span class="token operator">=</span> <span class="token function">getpid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    pid_t child_pid <span class="token operator">=</span> <span class="token function">fork</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>child_pid <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">perror</span><span class="token punctuation">(</span><span class="token string">"fork() while collecting backtrace:"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>child_pid <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">char</span> buf<span class="token punctuation">[</span><span class="token number">1024</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token function">sprintf</span><span class="token punctuation">(</span>buf<span class="token punctuation">,</span> <span class="token string">"gdb -p %d -batch -ex bt 2>/dev/null | "</span>
+                <span class="token string">"sed '0,/&lt;signal handler/d'"</span><span class="token punctuation">,</span> dying_pid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> argv<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">"sh"</span><span class="token punctuation">,</span> <span class="token string">"-c"</span><span class="token punctuation">,</span> buf<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+        <span class="token function">execve</span><span class="token punctuation">(</span><span class="token string">"/bin/sh"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span><span class="token operator">*</span><span class="token punctuation">)</span>argv<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">_exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">waitpid</span><span class="token punctuation">(</span>child_pid<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token function">_exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token function">BacktraceOnSegv</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">struct</span> <span class="token class-name">sigaction</span> action <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+    action<span class="token punctuation">.</span>sa_handler <span class="token operator">=</span> DumpBacktrace<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">sigaction</span><span class="token punctuation">(</span>SIGSEGV<span class="token punctuation">,</span> <span class="token operator">&amp;</span>action<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">perror</span><span class="token punctuation">(</span><span class="token string">"sigaction(SEGV)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">sigaction</span><span class="token punctuation">(</span>SIGABRT<span class="token punctuation">,</span> <span class="token operator">&amp;</span>action<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token function">perror</span><span class="token punctuation">(</span><span class="token string">"sigaction(SEGV)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">//assert(0);</span>
+    <span class="token keyword">int</span><span class="token operator">*</span> p <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token operator">*</span>p <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">BacktraceOnSegv</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
 <p>另外前段时间看到这篇文章<a target="_blank" rel="noopener" href="http://www.runswift.ly/solving-bugs.html">Solving vs. Fixing</a>写得不错，在面对一个 bug 的时候，先不要急于立马上 gdb 调试，根据现有的信息好好思考为什么会出现这个情况。<br>Reddit 上的一个得分最高的回复：</p>
-<pre><code>The ability to reason about code is probably the most important skill. 
-But it is sadly rare, and doesn&apos;t seem to be taught much, if at all.
+<pre class="language-none"><code class="language-none">The ability to reason about code is probably the most important skill. 
+But it is sadly rare, and doesn&#39;t seem to be taught much, if at all.
 Some things are simple, others take some more thought:
 
 * Under what conditions will this branch get taken?
@@ -184,9 +237,8 @@ The most talented engineer I know, when presented with a bug, does nothing but
 read the code and think about the code and how it could fail. 
 Most of the time,  he just figures it out in his head and fixes it. 
 Sometimes he will insert some strategic printfs and narrow it down like that. 
-I don&apos;t think I have ever seen him use a debugger, 
-even on the most complex of problems.
-</code></pre></section>
+I don&#39;t think I have ever seen him use a debugger, 
+even on the most complex of problems.</code></pre></section>
 
     <p></p>
     <!-- 二维码 START -->

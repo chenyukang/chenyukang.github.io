@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          拓扑排序 | 程序员的喵
-      
+    
+    拓扑排序 |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -162,7 +169,79 @@
 <h2 id="现实中的问题"><a href="#现实中的问题" class="headerlink" title="现实中的问题"></a>现实中的问题</h2><p>首先来看现实中哪些问题需要拓扑排序的，课程排序，编译依赖问题，类似的凡是涉及到相关顺序的时间安排，比如 Rails 里面的初始化调用了库<a target="_blank" rel="noopener" href="http://ruby-doc.org/stdlib-2.0/libdoc/tsort/rdoc/TSort.html">Tsort</a>来进行排序。Unix 中有个命令也叫<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Tsort_(Unix">tsort</a>)，在有的 makefile 里面还直接使用了这个命令来解决依赖问题。</p>
 <h2 id="O-V-E-的算法"><a href="#O-V-E-的算法" class="headerlink" title="O(V+E) 的算法"></a>O(V+E) 的算法</h2><p><img src="/images/topologicalsort.png" alt="topologicalsort" class="img-center" width="250" height="250"/></p>
 <p>拓扑排序的基本算法是用 DFS，我们希望把有出度的点尽量排在前面，所以这里需要注意和 DFS 的区别。比如上面图中的一个 DFS 访问顺序是: 5 2 3 1 0 4，但是这不是一个拓扑排序，4 需要排在 0 的前面，5, 4, 0, 2, 3, 1。<br>拓扑排序中需要等迭代完节点的连接邻点后再把当前点压入栈。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;list&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stack&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Graph</span> &#123;<br>    <span class="hljs-type">int</span> V;<br>    list&lt;<span class="hljs-type">int</span>&gt;* adj;<br>    <span class="hljs-type">void</span> _topological_sort(<span class="hljs-type">int</span> v, <span class="hljs-type">bool</span> visited[], stack&lt;<span class="hljs-type">int</span>&gt;&amp; stack);<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">Graph</span>(<span class="hljs-type">int</span> v);<br>    ~<span class="hljs-built_in">Graph</span>();<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">addEdge</span><span class="hljs-params">(<span class="hljs-type">int</span> v, <span class="hljs-type">int</span> w)</span></span>;<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Topological_sort</span><span class="hljs-params">()</span></span>;<br>&#125;;<br><br>Graph::<span class="hljs-built_in">Graph</span>(<span class="hljs-type">int</span> v):<span class="hljs-built_in">V</span>(v) &#123;<br>    adj = <span class="hljs-keyword">new</span> list&lt;<span class="hljs-type">int</span>&gt;[V];<br>&#125;<br><br>Graph::~<span class="hljs-built_in">Graph</span>() &#123;<br>    <span class="hljs-keyword">delete</span> [] adj;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Graph::addEdge</span><span class="hljs-params">(<span class="hljs-type">int</span> v, <span class="hljs-type">int</span> w)</span> </span>&#123;<br>    adj[v].<span class="hljs-built_in">push_back</span>(w);<br>&#125;<br><br><span class="hljs-type">void</span> Graph::_topological_sort(<span class="hljs-type">int</span> v, <span class="hljs-type">bool</span> visited[], stack&lt;<span class="hljs-type">int</span>&gt;&amp; stack) &#123;<br>    visited[v] = <span class="hljs-literal">true</span>;<br>    <span class="hljs-keyword">for</span>(list&lt;<span class="hljs-type">int</span>&gt;::iterator it = adj[v].<span class="hljs-built_in">begin</span>(); it != adj[v].<span class="hljs-built_in">end</span>(); ++it) &#123;<br>        <span class="hljs-type">int</span> u = *it;<br>        <span class="hljs-keyword">if</span>(visited[u] == <span class="hljs-literal">false</span>)<br>            _topological_sort(u, visited, stack);<br>    &#125;<br>    stack.<span class="hljs-built_in">push</span>(v);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Graph::Topological_sort</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">bool</span> visited[V];<br>    stack&lt;<span class="hljs-type">int</span>&gt; stack;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>; i&lt;V; i++)<br>        visited[i] = <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=V<span class="hljs-number">-1</span>; i&gt;=<span class="hljs-number">0</span>; i--) &#123;<br>        <span class="hljs-keyword">if</span>(visited[i] == <span class="hljs-literal">false</span>) &#123;<br>            _topological_sort(i, visited, stack);<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">while</span>(!stack.<span class="hljs-built_in">empty</span>()) &#123;<br>        <span class="hljs-type">int</span> v = stack.<span class="hljs-built_in">top</span>();<br>        stack.<span class="hljs-built_in">pop</span>();<br>        std::cout &lt;&lt; <span class="hljs-string">&quot; &quot;</span> &lt;&lt; v &lt;&lt; <span class="hljs-string">&quot; &quot;</span>;<br>    &#125;<br>    std::cout &lt;&lt; std::endl;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-function">Graph <span class="hljs-title">g</span><span class="hljs-params">(<span class="hljs-number">6</span>)</span></span>;<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">5</span>, <span class="hljs-number">2</span>);<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">5</span>, <span class="hljs-number">0</span>);<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">4</span>, <span class="hljs-number">0</span>);<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">4</span>, <span class="hljs-number">1</span>);<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>);<br>    g.<span class="hljs-built_in">addEdge</span>(<span class="hljs-number">3</span>, <span class="hljs-number">1</span>);<br>    cout &lt;&lt; <span class="hljs-string">&quot;Following is topological sort result: \n&quot;</span>;<br>    g.<span class="hljs-built_in">Topological_sort</span>();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><br></code></pre></td></tr></table></figure>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;list></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stack></span></span>
+
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Graph</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">int</span> V<span class="token punctuation">;</span>
+    list<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">></span><span class="token operator">*</span> adj<span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">_topological_sort</span><span class="token punctuation">(</span><span class="token keyword">int</span> v<span class="token punctuation">,</span> <span class="token keyword">bool</span> visited<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> stack<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">></span><span class="token operator">&amp;</span> stack<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">Graph</span><span class="token punctuation">(</span><span class="token keyword">int</span> v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">~</span><span class="token function">Graph</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token keyword">int</span> v<span class="token punctuation">,</span> <span class="token keyword">int</span> w<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">Topological_sort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token class-name">Graph</span><span class="token double-colon punctuation">::</span><span class="token function">Graph</span><span class="token punctuation">(</span><span class="token keyword">int</span> v<span class="token punctuation">)</span><span class="token operator">:</span><span class="token function">V</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    adj <span class="token operator">=</span> <span class="token keyword">new</span> list<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">></span><span class="token punctuation">[</span>V<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token class-name">Graph</span><span class="token double-colon punctuation">::</span><span class="token operator">~</span><span class="token function">Graph</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">delete</span> <span class="token punctuation">[</span><span class="token punctuation">]</span> adj<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token class-name">Graph</span><span class="token double-colon punctuation">::</span><span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token keyword">int</span> v<span class="token punctuation">,</span> <span class="token keyword">int</span> w<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span>w<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token class-name">Graph</span><span class="token double-colon punctuation">::</span><span class="token function">_topological_sort</span><span class="token punctuation">(</span><span class="token keyword">int</span> v<span class="token punctuation">,</span> <span class="token keyword">bool</span> visited<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> stack<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">></span><span class="token operator">&amp;</span> stack<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    visited<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span>list<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">></span><span class="token double-colon punctuation">::</span>iterator it <span class="token operator">=</span> adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">begin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> it <span class="token operator">!=</span> adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token operator">++</span>it<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">int</span> u <span class="token operator">=</span> <span class="token operator">*</span>it<span class="token punctuation">;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>visited<span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+            <span class="token function">_topological_sort</span><span class="token punctuation">(</span>u<span class="token punctuation">,</span> visited<span class="token punctuation">,</span> stack<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    stack<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token class-name">Graph</span><span class="token double-colon punctuation">::</span><span class="token function">Topological_sort</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">bool</span> visited<span class="token punctuation">[</span>V<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    stack<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">></span> stack<span class="token punctuation">;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span>V<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
+        visited<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span>V<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span> i<span class="token operator">>=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>visited<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token function">_topological_sort</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> visited<span class="token punctuation">,</span> stack<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token operator">!</span>stack<span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">int</span> v <span class="token operator">=</span> stack<span class="token punctuation">.</span><span class="token function">top</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        stack<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        std<span class="token double-colon punctuation">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">" "</span> <span class="token operator">&lt;&lt;</span> v <span class="token operator">&lt;&lt;</span> <span class="token string">" "</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    std<span class="token double-colon punctuation">::</span>cout <span class="token operator">&lt;&lt;</span> std<span class="token double-colon punctuation">::</span>endl<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    Graph <span class="token function">g</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    g<span class="token punctuation">.</span><span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    g<span class="token punctuation">.</span><span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    g<span class="token punctuation">.</span><span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    g<span class="token punctuation">.</span><span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    g<span class="token punctuation">.</span><span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    g<span class="token punctuation">.</span><span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cout <span class="token operator">&lt;&lt;</span> <span class="token string">"Following is topological sort result: \n"</span><span class="token punctuation">;</span>
+    g<span class="token punctuation">.</span><span class="token function">Topological_sort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+</code></pre>
 <h2 id="唯一性"><a href="#唯一性" class="headerlink" title="唯一性"></a>唯一性</h2><p>如果一个 DAG 的拓扑排序中任意连续的两点都是可连通的，那么这个序列也就是 DAG 的 Hamiltonian 路径，而且如果 DAG 图的 Hamiltonian 路径存在，那么拓扑排序就是唯一的。否则如果一个拓扑排序结果不是 Hamiltonian 路径，那么就存在多个拓扑排序结果。</p>
 <h2 id="其他图算法的预处理"><a href="#其他图算法的预处理" class="headerlink" title="其他图算法的预处理"></a>其他图算法的预处理</h2><ul>
 <li><p>DAG 的强连通分支问题<br>先得到拓扑排序，形成逆向图 (所有边与原来方向相反)，然后根据拓扑排序依次再进行 DFS。</p>

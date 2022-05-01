@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          在显示器前干了什么 | 程序员的喵
-      
+    
+    在显示器前干了什么 |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -165,7 +172,7 @@
 
 <p><pre class="src"><span style="color: #98f5ff;">CString</span> <span style="color: #daa520; font-weight: bold;">getProcPath</span>(<span style="color: #98f5ff;">int</span> <span style="color: #4eee94;">PID</span>)<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回 pid 进程的可执行程序名称<br></span>{<br>        <span style="color: #98f5ff;">HANDLE</span> <span style="color: #4eee94;">hModule</span>;<br>        <span style="color: #98f5ff;">MODULEENTRY32</span>* <span style="color: #4eee94;">minfo</span>=<span style="color: #00bfff; font-weight: bold;">new</span> <span style="color: #98f5ff;">MODULEENTRY32</span>;<br>        minfo-&gt;dwSize=<span style="color: #00bfff; font-weight: bold;">sizeof</span>(MODULEENTRY32);<br>        hModule=CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,PID);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">对系统进程进行拍照</p>
 <p></span>        Module32First(hModule, minfo);<span style="color: #5f9ea0; font-style: italic;">//</span><span style="color: #5f9ea0; font-style: italic;">返回与进程相关的第一个模块信息<br></span><br>        <span style="color: #98f5ff;">CString</span> <span style="color: #4eee94;">str</span>;<br>        str=CString(minfo-&gt;szExePath);<br>        CloseHandle(hModule);<br>        <span style="color: #00bfff; font-weight: bold;">if</span>(minfo) <span style="color: #00bfff; font-weight: bold;">delete</span> minfo;</p>
-<pre><code>&lt;span style=&quot;color: #00bfff; font-weight: bold;&quot;&gt;return&lt;/span&gt; str;
+<pre><code>    &lt;span style=&quot;color: #00bfff; font-weight: bold;&quot;&gt;return&lt;/span&gt; str;
 </code></pre><p>}</pre><br><span id="more"></span></p>
 <p>得到了当前活动的程序名称就比较好办了，其实经常用的就是那么几个程序，稍加分析然后分类就能统计到我的时间分布。我这里分为了四类：编程、上网、看文档、QQ。用个定时器记录下来即可。实现个托盘最小化，就可以了。</p>
 <p><pre class="src"><span style="color: #98f5ff;">void</span> <span style="color: #ffd700;">Report</span>::<span style="color: #daa520; font-weight: bold;">Init</span>()<br>{<br>        m_Programming.push_back(_T(<span style="color: #deb887;">“devenv.exe”</span>));<br>        m_Programming.push_back(_T(<span style="color: #deb887;">“Microsoft Visual Studio”</span>));<br>        m_Programming.push_back(_T(<span style="color: #deb887;">“vim”</span>));<br>        m_Programming.push_back(_T(<span style="color: #deb887;">“matlab”</span>));<br>        m_Programming.push_back(_T(<span style="color: #deb887;">“MATLAB”</span>));<br>        m_OnWeb.push_back(_T(<span style="color: #deb887;">“firefox”</span>));<br>        m_OnWeb.push_back(_T(<span style="color: #deb887;">“Chrome”</span>));<br>        m_OnWeb.push_back(_T(<span style="color: #deb887;">“IEXPLORE”</span>));<br>        m_OnWeb.push_back(_T(<span style="color: #deb887;">“opera”</span>));<br>        m_QQ.push_back(_T(<span style="color: #deb887;">“QQ”</span>));<br>        m_QQ.push_back(_T(<span style="color: #deb887;">“Tecent”</span>));<br>        m_Document.push_back(_T(<span style="color: #deb887;">“WINWORD”</span>));<br>        m_Document.push_back(_T(<span style="color: #deb887;">“Office”</span>));<br>        m_Document.push_back(_T(<span style="color: #deb887;">“CAJView”</span>));<br>        m_Document.push_back(_T(<span style="color: #deb887;">“hh.exe”</span>));<br>        m_Document.push_back(_T(<span style="color: #deb887;">“FOXITR”</span>));</p>

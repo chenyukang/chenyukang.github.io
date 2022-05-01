@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          OpenResty 使用总结 | 程序员的喵
-      
+    
+    OpenResty 使用总结 |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -164,8 +171,34 @@
 </ul>
 <p>其中 Readme 要看完，大概会有一个全局的了解。最佳实践辅助看看。<br>理解 Nginx 处理的几个阶段： <a target="_blank" rel="noopener" href="http://www.nginxguts.com/2011/01/phases/">http://www.nginxguts.com/2011/01/phases/</a></p>
 <h2 id="处理-Response-Body"><a href="#处理-Response-Body" class="headerlink" title="处理 Response Body"></a>处理 Response Body</h2><p>在我们的实现中有一步需要给后端返回的结果里面加一段水印 (也就是一段 JS 代码)，这步可以在 body_filter 这个里面做。不过需要注意 body_filter 是按流式方式处理的，需要把各个 buffer 存下来然后拼接起来。<br>而且后端返回的结果可能是 zip 压缩过的，<a target="_blank" rel="noopener" href="https://groups.google.com/forum/#!topic/openresty-en/q-dcQNxpwTA">所以需要解压，然后才能做替换或者拼接的操作</a>。</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua"><span class="hljs-keyword">local</span> chunk, eof = ngx.<span class="hljs-built_in">arg</span>[<span class="hljs-number">1</span>], ngx.<span class="hljs-built_in">arg</span>[<span class="hljs-number">2</span>] <br><span class="hljs-keyword">local</span> buffered = ngx.ctx.buffered <br><span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> buffered <span class="hljs-keyword">then</span> <br>   buffered = &#123;&#125;  <span class="hljs-comment">-- XXX we can use table.new here </span><br>   ngx.ctx.buffered = buffered <br><span class="hljs-keyword">end</span><br><br><span class="hljs-keyword">if</span> chunk ~= <span class="hljs-string">&quot;&quot;</span> <span class="hljs-keyword">then</span> <br>   buffered[#buffered + <span class="hljs-number">1</span>] = chunk <br>   ngx.<span class="hljs-built_in">arg</span>[<span class="hljs-number">1</span>] = <span class="hljs-literal">nil</span> <br><span class="hljs-keyword">end</span><br><br><span class="hljs-keyword">if</span> eof <span class="hljs-keyword">then</span> <br>   <span class="hljs-keyword">local</span> whole = <span class="hljs-built_in">table</span>.<span class="hljs-built_in">concat</span>(buffered) <br>   ngx.ctx.buffered = <span class="hljs-literal">nil</span><br><br>   <span class="hljs-comment">-- try to unzip</span><br>   <span class="hljs-keyword">local</span> <span class="hljs-built_in">status</span>, debody = <span class="hljs-built_in">pcall</span>(com.decode, whole)<br>   <br>   <span class="hljs-keyword">if</span> <span class="hljs-built_in">status</span> <span class="hljs-keyword">then</span> whole = debody <span class="hljs-keyword">end</span><br>   <span class="hljs-comment">-- try to add or replace response body</span><br>   <span class="hljs-keyword">local</span> js_code = ....<br>   whole = whole .. js_code<br>   <br>   ngx.<span class="hljs-built_in">arg</span>[<span class="hljs-number">1</span>] = whole <br><span class="hljs-keyword">end</span><br></code></pre></td></tr></table></figure>
-<p>最后因为修改了 response body，所以需要修改 header filter 里面的部分：<br><figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">ngx.header.content_length = <span class="hljs-literal">nil</span><br>ngx.header.content_encoding = <span class="hljs-literal">nil</span><br></code></pre></td></tr></table></figure></p>
+<pre class="language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">local</span> chunk<span class="token punctuation">,</span> eof <span class="token operator">=</span> ngx<span class="token punctuation">.</span>arg<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> ngx<span class="token punctuation">.</span>arg<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> 
+<span class="token keyword">local</span> buffered <span class="token operator">=</span> ngx<span class="token punctuation">.</span>ctx<span class="token punctuation">.</span>buffered 
+<span class="token keyword">if</span> <span class="token keyword">not</span> buffered <span class="token keyword">then</span> 
+   buffered <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>  <span class="token comment">-- XXX we can use table.new here </span>
+   ngx<span class="token punctuation">.</span>ctx<span class="token punctuation">.</span>buffered <span class="token operator">=</span> buffered 
+<span class="token keyword">end</span>
+
+<span class="token keyword">if</span> chunk <span class="token operator">~=</span> <span class="token string">""</span> <span class="token keyword">then</span> 
+   buffered<span class="token punctuation">[</span><span class="token operator">#</span>buffered <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> chunk 
+   ngx<span class="token punctuation">.</span>arg<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">nil</span> 
+<span class="token keyword">end</span>
+
+<span class="token keyword">if</span> eof <span class="token keyword">then</span> 
+   <span class="token keyword">local</span> whole <span class="token operator">=</span> table<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>buffered<span class="token punctuation">)</span> 
+   ngx<span class="token punctuation">.</span>ctx<span class="token punctuation">.</span>buffered <span class="token operator">=</span> <span class="token keyword">nil</span>
+
+   <span class="token comment">-- try to unzip</span>
+   <span class="token keyword">local</span> status<span class="token punctuation">,</span> debody <span class="token operator">=</span> <span class="token function">pcall</span><span class="token punctuation">(</span>com<span class="token punctuation">.</span>decode<span class="token punctuation">,</span> whole<span class="token punctuation">)</span>
+   
+   <span class="token keyword">if</span> status <span class="token keyword">then</span> whole <span class="token operator">=</span> debody <span class="token keyword">end</span>
+   <span class="token comment">-- try to add or replace response body</span>
+   <span class="token keyword">local</span> js_code <span class="token operator">=</span> <span class="token punctuation">....</span>
+   whole <span class="token operator">=</span> whole <span class="token operator">..</span> js_code
+   
+   ngx<span class="token punctuation">.</span>arg<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> whole 
+<span class="token keyword">end</span></code></pre>
+<p>最后因为修改了 response body，所以需要修改 header filter 里面的部分：<br><pre class="language-lua" data-language="lua"><code class="language-lua">ngx<span class="token punctuation">.</span>header<span class="token punctuation">.</span>content_length <span class="token operator">=</span> <span class="token keyword">nil</span>
+ngx<span class="token punctuation">.</span>header<span class="token punctuation">.</span>content_encoding <span class="token operator">=</span> <span class="token keyword">nil</span></code></pre></p>
 <h2 id="容易出现的-bug"><a href="#容易出现的-bug" class="headerlink" title="容易出现的 bug"></a>容易出现的 bug</h2><ol>
 <li><p>尽量使用 local 变量： <a target="_blank" rel="noopener" href="https://moonbingbing.gitbooks.io/openresty-best-practices/lua/local.html">具体的解释</a>，我在实践的过程中出现过变量乱窜的情况，结果发现是没有是用 local。</p>
 </li>

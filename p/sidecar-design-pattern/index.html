@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          Sidecar 架构模式 | 程序员的喵
-      
+    
+    Sidecar 架构模式 |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -185,9 +192,17 @@
 <h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>我们可以来看看业界典型的使用 sidecar 模式的框架。</p>
 <h3 id="DAPR"><a href="#DAPR" class="headerlink" title="DAPR"></a>DAPR</h3><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/dotnet/architecture/dapr-for-net-developers/dapr-at-20000-feet">Dapr: Distributed Application Runtime</a> 是微软开源的一套分布式程序开发框架，其目标是：“Build distributed applications with any language, any framework, run anywhere”。既然任何编程语言，任何框架都要支持，sidercar 是一个必然的选择。DAPR 把很多常见的分布式程序的公共组件抽象出来成为’building blocks’，然后通过 gRPC 或者 HTTP 统一出接口。应用程序通过 sidecar 来访问。</p>
 <p><img src="/images/ob_pasted-image-20211130172044.png" alt=""><br>这样多了一层抽象之后，即使是某个 Component 做了一些改变，应用层也是无感知的。除了在容器化的环境下运行，用户也可以在非容器化环境以 sidecar 模式启动任何应用，例如我们启动一个图片接口服务 <code>image-api-service</code>，该服务会监听端口 8080，而 sidecar 会通过 3500 端口来代理该服务接受请求：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">dapr run --app-id image-api \<br>         --app-protocol http \<br>         --app-port 8080 \<br>         --dapr-http-port 3500 \<br>         --components-path ../config \<br>         --log-level debug \<br>         ./image-api-service<br></code></pre></td></tr></table></figure>
+<pre class="language-bash" data-language="bash"><code class="language-bash">dapr run --app-id image-api <span class="token punctuation">\</span>
+         --app-protocol http <span class="token punctuation">\</span>
+         --app-port <span class="token number">8080</span> <span class="token punctuation">\</span>
+         --dapr-http-port <span class="token number">3500</span> <span class="token punctuation">\</span>
+         --components-path <span class="token punctuation">..</span>/config <span class="token punctuation">\</span>
+         --log-level debug <span class="token punctuation">\</span>
+         ./image-api-service</code></pre>
 <p>其他服务组件可以通过 sidecar 去请求该服务：</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// Dapr api format: http://localhost:&lt;daprPort&gt;/v1.0/invoke/&lt;appId&gt;/method/&lt;method-</span><br>uri = <span class="hljs-string">&quot;http://localhost:3500/v1.0/invoke/image-api/method/api/image&quot;</span><br>req, err := http.NewRequest(<span class="hljs-string">&quot;POST&quot;</span>, uri, bytes.NewBuffer(image))<br></code></pre></td></tr></table></figure>
+<pre class="language-go" data-language="go"><code class="language-go"><span class="token comment">// Dapr api format: http://localhost:&lt;daprPort>/v1.0/invoke/&lt;appId>/method/&lt;method-</span>
+uri <span class="token operator">=</span> <span class="token string">"http://localhost:3500/v1.0/invoke/image-api/method/api/image"</span>
+req<span class="token punctuation">,</span> err <span class="token operator">:=</span> http<span class="token punctuation">.</span><span class="token function">NewRequest</span><span class="token punctuation">(</span><span class="token string">"POST"</span><span class="token punctuation">,</span> uri<span class="token punctuation">,</span> bytes<span class="token punctuation">.</span><span class="token function">NewBuffer</span><span class="token punctuation">(</span>image<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
 <h3 id="lstio"><a href="#lstio" class="headerlink" title="lstio"></a>lstio</h3><p><a target="_blank" rel="noopener" href="https://istio.io/latest/zh/about/service-mesh/">Istio 服务网格</a> 是一个开源的服务网格，提供了统一的方式来实现连接、监控、负载均衡等公共服务和流量管理。单个服务的所有传入和传出网络流量均通过 Sidecar 代理，完成微服务之间的流量管理、遥测数据收集以及策略的执行等。</p>
 <p><img src="/images/ob_pasted-image-20211130173530.png" alt=""></p>
 <p>在 lstio 中，我们需要了解 Data Plane 和 Control Plane 两个概念——  </p>

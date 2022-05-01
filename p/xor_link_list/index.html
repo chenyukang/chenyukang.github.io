@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          巧妙的 XOR Link List | 程序员的喵
-      
+    
+    巧妙的 XOR Link List |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -164,12 +171,21 @@
 <p><code>(A ^ B) ^ A = B</code></p>
 <p><code>(B ^ A) ^ B = A</code></p>
 <p>注意最后两条，这是 XOR Link List 的关键，这也是通过 xor 操作来实现 swap 的关键。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">xorSwap</span> <span class="hljs-params">(<span class="hljs-type">int</span> *x, <span class="hljs-type">int</span> *y)</span> </span>&#123;<br>     <span class="hljs-keyword">if</span> (x != y) &#123;<br>         *x ^= *y;<br>         *y ^= *x;<br>         *x ^= *y;<br>     &#125;<br> &#125;<br></code></pre></td></tr></table></figure>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">xorSwap</span> <span class="token punctuation">(</span><span class="token keyword">int</span> <span class="token operator">*</span>x<span class="token punctuation">,</span> <span class="token keyword">int</span> <span class="token operator">*</span>y<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+     <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">!=</span> y<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+         <span class="token operator">*</span>x <span class="token operator">^=</span> <span class="token operator">*</span>y<span class="token punctuation">;</span>
+         <span class="token operator">*</span>y <span class="token operator">^=</span> <span class="token operator">*</span>x<span class="token punctuation">;</span>
+         <span class="token operator">*</span>x <span class="token operator">^=</span> <span class="token operator">*</span>y<span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+ <span class="token punctuation">&#125;</span></code></pre>
 <p>这里注意需要判断 x!=y，否则如果传入的是相同的指针，最后所指向的变量被设置为 0 了。</p>
 <p>通过最后两条联想到双向链表中的两个指针的实现，一般如下图所示：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp">...  A       B         C         D         E  ...<br>         –&gt;  next –&gt;  next  –&gt;  next  –&gt;<br>         &lt;–  prev &lt;–  prev  &lt;–  prev  &lt;–<br></code></pre></td></tr></table></figure>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>  A       B         C         D         E  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+         –<span class="token operator">></span>  next –<span class="token operator">></span>  next  –<span class="token operator">></span>  next  –<span class="token operator">></span>
+         <span class="token operator">&lt;</span>–  prev <span class="token operator">&lt;</span>–  prev  <span class="token operator">&lt;</span>–  prev  <span class="token operator">&lt;</span>–</code></pre>
 <p> 如果把 next 和 prev 用一个变量替换还能实现前向和后向遍历，那就节省了一个变量的空间。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp">...  A        B         C         D         E  ...<br>        &lt;–&gt;  A⊕C  &lt;-&gt;  B⊕D  &lt;-&gt;  C⊕E  &lt;-&gt;<br></code></pre></td></tr></table></figure>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>  A        B         C         D         E  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        <span class="token operator">&lt;</span>–<span class="token operator">></span>  A⊕C  <span class="token operator">&lt;</span><span class="token operator">-></span>  B⊕D  <span class="token operator">&lt;</span><span class="token operator">-></span>  C⊕E  <span class="token operator">&lt;</span><span class="token operator">-></span></code></pre>
 <p>比如当前在 B 节点，其 pointer 变量为 A⊕C，如果前面的 A 地址保存下来然后做运算 (A⊕C)⊕A -&gt; C，这样就得到下一个节点指针，反向遍历同样如此。当然其缺点是逻辑复杂了，删除其中的某一个节点也不方便 (删除头和尾要好点)，遍历的时候需要保存上一个节点。这样看来为了省一点点空间这样实现似乎有点不值，在大部分情况下这样的一个 pointer 的节省并没什么用，不过这其中的细节有趣、巧妙。</p>
 <p>同样上面的 xorSwap<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/249423/how-does-xor-variable-swapping-work">对于现代的 CPU 来说也没什么优化</a>，这样的代码只是更加不便于编译器来实现指令级别的优化。这种类型 trick 的东西还是要避免使用才好。</p>
 <p>自己稍微写了一下，代码在<a target="_blank" rel="noopener" href="https://gist.github.com/chenyukang/5364515">这个 Gist</a>。</p>

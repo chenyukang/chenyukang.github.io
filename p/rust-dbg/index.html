@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          Rust 的 dbg！宏 | 程序员的喵
-      
+    
+    Rust 的 dbg！宏 |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -159,15 +166,46 @@
   <article class="post-article">
     <section class="markdown-content"><p>前几天在群里看到有人讨论 dbg！宏已经在 Nightly 可以使用了，最近发布的 stable 版本 1.32.0 也可以使用了。 翻看了一下并玩了玩，这个简单的宏确实是调试好帮手，特别是适合我这样的喜欢打印调试的开发者。这个提议从 2017 年 10 月开始，从 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rfcs/pull/2173">https://github.com/rust-lang/rfcs/pull/2173</a> 可以看到，为了增加这个宏很多贡献者经过了无数次的讨论和回复。真是太佩服 Rust Team 的开发者，付出了这么多时间来增加这个看似很小又实用的功能。</p>
 <h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>先看看这个调试宏是怎么使用的，目前使用这个宏需要切换到 Nightly 版本或者最新的稳定版，已经安装了 rustup 的话就很简单了：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">rustup default nightly<br>rustup update<br></code></pre></td></tr></table></figure>
+<pre class="language-shell" data-language="shell"><code class="language-shell">rustup default nightly
+rustup update</code></pre>
 <p>然后很简单就是把一个表达式当作参数传入：</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">factorial</span>(n: <span class="hljs-type">u32</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">u32</span> &#123;<br>     <span class="hljs-keyword">if</span> dbg!(n &lt;= <span class="hljs-number">1</span>) &#123;<br>         dbg!(<span class="hljs-number">1</span>)<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>         dbg!(n * <span class="hljs-title function_ invoke__">factorial</span>(n - <span class="hljs-number">1</span>))<br>     &#125;<br>&#125;<br><br><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span>() &#123;<br>    dbg!(<span class="hljs-title function_ invoke__">factorial</span>(<span class="hljs-number">5</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre class="language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function-definition function">factorial</span><span class="token punctuation">(</span>n<span class="token punctuation">:</span> <span class="token keyword">u32</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">u32</span> <span class="token punctuation">&#123;</span>
+     <span class="token keyword">if</span> <span class="token macro property">dbg!</span><span class="token punctuation">(</span>n <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+         <span class="token macro property">dbg!</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+         <span class="token macro property">dbg!</span><span class="token punctuation">(</span>n <span class="token operator">*</span> <span class="token function">factorial</span><span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+     <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">fn</span> <span class="token function-definition function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token macro property">dbg!</span><span class="token punctuation">(</span><span class="token function">factorial</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
 <p>运行结果如下：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">[src/main.rs:4] n &lt;= 1 = false<br>[src/main.rs:4] n &lt;= 1 = false<br>[src/main.rs:4] n &lt;= 1 = false<br>[src/main.rs:4] n &lt;= 1 = false<br>[src/main.rs:4] n &lt;= 1 = true<br>[src/main.rs:5] 1 = 1<br>[src/main.rs:7] n * factorial(n - 1) = 2<br>[src/main.rs:7] n * factorial(n - 1) = 6<br>[src/main.rs:7] n * factorial(n - 1) = 24<br>[src/main.rs:7] n * factorial(n - 1) = 120<br>[src/main.rs:12] factorial(5) = 120<br></code></pre></td></tr></table></figure>
+<pre class="language-shell" data-language="shell"><code class="language-shell"><span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
+<span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
+<span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
+<span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
+<span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">true</span>
+<span class="token punctuation">[</span>src/main.rs:5<span class="token punctuation">]</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token number">1</span>
+<span class="token punctuation">[</span>src/main.rs:7<span class="token punctuation">]</span> n * factorial<span class="token punctuation">(</span>n - <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">2</span>
+<span class="token punctuation">[</span>src/main.rs:7<span class="token punctuation">]</span> n * factorial<span class="token punctuation">(</span>n - <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">6</span>
+<span class="token punctuation">[</span>src/main.rs:7<span class="token punctuation">]</span> n * factorial<span class="token punctuation">(</span>n - <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">24</span>
+<span class="token punctuation">[</span>src/main.rs:7<span class="token punctuation">]</span> n * factorial<span class="token punctuation">(</span>n - <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">120</span>
+<span class="token punctuation">[</span>src/main.rs:12<span class="token punctuation">]</span> factorial<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">120</span></code></pre>
 <h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>原理当然也就是把表达式和位置打印出来，但是这里有个技巧，在宏里面使用 match，这是为了避免参数被调用多次，因为宏在编译之前会被展开。Rust 的宏比较复杂，也不可避免会有些 hacky，对于喜欢爱折腾的程序员还是有吸引力。再看看这个宏是怎么实现的，代码很少。：</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><code class="hljs rust"><span class="hljs-built_in">macro_rules!</span> dbg &#123;<br>    ($val:expr) =&gt; &#123;<br>        <span class="hljs-keyword">match</span> $val &#123;<br>            tmp =&gt; &#123;<br>                eprintln!(<span class="hljs-string">&quot;[&#123;&#125;:&#123;&#125;] &#123;&#125; = &#123;:#?&#125;&quot;</span>,<br>                          <span class="hljs-built_in">file!</span>(), <span class="hljs-built_in">line!</span>(), <span class="hljs-built_in">stringify!</span>($val), &amp;tmp);<br>                tmp<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre class="language-rust" data-language="rust"><code class="language-rust"><span class="token macro property">macro_rules!</span> dbg <span class="token punctuation">&#123;</span>
+    <span class="token punctuation">(</span><span class="token variable">$val</span><span class="token punctuation">:</span><span class="token fragment-specifier punctuation">expr</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">match</span> <span class="token variable">$val</span> <span class="token punctuation">&#123;</span>
+            tmp <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+                <span class="token macro property">eprintln!</span><span class="token punctuation">(</span><span class="token string">"[&#123;&#125;:&#123;&#125;] &#123;&#125; = &#123;:#?&#125;"</span><span class="token punctuation">,</span>
+                          <span class="token macro property">file!</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token macro property">line!</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token macro property">stringify!</span><span class="token punctuation">(</span><span class="token variable">$val</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>tmp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                tmp
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
 <p>可以看到目前这个实现是只支持一个参数的，如果传入的参数类型没有实现 Copy Trait，可以传入引用。另外如果想同时打印多个参数，可以使用类似这样的做法：</p>
-<figure class="highlight rust"><table><tr><td class="code"><pre><code class="hljs rust">dbg!((exp1, exp2))<br></code></pre></td></tr></table></figure>
+<pre class="language-rust" data-language="rust"><code class="language-rust"><span class="token macro property">dbg!</span><span class="token punctuation">(</span><span class="token punctuation">(</span>exp1<span class="token punctuation">,</span> exp2<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
 </section>
 
     <p></p>

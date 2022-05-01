@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          valgrind | 程序员的喵
-      
+    
+    valgrind |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -159,7 +166,42 @@
   <article class="post-article">
     <section class="markdown-content"><p><br>纪念一下跑测试跑了几天才找出的一个内存泄漏，这个函数源于 UNP，还以为 UNP 有 bug 呢，找到原书当 getaddreinfo 失败或者 res==NULL 的时候直接退出了。但是写这个代码的同学当然不想连接不上直接退出，于是忘记了 freeaddrinfo 调用直接返回，那个 struct addrinfo 就没释放。很多错误都是这种，涉及到库函数的时候更加难查。<br></p>
 
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-type">int</span> <span class="hljs-title function_">tcp_connect</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> host, <span class="hljs-type">const</span> <span class="hljs-type">char</span> serv)</span>&#123;<br>    <span class="hljs-type">int</span>    sockfd, n;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">addrinfo</span> <span class="hljs-title">hints</span>, <span class="hljs-title">res</span>, <span class="hljs-title">ressave</span>;</span><br><br>    bzero(&amp;hints, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> addrinfo));<br>    hints.ai_family = AF_UNSPEC;<br>    hints.ai_socktype = SOCK_STREAM;<br><br>    <span class="hljs-keyword">if</span> ( (n = getaddrinfo(host, serv, &amp;hints, &amp;res)) != <span class="hljs-number">0</span>)<br>    &#123;<br>        log_sprintf(“tcp_connect error <span class="hljs-keyword">for</span> %s, %s: %s”, host, serv, gai_strerror(n));<br>        freeaddrinfo(res); <span class="hljs-comment">//oops: memory leak</span><br><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    ressave = res;<br><br>    <span class="hljs-keyword">do</span> &#123;<br>        sockfd = socket(res-&gt;ai_family, res-&gt;ai_socktype, res-&gt;ai_protocol);<br>        <span class="hljs-keyword">if</span> (sockfd &lt; <span class="hljs-number">0</span>)<br>                <span class="hljs-keyword">continue</span>;       / ignore this one /<br>        <span class="hljs-keyword">if</span> (connect(sockfd, res-&gt;ai_addr, res-&gt;ai_addrlen) == <span class="hljs-number">0</span>)<br>                <span class="hljs-keyword">break</span>;          / success /<br>        close(sockfd);  / ignore this one /<br><br>    &#125; <span class="hljs-keyword">while</span> ( (res = res-&gt;ai_next) != <span class="hljs-literal">NULL</span>);<br><br>    <span class="hljs-keyword">if</span> (res == <span class="hljs-literal">NULL</span>)        / errno <span class="hljs-built_in">set</span> from final <span class="hljs-title function_">connect</span><span class="hljs-params">()</span> /<br>    &#123;<br>        log_sprintf(“tcp_connect error <span class="hljs-keyword">for</span> %s, %s”, host, serv);<br>        freeaddrinfo(ressave); <span class="hljs-comment">//oops: memory leak</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    freeaddrinfo(ressave);<br>    <span class="hljs-keyword">return</span>(sockfd);<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre class="language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">tcp_connect</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span> host<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> serv<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">int</span>    sockfd<span class="token punctuation">,</span> n<span class="token punctuation">;</span>
+    <span class="token keyword">struct</span> <span class="token class-name">addrinfo</span> hints<span class="token punctuation">,</span> res<span class="token punctuation">,</span> ressave<span class="token punctuation">;</span>
+
+    <span class="token function">bzero</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>hints<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">addrinfo</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    hints<span class="token punctuation">.</span>ai_family <span class="token operator">=</span> AF_UNSPEC<span class="token punctuation">;</span>
+    hints<span class="token punctuation">.</span>ai_socktype <span class="token operator">=</span> SOCK_STREAM<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token punctuation">(</span>n <span class="token operator">=</span> <span class="token function">getaddrinfo</span><span class="token punctuation">(</span>host<span class="token punctuation">,</span> serv<span class="token punctuation">,</span> <span class="token operator">&amp;</span>hints<span class="token punctuation">,</span> <span class="token operator">&amp;</span>res<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token function">log_sprintf</span><span class="token punctuation">(</span>“tcp_connect error <span class="token keyword">for</span> <span class="token operator">%</span>s<span class="token punctuation">,</span> <span class="token operator">%</span>s<span class="token operator">:</span> <span class="token operator">%</span>s”<span class="token punctuation">,</span> host<span class="token punctuation">,</span> serv<span class="token punctuation">,</span> <span class="token function">gai_strerror</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">freeaddrinfo</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//oops: memory leak</span>
+
+        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    ressave <span class="token operator">=</span> res<span class="token punctuation">;</span>
+
+    <span class="token keyword">do</span> <span class="token punctuation">&#123;</span>
+        sockfd <span class="token operator">=</span> <span class="token function">socket</span><span class="token punctuation">(</span>res<span class="token operator">-></span>ai_family<span class="token punctuation">,</span> res<span class="token operator">-></span>ai_socktype<span class="token punctuation">,</span> res<span class="token operator">-></span>ai_protocol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>sockfd <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+                <span class="token keyword">continue</span><span class="token punctuation">;</span>       <span class="token operator">/</span> ignore this one <span class="token operator">/</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">connect</span><span class="token punctuation">(</span>sockfd<span class="token punctuation">,</span> res<span class="token operator">-></span>ai_addr<span class="token punctuation">,</span> res<span class="token operator">-></span>ai_addrlen<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>          <span class="token operator">/</span> success <span class="token operator">/</span>
+        <span class="token function">close</span><span class="token punctuation">(</span>sockfd<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token operator">/</span> ignore this one <span class="token operator">/</span>
+
+    <span class="token punctuation">&#125;</span> <span class="token keyword">while</span> <span class="token punctuation">(</span> <span class="token punctuation">(</span>res <span class="token operator">=</span> res<span class="token operator">-></span>ai_next<span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>res <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>        <span class="token operator">/</span> errno set from final <span class="token function">connect</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token function">log_sprintf</span><span class="token punctuation">(</span>“tcp_connect error <span class="token keyword">for</span> <span class="token operator">%</span>s<span class="token punctuation">,</span> <span class="token operator">%</span>s”<span class="token punctuation">,</span> host<span class="token punctuation">,</span> serv<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">freeaddrinfo</span><span class="token punctuation">(</span>ressave<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//oops: memory leak</span>
+        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token function">freeaddrinfo</span><span class="token punctuation">(</span>ressave<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span><span class="token punctuation">(</span>sockfd<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
 <p><br>上一篇博文中说到自己包装的内存检测方法，这还有个问题当时没发现，就是那个包装 malloc 之类的方法对于库函数中的内存申请调用没法记录，所以是不会发现上面这个 bug 的。这个 Memwatch 倒是把原生的 malloc 都重定义了，但是最好的 Linux 下检测内存泄漏的工具还是 valgrind，这真是个神器，在代码上不用做一点修改，这东西甚至能测试程序的 cache 命中率。看了一下 valgrind 的相关论文，对于检测方法都是一种称之为 shadow value 的方法，也就是用信息来记录每一个 byte 内存的使用情况。这种方式的一个缺点都是会拖慢速度，前面提到的那种稍微包装了一下的方式可能还好 (因为使用的是静态数组), Memwatch 里面使用了不少链表也会拖慢速度。再看看 valgrind 的实现，以后工作可能会碰上类似的。<br></p>
 
 <p><a target="_blank" rel="noopener" href="http://valgrind.org/docs/pubs.html">更多 valgrind</a></p>

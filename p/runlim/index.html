@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          调优的小工具 RunLim | 程序员的喵
-      
+    
+    调优的小工具 RunLim |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -159,43 +166,35 @@
   <article class="post-article">
     <section class="markdown-content"><p>在公司有同事用这个小程序<a target="_blank" rel="noopener" href="http://fmv.jku.at/runlim/">RunLim</a>来调试程序的内存问题。刚开始以为是我们上海的一个同事写的，就弄来看了看。后来发现是公司一个早期同事<a target="_blank" rel="noopener" href="http://fmv.jku.at/biere/index.html">Armin Biere</a>写的，还开源了，debian 的源里有这个东西。我在公司维护的一部分代码是这个人写的，据说厉害的程序员，他现在在学术圈里。</p>
 <p>用这个小程序来测试程序跑的时间和内存，用法很简单：</p>
-<pre class="prettyprint lang-sh">
-./runlim prog.exe
-
-比如：
-kang@ubuntu:~/download/runlim-1.7$ ./runlim sleep  1
-[runlim] version:        1.7
-[runlim] time limit:        311040000 seconds
-[runlim] real time limit:    311040000 seconds
-[runlim] space limit:        4294966090 MB
-[runlim] argv[0]:        sleep
-[runlim] argv[1]:        1
-[runlim] start:            Tue Oct 30 00:02:52 2012
-[runlim] main pid:        22546
-[runlim] end:            Tue Oct 30 00:02:53 2012
-[runlim] status:        ok
-[runlim] result:        0
-[runlim] children:        0
-[runlim] real:            1.63 seconds
-[runlim] time:            0.00 seconds
-[runlim] space:            0.5 MB
-[runlim] samples:        10
-
-</pre>
-
+<pre class="language-bash" data-language="bash"><code class="language-bash">./runlim prog.exe</code></pre>
+<p>比如：</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">kang@ubuntu:~/download/runlim-1.7$ ./runlim <span class="token function">sleep</span>  <span class="token number">1</span>
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> version:		<span class="token number">1.7</span>
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> <span class="token function">time</span> limit:		<span class="token number">311040000</span> seconds
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> real <span class="token function">time</span> limit:	<span class="token number">311040000</span> seconds
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> space limit:		<span class="token number">4294966090</span> MB
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> argv<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>:		<span class="token function">sleep</span>
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> argv<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>:		<span class="token number">1</span>
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> start:			Tue Oct <span class="token number">30</span> 00:02:52 <span class="token number">2012</span>
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> main pid:		<span class="token number">22546</span>
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> end:			Tue Oct <span class="token number">30</span> 00:02:53 <span class="token number">2012</span>
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> status:		ok
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> result:		<span class="token number">0</span>
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> children:		<span class="token number">0</span>
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> real:			<span class="token number">1.63</span> seconds
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> time:			<span class="token number">0.00</span> seconds
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> space:			<span class="token number">0.5</span> MB
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> samples:		<span class="token number">10</span></code></pre>
 <p>查看 help，这个工具还可以指定 time limit 和 space limit，在指定的时间和内存限制内强制退出程序，其功能很像那些<a target="_blank" rel="noopener" href="http://poj.org/">Online Judge</a>，只是没有检测结果输出是否正确。</p>
 <p>发现代码里有一个小小的 Bug，根据源代码如果没有指定 space limit， space limit 那栏应该是当前的空闲内存大小，但是<br>看我上面运行的命令，显示的 4294966090 MB 明显偏大，是其中的一个获取系统内存大小的函数溢出了。这里应该是这样：</p>
-<pre class="prettyprint lang-sh">
-static unsigned
-get_physical_mb ()
-{
-    unsigned long long mem;
-    mem = (unsigned long long)sysconf(_SC_PAGE_SIZE)*
-        (unsigned long long)sysconf(_SC_PHYS_PAGES);
-    return mem >>= 20;
-}
-</pre>
-
+<pre class="language-c" data-language="c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">unsigned</span>
+<span class="token function">get_physical_mb</span> <span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token keyword">long</span> mem<span class="token punctuation">;</span>
+    mem <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token keyword">long</span><span class="token punctuation">)</span><span class="token function">sysconf</span><span class="token punctuation">(</span>_SC_PAGE_SIZE<span class="token punctuation">)</span><span class="token operator">*</span>
+        <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token keyword">long</span><span class="token punctuation">)</span><span class="token function">sysconf</span><span class="token punctuation">(</span>_SC_PHYS_PAGES<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> mem <span class="token operator">>>=</span> <span class="token number">20</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
 <p>sysconf 获取页大小和页数目，具体看这里<a target="_blank" rel="noopener" href="http://www.gnu.org/software/libc/manual/html_node/Query-Memory-Parameters.html">How to get information about the memory subsystem?</a>。</p>
 <p>这个小工具还是查询/proc 下的进程统计信息的，根据 fork 出来的子进程 pid，递归地查询统计信息。</p>
 <p>时间的统计可能会稍显粗略，如果需要更精确的时间统计该如何实现。</p>

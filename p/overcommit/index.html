@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          使用 overcommit 生成 git hooks | 程序员的喵
-      
+    
+    使用 overcommit 生成 git hooks |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -159,11 +166,18 @@
   <article class="post-article">
     <section class="markdown-content"><p><code>git hooks</code>很方便地可以在 git 操作流程的各个阶段加入 hooks，比如执行一些脚本来检查代码风格、跑单元测试、做代码静态检查等。git hooks 的试用方法是在.git/hooks 目录下写各种脚本，但是.git 目录的这些脚本是不会 checkin 到 repo 里的，所以如果一个代码如果被多个开发人员共享就会显得不太方便同步 hooks。</p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/427207/can-git-hook-scripts-be-managed-along-with-the-repository">当然也有一些其他方法来解决这个问题</a>，比如配置 links 或者对于<code>git 2.9</code>以后也可以使用来定制 hooks 的目录：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">git config core.hooksPath hooks<br></code></pre></td></tr></table></figure>
+<pre class="language-shell" data-language="shell"><code class="language-shell"><span class="token function">git</span> config core.hooksPath hooks</code></pre>
 <p>对于熟悉 Ruby 的同学可以使用<a target="_blank" rel="noopener" href="https://github.com/brigade/overcommit">overcommit</a>这个 gem 来解决。使用方法就是通过配置<code>.overcommit.yml</code>，比如：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">PreCommit:</span><br>  <span class="hljs-attr">RuboCop:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>    <span class="hljs-attr">command:</span> [<span class="hljs-string">&#x27;bundle&#x27;</span>, <span class="hljs-string">&#x27;exec&#x27;</span>, <span class="hljs-string">&#x27;rubocop&#x27;</span>] <span class="hljs-comment">#  The shell command should run</span><br><br>  <span class="hljs-attr">AuthorName:</span><br>    <span class="hljs-attr">enabled:</span> <span class="hljs-literal">false</span><br><br></code></pre></td></tr></table></figure>
+<pre class="language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">PreCommit</span><span class="token punctuation">:</span>
+  <span class="token key atrule">RuboCop</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">command</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'bundle'</span><span class="token punctuation">,</span> <span class="token string">'exec'</span><span class="token punctuation">,</span> <span class="token string">'rubocop'</span><span class="token punctuation">]</span> <span class="token comment">#  The shell command should run</span>
+
+  <span class="token key atrule">AuthorName</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+</code></pre>
 <p>然后执行命令：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">overcommit install<br></code></pre></td></tr></table></figure>
+<pre class="language-shell" data-language="shell"><code class="language-shell">overcommit <span class="token function">install</span></code></pre>
 <p>来自动生成各种 hooks，通常后面的修改都是修改这个 yaml 文件即可，不过记得修改后需要<code>overcommit --signed</code>来重新生成 hooks。</p>
 </section>
 

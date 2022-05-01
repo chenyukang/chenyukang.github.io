@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          Kong 源码分析：缓存 | 程序员的喵
-      
+    
+    Kong 源码分析：缓存 |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -161,7 +168,25 @@
 <p>Kong 里的缓存基础代码在 tools/database_cache.lua 文件里面。这里又分两种类型的缓存，一种是<a target="_blank" rel="noopener" href="https://github.com/openresty/lua-nginx-module#ngxshareddict">shared dict</a>, 一种是使用<br><a target="_blank" rel="noopener" href="https://github.com/openresty/lua-resty-lrucache">lua-resty-lrucache</a>。这两者之间是有区别的: shared dict 如同其名字一样是 Nginx worker 之间共享的，而 lrucache 是 worker 级别的，内存空间在 Lua VM 里由 GC 管理，不能在进程之间共享，自然也不会在 Nginx worker 之间共享。</p>
 <p>具体我们开发中使用哪一种由具体场景分析，比如在 Kong 的插件 rate-limiting 里就使用了共享缓存，因为我们需要针对一个 Nginx 所有的 worker 做请求数统计。</p>
 <p>share dict 最常规的使用方法是：</p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">http &#123;<br>    lua_shared_dict dogs <span class="hljs-number">10</span>m;<br>    server &#123;<br>        location /set &#123;<br>            content_by_lua_block &#123;<br>                <span class="hljs-keyword">local</span> dogs = ngx.shared.dogs<br>                dogs:set(<span class="hljs-string">&quot;Jim&quot;</span>, <span class="hljs-number">8</span>)<br>                ngx.say(<span class="hljs-string">&quot;STORED&quot;</span>)<br>            &#125;<br>        &#125;<br>        location /get &#123;<br>            content_by_lua_block &#123;<br>                <span class="hljs-keyword">local</span> dogs = ngx.shared.dogs<br>                ngx.say(dogs:get(<span class="hljs-string">&quot;Jim&quot;</span>))<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<pre class="language-lua" data-language="lua"><code class="language-lua"><span class="token function">http</span> <span class="token punctuation">&#123;</span>
+    lua_shared_dict dogs 10m<span class="token punctuation">;</span>
+    <span class="token function">server</span> <span class="token punctuation">&#123;</span>
+        location <span class="token operator">/</span><span class="token function">set</span> <span class="token punctuation">&#123;</span>
+            <span class="token function">content_by_lua_block</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">local</span> dogs <span class="token operator">=</span> ngx<span class="token punctuation">.</span>shared<span class="token punctuation">.</span>dogs
+                dogs<span class="token punctuation">:</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"Jim"</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">)</span>
+                ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token string">"STORED"</span><span class="token punctuation">)</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+        location <span class="token operator">/</span><span class="token function">get</span> <span class="token punctuation">&#123;</span>
+            <span class="token function">content_by_lua_block</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">local</span> dogs <span class="token operator">=</span> ngx<span class="token punctuation">.</span>shared<span class="token punctuation">.</span>dogs
+                ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span>dogs<span class="token punctuation">:</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"Jim"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+</code></pre>
 <p>lrucache 的使用方法如<a target="_blank" rel="noopener" href="https://github.com/openresty/lua-resty-lrucache">文档所示</a>。</p>
 <h3 id="Kong-里的多级缓存实现"><a href="#Kong-里的多级缓存实现" class="headerlink" title="Kong 里的多级缓存实现"></a>Kong 里的多级缓存实现</h3><p>有了上面的了解，看 database_cache.lua 这个文件就比较直观了，这里 Kong 会分多类缓存: apis, consumers, plugins 等。具体这样分是因为如果我们对配置做了修改，需要发出 serf 消息来指名这次改动涉及到哪些，其他 Kong 节点收到消息后自然只更新对应的缓存部分。所以 Kong 里申明了一个列表 CACHE_KEYS 来存要缓存的数据类别，同时写了不少生成缓存 key 的方法，比如: api_key，plugin_key 等。</p>
 <p>仔细查看 database_cache.lua，我们发现其实这里是做了两级缓存。Kong 要从缓存里取出一个 key/value，首先从 lrucache 里取，如果有则返回。如果没有则从 share dict 里去取，如果取到则 deserialize 然后存储在 lrucache 里，然后返回。如果 shared dict 里也没有，则返回 nil。标准的两级缓存流程，这样做的好处在于减少 deserialize 的次数，而且 shared dict 可能被多个 worker 同时修改，要修改的时候需要加互斥锁。</p>

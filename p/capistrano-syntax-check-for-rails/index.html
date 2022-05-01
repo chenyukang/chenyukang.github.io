@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          Add syntax check for Capistrano | 程序员的喵
-      
+    
+    Add syntax check for Capistrano |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -158,11 +165,30 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>In an normal release, Rails app’s unit testing will avoid most errors. But for the urgent code publishing, we have got several time of typo error. Code syntax error may cause server crash for a little while(Passenger web server and we using <code>./tmp/restart.txt</code> to restart). We use Capistrano to publish code, so I plan to add a syntax checking before publishing code.<br>The method is writing a task to bundle exec rails runner, this will report most ruby syntax error(except the undef variables in some functions, runner will load .rb files). </p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><code class="hljs ruby">namespace <span class="hljs-symbol">:app</span> <span class="hljs-keyword">do</span><br>  desc <span class="hljs-string">&quot;check all the ruby code&quot;</span><br>  task <span class="hljs-symbol">:check</span> =&gt; <span class="hljs-symbol">:environment</span> <span class="hljs-keyword">do</span><br>    res = <span class="hljs-string">`RAILS_ENV=<span class="hljs-subst">#&#123;Rails.env&#125;</span>  bundle exec rails runner &quot;&quot; 2&gt;&amp;1`</span><br>    raise res <span class="hljs-keyword">if</span> res.size &gt; <span class="hljs-number">0</span><br>  <span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br></code></pre></td></tr></table></figure>
+<pre class="language-ruby" data-language="ruby"><code class="language-ruby">namespace <span class="token symbol">:app</span> <span class="token keyword">do</span>
+  desc <span class="token string-literal"><span class="token string">"check all the ruby code"</span></span>
+  task <span class="token symbol">:check</span> <span class="token operator">=></span> <span class="token symbol">:environment</span> <span class="token keyword">do</span>
+    res <span class="token operator">=</span> <span class="token command-literal"><span class="token command string">`RAILS_ENV=</span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">Rails<span class="token punctuation">.</span>env</span><span class="token delimiter punctuation">&#125;</span></span><span class="token command string">  bundle exec rails runner "" 2>&amp;1`</span></span>
+    <span class="token keyword">raise</span> res <span class="token keyword">if</span> res<span class="token punctuation">.</span>size <span class="token operator">></span> <span class="token number">0</span>
+  <span class="token keyword">end</span>
+<span class="token keyword">end</span></code></pre>
 <p>then add this in the deploy.rb (Capistrano 3.1):</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><code class="hljs ruby">namespace <span class="hljs-symbol">:deploy</span> <span class="hljs-keyword">do</span><br><br>  task <span class="hljs-symbol">:run_code_check</span> <span class="hljs-keyword">do</span><br>    on roles(<span class="hljs-symbol">:all</span>) <span class="hljs-keyword">do</span><br>      within release_path <span class="hljs-keyword">do</span><br>        with <span class="hljs-symbol">rails_env:</span> fetch(<span class="hljs-symbol">:rails_env</span>) <span class="hljs-keyword">do</span><br>          execute <span class="hljs-symbol">:rake</span>, <span class="hljs-string">&#x27;app:check&#x27;</span><br>        <span class="hljs-keyword">end</span><br>      <span class="hljs-keyword">end</span><br>    <span class="hljs-keyword">end</span><br>  <span class="hljs-keyword">end</span><br><br>  before <span class="hljs-string">&quot;deploy:updated&quot;</span>, <span class="hljs-string">&quot;deploy:run_code_check&quot;</span><br><span class="hljs-keyword">end</span><br></code></pre></td></tr></table></figure>
+<pre class="language-ruby" data-language="ruby"><code class="language-ruby">namespace <span class="token symbol">:deploy</span> <span class="token keyword">do</span>
+
+  task <span class="token symbol">:run_code_check</span> <span class="token keyword">do</span>
+    on roles<span class="token punctuation">(</span><span class="token symbol">:all</span><span class="token punctuation">)</span> <span class="token keyword">do</span>
+      within release_path <span class="token keyword">do</span>
+        with rails_env<span class="token operator">:</span> fetch<span class="token punctuation">(</span><span class="token symbol">:rails_env</span><span class="token punctuation">)</span> <span class="token keyword">do</span>
+          execute <span class="token symbol">:rake</span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">'app:check'</span></span>
+        <span class="token keyword">end</span>
+      <span class="token keyword">end</span>
+    <span class="token keyword">end</span>
+  <span class="token keyword">end</span>
+
+  before <span class="token string-literal"><span class="token string">"deploy:updated"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"deploy:run_code_check"</span></span>
+<span class="token keyword">end</span></code></pre>
 <p>This is not a tricky part, but please pay attention to the line:</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><code class="hljs ruby">res = <span class="hljs-string">`RAILS_ENV=<span class="hljs-subst">#&#123;Rails.env&#125;</span>  bundle exec rails runner &quot;&quot; 2&gt;&amp;1`</span><br></code></pre></td></tr></table></figure>
+<pre class="language-ruby" data-language="ruby"><code class="language-ruby">res <span class="token operator">=</span> <span class="token command-literal"><span class="token command string">`RAILS_ENV=</span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">Rails<span class="token punctuation">.</span>env</span><span class="token delimiter punctuation">&#125;</span></span><span class="token command string">  bundle exec rails runner "" 2>&amp;1`</span></span></code></pre>
 <p>This line of code cost me some time, I forget the <code>2&gt;&amp;1</code>. so <code>res</code> will just got the stdout, not the stderr output, which causes the exception is not raised, and Capistrano flow is not stopped.</p>
 </section>
 

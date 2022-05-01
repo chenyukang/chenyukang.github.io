@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          Clang is Making Emacs Smarter | 程序员的喵
-      
+    
+    Clang is Making Emacs Smarter |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -161,11 +168,33 @@
 <pre><code>The gcc version has been difficult to support and maintain, due mainly to the fact that the GIMPLE intermediate language was never designed for static analysis. The abstract syntax tree provided by Clang is an easier data structure to work with for front-end analyses of this kind.
 </code></pre><p>这个 thread 挺好玩的，后面变成了一大群人争论 functional programming 和 Imperative Programming。这篇<a target="_blank" rel="noopener" href="http://fpcomplete.com/the-downfall-of-imperative-programming/">The Downfall of Imperative Programming</a>再好好看看。</p>
 <p>回到正题，我最近切换到 Mac 下。因为在 Mac OS X 下编译器变成了 Clang， Clang 是基于 LLVM 的。LLVM 对于分析代码是有比较方便的支持，所以基于 LLVM 有各种分析源程序的工具了，Xcode 下的一些辅助开发的工具还是很舒服的。前些天突然想到那么会不会有个东西来作为 Emacs 的自动补全的后端，一搜果然有了这个<a target="_blank" rel="noopener" href="https://github.com/mikeandmore/auto-complete-clang">auto-complete-clang</a>，使用了一下非常的方便。其实看看其代码是在后面调用 Clang 的，比如在 main.cc 源文件里面写一些代码：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp"><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Demo</span>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">print</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span></span>;<br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-type">int</span> value;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    std::string s;<br>    Demo demo;<br>    demo.<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>结果还是非常精准的，不想截图了。后端运行的命令其实是：<br><figure class="highlight sh"><table><tr><td class="code"><pre><code class="hljs sh">cmd: clang -cc1 main.cc -fsyntax-only -code-completion-at main.cc:18:10<br></code></pre></td></tr></table></figure></p>
-<p>所得到的结果是：<br><figure class="highlight sh"><table><tr><td class="code"><pre><code class="hljs sh">COMPLETION: Demo : Demo::<br>COMPLETION: operator= : [<span class="hljs-comment">#Demo &amp;#]operator=(&lt;#const Demo &amp;#&gt;)</span><br>COMPLETION: <span class="hljs-built_in">print</span> : [<span class="hljs-comment">#void#]print()</span><br>COMPLETION: <span class="hljs-built_in">test</span> : [<span class="hljs-comment">#void#]test()</span><br>COMPLETION: value : [<span class="hljs-comment">#int#]value</span><br>COMPLETION: ~Demo : [<span class="hljs-comment">#void#]~Demo()</span><br></code></pre></td></tr></table></figure></p>
+<pre class="language-cpp" data-language="cpp"><code class="language-cpp">
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;string></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;vector></span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Demo</span><span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">void</span> <span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span><span class="token operator">:</span>
+    <span class="token keyword">int</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    std<span class="token double-colon punctuation">::</span>string s<span class="token punctuation">;</span>
+    Demo demo<span class="token punctuation">;</span>
+    demo<span class="token punctuation">.</span>
+<span class="token punctuation">&#125;</span></code></pre>
+<p>结果还是非常精准的，不想截图了。后端运行的命令其实是：<br><pre class="language-sh" data-language="sh"><code class="language-sh">cmd: clang -cc1 main.cc -fsyntax-only -code-completion-at main.cc:18:10</code></pre></p>
+<p>所得到的结果是：<br><pre class="language-sh" data-language="sh"><code class="language-sh">COMPLETION: Demo : Demo::
+COMPLETION: operator&#x3D; : [#Demo &amp;#]operator&#x3D;(&lt;#const Demo &amp;#&gt;)
+COMPLETION: print : [#void#]print()
+COMPLETION: test : [#void#]test()
+COMPLETION: value : [#int#]value
+COMPLETION: ~Demo : [#void#]~Demo()</code></pre></p>
 <p>auto-complete-clang 做的事情就是把这个结果再展示出来，其实这条命令也做了语法检查的，所以加上一个语法检查的功能应该也是可以的。一搜果然还是有了，看这个<a target="_blank" rel="noopener" href="http://duncan.mac-vicar.com/2011/08/30/realtime-syntax-checking-with-emacs/">Realtime syntax checking with emacs</a>，需要翻墙，不过代码在<a target="_blank" rel="noopener" href="https://github.com/dmacvicar/duncan-emacs-setup/tree/master/site-lisp">Github 上</a>。其实其后端运行的命令是：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><code class="hljs sh">cmd: clang  -fsyntax-only -fno-exceptions main.cc<br></code></pre></td></tr></table></figure>
+<pre class="language-sh" data-language="sh"><code class="language-sh">cmd: clang  -fsyntax-only -fno-exceptions main.cc</code></pre>
 <p>最近用这个插件，基本代码都会是一遍编译通过啊，哈哈。Clang 错误提示也人性化一点，比如在 Xcode 下会提示你想的是不是”XXX”之类的。</p>
 </section>
 

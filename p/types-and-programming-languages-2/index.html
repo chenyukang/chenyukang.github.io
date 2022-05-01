@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          Types and Programming Languages (2) | 程序员的喵
-      
+    
+    Types and Programming Languages (2) |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -159,14 +166,24 @@
   <article class="post-article">
     <section class="markdown-content"><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><h3 id="Side-effect"><a href="#Side-effect" class="headerlink" title="Side effect"></a>Side effect</h3><p>In particular, besides just yielding results, evaluation of terms in these languages may assign to mutable variables (reference cells, arrays, mutable record fields, etc.), perform input and output to files, displays, or network connections, make non-local transfers of control via exceptions, jumps, or continuations, engage in inter-process synchronization and communication, and so on. In the literature on programming languages, such “side effects” of computation are more generally referred to as computational effects.</p>
 <p>引用指向的对象可以是基本类型、组合类型，甚至是函数，把指向函数的 ref 放进对应的 record，就变成一个简单的 object，OOP 的原型就出来了。</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><code class="hljs ocaml">update = λa:<span class="hljs-type">NatArray</span>. λm:<span class="hljs-type">Nat</span>. λv:<span class="hljs-type">Nat</span>.<br>     a := (λn:<span class="hljs-type">Nat</span>. <span class="hljs-keyword">if</span> equal m n <span class="hljs-keyword">then</span> v <span class="hljs-keyword">else</span> (!a) n);<br></code></pre></td></tr></table></figure>
+<pre class="language-ocaml" data-language="ocaml"><code class="language-ocaml">update <span class="token operator">=</span> λa<span class="token punctuation">:</span>NatArray<span class="token punctuation">.</span> λm<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span> λv<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span>
+     a <span class="token operator">:=</span> <span class="token punctuation">(</span>λn<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span> <span class="token keyword">if</span> equal m n <span class="token keyword">then</span> v <span class="token keyword">else</span> <span class="token punctuation">(</span><span class="token operator">!</span>a<span class="token punctuation">)</span> n<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>通过这个习题的例子可以看出 ref 引进的副作用。</p>
 <h2 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a>Garbage Collection</h2><h3 id="GC-or-not"><a href="#GC-or-not" class="headerlink" title="GC or not"></a>GC or not</h3><p>This is not just a question of taste in language design: it is extremely difficult to achieve type safety in the presence of an explicit deallocation operation.</p>
 <p>The reason for this is the familiar dangling reference problem: we allocate a cell holding a number, save a reference to it in some data structure, use it for a while, then deallocate it and allocate a new cell holding a boolean, possibly reusing the same storage. Now we can have two names for the same storage cell—one with type Ref Nat and the other with type Ref Bool.</p>
 <h3 id="Pointer"><a href="#Pointer" class="headerlink" title="Pointer"></a>Pointer</h3><p>Pointer arithmetic is occasionally very useful (especially for implementing low-level components of run-time systems, such as garbage collectors), it cannot be tracked by most type systems: knowing that location n in the store contains a Float doesn’t tell us anything useful about the type of location n + 4. In C, pointer arithmetic is a notorious source of type safety violations.</p>
 <p>Store typings: 引入引用后类型系统需要处理 Cyclic reference structures，比如 double linked list。Store typings 就是一个 locations 到 typings 的映射。</p>
 <p>实现 fullref： 引用部分的实现非常简单，</p>
-<figure class="highlight ocaml"><table><tr><td class="code"><pre><code class="hljs ocaml">| <span class="hljs-type">TmRef</span>(fi,t1) -&gt;<br>    <span class="hljs-type">TyRef</span>(typeof ctx t1)<br>| <span class="hljs-type">TmLoc</span>(fi,l) -&gt;<br>    error fi <span class="hljs-string">&quot;locations are not supposed to occur in source programs!&quot;</span><br>| <span class="hljs-type">TmDeref</span>(fi,t1) -&gt;<br>    (<span class="hljs-keyword">match</span> simplifyty ctx (typeof ctx t1) <span class="hljs-keyword">with</span><br>        <span class="hljs-type">TyRef</span>(tyT1) -&gt; tyT1<br>      | <span class="hljs-type">TyBot</span> -&gt; <span class="hljs-type">TyBot</span><br>      | <span class="hljs-type">TySource</span>(tyT1) -&gt; tyT1<br>      | _ -&gt; error fi <span class="hljs-string">&quot;argument of ! is not a Ref or Source&quot;</span>)<br></code></pre></td></tr></table></figure>
+<pre class="language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmRef<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">)</span> <span class="token operator">-></span>
+    TyRef<span class="token punctuation">(</span>typeof ctx t1<span class="token punctuation">)</span>
+<span class="token operator">|</span> TmLoc<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>l<span class="token punctuation">)</span> <span class="token operator">-></span>
+    error fi <span class="token string">"locations are not supposed to occur in source programs!"</span>
+<span class="token operator">|</span> TmDeref<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">)</span> <span class="token operator">-></span>
+    <span class="token punctuation">(</span><span class="token keyword">match</span> simplifyty ctx <span class="token punctuation">(</span>typeof ctx t1<span class="token punctuation">)</span> <span class="token keyword">with</span>
+        TyRef<span class="token punctuation">(</span>tyT1<span class="token punctuation">)</span> <span class="token operator">-></span> tyT1
+      <span class="token operator">|</span> TyBot <span class="token operator">-></span> TyBot
+      <span class="token operator">|</span> TySource<span class="token punctuation">(</span>tyT1<span class="token punctuation">)</span> <span class="token operator">-></span> tyT1
+      <span class="token operator">|</span> <span class="token punctuation">_</span> <span class="token operator">-></span> error fi <span class="token string">"argument of ! is not a Ref or Source"</span><span class="token punctuation">)</span></code></pre>
 </section>
 
     <p></p>

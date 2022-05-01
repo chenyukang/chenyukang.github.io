@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          Nginx https too many redirect | 程序员的喵
-      
+    
+    Nginx https too many redirect |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -158,15 +165,18 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Http 请求在经过多层 Nginx 的时候，通常强制 http 跳转到 https 的时候会这样配置：</p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">return</span> <span class="hljs-number">302</span> https://<span class="hljs-variable">$host</span><span class="hljs-variable">$request_uri</span>; <br><span class="hljs-comment">## 需要注意这里是 request_uri 而不是 uri，否则会引起安全问题</span><br></code></pre></td></tr></table></figure>
+<pre class="language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">return</span> <span class="token number">302</span> https://<span class="token variable">$host</span><span class="token variable">$request_uri</span></span><span class="token punctuation">;</span> 
+<span class="token comment">## 需要注意这里是 request_uri 而不是 uri，否则会引起安全问题</span></code></pre>
 <p>但是如果是多层 Nginx，前面的 Nginx 需要把用户原始请求的 scheme 传递到后端，可以加上头部设置： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">proxy_set_header</span> X-Forwarded-Proto <span class="hljs-variable">$scheme</span>;<br></code></pre></td></tr></table></figure>
+<pre class="language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">proxy_set_header</span> X-Forwarded-Proto <span class="token variable">$scheme</span></span><span class="token punctuation">;</span></code></pre>
 <p>后面的 Nginx 再判断一次：</p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">if</span> ( <span class="hljs-variable">$http_x_forwarded_proto</span> != <span class="hljs-string">&#x27;https&#x27;</span> ) &#123;<br>  <span class="hljs-attribute">return</span> <span class="hljs-number">301</span> https://<span class="hljs-variable">$host</span><span class="hljs-variable">$request_uri</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre class="language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">if</span> ( <span class="token variable">$http_x_forwarded_proto</span> != <span class="token string">'https'</span> )</span> <span class="token punctuation">&#123;</span>
+  <span class="token directive"><span class="token keyword">return</span> <span class="token number">301</span> https://<span class="token variable">$host</span><span class="token variable">$request_uri</span></span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
 <p>否则强制 https 经常会出现类似<code>ERR_TOO_MANY_REDIRECTS 将您重定向的次数过多</code>这样的问题。</p>
 <p>可是在实践过程中偶尔也碰到过一些 ELB 会丢掉 scheme 的问题，比如在这样的请求链路情况下<code>elb =&gt; nginx =&gt; nginx =&gt; application</code>第二层 Nginx 获取的 scheme 就有问题了，这也可能会导致<code>too many redirects</code>问题。</p>
 <p>可以尝试在第二层 Nginx 上这样解决： </p>
-<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">proxy_set_header</span>   X-Forwarded-Proto <span class="hljs-variable">$http_x_forwarded_proto</span>;<br></code></pre></td></tr></table></figure>
+<pre class="language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">proxy_set_header</span>   X-Forwarded-Proto <span class="token variable">$http_x_forwarded_proto</span></span><span class="token punctuation">;</span></code></pre>
 <p>当然强制 https 这样的跳转逻辑尽量放在请求链路的最外层，这样问题会少一些。</p>
 </section>
 

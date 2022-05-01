@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          My org-mode stuff | 程序员的喵
-      
+    
+    My org-mode stuff |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -159,7 +166,19 @@
   <article class="post-article">
     <section class="markdown-content"><p> I switched to org-mode from EverNote recently, and the experience imrpoved much for note and journal writing, especially for technical notes. After the whole tool is set appropriately, I am even addicted to writing. During my setting up for org-mode and related tools, I found these code snippets are really handy, so let’s have a share.</p>
 <h3 id="Insert-Pic-from-paste"><a href="#Insert-Pic-from-paste" class="headerlink" title="Insert Pic from paste"></a>Insert Pic from paste</h3><p> You need to install <strong>pngpaste</strong> first, then with this elisp function, we can copy the picture from paste very quickly, the picture will store on current directory’s img sub-directory, it will create it if img directory is not exists.</p>
-<figure class="highlight lisp"><table><tr><td class="code"><pre><code class="hljs lisp">(<span class="hljs-name">defun</span> org-insert-image ()<br>  (<span class="hljs-name">interactive</span>)<br>  (<span class="hljs-name">let*</span> ((<span class="hljs-name">path</span> (<span class="hljs-name">concat</span> default-directory <span class="hljs-string">&quot;img/&quot;</span>))<br>         (<span class="hljs-name">image-file</span> (<span class="hljs-name">concat</span><br>                      path<br>                      (<span class="hljs-name">buffer-name</span>)<br>                      (<span class="hljs-name">format-time-string</span> <span class="hljs-string">&quot;_%Y%m%d_%H%M%S.png&quot;</span>))))<br>    (<span class="hljs-name">if</span> (<span class="hljs-name">not</span> (<span class="hljs-name">file-exists-p</span> path))<br>        (<span class="hljs-name">mkdir</span> path))<br>    (<span class="hljs-name">shell-command</span> (<span class="hljs-name">concat</span> <span class="hljs-string">&quot;pngpaste &quot;</span> image-file))<br>    (<span class="hljs-name">org-insert-link</span> <span class="hljs-literal">nil</span> (<span class="hljs-name">concat</span> <span class="hljs-string">&quot;file:&quot;</span> image-file) <span class="hljs-string">&quot;&quot;</span>))<br>    <span class="hljs-comment">;; (org-display-inline-images) ;; show inline picture</span><br>  )<br></code></pre></td></tr></table></figure>
+<pre class="language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">org-insert-image</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
+  <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token keyword">let*</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token car">path</span> <span class="token punctuation">(</span><span class="token keyword">concat</span> default-directory <span class="token string">"img/"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+         <span class="token punctuation">(</span><span class="token car">image-file</span> <span class="token punctuation">(</span><span class="token keyword">concat</span>
+                      path
+                      <span class="token punctuation">(</span><span class="token car">buffer-name</span><span class="token punctuation">)</span>
+                      <span class="token punctuation">(</span><span class="token car">format-time-string</span> <span class="token string">"_%Y%m%d_%H%M%<span class="token argument">S</span>.png"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">not</span> <span class="token punctuation">(</span><span class="token car">file-exists-p</span> path<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token car">mkdir</span> path<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token car">shell-command</span> <span class="token punctuation">(</span><span class="token keyword">concat</span> <span class="token string">"pngpaste "</span> image-file<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token car">org-insert-link</span> <span class="token boolean">nil</span> <span class="token punctuation">(</span><span class="token keyword">concat</span> <span class="token string">"file:"</span> image-file<span class="token punctuation">)</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token comment">;; (org-display-inline-images) ;; show inline picture</span>
+  <span class="token punctuation">)</span></code></pre>
 <h3 id="Using-org-ruby-for-Hexo-publishing"><a href="#Using-org-ruby-for-Hexo-publishing" class="headerlink" title="Using org-ruby for Hexo publishing"></a>Using org-ruby for Hexo publishing</h3><p> I using Hexo for blogging, the default format is markdown in Hexo, so I need to convert org format to markdown format very conveniently, and finally org-ruby solve it. I did some dirty hacks on the codebase, <a target="_blank" rel="noopener" href="https://github.com/chenyukang/org-ruby/pull/1/files">please have a look at this PR</a>, this PR solve three issues.</p>
 <ul>
 <li>Add title and path attributes in org file, and the ruby script will extract it for dumping markdown file.</li>
@@ -167,11 +186,80 @@
 <li>Copy the images to proper directory for Hexo, support image size attributes.</li>
 </ul>
 <p> Then I added an elisp function for auto publish it after saving file whenever “#MD_TITLE:” is founded in buffer:</p>
-<figure class="highlight lisp"><table><tr><td class="code"><pre><code class="hljs lisp">(<span class="hljs-name">defun</span> org-publish-to-hexo ()<br>  (<span class="hljs-name">interactive</span>)<br>  (<span class="hljs-name">shell-command</span> (<span class="hljs-name">concat</span><br>                  <span class="hljs-string">&quot;org-ruby &quot;</span> <span class="hljs-string">&quot;--translate &quot;</span> <span class="hljs-string">&quot;markdown &quot;</span> <span class="hljs-string">&quot;-a &quot;</span><br>                  (<span class="hljs-name">buffer-name</span>))))<br>(<span class="hljs-name">defalias</span> &#x27;op &#x27;org-publish-to-hexo)<br><br>(<span class="hljs-name">defun</span> buffer-contains-substring (<span class="hljs-name">string</span>)<br>  (<span class="hljs-name">save-excursion</span><br>    (<span class="hljs-name">save-match-data</span><br>      (<span class="hljs-name">goto-char</span> (<span class="hljs-name">point-min</span>))<br>      (<span class="hljs-name">search-forward</span> string <span class="hljs-literal">nil</span> <span class="hljs-literal">t</span>))))<br><br>(<span class="hljs-name">defun</span> org-auto-publish-save-hook ()<br>  (<span class="hljs-name">when</span> (<span class="hljs-name">and</span> (<span class="hljs-name">eq</span> major-mode &#x27;org-mode)<br>             (<span class="hljs-name">buffer-contains-substring</span> <span class="hljs-string">&quot;#+MD_TITLE:&quot;</span>)<br>             (<span class="hljs-name">buffer-contains-substring</span> <span class="hljs-string">&quot;#+MD_PATH:&quot;</span>))<br>    (<span class="hljs-name">message</span> <span class="hljs-string">&quot;publishing to Hexo markdown&quot;</span>)<br>    (<span class="hljs-name">org-publish-to-hexo</span>)))<br><br>(<span class="hljs-name">add-hook</span> &#x27;after-save-hook #&#x27;org-auto-publish-save-hook)<br><br>(<span class="hljs-name">defun</span> org-before-save-hook ()<br>  (<span class="hljs-name">when</span> (<span class="hljs-name">eq</span> major-mode &#x27;org-mode)<br>    (<span class="hljs-name">message</span> <span class="hljs-string">&quot;saving org-file&quot;</span>)<br>    (<span class="hljs-name">pangu-spacing-space-current-buffer</span>)<br>    <span class="hljs-comment">;;(fill-region (point-min) (point-max))</span><br>    ))<br>(<span class="hljs-name">add-hook</span> &#x27;before-save-hook #&#x27;org-before-save-hook)<br></code></pre></td></tr></table></figure>
+<pre class="language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">org-publish-to-hexo</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
+  <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token car">shell-command</span> <span class="token punctuation">(</span><span class="token keyword">concat</span>
+                  <span class="token string">"org-ruby "</span> <span class="token string">"--translate "</span> <span class="token string">"markdown "</span> <span class="token string">"-a "</span>
+                  <span class="token punctuation">(</span><span class="token car">buffer-name</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span><span class="token car">defalias</span> <span class="token quoted-symbol variable symbol">'op</span> <span class="token quoted-symbol variable symbol">'org-publish-to-hexo</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">buffer-contains-substring</span> <span class="token punctuation">(</span><span class="token arguments"><span class="token argument variable">string</span></span><span class="token punctuation">)</span></span>
+  <span class="token punctuation">(</span><span class="token car">save-excursion</span>
+    <span class="token punctuation">(</span><span class="token car">save-match-data</span>
+      <span class="token punctuation">(</span><span class="token car">goto-char</span> <span class="token punctuation">(</span><span class="token car">point-min</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token punctuation">(</span><span class="token car">search-forward</span> string <span class="token boolean">nil</span> <span class="token boolean">t</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">org-auto-publish-save-hook</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
+  <span class="token punctuation">(</span><span class="token keyword">when</span> <span class="token punctuation">(</span><span class="token keyword">and</span> <span class="token punctuation">(</span><span class="token car">eq</span> major-mode <span class="token quoted-symbol variable symbol">'org-mode</span><span class="token punctuation">)</span>
+             <span class="token punctuation">(</span><span class="token car">buffer-contains-substring</span> <span class="token string">"#+MD_TITLE:"</span><span class="token punctuation">)</span>
+             <span class="token punctuation">(</span><span class="token car">buffer-contains-substring</span> <span class="token string">"#+MD_PATH:"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token keyword">message</span> <span class="token string">"publishing to Hexo markdown"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token car">org-publish-to-hexo</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">(</span><span class="token car">add-hook</span> <span class="token quoted-symbol variable symbol">'after-save-hook</span> <span class="token quoted-symbol variable symbol">#'org-auto-publish-save-hook</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">org-before-save-hook</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
+  <span class="token punctuation">(</span><span class="token keyword">when</span> <span class="token punctuation">(</span><span class="token car">eq</span> major-mode <span class="token quoted-symbol variable symbol">'org-mode</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token keyword">message</span> <span class="token string">"saving org-file"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token car">pangu-spacing-space-current-buffer</span><span class="token punctuation">)</span>
+    <span class="token comment">;;(fill-region (point-min) (point-max))</span>
+    <span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span><span class="token car">add-hook</span> <span class="token quoted-symbol variable symbol">'before-save-hook</span> <span class="token quoted-symbol variable symbol">#'org-before-save-hook</span><span class="token punctuation">)</span></code></pre>
 <h3 id="pangu-spacing"><a href="#pangu-spacing" class="headerlink" title="pangu-spacing"></a>pangu-spacing</h3><p> This package will add spacing between Chinese word and English word, so I hooked it before save org file:</p>
-<figure class="highlight lisp"><table><tr><td class="code"><pre><code class="hljs lisp">(<span class="hljs-name">require</span> &#x27;pangu-spacing)<br>(<span class="hljs-name">global-pangu-spacing-mode</span> <span class="hljs-number">1</span>)<br><span class="hljs-comment">;;(setq pangu-spacing-real-insert-separtor t)</span><br><br>(<span class="hljs-name">defun</span> org-before-save-hook ()<br>  (<span class="hljs-name">when</span> (<span class="hljs-name">eq</span> major-mode &#x27;org-mode)<br>    (<span class="hljs-name">message</span> <span class="hljs-string">&quot;saving org-file&quot;</span>)<br>    (<span class="hljs-name">pangu-spacing-space-current-buffer</span>)<br>    ))<br><br>(<span class="hljs-name">add-hook</span> &#x27;before-save-hook #&#x27;org-before-save-hook)<br></code></pre></td></tr></table></figure>
+<pre class="language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token keyword">require</span> <span class="token quoted-symbol variable symbol">'pangu-spacing</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span><span class="token car">global-pangu-spacing-mode</span> <span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token comment">;;(setq pangu-spacing-real-insert-separtor t)</span>
+
+<span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">org-before-save-hook</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
+  <span class="token punctuation">(</span><span class="token keyword">when</span> <span class="token punctuation">(</span><span class="token car">eq</span> major-mode <span class="token quoted-symbol variable symbol">'org-mode</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token keyword">message</span> <span class="token string">"saving org-file"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token car">pangu-spacing-space-current-buffer</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">(</span><span class="token car">add-hook</span> <span class="token quoted-symbol variable symbol">'before-save-hook</span> <span class="token quoted-symbol variable symbol">#'org-before-save-hook</span><span class="token punctuation">)</span></code></pre>
 <h3 id="org-capture"><a href="#org-capture" class="headerlink" title="org-capture"></a>org-capture</h3><p> And the best thing is org-capture, with this we can write all kinds of tempaltes, for journal writing, I need to generate file according to date and time:</p>
-<figure class="highlight lisp"><table><tr><td class="code"><pre><code class="hljs lisp">(<span class="hljs-name">defun</span> create-code-file ()<br>  (<span class="hljs-name">interactive</span>)<br>  (<span class="hljs-name">let</span> ((<span class="hljs-name">name</span> (<span class="hljs-name">concat</span> (<span class="hljs-name">format-time-string</span> <span class="hljs-string">&quot;%Y_%m_%d_&quot;</span>)<br>                       (<span class="hljs-name">read-string</span> <span class="hljs-string">&quot;file-name: &quot;</span>))))<br>    (<span class="hljs-name">expand-file-name</span> (<span class="hljs-name">format</span> <span class="hljs-string">&quot;%s.org&quot;</span> name) <span class="hljs-string">&quot;~/Dropbox/org/snippets/&quot;</span>)))<br><br>(<span class="hljs-name">defun</span> gen-date-file ()<br>  <span class="hljs-string">&quot;Create an org file in ~/notes/snippets.&quot;</span><br>  (<span class="hljs-name">format-time-string</span> <span class="hljs-string">&quot;~/Dropbox/org/journals/%Y_%m_%d.org&quot;</span>))<br><br>(<span class="hljs-name">setq</span> org-capture-templates<br>      &#x27;((<span class="hljs-string">&quot;t&quot;</span> <span class="hljs-string">&quot;Todo&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/work.org&quot;</span>)<br>         <span class="hljs-string">&quot;** TODO %?\n  %i\n &quot;</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;x&quot;</span> <span class="hljs-string">&quot;Task&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/work.org&quot;</span>)<br>         <span class="hljs-string">&quot;** TODO %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n&quot;</span>)<br>        (<span class="hljs-string">&quot;e&quot;</span> <span class="hljs-string">&quot;Task&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/life.org&quot;</span>)<br>         <span class="hljs-string">&quot;** TODO %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n&quot;</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;l&quot;</span> <span class="hljs-string">&quot;Todo&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/learn.org&quot;</span>)<br>         <span class="hljs-string">&quot;** TODO %?\nEntered on %U\n  %i\n\n &quot;</span> :kill-buffer <span class="hljs-literal">t</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;k&quot;</span> <span class="hljs-string">&quot;Todo&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/learn.org&quot;</span>)<br>         <span class="hljs-string">&quot;* TODO %?\n  %i\n %f\n %a&quot;</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;j&quot;</span> <span class="hljs-string">&quot;Journal&quot;</span> entry (file+datetree <span class="hljs-string">&quot;~/Dropbox/org/_journal.org&quot;</span> )<br>         <span class="hljs-string">&quot;** %?\nEntered on %U\n  %i\n&quot;</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;J&quot;</span> <span class="hljs-string">&quot;Journal&quot;</span> entry (file gen-date-file)<br>         <span class="hljs-string">&quot;** %?\nEntered on %U\n  %i\n&quot;</span> :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;c&quot;</span> <span class="hljs-string">&quot;Code snippet&quot;</span> entry (file+headline <span class="hljs-string">&quot;~/Dropbox/org/_code.org&quot;</span> <span class="hljs-string">&quot;Code&quot;</span>)<br>         <span class="hljs-string">&quot;** %^&#123;desc&#125;\n#+BEGIN_SRC %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC&quot;</span> <br>          :empty-lines <span class="hljs-number">1</span>)<br>        (<span class="hljs-string">&quot;C&quot;</span> <span class="hljs-string">&quot;Notes&quot;</span> entry (file create-code-file)<br>         <span class="hljs-string">&quot;** %^&#123;desc&#125;\n#+BEGIN_SRC %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC&quot;</span> <br>          :empty-lines <span class="hljs-number">1</span>)<br>        ))<br></code></pre></td></tr></table></figure></section>
+<pre class="language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">create-code-file</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
+  <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token keyword">let</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token car">name</span> <span class="token punctuation">(</span><span class="token keyword">concat</span> <span class="token punctuation">(</span><span class="token car">format-time-string</span> <span class="token string">"%Y_%m_%d_"</span><span class="token punctuation">)</span>
+                       <span class="token punctuation">(</span><span class="token car">read-string</span> <span class="token string">"file-name: "</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token car">expand-file-name</span> <span class="token punctuation">(</span><span class="token car">format</span> <span class="token string">"%s.org"</span> name<span class="token punctuation">)</span> <span class="token string">"~/Dropbox/org/snippets/"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">gen-date-file</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
+  <span class="token string">"Create an org file in ~/notes/snippets."</span>
+  <span class="token punctuation">(</span><span class="token car">format-time-string</span> <span class="token string">"~/Dropbox/org/journals/%Y_%m_%d.org"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">(</span><span class="token keyword">setq</span> org-capture-templates
+      <span class="token punctuation">'(</span><span class="token punctuation">(</span><span class="token string">"t"</span> <span class="token string">"Todo"</span> entry <span class="token punctuation">(</span><span class="token car">file+datetree</span> <span class="token string">"~/Dropbox/org/work.org"</span><span class="token punctuation">)</span>
+         <span class="token string">"** <span class="token argument">TODO</span> %?\n  %i\n "</span> <span class="token lisp-property property">:empty-lines</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token string">"x"</span> <span class="token string">"Task"</span> entry <span class="token punctuation">(</span><span class="token car">file+datetree</span> <span class="token string">"~/Dropbox/org/work.org"</span><span class="token punctuation">)</span>
+         <span class="token string">"** <span class="token argument">TODO</span> %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n"</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token string">"e"</span> <span class="token string">"Task"</span> entry <span class="token punctuation">(</span><span class="token car">file+datetree</span> <span class="token string">"~/Dropbox/org/life.org"</span><span class="token punctuation">)</span>
+         <span class="token string">"** <span class="token argument">TODO</span> %^&#123;priority|[#A]|[#B]|[#C]&#125; %?\n"</span> <span class="token lisp-property property">:empty-lines</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token string">"l"</span> <span class="token string">"Todo"</span> entry <span class="token punctuation">(</span><span class="token car">file+datetree</span> <span class="token string">"~/Dropbox/org/learn.org"</span><span class="token punctuation">)</span>
+         <span class="token string">"** <span class="token argument">TODO</span> %?\nEntered on %U\n  %i\n\n "</span> <span class="token lisp-property property">:kill-buffer</span> <span class="token boolean">t</span> <span class="token lisp-property property">:empty-lines</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token string">"k"</span> <span class="token string">"Todo"</span> entry <span class="token punctuation">(</span><span class="token car">file+datetree</span> <span class="token string">"~/Dropbox/org/learn.org"</span><span class="token punctuation">)</span>
+         <span class="token string">"* <span class="token argument">TODO</span> %?\n  %i\n %f\n %a"</span> <span class="token lisp-property property">:empty-lines</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token string">"j"</span> <span class="token string">"Journal"</span> entry <span class="token punctuation">(</span><span class="token car">file+datetree</span> <span class="token string">"~/Dropbox/org/_journal.org"</span> <span class="token punctuation">)</span>
+         <span class="token string">"** %?\nEntered on %U\n  %i\n"</span> <span class="token lisp-property property">:empty-lines</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token string">"J"</span> <span class="token string">"Journal"</span> entry <span class="token punctuation">(</span><span class="token car">file</span> gen-date-file<span class="token punctuation">)</span>
+         <span class="token string">"** %?\nEntered on %U\n  %i\n"</span> <span class="token lisp-property property">:empty-lines</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token string">"c"</span> <span class="token string">"Code snippet"</span> entry <span class="token punctuation">(</span><span class="token car">file+headline</span> <span class="token string">"~/Dropbox/org/_code.org"</span> <span class="token string">"Code"</span><span class="token punctuation">)</span>
+         <span class="token string">"** %^&#123;desc&#125;\n#+BEGIN_<span class="token argument">SRC</span> %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC"</span> 
+          <span class="token lisp-property property">:empty-lines</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token string">"C"</span> <span class="token string">"Notes"</span> entry <span class="token punctuation">(</span><span class="token car">file</span> create-code-file<span class="token punctuation">)</span>
+         <span class="token string">"** %^&#123;desc&#125;\n#+BEGIN_<span class="token argument">SRC</span> %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC"</span> 
+          <span class="token lisp-property property">:empty-lines</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre></section>
 
     <p></p>
     <!-- 二维码 START -->

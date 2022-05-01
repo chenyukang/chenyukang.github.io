@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          Kong 集群 Left Cluster Node 问题 | 程序员的喵
-      
+    
+    Kong 集群 Left Cluster Node 问题 |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -161,7 +168,26 @@
 <p>在 Kong 多节点部署的时候，有时候某个节点停掉后，我们在后台可以看到 left 的信息，而且这个 left 信息会保留一段不短的时间。类似于如下： </p>
 <p><img src="/images/kong-left-0133521.png" alt="kong-left"></p>
 <h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>管理后台 Konga 是通过 api 获取的节点信息，在<code>kong/kong/api/routes/cluster.lua</code>文件里可以看到如下路由处理逻辑： </p>
-<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">GET = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(self, dao_factory, helpers)</span></span><br>  <span class="hljs-keyword">local</span> members, err = singletons.serf:members()<br>  <span class="hljs-keyword">if</span> err <span class="hljs-keyword">then</span><br>    <span class="hljs-keyword">return</span> responses.send_HTTP_INTERNAL_SERVER_ERROR(err)<br>  <span class="hljs-keyword">end</span><br><br>  <span class="hljs-keyword">local</span> result = &#123;data = &#123;&#125;&#125;<br>  <span class="hljs-keyword">for</span> _, v <span class="hljs-keyword">in</span> <span class="hljs-built_in">pairs</span>(members) <span class="hljs-keyword">do</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">self</span>.params.<span class="hljs-built_in">status</span> <span class="hljs-keyword">or</span> (<span class="hljs-built_in">self</span>.params.<span class="hljs-built_in">status</span> <span class="hljs-keyword">and</span> v.<span class="hljs-built_in">status</span> == <span class="hljs-built_in">self</span>.params.<span class="hljs-built_in">status</span>) <span class="hljs-keyword">then</span><br>      table_insert(result.data, &#123;<br>        name = v.name,<br>        address = v.addr,<br>        <span class="hljs-built_in">status</span> = v.<span class="hljs-built_in">status</span><br>      &#125;)<br>    <span class="hljs-keyword">end</span><br>  <span class="hljs-keyword">end</span><br><br>  result.total = #result.data<br>  <span class="hljs-keyword">return</span> responses.send_HTTP_OK(result)<br><span class="hljs-keyword">end</span>,<br></code></pre></td></tr></table></figure>
+<pre class="language-lua" data-language="lua"><code class="language-lua">GET <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> dao_factory<span class="token punctuation">,</span> helpers<span class="token punctuation">)</span>
+  <span class="token keyword">local</span> members<span class="token punctuation">,</span> err <span class="token operator">=</span> singletons<span class="token punctuation">.</span>serf<span class="token punctuation">:</span><span class="token function">members</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> err <span class="token keyword">then</span>
+    <span class="token keyword">return</span> responses<span class="token punctuation">.</span><span class="token function">send_HTTP_INTERNAL_SERVER_ERROR</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span>
+  <span class="token keyword">end</span>
+
+  <span class="token keyword">local</span> result <span class="token operator">=</span> <span class="token punctuation">&#123;</span>data <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>
+  <span class="token keyword">for</span> _<span class="token punctuation">,</span> v <span class="token keyword">in</span> <span class="token function">pairs</span><span class="token punctuation">(</span>members<span class="token punctuation">)</span> <span class="token keyword">do</span>
+    <span class="token keyword">if</span> <span class="token keyword">not</span> self<span class="token punctuation">.</span>params<span class="token punctuation">.</span>status <span class="token keyword">or</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>params<span class="token punctuation">.</span>status <span class="token keyword">and</span> v<span class="token punctuation">.</span>status <span class="token operator">==</span> self<span class="token punctuation">.</span>params<span class="token punctuation">.</span>status<span class="token punctuation">)</span> <span class="token keyword">then</span>
+      <span class="token function">table_insert</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>data<span class="token punctuation">,</span> <span class="token punctuation">&#123;</span>
+        name <span class="token operator">=</span> v<span class="token punctuation">.</span>name<span class="token punctuation">,</span>
+        address <span class="token operator">=</span> v<span class="token punctuation">.</span>addr<span class="token punctuation">,</span>
+        status <span class="token operator">=</span> v<span class="token punctuation">.</span>status
+      <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token keyword">end</span>
+  <span class="token keyword">end</span>
+
+  result<span class="token punctuation">.</span>total <span class="token operator">=</span> <span class="token operator">#</span>result<span class="token punctuation">.</span>data
+  <span class="token keyword">return</span> responses<span class="token punctuation">.</span><span class="token function">send_HTTP_OK</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span>
+<span class="token keyword">end</span><span class="token punctuation">,</span></code></pre>
 <p>具体<code>serf:members()</code>的实现在 serf.lua 里面可以看到，就是执行了<code>serf cluster members</code>命令获取结果然后返回 JSON。所以我们在服务器上执行这个命令其实也可以看到类似的结果： </p>
 <p><img src="/images/kong-left-cmd.png" alt="kong-left-cmd"></p>
 <p>那么问题的根源当然是在 Serf 本身里面，通过看文档发现原来确实是有一定延迟的。</p>
@@ -170,13 +196,78 @@
 <p><a target="_blank" rel="noopener" href="https://www.serf.io/docs/internals/gossip.html#lifeguard-enhancements">参考 serf 文档»</a></p>
 </blockquote>
 <h4 id="serf-的具体实现"><a href="#serf-的具体实现" class="headerlink" title="serf 的具体实现"></a>serf 的具体实现</h4><p>接着稍微看了一下 Serf 的代码，果然 Go 的项目代码直观好读。在 Serf 这个结构体里面保存了一个 leftMembers 的状态列表，每次收到 left 事件的时候处理逻辑是： </p>
-<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// handleNodeLeaveIntent is called when an intent to leave is received.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *Serf)</span></span> handleNodeLeaveIntent(leaveMsg *messageLeave) <span class="hljs-type">bool</span> &#123;<br>  ..................<br>    <br>  <span class="hljs-comment">// State transition depends on current state</span><br>  <span class="hljs-keyword">switch</span> member.Status &#123;<br>  <span class="hljs-keyword">case</span> StatusAlive:<br>    member.Status = StatusLeaving<br>    member.statusLTime = leaveMsg.LTime<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>  <span class="hljs-keyword">case</span> StatusFailed:<br>    member.Status = StatusLeft<br>    member.statusLTime = leaveMsg.LTime<br><br>    <span class="hljs-comment">// Remove from the failed list and add to the left list. We add</span><br>    <span class="hljs-comment">// to the left list so that when we do a sync, other nodes will</span><br>    <span class="hljs-comment">// remove it from their failed list.</span><br>    s.failedMembers = removeOldMember(s.failedMembers, member.Name)<br>    s.leftMembers = <span class="hljs-built_in">append</span>(s.leftMembers, member)<br>        <br>        ................<br>        <br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>  <span class="hljs-keyword">default</span>:<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre class="language-go" data-language="go"><code class="language-go"><span class="token comment">// handleNodeLeaveIntent is called when an intent to leave is received.</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>Serf<span class="token punctuation">)</span> <span class="token function">handleNodeLeaveIntent</span><span class="token punctuation">(</span>leaveMsg <span class="token operator">*</span>messageLeave<span class="token punctuation">)</span> <span class="token builtin">bool</span> <span class="token punctuation">&#123;</span>
+	<span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span>
+    
+	<span class="token comment">// State transition depends on current state</span>
+	<span class="token keyword">switch</span> member<span class="token punctuation">.</span>Status <span class="token punctuation">&#123;</span>
+	<span class="token keyword">case</span> StatusAlive<span class="token punctuation">:</span>
+		member<span class="token punctuation">.</span>Status <span class="token operator">=</span> StatusLeaving
+		member<span class="token punctuation">.</span>statusLTime <span class="token operator">=</span> leaveMsg<span class="token punctuation">.</span>LTime
+		<span class="token keyword">return</span> <span class="token boolean">true</span>
+	<span class="token keyword">case</span> StatusFailed<span class="token punctuation">:</span>
+		member<span class="token punctuation">.</span>Status <span class="token operator">=</span> StatusLeft
+		member<span class="token punctuation">.</span>statusLTime <span class="token operator">=</span> leaveMsg<span class="token punctuation">.</span>LTime
+
+		<span class="token comment">// Remove from the failed list and add to the left list. We add</span>
+		<span class="token comment">// to the left list so that when we do a sync, other nodes will</span>
+		<span class="token comment">// remove it from their failed list.</span>
+		s<span class="token punctuation">.</span>failedMembers <span class="token operator">=</span> <span class="token function">removeOldMember</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>failedMembers<span class="token punctuation">,</span> member<span class="token punctuation">.</span>Name<span class="token punctuation">)</span>
+		s<span class="token punctuation">.</span>leftMembers <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>leftMembers<span class="token punctuation">,</span> member<span class="token punctuation">)</span>
+        
+        <span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token punctuation">.</span>
+        
+		<span class="token keyword">return</span> <span class="token boolean">true</span>
+	<span class="token keyword">default</span><span class="token punctuation">:</span>
+		<span class="token keyword">return</span> <span class="token boolean">false</span>
+	<span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
 <p>通过索引变量发现这个列表会定时通过<code>handleReap</code>函数更新，逻辑如下： </p>
-<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// handleReap periodically reaps the list of failed and left members, as well</span><br><span class="hljs-comment">// as old buffered intents.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *Serf)</span></span> handleReap() &#123;<br>  <span class="hljs-keyword">for</span> &#123;<br>    <span class="hljs-keyword">select</span> &#123;<br>    <span class="hljs-keyword">case</span> &lt;-time.After(s.config.ReapInterval):<br>      s.memberLock.Lock()<br>      now := time.Now()<br>      s.failedMembers = s.reap(s.failedMembers, now, s.config.ReconnectTimeout)<br>      s.leftMembers = s.reap(s.leftMembers, now, s.config.TombstoneTimeout)<br>      reapIntents(s.recentIntents, now, s.config.RecentIntentTimeout)<br>      s.memberLock.Unlock()<br>    <span class="hljs-keyword">case</span> &lt;-s.shutdownCh:<br>      <span class="hljs-keyword">return</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre class="language-go" data-language="go"><code class="language-go"><span class="token comment">// handleReap periodically reaps the list of failed and left members, as well</span>
+<span class="token comment">// as old buffered intents.</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>Serf<span class="token punctuation">)</span> <span class="token function">handleReap</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	<span class="token keyword">for</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">select</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">case</span> <span class="token operator">&lt;-</span>time<span class="token punctuation">.</span><span class="token function">After</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>ReapInterval<span class="token punctuation">)</span><span class="token punctuation">:</span>
+			s<span class="token punctuation">.</span>memberLock<span class="token punctuation">.</span><span class="token function">Lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+			now <span class="token operator">:=</span> time<span class="token punctuation">.</span><span class="token function">Now</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+			s<span class="token punctuation">.</span>failedMembers <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">reap</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>failedMembers<span class="token punctuation">,</span> now<span class="token punctuation">,</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>ReconnectTimeout<span class="token punctuation">)</span>
+			s<span class="token punctuation">.</span>leftMembers <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">reap</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>leftMembers<span class="token punctuation">,</span> now<span class="token punctuation">,</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>TombstoneTimeout<span class="token punctuation">)</span>
+			<span class="token function">reapIntents</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>recentIntents<span class="token punctuation">,</span> now<span class="token punctuation">,</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>RecentIntentTimeout<span class="token punctuation">)</span>
+			s<span class="token punctuation">.</span>memberLock<span class="token punctuation">.</span><span class="token function">Unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+		<span class="token keyword">case</span> <span class="token operator">&lt;-</span>s<span class="token punctuation">.</span>shutdownCh<span class="token punctuation">:</span>
+			<span class="token keyword">return</span>
+		<span class="token punctuation">&#125;</span>
+	<span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
 <p>所以看起来这里相关的 Timeout 是<code>s.config.TombstoneTimeout</code>, 接着需要看看<code>reap</code>到底做了什么，这里果然是把到了一定时间间隔的节点删掉了：</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// reap is called with a list of old members and a timeout, and removes</span><br><span class="hljs-comment">// members that have exceeded the timeout. The members are removed from</span><br><span class="hljs-comment">// both the old list and the members itself. Locking is left to the caller.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *Serf)</span></span> reap(old []*memberState, now time.Time, timeout time.Duration) []*memberState &#123;<br>  n := <span class="hljs-built_in">len</span>(old)<br>  <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; n; i++ &#123;<br>    m := old[i]<br><br>    <span class="hljs-comment">// Skip if the timeout is not yet reached</span><br>    <span class="hljs-keyword">if</span> now.Sub(m.leaveTime) &lt;= timeout &#123;<br>      <span class="hljs-keyword">continue</span><br>    &#125;<br><br>    <span class="hljs-comment">// Delete from the list</span><br>    old[i], old[n<span class="hljs-number">-1</span>] = old[n<span class="hljs-number">-1</span>], <span class="hljs-literal">nil</span><br>    old = old[:n<span class="hljs-number">-1</span>]<br>    n--<br>    i--<br><br>    ..........<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> old<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre class="language-go" data-language="go"><code class="language-go"><span class="token comment">// reap is called with a list of old members and a timeout, and removes</span>
+<span class="token comment">// members that have exceeded the timeout. The members are removed from</span>
+<span class="token comment">// both the old list and the members itself. Locking is left to the caller.</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>Serf<span class="token punctuation">)</span> <span class="token function">reap</span><span class="token punctuation">(</span>old <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">*</span>memberState<span class="token punctuation">,</span> now time<span class="token punctuation">.</span>Time<span class="token punctuation">,</span> timeout time<span class="token punctuation">.</span>Duration<span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">*</span>memberState <span class="token punctuation">&#123;</span>
+	n <span class="token operator">:=</span> <span class="token function">len</span><span class="token punctuation">(</span>old<span class="token punctuation">)</span>
+	<span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
+		m <span class="token operator">:=</span> old<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+
+		<span class="token comment">// Skip if the timeout is not yet reached</span>
+		<span class="token keyword">if</span> now<span class="token punctuation">.</span><span class="token function">Sub</span><span class="token punctuation">(</span>m<span class="token punctuation">.</span>leaveTime<span class="token punctuation">)</span> <span class="token operator">&lt;=</span> timeout <span class="token punctuation">&#123;</span>
+			<span class="token keyword">continue</span>
+		<span class="token punctuation">&#125;</span>
+
+		<span class="token comment">// Delete from the list</span>
+		old<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> old<span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> old<span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token boolean">nil</span>
+		old <span class="token operator">=</span> old<span class="token punctuation">[</span><span class="token punctuation">:</span>n<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+		n<span class="token operator">--</span>
+		i<span class="token operator">--</span>
+
+		<span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token punctuation">.</span>
+	<span class="token punctuation">&#125;</span>
+
+	<span class="token keyword">return</span> old
+<span class="token punctuation">&#125;</span></code></pre>
 <p>那么这个时间间隔是多久呢，在<code>serf/config.go</code>有一个默认配置： </p>
-<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go">TombstoneTimeout:             <span class="hljs-number">24</span> * time.Hour,  <br></code></pre></td></tr></table></figure>
+<pre class="language-go" data-language="go"><code class="language-go">TombstoneTimeout<span class="token punctuation">:</span>             <span class="token number">24</span> <span class="token operator">*</span> time<span class="token punctuation">.</span>Hour<span class="token punctuation">,</span>	</code></pre>
 <h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>serf 这个软件值得好好分析一下，节点的状态同步和事件处理都是分布式软件的基础，后续继续看看这个<code>gossip protocol based on SWIM</code>的具体实现。另外<a target="_blank" rel="noopener" href="https://www.hashicorp.com/">hashicorp</a>这个公司的开源代码和文档都非常好，值得学习一番。</p>
 </section>
 

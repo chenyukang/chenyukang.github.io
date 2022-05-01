@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="Linux switch screen with key" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          Linux 下快捷切换屏幕 | 程序员的喵
-      
+    
+    Linux 下快捷切换屏幕 |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -161,19 +168,72 @@
 <p>在办公室工作的时候一般面对两个显示器，大部分时候左边用来看代码，右边用来写程序。双显示屏还是有助于提高工作效率的。有一点困扰我的是如果要切换屏幕一般得用鼠标，这对于<br>Emacs 党是有些不能忍受的，右手离开键盘总是得停顿一下的感觉。今天找到一个解决办法。</p>
 <p>最终找到的是这个号称 Linux 下键盘精灵的一个程序：<a target="_blank" rel="noopener" href="http://www.semicomplete.com/projects/xdotool/">xdotool</a>，下载下来编译安装。这个东西可以模拟鼠标和键盘的行为：</p>
 <p>比如：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell">xdotool search &quot;Mozilla Firefox&quot; windowactivate --sync key --clearmodifiers ctrl+l <br>(快速切换倒 firefox，并 focus 在地址输入栏)<br><br>xdotool getmouselocation --shell  (获取当前鼠标位置等信息)<br>X=880<br>Y=443<br>SCREEN=0<br>WINDOW=16777250<br><br>xdotool getactivewindow windowmove 100 100    # Moves to 100,100<br>xdotool getactivewindow windowmove x 100      # Moves to x,100<br>xdotool getactivewindow windowmove 100 y      # Moves to 100,y<br>xdotool getactivewindow windowmove 100 y      # Moves to 100,y<br>xdotool mousemove --screen 0 100 100          # Moves to screen 0 pos at 100,100<br></code></pre></td></tr></table></figure>
+<pre class="language-shell" data-language="shell"><code class="language-shell">xdotool search <span class="token string">"Mozilla Firefox"</span> windowactivate --sync key --clearmodifiers ctrl+l 
+<span class="token punctuation">(</span>快速切换倒 firefox，并 focus 在地址输入栏<span class="token punctuation">)</span>
+
+xdotool getmouselocation --shell  <span class="token punctuation">(</span>获取当前鼠标位置等信息<span class="token punctuation">)</span>
+<span class="token assign-left variable">X</span><span class="token operator">=</span><span class="token number">880</span>
+<span class="token assign-left variable">Y</span><span class="token operator">=</span><span class="token number">443</span>
+<span class="token assign-left variable">SCREEN</span><span class="token operator">=</span><span class="token number">0</span>
+<span class="token assign-left variable">WINDOW</span><span class="token operator">=</span><span class="token number">16777250</span>
+
+xdotool getactivewindow windowmove <span class="token number">100</span> <span class="token number">100</span>    <span class="token comment"># Moves to 100,100</span>
+xdotool getactivewindow windowmove x <span class="token number">100</span>      <span class="token comment"># Moves to x,100</span>
+xdotool getactivewindow windowmove <span class="token number">100</span> y      <span class="token comment"># Moves to 100,y</span>
+xdotool getactivewindow windowmove <span class="token number">100</span> y      <span class="token comment"># Moves to 100,y</span>
+xdotool mousemove --screen <span class="token number">0</span> <span class="token number">100</span> <span class="token number">100</span>          <span class="token comment"># Moves to screen 0 pos at 100,100</span></code></pre>
 <p>有了上面 windowmove 命令，屏幕的切换就好实现了。写个丑陋的 python 脚本来保存当前的位置，切换到另外一个屏幕，再次调用的时候返回到原来的位置，<br>保存为 mouse.py。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/python</span><br><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">import</span> commands<br><br>data_f = <span class="hljs-string">&quot;/tmp/window_data&quot;</span><br>now_info = commands.getoutput(<span class="hljs-string">&quot;xdotool getmouselocation --shell&quot;</span>).split(<span class="hljs-string">&#x27;\n&#x27;</span>)<br>x = (now_info[<span class="hljs-number">1</span>])[<span class="hljs-number">2</span>:]<br>y = (now_info[<span class="hljs-number">2</span>])[<span class="hljs-number">2</span>:]<br>screen = (now_info[<span class="hljs-number">3</span>])[<span class="hljs-number">7</span>:]<br>window = (now_info[<span class="hljs-number">4</span>])[<span class="hljs-number">7</span>:]<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">do_store</span>():<br>    data = <span class="hljs-built_in">open</span>(data_f, <span class="hljs-string">&quot;w+&quot;</span>)<br>    content = screen+<span class="hljs-string">&quot;\n&quot;</span>+x+<span class="hljs-string">&quot;\n&quot;</span>+y+<span class="hljs-string">&quot;\n&quot;</span>+window<br>    data.write(content)<br>    data.close()<br>    <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">do_update</span>():<br>    <span class="hljs-keyword">if</span> screen == <span class="hljs-string">&quot;1&quot;</span>:<br>        new_sc = <span class="hljs-string">&quot;0&quot;</span><br>    <span class="hljs-keyword">else</span>:<br>        new_sc = <span class="hljs-string">&quot;1&quot;</span><br>    cmd = <span class="hljs-string">&quot;xdotool mousemove --screen &quot;</span> + new_sc +  <span class="hljs-string">&quot; 0 0&quot;</span><br>    commands.getoutput(cmd)<br><br><span class="hljs-keyword">if</span> os.path.exists(data_f):<br>    data = <span class="hljs-built_in">open</span>(data_f, <span class="hljs-string">&quot;r+&quot;</span>)<br>    content = data.readlines()<br>    data.close()<br>    screen = content[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>:-<span class="hljs-number">1</span>]<br>    old_x = content[<span class="hljs-number">1</span>][<span class="hljs-number">0</span>:-<span class="hljs-number">1</span>]<br>    old_y = content[<span class="hljs-number">2</span>][<span class="hljs-number">0</span>:-<span class="hljs-number">1</span>]<br>    old_window = content[<span class="hljs-number">3</span>]<br>    <span class="hljs-keyword">if</span> old_window != window:<br>        cmd = <span class="hljs-string">&quot;xdotool mousemove -w &quot;</span> + old_window + <span class="hljs-string">&quot; &quot;</span> + old_x + <span class="hljs-string">&quot; &quot;</span> + old_y<br>        commands.getoutput(cmd)<br>        do_store()<br>    <span class="hljs-keyword">else</span>:<br>        do_store()<br>        do_update()<br><span class="hljs-keyword">else</span>:<br>    do_store()<br>    do_update()<br></code></pre></td></tr></table></figure>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token comment">#!/usr/bin/python</span>
+<span class="token keyword">import</span> os
+<span class="token keyword">import</span> sys
+<span class="token keyword">import</span> commands
+
+data_f <span class="token operator">=</span> <span class="token string">"/tmp/window_data"</span>
+now_info <span class="token operator">=</span> commands<span class="token punctuation">.</span>getoutput<span class="token punctuation">(</span><span class="token string">"xdotool getmouselocation --shell"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">)</span>
+x <span class="token operator">=</span> <span class="token punctuation">(</span>now_info<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+y <span class="token operator">=</span> <span class="token punctuation">(</span>now_info<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+screen <span class="token operator">=</span> <span class="token punctuation">(</span>now_info<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+window <span class="token operator">=</span> <span class="token punctuation">(</span>now_info<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+
+<span class="token keyword">def</span> <span class="token function">do_store</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    data <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span>data_f<span class="token punctuation">,</span> <span class="token string">"w+"</span><span class="token punctuation">)</span>
+    content <span class="token operator">=</span> screen<span class="token operator">+</span><span class="token string">"\n"</span><span class="token operator">+</span>x<span class="token operator">+</span><span class="token string">"\n"</span><span class="token operator">+</span>y<span class="token operator">+</span><span class="token string">"\n"</span><span class="token operator">+</span>window
+    data<span class="token punctuation">.</span>write<span class="token punctuation">(</span>content<span class="token punctuation">)</span>
+    data<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    
+<span class="token keyword">def</span> <span class="token function">do_update</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> screen <span class="token operator">==</span> <span class="token string">"1"</span><span class="token punctuation">:</span>
+        new_sc <span class="token operator">=</span> <span class="token string">"0"</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        new_sc <span class="token operator">=</span> <span class="token string">"1"</span>
+    cmd <span class="token operator">=</span> <span class="token string">"xdotool mousemove --screen "</span> <span class="token operator">+</span> new_sc <span class="token operator">+</span>  <span class="token string">" 0 0"</span>
+    commands<span class="token punctuation">.</span>getoutput<span class="token punctuation">(</span>cmd<span class="token punctuation">)</span>
+
+<span class="token keyword">if</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>exists<span class="token punctuation">(</span>data_f<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    data <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span>data_f<span class="token punctuation">,</span> <span class="token string">"r+"</span><span class="token punctuation">)</span>
+    content <span class="token operator">=</span> data<span class="token punctuation">.</span>readlines<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    data<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    screen <span class="token operator">=</span> content<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+    old_x <span class="token operator">=</span> content<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+    old_y <span class="token operator">=</span> content<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+    old_window <span class="token operator">=</span> content<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span>
+    <span class="token keyword">if</span> old_window <span class="token operator">!=</span> window<span class="token punctuation">:</span>
+        cmd <span class="token operator">=</span> <span class="token string">"xdotool mousemove -w "</span> <span class="token operator">+</span> old_window <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> old_x <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> old_y
+        commands<span class="token punctuation">.</span>getoutput<span class="token punctuation">(</span>cmd<span class="token punctuation">)</span>
+        do_store<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        do_store<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        do_update<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+    do_store<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    do_update<span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
 <p>最后，通过 Emacs 下绑定快捷键来调用这个脚本即可实现两个屏幕之间的切换，又可以远离鼠标了。哈哈。</p>
-<pre class="prettyprint lang-lisp">
-(defun switch-screen()
-  (interactive)
-  (start-process "mouse.py" nil "bash" "-c" 
-                 "/home/yukang/apps/bin/mouse.py"))
+<pre class="language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token car">defun</span> switch-screen<span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token car">start-process</span> <span class="token string">"mouse.py"</span> <span class="token boolean">nil</span> <span class="token string">"bash"</span> <span class="token string">"-c"</span> 
+                 <span class="token string">"/home/yukang/apps/bin/mouse.py"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-(global-set-key (kbd "C-x q") 'switch-screen)
-</pre>
-
+<span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">(</span><span class="token car">kbd</span> <span class="token string">"C-x q"</span><span class="token punctuation">)</span> <span class="token quoted-symbol variable symbol">'switch-screen</span><span class="token punctuation">)</span></code></pre>
 <p>Jekyll 下写点东西快多了。</p>
 </section>
 

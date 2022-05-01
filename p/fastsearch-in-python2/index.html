@@ -10,18 +10,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="" />
   <meta property="og:description" content="" />
-  <meta property="og:image" content="http://catcoding.me/css/images/logo.png" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
 
   <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
   
-    <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
   
   <title>
-      
-          一种更快的字符串匹配算法 - 源自 Python2.5 | 程序员的喵
-      
+    
+    一种更快的字符串匹配算法 - 源自 Python2.5 |
+    程序员的喵
+    
   </title>
-  
+
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
@@ -33,6 +34,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
 
   
 <link rel="stylesheet" href="/css/style.css">
@@ -48,21 +53,23 @@
 
 
   <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
-      <img src="/css/images/logo.png" width='400px' height='400px'/>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
   </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-77282254-1');
-</script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
 
 <meta name="generator" content="Hexo 5.4.2"></head>
-
   <body>
     <header class="header fixed-header">
   <div class="header-container">
@@ -170,11 +177,93 @@
 <p>如何知道 s 中的某一个字符是否是 p 中的一部分？<br>如何尽量移动 m 而不出现少找的情况？</p>
 </blockquote>
 <p>第一个问题，可以用某个存储空间存下是否有 p 中的某个字符出现过，方便以后查找。Hash 的思想，但是这里字符串查找里面再弄个 Hash 太无语了吧。一个简单的 Bloom-filter，这里是这样实现的。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/*计算 mask*/</span> <br>mlast = m<span class="hljs-number">-1</span>;<br><span class="hljs-keyword">for</span> (mask = i = <span class="hljs-number">0</span>; i &lt;= mlast; i++) &#123;<br>    mask |= (<span class="hljs-number">1</span> &lt;&lt; (p[i] &amp; <span class="hljs-number">0x1F</span>));<br>&#125;<br><br><span class="hljs-comment">/*判断 s[i] 不是 p 中的一个字符串*/</span> <br><span class="hljs-keyword">if</span>(!(mask &amp; (<span class="hljs-number">1</span> &lt;&lt; (s[i] &amp; <span class="hljs-number">0x1F</span>))))<br>     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;s[i] is not in pattern&quot;</span>);<br><span class="hljs-keyword">else</span> <br>     <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;s[i] is in pattern&quot;</span>);<br></code></pre></td></tr></table></figure>
+<pre class="language-c" data-language="c"><code class="language-c"><span class="token comment">/*计算 mask*/</span> 
+mlast <span class="token operator">=</span> m<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span>mask <span class="token operator">=</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;=</span> mlast<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    mask <span class="token operator">|=</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span>p<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x1F</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/*判断 s[i] 不是 p 中的一个字符串*/</span> 
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>mask <span class="token operator">&amp;</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span>s<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x1F</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+     <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"s[i] is not in pattern"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">else</span> 
+     <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"s[i] is in pattern"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>其实我们是要判断一个 s 中的一个字符串没有出现在 p 中，取低 5 位不是可能产生冲突么？产生冲突也没问题，就像一个 Hash 只要一个元素算出来的 Key 指定的 slot 没元素不就能确定这个元素不在里面了么。</p>
 <p>第二个问题，有些巧妙。上面那个例子是因为 s 的最后一个字符没被匹配，所以能移动 m 的长度。如果这个例子 s=”aaacaaaacaa”，p=”aacaa”，第 5 个位置都为 a，最后一个匹配，但是 s 里面前几个其实不为 aacaa，所以需要移动，但是移动多少呢？如果移动 p 的长度，那从第 2 个位置开始的 aacaa 就没被检查到。所以需要一个变量记录在每次最后一个字母匹配的情况下向右移动的合理偏移量，在这里为 skip，初始化的时候计算出来，这最偏移量其实是计算的最小偏移量，就是移动 skip 个位置到第一个 s[m-1] 的位置。 整个实现既节省空间又速度快，强大。</p>
 <p>具体实现如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//如果 mode 为 FAST_COUNT，则查找 pattern 出现的次数</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> FAST_COUNT 1</span><br><br><span class="hljs-type">int</span> <span class="hljs-title function_">fastsearch</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* s, <span class="hljs-type">size_t</span> n,</span><br><span class="hljs-params">           <span class="hljs-type">const</span> <span class="hljs-type">char</span>* p, <span class="hljs-type">size_t</span> m,</span><br><span class="hljs-params">           <span class="hljs-type">int</span> mode)</span><br>&#123;<br>    <span class="hljs-type">long</span> mask;<br>    <span class="hljs-type">size_t</span> skip, count = <span class="hljs-number">0</span>;<br>    <span class="hljs-type">size_t</span> i, j, mlast, w;<br><br>    w = n - m;<br><br>    <span class="hljs-keyword">if</span> (w &lt; <span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br><br>    <span class="hljs-comment">/* 如果 m=1，特例，扫描一遍解决*/</span> <br>    <span class="hljs-keyword">if</span> (m &lt;= <span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">if</span> (m &lt;= <span class="hljs-number">0</span>)<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>        <span class="hljs-keyword">if</span> (mode == FAST_COUNT) &#123;<br>            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; n; i++)<br>                <span class="hljs-keyword">if</span> (s[i] == p[<span class="hljs-number">0</span>])<br>                    count++;<br>            <span class="hljs-keyword">return</span> count;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; n; i++)<br>                <span class="hljs-keyword">if</span> (s[i] == p[<span class="hljs-number">0</span>])<br>                    <span class="hljs-keyword">return</span> i;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br><br>    mlast = m - <span class="hljs-number">1</span>;<br><br>    skip = mlast - <span class="hljs-number">1</span>;<br>    <span class="hljs-comment">/*计算 mask*/</span> <br>    <span class="hljs-keyword">for</span> (mask = i = <span class="hljs-number">0</span>; i &lt; mlast; i++) &#123;<br>        mask |= (<span class="hljs-number">1</span> &lt;&lt; (p[i] &amp; <span class="hljs-number">0x1F</span>));<br>        <span class="hljs-keyword">if</span> (p[i] == p[mlast])<br>            skip = mlast - i - <span class="hljs-number">1</span>;<br>    &#125;<br>    mask |= (<span class="hljs-number">1</span> &lt;&lt; (p[mlast] &amp; <span class="hljs-number">0x1F</span>));<br><br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt;= w; i++) &#123;<br>        <span class="hljs-keyword">if</span> (s[i+m<span class="hljs-number">-1</span>] == p[m<span class="hljs-number">-1</span>]) &#123;<span class="hljs-comment">//pattern 末尾匹配</span><br>            <span class="hljs-comment">/* candidate match */</span> <br>            <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; mlast; j++)<br>                <span class="hljs-keyword">if</span> (s[i+j] != p[j])<br>                    <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">if</span> (j == mlast) &#123;<span class="hljs-comment">//一个匹配成功</span><br>                <span class="hljs-keyword">if</span> (mode != FAST_COUNT)<br>                    <span class="hljs-keyword">return</span> i;<br>                count++;<br>                i = i + mlast;<br>                <span class="hljs-keyword">continue</span>;<br>            &#125;<br>            <span class="hljs-comment">/*移动多少？,根据 mask*/</span> <br>            <span class="hljs-keyword">if</span> (!(mask &amp; (<span class="hljs-number">1</span> &lt;&lt; (s[i+m] &amp; <span class="hljs-number">0x1F</span>))))<br>                i = i + m;<br>            <span class="hljs-keyword">else</span> <br>                i = i + skip;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">/* skip: check if next character is part of pattern */</span> <br>            <span class="hljs-keyword">if</span> (!(mask &amp; (<span class="hljs-number">1</span> &lt;&lt; (s[i+m] &amp; <span class="hljs-number">0x1F</span>))))<br>                i = i + m;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (mode != FAST_COUNT)<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    <span class="hljs-keyword">return</span> count;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre class="language-c" data-language="c"><code class="language-c"><span class="token comment">//如果 mode 为 FAST_COUNT，则查找 pattern 出现的次数</span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">FAST_COUNT</span> <span class="token expression"><span class="token number">1</span></span></span>
+
+<span class="token keyword">int</span> <span class="token function">fastsearch</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">,</span> <span class="token class-name">size_t</span> n<span class="token punctuation">,</span>
+           <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> p<span class="token punctuation">,</span> <span class="token class-name">size_t</span> m<span class="token punctuation">,</span>
+           <span class="token keyword">int</span> mode<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">long</span> mask<span class="token punctuation">;</span>
+    <span class="token class-name">size_t</span> skip<span class="token punctuation">,</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token class-name">size_t</span> i<span class="token punctuation">,</span> j<span class="token punctuation">,</span> mlast<span class="token punctuation">,</span> w<span class="token punctuation">;</span>
+
+    w <span class="token operator">=</span> n <span class="token operator">-</span> m<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>w <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+
+    <span class="token comment">/* 如果 m=1，特例，扫描一遍解决*/</span> 
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>m <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>m <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+            <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>mode <span class="token operator">==</span> FAST_COUNT<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>s<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> p<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+                    count<span class="token operator">++</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> count<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>s<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> p<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+                    <span class="token keyword">return</span> i<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    mlast <span class="token operator">=</span> m <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+
+    skip <span class="token operator">=</span> mlast <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token comment">/*计算 mask*/</span> 
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>mask <span class="token operator">=</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> mlast<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        mask <span class="token operator">|=</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span>p<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x1F</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>p<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> p<span class="token punctuation">[</span>mlast<span class="token punctuation">]</span><span class="token punctuation">)</span>
+            skip <span class="token operator">=</span> mlast <span class="token operator">-</span> i <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    mask <span class="token operator">|=</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span>p<span class="token punctuation">[</span>mlast<span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x1F</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;=</span> w<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>s<span class="token punctuation">[</span>i<span class="token operator">+</span>m<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">==</span> p<span class="token punctuation">[</span>m<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token comment">//pattern 末尾匹配</span>
+            <span class="token comment">/* candidate match */</span> 
+            <span class="token keyword">for</span> <span class="token punctuation">(</span>j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> mlast<span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>s<span class="token punctuation">[</span>i<span class="token operator">+</span>j<span class="token punctuation">]</span> <span class="token operator">!=</span> p<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span>
+                    <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>j <span class="token operator">==</span> mlast<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token comment">//一个匹配成功</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>mode <span class="token operator">!=</span> FAST_COUNT<span class="token punctuation">)</span>
+                    <span class="token keyword">return</span> i<span class="token punctuation">;</span>
+                count<span class="token operator">++</span><span class="token punctuation">;</span>
+                i <span class="token operator">=</span> i <span class="token operator">+</span> mlast<span class="token punctuation">;</span>
+                <span class="token keyword">continue</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token comment">/*移动多少？,根据 mask*/</span> 
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>mask <span class="token operator">&amp;</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span>s<span class="token punctuation">[</span>i<span class="token operator">+</span>m<span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x1F</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+                i <span class="token operator">=</span> i <span class="token operator">+</span> m<span class="token punctuation">;</span>
+            <span class="token keyword">else</span> 
+                i <span class="token operator">=</span> i <span class="token operator">+</span> skip<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">/* skip: check if next character is part of pattern */</span> 
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>mask <span class="token operator">&amp;</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span>s<span class="token punctuation">[</span>i<span class="token operator">+</span>m<span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x1F</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+                i <span class="token operator">=</span> i <span class="token operator">+</span> m<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mode <span class="token operator">!=</span> FAST_COUNT<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> count<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
 </section>
 
     <p></p>
