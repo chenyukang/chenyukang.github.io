@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -165,13 +164,13 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>正则表达式匹配是一个经典问题，这里有一个<a target="_blank" rel="noopener" href="http://oj.leetcode.com/problems/regular-expression-matching/">问题</a>。<br>实现 isMatch，其中。表示任意一个字符，*表示 0 个或者任一个前面的字符：</p>
-<pre class="language-sh" data-language="sh"><code class="language-sh">isMatch(&quot;aa&quot;,&quot;a&quot;)       → false
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">isMatch(&quot;aa&quot;,&quot;a&quot;)       → false
 isMatch(&quot;aa&quot;,&quot;aa&quot;)      → true
 isMatch(&quot;aaa&quot;,&quot;aa&quot;)     → false
 isMatch(&quot;aa&quot;, &quot;a*&quot;)     → true
 isMatch(&quot;aa&quot;, &quot;.*&quot;)     → true
 isMatch(&quot;ab&quot;, &quot;.*&quot;)     → true
-isMatch(&quot;aab&quot;, &quot;c*a*b&quot;) → true</code></pre>
+isMatch(&quot;aab&quot;, &quot;c*a*b&quot;) → true<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这是一个正则表达式问题的简化版本只有<code>.</code>和<code>*</code>，可以用递归来解决。正则表达式涉及到自动机理论，顺便再复习一下当年没好好学的东西。查找一番后发现了这篇 Russ Cox 写的文章非常好 (这家伙写了不少文章，xv6 里也有他的代码，现在在为 Go 项目工作)。于是我也尝试着用 DFA 来解决这个问题。</p>
 <h2 id="DFA-和-NFA-的概念"><a href="#DFA-和-NFA-的概念" class="headerlink" title="DFA 和 NFA 的概念"></a>DFA 和 NFA 的概念</h2><p>首先对于没一个正则表达式都有一个对应的 DFA 可以来表示，DFA 是 Deterministic Finite Automaton 的简称，还有 NFA(Non-deterministic Finite Automata)。NFA 对于一个字符的输入有可能存在多个以上的状态转移，而 DFA 对于没一个输入只存在一个选择。所以每一个 NFA 都可以转化为一个 DFA，但是一个 DFA 可以转化为多个 NFA。我们来看一个例子：</p>
 <p>对于正则表达<code>(a|b)*abb</code>的 NFA 和 DFA 分别表示为：</p>
@@ -180,7 +179,7 @@ isMatch(&quot;aab&quot;, &quot;c*a*b&quot;) → true</code></pre>
 <p>DFA 的状态数目和 NFA 一样，但是一般实践过程中 DFA 的状态转移要多，所以 DFA 相对来说要难构造一些，同时 DFA 比 NFA 需要的内存空间更大。正因为在 NFA 中一个状态可能向多个状态转移，在极端的情况下其效率比不过 DFA。更多关于正则分类可以参考<a target="_blank" rel="noopener" href="http://kb.cnblogs.com/page/86751/">正则表达式引擎及其分类</a>。</p>
 <p>对于 NFA 不同的实现效率会不一样，这也是 Russ 的文章里所说的。Russ 的文章里面介绍了 Thompson NFA 算法实现 (没错就是发明 C 的那神)，一些老的 Unix 工具是用的这个算法，比如 Awk，Tcl，GNU grep 等，而一些更通用的编程语言用的是基于回溯的一种 NFA 实现，比如 Perl/Python。通过数据比较，在最坏的情况下用 Thompson NFA 实现的 awk 表现比匹配回溯的 NFA 要好很多倍。最坏情况下的复杂度不一样，回溯 NFA 是 O(2^N)，而 Thompson 的复杂度是 O(N^2)。文中的代码可以号好看看，非常简洁的 C 实现。</p>
 <h2 id="一个尝试实现"><a href="#一个尝试实现" class="headerlink" title="一个尝试实现"></a>一个尝试实现</h2><p>对上面那个问题我尝试着实现了一个程序构建 DFA 来解决，提交上去完成 439 个测试用例只用了 28ms，相对于递归版本的需要 104ms。也可能 LeetCode 上面的测试数据太少，比较的意义不大。代码长度当然要比递归的长不少。<br>定义 State：</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">enum</span> <span class="token class-name">OpType</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">enum</span> <span class="token class-name">OpType</span> <span class="token punctuation">&#123;</span>
     ZERO_PLUS_ONE<span class="token punctuation">,</span>
     ANY_ONE<span class="token punctuation">,</span>
     MUST_ONE
@@ -207,9 +206,9 @@ isMatch(&quot;aab&quot;, &quot;c*a*b&quot;) → true</code></pre>
         <span class="token keyword">if</span><span class="token punctuation">(</span>type <span class="token operator">==</span> ZERO_PLUS_ONE <span class="token operator">&amp;&amp;</span> prev <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> 
             prev<span class="token operator">-></span><span class="token function">add</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span></code></pre>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>构建 DFA 的过程如下，注释的部分需要注意：</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp">State<span class="token operator">*</span> <span class="token function">construct_dfa</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> pattern<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">State<span class="token operator">*</span> <span class="token function">construct_dfa</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> pattern<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token keyword">if</span><span class="token punctuation">(</span>pattern <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
     <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> p <span class="token operator">=</span> pattern<span class="token punctuation">;</span>
     State<span class="token operator">*</span> start <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">State</span><span class="token punctuation">(</span>ANY_ONE<span class="token punctuation">,</span> Num<span class="token punctuation">,</span> <span class="token char">'.'</span><span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -245,7 +244,7 @@ isMatch(&quot;aab&quot;, &quot;c*a*b&quot;) → true</code></pre>
         cur<span class="token operator">-></span>end <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
     <span class="token punctuation">&#125;</span>
     <span class="token keyword">return</span> start<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>匹配的过程就是一个搜索的过程，需要注意避免重复访问，另外如果下一层要访问的为空就可以退出整个搜索过程了，整个代码看这个<a target="_blank" rel="noopener" href="https://gist.github.com/chenyukang/8265615">Gist</a>。</p>
 </section>
 
@@ -416,25 +415,6 @@ isMatch(&quot;aab&quot;, &quot;c*a*b&quot;) → true</code></pre>
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

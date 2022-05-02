@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -188,7 +187,7 @@
 <p> Well-typed programs cannot “go wrong.” —Robin Milner (1978)</p>
 </blockquote>
 <h4 id="An-ML-Implementation-of-Simple-Types"><a href="#An-ML-Implementation-of-Simple-Types" class="headerlink" title="An ML Implementation of Simple Types"></a>An ML Implementation of Simple Types</h4><p>simplebool 是一个只有 bool 类型的解释器，但是加上了函数。typeof 挺简单，主要是函数这里注意处理形参和实参：</p>
-<pre class="language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmAbs<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>x<span class="token punctuation">,</span>tyT1<span class="token punctuation">,</span>t2<span class="token punctuation">)</span> <span class="token operator">-></span>
+<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmAbs<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>x<span class="token punctuation">,</span>tyT1<span class="token punctuation">,</span>t2<span class="token punctuation">)</span> <span class="token operator">-></span>
     <span class="token keyword">let</span> ctx' <span class="token operator">=</span> addbinding ctx x <span class="token punctuation">(</span>VarBind<span class="token punctuation">(</span>tyT1<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">in</span>
     <span class="token keyword">let</span> tyT2 <span class="token operator">=</span> typeof ctx' t2 <span class="token keyword">in</span>
     TyArr<span class="token punctuation">(</span>tyT1<span class="token punctuation">,</span> tyT2<span class="token punctuation">)</span>
@@ -199,14 +198,14 @@
         TyArr<span class="token punctuation">(</span>tyT11<span class="token punctuation">,</span> tyT12<span class="token punctuation">)</span> <span class="token operator">-></span>
           <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">=</span><span class="token punctuation">)</span> tyT2 tyT11 <span class="token keyword">then</span> tyT12
           <span class="token keyword">else</span> error fi <span class="token string">"parameter type mismatch"</span>
-      <span class="token operator">|</span> <span class="token punctuation">_</span> <span class="token operator">-></span> error fi <span class="token string">"arrow type expected"</span><span class="token punctuation">)</span></code></pre>
+      <span class="token operator">|</span> <span class="token punctuation">_</span> <span class="token operator">-></span> error fi <span class="token string">"arrow type expected"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>if 的判断部分必须为 bool，而且两个分支必须为同一类型：</p>
-<pre class="language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmIf<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">,</span>t2<span class="token punctuation">,</span>t3<span class="token punctuation">)</span> <span class="token operator">-></span>
+<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmIf<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">,</span>t2<span class="token punctuation">,</span>t3<span class="token punctuation">)</span> <span class="token operator">-></span>
    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">=</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>typeof ctx t1<span class="token punctuation">)</span> TyBool <span class="token keyword">then</span>
      <span class="token keyword">let</span> tyT2 <span class="token operator">=</span> typeof ctx t2 <span class="token keyword">in</span>
      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">=</span><span class="token punctuation">)</span> tyT2 <span class="token punctuation">(</span>typeof ctx t3<span class="token punctuation">)</span> <span class="token keyword">then</span> tyT2
      <span class="token keyword">else</span> error fi <span class="token string">"arms of conditional have different types"</span>
-     <span class="token keyword">else</span> error fi <span class="token string">"guard of conditional not a boolean"</span></code></pre>
+     <span class="token keyword">else</span> error fi <span class="token string">"guard of conditional not a boolean"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="Simple-Extensions"><a href="#Simple-Extensions" class="headerlink" title="Simple Extensions"></a>Simple Extensions</h4><p>在上一章的基础上，加上各种 Drived Form。</p>
 <ul>
 <li><p>Sequencing:</p>
@@ -398,25 +397,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -165,7 +164,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>这个操作好像经常要用到，拷贝当前光标连续的一段字符串 (除了空白和换行), 写了个小函数来实现。</p>
-<pre class="language-elisp" data-language="elisp"><code class="language-elisp">(defun get-continue-string ()
+<pre class="line-numbers language-elisp" data-language="elisp"><code class="language-elisp">(defun get-continue-string ()
   (interactive)
   (skip-chars-backward &quot;^ \n&quot;)
   (setq low (point))
@@ -174,7 +173,7 @@
   (copy-region-as-kill low high)
   (message (buffer-substring low high)))
 
-(global-set-key (kbd &quot;C-x y&quot;) &#39;get-continue-string)</code></pre>
+(global-set-key (kbd &quot;C-x y&quot;) &#39;get-continue-string)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </section>
 
     <p></p>
@@ -334,25 +333,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

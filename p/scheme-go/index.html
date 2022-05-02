@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -169,7 +168,7 @@
 
 <p>在我学 Go 的时候开始了一个自己的业余小项目，就是这个<a target="_blank" rel="noopener" href="https://github.com/chenyukang/GoScheme">GoScheme</a>，打算用 Go 来写一个 Scheme 解释器，因为重写轮子是学习新东西的好手段。<br>现在基本完成了，当然只是一些基本的语法支持，没有宏。</p>
 <p>我只是用这个项目来熟悉 Go 的语法，Go 来做这种项目没有特别大的优势，这个项目用 C 来实现代码量会更少一些。比如这里个里面的基本数据对象包括各种类型，boolean, symbol, fixnum, proc 等等，又都是一个 Object 类型。如果是 C 可以用 union 类型来表示，然后通过 Object*实现接口上的统一操作各种数据，类似的代码像这样子：</p>
-<pre class="language-c" data-language="c"><code class="language-c">
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
 <span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">object</span> <span class="token punctuation">&#123;</span>
     object_type type<span class="token punctuation">;</span>
     <span class="token keyword">union</span> <span class="token punctuation">&#123;</span>
@@ -186,7 +185,7 @@
 		<span class="token comment">// ..........</span>
     <span class="token punctuation">&#125;</span> data<span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span> object<span class="token punctuation">;</span>
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>Go 里面没有 Union 这种类型，所以我用了<a target="_blank" rel="noopener" href="https://github.com/chenyukang/GoScheme/blob/master/src/eval/data.go">reflect</a>来实现这些东西，看起来还不是那么简洁。Go 的自带的一些 toolset 还可以，比如 testing，format，coverage 等，可以减少一些琐碎的事。</p>
 <p>另外，以后项目里配一下 travis-CI 可以做集成测试。</p>
 <p>Go 更适合做一些需要并发的任务，比如服务端的事情。</p>
@@ -349,25 +348,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

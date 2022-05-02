@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -167,15 +166,15 @@
     <section class="markdown-content"><h4 id="类型保证"><a href="#类型保证" class="headerlink" title="类型保证"></a>类型保证</h4><p>强类型的编程语言通常编译器自带一些类型检查，保证代码编译后不会出现类型方面的错误，比如 Rust 之类的甚至做了变量的生命周期检查，以防止内存出错或者未定义行为。常见的变成语言类型如下：</p>
 <p><img src="/images/2019_08_06.org_20190806_012652.png" width="70%" hegiht="70%" align=center /></p>
 <h4 id="typecheck"><a href="#typecheck" class="headerlink" title="typecheck"></a>typecheck</h4><p> 但是 C 为弱类型语言，弱类型语言，类型检查更不严格，如偏向于容忍隐式类型转换。譬如说 C 语言的 int 可以变成 double。 这样的结果是：容易产生 forbidden behaviours。为了解决类似问题，Linux 内核中的这个宏比较有技巧。</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">typecheck</span><span class="token expression"><span class="token punctuation">(</span>type<span class="token punctuation">,</span>x<span class="token punctuation">)</span>                       </span><span class="token punctuation">\</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">typecheck</span><span class="token expression"><span class="token punctuation">(</span>type<span class="token punctuation">,</span>x<span class="token punctuation">)</span>                       </span><span class="token punctuation">\</span>
   <span class="token expression"><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>  type __dummy<span class="token punctuation">;</span>                             </span><span class="token punctuation">\</span>
   <span class="token expression"><span class="token keyword">typeof</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> __dummy2<span class="token punctuation">;</span>                           </span><span class="token punctuation">\</span>
   <span class="token expression"><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>__dummy <span class="token operator">==</span> <span class="token operator">&amp;</span>__dummy2<span class="token punctuation">)</span><span class="token punctuation">;</span>                </span><span class="token punctuation">\</span>
   <span class="token expression"><span class="token number">1</span><span class="token punctuation">;</span>                                            </span><span class="token punctuation">\</span>
-  <span class="token expression"><span class="token punctuation">&#125;</span><span class="token punctuation">)</span></span></span></code></pre>
+  <span class="token expression"><span class="token punctuation">&#125;</span><span class="token punctuation">)</span></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p> 使用的时候可以保证某些变量为特定的类型：</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> a<span class="token punctuation">;</span>
-<span class="token function">typecheck</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> a<span class="token punctuation">;</span>
+<span class="token function">typecheck</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p> 这样就会报出一个编译错误：</p>
 <p><img src="/images/2019_08_06.org_20190806_011627.png" width="70%" hegiht="70%" align=center /></p>
 </section>
@@ -334,25 +333,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

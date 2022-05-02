@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -169,7 +168,7 @@
 <h2 id="现实中的问题"><a href="#现实中的问题" class="headerlink" title="现实中的问题"></a>现实中的问题</h2><p>首先来看现实中哪些问题需要拓扑排序的，课程排序，编译依赖问题，类似的凡是涉及到相关顺序的时间安排，比如 Rails 里面的初始化调用了库<a target="_blank" rel="noopener" href="http://ruby-doc.org/stdlib-2.0/libdoc/tsort/rdoc/TSort.html">Tsort</a>来进行排序。Unix 中有个命令也叫<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Tsort_(Unix">tsort</a>)，在有的 makefile 里面还直接使用了这个命令来解决依赖问题。</p>
 <h2 id="O-V-E-的算法"><a href="#O-V-E-的算法" class="headerlink" title="O(V+E) 的算法"></a>O(V+E) 的算法</h2><p><img src="/images/topologicalsort.png" alt="topologicalsort" class="img-center" width="250" height="250"/></p>
 <p>拓扑排序的基本算法是用 DFS，我们希望把有出度的点尽量排在前面，所以这里需要注意和 DFS 的区别。比如上面图中的一个 DFS 访问顺序是: 5 2 3 1 0 4，但是这不是一个拓扑排序，4 需要排在 0 的前面，5, 4, 0, 2, 3, 1。<br>拓扑排序中需要等迭代完节点的连接邻点后再把当前点压入栈。</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp">
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;list></span></span>
@@ -241,7 +240,7 @@
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span>
 
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="唯一性"><a href="#唯一性" class="headerlink" title="唯一性"></a>唯一性</h2><p>如果一个 DAG 的拓扑排序中任意连续的两点都是可连通的，那么这个序列也就是 DAG 的 Hamiltonian 路径，而且如果 DAG 图的 Hamiltonian 路径存在，那么拓扑排序就是唯一的。否则如果一个拓扑排序结果不是 Hamiltonian 路径，那么就存在多个拓扑排序结果。</p>
 <h2 id="其他图算法的预处理"><a href="#其他图算法的预处理" class="headerlink" title="其他图算法的预处理"></a>其他图算法的预处理</h2><ul>
 <li><p>DAG 的强连通分支问题<br>先得到拓扑排序，形成逆向图 (所有边与原来方向相反)，然后根据拓扑排序依次再进行 DFS。</p>
@@ -414,25 +413,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

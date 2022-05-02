@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -167,7 +166,7 @@
     <section class="markdown-content"><p><img src="/images/compiling.png" alt="My code is compiling" class="img-center" /></p>
 <h2 id="什么是-Ninja"><a href="#什么是-Ninja" class="headerlink" title="什么是 Ninja"></a>什么是 Ninja</h2><p> 在 Unix/Linux 下通常使用 Makefile 来控制代码的编译，但是 Makefile 对于比较大的项目有时候会比较慢，看看上面那副漫画，代码在编译都变成了程序员放松的借口了。所以这个 Google 的程序员在开发 Chrome 的时候因为忍受不了 Makefile 的速度，自己重新开发出来一套新的控制编译的工具叫作<a target="_blank" rel="noopener" href="https://github.com/martine/ninja">Ninja</a>，Ninja 相对于 Makefile 这套工具更注重于编译速度。除了 Chrome 现在还有一些其他的比较大的项目也在开始使用 Ninja，比如 LLVM。我试用了一下感觉还是不错，比如编译 Cmake 时间大概是原来的 1/4。Ninja 试用 C++ 实现，<a target="_blank" rel="noopener" href="http://martine.github.com/ninja/manual.html">其支持的语法非常简单</a>，作者在这里说明了为了控制复杂度。</p>
 <h2 id="代码如何编译"><a href="#代码如何编译" class="headerlink" title="代码如何编译"></a>代码如何编译</h2><p>其实对于 C/C++ 和很多其他程序的编译都是一个道理，就是把一些源代码文件编译成目标文件，或者有的目标文件再编译到一个库里，然后再链接起来。所以 Ninja 的配置文件分为两个部分，rule 和文件依赖关系。看个简单的例子：</p>
-<pre class="language-sh" data-language="sh"><code class="language-sh">cc&#x3D;gcc
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">cc&#x3D;gcc
 cflags&#x3D; -g -c
 
 rule cc
@@ -185,17 +184,17 @@ build main.o           : cc main.c
 build app.exe            : link main.o func.o
 
 build all:  phony || app.exe
-build clean: cleanup </code></pre>
+build clean: cleanup <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>非常易懂，编译的可执行未见叫做 app.exe，其中有三条 rule: cc, link, cleanup。看看这个官方的试用手册，还有一些附加参数可以加在 rule 的下面，比如 description 用来在编译的时候显示出来。Ninja 还有个比较好玩的功能就是 Ninja -t graph all 命令，这可以用来生成编译时候的依赖关系，可以用 dot 来生成图片等。Ninja 的实现也可以大概推测到，根据用户给的依赖关系图，_并行_ 地编译各个文件。</p>
 <p>使用 Ninja 的一个问题就是需要生成这个 build.ninja 文件，对于大型项目来说这样一条一条地写配置文件是不可能的。幸好我们可以使用 Cmake 来生成这个配置文件，Cmake 对应的是 automake 这样的东西。在<a target="_blank" rel="noopener" href="http://www.kitware.com/news/home/browse/CMake?2012_11_07&amp;CMake+2.8.10+Just+Released">Cmake 的最新版本</a>中已经支持参数 Camke -G Ninja，Cmake 会根据用户给定的 CMakeLists.txt 来生成 build.ninja 文件。而 CmakeLists 文件相对来说要简单一些，只要写清楚编译的可执行文件的名字，和其依赖的包含 main 函数的源文件。把我的<a target="_blank" rel="noopener" href="https://github.com/chenyukang/Maze">迷宫小项目</a>来举个例子，在项目文件夹下写配置文件 CMakeLists.txt:</p>
-<pre class="language-sh" data-language="sh"><code class="language-sh">cmake_minimum_required(VERSION 2.8)
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">cmake_minimum_required(VERSION 2.8)
 project (Maze)
 
 add_library(maze A_star.cpp Algorithm.cpp DFS_L.cpp DFS_R.cpp DisjSets.cpp Maze.cpp)
 
 add_executable(Maze.exe main.cpp)
 target_link_libraries(Maze.exe maze)
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>add_library 写明了生成一个叫做 maze.a 的库文件，然后和 main.cpp 编译出来的 main.o 生成可执行文件，写好 CmakeList.txt 后运行 Cmake -G Ninja，然后运行 ninja all 就能编译这个工程。具体的 Cmake 语法参考 <a target="_blank" rel="noopener" href="http://www.cmake.org/cmake/help/cmake_tutorial.html">这里</a>，对于不少项目来说 Cmake 已经足够使用，只是我觉得 Cmake 还是稍微复杂了一点。</p>
 <h2 id="我这样来使用"><a href="#我这样来使用" class="headerlink" title="我这样来使用"></a>我这样来使用</h2><p> 整个 Ninja 是使用 C++ 写的开源项目，如果我们想增加一些自己的 feature 可以 hack 一下，不过作者估计不会接受增加语法支持的 patch。我准备做一个小的 hack 来自动分析我当前的源码，自动生成 build.ninja 文件，不要求处理所有的复杂情况，只是分析.cc 和.c，自动检测 main 函数文件。最后用户只用配置链接参数就可以了。我觉得这样用起来就非常方便了，待完成中，顺便看看 Ninja 的内部实现。</p>
 </section>
@@ -367,25 +366,6 @@ target_link_libraries(Maze.exe maze)
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

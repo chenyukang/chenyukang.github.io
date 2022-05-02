@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -203,10 +202,10 @@
 <hr>
 <p>这种类型的 Bug 其实还有很多，时间和日期是程序和系统中非常重要的一个概念，在分布式系统中时间也很容易造成 Bug。我们作为程序员在写代码的时候，<strong>尽量眼光放远一点</strong>，多想想自己的程序一千年以后还在跑🤣，这样大概就没这类问题了。</p>
 <p>不过一千年后还在运行的代码，得多伟大。这时候我脑海里回想起来那首歌：</p>
-<pre class="language-none"><code class="language-none">别等到 一千年以后
+<pre class="line-numbers language-none"><code class="language-none">别等到 一千年以后
 所有人都遗忘了我
 那时红色黄昏的沙漠
-能有谁 解开缠绕千年的寂寞</code></pre>
+能有谁 解开缠绕千年的寂寞<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 </section>
 
     <p></p>
@@ -376,25 +375,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

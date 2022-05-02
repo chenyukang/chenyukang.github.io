@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -173,7 +172,7 @@
 <li> UnionSets(int root1,int root2), 用来合并两个根节点。 </li><br><li> FindSet(int x) , 用来查找 x 所属的根节点。 </li>
 
 <p>一并一查，所以叫作并查集。实现时候可以通过按秩合并 (union by rank)，和路径压缩 (path compression) 来增加效率，可以获得几乎与总操作数 m 成线性关系的运行时间。</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> rank<span class="token punctuation">[</span>MAXSIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>    <span class="token comment">// 节点高度的上界</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> rank<span class="token punctuation">[</span>MAXSIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>    <span class="token comment">// 节点高度的上界</span>
 <span class="token keyword">int</span> parent<span class="token punctuation">[</span>MAXSIZE<span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// 根节点</span>
 
 <span class="token keyword">void</span> <span class="token function">Init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
@@ -196,7 +195,7 @@
     parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> y<span class="token punctuation">;</span>
     <span class="token keyword">if</span><span class="token punctuation">(</span> rank<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">==</span> rank<span class="token punctuation">[</span>y<span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token operator">++</span>rank<span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">;</span>
   <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><h3>迷宫的实现</h3></p>
 <p><br>上面那本书上的习题上给了提示，比如首先所有的墙都没有去掉，那么是一个一个的方格，每一个方格为并查集合的一个元素，已经连通的元素是在并查集的一个集合中，有相同的根节点。 随机的选择一个墙，在并查集中查询这两个元素是否已经连通，如果已经连通则另选一个墙，如果不连通，union 两个节点的根节点，这样操作以后这两个方格已经连通。继续上面的操作， 直到入口和出口连通位置，那么这就形成了一个只有一条合法路径的迷宫，称为单迷宫。如下图所示。<br></p>
 
@@ -372,25 +371,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

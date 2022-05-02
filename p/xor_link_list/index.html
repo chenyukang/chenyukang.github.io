@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -171,21 +170,21 @@
 <p><code>(A ^ B) ^ A = B</code></p>
 <p><code>(B ^ A) ^ B = A</code></p>
 <p>注意最后两条，这是 XOR Link List 的关键，这也是通过 xor 操作来实现 swap 的关键。</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">xorSwap</span> <span class="token punctuation">(</span><span class="token keyword">int</span> <span class="token operator">*</span>x<span class="token punctuation">,</span> <span class="token keyword">int</span> <span class="token operator">*</span>y<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">xorSwap</span> <span class="token punctuation">(</span><span class="token keyword">int</span> <span class="token operator">*</span>x<span class="token punctuation">,</span> <span class="token keyword">int</span> <span class="token operator">*</span>y<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
      <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">!=</span> y<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
          <span class="token operator">*</span>x <span class="token operator">^=</span> <span class="token operator">*</span>y<span class="token punctuation">;</span>
          <span class="token operator">*</span>y <span class="token operator">^=</span> <span class="token operator">*</span>x<span class="token punctuation">;</span>
          <span class="token operator">*</span>x <span class="token operator">^=</span> <span class="token operator">*</span>y<span class="token punctuation">;</span>
      <span class="token punctuation">&#125;</span>
- <span class="token punctuation">&#125;</span></code></pre>
+ <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这里注意需要判断 x!=y，否则如果传入的是相同的指针，最后所指向的变量被设置为 0 了。</p>
 <p>通过最后两条联想到双向链表中的两个指针的实现，一般如下图所示：</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>  A       B         C         D         E  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>  A       B         C         D         E  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
          –<span class="token operator">></span>  next –<span class="token operator">></span>  next  –<span class="token operator">></span>  next  –<span class="token operator">></span>
-         <span class="token operator">&lt;</span>–  prev <span class="token operator">&lt;</span>–  prev  <span class="token operator">&lt;</span>–  prev  <span class="token operator">&lt;</span>–</code></pre>
+         <span class="token operator">&lt;</span>–  prev <span class="token operator">&lt;</span>–  prev  <span class="token operator">&lt;</span>–  prev  <span class="token operator">&lt;</span>–<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p> 如果把 next 和 prev 用一个变量替换还能实现前向和后向遍历，那就节省了一个变量的空间。</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>  A        B         C         D         E  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-        <span class="token operator">&lt;</span>–<span class="token operator">></span>  A⊕C  <span class="token operator">&lt;</span><span class="token operator">-></span>  B⊕D  <span class="token operator">&lt;</span><span class="token operator">-></span>  C⊕E  <span class="token operator">&lt;</span><span class="token operator">-></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>  A        B         C         D         E  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        <span class="token operator">&lt;</span>–<span class="token operator">></span>  A⊕C  <span class="token operator">&lt;</span><span class="token operator">-></span>  B⊕D  <span class="token operator">&lt;</span><span class="token operator">-></span>  C⊕E  <span class="token operator">&lt;</span><span class="token operator">-></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>比如当前在 B 节点，其 pointer 变量为 A⊕C，如果前面的 A 地址保存下来然后做运算 (A⊕C)⊕A -&gt; C，这样就得到下一个节点指针，反向遍历同样如此。当然其缺点是逻辑复杂了，删除其中的某一个节点也不方便 (删除头和尾要好点)，遍历的时候需要保存上一个节点。这样看来为了省一点点空间这样实现似乎有点不值，在大部分情况下这样的一个 pointer 的节省并没什么用，不过这其中的细节有趣、巧妙。</p>
 <p>同样上面的 xorSwap<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/249423/how-does-xor-variable-swapping-work">对于现代的 CPU 来说也没什么优化</a>，这样的代码只是更加不便于编译器来实现指令级别的优化。这种类型 trick 的东西还是要避免使用才好。</p>
 <p>自己稍微写了一下，代码在<a target="_blank" rel="noopener" href="https://gist.github.com/chenyukang/5364515">这个 Gist</a>。</p>
@@ -348,25 +347,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

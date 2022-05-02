@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -168,7 +167,7 @@
 <p>在办公室工作的时候一般面对两个显示器，大部分时候左边用来看代码，右边用来写程序。双显示屏还是有助于提高工作效率的。有一点困扰我的是如果要切换屏幕一般得用鼠标，这对于<br>Emacs 党是有些不能忍受的，右手离开键盘总是得停顿一下的感觉。今天找到一个解决办法。</p>
 <p>最终找到的是这个号称 Linux 下键盘精灵的一个程序：<a target="_blank" rel="noopener" href="http://www.semicomplete.com/projects/xdotool/">xdotool</a>，下载下来编译安装。这个东西可以模拟鼠标和键盘的行为：</p>
 <p>比如：</p>
-<pre class="language-shell" data-language="shell"><code class="language-shell">xdotool search <span class="token string">"Mozilla Firefox"</span> windowactivate --sync key --clearmodifiers ctrl+l 
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">xdotool search <span class="token string">"Mozilla Firefox"</span> windowactivate --sync key --clearmodifiers ctrl+l 
 <span class="token punctuation">(</span>快速切换倒 firefox，并 focus 在地址输入栏<span class="token punctuation">)</span>
 
 xdotool getmouselocation --shell  <span class="token punctuation">(</span>获取当前鼠标位置等信息<span class="token punctuation">)</span>
@@ -181,9 +180,9 @@ xdotool getactivewindow windowmove <span class="token number">100</span> <span c
 xdotool getactivewindow windowmove x <span class="token number">100</span>      <span class="token comment"># Moves to x,100</span>
 xdotool getactivewindow windowmove <span class="token number">100</span> y      <span class="token comment"># Moves to 100,y</span>
 xdotool getactivewindow windowmove <span class="token number">100</span> y      <span class="token comment"># Moves to 100,y</span>
-xdotool mousemove --screen <span class="token number">0</span> <span class="token number">100</span> <span class="token number">100</span>          <span class="token comment"># Moves to screen 0 pos at 100,100</span></code></pre>
+xdotool mousemove --screen <span class="token number">0</span> <span class="token number">100</span> <span class="token number">100</span>          <span class="token comment"># Moves to screen 0 pos at 100,100</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>有了上面 windowmove 命令，屏幕的切换就好实现了。写个丑陋的 python 脚本来保存当前的位置，切换到另外一个屏幕，再次调用的时候返回到原来的位置，<br>保存为 mouse.py。</p>
-<pre class="language-python" data-language="python"><code class="language-python"><span class="token comment">#!/usr/bin/python</span>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment">#!/usr/bin/python</span>
 <span class="token keyword">import</span> os
 <span class="token keyword">import</span> sys
 <span class="token keyword">import</span> commands
@@ -226,14 +225,14 @@ window <span class="token operator">=</span> <span class="token punctuation">(</
         do_update<span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">else</span><span class="token punctuation">:</span>
     do_store<span class="token punctuation">(</span><span class="token punctuation">)</span>
-    do_update<span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+    do_update<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>最后，通过 Emacs 下绑定快捷键来调用这个脚本即可实现两个屏幕之间的切换，又可以远离鼠标了。哈哈。</p>
-<pre class="language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token car">defun</span> switch-screen<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token car">defun</span> switch-screen<span class="token punctuation">(</span><span class="token punctuation">)</span>
   <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
   <span class="token punctuation">(</span><span class="token car">start-process</span> <span class="token string">"mouse.py"</span> <span class="token boolean">nil</span> <span class="token string">"bash"</span> <span class="token string">"-c"</span> 
                  <span class="token string">"/home/yukang/apps/bin/mouse.py"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-<span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">(</span><span class="token car">kbd</span> <span class="token string">"C-x q"</span><span class="token punctuation">)</span> <span class="token quoted-symbol variable symbol">'switch-screen</span><span class="token punctuation">)</span></code></pre>
+<span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">(</span><span class="token car">kbd</span> <span class="token string">"C-x q"</span><span class="token punctuation">)</span> <span class="token quoted-symbol variable symbol">'switch-screen</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>Jekyll 下写点东西快多了。</p>
 </section>
 
@@ -394,25 +393,6 @@ window <span class="token operator">=</span> <span class="token punctuation">(</
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

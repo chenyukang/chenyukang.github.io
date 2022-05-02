@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -192,9 +191,9 @@
 <p>简而言之就是我们可以预设一些文件格式、动作，让我们通过命令就可以快速创建文件，或者按某种格式记录内容，比如我设定了这些预设动作，通过命令运行某个命令，我就可以快速的记录一个 Todo，或者输入一个标题则开始写文章，或者是记录一个单词，或者是记录一个代码片段：</p>
 <p><img src="/images/ob_pasted-image-20220215001825.png" alt=""></p>
 <h3 id="Todo"><a href="#Todo" class="headerlink" title="Todo"></a>Todo</h3><p>Todo 的格式就是 Markdown 的 <code>- [ ]</code>，我用 Obsidian 管理 Todo 的好处在于每个 todo 都有上下文，我可能是 Daily 里面记录了 Todo，也可能是网页浏览时留下了一些 Todo，这些 Todo 散落在各个文件，但是我可以通过一条   <a target="_blank" rel="noopener" href="https://github.com/schemar/obsidian-tasks">obsidian-tasks</a> 语句生成一个 Task 视角，而在这个 Task 视角上编辑就等于编辑了散落在各个文件里的 Todo，真是绝妙！</p>
-<pre class="language-none"><code class="language-none">not done
+<pre class="line-numbers language-none"><code class="language-none">not done
 sort by due desc
-description includes #write</code></pre>
+description includes #write<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>在 Obsidian 里显示为：<br><img src="/images/ob_pasted-image-20220215010029.png" alt=""></p>
 <p>这种工作方式也是来自 Emacs 的 org-mode，我觉得 Obsidian 的这些插件都做得更容易使用，毕竟不是谁都有心思去学习 elisp 来配置 Emacs 。</p>
 <h3 id="网页标注"><a href="#网页标注" class="headerlink" title="网页标注"></a>网页标注</h3><p>网页标注是非常好的概念，这是我打通输入输出的必要工具。很多人喜欢收藏东西，用浏览器书签、知乎收藏夹之类的。因为收藏的时候没有自己写上标注和自己的理解，而且和自己的输入是隔离的，这样导致收藏的东西基本吃灰。</p>
@@ -379,25 +378,6 @@ description includes #write</code></pre>
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

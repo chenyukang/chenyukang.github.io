@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -171,7 +170,7 @@
 </ul>
 <p>其中 Readme 要看完，大概会有一个全局的了解。最佳实践辅助看看。<br>理解 Nginx 处理的几个阶段： <a target="_blank" rel="noopener" href="http://www.nginxguts.com/2011/01/phases/">http://www.nginxguts.com/2011/01/phases/</a></p>
 <h2 id="处理-Response-Body"><a href="#处理-Response-Body" class="headerlink" title="处理 Response Body"></a>处理 Response Body</h2><p>在我们的实现中有一步需要给后端返回的结果里面加一段水印 (也就是一段 JS 代码)，这步可以在 body_filter 这个里面做。不过需要注意 body_filter 是按流式方式处理的，需要把各个 buffer 存下来然后拼接起来。<br>而且后端返回的结果可能是 zip 压缩过的，<a target="_blank" rel="noopener" href="https://groups.google.com/forum/#!topic/openresty-en/q-dcQNxpwTA">所以需要解压，然后才能做替换或者拼接的操作</a>。</p>
-<pre class="language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">local</span> chunk<span class="token punctuation">,</span> eof <span class="token operator">=</span> ngx<span class="token punctuation">.</span>arg<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> ngx<span class="token punctuation">.</span>arg<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> 
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">local</span> chunk<span class="token punctuation">,</span> eof <span class="token operator">=</span> ngx<span class="token punctuation">.</span>arg<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> ngx<span class="token punctuation">.</span>arg<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> 
 <span class="token keyword">local</span> buffered <span class="token operator">=</span> ngx<span class="token punctuation">.</span>ctx<span class="token punctuation">.</span>buffered 
 <span class="token keyword">if</span> <span class="token keyword">not</span> buffered <span class="token keyword">then</span> 
    buffered <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>  <span class="token comment">-- XXX we can use table.new here </span>
@@ -196,9 +195,9 @@
    whole <span class="token operator">=</span> whole <span class="token operator">..</span> js_code
    
    ngx<span class="token punctuation">.</span>arg<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> whole 
-<span class="token keyword">end</span></code></pre>
-<p>最后因为修改了 response body，所以需要修改 header filter 里面的部分：<br><pre class="language-lua" data-language="lua"><code class="language-lua">ngx<span class="token punctuation">.</span>header<span class="token punctuation">.</span>content_length <span class="token operator">=</span> <span class="token keyword">nil</span>
-ngx<span class="token punctuation">.</span>header<span class="token punctuation">.</span>content_encoding <span class="token operator">=</span> <span class="token keyword">nil</span></code></pre></p>
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最后因为修改了 response body，所以需要修改 header filter 里面的部分：<br><pre class="line-numbers language-lua" data-language="lua"><code class="language-lua">ngx<span class="token punctuation">.</span>header<span class="token punctuation">.</span>content_length <span class="token operator">=</span> <span class="token keyword">nil</span>
+ngx<span class="token punctuation">.</span>header<span class="token punctuation">.</span>content_encoding <span class="token operator">=</span> <span class="token keyword">nil</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></p>
 <h2 id="容易出现的-bug"><a href="#容易出现的-bug" class="headerlink" title="容易出现的 bug"></a>容易出现的 bug</h2><ol>
 <li><p>尽量使用 local 变量： <a target="_blank" rel="noopener" href="https://moonbingbing.gitbooks.io/openresty-best-practices/lua/local.html">具体的解释</a>，我在实践的过程中出现过变量乱窜的情况，结果发现是没有是用 local。</p>
 </li>
@@ -367,25 +366,6 @@ ngx<span class="token punctuation">.</span>header<span class="token punctuation"
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

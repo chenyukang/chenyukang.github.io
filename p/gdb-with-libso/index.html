@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -166,7 +165,7 @@
   <article class="post-article">
     <section class="markdown-content"><p>今天解决了一个长期会碰到的问题，就是用 GDB 如何来调试动态链接库。我这个问题的难点是我的需要调试代码是在动态链接库里面，但是启动的不是普通的可以调试的二进制文件，换句话说这不是我所能控制的代码所编译出来的，甚至可能是由脚本程序来控制启动的。这个问题时不时地困扰着我，总结一下尝试过几种调试方式：</p>
 <p> 1 使用 print 来打印 log，有时候有用，不好的地方是有时候定位出问题的代码位置还是稍显麻烦。很常用的会定义一对宏，进入函数和退出某个函数的时候都相应调用。</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">APP_LOG</span><span class="token expression"><span class="token punctuation">(</span>X<span class="token punctuation">)</span>                                  </span><span class="token punctuation">\</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">APP_LOG</span><span class="token expression"><span class="token punctuation">(</span>X<span class="token punctuation">)</span>                                  </span><span class="token punctuation">\</span>
     <span class="token expression"><span class="token function">fprintf</span><span class="token punctuation">(</span><span class="token constant">stderr</span><span class="token punctuation">,</span> </span><span class="token string">"log: %s %d %s %s\n"</span><span class="token expression"><span class="token punctuation">,</span>           </span><span class="token punctuation">\</span>
             <span class="token expression"><span class="token constant">__FILE__</span><span class="token punctuation">,</span> <span class="token constant">__LINE__</span><span class="token punctuation">,</span> __FUNCTION__<span class="token punctuation">,</span> X<span class="token punctuation">)</span><span class="token punctuation">;</span>   </span><span class="token punctuation">\</span>
 </span>
@@ -175,11 +174,11 @@
     
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">LOG_LEAVE</span> <span class="token punctuation">\</span>
     <span class="token expression"><span class="token function">APP_LOG</span><span class="token punctuation">(</span></span><span class="token string">"leave"</span><span class="token expression"><span class="token punctuation">)</span></span></span>
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p> 2 对于 crash 掉的 bug，打印出来调用栈是非常有用的。使用<a target="_blank" rel="noopener" href="http://www.gnu.org/software/libc/manual/html_node/Backtraces.html#Backtraces">libc 提供的 Backtraces 函数</a>来获取调用栈。这是在不能提供 GDB 环境下拿到调用栈的不错方法。不过经过我的实验这对于动态链接库有一定的问题。</p>
 <p> 3 最后就是今天试用的比较通用办法。</p>
 <p> 我们不管是如何调用到动态链接库文件的，但是肯定会调用进来。所以需要想办法让代码在库代码处停下来，然后把找机会把 GDB 弄进去。于是乎有这么一个变态的办法，在动态链接库入口处来这么一段，就是执行到这里停住，等待 GDB attach 这个进程，然后在 GDB 里设置一个断点，touch 创建当前文件夹 debug 文件就跳出死循环，接下来就是一切在 GDB 控制下了。</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">wait_attach</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">wait_attach</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token function">fprintf</span><span class="token punctuation">(</span><span class="token constant">stderr</span><span class="token punctuation">,</span> <span class="token string">"Waiting attach pid: %d\n"</span><span class="token punctuation">,</span> <span class="token function">getpid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
         <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token function">access</span><span class="token punctuation">(</span><span class="token string">"./debug"</span><span class="token punctuation">,</span> F_OK<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
@@ -188,7 +187,7 @@
         <span class="token keyword">else</span>
             <span class="token punctuation">;</span>
     <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这是一个 stupid and work 的方法，不过我总觉得还有更好的办法来在这种情况下调试。</p>
 <p>在查找资料的过程中有点意外收获，顺便推荐 GDB 一个选项，gdb -tui，以 texture gui 方式启动 GDB，这是非常方便的文字界面。如果不用这个选项也可以在运行 GDB 以后按下快捷键盘 C-x C-a(怎么这么像 Emacs 快捷键) 来进行 gui 和非 gui 的切换。CLI 爱好者可以试用一下，DDD 什么的可以放下了，嘿嘿。</p>
 <p>另外一些有用的 GDB 命令：</p>
@@ -358,25 +357,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

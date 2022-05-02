@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -182,7 +181,7 @@
 
 <p><br>[Cycle detection] 是一个经典的计算机问题。经典的算法是 Floyd’s cycle-finding algorithm，这个算法简单而优美。严格的数学证明当然可以，也能更明显的从现实经验得出结论。如果一个赛道中间出现某个环 (分两种情况，赛道本身是环、赛道前面有一段没环而中间出现一个环 9 字形)，求这个环的周长 C。让两位运动员同时出发，并且 P1 的速度是 P2 的两倍，当他们第一重新相遇的时候，一定是在环的某个点上，并且其路程之差为这个环的周长的 K 倍 (K&gt;=1)，这解决了一部分问题，我们知道了 KC 的值，如果 K==1，则得出结果，说明两人刚好是在环开始点相遇。否则就是在环内其余点相遇，可以得知现在 P2 的路程为 KC(P1 的路程为 2KC), 如果让 P3 以和 P2 同样的速度从起点开始，P2 继续从相遇点开始跑，那么 P2 和 P3 肯定还会相遇，并且相遇的点一定为环开始点！回到这个问题，这个 index 的值就是重复的值。代码描述如下：<br></p>
 
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">detectCycle</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token operator">*</span> seq， <span class="token keyword">int</span> Num<span class="token punctuation">)</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">detectCycle</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token operator">*</span> seq， <span class="token keyword">int</span> Num<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
     <span class="token keyword">int</span> slow <span class="token operator">=</span> Num <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
     <span class="token keyword">int</span> fast <span class="token operator">=</span> Num <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
@@ -200,10 +199,10 @@
             <span class="token keyword">break</span><span class="token punctuation">;</span>
     <span class="token punctuation">&#125;</span>
     <span class="token keyword">return</span> finder<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><br>算法描述很简单，但其中思维的却很有乐趣。以前同样有一个问题，检测一个链表是否有环，这是由此出来的一个特例，因为对于一个链表的每个节点除了头节点都有一个前节点和后节点 (无环则末节点指向空)，而图是一个更通用的模型。<br></p>
 
-<pre class="language-c" data-language="c"><code class="language-c">bool <span class="token function">hasCycle</span><span class="token punctuation">(</span>ListNode <span class="token operator">*</span>head<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">bool <span class="token function">hasCycle</span><span class="token punctuation">(</span>ListNode <span class="token operator">*</span>head<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
   ListNode<span class="token operator">*</span> slow <span class="token operator">=</span> head<span class="token punctuation">;</span>
   ListNode<span class="token operator">*</span> fast <span class="token operator">=</span> head<span class="token punctuation">;</span>
   <span class="token keyword">while</span><span class="token punctuation">(</span>fast <span class="token operator">&amp;&amp;</span> fast<span class="token operator">-></span>next<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
@@ -213,7 +212,7 @@
         <span class="token keyword">return</span> true<span class="token punctuation">;</span>
     <span class="token punctuation">&#125;</span>
   <span class="token keyword">return</span> false<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </section>
 
     <p></p>
@@ -373,25 +372,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

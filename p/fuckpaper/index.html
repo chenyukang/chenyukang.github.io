@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -169,7 +168,7 @@
 <p class="first">这题折腾了很久很久，刚开始误以为每个文件的最大行数为 1500，最后因为输出格式问题。代码也比较长 330 行，954ms。<br>使用数组作为 hash，使用位图记录文件中存在的单词，idx 为由单词转化得到的该单词在 hash 表中的 index。</p>
 
 
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token keyword">unsigned</span> <span class="token keyword">int</span> docs_flag<span class="token punctuation">[</span>MAXDOC<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">(</span>MAXWORDS<span class="token operator">+</span><span class="token number">31</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token number">32</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">//记录某个文件中是否存在某个单词</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">unsigned</span> <span class="token keyword">int</span> docs_flag<span class="token punctuation">[</span>MAXDOC<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">(</span>MAXWORDS<span class="token operator">+</span><span class="token number">31</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token number">32</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">//记录某个文件中是否存在某个单词</span>
 <span class="token keyword">void</span> <span class="token function">set_docflag</span><span class="token punctuation">(</span><span class="token keyword">int</span> doc<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> idx<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
         doc<span class="token punctuation">[</span>idx<span class="token operator">>></span><span class="token number">5</span><span class="token punctuation">]</span> <span class="token operator">|=</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">&lt;&lt;</span><span class="token punctuation">(</span>idx<span class="token operator">&amp;</span><span class="token number">0x1f</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -178,7 +177,7 @@
 <span class="token keyword">int</span>  <span class="token function">get_docflag</span><span class="token punctuation">(</span><span class="token keyword">int</span> doc<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token keyword">unsigned</span> <span class="token keyword">int</span> idx<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
         <span class="token keyword">return</span> doc<span class="token punctuation">[</span>idx<span class="token operator">>></span><span class="token number">5</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">&lt;&lt;</span><span class="token punctuation">(</span>idx<span class="token operator">&amp;</span><span class="token number">0x1f</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><h4>poj 2518</h4></p>
 <p class="first">这个好玩，一个 4<em>4 的方格，里面分别放四个 A,B,C,D，初始状态从输入获取，先随便选取一个字母，然后能进行很多次操作。<br>每次能交换两个相邻的方格，到任何一个小的 2</em>2 的方格中全部都是所选的字母就获胜。对于每一个输入，求最少多少次交换就能达到胜利状态，<br>以及有多少方案可以达到这个目的。</p><br>例如：<br><pre class="example">AABB<br>ABAB<br>CDCD<br>CCDD          output ==&gt; 1 4 (选择 A 或者 B 交换 BA 选择 C 或者 D 交换 DC)<br><br>ACAB<br>CBBD<br>ADAD<br>DCBC          output ==&gt; 4 96</pre><br><br><p><br>首先想到还是搜索，用 bit 来减少空间。求最少次数，BFS 搜索也许太慢，毕竟每次状态转移会有 16 个选择。对于每一个输入，先枚举 A,B,C,D 进行搜索。对于每一个字母，比如 A，用一个整数表示其在方格的位置 (最大数字到 1&lt;&lt;16)，<br></p>
 
@@ -363,25 +362,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -168,7 +167,7 @@
 <pre><code>The gcc version has been difficult to support and maintain, due mainly to the fact that the GIMPLE intermediate language was never designed for static analysis. The abstract syntax tree provided by Clang is an easier data structure to work with for front-end analyses of this kind.
 </code></pre><p>这个 thread 挺好玩的，后面变成了一大群人争论 functional programming 和 Imperative Programming。这篇<a target="_blank" rel="noopener" href="http://fpcomplete.com/the-downfall-of-imperative-programming/">The Downfall of Imperative Programming</a>再好好看看。</p>
 <p>回到正题，我最近切换到 Mac 下。因为在 Mac OS X 下编译器变成了 Clang， Clang 是基于 LLVM 的。LLVM 对于分析代码是有比较方便的支持，所以基于 LLVM 有各种分析源程序的工具了，Xcode 下的一些辅助开发的工具还是很舒服的。前些天突然想到那么会不会有个东西来作为 Emacs 的自动补全的后端，一搜果然有了这个<a target="_blank" rel="noopener" href="https://github.com/mikeandmore/auto-complete-clang">auto-complete-clang</a>，使用了一下非常的方便。其实看看其代码是在后面调用 Clang 的，比如在 main.cc 源文件里面写一些代码：</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp">
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;string></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;vector></span></span>
 <span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
@@ -185,16 +184,16 @@
     std<span class="token double-colon punctuation">::</span>string s<span class="token punctuation">;</span>
     Demo demo<span class="token punctuation">;</span>
     demo<span class="token punctuation">.</span>
-<span class="token punctuation">&#125;</span></code></pre>
-<p>结果还是非常精准的，不想截图了。后端运行的命令其实是：<br><pre class="language-sh" data-language="sh"><code class="language-sh">cmd: clang -cc1 main.cc -fsyntax-only -code-completion-at main.cc:18:10</code></pre></p>
-<p>所得到的结果是：<br><pre class="language-sh" data-language="sh"><code class="language-sh">COMPLETION: Demo : Demo::
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>结果还是非常精准的，不想截图了。后端运行的命令其实是：<br><pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">cmd: clang -cc1 main.cc -fsyntax-only -code-completion-at main.cc:18:10<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></p>
+<p>所得到的结果是：<br><pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">COMPLETION: Demo : Demo::
 COMPLETION: operator&#x3D; : [#Demo &amp;#]operator&#x3D;(&lt;#const Demo &amp;#&gt;)
 COMPLETION: print : [#void#]print()
 COMPLETION: test : [#void#]test()
 COMPLETION: value : [#int#]value
-COMPLETION: ~Demo : [#void#]~Demo()</code></pre></p>
+COMPLETION: ~Demo : [#void#]~Demo()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
 <p>auto-complete-clang 做的事情就是把这个结果再展示出来，其实这条命令也做了语法检查的，所以加上一个语法检查的功能应该也是可以的。一搜果然还是有了，看这个<a target="_blank" rel="noopener" href="http://duncan.mac-vicar.com/2011/08/30/realtime-syntax-checking-with-emacs/">Realtime syntax checking with emacs</a>，需要翻墙，不过代码在<a target="_blank" rel="noopener" href="https://github.com/dmacvicar/duncan-emacs-setup/tree/master/site-lisp">Github 上</a>。其实其后端运行的命令是：</p>
-<pre class="language-sh" data-language="sh"><code class="language-sh">cmd: clang  -fsyntax-only -fno-exceptions main.cc</code></pre>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">cmd: clang  -fsyntax-only -fno-exceptions main.cc<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>最近用这个插件，基本代码都会是一遍编译通过啊，哈哈。Clang 错误提示也人性化一点，比如在 Xcode 下会提示你想的是不是”XXX”之类的。</p>
 </section>
 
@@ -359,25 +358,6 @@ COMPLETION: ~Demo : [#void#]~Demo()</code></pre></p>
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

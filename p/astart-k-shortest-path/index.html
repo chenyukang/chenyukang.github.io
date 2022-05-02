@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -204,7 +203,7 @@
 
 <p>当然这个算法不是我想出来的，这里只是说一下看后自己的理解。在 A<em>算法中，优先队列出来的点如果扩展到了终点，那么 就得到了最短路径。如果能得到实际的评估函数 (也就是 h</em>(N))，那么第二次 从优先队列里面弹出来的就是第 2 段的路径，依次直到 k 短。如何得到 h(N),就是图中各个点到 T 的实际最短路径距离，可以从图的反向图以 T 为源点进行 Dijkstra 算法，最后 Dist[N] 就可以作为 h(N)。然后以 cnt[N] 表示 N 点从优先队列里面弹出来的次数。K-shortest 问题还有更快的解法，不过还没看，这里有<a target="_blank" rel="noopener" href="http://www.mat.uc.pt/~eqvm/cientificos/investigacao/r_papers.html">大把论文</a>。这里还分结果路径中是否可以有环，像现实中公路网肯定是要求无环的 k-shortest path。下面这个算法是可以有环的。 </p>
 <p>完整代码如下：   </p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp">
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">
 <span class="token comment">//7040K 282MS</span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
 
@@ -321,7 +320,7 @@ vector<span class="token operator">&lt;</span>Edge<span class="token operator">>
     <span class="token keyword">int</span> ans<span class="token operator">=</span><span class="token function">Astar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span>ans<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </section>
 
     <p></p>
@@ -491,25 +490,6 @@ vector<span class="token operator">&lt;</span>Edge<span class="token operator">>
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

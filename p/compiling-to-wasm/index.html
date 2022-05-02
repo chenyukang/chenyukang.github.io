@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -182,21 +181,21 @@
 </ol>
 <h2 id="C-C-gt-wasm"><a href="#C-C-gt-wasm" class="headerlink" title="C/C++ =&gt; wasm"></a>C/C++ =&gt; wasm</h2><p>首先需要安装 Emscripten  SDK:<br><a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/downloads.html">https://emscripten.org/docs/getting_started/downloads.html</a></p>
 <p>移植一个 C/C++ 项目到 WebAssembly , 最简单的办法是把类似 gcc 命令换成 emcc，难点在于动态链接的第三方库，我们需要改成静态链接。一些常用的库已经被移植了，例如<em>libc</em>, <em>libc++</em> and <em>SDL</em>，这些我们不需要手动处理。不在 emcc 预装里的库，我们只需要在编译的过程中加一些额外的参数，例如我下面这个项目就用到了 PNG，JPEG 这些库：</p>
-<pre class="language-shell" data-language="shell"><code class="language-shell">emcc -c dbgutil.c -o dbgutil.o
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">emcc -c dbgutil.c -o dbgutil.o
 emcc -c qrtest.c -o qrtest.o
 emcc -c decode.c -o decode.o
 emcc -c identify.c -o identify.o
 emcc -c quirc.c -o quirc.o
 emcc -c version_db.c -o version_db.o
-emcc -g -Oz --llvm-lto 1  -s STANDALONE_WASM *.o -o qrtest.wasm  -lm  -s USE_LIBJPEG -s USE_LIBPNG </code></pre>
+emcc -g -Oz --llvm-lto <span class="token number">1</span>  -s STANDALONE_WASM *.o -o qrtest.wasm  -lm  -s USE_LIBJPEG -s USE_LIBPNG <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>另外 emcc 编译出来的 wasm 模块默认只能做纯计算，没有网络、系统文件等。如果有系统调用则需要运行在浏览器中，用浏览器的接口来模拟某些 C 函数调用，例如 C 语言中的系统调用 <code>time</code> 在 emcc 中被替成为了 JavaScript  代码：</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript"><span class="token function-variable function">clock</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token function-variable function">clock</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>_clock<span class="token punctuation">.</span>start <span class="token operator">===</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> _clock<span class="token punctuation">.</span>start <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> _clock<span class="token punctuation">.</span>start<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> <span class="token function">cDefine</span><span class="token punctuation">(</span><span class="token string">'CLOCKS_PER_SEC'</span><span class="token punctuation">)</span> <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span> <span class="token operator">/</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token number">0</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span></code></pre>
+  <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="Rust-gt-wasm"><a href="#Rust-gt-wasm" class="headerlink" title="Rust =&gt; wasm"></a>Rust =&gt; wasm</h2><p>Rust 是对 WebAssembly  支持得特别好的编程语言。我们可以使用 wasm-pack，或者安装 target:</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">rustup target <span class="token function">add</span> wasm32-wasi</code></pre>
-<p>然后在编译命令后面加参数：<br><pre class="language-bash" data-language="bash"><code class="language-bash">cargo build --target wasm32-wasi</code></pre></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">rustup target <span class="token function">add</span> wasm32-wasi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>然后在编译命令后面加参数：<br><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cargo build --target wasm32-wasi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></p>
 <p>系统函数同样是个问题，有的第三方库可能会支持 wasm 格式，例如 <a target="_blank" rel="noopener" href="https://docs.rs/getrandom/latest/getrandom/#webassembly-support">getrandom - Rust (docs.rs)</a>。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://emscripten.org/">Main — Emscripten 3.0.1-git (dev) documentation</a><br><a target="_blank" rel="noopener" href="https://marcoselvatici.github.io/WASM_tutorial/">WASM Tutorial (marcoselvatici.github.io)</a><br><a target="_blank" rel="noopener" href="https://rustwasm.github.io/docs/book/">Introduction - Rust and WebAssembly (rustwasm.github.io)</a></p>
 </section>
@@ -368,25 +367,6 @@ emcc -g -Oz --llvm-lto 1  -s STANDALONE_WASM *.o -o qrtest.wasm  -lm  -s USE_LIB
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

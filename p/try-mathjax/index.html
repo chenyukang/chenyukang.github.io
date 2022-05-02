@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -170,9 +169,9 @@
 <p>在每个页面开头加上这么一句，在 Jekyll 下可以通过修改 default.html 加上。</p>
 </li>
 </ul>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token operator">&lt;</span>script type<span class="token operator">=</span><span class="token string">"text/javascript"</span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token operator">&lt;</span>script type<span class="token operator">=</span><span class="token string">"text/javascript"</span>
  src<span class="token operator">=</span><span class="token string">"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"</span><span class="token operator">></span>
-<span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span></code></pre>
+<span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <ul>
 <li><p>本地安装 kramdown。</p>
 <p>因为 rdiscount 和默认的 markdown 在解析带公式文件的时候都会出现<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/10987992/using-mathjax-with-jekyll">一些问题</a>，所以最简单办法还是安装 kramdown。<br><code>$ gem install kramdown</code></p>
@@ -352,25 +351,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

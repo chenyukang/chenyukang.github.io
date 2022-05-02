@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -168,7 +167,7 @@
 <p>在 Kong 多节点部署的时候，有时候某个节点停掉后，我们在后台可以看到 left 的信息，而且这个 left 信息会保留一段不短的时间。类似于如下： </p>
 <p><img src="/images/kong-left-0133521.png" alt="kong-left"></p>
 <h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>管理后台 Konga 是通过 api 获取的节点信息，在<code>kong/kong/api/routes/cluster.lua</code>文件里可以看到如下路由处理逻辑： </p>
-<pre class="language-lua" data-language="lua"><code class="language-lua">GET <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> dao_factory<span class="token punctuation">,</span> helpers<span class="token punctuation">)</span>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua">GET <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> dao_factory<span class="token punctuation">,</span> helpers<span class="token punctuation">)</span>
   <span class="token keyword">local</span> members<span class="token punctuation">,</span> err <span class="token operator">=</span> singletons<span class="token punctuation">.</span>serf<span class="token punctuation">:</span><span class="token function">members</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
   <span class="token keyword">if</span> err <span class="token keyword">then</span>
     <span class="token keyword">return</span> responses<span class="token punctuation">.</span><span class="token function">send_HTTP_INTERNAL_SERVER_ERROR</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span>
@@ -187,7 +186,7 @@
 
   result<span class="token punctuation">.</span>total <span class="token operator">=</span> <span class="token operator">#</span>result<span class="token punctuation">.</span>data
   <span class="token keyword">return</span> responses<span class="token punctuation">.</span><span class="token function">send_HTTP_OK</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span>
-<span class="token keyword">end</span><span class="token punctuation">,</span></code></pre>
+<span class="token keyword">end</span><span class="token punctuation">,</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>具体<code>serf:members()</code>的实现在 serf.lua 里面可以看到，就是执行了<code>serf cluster members</code>命令获取结果然后返回 JSON。所以我们在服务器上执行这个命令其实也可以看到类似的结果： </p>
 <p><img src="/images/kong-left-cmd.png" alt="kong-left-cmd"></p>
 <p>那么问题的根源当然是在 Serf 本身里面，通过看文档发现原来确实是有一定延迟的。</p>
@@ -196,7 +195,7 @@
 <p><a target="_blank" rel="noopener" href="https://www.serf.io/docs/internals/gossip.html#lifeguard-enhancements">参考 serf 文档»</a></p>
 </blockquote>
 <h4 id="serf-的具体实现"><a href="#serf-的具体实现" class="headerlink" title="serf 的具体实现"></a>serf 的具体实现</h4><p>接着稍微看了一下 Serf 的代码，果然 Go 的项目代码直观好读。在 Serf 这个结构体里面保存了一个 leftMembers 的状态列表，每次收到 left 事件的时候处理逻辑是： </p>
-<pre class="language-go" data-language="go"><code class="language-go"><span class="token comment">// handleNodeLeaveIntent is called when an intent to leave is received.</span>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// handleNodeLeaveIntent is called when an intent to leave is received.</span>
 <span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>Serf<span class="token punctuation">)</span> <span class="token function">handleNodeLeaveIntent</span><span class="token punctuation">(</span>leaveMsg <span class="token operator">*</span>messageLeave<span class="token punctuation">)</span> <span class="token builtin">bool</span> <span class="token punctuation">&#123;</span>
 	<span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span>
     
@@ -222,9 +221,9 @@
 	<span class="token keyword">default</span><span class="token punctuation">:</span>
 		<span class="token keyword">return</span> <span class="token boolean">false</span>
 	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>通过索引变量发现这个列表会定时通过<code>handleReap</code>函数更新，逻辑如下： </p>
-<pre class="language-go" data-language="go"><code class="language-go"><span class="token comment">// handleReap periodically reaps the list of failed and left members, as well</span>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// handleReap periodically reaps the list of failed and left members, as well</span>
 <span class="token comment">// as old buffered intents.</span>
 <span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>Serf<span class="token punctuation">)</span> <span class="token function">handleReap</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
 	<span class="token keyword">for</span> <span class="token punctuation">&#123;</span>
@@ -240,9 +239,9 @@
 			<span class="token keyword">return</span>
 		<span class="token punctuation">&#125;</span>
 	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>所以看起来这里相关的 Timeout 是<code>s.config.TombstoneTimeout</code>, 接着需要看看<code>reap</code>到底做了什么，这里果然是把到了一定时间间隔的节点删掉了：</p>
-<pre class="language-go" data-language="go"><code class="language-go"><span class="token comment">// reap is called with a list of old members and a timeout, and removes</span>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// reap is called with a list of old members and a timeout, and removes</span>
 <span class="token comment">// members that have exceeded the timeout. The members are removed from</span>
 <span class="token comment">// both the old list and the members itself. Locking is left to the caller.</span>
 <span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>Serf<span class="token punctuation">)</span> <span class="token function">reap</span><span class="token punctuation">(</span>old <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">*</span>memberState<span class="token punctuation">,</span> now time<span class="token punctuation">.</span>Time<span class="token punctuation">,</span> timeout time<span class="token punctuation">.</span>Duration<span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">*</span>memberState <span class="token punctuation">&#123;</span>
@@ -265,9 +264,9 @@
 	<span class="token punctuation">&#125;</span>
 
 	<span class="token keyword">return</span> old
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>那么这个时间间隔是多久呢，在<code>serf/config.go</code>有一个默认配置： </p>
-<pre class="language-go" data-language="go"><code class="language-go">TombstoneTimeout<span class="token punctuation">:</span>             <span class="token number">24</span> <span class="token operator">*</span> time<span class="token punctuation">.</span>Hour<span class="token punctuation">,</span>	</code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">TombstoneTimeout<span class="token punctuation">:</span>             <span class="token number">24</span> <span class="token operator">*</span> time<span class="token punctuation">.</span>Hour<span class="token punctuation">,</span>	<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>serf 这个软件值得好好分析一下，节点的状态同步和事件处理都是分布式软件的基础，后续继续看看这个<code>gossip protocol based on SWIM</code>的具体实现。另外<a target="_blank" rel="noopener" href="https://www.hashicorp.com/">hashicorp</a>这个公司的开源代码和文档都非常好，值得学习一番。</p>
 </section>
 
@@ -442,25 +441,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

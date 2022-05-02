@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -166,7 +165,7 @@
   <article class="post-article">
     <section class="markdown-content"><p> I switched to org-mode from EverNote recently, and the experience imrpoved much for note and journal writing, especially for technical notes. After the whole tool is set appropriately, I am even addicted to writing. During my setting up for org-mode and related tools, I found these code snippets are really handy, so let’s have a share.</p>
 <h3 id="Insert-Pic-from-paste"><a href="#Insert-Pic-from-paste" class="headerlink" title="Insert Pic from paste"></a>Insert Pic from paste</h3><p> You need to install <strong>pngpaste</strong> first, then with this elisp function, we can copy the picture from paste very quickly, the picture will store on current directory’s img sub-directory, it will create it if img directory is not exists.</p>
-<pre class="language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">org-insert-image</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">org-insert-image</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
   <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
   <span class="token punctuation">(</span><span class="token keyword">let*</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token car">path</span> <span class="token punctuation">(</span><span class="token keyword">concat</span> default-directory <span class="token string">"img/"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
          <span class="token punctuation">(</span><span class="token car">image-file</span> <span class="token punctuation">(</span><span class="token keyword">concat</span>
@@ -178,7 +177,7 @@
     <span class="token punctuation">(</span><span class="token car">shell-command</span> <span class="token punctuation">(</span><span class="token keyword">concat</span> <span class="token string">"pngpaste "</span> image-file<span class="token punctuation">)</span><span class="token punctuation">)</span>
     <span class="token punctuation">(</span><span class="token car">org-insert-link</span> <span class="token boolean">nil</span> <span class="token punctuation">(</span><span class="token keyword">concat</span> <span class="token string">"file:"</span> image-file<span class="token punctuation">)</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
     <span class="token comment">;; (org-display-inline-images) ;; show inline picture</span>
-  <span class="token punctuation">)</span></code></pre>
+  <span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="Using-org-ruby-for-Hexo-publishing"><a href="#Using-org-ruby-for-Hexo-publishing" class="headerlink" title="Using org-ruby for Hexo publishing"></a>Using org-ruby for Hexo publishing</h3><p> I using Hexo for blogging, the default format is markdown in Hexo, so I need to convert org format to markdown format very conveniently, and finally org-ruby solve it. I did some dirty hacks on the codebase, <a target="_blank" rel="noopener" href="https://github.com/chenyukang/org-ruby/pull/1/files">please have a look at this PR</a>, this PR solve three issues.</p>
 <ul>
 <li>Add title and path attributes in org file, and the ruby script will extract it for dumping markdown file.</li>
@@ -186,7 +185,7 @@
 <li>Copy the images to proper directory for Hexo, support image size attributes.</li>
 </ul>
 <p> Then I added an elisp function for auto publish it after saving file whenever “#MD_TITLE:” is founded in buffer:</p>
-<pre class="language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">org-publish-to-hexo</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">org-publish-to-hexo</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
   <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
   <span class="token punctuation">(</span><span class="token car">shell-command</span> <span class="token punctuation">(</span><span class="token keyword">concat</span>
                   <span class="token string">"org-ruby "</span> <span class="token string">"--translate "</span> <span class="token string">"markdown "</span> <span class="token string">"-a "</span>
@@ -214,9 +213,9 @@
     <span class="token punctuation">(</span><span class="token car">pangu-spacing-space-current-buffer</span><span class="token punctuation">)</span>
     <span class="token comment">;;(fill-region (point-min) (point-max))</span>
     <span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token punctuation">(</span><span class="token car">add-hook</span> <span class="token quoted-symbol variable symbol">'before-save-hook</span> <span class="token quoted-symbol variable symbol">#'org-before-save-hook</span><span class="token punctuation">)</span></code></pre>
+<span class="token punctuation">(</span><span class="token car">add-hook</span> <span class="token quoted-symbol variable symbol">'before-save-hook</span> <span class="token quoted-symbol variable symbol">#'org-before-save-hook</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="pangu-spacing"><a href="#pangu-spacing" class="headerlink" title="pangu-spacing"></a>pangu-spacing</h3><p> This package will add spacing between Chinese word and English word, so I hooked it before save org file:</p>
-<pre class="language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token keyword">require</span> <span class="token quoted-symbol variable symbol">'pangu-spacing</span><span class="token punctuation">)</span>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token keyword">require</span> <span class="token quoted-symbol variable symbol">'pangu-spacing</span><span class="token punctuation">)</span>
 <span class="token punctuation">(</span><span class="token car">global-pangu-spacing-mode</span> <span class="token number">1</span><span class="token punctuation">)</span>
 <span class="token comment">;;(setq pangu-spacing-real-insert-separtor t)</span>
 
@@ -226,9 +225,9 @@
     <span class="token punctuation">(</span><span class="token car">pangu-spacing-space-current-buffer</span><span class="token punctuation">)</span>
     <span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-<span class="token punctuation">(</span><span class="token car">add-hook</span> <span class="token quoted-symbol variable symbol">'before-save-hook</span> <span class="token quoted-symbol variable symbol">#'org-before-save-hook</span><span class="token punctuation">)</span></code></pre>
+<span class="token punctuation">(</span><span class="token car">add-hook</span> <span class="token quoted-symbol variable symbol">'before-save-hook</span> <span class="token quoted-symbol variable symbol">#'org-before-save-hook</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="org-capture"><a href="#org-capture" class="headerlink" title="org-capture"></a>org-capture</h3><p> And the best thing is org-capture, with this we can write all kinds of tempaltes, for journal writing, I need to generate file according to date and time:</p>
-<pre class="language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">create-code-file</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">create-code-file</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
   <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
   <span class="token punctuation">(</span><span class="token keyword">let</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token car">name</span> <span class="token punctuation">(</span><span class="token keyword">concat</span> <span class="token punctuation">(</span><span class="token car">format-time-string</span> <span class="token string">"%Y_%m_%d_"</span><span class="token punctuation">)</span>
                        <span class="token punctuation">(</span><span class="token car">read-string</span> <span class="token string">"file-name: "</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -259,7 +258,7 @@
         <span class="token punctuation">(</span><span class="token string">"C"</span> <span class="token string">"Notes"</span> entry <span class="token punctuation">(</span><span class="token car">file</span> create-code-file<span class="token punctuation">)</span>
          <span class="token string">"** %^&#123;desc&#125;\n#+BEGIN_<span class="token argument">SRC</span> %^&#123;language|ruby|shell|c|rust|emacs-lisp&#125;\n%?\n#+END_SRC"</span> 
           <span class="token lisp-property property">:empty-lines</span> <span class="token number">1</span><span class="token punctuation">)</span>
-        <span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre></section>
+        <span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></section>
 
     <p></p>
     <!-- 二维码 START -->
@@ -415,25 +414,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

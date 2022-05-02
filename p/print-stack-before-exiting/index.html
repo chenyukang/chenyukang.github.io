@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -166,14 +165,14 @@
   <article class="post-article">
     <section class="markdown-content"><p>在程序挂掉的时候最好还是留点有用的遗言，特别是对于一些比较难重现的 Bug，也许这些信息会成为解决问题的关键。</p>
 <p>下面这个技巧可以让程挂掉的时候打印出来栈信息。这个办法来自<a target="_blank" rel="noopener" href="http://neugierig.org/software/blog/2012/06/backtraces.html">这里</a>, 我觉得把 SIGABRT、SIGBUS 信号加进去也挺好的，在此做了点修改。曾经尝也试过 glibc 的 backtrace 函数，，但是给的信息不全 (没有行号)，对此做得最好的还是 gdb。 在终端可以用 gdb 获取某个进程的当前栈：</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">$ gdb -p <span class="token number">5595</span> -batch -ex bt
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ gdb -p <span class="token number">5595</span> -batch -ex bt
 0xb7fb4410 <span class="token keyword">in</span> __kernel_vsyscall <span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token comment">#0  0xb7fb4410 in __kernel_vsyscall ()</span>
 <span class="token comment">#1  0xb7dc2d50 in nanosleep () from /lib/tls/i686/cmov/libc.so.6</span>
 <span class="token comment">#2  0xb7dc2b87 in sleep () from /lib/tls/i686/cmov/libc.so.6</span>
-<span class="token comment">#3  0x0804874f in main () at print_stack.cc:64</span></code></pre>
+<span class="token comment">#3  0x0804874f in main () at print_stack.cc:64</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>那么一个好的办法就是在程序开始的时候设置好信号，绑定 SIGSEGV 和 SIGABRT 到 DumpBackTrace() 函数，DumpBackTrace 函数 fork 出来一个新进程，运行上面的命令来获取调用栈。</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;signal.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;sys/types.h></span></span>
@@ -219,9 +218,9 @@
 <span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token function">BacktraceOnSegv</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>另外前段时间看到这篇文章<a target="_blank" rel="noopener" href="http://www.runswift.ly/solving-bugs.html">Solving vs. Fixing</a>写得不错，在面对一个 bug 的时候，先不要急于立马上 gdb 调试，根据现有的信息好好思考为什么会出现这个情况。<br>Reddit 上的一个得分最高的回复：</p>
-<pre class="language-none"><code class="language-none">The ability to reason about code is probably the most important skill. 
+<pre class="line-numbers language-none"><code class="language-none">The ability to reason about code is probably the most important skill. 
 But it is sadly rare, and doesn&#39;t seem to be taught much, if at all.
 Some things are simple, others take some more thought:
 
@@ -238,7 +237,7 @@ read the code and think about the code and how it could fail.
 Most of the time,  he just figures it out in his head and fixes it. 
 Sometimes he will insert some strategic printfs and narrow it down like that. 
 I don&#39;t think I have ever seen him use a debugger, 
-even on the most complex of problems.</code></pre></section>
+even on the most complex of problems.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></section>
 
     <p></p>
     <!-- 二维码 START -->
@@ -397,25 +396,6 @@ even on the most complex of problems.</code></pre></section>
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

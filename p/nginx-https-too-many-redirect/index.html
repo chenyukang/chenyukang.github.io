@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -165,18 +164,18 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Http 请求在经过多层 Nginx 的时候，通常强制 http 跳转到 https 的时候会这样配置：</p>
-<pre class="language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">return</span> <span class="token number">302</span> https://<span class="token variable">$host</span><span class="token variable">$request_uri</span></span><span class="token punctuation">;</span> 
-<span class="token comment">## 需要注意这里是 request_uri 而不是 uri，否则会引起安全问题</span></code></pre>
+<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">return</span> <span class="token number">302</span> https://<span class="token variable">$host</span><span class="token variable">$request_uri</span></span><span class="token punctuation">;</span> 
+<span class="token comment">## 需要注意这里是 request_uri 而不是 uri，否则会引起安全问题</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>但是如果是多层 Nginx，前面的 Nginx 需要把用户原始请求的 scheme 传递到后端，可以加上头部设置： </p>
-<pre class="language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">proxy_set_header</span> X-Forwarded-Proto <span class="token variable">$scheme</span></span><span class="token punctuation">;</span></code></pre>
+<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">proxy_set_header</span> X-Forwarded-Proto <span class="token variable">$scheme</span></span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>后面的 Nginx 再判断一次：</p>
-<pre class="language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">if</span> ( <span class="token variable">$http_x_forwarded_proto</span> != <span class="token string">'https'</span> )</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">if</span> ( <span class="token variable">$http_x_forwarded_proto</span> != <span class="token string">'https'</span> )</span> <span class="token punctuation">&#123;</span>
   <span class="token directive"><span class="token keyword">return</span> <span class="token number">301</span> https://<span class="token variable">$host</span><span class="token variable">$request_uri</span></span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>否则强制 https 经常会出现类似<code>ERR_TOO_MANY_REDIRECTS 将您重定向的次数过多</code>这样的问题。</p>
 <p>可是在实践过程中偶尔也碰到过一些 ELB 会丢掉 scheme 的问题，比如在这样的请求链路情况下<code>elb =&gt; nginx =&gt; nginx =&gt; application</code>第二层 Nginx 获取的 scheme 就有问题了，这也可能会导致<code>too many redirects</code>问题。</p>
 <p>可以尝试在第二层 Nginx 上这样解决： </p>
-<pre class="language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">proxy_set_header</span>   X-Forwarded-Proto <span class="token variable">$http_x_forwarded_proto</span></span><span class="token punctuation">;</span></code></pre>
+<pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">proxy_set_header</span>   X-Forwarded-Proto <span class="token variable">$http_x_forwarded_proto</span></span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>当然强制 https 这样的跳转逻辑尽量放在请求链路的最外层，这样问题会少一些。</p>
 </section>
 
@@ -333,25 +332,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

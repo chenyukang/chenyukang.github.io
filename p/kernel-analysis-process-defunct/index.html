@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -165,7 +164,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>我发现带着问题去看内核代码比较容易理解。如果一个父进程显示的设置 SIGCHLD 为 Ignore，子进程将自己清理自己。</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;signal.h></span></span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;signal.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;string.h></span></span>
@@ -186,10 +185,10 @@
 	<span class="token punctuation">&#125;</span>
 	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"finished\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>我们可以顺便看看内核里面是怎么写的，</p>
 <p>linux/kernel/exit.c 里面这部分是负责进程退出的，我截取了相关的代码：</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">/*
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">/*
  * Send signals to all our closest relatives so that they know
  * to properly mourn us..
  */</span>
@@ -216,9 +215,9 @@
     <span class="token comment">/* If the process is dead, release it - nobody will wait for it */</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>autoreap<span class="token punctuation">)</span>
         <span class="token function">release_task</span><span class="token punctuation">(</span>tsk<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>其中有一段是判断是否 autoreap，我们继续可以看看<br>linux/kernel/signal.c 里面的 do_notify_parent 函数：</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">bool</span> <span class="token function">do_notify_parent</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">task_struct</span> <span class="token operator">*</span>tsk<span class="token punctuation">,</span> <span class="token keyword">int</span> sig<span class="token punctuation">)</span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">bool</span> <span class="token function">do_notify_parent</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">task_struct</span> <span class="token operator">*</span>tsk<span class="token punctuation">,</span> <span class="token keyword">int</span> sig<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
     <span class="token keyword">struct</span> <span class="token class-name">siginfo</span> info<span class="token punctuation">;</span>
     <span class="token keyword">unsigned</span> <span class="token keyword">long</span> flags<span class="token punctuation">;</span>
@@ -254,7 +253,7 @@
 
     <span class="token function">__wake_up_parent</span><span class="token punctuation">(</span>tsk<span class="token punctuation">,</span> tsk<span class="token operator">-></span>parent<span class="token punctuation">)</span><span class="token punctuation">;</span>
 	<span class="token keyword">return</span> autoreap<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>可以看到如果父进程对子进程的生死不关心，那么设置 autoreap 为 TRUE，甚至这个信号也可以不发送了。</p>
 </section>
 
@@ -415,25 +414,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

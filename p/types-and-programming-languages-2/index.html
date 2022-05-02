@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -166,15 +165,15 @@
   <article class="post-article">
     <section class="markdown-content"><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><h3 id="Side-effect"><a href="#Side-effect" class="headerlink" title="Side effect"></a>Side effect</h3><p>In particular, besides just yielding results, evaluation of terms in these languages may assign to mutable variables (reference cells, arrays, mutable record fields, etc.), perform input and output to files, displays, or network connections, make non-local transfers of control via exceptions, jumps, or continuations, engage in inter-process synchronization and communication, and so on. In the literature on programming languages, such “side effects” of computation are more generally referred to as computational effects.</p>
 <p>引用指向的对象可以是基本类型、组合类型，甚至是函数，把指向函数的 ref 放进对应的 record，就变成一个简单的 object，OOP 的原型就出来了。</p>
-<pre class="language-ocaml" data-language="ocaml"><code class="language-ocaml">update <span class="token operator">=</span> λa<span class="token punctuation">:</span>NatArray<span class="token punctuation">.</span> λm<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span> λv<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span>
-     a <span class="token operator">:=</span> <span class="token punctuation">(</span>λn<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span> <span class="token keyword">if</span> equal m n <span class="token keyword">then</span> v <span class="token keyword">else</span> <span class="token punctuation">(</span><span class="token operator">!</span>a<span class="token punctuation">)</span> n<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml">update <span class="token operator">=</span> λa<span class="token punctuation">:</span>NatArray<span class="token punctuation">.</span> λm<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span> λv<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span>
+     a <span class="token operator">:=</span> <span class="token punctuation">(</span>λn<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span> <span class="token keyword">if</span> equal m n <span class="token keyword">then</span> v <span class="token keyword">else</span> <span class="token punctuation">(</span><span class="token operator">!</span>a<span class="token punctuation">)</span> n<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>通过这个习题的例子可以看出 ref 引进的副作用。</p>
 <h2 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a>Garbage Collection</h2><h3 id="GC-or-not"><a href="#GC-or-not" class="headerlink" title="GC or not"></a>GC or not</h3><p>This is not just a question of taste in language design: it is extremely difficult to achieve type safety in the presence of an explicit deallocation operation.</p>
 <p>The reason for this is the familiar dangling reference problem: we allocate a cell holding a number, save a reference to it in some data structure, use it for a while, then deallocate it and allocate a new cell holding a boolean, possibly reusing the same storage. Now we can have two names for the same storage cell—one with type Ref Nat and the other with type Ref Bool.</p>
 <h3 id="Pointer"><a href="#Pointer" class="headerlink" title="Pointer"></a>Pointer</h3><p>Pointer arithmetic is occasionally very useful (especially for implementing low-level components of run-time systems, such as garbage collectors), it cannot be tracked by most type systems: knowing that location n in the store contains a Float doesn’t tell us anything useful about the type of location n + 4. In C, pointer arithmetic is a notorious source of type safety violations.</p>
 <p>Store typings: 引入引用后类型系统需要处理 Cyclic reference structures，比如 double linked list。Store typings 就是一个 locations 到 typings 的映射。</p>
 <p>实现 fullref： 引用部分的实现非常简单，</p>
-<pre class="language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmRef<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">)</span> <span class="token operator">-></span>
+<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmRef<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">)</span> <span class="token operator">-></span>
     TyRef<span class="token punctuation">(</span>typeof ctx t1<span class="token punctuation">)</span>
 <span class="token operator">|</span> TmLoc<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>l<span class="token punctuation">)</span> <span class="token operator">-></span>
     error fi <span class="token string">"locations are not supposed to occur in source programs!"</span>
@@ -183,7 +182,7 @@
         TyRef<span class="token punctuation">(</span>tyT1<span class="token punctuation">)</span> <span class="token operator">-></span> tyT1
       <span class="token operator">|</span> TyBot <span class="token operator">-></span> TyBot
       <span class="token operator">|</span> TySource<span class="token punctuation">(</span>tyT1<span class="token punctuation">)</span> <span class="token operator">-></span> tyT1
-      <span class="token operator">|</span> <span class="token punctuation">_</span> <span class="token operator">-></span> error fi <span class="token string">"argument of ! is not a Ref or Source"</span><span class="token punctuation">)</span></code></pre>
+      <span class="token operator">|</span> <span class="token punctuation">_</span> <span class="token operator">-></span> error fi <span class="token string">"argument of ! is not a Ref or Source"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </section>
 
     <p></p>
@@ -357,25 +356,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

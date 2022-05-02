@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -176,7 +175,7 @@
 <p>在这篇文章中 Ken Thompson 阐述了一种在编译器里面加上后门的巧妙办法，让他可以登录任何早期的 Unix 系统。</p>
 <p>有的人会说编译器里加恶意代码，我们看看编译器的源代码不就知道了么，所以大家通常认为开源软件更安全，毕竟源码面前，毫无秘密。</p>
 <p>Ken Thompson 的办法巧妙在于，他先修改了一个编译器的源码，编译出来的编译器为 P0,  P0 可以在另外一份没有后门的编译器源码中插入代码，这样出来的编译器就还是有后门的 P1，但是你看源码又发现不了任何踪迹。</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token function">compile</span> <span class="token punctuation">(</span>code<span class="token punctuation">)</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">compile</span> <span class="token punctuation">(</span>code<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
   <span class="token comment">/* If the code we're compiling is code for the Unix login command */</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">match</span> <span class="token punctuation">(</span>code<span class="token punctuation">,</span> login_code_pattern<span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -197,7 +196,7 @@
     <span class="token comment">/* Do regular compilation things */</span>
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
   <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>编译器开发中有个常用的概念是自举 (bootstrapping)，就是用这门语言实现的编译器编译新版本的编译器源码，一门新的编译型编程语言，实现自举是第一个里程碑。</p>
 <p>这里就牵涉到<strong>鸡生蛋还是蛋生鸡</strong>的问题，那第一个编译器肯定不是自身语言实现的，比如 C 第一个编译器是 B 语言写的， Rust 编译器的第一份源码是 OCaml 的。</p>
 <p>Ken Thompson 的做法可以理解为在自举过程中加入了特定的后门逻辑，导致编译出来的编译器都会有问题。</p>
@@ -218,12 +217,12 @@
 <p>为什么称为 New Jersey 方式 ? </p>
 <p>因为 C/Unix 的创造者 Dennis Ritchie 和  Thompson 所在的学校 UC Berkeley 在 New Jersey，另外美国人喜欢调侃新泽西，觉得相比起附近高贵的纽约，这地方真是又土又穷。新泽西乡巴佬，赤裸裸的地域歧视和小讽刺啊！</p>
 <p>这篇文章中的主要例子是一个操作系统中的  <code>PC loser-ing</code> 问题，我看的时候没太看懂，然后搜到了这篇文章 <a target="_blank" rel="noopener" href="https://blog.reverberate.org/2011/04/eintr-and-pc-loser-ing-is-better-case.html">EINTR and PC loser-ing , The “Worse Is Better” case study</a>。这篇文章的推测我认为是对的，早期的 Unix 系统调用有一个 EINTR 返回状态 (被中断的系统调用)，表示系统调用过程中发生了中断，需要重试，所以调用的时候经常写这种代码：</p>
-<pre class="language-c" data-language="c"><code class="language-c">again<span class="token operator">:</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">again<span class="token operator">:</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>n <span class="token operator">=</span> <span class="token function">read</span><span class="token punctuation">(</span>fd<span class="token punctuation">,</span> buf<span class="token punctuation">,</span> BUFFSIZE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>errno <span class="token operator">==</span> EINTR<span class="token punctuation">)</span>
       <span class="token keyword">goto</span> again<span class="token punctuation">;</span>  <span class="token comment">/* just an interrupted system call */</span>
     <span class="token comment">/* handle other errors */</span>
-  <span class="token punctuation">&#125;</span></code></pre>
+  <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这看起来确实够丑陋的，不过因为几乎所有的开发者默认都想重试，所以  4.2BSD 开始就已经支持自动重试，而 POSIX API 通过修改 <code>struct sigaction</code> 的  <code>SA_RESTART</code> 参数来决定是否重试。</p>
 <p>所以，Unix 系统调用接口虽然当时看起来丑陋，但是逐渐已经通过缝缝补补把这个问题解决了！</p>
 <blockquote>
@@ -424,25 +423,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

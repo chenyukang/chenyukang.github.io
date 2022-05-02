@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -165,15 +164,15 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>In an normal release, Rails app’s unit testing will avoid most errors. But for the urgent code publishing, we have got several time of typo error. Code syntax error may cause server crash for a little while(Passenger web server and we using <code>./tmp/restart.txt</code> to restart). We use Capistrano to publish code, so I plan to add a syntax checking before publishing code.<br>The method is writing a task to bundle exec rails runner, this will report most ruby syntax error(except the undef variables in some functions, runner will load .rb files). </p>
-<pre class="language-ruby" data-language="ruby"><code class="language-ruby">namespace <span class="token symbol">:app</span> <span class="token keyword">do</span>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby">namespace <span class="token symbol">:app</span> <span class="token keyword">do</span>
   desc <span class="token string-literal"><span class="token string">"check all the ruby code"</span></span>
   task <span class="token symbol">:check</span> <span class="token operator">=></span> <span class="token symbol">:environment</span> <span class="token keyword">do</span>
     res <span class="token operator">=</span> <span class="token command-literal"><span class="token command string">`RAILS_ENV=</span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">Rails<span class="token punctuation">.</span>env</span><span class="token delimiter punctuation">&#125;</span></span><span class="token command string">  bundle exec rails runner "" 2>&amp;1`</span></span>
     <span class="token keyword">raise</span> res <span class="token keyword">if</span> res<span class="token punctuation">.</span>size <span class="token operator">></span> <span class="token number">0</span>
   <span class="token keyword">end</span>
-<span class="token keyword">end</span></code></pre>
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>then add this in the deploy.rb (Capistrano 3.1):</p>
-<pre class="language-ruby" data-language="ruby"><code class="language-ruby">namespace <span class="token symbol">:deploy</span> <span class="token keyword">do</span>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby">namespace <span class="token symbol">:deploy</span> <span class="token keyword">do</span>
 
   task <span class="token symbol">:run_code_check</span> <span class="token keyword">do</span>
     on roles<span class="token punctuation">(</span><span class="token symbol">:all</span><span class="token punctuation">)</span> <span class="token keyword">do</span>
@@ -186,9 +185,9 @@
   <span class="token keyword">end</span>
 
   before <span class="token string-literal"><span class="token string">"deploy:updated"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"deploy:run_code_check"</span></span>
-<span class="token keyword">end</span></code></pre>
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>This is not a tricky part, but please pay attention to the line:</p>
-<pre class="language-ruby" data-language="ruby"><code class="language-ruby">res <span class="token operator">=</span> <span class="token command-literal"><span class="token command string">`RAILS_ENV=</span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">Rails<span class="token punctuation">.</span>env</span><span class="token delimiter punctuation">&#125;</span></span><span class="token command string">  bundle exec rails runner "" 2>&amp;1`</span></span></code></pre>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby">res <span class="token operator">=</span> <span class="token command-literal"><span class="token command string">`RAILS_ENV=</span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">Rails<span class="token punctuation">.</span>env</span><span class="token delimiter punctuation">&#125;</span></span><span class="token command string">  bundle exec rails runner "" 2>&amp;1`</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>This line of code cost me some time, I forget the <code>2&gt;&amp;1</code>. so <code>res</code> will just got the stdout, not the stderr output, which causes the exception is not raised, and Capistrano flow is not stopped.</p>
 </section>
 
@@ -345,25 +344,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -166,10 +165,10 @@
   <article class="post-article">
     <section class="markdown-content"><p>前几天在群里看到有人讨论 dbg！宏已经在 Nightly 可以使用了，最近发布的 stable 版本 1.32.0 也可以使用了。 翻看了一下并玩了玩，这个简单的宏确实是调试好帮手，特别是适合我这样的喜欢打印调试的开发者。这个提议从 2017 年 10 月开始，从 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rfcs/pull/2173">https://github.com/rust-lang/rfcs/pull/2173</a> 可以看到，为了增加这个宏很多贡献者经过了无数次的讨论和回复。真是太佩服 Rust Team 的开发者，付出了这么多时间来增加这个看似很小又实用的功能。</p>
 <h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>先看看这个调试宏是怎么使用的，目前使用这个宏需要切换到 Nightly 版本或者最新的稳定版，已经安装了 rustup 的话就很简单了：</p>
-<pre class="language-shell" data-language="shell"><code class="language-shell">rustup default nightly
-rustup update</code></pre>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rustup default nightly
+rustup update<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>然后很简单就是把一个表达式当作参数传入：</p>
-<pre class="language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function-definition function">factorial</span><span class="token punctuation">(</span>n<span class="token punctuation">:</span> <span class="token keyword">u32</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">u32</span> <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function-definition function">factorial</span><span class="token punctuation">(</span>n<span class="token punctuation">:</span> <span class="token keyword">u32</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">u32</span> <span class="token punctuation">&#123;</span>
      <span class="token keyword">if</span> <span class="token macro property">dbg!</span><span class="token punctuation">(</span>n <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
          <span class="token macro property">dbg!</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
     <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
@@ -179,9 +178,9 @@ rustup update</code></pre>
 
 <span class="token keyword">fn</span> <span class="token function-definition function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token macro property">dbg!</span><span class="token punctuation">(</span><span class="token function">factorial</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>运行结果如下：</p>
-<pre class="language-shell" data-language="shell"><code class="language-shell"><span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"><span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
 <span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
 <span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
 <span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
@@ -191,9 +190,9 @@ rustup update</code></pre>
 <span class="token punctuation">[</span>src/main.rs:7<span class="token punctuation">]</span> n * factorial<span class="token punctuation">(</span>n - <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">6</span>
 <span class="token punctuation">[</span>src/main.rs:7<span class="token punctuation">]</span> n * factorial<span class="token punctuation">(</span>n - <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">24</span>
 <span class="token punctuation">[</span>src/main.rs:7<span class="token punctuation">]</span> n * factorial<span class="token punctuation">(</span>n - <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">120</span>
-<span class="token punctuation">[</span>src/main.rs:12<span class="token punctuation">]</span> factorial<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">120</span></code></pre>
+<span class="token punctuation">[</span>src/main.rs:12<span class="token punctuation">]</span> factorial<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">120</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>原理当然也就是把表达式和位置打印出来，但是这里有个技巧，在宏里面使用 match，这是为了避免参数被调用多次，因为宏在编译之前会被展开。Rust 的宏比较复杂，也不可避免会有些 hacky，对于喜欢爱折腾的程序员还是有吸引力。再看看这个宏是怎么实现的，代码很少。：</p>
-<pre class="language-rust" data-language="rust"><code class="language-rust"><span class="token macro property">macro_rules!</span> dbg <span class="token punctuation">&#123;</span>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token macro property">macro_rules!</span> dbg <span class="token punctuation">&#123;</span>
     <span class="token punctuation">(</span><span class="token variable">$val</span><span class="token punctuation">:</span><span class="token fragment-specifier punctuation">expr</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
         <span class="token keyword">match</span> <span class="token variable">$val</span> <span class="token punctuation">&#123;</span>
             tmp <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
@@ -203,9 +202,9 @@ rustup update</code></pre>
             <span class="token punctuation">&#125;</span>
         <span class="token punctuation">&#125;</span>
     <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>可以看到目前这个实现是只支持一个参数的，如果传入的参数类型没有实现 Copy Trait，可以传入引用。另外如果想同时打印多个参数，可以使用类似这样的做法：</p>
-<pre class="language-rust" data-language="rust"><code class="language-rust"><span class="token macro property">dbg!</span><span class="token punctuation">(</span><span class="token punctuation">(</span>exp1<span class="token punctuation">,</span> exp2<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token macro property">dbg!</span><span class="token punctuation">(</span><span class="token punctuation">(</span>exp1<span class="token punctuation">,</span> exp2<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 </section>
 
     <p></p>
@@ -371,25 +370,6 @@ rustup update</code></pre>
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

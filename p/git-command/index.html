@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -166,7 +165,7 @@
   <article class="post-article">
     <section class="markdown-content"><p>公司这群人终于打算从 CVS 迁徙到 Git 上了，CVS 这套公司用了六年。CVS 这是 90 年代的东西，我们不能因为年代久远而嫌弃这，只是 CVS 这东西对于一个比较大的项目来说创建分支是相当漫长，大多数程序员都没有耐心的。<br>迁徙计划虽然纸上谈兵了很长时间，直到现在才终于打算行动。</p>
 <p>上午把 Git 在服务器上搭建好，主要卡在一个 Git 的命令上，因为一些权限问题。</p>
-<pre class="language-sh" data-language="sh"><code class="language-sh">git init --bare --shared&#x3D;group ; --shared&#x3D;group forget this</code></pre>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">git init --bare --shared&#x3D;group ; --shared&#x3D;group forget this<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>Git 的 web 接口是用的是<a target="_blank" rel="noopener" href="http://viewgit.fealdia.org/">ViewGit</a>，自己做了一些修改，加上<a target="_blank" rel="noopener" href="http://qbnz.com/highlighter/">GeShi</a>来高亮代码，并使用了<a target="_blank" rel="noopener" href="https://github.com/trybeee/GitStats">GitStats</a>来做代码统计。GitStats 统计的项目非常多，看起来很直观。</p>
 <p>稍微记录一下常用的一些 git 命令：</p>
 <table><tbody><tr><td>检出仓库</td><td>git clone repo</td></tr><tr><td>更新</td><td>git pull</td></tr><tr><td>提交到远程</td><td>git push</td></tr><tr><td>提交到本地</td><td>git commit -am”log message”</td></tr><tr><td>创建 branch</td><td>git branch branch_name</td></tr><tr><td>切换 branch</td><td>git checkout branch_name</td></tr><tr><td>合并 branch</td><td>git merge branch_name</td></tr><tr><td>图形界面</td><td>gitk</td></tr><tr><td>解决冲突</td><td>git mergetool</td></tr><tr><td>撤销上一次 commit</td><td>git revert HEAD</td></tr><tr><td>撤销上上次 commit</td><td>git revert HEAD^</td></tr><tr><td>撤销上一次的 merge</td><td>git reset –hard HEAD^</td></tr></tbody></table>
@@ -329,25 +328,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

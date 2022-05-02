@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -177,7 +176,7 @@
 <p>如何知道 s 中的某一个字符是否是 p 中的一部分？<br>如何尽量移动 m 而不出现少找的情况？</p>
 </blockquote>
 <p>第一个问题，可以用某个存储空间存下是否有 p 中的某个字符出现过，方便以后查找。Hash 的思想，但是这里字符串查找里面再弄个 Hash 太无语了吧。一个简单的 Bloom-filter，这里是这样实现的。</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token comment">/*计算 mask*/</span> 
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">/*计算 mask*/</span> 
 mlast <span class="token operator">=</span> m<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
 <span class="token keyword">for</span> <span class="token punctuation">(</span>mask <span class="token operator">=</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;=</span> mlast<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     mask <span class="token operator">|=</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span>p<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x1F</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -187,11 +186,11 @@ mlast <span class="token operator">=</span> m<span class="token operator">-</spa
 <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>mask <span class="token operator">&amp;</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span>s<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token number">0x1F</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
      <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"s[i] is not in pattern"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">else</span> 
-     <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"s[i] is in pattern"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+     <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"s[i] is in pattern"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>其实我们是要判断一个 s 中的一个字符串没有出现在 p 中，取低 5 位不是可能产生冲突么？产生冲突也没问题，就像一个 Hash 只要一个元素算出来的 Key 指定的 slot 没元素不就能确定这个元素不在里面了么。</p>
 <p>第二个问题，有些巧妙。上面那个例子是因为 s 的最后一个字符没被匹配，所以能移动 m 的长度。如果这个例子 s=”aaacaaaacaa”，p=”aacaa”，第 5 个位置都为 a，最后一个匹配，但是 s 里面前几个其实不为 aacaa，所以需要移动，但是移动多少呢？如果移动 p 的长度，那从第 2 个位置开始的 aacaa 就没被检查到。所以需要一个变量记录在每次最后一个字母匹配的情况下向右移动的合理偏移量，在这里为 skip，初始化的时候计算出来，这最偏移量其实是计算的最小偏移量，就是移动 skip 个位置到第一个 s[m-1] 的位置。 整个实现既节省空间又速度快，强大。</p>
 <p>具体实现如下：</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token comment">//如果 mode 为 FAST_COUNT，则查找 pattern 出现的次数</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">//如果 mode 为 FAST_COUNT，则查找 pattern 出现的次数</span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">FAST_COUNT</span> <span class="token expression"><span class="token number">1</span></span></span>
 
 <span class="token keyword">int</span> <span class="token function">fastsearch</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">,</span> <span class="token class-name">size_t</span> n<span class="token punctuation">,</span>
@@ -263,7 +262,7 @@ mlast <span class="token operator">=</span> m<span class="token operator">-</spa
     <span class="token keyword">if</span> <span class="token punctuation">(</span>mode <span class="token operator">!=</span> FAST_COUNT<span class="token punctuation">)</span>
         <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> count<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </section>
 
     <p></p>
@@ -427,25 +426,6 @@ mlast <span class="token operator">=</span> m<span class="token operator">-</spa
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

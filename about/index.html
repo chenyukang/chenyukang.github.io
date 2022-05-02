@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -153,9 +152,9 @@
 
     <div id="about-banner" style="background-image: url(http://chenyukang.github.io/images/134871342111-2510476.jpg)"></div>
 <main class="app-body" style="max-width: 760px">
-    <article class="post-article">
-        <section class="markdown-content">
-            <h2 id="作者"><a href="#作者" class="headerlink" title="作者"></a>作者</h2><p><strong>yukang</strong>，热爱技术，兴趣广泛，并长期参与<a target="_blank" rel="noopener" href="https://github.com/chenyukang">开源</a>。</p>
+  <article class="post-article">
+    <section class="markdown-content">
+      <h2 id="作者"><a href="#作者" class="headerlink" title="作者"></a>作者</h2><p><strong>yukang</strong>，热爱技术，兴趣广泛，并长期参与<a target="_blank" rel="noopener" href="https://github.com/chenyukang">开源</a>。</p>
 <p>写作是我的乐趣之一，<a href="/p/writing-for-joy/">写作 12 年，我的经验和技巧</a>。</p>
 <p>2019 年开始我想锻炼自己的英文写作能力，所以建了另外一个英文博客 <a target="_blank" rel="noopener" href="https://coderscat.com/">coderscat.com</a>。</p>
 <p>我的英语文章通常会发布在 <a target="_blank" rel="noopener" href="https://medium.com/@coderscat">medium.com/@coderscat</a>。</p>
@@ -169,43 +168,43 @@
 <li>硬件: ThinkPad T系列, 我太喜欢这个键盘手感了！</li>
 </ul>
 
-        </section>
-    </article>
+    </section>
+  </article>
 </main>
 
 <div class="author" style="margin-top: 10px">
-    <p><a href="mailto:moorekang@gmail.com" target="_blank" rel="external">邮件联系我 👻</a></p>
-    <img src="/images/wechat-qr-code.jpg" height="180" width="180">
-    <p>文章采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="external">BY-NC-SA</a> 授权，如需转载请注明。
-        <section class="share-icons">
-            <a class="icon-github" href="https://github.com/chenyukang" target="_blank">
-                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                </span>
-            </a>
-            <a class="icon-twitter" href="https://twitter.com/cyukang" target="_blank">
-                <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                        </span>
-            </a>
-        </section>
+  <p><a href="mailto:moorekang@gmail.com" target="_blank" rel="external">邮件联系我 👻</a></p>
+  <img src="/images/wechat-qr-code.jpg" height="180" width="180">
+  <p>文章采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="external">BY-NC-SA</a> 授权，如需转载请注明。
+  <section class="share-icons">
+    <a class="icon-github" href="https://github.com/chenyukang" target="_blank">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
+    <a class="icon-twitter" href="https://twitter.com/cyukang" target="_blank">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
+  </section>
 </div>
 
 
 <script>
-    (function() {
-        $('.header').removeClass('fixed-header')
-        var windowH = $(window).height();
-        var author = $('.author')
-        var bodyH = author.offset().top + author[0].offsetHeight + 71;
-        if (bodyH < windowH) {
-            author.css({
-                'margin-bottom': windowH - bodyH
-            })
-        }
-    })();
+  (function() {
+    $('.header').removeClass('fixed-header')
+    var windowH = $(window).height();
+    var author = $('.author')
+    var bodyH = author.offset().top + author[0].offsetHeight + 71;
+    if (bodyH < windowH) {
+      author.css({
+        'margin-bottom': windowH - bodyH
+      })
+    }
+  })();
 </script>
     <div class="scroll-top">
   <span class="arrow-icon"></span>
@@ -238,25 +237,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

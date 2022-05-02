@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -166,7 +165,7 @@
   <article class="post-article">
     <section class="markdown-content"><p><span class="Apple-style-span" style="font-size: 13px; font-weight: normal;">OO 是一种编程范型，而不只是特定语言的特定支持，所以用 C 来实现也是可行的。最近碰到的一部分代码都是用 C 实现的面向对象风格，可能是参考了 Python 里面的实现，Python 内部实现的基本对象这块也全是这样的代码。在这里做一个小小的总结。</span></p>
 <p>C 语言里面没有语言层面的面向对象支持，那 OO 中的三个基本要素封装、继承、多态如何实现？C 里面最强大的东西是指针，指针中最神奇的是 void 指针，这是一切的基本。首先来看封装，如何通过实例来调用方法，而对内部数据进行隐藏。完全可以写一些 struct，然后写对应的函数来针对这个 struct 来操作，我们需要更进一步，把数据和方法绑定起来。这样写初看起来并没什么好处，后面会发现，通过函数指针去找对应的函数是多态的关键。</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token comment">//object.h</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">//object.h</span>
 <span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_obj</span><span class="token punctuation">&#123;</span>
     <span class="token keyword">char</span> name<span class="token punctuation">[</span>MAXLEN<span class="token punctuation">]</span><span class="token punctuation">;</span>
     <span class="token keyword">int</span> ref_cnt<span class="token punctuation">;</span>
@@ -202,9 +201,9 @@ Obj <span class="token function">Obj_new</span><span class="token punctuation">(
   <span class="token function">Obj_drop</span><span class="token punctuation">(</span>other<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span>
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>对于继承 C 当然也没原生的支持，可以在子类的定义中写入父类中的成员变量和成员函数，这里如果父类中定义的时候就是宏，直接拿过来就是。所以把父类的定义重新改写一下，分为 DATA 类型和 TYPE 类型，在 Python 里面就是这样，PyObject 和 PyVarObject 是一切其他对象都包含有的。下面是一个例子 People 继承 Object,Student 继承 People。</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">PEOPLE_DATA</span> <span class="token punctuation">\</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">PEOPLE_DATA</span> <span class="token punctuation">\</span>
     <span class="token expression">OBJ_DATA </span><span class="token punctuation">\</span>
     <span class="token expression"><span class="token keyword">int</span> age<span class="token punctuation">;</span></span><span class="token punctuation">\</span>
     <span class="token expression"><span class="token keyword">char</span> fullname<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">;</span></span></span>
@@ -224,10 +223,10 @@ Obj <span class="token function">Obj_new</span><span class="token punctuation">(
 <span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_People</span><span class="token punctuation">&#123;</span>
   <span class="token keyword">const</span> People_Type<span class="token operator">*</span> methods<span class="token punctuation">;</span>
   PEOPLE_DATA
-<span class="token punctuation">&#125;</span>People<span class="token punctuation">;</span></code></pre>
+<span class="token punctuation">&#125;</span>People<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这里 sleep 为新增加的子类方法，fullname 为新增加的成员变量。注释部分为特别注意的，只有在保证内存的里面数据的分布前面部分都是一样的 (一个 methods 指针和 obj_data 部分) 才能进行指针之间的强制转换时候不出问题。例子里面的 Student 类也是类似的继承 People 类，这里可以看到 sleep 这个方法不好弄，因为在 People 那里申明为 static 了，这里想复用就麻烦，所以只有再自己写一个 (即使实现是一样的)，这也是 C++ 内部帮用户做好的。可以看到通过 type 里面的函数指针的不同，不同对象相同的方法实现就不同了，因此实现了多态。</p>
 <p>最后我们可以写一个基于计数的指针管理，在持有一个指针的时候调用 Obj_pick，用完以后执行 Obj_drop。</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">Obj_pick</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">void</span> thiz<span class="token punctuation">)</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">Obj_pick</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">void</span> thiz<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
   <span class="token function">assert</span><span class="token punctuation">(</span>thiz<span class="token punctuation">)</span><span class="token punctuation">;</span>
   Object o <span class="token operator">=</span> <span class="token punctuation">(</span>Object<span class="token operator">*</span><span class="token punctuation">)</span>thiz<span class="token punctuation">;</span>
@@ -245,7 +244,7 @@ Obj <span class="token function">Obj_new</span><span class="token punctuation">(
     <span class="token punctuation">&#125;</span>
   <span class="token punctuation">&#125;</span>
   <span class="token function">free</span><span class="token punctuation">(</span>o<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>按照这种 OO 的风格的 C 代码感觉要清晰一些，至少我习惯了。不过还是看个人品位吧，这样的代码风格是我另外一个同事所鄙视的。关于用 C 实现 OO 风格，还有一本比较好的书叫做<a target="_blank" rel="noopener" href="http://www.cs.rit.edu/~ats/books/ooc.pdf">Object-oriented Programming with ANSI-C</a>，感兴趣可以看看。</p>
 <p>上面的代码在这里下载：<a href="https://github.com/chenyukang/ooc" target="_blank">https://github.com/chenyukang/ooc</a>。</p>
 </section>
@@ -407,25 +406,6 @@ Obj <span class="token function">Obj_new</span><span class="token punctuation">(
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

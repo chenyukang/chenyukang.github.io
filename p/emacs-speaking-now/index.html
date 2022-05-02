@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -172,7 +171,7 @@
 <p>这也是我第一次学着写一个 minor mode，实现起来也很简单。整个不到 100 行 elisp 代码。</p>
 <p>基本思路就是如果当前输入的字符是空白 (或者其他非字母字符)，寻找前面一个字符串，格式化成一个命令行，用 start-process 或者 shell-command 来调用。<br>注意 start-process 会 fork 出来一个子进程来执行命令，在书写过程中最好还是使用 start-process 来调用命令，因为 say 可能要待个一两秒才返回，如果使用 shell-command 来调用会造成输入有迟钝的感觉。</p>
 <p>绑定的快捷键有这些，其中 eamcsay-say-buffer 是用来朗读当前的整个 buffer，如果你想在其中中断朗读使用 emacsay-say-stop。</p>
-<pre class="language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defvar"><span class="token keyword">defvar</span> <span class="token variable">emacsay-mode-map</span></span> <span class="token boolean">nil</span>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defvar"><span class="token keyword">defvar</span> <span class="token variable">emacsay-mode-map</span></span> <span class="token boolean">nil</span>
   <span class="token string">"Keymap for emacsay minor mode"</span><span class="token punctuation">)</span>
 <span class="token punctuation">(</span><span class="token keyword">unless</span> emacsay-mode-map
   <span class="token punctuation">(</span><span class="token keyword">let</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token car">map</span> <span class="token punctuation">(</span><span class="token car">make-sparse-keymap</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -180,7 +179,7 @@
     <span class="token punctuation">(</span><span class="token car">define-key</span> map <span class="token string">"\C-cp"</span> <span class="token quoted-symbol variable symbol">'emacsay-say-buffer</span><span class="token punctuation">)</span>
     <span class="token punctuation">(</span><span class="token car">define-key</span> map <span class="token string">"\C-ct"</span> <span class="token quoted-symbol variable symbol">'emacsay-say-stop</span><span class="token punctuation">)</span>
     <span class="token punctuation">(</span><span class="token keyword">setq</span> emacsay-mode-map map<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>还可以有一些小的改进，比如阅读时候闪烁单词，或者 say 声音的选择等等。</p>
 <p>所有代码在 GitHub: <a target="_blank" rel="noopener" href="https://github.com/chenyukang/emacSay">emacSay-mode</a>。 </p>
 </section>
@@ -338,25 +337,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

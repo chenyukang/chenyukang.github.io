@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -169,10 +168,10 @@
 <p>If <em>path</em> starts with a pipe character, a subprocess is created, connected to the <a target="_blank" rel="noopener" href="https://apidock.com/ruby/Kernel/caller">caller</a> by a pair of pipes. The returned <a target="_blank" rel="noopener" href="https://apidock.com/ruby/IO">IO</a> object may be used to write to the standard input and read from the standard output of this subprocess. If the command following the “|” is a single minus sign, Ruby forks, and this subprocess is connected to the parent. In the subprocess, the <a target="_blank" rel="noopener" href="https://apidock.com/ruby/Kernel/open">open</a> call returns nil. If the command is not “-”, the subprocess runs the command. If a block is associated with an <a target="_blank" rel="noopener" href="https://apidock.com/ruby/Kernel/open">open</a>(“|-”) call, that block will be run twice—once in the parent and once in the child. The block parameter will be an <a target="_blank" rel="noopener" href="https://apidock.com/ruby/IO">IO</a> object in the parent and nil in the child. The parent’s <a target="_blank" rel="noopener" href="https://apidock.com/ruby/IO">IO</a> object will be connected to the child’s stdin  and stdout. The subprocess will be terminated at the end of the block.</p>
 </blockquote>
 <p>其中说明了如果以 | 开头则会 fork 出一个进程，<code>|</code> 后面的内容则会当成一条命令执行，比如： </p>
-<pre class="language-ruby" data-language="ruby"><code class="language-ruby">cmd <span class="token operator">=</span> open<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"|date"</span></span><span class="token punctuation">)</span>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby">cmd <span class="token operator">=</span> open<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"|date"</span></span><span class="token punctuation">)</span>
 print cmd<span class="token punctuation">.</span>gets
 cmd<span class="token punctuation">.</span>close
-<span class="token operator">=></span> <span class="token number">2018</span> 年 <span class="token number">2</span> 月 <span class="token number">12</span> 日 星期一 <span class="token number">21</span> 时 <span class="token number">37</span> 分 <span class="token number">45</span> 秒 <span class="token constant">CST</span></code></pre>
+<span class="token operator">=></span> <span class="token number">2018</span> 年 <span class="token number">2</span> 月 <span class="token number">12</span> 日 星期一 <span class="token number">21</span> 时 <span class="token number">37</span> 分 <span class="token number">45</span> 秒 <span class="token constant">CST</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h4><p>正因为这样，这个 open 函数真的是很容易出错，最近的这个 PR： </p>
 <p><a target="_blank" rel="noopener" href="https://github.com/ruby/ruby/pull/1777">https://github.com/ruby/ruby/pull/1777</a></p>
 <p>之前我们的项目里也出现过类似的情况，直接相当于一个 webshell，任意执行命令。这样的 command injection 当然也很好检测，brakeman 之类的就可以。所以 Rails 项目还是时不时地扫描一下比较好。</p>
@@ -335,25 +334,6 @@ cmd<span class="token punctuation">.</span>close
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

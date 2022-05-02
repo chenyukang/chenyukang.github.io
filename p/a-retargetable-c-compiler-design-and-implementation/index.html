@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -183,14 +182,14 @@
 <p>上面说的是语法的识别，在构建 AST 的过程中另外一个事情就是语意的分析。包括类型检查，类型的转换，操作符优先级等，这些也在构建 AST 的时候顺便做了。比如在遇到 expr1 ? expr2 : expr3 的时候，expr1 的值最后被 cast 成一个 bool。指针之间的隐式转换也比较复杂。function call 比较复杂，这里还做了函数参数的写法是否是老的风格，类型说明放在函数头的最后。assignments 和 binary operator 的分析相对来说简单一些，需要做各种 cast。</p>
 <p>前些天稍微看了一些 Erlang，发现里面的类型推导比较好玩，甚至可以发现一些代码里面的逻辑错误：</p>
 <p>比如：</p>
-<pre class="language-erlang" data-language="erlang"><code class="language-erlang"><span class="token function">fact</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">;</span>
+<pre class="line-numbers language-erlang" data-language="erlang"><code class="language-erlang"><span class="token function">fact</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">;</span>
 <span class="token function">fact</span><span class="token punctuation">(</span><span class="token variable">N</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token variable">N</span> <span class="token operator">*</span> <span class="token function">fact</span><span class="token punctuation">(</span><span class="token variable">N</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>
 
-<span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token function">fact</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span></code></pre>
+<span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token function">fact</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>不用运行 Erlang 的 dialyzer 就可以发现这里面的死循环，因为可以通过上面的定义推断出 fact 的参数是 non_neg_integer，而-5 是不符合的，所以报出来一个错误：</p>
 <p><code>fact(-5) will never return</code>。</p>
 <h2 id="stmt-c"><a href="#stmt-c" class="headerlink" title="stmt.c"></a>stmt.c</h2><p>codelist 为双向列表，遇到新的执行块就加到这个列表上。在处理 control-flow 的过程中有的死代码块是可以被编译器发现的，只是我们平时都被忽略了。</p>
-<p>比如 C 代码：<br><pre class="language-erlang" data-language="erlang"><code class="language-erlang"><span class="token atom">int</span> <span class="token function">loop</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+<p>比如 C 代码：<br><pre class="line-numbers language-erlang" data-language="erlang"><code class="language-erlang"><span class="token atom">int</span> <span class="token function">loop</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
  <span class="token variable">Loop</span><span class="token punctuation">:</span>
     <span class="token atom">goto</span> <span class="token variable">Loop</span><span class="token punctuation">;</span>
     <span class="token atom">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
@@ -199,7 +198,7 @@
 <span class="token atom">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"loop: %d\n"</span><span class="token punctuation">,</span> <span class="token function">loop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token atom">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre><br>loop 永远不会返回，Gcc 选项<code>-Wsuggest-attribute=noreturn</code>可以报出一个 warning。</p>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><br>loop 永远不会返回，Gcc 选项<code>-Wsuggest-attribute=noreturn</code>可以报出一个 warning。</p>
 <h2 id="decl-c"><a href="#decl-c" class="headerlink" title="decl.c"></a>decl.c</h2><p>声明是 C 语言中最难解析的部分，原因是声明涉及到变量和类型，而从 C 声明中弄出类型信息还是挺复杂的。另外声明还分局部，全局，其中还涉及到函数参数，结构体等。decl.c 可能是最复杂的文件了，1100 多行代码，里面的函数之间又相互调用。finalize() 函数最后检查是否有重复定义的变量。</p>
 <h2 id="dag-c"><a href="#dag-c" class="headerlink" title="dag.c"></a>dag.c</h2><p>lcc 的 intermediate code 是用 listnodes 把前面 parser 的 tree 转换为 DAG，最终整个程序会经过转换变成由多个 DAG 组合成的森林。listnodes 还负责把一些公共的 sub-expression 简化。</p>
 <p>接口为 gencode,emitcode。后面每一个代码生成的后端都是一个 Interface 结构，在 function 函数里面调用这两个函数生成汇编代码，其中还包含一个 Xinterface 成员，这是平台相关的接口。</p>
@@ -373,25 +372,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

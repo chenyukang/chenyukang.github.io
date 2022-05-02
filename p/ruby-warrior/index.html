@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -171,7 +170,7 @@
 </blockquote>
 <p>我现在只是完成了初学者模式，这里的 AI 还比较简单，主要实现一个函数就行了。分为两种模式，第一种只用对付当前的场景，第二种为 epic(史诗？) 模式，要从 1~9 连续闯关。</p>
 <p>我的平均成绩是 C，所有级的代码放在<a target="_blank" rel="noopener" href="https://github.com/chenyukang/rubywarrior">Github 上</a>了。</p>
-<pre class="language-markdown" data-language="markdown"><code class="language-markdown">Level Score: 27
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">Level Score: 27
 Time Bonus: 18
 Level Grade: F
 Total Score: 374 + 45 = 419
@@ -187,7 +186,7 @@ Level 7: B
 Level 8: F
 Level 9: F
 
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>中级模式是二维的地图，所以更有挑战。</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/Spooner/ruby_armor">这里</a>有一个前端，不过我还没用过。</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/Sujimichi/ruby_warrior_NN_solution">这还有人用神经网络的方法来做的</a>，可以学习一下，:)。</p>
@@ -346,25 +345,6 @@ Level 9: F
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

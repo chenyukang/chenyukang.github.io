@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -166,9 +165,9 @@
   <article class="post-article">
     <section class="markdown-content"><p>在公司有同事用这个小程序<a target="_blank" rel="noopener" href="http://fmv.jku.at/runlim/">RunLim</a>来调试程序的内存问题。刚开始以为是我们上海的一个同事写的，就弄来看了看。后来发现是公司一个早期同事<a target="_blank" rel="noopener" href="http://fmv.jku.at/biere/index.html">Armin Biere</a>写的，还开源了，debian 的源里有这个东西。我在公司维护的一部分代码是这个人写的，据说厉害的程序员，他现在在学术圈里。</p>
 <p>用这个小程序来测试程序跑的时间和内存，用法很简单：</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">./runlim prog.exe</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./runlim prog.exe<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>比如：</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">kang@ubuntu:~/download/runlim-1.7$ ./runlim <span class="token function">sleep</span>  <span class="token number">1</span>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">kang@ubuntu:~/download/runlim-1.7$ ./runlim <span class="token function">sleep</span>  <span class="token number">1</span>
 <span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> version:		<span class="token number">1.7</span>
 <span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> <span class="token function">time</span> limit:		<span class="token number">311040000</span> seconds
 <span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> real <span class="token function">time</span> limit:	<span class="token number">311040000</span> seconds
@@ -184,17 +183,17 @@
 <span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> real:			<span class="token number">1.63</span> seconds
 <span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> time:			<span class="token number">0.00</span> seconds
 <span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> space:			<span class="token number">0.5</span> MB
-<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> samples:		<span class="token number">10</span></code></pre>
+<span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> samples:		<span class="token number">10</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>查看 help，这个工具还可以指定 time limit 和 space limit，在指定的时间和内存限制内强制退出程序，其功能很像那些<a target="_blank" rel="noopener" href="http://poj.org/">Online Judge</a>，只是没有检测结果输出是否正确。</p>
 <p>发现代码里有一个小小的 Bug，根据源代码如果没有指定 space limit， space limit 那栏应该是当前的空闲内存大小，但是<br>看我上面运行的命令，显示的 4294966090 MB 明显偏大，是其中的一个获取系统内存大小的函数溢出了。这里应该是这样：</p>
-<pre class="language-c" data-language="c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">unsigned</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">unsigned</span>
 <span class="token function">get_physical_mb</span> <span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
     <span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token keyword">long</span> mem<span class="token punctuation">;</span>
     mem <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token keyword">long</span><span class="token punctuation">)</span><span class="token function">sysconf</span><span class="token punctuation">(</span>_SC_PAGE_SIZE<span class="token punctuation">)</span><span class="token operator">*</span>
         <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token keyword">long</span><span class="token punctuation">)</span><span class="token function">sysconf</span><span class="token punctuation">(</span>_SC_PHYS_PAGES<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> mem <span class="token operator">>>=</span> <span class="token number">20</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>sysconf 获取页大小和页数目，具体看这里<a target="_blank" rel="noopener" href="http://www.gnu.org/software/libc/manual/html_node/Query-Memory-Parameters.html">How to get information about the memory subsystem?</a>。</p>
 <p>这个小工具还是查询/proc 下的进程统计信息的，根据 fork 出来的子进程 pid，递归地查询统计信息。</p>
 <p>时间的统计可能会稍显粗略，如果需要更精确的时间统计该如何实现。</p>
@@ -357,25 +356,6 @@
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

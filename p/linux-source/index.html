@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -165,7 +164,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要 unset 当前 shell 的环境变量等，</p>
-<pre class="language-shell" data-language="shell"><code class="language-shell"><span class="token shebang important">#!/usr/bin/env zsh</span>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"><span class="token shebang important">#!/usr/bin/env zsh</span>
 
 <span class="token keyword">if</span> <span class="token punctuation">[</span> -z <span class="token variable">$http_proxy</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
     <span class="token builtin class-name">echo</span> <span class="token string">"not using proxy, set it now ... "</span><span class="token punctuation">;</span>
@@ -178,11 +177,11 @@
     <span class="token builtin class-name">unset</span> https_proxy<span class="token punctuation">;</span>
     <span class="token builtin class-name">echo</span> <span class="token variable">$http_proxy</span><span class="token punctuation">;</span>
 <span class="token keyword">fi</span>
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这时候需要执行 <code>. ./proxy_toggle.sh</code> 或者 <code>source ./proxy_toggle.sh</code>。</p>
 <p><code>.</code> (a period) is a <a target="_blank" rel="noopener" href="http://www.gnu.org/software/bash/manual/bashref.html#Bourne-Shell-Builtins">bash shell built-in command</a> that executes the commands from a file passed as argument, in the current shell. <code>source</code> is a synonym for <code>.</code></p>
 <p>From Bash man page:</p>
-<pre class="language-markdown" data-language="markdown"><code class="language-markdown">. filename [arguments]
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">. filename [arguments]
 source filename [arguments]
        Read  and  execute  commands  from filename in the current shell
        environment and return the exit status of the last command  exe‐
@@ -197,7 +196,7 @@ source filename [arguments]
        positional  parameters  are unchanged.  The return status is the
        status of the last command exited within the  script  (0  if  no
        commands  are  executed),  and false if filename is not found or
-       cannot be read.</code></pre>
+       cannot be read.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </section>
 
     <p></p>
@@ -344,25 +343,6 @@ source filename [arguments]
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 

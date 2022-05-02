@@ -46,7 +46,6 @@
   
 <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
-<script src="/js/highlight.min.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
@@ -170,7 +169,7 @@
 <p>os.time()                &lt;== 返回当前系统的日历时间， 1505181586<br>os.date()                &lt;== 返回本地化的时间字符串，Tue Sep 12 09:59:56 2017<br>os.clock()               &lt;== 返回执行该程序 CPU 花去的时钟秒数，这里是 1156.726</p>
 </blockquote>
 <p>我首先需要一个日期字符串转换为时间戳的函数，找来找去有了这么一个函数，使用正则表达式然后组成表：</p>
-<pre class="language-Lua" data-language="Lua"><code class="language-Lua">function convert_time(time_str)
+<pre class="line-numbers language-Lua" data-language="Lua"><code class="language-Lua">function convert_time(time_str)
   -- Assuming a date pattern like: yyyy-mm-dd hh:mm:ss
   -- Assuming timezone is Beijing
   local pattern &#x3D; &quot;(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)&quot;
@@ -183,20 +182,20 @@
              day &#x3D; day, hour &#x3D; hour, min &#x3D; minute, sec &#x3D; seconds&#125;)
       
     return converted_timestamp 
-end</code></pre>
+end<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>然后我们可以使用 os.time() 获取当前时间戳来对比。但是必须注意时区问题，Lua 里面要获取当前时区和 UTC 里面的 offset 可以使用一个比较笨拙的办法：</p>
-<pre class="language-LUA" data-language="LUA"><code class="language-LUA">function get_timezone_offset_with_utc()
+<pre class="line-numbers language-LUA" data-language="LUA"><code class="language-LUA">function get_timezone_offset_with_utc()
   local now &#x3D; os.time()
   return os.difftime(now, os.time(os.date(&quot;!*t&quot;, now)))
-end</code></pre>
+end<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>使用这个函数获取时区的 offset 之后，对 convert_time 返回的结果做一下偏移即可和 os.time() 做对比。有个问题是上面的函数居然调用了三次系统调用，开销是比较大的。</p>
 <blockquote>
 <p>在 OpenResty 的世界里，不推荐使用这里的标准时间函数，因为这些函数通常会引发不止一个昂贵的系统调用，同时无法为 LuaJIT JIT 编译，对性能造成较大影响。推荐使用 ngx_lua 模块提供的带缓存的时间接口，如 <code>ngx.today</code>, <code>ngx.time</code>, <code>ngx.utctime</code>, <code>ngx.localtime</code>, <code>ngx.now</code>, <code>ngx.http_time</code>，以及 <code>ngx.cookie_time</code> 等。</p>
 </blockquote>
 <p><a target="_blank" rel="noopener" href="https://github.com/stevedonovan/Penlight/blob/master/lua/pl/Date.lua">Penlight</a>库也有很多日期相关的函数封装，不过大多也都使用了 os 相关函数。为了避免多次调用 get_timezone_offset_with_utc我使用了 Kong 里面自带的 cache 相关函数做一下缓存：</p>
-<pre class="language-Lua" data-language="Lua"><code class="language-Lua">-- 缓存上面的时区差，减少系统调用
+<pre class="line-numbers language-Lua" data-language="Lua"><code class="language-Lua">-- 缓存上面的时区差，减少系统调用
 local offset_with_cst, err &#x3D;
-  cache.get_or_set(&quot;timezone_offset&quot;, nil, get_timezone_offset_with_utc, nil)</code></pre>
+  cache.get_or_set(&quot;timezone_offset&quot;, nil, get_timezone_offset_with_utc, nil)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 </section>
 
     <p></p>
@@ -352,25 +351,6 @@ local offset_with_cst, err &#x3D;
     })
 </script>
 
-<script>
-    var hasLine = 'false';
-    async("//catcoding.me/js/highlight.min.js", function() {
-        $('figure pre').each(function(i, block) {
-            var figure = $(this).parents('figure');
-            if (hasLine === 'false') {
-                figure.find('.gutter').hide();
-            }
-            var lang = figure.attr('class').split(' ')[1] || 'code';
-            var codeHtml = $(this).html();
-            var codeTag = document.createElement('code');
-            codeTag.className = lang;
-            codeTag.innerHTML = codeHtml;
-            $(this).attr('class', '').empty().html(codeTag);
-            figure.attr('data-lang', lang.toUpperCase());
-            hljs.highlightBlock(block);
-        });
-    })
-</script>
 
 <script src="/js/script.js"></script>
 
