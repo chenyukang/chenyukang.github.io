@@ -168,34 +168,38 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>最近都睡的比较晚，对身体不好啊。写了几行恶趣味的 elisp，晚上 10 点 40 开始提醒提醒我准备睡觉，如果 10 点 50 还没动，我的上下移动键就不能用了，下面会有一条提示：太晚了，该睡觉了。不过这时可以用方向键盘来移动。但过十分钟后快捷键又恢复正常，因为过了 11 点表示我确实要再待晚点，下个小时 40 分钟继续提醒，50 分锁死快捷键盘。12 点过后 emacs 彻底对我无语了。真是 egg hurt…</p>
-<pre class="src">
-(<span style="color: #00ffff; font-weight: bold;">defun</span> <span style="color: #87cefa; font-weight: bold;">is-late-now</span>()
-  <span style="color: #ffa07a;">"Check if it is now late, emmm, go to sleep"</span>
-  (<span style="color: #00ffff; font-weight: bold;">let</span> ((hr (nth 2 (decode-time (current-time))))
-        (minute (nth 1 (decode-time (current-time)))))
-    (and (and (&gt;= hr 22)
-              (&gt;= minute 40)
-              (message <span style="color: #ffa07a;">"prepare sleep now...."</span>))
-         (&gt;= minute 50))))
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token car">defun</span> is-late-now<span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token string">"Check if it is now late, emmm, go to sleep"</span>
+  <span class="token punctuation">(</span><span class="token keyword">let</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token car">hr</span> <span class="token punctuation">(</span><span class="token car">nth</span> <span class="token number">2</span> <span class="token punctuation">(</span><span class="token car">decode-time</span> <span class="token punctuation">(</span><span class="token car">current-time</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token car">minute</span> <span class="token punctuation">(</span><span class="token car">nth</span> <span class="token number">1</span> <span class="token punctuation">(</span><span class="token car">decode-time</span> <span class="token punctuation">(</span><span class="token car">current-time</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token keyword">and</span> <span class="token punctuation">(</span><span class="token keyword">and</span> <span class="token punctuation">(</span><span class="token car">>=</span> hr <span class="token number">22</span><span class="token punctuation">)</span>
+              <span class="token punctuation">(</span><span class="token car">>=</span> minute <span class="token number">40</span><span class="token punctuation">)</span>
+              <span class="token punctuation">(</span><span class="token keyword">message</span> <span class="token string">"prepare sleep now...."</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+         <span class="token punctuation">(</span><span class="token car">>=</span> minute <span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-(<span style="color: #00ffff; font-weight: bold;">defun</span> <span style="color: #87cefa; font-weight: bold;">my-next-line</span>()
-  (interactive)
-  (<span style="color: #00ffff; font-weight: bold;">if</span> (is-late-now)
-      (message <span style="color: #ffa07a;">"late now, go to sleep ... baby!"</span>)
-    (next-line)))
+<span class="token punctuation">(</span><span class="token car">defun</span> my-next-line<span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token car">is-late-now</span><span class="token punctuation">)</span>
+      <span class="token punctuation">(</span><span class="token keyword">message</span> <span class="token string">"late now, go to sleep ... baby!"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token car">next-line</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-(<span style="color: #00ffff; font-weight: bold;">defun</span> <span style="color: #87cefa; font-weight: bold;">my-prev-line</span>()
-  (interactive)
-  (<span style="color: #00ffff; font-weight: bold;">if</span> (is-late-now)
-      (message <span style="color: #ffa07a;">"late now, go to sleep ... baby!"</span>)
-    (previous-line)))
+<span class="token punctuation">(</span><span class="token car">defun</span> my-prev-line<span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token car">is-late-now</span><span class="token punctuation">)</span>
+      <span class="token punctuation">(</span><span class="token keyword">message</span> <span class="token string">"late now, go to sleep ... baby!"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">(</span><span class="token car">previous-line</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-(global-set-key (kbd <span style="color: #ffa07a;">"C-n"</span>) 'my-next-line)
-(global-set-key (kbd <span style="color: #ffa07a;">"C-p"</span>) 'my-prev-line)</pre>
-
+<span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">(</span><span class="token car">kbd</span> <span class="token string">"C-n"</span><span class="token punctuation">)</span> <span class="token quoted-symbol variable symbol">'my-next-line</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">(</span><span class="token car">kbd</span> <span class="token string">"C-p"</span><span class="token punctuation">)</span> <span class="token quoted-symbol variable symbol">'my-prev-line</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这样写不好看，更好的办法是用 defadvice，那就不用重新绑定 C-n 和 C-p 了，defadvice 可以直接在运行 next-line 和 previous-line 之前检查一下。</p>
-<p><pre class="src"><br>(<span style="color: #00ffff; font-weight: bold;">defadvice</span> <span style="color: #87cefa; font-weight: bold;">previous-line</span> (before check-is-later)<br>  (<span style="color: #00ffff; font-weight: bold;">if</span> (is-late-now)<br>      (<span style="color: #00ffff; font-weight: bold;">progn</span><br>        (message <span style="color: #ffa07a;">“late now”</span>)<br>        (sleep-for 1)))) ;;just sleep 1 second</p>
-<p>(ad-activate ‘previous-line)<br></pre><br>这样后只要执行 previous-line 这个函数之前都会执行我这个 defadvice 定义的代码，但是这样连方向键也不能移动了，因为向上这个按钮是绑定的 previous-line 这个函数。</p>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token car">defadvice</span> previous-line <span class="token punctuation">(</span><span class="token car">before</span> check-is-later<span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token car">is-late-now</span><span class="token punctuation">)</span>
+      <span class="token punctuation">(</span><span class="token car">progn</span>
+        <span class="token punctuation">(</span><span class="token keyword">message</span> “late now”<span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token car">sleep-for</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">;;just sleep 1 second</span>
+
+<span class="token punctuation">(</span><span class="token car">ad-activate</span> ‘previous-line<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这样后只要执行 previous-line 这个函数之前都会执行我这个 defadvice 定义的代码，但是这样连方向键也不能移动了，因为向上这个按钮是绑定的 previous-line 这个函数。</p>
 </section>
 
     <p></p>
@@ -212,8 +216,8 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Life|Notes" >
-    <span class="tag-code">Life|Notes</span>
+  <a href="/tags#Emacs" >
+    <span class="tag-code">Emacs</span>
   </a>
 
       </div>

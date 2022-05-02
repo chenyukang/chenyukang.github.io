@@ -175,7 +175,11 @@
 <p>stats.c:负责统计信息，记录 get、set、delete、hits 的数目。以前缀作为 key。</p>
 <p>slabs.c：负责管理内存申请和释放，slabs 主要是为了避免内存碎片问题，同时提高申请内存的速度，其基本原理是大块地申请内存，根据不同的 slabclass 块大小分给 slabclass，申请内存的时候根据地址选择最适合的 slabclass，从中去下内存返回指针，释放的时候只是放在其空闲指针列表中 (不少地方都用到这样的方式)。slab_list 没什么用，因为释放的指针放在了 slots 里面啊！slabs 贪婪地使用内存，整个这东西的作用就是用内存空间来换时间效率的。</p>
 <p>memcached.c：主程序，分析设置参数默认值，分析参数根据参数修改配置参数。初始化 stats，assoc，conn，slabs 等。thread_init 启动线程，每一个线程都有自己的 struct event_base，setup_thread 函数初始化这些，最重要的设置 thread_libevent_process 来处理新的连接。一直到：</p>
-<p><pre class="src">  <span style="color: #5f9ea0; font-style: italic;">/<em> </span><span style="color: #5f9ea0; font-style: italic;">Create threads after we’ve done all the libevent setup. </span><span style="color: #5f9ea0; font-style: italic;"></em>/</span><br>    <span style="color: #00bfff; font-weight: bold;">for</span> (i = 0; i &lt; nthreads; i++) {<br>        create_worker(worker_libevent, &amp;threads[i]);<br>    }</pre><br>每个线程进入自己的 event_loop。<br></p></p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"> <span class="token operator">/</span> Create threads after we’ve done all the libevent setup<span class="token punctuation">.</span> <span class="token operator">/</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> nthreads<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">create_worker</span><span class="token punctuation">(</span>worker_libevent<span class="token punctuation">,</span> <span class="token operator">&amp;</span>threads<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>每个线程进入自己的 event_loop。<br></p></p>
 <p>当请求来临的时候对于每一个连接，增加一个事件来调用处理函数 event_handler。每个连接的处理过程是一个状态机，drive_machine(conn* c) 来处理，由 even_handler 来调用，状态转移这部分代码比较复杂，conn_listening —&gt; conn_new_cmd —&gt; conn_parse_cmd —&gt; conn_mwrite —&gt; conn_closing。process_command 来处理各种命令。<br></p></p>
 </section>
 

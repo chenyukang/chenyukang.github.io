@@ -171,11 +171,8 @@
 <p><img src="/images/iedit.png" alt="screen" class="img-center" /></p>
 <p>最开始看到这个功能是在比较新的编辑器<a target="_blank" rel="noopener" href="http://www.sublimetext.com/">Sublime</a>上，算是编辑器里一个很好的小创新吧。</p>
 <p>另外在 buffer 中查找一个 symbol 也是经常需要的一个操作，我基本会用</p>
-<pre class="prettyprint lang-python">
-(global-set-key [f3] 'highlight-symbol-next)
-(global-set-key [(shift f3)] 'highlight-symbol-prev)
-</pre>
-
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">[</span>f3<span class="token punctuation">]</span> <span class="token quoted-symbol variable symbol">'highlight-symbol-next</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token car">shift</span> f3<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token quoted-symbol variable symbol">'highlight-symbol-prev</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>来快速地在相同的 symbol 之间切换，这是来自 highlight-symbol.el 里面的。</p>
 <p>同样的操作也可以用 occur-mode 来实现，occur 的好处在于可以在另外一个窗口列出所找到结果大纲，这样更方便快速跳到相应的位置，这对于任何类型的文件都可以使用，而不止是可能需要静态分析后生成 tags 的程序。在<a target="_blank" rel="noopener" href="http://www.masteringemacs.org/articles/2011/07/20/searching-buffers-occur-mode/">Mastering Emacs</a>后面有一段代码使得 occur-mode 可以在当前所有打开的 buffer 里找关键字。</p>
 </section>

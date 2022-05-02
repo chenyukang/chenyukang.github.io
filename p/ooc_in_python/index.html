@@ -212,7 +212,8 @@ Obj <span class="token function">Obj_new</span><span class="token punctuation">(
     <span class="token expression"><span class="token keyword">int</span> age<span class="token punctuation">;</span></span><span class="token punctuation">\</span>
     <span class="token expression"><span class="token keyword">char</span> fullname<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">;</span></span></span>
     
-<span class="token comment">//OBJ_DATA 必须放在子类新的数据成员前面，只有这样才能把子类的指针强制转换成父类指针 或者转化为 Object 指针 </span>
+<span class="token comment">// OBJ_DATA 必须放在子类新的数据成员前面，</span>
+<span class="token comment">// 只有这样才能把子类的指针强制转换成父类指针 或者转化为 Object 指针 </span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">PEOPLE_TYPE</span> <span class="token punctuation">\</span>
     <span class="token expression">OBJ_TYPE </span><span class="token punctuation">\</span>
     <span class="token expression"><span class="token keyword">void</span> <span class="token punctuation">(</span>sleep<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">void</span> thiz<span class="token punctuation">)</span><span class="token punctuation">;</span></span></span>
@@ -227,7 +228,7 @@ Obj <span class="token function">Obj_new</span><span class="token punctuation">(
 <span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_People</span><span class="token punctuation">&#123;</span>
   <span class="token keyword">const</span> People_Type<span class="token operator">*</span> methods<span class="token punctuation">;</span>
   PEOPLE_DATA
-<span class="token punctuation">&#125;</span>People<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token punctuation">&#125;</span>People<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这里 sleep 为新增加的子类方法，fullname 为新增加的成员变量。注释部分为特别注意的，只有在保证内存的里面数据的分布前面部分都是一样的 (一个 methods 指针和 obj_data 部分) 才能进行指针之间的强制转换时候不出问题。例子里面的 Student 类也是类似的继承 People 类，这里可以看到 sleep 这个方法不好弄，因为在 People 那里申明为 static 了，这里想复用就麻烦，所以只有再自己写一个 (即使实现是一样的)，这也是 C++ 内部帮用户做好的。可以看到通过 type 里面的函数指针的不同，不同对象相同的方法实现就不同了，因此实现了多态。</p>
 <p>最后我们可以写一个基于计数的指针管理，在持有一个指针的时候调用 Obj_pick，用完以后执行 Obj_drop。</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">Obj_pick</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">void</span> thiz<span class="token punctuation">)</span>

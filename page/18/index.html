@@ -277,10 +277,10 @@ cflow是个比较古老的程序 (好像比我老一岁)，主要是用来打印
       <div class="article-summary">
         
         
-          <p><div class="contents"><dl> <dt> </dt> <dt>晚上看到个有趣的文章，翻译了一下，看过 Head First 绕过。 <a target="_blank" rel="noopener" href="http://www.codeproject.com/KB/architecture/SOLIDPrinciplesInOOD.aspx">原文在这里</a>。</dt> <dt> </dt> <dt><a href="#sec5">OOD 介绍</a></dt> <dt><a href="#sec5">Why OOD?</a></dt> <dt><a href="#sec5">Single Responsibility Principle 单一职责原则</a></dt> <dt><a href="#sec5">Open-closed Principle 开闭原则</a></dt> <dt><a href="#sec5">Liskov’s Substitution Principle 里氏可替换原则</a> </dt> <dt><a href="#sec6">The Interface Segregation Principle 接口分离原则</a> </dt> <dt><a href="#sec8">The Dependency Inversion Principle 依赖倒置原则</a></dt> <dt><a href="#sec8">总结</a> </dt> </dl></div><br>我的妻子 Farhana 想重新她软件开发师的职业生涯 (她以前也是个软件开发师，但是因为第一个孩子的出生而没有继续下去)。所以，这段时间我在帮助她学习一些 OOD 方面的东西，我是一个比较有开发经验的程序员。</p>
-<p>从我早期的职业生涯中，我发现不管是多么复杂的技术问题，如果从普通交谈中以平常生活常见的角度去解释往往变得更容易理解。因为之前我和她有不少富有成果的交谈，我想可以和大家一起分享一下这种学习 OOD 的有趣方式。</p>
-<p>下面是我们学习 OOD 的对话：</p>
-<h3><a name="sec1"></a><br>OOD 介绍</h3><br><ul><br>    <li>Shubho : 好，让我们开始学习 OOD，你已经知道了面向对象三大特性，对吗？</li><br>    <li>Farhana: 你是指封装、继承、多态吗？是的，这些我知道。</li><br>    <li>Shubho : 好，希望你已经知道了使用对象和类，让我们今天开始学习 OOD。</li><br>    <li>Farhana: 等等，知道面向对象特性还不够面向对象程序设计吗？我的意思是，我能定义类，封装成员变量和函数，我也能根据类之间的关系定义继承类。那还有什么需要学的么？</li><br>    <li>Shubho : 好问题，OOP 和 OOD 是两码事。让我给个例子给你。当你还是小孩的时候你学会了字母表，对吧？</li><br>    <li>Farhana: 嗯</li><br>    <li>Shubho : 好，你也学会了如何用字母形成一个个有意义的单词，同时，你也学会了一些语法来造句子。比如，你要维持时态，使用介词、连接词、和其他语法来造出正确的句子。比如说一个句子像下面这样。”I” (pronoun) “want” (Verb) “to” (Preposition) “learn” (Verb) “OOD” (Noun) 你看，你要让这些单词安特定的顺序组成，你也  要选取正确的词来使得这个句子有意义。</li><br>    <li>Farhana: 呃，这是什么意思？</li><br>    <li>Shubho : 这和 OOP 是类似的。OOP 是面向对象程序设计的基本原则和核心思想。这里，OOP 对应于英语语法，这些基本语法告诉你如何用单词去构造一句有意义的话，<br>OOP 告诉你使用类，封装成员变量和方法，也告诉你在代码中使用继承关系。</li><br>    <li>Farhana: 嗯，有点懂了。那么 OOD 对应于什么呢？</li><br>    <li>Shubho : 你马上就知道。好，现在比如说你想要就一个论题写一些文章。你也想就一些你比较精通的方面写一些书。知道如何遣词造句还不够写一篇好文章或者好书出来，对吧？你还需要学习很多，你需要知道如何用一种好的方式去解释一个东西，这样读者才能了解你到底在说什么。</li><br>    <li>Farhana: 有点趣，继续。</li><br>    <li>Shubho : 好，现在比如说你想就 OOD 方面写一个本书，你需要知道如何把这个主题分为小题目。然后在这些小议题上面逐章地写，你还要写前言、简介、解释、例子，还有许多其他段落。你需要知道如何从整体上把握这本书的构造，甚至需要一些写作技巧。这才能让你的书通俗易懂。在软件设计领域，OOD 同样是个更上层的角度。你需要好好的设计，使得你的类和代码可以更好地模块化、复用、灵活。使用这些设计原则可以是你少重复发明轮子。懂了吗？</li><br>    <li>Farhana: Hmm，我明白了一些，但是请继续。</li><br>    <li>Shubho : 别急，一会你就知道了。我们只管讨论就是了。</li><br>
+            
+                晚上看到个有趣的文章，翻译了一下，看过 Head First 绕过。 原文在这里。
+我的妻子 Farhana 想重新她软件开发师的职业生涯 (她以前也是个软件开发师，但是因为第一个孩子的出生而没有继续下去)。所以，这段时间我在帮助她学习一些 OOD 方面的东西，我是一个比较有开发经验的程 .....
+            
         
       </div>
       
@@ -429,7 +429,15 @@ cflow是个比较古老的程序 (好像比我老一岁)，主要是用来打印
 <p>输入 N，和 N 个点 (x,y)，从原点开始一共可以走 N 步，每一步可以随机选择移动 (x,y)，或者 (-x,-y)。N 的范围为 1-100。<br>输出最远能走到离开原点多远的地方，输出其距离。</p>
 <p>分析一下，用迭代肯定可以，不过 2^N 的复杂度肯定太高了。每步有两种选择，其本质是求一个长度为 N 的 0、1 序列使得最后的值最大，为一个优化问 题。这里贪心不能求到最优解，稍微证明一下就能得出。如果不贪心，或者把贪心的范围扩大一点，求出每一步完后的凸包呢，然后再在这步的基础上继续扩展下一 些节点，再求凸包，继续如此，最后求得凸包中距离最远的。求凸包的复杂度位 O(nlgn)，即最后的复杂度为 O(N^2lgN)，是可以接受的。</p>
 <p><h2>随机搜索</h2><br>以前看过《集体智慧编程》这本书，这里有一章是说的优化。稍微回顾一下其中的几个算法。对于优化问题，首先得找到一个评价函数，对于其某个方案评价函数能给出某个值评估方案的优劣。至于返回值越大还是越好没有规定，对于特定的问题选择特定的评价函数。 随机搜索不是一种好的优化算法，但是却是后面的算法的根源。其基本思想是，我们随机长生一些解，看是否好，如果比当前更好，替换当前最优解，直到收敛了，或者猜测了足够的次数了。</p>
-<p><pre class="src"><span style="color: #00ffff;">do</span>{<br>   solution=rand_solution;<br>   value=eval(solution);<br>   <span style="color: #00ffff;">if</span>(value&gt;best)<br>       best=value;<br>   times++;<br>   <span style="color: #ff7f24;">//</span><span style="color: #ff7f24;">测试是否收敛<br></span>}<span style="color: #00ffff;">while</span>(times&lt;max_iter&amp;&amp;(!limit_flag));</pre><br>这种盲目的猜测虽然有机会在某一次猜中最优解，但是效率肯定不怎么好。随机算法还是有一些问题可以适用，比如素数判定，如果能保证错误率很低很低也是可行的算法。<br>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">do</span><span class="token punctuation">&#123;</span>
+   solution<span class="token operator">=</span>rand_solution<span class="token punctuation">;</span>
+   value<span class="token operator">=</span><span class="token function">eval</span><span class="token punctuation">(</span>solution<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">if</span><span class="token punctuation">(</span>value<span class="token operator">></span>best<span class="token punctuation">)</span>
+       best<span class="token operator">=</span>value<span class="token punctuation">;</span>
+   times<span class="token operator">++</span><span class="token punctuation">;</span>
+   <span class="token comment">//测试是否收敛</span>
+<span class="token punctuation">&#125;</span><span class="token keyword">while</span><span class="token punctuation">(</span>times<span class="token operator">&lt;</span>max_iter<span class="token operator">&amp;&amp;</span><span class="token punctuation">(</span><span class="token operator">!</span>limit_flag<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这种盲目的猜测虽然有机会在某一次猜中最优解，但是效率肯定不怎么好。随机算法还是有一些问题可以适用，比如素数判定，如果能保证错误率很低很低也是可行的算法。<br>
         
       </div>
       
@@ -459,8 +467,7 @@ cflow是个比较古老的程序 (好像比我老一岁)，主要是用来打印
         
             
                   Muse 简介   Muse 的配置   Muse 中源代码高亮显示   Muse 来写主页和博客  
-Muse 简介
-Muse 是由 EmacsWiki 衍生的，为 emacs 下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括 html,pdf，latex 等等。Muse  .....
+Muse 简介Muse 是由 EmacsWiki 衍生的，为 emacs 下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括 html,pdf，latex 等等。Muse 的 .....
             
         
       </div>

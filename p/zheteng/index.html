@@ -167,19 +167,24 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><h4>centos 环境变量</h4></p>
-<p class="first">在配服务器 web 环境的时候，因为这个问题花费了不少时间。tomcat 找不到 java 的其他开发包，开始以为是服务器是 64 位的问题。<br>最后因为在/etc/profile 文件里面设置为 export CLASSPATH=…,这个 export 貌似不能少。<br>或者是因为命令 prelink -a 的作用起了效果，这个命令好像只是起到加速到作用。orz，我是被 ubuntu 宠坏了，什么 linux 命令都没怎么用咯。</p>
+    <section class="markdown-content"><h4>centos 环境变量</h4>
 
-<p><h4>mysql</h4></p>
-<p class="first">mysql 配置局域网内都能访问。</p>
+<p>在配服务器 web 环境的时候，因为这个问题花费了不少时间。tomcat 找不到 java 的其他开发包，开始以为是服务器是 64 位的问题。</p>
+<p>最后因为在/etc/profile 文件里面设置为 export CLASSPATH=…,这个 export 貌似不能少。或者是因为命令 prelink -a 的作用起了效果，这个命令好像只是起到加速到作用。orz，我是被 ubuntu 宠坏了，什么 linux 命令都没怎么用咯。</p>
+<h4>mysql</h4>
 
-<p><pre class="src">1 mysql -h localhost -u root<br>2 mysql&gt;GRANT ALL PRIVILEGES ON <em>.</em> TO <span style="color: #deb887;">‘root’</span>@<span style="color: #deb887;">‘%’</span>WITH GRANT OPTION<br>3 mysql&gt;FLUSH PRIVILEGES<br>4 mysql&gt;EXIT</p>
+<p>mysql 配置局域网内都能访问。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">1</span> mysql -h localhost -u root
+<span class="token number">2</span> mysql<span class="token operator">></span>GRANT ALL PRIVILEGES ON <span class="token builtin class-name">.</span> TO ‘root’@‘%’WITH GRANT OPTION
+<span class="token number">3</span> mysql<span class="token operator">></span>FLUSH PRIVILEGES
+<span class="token number">4</span> mysql<span class="token operator">></span>EXIT<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这样就可以在其它任何的主机上以 root 登录，其他用户类似。但是连上以后速度比较慢，在 my.cnf 文件里面配置一下啊，</pre></p>
 <p><pre class="src">把缓存那些改大一些，加上这么一行：skip-name-resolve。</pre></p>
 <p><h4>centos 双网卡路由问题</h4></p>
 <p class="first">centos 能 ping 通局域网，但是不能上外网，最后查处是因为双网卡到问题，添加一个默认的网关就可以了。<br>使用命令：</p>
 
-<p><pre class="src">route add <span style="color: #98f5ff;">defualt</span> <span style="color: #4eee94;">gw</span> 192.168.1.1</pre><br>netstat -nr 查看内核 iP 路由表。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">route <span class="token function">add</span> defualt gw <span class="token number">192.168</span>.1.1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>netstat -nr 查看内核 iP 路由表。</p>
 <p><h4>two or more data types in declaration specifiers</h4></p>
 <p class="first">C 编译器这个错误指向到行会不准确，有一种情况最容易出现这样的错误，那就是在你的程序里少了个”;”号，有可能在你的头文件里，也有可能在本文件中。</p>
 </section>
