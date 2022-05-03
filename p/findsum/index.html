@@ -169,7 +169,7 @@
   <article class="post-article">
     <section class="markdown-content"><p>前些天在班级群里看到一个笔试题：</p>
 <p><blockquote></p>
-<p><p class="quoted">从 1 到 100000 中任意拿掉两个数字，把剩下的 99998 个数顺序打乱，并且放入数组 A 中。要求只扫描一遍，把这两个数找出来；可以使用最多不超过 5 个局部变量，不能使用数组变量，并且不能改变原数组的值。</p><br></blockquote><br>也想不到什么更好的解法，原解法是顺序扫一边求得所有数的乘积 (mul_res)、和 (sum_res)。用 (N!)/mul_res 得到两个数的乘积，1 到 100000 的和减去 sum_res 得到两个数之和。 解这个方程得到两个数。关键是 N！太大了，C 会溢出。刚开始想想乘积每次模 100000，后来写了一下还是不对的，因为模 100000 中可能就出现了 0，后面全为 0 了。最后想到这么一个办法，不过中间 除法和比较多。也许有更快的解法。</p>
+<p><p class="quoted">从 1 到 100000 中任意拿掉两个数字，把剩下的 99998 个数顺序打乱，并且放入数组 A 中。要求只扫描一遍，把这两个数找出来；可以使用最多不超过 5 个局部变量，不能使用数组变量，并且不能改变原数组的值。<br></blockquote><br>也想不到什么更好的解法，原解法是顺序扫一边求得所有数的乘积 (mul_res)、和 (sum_res)。用 (N!)/mul_res 得到两个数的乘积，1 到 100000 的和减去 sum_res 得到两个数之和。 解这个方程得到两个数。关键是 N！太大了，C 会溢出。刚开始想想乘积每次模 100000，后来写了一下还是不对的，因为模 100000 中可能就出现了 0，后面全为 0 了。最后想到这么一个办法，不过中间 除法和比较多。也许有更快的解法。</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">//1 到 100 000</span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;math.h></span></span>

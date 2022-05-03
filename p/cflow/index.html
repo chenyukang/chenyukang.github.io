@@ -173,8 +173,7 @@
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">prcc demo.c <span class="token operator">|</span> prcg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>这是典型的通过管道把小程序组起来的例子。</p>
 <p><h2>life is short , use Python</h2></p>
-<p class="first">闲着的时候在这个程序上做了些小工作。既然有了第一个程序，那也可以用 python 来快速写个程序继续做些工作。首先想到的是写个程序把函数名打印出来，在有调用关系的函数之间用直线连起来。python 就是容易实现。这里有一个问题，就是怎么排列函数名的位置，使得连线不怎么相交，因为相交起来就不容易看到函数之间的关系了。不好解决，还是用了以前《集体智慧编程》里面的优化函数，也就是优化问题。通用思路就是试着移动各个函数的位置，朝着相交点最少的部分移动 (这里给一个解，相交点的个数为评估函数)。效果不是很好，当函数比较多的时候哪种算法都比较慢，而且交点看起来不可避免。这是一个结果。运行方法是:</p>
-
+<p><p class="first">闲着的时候在这个程序上做了些小工作。既然有了第一个程序，那也可以用 python 来快速写个程序继续做些工作。首先想到的是写个程序把函数名打印出来，在有调用关系的函数之间用直线连起来。python 就是容易实现。这里有一个问题，就是怎么排列函数名的位置，使得连线不怎么相交，因为相交起来就不容易看到函数之间的关系了。不好解决，还是用了以前《集体智慧编程》里面的优化函数，也就是优化问题。通用思路就是试着移动各个函数的位置，朝着相交点最少的部分移动 (这里给一个解，相交点的个数为评估函数)。效果不是很好，当函数比较多的时候哪种算法都比较慢，而且交点看起来不可避免。这是一个结果。运行方法是:</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">prcc demo.c <span class="token operator">|</span> python drawfuncs.py<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>或者</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">find</span>  *.c <span class="token operator">|</span> <span class="token function">xargs</span> prcc<span class="token operator">|</span> python drawfuncs.py<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
@@ -182,11 +181,8 @@
 <p><img src="/images/out.jpg" alt="screen" class="img-center" width="70%" height="70%"/></p>
 <p>然后又想着可以做一个标签一样的东西，把调用深度比较潜的放大，调用深度深的缩小。不连线，位置随机画。这样一眼能看出来这个程序的主要函数是哪些。结果成这样了。</p>
 <p><img src="/images/out5.jpg" alt="screen" class="img-center" width="70%" height="70%"/></p>
-
-
 <p>位置随便画还是不好，可以分层。然后再相邻层之间的函数有调用关系的再用直线连起来，就变成这样了。清晰一点。既然有函数关系，其实是可以做到更好的，就像上面那个 prcg.c 程序，不过代码要复杂些了。</p>
 <p><img src="/images/out6.jpg" alt="screen" class="img-center" width="70%" height="70%"/></p>
-
 <p>C 要的是运行速度，Python 实现速度快！</p>
 </section>
 

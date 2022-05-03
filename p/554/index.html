@@ -167,20 +167,12 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><br>我是豆瓣 FM 的忠实用户，用这个东西已经有一年多了吧，累计收听了不少歌曲 (316 首喜欢的，45 首不再播放的，7352 首播放过)。通过这个东西发现不少符合自己口味的音乐。这 316 首是我喜欢的类型，所以想把这个列表弄下来，然后把这些歌曲下载到电脑上。<br></p>
-
-<p><br>看了一下豆瓣是有自己开放的 API 的，不过还是够麻烦的。于是折腾了一个 Python 程序，输入你的豆瓣用户名和密码，模拟登录豆瓣并记录 cookie，自动地到 FM 的页面去取下这个音乐列表。这个程序在处理 HTML 文件的时候有点笨拙，正则表达式不够强嗄。需要另一个库 python-beautifulsoup。<br></p>
-
-<p><br>通过歌曲名，自动下载这个应该是已经有人做了的，于是发现这个 getsong.py，是通过 Baidu 音乐自动下载的，使用了一下速度和成功率都不错，于是在这个上面做了一些修改，直接从上面的程序<br>生成的列表中取歌曲名字，下载下来。如果网速可以一般能在 500k 左右的下载速度，挺不错的。这个程序有可能会抛出一些异常，我没做仔细的检查，如果一首歌下载不下来就 pass 掉。<br></p>
-
-<p><br>上面的程序都放在 GitHub 上了，Git/GitHub 可个是真好东西。<br>需要的朋友们从这个地址弄下代码:<a target="_blank" rel="noopener" href="https://github.com/chenyukang/fmmusic">https://github.com/chenyukang/fmmusic</a><br></p>
-
-
+    <section class="markdown-content"><p>我是豆瓣 FM 的忠实用户，用这个东西已经有一年多了吧，累计收听了不少歌曲 (316 首喜欢的，45 首不再播放的，7352 首播放过)。通过这个东西发现不少符合自己口味的音乐。这 316 首是我喜欢的类型，所以想把这个列表弄下来，然后把这些歌曲下载到电脑上。</p>
+<p>看了一下豆瓣是有自己开放的 API 的，不过还是够麻烦的。于是折腾了一个 Python 程序，输入你的豆瓣用户名和密码，模拟登录豆瓣并记录 cookie，自动地到 FM 的页面去取下这个音乐列表。这个程序在处理 HTML 文件的时候有点笨拙，正则表达式不够强嗄。需要另一个库 python-beautifulsoup。</p>
+<p>通过歌曲名，自动下载这个应该是已经有人做了的，于是发现这个 getsong.py，是通过 Baidu 音乐自动下载的，使用了一下速度和成功率都不错，于是在这个上面做了一些修改，直接从上面的程序<br>生成的列表中取歌曲名字，下载下来。如果网速可以一般能在 500k 左右的下载速度，挺不错的。这个程序有可能会抛出一些异常，我没做仔细的检查，如果一首歌下载不下来就 pass 掉。</p>
+<p>上面的程序都放在 GitHub 上了，Git/GitHub 可个是真好东西。<br>需要的朋友们从这个地址弄下代码:<a target="_blank" rel="noopener" href="https://github.com/chenyukang/fmmusic">https://github.com/chenyukang/fmmusic</a></p>
 <p>使用方法：</p>
-<pre class="example">1 修改 fm_get_music.py，在里面填入自己的豆瓣用户名和密码。
-2 运行这个程序，会在当前目录生成一个歌曲列表：songlist.txt。
-3 运行 getsong.py 程序， python getsong.py -x，就是通过 songlist.txt 逐个通过百度搜索自动下载，存在当前目录。
-</pre>
+<p>1 修改 fm_get_music.py，在里面填入自己的豆瓣用户名和密码。<br>2 运行这个程序，会在当前目录生成一个歌曲列表：songlist.txt。<br>3 运行 getsong.py 程序， python getsong.py -x，就是通过 songlist.txt 逐个通过百度搜索自动下载，存在当前目录。</p>
 </section>
 
     <p></p>
