@@ -169,7 +169,7 @@
   <article class="post-article">
     <section class="markdown-content"><p><code>git hooks</code>很方便地可以在 git 操作流程的各个阶段加入 hooks，比如执行一些脚本来检查代码风格、跑单元测试、做代码静态检查等。git hooks 的试用方法是在.git/hooks 目录下写各种脚本，但是.git 目录的这些脚本是不会 checkin 到 repo 里的，所以如果一个代码如果被多个开发人员共享就会显得不太方便同步 hooks。</p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/427207/can-git-hook-scripts-be-managed-along-with-the-repository">当然也有一些其他方法来解决这个问题</a>，比如配置 links 或者对于<code>git 2.9</code>以后也可以使用来定制 hooks 的目录：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"><span class="token function">git</span> config core.hooksPath hooks<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config core.hooksPath hooks<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>对于熟悉 Ruby 的同学可以使用<a target="_blank" rel="noopener" href="https://github.com/brigade/overcommit">overcommit</a>这个 gem 来解决。使用方法就是通过配置<code>.overcommit.yml</code>，比如：</p>
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">PreCommit</span><span class="token punctuation">:</span>
   <span class="token key atrule">RuboCop</span><span class="token punctuation">:</span>
@@ -180,7 +180,7 @@
     <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>然后执行命令：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">overcommit <span class="token function">install</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">overcommit <span class="token function">install</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>来自动生成各种 hooks，通常后面的修改都是修改这个 yaml 文件即可，不过记得修改后需要<code>overcommit --signed</code>来重新生成 hooks。</p>
 </section>
 

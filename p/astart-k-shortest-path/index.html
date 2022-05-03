@@ -168,9 +168,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>那天师兄给面试，面到一道图算法题目，求图中两个点的前 K 短路径。当时觉得用 Dijkstra+heap 应该可以，不过也没想清楚。以前看到过这个，那时还没怎么仔细看图算法所以丢一边了， 今天好好看了一下。简单一点的解法是用 Dijkstra+Astar。典型的题目就是<a target="_blank" rel="noopener" href="http://acm.pku.edu.cn/JudgeOnline/problem?id=2449">POJ 2449</a>。   </p>
-<h4>A* 算法</h4>
-
-<p>再谈 A<em>算法。A</em>算法中的评估函数为 f(N)=cost(N)+h<em>(N)。其中 cost(N) 为从源点到 N 点的距离，h</em>(N) 为 N 点到终点的的一个评估路径长度，设 h(N) 为实际 N 点到终点的路径长度。只要满足条件： h<em>(N)&lt;=h(N)，那么用这个评估函数找到最短路径。具体证明看这篇论文<a target="_blank" rel="noopener" href="http://www.cs.auckland.ac.nz/compsci767s2c/projectReportExamples.d/astarNilsson.pdf">A Formal Basis for the Heuristic Determination of Minimum Cost Paths</a>。 其优势在于在选择每个路径 上的点的时候给予了 h(N) 这个启发，在搜索空间中尽量选择可能最有可能产生最优解的下一个状态，使得搜索的时间都相应地减少。A</em>算法的思想也是贪心 的，Dijkstra 是 A<em>的一个特例，当 h</em>(N)=0 时，A*就退化成了 Dijkstra 算法，那么就是盲目的扩展当前最短路径了。   </p>
+<h2 id="A-算法"><a href="#A-算法" class="headerlink" title="A* 算法"></a>A* 算法</h2><p>再谈 A<em>算法。A</em>算法中的评估函数为 f(N)=cost(N)+h<em>(N)。其中 cost(N) 为从源点到 N 点的距离，h</em>(N) 为 N 点到终点的的一个评估路径长度，设 h(N) 为实际 N 点到终点的路径长度。只要满足条件： h<em>(N)&lt;=h(N)，那么用这个评估函数找到最短路径。具体证明看这篇论文<a target="_blank" rel="noopener" href="http://www.cs.auckland.ac.nz/compsci767s2c/projectReportExamples.d/astarNilsson.pdf">A Formal Basis for the Heuristic Determination of Minimum Cost Paths</a>。 其优势在于在选择每个路径 上的点的时候给予了 h(N) 这个启发，在搜索空间中尽量选择可能最有可能产生最优解的下一个状态，使得搜索的时间都相应地减少。A</em>算法的思想也是贪心 的，Dijkstra 是 A<em>的一个特例，当 h</em>(N)=0 时，A*就退化成了 Dijkstra 算法，那么就是盲目的扩展当前最短路径了。   </p>
 <p>来个例子，下面这是一个城市的公路图网，一共有 18263 个点，23874 条边，视为无向图。我们知道起点和终点的坐标，现在我们要求某两点之间的最短路径。</p>
 <ol>
 <li>用 Dijkstra 算法来，其中白色的点表示搜索过程中访问了的点。可以看出 Dijkstra 算法有点像 BFS 向周围扩展，做了很多无用的搜索。当然这与图的形状也有一定关系。   </li>
@@ -190,9 +188,7 @@
 </ol>
 <p>[A* 曼哈顿距离作为启发函数 访问 296 个点]<br><a href="/images/Astar2.jpg"><img class="size-full wp-image-78  " title="Astar2" src="/images/Astar2.jpg" alt="" width="556" height="508" align="center"></a></p>
 <p>大概能得到一个规律，搜索效率依赖于 h<em>(N) 的启发作用，当 h</em>(N) &lt;= h(N) 时候，我们能得到最优解，用第二种启发函数能也满足最优解的条件，但是因为启发用少了所以访问了更多的点。当 h<em>(N)&gt;h(N) 时，得到的可能是比较优的解 (非最短路径)，可以认为因为得到的启发更多 (多到超出了得到最优解的条件限制)，所以能取得更快的效率。这又是一个普遍的问题，在速度、精确度两者之间经常会只能二选一，对于不同的应用从中作出折中。上面那篇论文证明了，对于刚才举例的这个问题，用两点之间的直线距离最为启发函数的 A</em>算法是所有能得到最优解的算法中访问点最少的。启发函数对于特定的问题有特定的取法，那么 A*作为一个搜索的算法框架用处还是挺多的。   </p>
-<h4>Dijkstra＋A* 求 k 短路径</h4>
-
-<p>当然这个算法不是我想出来的，这里只是说一下看后自己的理解。在 A<em>算法中，优先队列出来的点如果扩展到了终点，那么 就得到了最短路径。如果能得到实际的评估函数 (也就是 h</em>(N))，那么第二次 从优先队列里面弹出来的就是第 2 段的路径，依次直到 k 短。如何得到 h(N),就是图中各个点到 T 的实际最短路径距离，可以从图的反向图以 T 为源点进行 Dijkstra 算法，最后 Dist[N] 就可以作为 h(N)。然后以 cnt[N] 表示 N 点从优先队列里面弹出来的次数。K-shortest 问题还有更快的解法，不过还没看，这里有<a target="_blank" rel="noopener" href="http://www.mat.uc.pt/~eqvm/cientificos/investigacao/r_papers.html">大把论文</a>。这里还分结果路径中是否可以有环，像现实中公路网肯定是要求无环的 k-shortest path。下面这个算法是可以有环的。 </p>
+<h2 id="Dijkstra＋A-求-k-短路径"><a href="#Dijkstra＋A-求-k-短路径" class="headerlink" title="Dijkstra＋A* 求 k 短路径"></a>Dijkstra＋A* 求 k 短路径</h2><p>当然这个算法不是我想出来的，这里只是说一下看后自己的理解。在 A<em>算法中，优先队列出来的点如果扩展到了终点，那么 就得到了最短路径。如果能得到实际的评估函数 (也就是 h</em>(N))，那么第二次 从优先队列里面弹出来的就是第 2 段的路径，依次直到 k 短。如何得到 h(N),就是图中各个点到 T 的实际最短路径距离，可以从图的反向图以 T 为源点进行 Dijkstra 算法，最后 Dist[N] 就可以作为 h(N)。然后以 cnt[N] 表示 N 点从优先队列里面弹出来的次数。K-shortest 问题还有更快的解法，不过还没看，这里有<a target="_blank" rel="noopener" href="http://www.mat.uc.pt/~eqvm/cientificos/investigacao/r_papers.html">大把论文</a>。这里还分结果路径中是否可以有环，像现实中公路网肯定是要求无环的 k-shortest path。下面这个算法是可以有环的。 </p>
 <p>完整代码如下：   </p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">
 <span class="token comment">//7040K 282MS</span>
@@ -384,7 +380,7 @@ vector<span class="token operator">&lt;</span>Edge<span class="token operator">>
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">A* 算法</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">Dijkstra＋A* 求 k 短路径</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#A-%E7%AE%97%E6%B3%95"><span class="toc-nav-text">A* 算法</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Dijkstra%EF%BC%8BA-%E6%B1%82-k-%E7%9F%AD%E8%B7%AF%E5%BE%84"><span class="toc-nav-text">Dijkstra＋A* 求 k 短路径</span></a></li></ol>
     
   </div>
 </aside>

@@ -168,17 +168,15 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p><div class="contents"><dl> <dt> <a href="#sec1">Muse 简介</a> </dt> <dt> <a href="#sec2">Muse 的配置</a> </dt> <dt> <a href="#sec3">Muse 中源代码高亮显示</a> </dt> <dt> <a href="#sec4">Muse 来写主页和博客</a> </dt> </dl></div></p>
-<h2>Muse 简介</h2><br><p class="first">Muse 是由 <a target="_blank" rel="noopener" href="http://www.emacswiki.org/cgi-bin/wiki/">EmacsWiki</a> 衍生的，为 emacs 下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括 html,pdf，latex 等等。Muse 的编辑规则很简单，而且支持“所见即所得”的编辑方式可以让文档编辑更轻松。我使用这个工具已经快一年了，强烈推荐。这个 html 文件就是从 Muse 调用 htmlize 生成的。<br><br><h2><a name="sec2"></a><br>Muse 的配置</h2>
+<h2>Muse 简介</h2><br>Muse 是由 <a target="_blank" rel="noopener" href="http://www.emacswiki.org/cgi-bin/wiki/">EmacsWiki</a> 衍生的，为 emacs 下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括 html,pdf，latex 等等。Muse 的编辑规则很简单，而且支持“所见即所得”的编辑方式可以让文档编辑更轻松。我使用这个工具已经快一年了，强烈推荐。这个 html 文件就是从 Muse 调用 htmlize 生成的。<br><br><h2><a name="sec2"></a><br>Muse 的配置</h2>
 
 <p>从<a target="_blank" rel="noopener" href="http://mwolson.org/static/dist/muse/muse-3.12.tar.gz">这里</a>下载最新版本的 Muse，比较简单的安装方法是解压后直接在目录下运行 make，然后把所有的文件都拷贝到 emacs 的一个加载目录下面 (比如～/.emacs.d/muse/)。设置.emacs 加入以下几行。</p>
 <pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token comment">;; 加载 muse</span>
 <span class="token punctuation">(</span><span class="token keyword">require</span> <span class="token quoted-symbol variable symbol">'muse-mode</span><span class="token punctuation">)</span>
 <span class="token punctuation">(</span><span class="token keyword">require</span> <span class="token quoted-symbol variable symbol">'muse-html</span><span class="token punctuation">)</span>&lt;/pre><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>然后就可以利用 Muse-mode 来方便地创建文档。这里有个<a target="_blank" rel="noopener" href="http://mwolson.org/projects/MuseQuickStart.html">QuickStarted</a>，看一遍就基本掌握了编辑规则。编辑完成以后按键 C-u C-c C-t 即可发布该文档。</p>
-<p><h2><a name="sec3"></a><br>Muse 中源代码高亮显示</h2></p>
-<p><p class="first">在 Muse-mode 中编辑时是所见即所得样式的显示，但是有一个问题是代码不能高亮显示，要贴代码就有点不方便，解决的方法是要下载 htmlize.el，而且需要 1.34 以后的版本才支持这个功能，在<a target="_blank" rel="noopener" href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el">这里</a>下载。使用方法也有说明。</p>
-<p><h2><a name="sec4"></a><br>Muse 来写主页和博客</h2></p>
-<p><p class="first">很多搞学术的同学喜欢建一个看起来很严谨的静态主页，这样的主页用 Muse 来维护非常方便。对于 wordpress 的博客或者主页，一款离线撰写工具是必须的，在 windows 下可以用 WindowsLiveWriter,Linux 下也有相应工具。不过我大部分还是在自己电脑上用 Muse 来写完发布成 html 格式，然后再发布到主页上。首先我们需要建立一个主页的工程。比如我的：</p>
+<p><h2><a name="sec3"></a><br>Muse 中源代码高亮显示</h2><br>在 Muse-mode 中编辑时是所见即所得样式的显示，但是有一个问题是代码不能高亮显示，要贴代码就有点不方便，解决的方法是要下载 htmlize.el，而且需要 1.34 以后的版本才支持这个功能，在<a target="_blank" rel="noopener" href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el">这里</a>下载。使用方法也有说明。</p>
+<p><h2><a name="sec4"></a><br>Muse 来写主页和博客</h2><br>很多搞学术的同学喜欢建一个看起来很严谨的静态主页，这样的主页用 Muse 来维护非常方便。对于 wordpress 的博客或者主页，一款离线撰写工具是必须的，在 windows 下可以用 WindowsLiveWriter,Linux 下也有相应工具。不过我大部分还是在自己电脑上用 Muse 来写完发布成 html 格式，然后再发布到主页上。首先我们需要建立一个主页的工程。比如我的：</p>
 <pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token comment">;;==新建一个 wiki 工程</span>
 <span class="token punctuation">(</span><span class="token keyword">setq</span> muse-project-alist
       <span class="token punctuation">'(</span><span class="token punctuation">(</span><span class="token string">"MainPage"</span>

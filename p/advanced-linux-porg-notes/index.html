@@ -228,7 +228,11 @@
 <p><p class="first">线程作为亲量级进程，切换引起的开销更小，一个进程的多个子线程共享进程的资源。</p>
 <h3>create thread</h3>
 
-<p>创建线程：pthread_create (&amp;thread_id, NULL(pointer_to_thread_info), &amp;thread_func, NULL(argument))<br>线程的执行顺序是异步的，不能假设其执行顺序。<br>向 thread 传递数据：可以通过 pthread_create 的地四个参数，传递一个 void* 的指针，指针指向一个数据结构体。注意在多线程中的数据空间的销毁。<br>More about thread_id:</p>
+<p>创建线程：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">pthread_create</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>thread_id<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">(</span>pointer_to_thread_info<span class="token punctuation">)</span><span class="token punctuation">,</span> 
+               <span class="token operator">&amp;</span>thread_func<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">(</span>argument<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>线程的执行顺序是异步的，不能假设其执行顺序。向 thread 传递数据：可以通过 pthread_create 的地四个参数，传递一个 void* 的指针，指针指向一个数据结构体。注意在多线程中的数据空间的销毁。</p>
+<p>More about thread_id:</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pthread_equal</span> <span class="token punctuation">(</span><span class="token function">pthread_self</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> other_thread<span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token function">pthread_join</span> <span class="token punctuation">(</span>other_thread<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>Thread Attributes，为了设定线程的某些属性，detach 线程退出后自动回首资源，joinable 则等到另一个线程调用 pthread_jion 获得其返回值。</p>

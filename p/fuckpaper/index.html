@@ -168,8 +168,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>前些天在写毕业论文，开题弄了个什么神经网络什么数据融合，至今没搞懂过，真是没话说，但是又不得不硬着头皮写，废话连篇，说来说去就那么几句。做的东西本来挺简单的，没用到那么高深的理论，不过为了装装深度，硬要往上面套，希望最好别出什么问题吧。写论文的时候我就想嗄，写代码好玩多了，异常怀念那段天天在 poj 上写程序的日子。这两天交完初稿，继续做做题，一是玩玩，二是为了原来定下的一个小目标：毕业前水到 500 题，还差 20。两个比较好玩也折腾得比较久的题目。</p>
-<p><h4>poj 2050</h4></p>
-<p><p class="first">这题折腾了很久很久，刚开始误以为每个文件的最大行数为 1500，最后因为输出格式问题。代码也比较长 330 行，954ms。<br>使用数组作为 hash，使用位图记录文件中存在的单词，idx 为由单词转化得到的该单词在 hash 表中的 index。</p>
+<h2 id="poj-2050"><a href="#poj-2050" class="headerlink" title="poj 2050"></a>poj 2050</h2><p>这题折腾了很久很久，刚开始误以为每个文件的最大行数为 1500，最后因为输出格式问题。代码也比较长 330 行，954ms。<br>使用数组作为 hash，使用位图记录文件中存在的单词，idx 为由单词转化得到的该单词在 hash 表中的 index。</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">unsigned</span> <span class="token keyword">int</span> docs_flag<span class="token punctuation">[</span>MAXDOC<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">(</span>MAXWORDS<span class="token operator">+</span><span class="token number">31</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token number">32</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">//记录某个文件中是否存在某个单词</span>
 <span class="token keyword">void</span> <span class="token function">set_docflag</span><span class="token punctuation">(</span><span class="token keyword">int</span> doc<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> idx<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
@@ -180,8 +179,7 @@
 <span class="token punctuation">&#123;</span>
         <span class="token keyword">return</span> doc<span class="token punctuation">[</span>idx<span class="token operator">>></span><span class="token number">5</span><span class="token punctuation">]</span> <span class="token operator">&amp;</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">&lt;&lt;</span><span class="token punctuation">(</span>idx<span class="token operator">&amp;</span><span class="token number">0x1f</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><h4>poj 2518</h4></p>
-<p><p class="first">这个好玩，一个 4<em>4 的方格，里面分别放四个 A,B,C,D，初始状态从输入获取，先随便选取一个字母，然后能进行很多次操作。<br>每次能交换两个相邻的方格，到任何一个小的 2</em>2 的方格中全部都是所选的字母就获胜。对于每一个输入，求最少多少次交换就能达到胜利状态，<br>以及有多少方案可以达到这个目的。<br>例如：</p>
+<h2 id="poj-2518"><a href="#poj-2518" class="headerlink" title="poj 2518"></a>poj 2518</h2><p>这个好玩，一个 4<em>4 的方格，里面分别放四个 A,B,C,D，初始状态从输入获取，先随便选取一个字母，然后能进行很多次操作。<br>每次能交换两个相邻的方格，到任何一个小的 2</em>2 的方格中全部都是所选的字母就获胜。对于每一个输入，求最少多少次交换就能达到胜利状态，<br>以及有多少方案可以达到这个目的。<br>例如：</p>
 <pre class="example">AABB
 ABAB
 CDCD
@@ -279,7 +277,7 @@ CCDD            state ==&gt; 1100 1010 0000 0000</pre>
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">poj 2050</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link"><span class="toc-nav-text">poj 2518</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#poj-2050"><span class="toc-nav-text">poj 2050</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#poj-2518"><span class="toc-nav-text">poj 2518</span></a></li></ol>
     
   </div>
 </aside>
