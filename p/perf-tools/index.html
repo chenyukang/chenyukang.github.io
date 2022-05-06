@@ -195,7 +195,7 @@ hyperfine --prepare <span class="token string">'sudo sync; echo 3 | sudo tee /pr
 
 hyperfine --prepare <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> --warmup <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo runc create -b tutorial a &amp;&amp; sudo runc start a &amp;&amp; sudo runc delete -f a'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>跑出结果：<br><img src="/images/ob_2022-05-06-111156.png" alt=""></p>
-<p>这个工具的作者用 Rust 写了好几个非常好用的 Linux 命令行工具，比如 <code>fd</code> 快速查找文件等。</p>
+<p>这个工具的作者用 Rust 写了好几个非常好用的命令行工具，比如 <code>fd</code> 快速查找文件等。</p>
 <h2 id="wrk"><a href="#wrk" class="headerlink" title="wrk"></a>wrk</h2><p><a target="_blank" rel="noopener" href="https://github.com/wg/wrk">wg/wrk: Modern HTTP benchmarking tool</a></p>
 <p>这个工具可以用来批量发起 HTTP 请求，使用方法很简单：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">wrk -t12 -c400 -d30s http://127.0.0.1:8080/index.html<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
