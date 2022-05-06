@@ -189,7 +189,7 @@
 <span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> space:			<span class="token number">0.5</span> MB
 <span class="token punctuation">[</span>runlim<span class="token punctuation">]</span> samples:		<span class="token number">10</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>查看 help，这个工具还可以指定 time limit 和 space limit，在指定的时间和内存限制内强制退出程序，其功能很像那些<a target="_blank" rel="noopener" href="http://poj.org/">Online Judge</a>，只是没有检测结果输出是否正确。</p>
-<p>发现代码里有一个小小的 Bug，根据源代码如果没有指定 space limit， space limit 那栏应该是当前的空闲内存大小，但是<br>看我上面运行的命令，显示的 4294966090 MB 明显偏大，是其中的一个获取系统内存大小的函数溢出了。这里应该是这样：</p>
+<p>发现代码里有一个小小的 Bug，根据源代码如果没有指定 space limit， space limit 那栏应该是当前的空闲内存大小，但是看我上面运行的命令，显示的 4294966090 MB 明显偏大，是其中的一个获取系统内存大小的函数溢出了。这里应该是这样：</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">unsigned</span>
 <span class="token function">get_physical_mb</span> <span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
