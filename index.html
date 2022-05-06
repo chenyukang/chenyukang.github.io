@@ -219,7 +219,7 @@
 <p><code>/proc/&#123;pid&#125;/stat</code>  ： 进程资源统计<br><code>/proc/&#123;pid&#125;/io</code> ： 进程 IO 相关统计<br><code>/proc/&#123;pid&#125;/fd</code> ： 进程句柄</p>
 <p>具体通过 <code>man proc</code> 查询 Linux proc 相关的文档。</p>
 <h2 id="Hyperfine"><a href="#Hyperfine" class="headerlink" title="Hyperfine"></a>Hyperfine</h2><p><a target="_blank" rel="noopener" href="https://github.com/sharkdp/hyperfine">sharkdp/hyperfine: A command-line benchmarking tool</a></p>
-<p>这个命令行工具可以用来批量跑程序，找出程序的耗时区间，生成的结果可以输出为 JOSN 格式，这样能用来可视化对比结果。</p>
+<p>这个 Rust 命令行工具可以用来批量跑程序，找出程序的耗时区间，生成的结果可以输出为 JOSN 格式，这样能用来可视化对比结果。</p>
 <p>比如我们使用这个工具来对比 <code>youki</code>、<code>crun</code>、<code>runc</code> 的性能，<a target="_blank" rel="noopener" href="https://github.com/containers/youki/pull/544#issuecomment-1118473648">add the benchmark result to README, containers/youki</a></p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">hyperfine --prepare <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> --warmup <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo ./youki create -b tutorial a &amp;&amp; sudo ./youki start a &amp;&amp; sudo ./youki delete -f a'</span>
 
