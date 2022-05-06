@@ -175,18 +175,14 @@
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">nohup</span> ./image-api-go <span class="token operator">></span> infer.log <span class="token operator">&amp;</span>
 
 <span class="token function">sleep</span> <span class="token number">3</span>
-
 <span class="token assign-left variable">pid</span><span class="token operator">=</span><span class="token variable"><span class="token variable">`</span>pidof ./image-api-go<span class="token variable">`</span></span>
-
 <span class="token builtin class-name">echo</span> <span class="token string">"begin record <span class="token variable">$pid</span> ..."</span>
-
 <span class="token function">rm</span> -rf ff.sqlite
 
 /home/coder/.local/bin/procpath record -i <span class="token number">1</span> -r <span class="token number">60</span> -d ff.sqlite -p <span class="token variable">$pid</span>
-
 /home/coder/.local/bin/procpath plot -d ff.sqlite -q rss -p <span class="token variable">$pid</span> -f rss.svg
 
-<span class="token builtin class-name">echo</span> <span class="token string">"recorded <span class="token variable">$pid</span> ...."</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token builtin class-name">echo</span> <span class="token string">"recorded <span class="token variable">$pid</span> ...."</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>如果你看看 <a target="_blank" rel="noopener" href="https://heptapod.host/saajns/procpath/-/blob/branch/default/procpath/procfile.py">procpath 的代码</a>发现也非常简单，就是通过 Linux 系统下的 <code>/proc/&#123;pid&#125;</code> 下面的数据来进行统计的：</p>
 <p><code>/proc/&#123;pid&#125;/stat</code>  ： 进程资源统计<br><code>/proc/&#123;pid&#125;/io</code> ： 进程 IO 相关统计<br><code>/proc/&#123;pid&#125;/fd</code> ： 进程句柄</p>
 <p>具体通过 <code>man proc</code> 查询 Linux proc 相关的文档。</p>
@@ -195,11 +191,9 @@
 <p>比如我们使用这个工具来对比 <code>youki</code>、<code>crun</code>、<code>runc</code> 的性能，<a target="_blank" rel="noopener" href="https://github.com/containers/youki/pull/544#issuecomment-1118473648">add the benchmark result to README, containers/youki</a></p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">hyperfine --prepare <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> --warmup <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo ./youki create -b tutorial a &amp;&amp; sudo ./youki start a &amp;&amp; sudo ./youki delete -f a'</span>
 
-
 hyperfine --prepare <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> --warmup <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo crun create -b tutorial a &amp;&amp; sudo crun start a &amp;&amp; sudo crun delete -f a'</span>
 
-
-hyperfine --prepare <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> --warmup <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo runc create -b tutorial a &amp;&amp; sudo runc start a &amp;&amp; sudo runc delete -f a'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+hyperfine --prepare <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> --warmup <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo runc create -b tutorial a &amp;&amp; sudo runc start a &amp;&amp; sudo runc delete -f a'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>跑出结果：<br><img src="/images/ob_2022-05-06-111156.png" alt=""></p>
 <p>这个工具的作者用 Rust 写了好几个非常好用的 Linux 命令行工具，比如 <code>fd</code> 快速查找文件等。</p>
 <h2 id="wrk"><a href="#wrk" class="headerlink" title="wrk"></a>wrk</h2><p><a target="_blank" rel="noopener" href="https://github.com/wg/wrk">wg/wrk: Modern HTTP benchmarking tool</a></p>
