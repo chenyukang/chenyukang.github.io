@@ -197,7 +197,7 @@
             
                 <h2 id="procpath"><a href="#procpath" class="headerlink" title="procpath"></a>procpath</h2><p>一个 Python 实现的小工具，我们可以用来不断监控某个进程 (或者一组进程) 的资源使用情况，比如内存、CPU、IO 等。使用说明在这里：<a target="_blank" rel="noopener" href="https://pypi.org/project/Procpath/">Procpath · PyPI</a></p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">pipx <span class="token function">install</span> Procpath<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>安装即可，然后使用命令先来生成一个统计数据存储在 sqlite，还可以生成统计图：</p>
+<p>安装即可，然后使用这个命令先来生成一个统计数据存储在 sqlite，还可以生成统计图：</p>
 <p><img src="/images/ob_2022-05-06-110341.png" alt=""></p>
 <p>我之前排查一个<a target="_blank" rel="noopener" href="https://github.com/second-state/dapr-wasm/issues/16">内存问题</a>时就用这个工具来调试，非常方便。比如我要统计 <code>image-api</code> 这个进程的内存情况，并生成图就使用下面这个脚本：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">nohup</span> ./image-api-go <span class="token operator">></span> infer.log <span class="token operator">&amp;</span>
