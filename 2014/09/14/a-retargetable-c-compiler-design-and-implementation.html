@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="lcc 阅读记录 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    lcc 阅读记录 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>lcc 阅读记录</h2>
+  <p class="post-date">2014-09-14</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>之前看 EOPL 感觉收获挺大，最近又花业余时间看了看编译相关的东西，这是我看 lcc 的时候顺手记下的一些自己的理解。这本书<a target="_blank" rel="noopener" href="http://book.douban.com/subject/1610344/">《A Retargetable C Compiler》</a>还挺大头的。lcc 代码量不是特别大，更复杂的是 tinyCC，tinyCC 甚至可以直接运行 C 代码。</p>
+<h2 id="alloc-c"><a href="#alloc-c" class="headerlink" title="alloc.c"></a>alloc.c</h2><p>为了尽量的少调用系统调用，在 alloc 基础上封装了一下。</p>
+<h2 id="sym-c"><a href="#sym-c" class="headerlink" title="sym.c"></a>sym.c</h2><p>用来存储 symbol，注意 scope 的表示方法。</p>
+<h2 id="input-c"><a href="#input-c" class="headerlink" title="input.c"></a>input.c</h2><p>为了减少读取文件的开销，用一个 buffer 来缓存源文件内容。cp 表示当前读取出来的字符位置，limit 表示缓存的结尾字符位置，如果 fillbuf 一次以后仍然<code>cp == limit</code>则表示读取文件到 EOF 了。</p>
+<p>注意这里的 fread 读取的时候是通过 stdin 的，但是在 main.c/main_init 函数的时候通过 freopen 将源文件重定向到了 stdin。</p>
+<p>fillbuf 其实读取的时候是永远先把内容读取到 buffer[MAXLINE+1] 的位置，如果发现<code>cp &lt; limit</code>就把前面剩下的内容往前移动，这样永远保证 buffer 足够下一次预读取，这里有点巧妙。</p>
+<p>比较复杂的部分是处理 resynch，input 处理的内容是经过 C 语言预处理器的，这部分没有包含在这个编译器内。</p>
+<h2 id="lex-c"><a href="#lex-c" class="headerlink" title="lex.c"></a>lex.c</h2><p>一个完全是手写的 C 语言 Parser，虽然只是兼容 C99，但手写还是比较复杂的。<code>码农约架比写 Parser 是个体现实力的比赛。</code></p>
+<p>getchr 逐个字符读取，cp 就是 input.c 里面的当前字符。跳过 BLANK，如果碰到 NEWLINE 则调用 input.c 读取下一行。</p>
+<p>token.h 看起来有很多列，这个文件被多个地方用到。是用宏来生成一些 Enum 里面的代码。比如 token type 和 expr type。</p>
+<p>gettok 顾名思义在 lex 运行的时候不断提供一个一个的 token，这主要是通过 cp 匹配 map 来判断，条件分支很多 (依据当前的第一个字符)。<code>register unsigned char* rpc</code>存储当前字符。<code>register 作为一个对编译器的提示，尽量用 register 来存储变量。事实上现在的编译器很多都能做 auto register allocation，有的时候编译器的选择可能比人的选择更好。register 在老的 C 代码里面可能更为常见。</code></p>
+<p>这个函数里面很多地方都用到了 goto，主要是在匹配关键字的时候区分 identifier。主要几大类是: number, keyword, identifier, string。 icon 处理数字的前缀，fcon 处理浮点数。</p>
+<p>Lexical analyzer 基本理论是自动状态机，没一个 token 可以根据相应的正则表达式来表示。有一些工具可以用来自动生成这些繁琐的代码，比如 LEX，更新一些的有 Flex 和 re2c。</p>
+<h2 id="error-c"><a href="#error-c" class="headerlink" title="error.c"></a>error.c</h2><p>终于来到 Parser 部分了，lcc 使用的是 recursive-descent，很多商业的编译器都是用的这种直观的算法，事实上对于大部分语言都足够了。recursive-descent 是自上而下的递归的，依据当前的 token 匹配语法结构。一个重要的问题是如何在处理的过程中给出适当的错误信息。error.c 里面的函数 test 和 expect 用来测试下一个 token 是否是预期的，expect 可以打印出错误信息。</p>
+<h2 id="tree-c"><a href="#tree-c" class="headerlink" title="tree.c"></a>tree.c</h2><p>最重要的数据结构 struct tree，AST 中的基本节点，包含子节点，和 operator 类型 (比如 AND，OR，NOT 等）。在构建 AST 的时候 root 函数经常被用到。</p>
+<h2 id="expr-c-enode-c"><a href="#expr-c-enode-c" class="headerlink" title="expr.c enode.c"></a>expr.c enode.c</h2><p>parser 的一部分，用来识别表达式。代码好复杂，和 paresr 有些类似，整个过程是构建 AST。编译器的前端最重要的事情就是这了，后面的操作都是在这个基础上做的。为什么 Scheme/Lisp 的 front 部分比较简单，因为这货代码就和 AST 有些类似了，括号把一个一个的节点组合了起来。初看起来很难看，其实习惯了还好。</p>
+<p>上面说的是语法的识别，在构建 AST 的过程中另外一个事情就是语意的分析。包括类型检查，类型的转换，操作符优先级等，这些也在构建 AST 的时候顺便做了。比如在遇到 expr1 ? expr2 : expr3 的时候，expr1 的值最后被 cast 成一个 bool。指针之间的隐式转换也比较复杂。function call 比较复杂，这里还做了函数参数的写法是否是老的风格，类型说明放在函数头的最后。assignments 和 binary operator 的分析相对来说简单一些，需要做各种 cast。</p>
+<p>前些天稍微看了一些 Erlang，发现里面的类型推导比较好玩，甚至可以发现一些代码里面的逻辑错误：</p>
+<p>比如：</p>
+<pre class="line-numbers language-erlang" data-language="erlang"><code class="language-erlang"><span class="token function">fact</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token function">fact</span><span class="token punctuation">(</span><span class="token variable">N</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token variable">N</span> <span class="token operator">*</span> <span class="token function">fact</span><span class="token punctuation">(</span><span class="token variable">N</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>
+
+<span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token function">fact</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>不用运行 Erlang 的 dialyzer 就可以发现这里面的死循环，因为可以通过上面的定义推断出 fact 的参数是 non_neg_integer，而-5 是不符合的，所以报出来一个错误：</p>
+<p><code>fact(-5) will never return</code>。</p>
+<h2 id="stmt-c"><a href="#stmt-c" class="headerlink" title="stmt.c"></a>stmt.c</h2><p>codelist 为双向列表，遇到新的执行块就加到这个列表上。在处理 control-flow 的过程中有的死代码块是可以被编译器发现的，只是我们平时都被忽略了。</p>
+<p>比如 C 代码：<br><pre class="line-numbers language-erlang" data-language="erlang"><code class="language-erlang"><span class="token atom">int</span> <span class="token function">loop</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+ <span class="token variable">Loop</span><span class="token punctuation">:</span>
+    <span class="token atom">goto</span> <span class="token variable">Loop</span><span class="token punctuation">;</span>
+    <span class="token atom">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token atom">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"loop: %d\n"</span><span class="token punctuation">,</span> <span class="token function">loop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token atom">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><br>loop 永远不会返回，Gcc 选项<code>-Wsuggest-attribute=noreturn</code>可以报出一个 warning。</p>
+<h2 id="decl-c"><a href="#decl-c" class="headerlink" title="decl.c"></a>decl.c</h2><p>声明是 C 语言中最难解析的部分，原因是声明涉及到变量和类型，而从 C 声明中弄出类型信息还是挺复杂的。另外声明还分局部，全局，其中还涉及到函数参数，结构体等。decl.c 可能是最复杂的文件了，1100 多行代码，里面的函数之间又相互调用。finalize() 函数最后检查是否有重复定义的变量。</p>
+<h2 id="dag-c"><a href="#dag-c" class="headerlink" title="dag.c"></a>dag.c</h2><p>lcc 的 intermediate code 是用 listnodes 把前面 parser 的 tree 转换为 DAG，最终整个程序会经过转换变成由多个 DAG 组合成的森林。listnodes 还负责把一些公共的 sub-expression 简化。</p>
+<p>接口为 gencode,emitcode。后面每一个代码生成的后端都是一个 Interface 结构，在 function 函数里面调用这两个函数生成汇编代码，其中还包含一个 Xinterface 成员，这是平台相关的接口。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>到现在我只是大概看了了前端和中间层，后面 lcc 跨平台的指令生成还没来得及研究，这本书的电子版不是很清晰，还是买个中文版来再稍微看看。总的来说，lcc 是的 Parsing 和语义分析是同时进行的，就是所谓的 one-pass 方法。现在很多编译器所用的方法是先建立 AST，后面可能要多次遍历整个 AST 进行分析，LLVM 好像就是采用的这种方案。另外代码的优化是一个 trade-off，作为教学用途的 lcc 没有过多做代码优化，这样 lcc 代码还是可以花不多的时间来一个大概的学习。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Compiler" >
+    <span class="tag-code">Compiler</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2015/01/10/rust-10-alpha.html">
+        <span class="nav-arrow">← </span>
+        
+          Rust coming to 1.0
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2014/08/01/install-server.html">
+        
+          折腾服务器
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#alloc-c"><span class="toc-nav-text">alloc.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#sym-c"><span class="toc-nav-text">sym.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#input-c"><span class="toc-nav-text">input.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#lex-c"><span class="toc-nav-text">lex.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#error-c"><span class="toc-nav-text">error.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#tree-c"><span class="toc-nav-text">tree.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#expr-c-enode-c"><span class="toc-nav-text">expr.c enode.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#stmt-c"><span class="toc-nav-text">stmt.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#decl-c"><span class="toc-nav-text">decl.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#dag-c"><span class="toc-nav-text">dag.c</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-nav-text">小结</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2014/09/14/a-retargetable-c-compiler-design-and-implementation.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="BuckleScript and Reason | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    BuckleScript and Reason |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>BuckleScript and Reason</h2>
+  <p class="post-date">2017-09-17</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h4 id="BuckleScript"><a href="#BuckleScript" class="headerlink" title="BuckleScript"></a>BuckleScript</h4><p>虽然我不是前端工程师，不过因为喜欢 OCaml，所以偶尔关注 <a target="_blank" rel="noopener" href="https://github.com/BuckleScript/bucklescript">BuckleScript</a> 有一段时间了，今天又花时间看了看文档和代码。BuckleScript 是张宏波主导开发的开源项目，『有希望成为第一个完全由国人设计主导实现并被世界各地广泛使用的编译器』，不过是否能广泛被使用还得看后续推广。</p>
+<p>简单来说 BuckleScript 是一个代码转换器，把你写的 OCaml 代码生成为纯 JS 代码。这样做的好处和必要性在于：</p>
+<ol>
+<li>JS 太牛了，<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=jFU-wc28lF4">这个跨平台语言正在吞噬着所有软件领域</a></li>
+<li>JS 太难维护了，大规模的 JS 代码更是噩梦。不管是从开发者角度和是从代码安全的角度，JS 需要类型！<a target="_blank" rel="noopener" href="https://www.typescriptlang.org/">微软的 Typescript</a> 和 <a target="_blank" rel="noopener" href="https://flow.org/en/">FB 的 Flow</a> ，甚至是<a target="_blank" rel="noopener" href="http://elm-lang.org/examples">Elm</a>都是为了给 JS 带来类型。</li>
+<li>OCaml 类型系统稳定可靠，关键是编译器速度快，并且可以编译在多个平台上。</li>
+</ol>
+<p>就我个人而言非常喜欢 OCaml，之前也有一些自己的小项目用过 OCaml。BuckleScript 从技术角度来说是非常好的，我看了一些生成的代码可读性比很多代码生成器要好。并且除了直接翻译代码，这个编译器也做了很多代码优化的工作，生成 size 更小，performance 更好的 JS 代码。遗憾的是目前还不支持 Core 这个库，我之前用 Core 比较多，ಥ_ಥ。</p>
+<p>关于代码生成，想起我们原来做过的 <a target="_blank" rel="noopener" href="https://github.com/sipin/gorazor">Gorazor</a>，从技术角度来说还是有些挑战的，不过从使用角度我个人持保留态度。代码生成毕竟会引入新的语法，我发现很多前端程序员其实并不怎么熟悉函数式编程那套，OCaml 的语法是否能在前端程序员中推广开来是个问题。BuckleScript 的文档有待改进，可以给更多大一点的完整的例子。</p>
+<p>关于 BuckleScript 和 js_of_ocaml 的区别，从文档上来看 js_of_ocaml 可以把 bytecode 转换为 JS 代码，而 BuckleScript 是在从编译器里面的 rawlambda 生成代码，所以理论上来说 js_of_ocaml 对 OCaml 的兼容性更好，而 BuckleScript 能生成更可读的 JS 代码，目标在于兼容 npm 平台。</p>
+<h4 id="ReasonML"><a href="#ReasonML" class="headerlink" title="ReasonML"></a>ReasonML</h4><p><a target="_blank" rel="noopener" href="https://reasonml.github.io/">ReasonML</a>的来由是之前我说的 OCaml 独特的语法，在很多人看来并不是很友好，所以 FB 的这群人做了一个更符合大众品位的方言。然后可以通过 BuckleScript 再翻译为 JS 代码。好绕啊！不过据说 FB 已经在生成环境使用这些了。ReasonML 的开发者移植了一个之前用 js_of_ocaml 写的<a target="_blank" rel="noopener" href="https://github.com/reasonml-community/Mareo">mario 的例子</a>，看了一遍觉得 reason 的语法其实改动并不大，可能对 JS 的程序员来说更友好吧。reason 和 OCaml 的关系类似于 Elixir 和 Erlang 之前的关系，为了讨好一类程序员，又为了利用一个已经非常成熟可靠的现有平台。</p>
+<p>在 HN 上有一个比较老的<a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=12400397">讨论帖</a>，有时间也可以再看看。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/BuckleScript/bucklescript/wiki/Why-bucklescript-matters-for-Javascript-platform">Why bucklescript matters for Javascript platform</a></p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#OCaml" >
+    <span class="tag-code">OCaml</span>
+  </a>
+
+  <a href="/tags#Javascript" >
+    <span class="tag-code">Javascript</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/02/12/ruby-open-vul.html">
+        <span class="nav-arrow">← </span>
+        
+          Ruby 的 open 函数导致命令执行
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2017/09/14/deep-work.html">
+        
+          《深度工作 - 如何有效使用每一点脑力》读后
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#BuckleScript"><span class="toc-nav-text">BuckleScript</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#ReasonML"><span class="toc-nav-text">ReasonML</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2017/09/17/bucklescript-and-reason.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

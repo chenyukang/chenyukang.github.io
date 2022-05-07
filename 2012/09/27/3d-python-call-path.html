@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="UbiGraph 动态显示 Python 函数调用 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    UbiGraph 动态显示 Python 函数调用 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>UbiGraph 动态显示 Python 函数调用</h2>
+  <p class="post-date">2012-09-27</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="UbiGraph-显示环境"><a href="#UbiGraph-显示环境" class="headerlink" title="UbiGraph 显示环境"></a>UbiGraph 显示环境</h2><p> <a target="_blank" rel="noopener" href="http://www.ubietylab.net/ubigraph/content/Docs/index.html">UbiGraph</a>是一个显示平台，可以非常方便地使用 Python/C/Ruby 来控制渲染，只需要制定节点和边还有其他相关属性，其余的都不用管了。其使用 XML-RPC 服务于客户端，所以甚至可以在一台机器上开 server，在另外一台机器上用渲染代码控制，这个环境对于算法和数据的可视化很有用。 比如：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> ubigraph
+
+U <span class="token operator">=</span> ubigraph<span class="token punctuation">.</span>Ubigraph<span class="token punctuation">(</span><span class="token punctuation">)</span>
+U<span class="token punctuation">.</span>clear<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+x <span class="token operator">=</span> U<span class="token punctuation">.</span>newVertex<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token string">"sphere"</span><span class="token punctuation">,</span> color<span class="token operator">=</span><span class="token string">"#ffff00"</span><span class="token punctuation">)</span>
+
+smallRed <span class="token operator">=</span> U<span class="token punctuation">.</span>newVertexStyle<span class="token punctuation">(</span>shape<span class="token operator">=</span><span class="token string">"sphere"</span><span class="token punctuation">,</span> color<span class="token operator">=</span><span class="token string">"#ff0000"</span><span class="token punctuation">,</span> size<span class="token operator">=</span><span class="token string">"0.2"</span><span class="token punctuation">)</span>
+
+previous_r <span class="token operator">=</span> <span class="token boolean">None</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+  r <span class="token operator">=</span> U<span class="token punctuation">.</span>newVertex<span class="token punctuation">(</span>style<span class="token operator">=</span>smallRed<span class="token punctuation">,</span> label<span class="token operator">=</span><span class="token builtin">str</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  U<span class="token punctuation">.</span>newEdge<span class="token punctuation">(</span>x<span class="token punctuation">,</span>r<span class="token punctuation">,</span>arrow<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> previous_r <span class="token operator">!=</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+   U<span class="token punctuation">.</span>newEdge<span class="token punctuation">(</span>r<span class="token punctuation">,</span>previous_r<span class="token punctuation">,</span>spline<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>stroke<span class="token operator">=</span><span class="token string">"dashed"</span><span class="token punctuation">)</span>
+  previous_r <span class="token operator">=</span> r<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>显示效果如下：<br><img src="/images/ubigraph_py.png" alt="ubigraph_python" class="img-center"/></p>
+<p>只是这个软件是免费的但不是开源的，另外还没有支持 Windows 平台。</p>
+<h2 id="使用-Ubigraph-显示-Python-函数调用"><a href="#使用-Ubigraph-显示-Python-函数调用" class="headerlink" title="使用 Ubigraph 显示 Python 函数调用"></a>使用 Ubigraph 显示 Python 函数调用</h2><p>这是在<a target="_blank" rel="noopener" href="http://pyevolve.sourceforge.net/wordpress/?p=210">这里</a>看到的，貌似需要翻墙。代码比较简单，在点击查看<a target="_blank" rel="noopener" href="http://cyukang.com/images/prof3d.py">prof3d.py</a>。</p>
+<p>使用方法是先启动 Ubigraph 的 server，然后运行下面的代码：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> prof3d
+
+<span class="token keyword">def</span> <span class="token function">run_main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+  <span class="token comment"># your code</span>
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+   prof3d<span class="token punctuation">.</span>profile_me<span class="token punctuation">(</span><span class="token punctuation">)</span>
+   run_main<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这段 Python 的代码函数调用关系就显示出来了，而且还是动态的。</p>
+<p>效果如下：<br><img src="/images/python_call.png" alt="ubigraph_python" class="img-center"/></p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+  <a href="/tags#Tools" >
+    <span class="tag-code">Tools</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2012/10/16/delegate_ruby_cpp.html">
+        <span class="nav-arrow">← </span>
+        
+          Ruby vs C++ for delegation
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2012/09/18/a-start-k-shortest.html">
+        
+          A*算法解决 kth-shortest 路径问题 (2)
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#UbiGraph-%E6%98%BE%E7%A4%BA%E7%8E%AF%E5%A2%83"><span class="toc-nav-text">UbiGraph 显示环境</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8-Ubigraph-%E6%98%BE%E7%A4%BA-Python-%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8"><span class="toc-nav-text">使用 Ubigraph 显示 Python 函数调用</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2012/09/27/3d-python-call-path.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

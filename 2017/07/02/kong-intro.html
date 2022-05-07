@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="Kong 源码分析 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    Kong 源码分析 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Kong 源码分析</h2>
+  <p class="post-date">2017-07-02</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h3><p>最近在工作上接触了<a href="">Kong</a>这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一些涉及各个系统的功能就很困难。比如我们前段时间实现的灰度系统就把人折腾得很惨。因为我们的设计中有一些 http header 需要在各个系统之间传递。每个项目的 Nginx 里面都用了 Lua 写一些授权逻辑，最终这些逻辑分散在各个项目的 Nginx 层，维护困难。除了灰度，其他的一些比较基础的 Nginx 层功能也是各自为政。所以我们的教训是：在做微服务化之前，需要统一的、可扩张的 API 网关。我们希望网关性能好，并且扩张性足够好。使用 OpenResty 是很自然的选择，我们希望有一层 Nginx 是所有请求都会经过的，这层 Nginx 会负责做一些基础操作，当然最重要的是做流量转发。</p>
+<p>调研了一阵子之后，我们所面临的是两条路，一是自己写一个类似于<a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/JD-Nignx-JEN">京东 JEN</a>的系统，在调研一圈之后我们发现 Kong 是比较适合自身业务需求的。二是在 Kong 的基础上做一些插件开发，然后集群部署 Kong 即可。</p>
+<p>我之前稍微看了一下介绍，认为 Kong 可能对我们来说太重了些。后来又仔细看了一阵源码，自己认为代码质量挺好，而且模块化和可扩张性做得很好，因此决定采用。</p>
+<h3 id="Kong-简介"><a href="#Kong-简介" class="headerlink" title="Kong 简介"></a>Kong 简介</h3><p>Kong 项目的目的是这样一幅图<a href="/images/kong-intro.png">kong-intro</a>：</p>
+<p><img src="/images/kong-intro.png" alt="kong-intro" class="img-center" style="width:320px;height:300px;"/></p>
+<p>可以看到这正是我们要做的事情。使用 Kong 的优势在于：</p>
+<ol>
+<li>可扩展性，Kong 依赖一个数据库来实现配置存储，依赖 <a target="_blank" rel="noopener" href="https://www.serf.io">serf</a> 来实现 instance 之间的通信。任何一个节点修改了其他节点会收到通知并重新 reload 配置。</li>
+<li>模块化，Kong 可以方便地增加新的插件，并且插件可以通过 Restful API 进行管理</li>
+</ol>
+<h3 id="主要代码模块"><a href="#主要代码模块" class="headerlink" title="主要代码模块"></a>主要代码模块</h3><p>Kong 的使用方法这里不做介绍，<a target="_blank" rel="noopener" href="https://getkong.org/docs/">这里</a>有非常详细的文档和示例。我主要分析一下其<a target="_blank" rel="noopener" href="https://github.com/Mashape/kong">源码</a>和原理。</p>
+<ol>
+<li>core 目录里面是一些基础框架代码，包括 hooks，事件，插件基础</li>
+<li>plugins 目录包括所有 kong 自带的插件，kong 的插件扩展有一套自己的规范，按照规范来非常容易地就能扩展 kong</li>
+<li>dao 是数据库抽象层，目前 kong 自带支持数据库 postgresql 和 cassandra。</li>
+<li>tools 为一些工具函数，需要注意的是 cache。因为所有配置（包括插件的配置）都会是用 cache 来缓存，为了减少读取数据库次数。</li>
+<li>api Kong 会提供一个系列接口来更新配置</li>
+</ol>
+<p>我觉得 Kong 的代码质量很好，另外依照带着问题来学习新东西感觉非常有收获，这几个部分我都是从一个主题问题逐个分析，这几个问题解决了之后自然对代码就熟悉了很多，并且有信心在生产环境使用。后续我会陆续继续写一些 Kong 相关原理分析，顺便更深入熟悉一下 Lua。主要涉及到 Kong 的初始化部分、缓存如何更新、插件机制如何实现等。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Lua" >
+    <span class="tag-code">Lua</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2017/07/07/kong-intro-2.html">
+        <span class="nav-arrow">← </span>
+        
+          Kong 源码分析：启动
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2017/06/27/recent-reading-list.html">
+        
+          小说推荐
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E7%BC%98%E7%94%B1"><span class="toc-nav-text">缘由</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Kong-%E7%AE%80%E4%BB%8B"><span class="toc-nav-text">Kong 简介</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%BB%E8%A6%81%E4%BB%A3%E7%A0%81%E6%A8%A1%E5%9D%97"><span class="toc-nav-text">主要代码模块</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2017/07/02/kong-intro.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

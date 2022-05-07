@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="《编程珠玑》：代码优化 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    《编程珠玑》：代码优化 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>《编程珠玑》：代码优化</h2>
+  <p class="post-date">2010-08-05</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>编程珠玑里面代码优化这一章。</p>
+<h2 id="问题-1-函数，宏，内联代码"><a href="#问题-1-函数，宏，内联代码" class="headerlink" title="问题 1 函数，宏，内联代码"></a>问题 1 函数，宏，内联代码</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">max</span><span class="token expression"><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">></span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token operator">?</span> <span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token operator">:</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span></span></span>
+
+<span class="token keyword">float</span> <span class="token function">max</span><span class="token punctuation">(</span><span class="token keyword">float</span> a<span class="token punctuation">,</span><span class="token keyword">float</span> b<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> a<span class="token operator">></span>b<span class="token operator">?</span> a<span class="token operator">:</span>b<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">inline</span> <span class="token keyword">float</span> <span class="token function">max</span><span class="token punctuation">(</span><span class="token keyword">float</span> a<span class="token punctuation">,</span><span class="token keyword">float</span> b<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> a<span class="token operator">></span>b<span class="token operator">?</span> a<span class="token operator">:</span>b<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上面这个函数到底哪一个快一些？测试了一下。宏效率是高一点，但是对于加上编译器优化以后基本没什么区别了。</p>
+<p><a href="/images/static1.jpg"><img class="size-full wp-image-109 img-center" title="static1" src="/images/static1.jpg" alt="" width="273" height="123" /></a></p>
+<h2 id="问题-2-顺寻搜索"><a href="#问题-2-顺寻搜索" class="headerlink" title="问题 2 顺寻搜索"></a>问题 2 顺寻搜索</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">search1</span><span class="token punctuation">(</span><span class="token keyword">int</span> v<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span>N<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>vec<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">==</span>v<span class="token punctuation">)</span>
+            <span class="token keyword">return</span> i<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token function">search2</span><span class="token punctuation">(</span><span class="token keyword">int</span> v<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    vec<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token operator">=</span>v<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> i<span class="token punctuation">;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> <span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>vec<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> v<span class="token punctuation">)</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>i<span class="token operator">==</span>N<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> i<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+
+<span class="token keyword">int</span> <span class="token function">search3</span><span class="token punctuation">(</span><span class="token keyword">int</span> v<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    vec<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token operator">=</span>v<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> i<span class="token punctuation">;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> <span class="token punctuation">;</span>i<span class="token operator">+=</span><span class="token number">8</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>vec<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">==</span>v<span class="token punctuation">)</span> <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>vec<span class="token punctuation">[</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">==</span>v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>i<span class="token operator">+=</span><span class="token number">1</span><span class="token punctuation">;</span> <span class="token keyword">break</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>vec<span class="token punctuation">[</span>i<span class="token operator">+</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">==</span>v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>i<span class="token operator">+=</span><span class="token number">2</span><span class="token punctuation">;</span> <span class="token keyword">break</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>vec<span class="token punctuation">[</span>i<span class="token operator">+</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">==</span>v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>i<span class="token operator">+=</span><span class="token number">3</span><span class="token punctuation">;</span> <span class="token keyword">break</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>vec<span class="token punctuation">[</span>i<span class="token operator">+</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token operator">==</span>v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>i<span class="token operator">+=</span><span class="token number">4</span><span class="token punctuation">;</span> <span class="token keyword">break</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>vec<span class="token punctuation">[</span>i<span class="token operator">+</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token operator">==</span>v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>i<span class="token operator">+=</span><span class="token number">5</span><span class="token punctuation">;</span> <span class="token keyword">break</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>vec<span class="token punctuation">[</span>i<span class="token operator">+</span><span class="token number">6</span><span class="token punctuation">]</span><span class="token operator">==</span>v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>i<span class="token operator">+=</span><span class="token number">6</span><span class="token punctuation">;</span> <span class="token keyword">break</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>vec<span class="token punctuation">[</span>i<span class="token operator">+</span><span class="token number">7</span><span class="token punctuation">]</span><span class="token operator">==</span>v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>i<span class="token operator">+=</span><span class="token number">7</span><span class="token punctuation">;</span> <span class="token keyword">break</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>i<span class="token operator">==</span>N<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> i<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这三个函数哪一个效率最好？据说第二个提高 5%，第三个会提高 10%~20%(对于老实计算机)。在我的机子上测试了一下，N=10000000。并不如书上说的能提高多少， 反而最原始的写法在优化后效率更高，确实是这样的数据。</p>
+<p><a style="text-decoration: none;" href="/images/static2.jpg"><img class="img-center size-full wp-image-110" title="static2" src="/images/static2.jpg" alt="" width="215" height="121" /></a></p>
+<h2 id="问题三-二分查找"><a href="#问题三-二分查找" class="headerlink" title="问题三 二分查找"></a>问题三 二分查找</h2><p>数组大小为 1000。 单位 ms。</p>
+<p><a style="text-decoration: none;" href="/images/static3.jpg"><img class="img-center size-full wp-image-111" title="static3" src="/images/static3.jpg" alt="" width="317" height="148" /></a></p>
+<p>确实第二个版本提高了一些，第四个版本甚至提高了一半的效率。</p>
+<p>测试是一个麻烦的事情，因为同一时间处理器调度了其他进程，但多次测试还是能给一个大概的印象。第二个例子的优化没起什么作用，也许现在的编译器优 化技术比以前更好的，得出的结果并不如书上所说。在一个算法复杂度确定的情况下改变一些写法会有一点提升，但是对于不同的输入规模也许就得不到什么提高， 而且编译器优化以后基本差别就更小了。为了那么一点效率的 提升增加了代码的复杂度得不偿失。原理那章也说了，不成熟的优化是大量编程的祸害，会危机程序的正确性、功能性、和可维护性。 王道还是改变数据结构或者算法，除非确定一个部分的代码会经常被调用很多次，在这里可以花一些功夫去优化。优化是把双刃剑，玩火者，小心自焚，哈哈。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Books" >
+    <span class="tag-code">Books</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2010/08/20/zheteng.html">
+        <span class="nav-arrow">← </span>
+        
+          折腾记录
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2010/08/02/astart-k-shortest-path.html">
+        
+          A*算法与 K-shortest path 问题
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98-1-%E5%87%BD%E6%95%B0%EF%BC%8C%E5%AE%8F%EF%BC%8C%E5%86%85%E8%81%94%E4%BB%A3%E7%A0%81"><span class="toc-nav-text">问题 1 函数，宏，内联代码</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98-2-%E9%A1%BA%E5%AF%BB%E6%90%9C%E7%B4%A2"><span class="toc-nav-text">问题 2 顺寻搜索</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98%E4%B8%89-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="toc-nav-text">问题三 二分查找</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2010/08/05/programming-peal.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="using automake | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    using automake |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>using automake</h2>
+  <p class="post-date">2010-08-21</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>以前都是手写 makefile，没使用 automake 之类的工具，今天看了一些相关资料，简单地总结一下，留个备份。</p>
+<h2 id="使用-Makefile"><a href="#使用-Makefile" class="headerlink" title="使用 Makefile"></a>使用 Makefile</h2><p>unix/linux 下面使用相当广泛，对于简单一些的程序，手写 makefile 还是比较容易的，只要指定清目标文件，最后可执行文件的依赖关系。使用一些高级一点的功能更方便，比如下面这个就比较好用，稍微编辑一下就可以用于常用的小工程。</p>
+<p>这个 Makefile 把所有.cpp 的文件编译成相应的.o 文件，然后链接为 Targetfile 文件。</p>
+<pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile">CC <span class="token operator">=</span> g++  -O2
+LD <span class="token operator">=</span> g++
+TARGET <span class="token operator">=</span> Targetfile
+SOURCES <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">wildcard</span> *.cpp<span class="token punctuation">)</span>
+OBJS <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">patsubst</span> %.cpp,%.o,<span class="token variable">$</span><span class="token punctuation">(</span>SOURCES<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token target symbol">%.o</span><span class="token punctuation">:</span>%.cpp
+        <span class="token variable">$</span><span class="token punctuation">(</span>CC<span class="token punctuation">)</span> <span class="token variable">$</span><span class="token punctuation">(</span>CFLAGS<span class="token punctuation">)</span> -c <span class="token variable">$&amp;lt;</span> -o <span class="token variable">$@</span>
+
+<span class="token target symbol">Targetfile</span><span class="token punctuation">:</span><span class="token variable">$</span><span class="token punctuation">(</span>OBJS<span class="token punctuation">)</span>
+        <span class="token variable">$</span><span class="token punctuation">(</span>CC<span class="token punctuation">)</span> <span class="token variable">$</span><span class="token punctuation">(</span>OBJS<span class="token punctuation">)</span> -lglut -lglui  -o Targetfile
+
+<span class="token target symbol">clean</span><span class="token punctuation">:</span>
+        <span class="token operator">@</span>/bin/rm *.o&lt;/pre><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="使用-automake-等工具"><a href="#使用-automake-等工具" class="headerlink" title="使用 automake 等工具"></a>使用 automake 等工具</h2><p>首先运行 autoscan，这之后会生成一个 configure.scan 文件，修改为 configure.in，并编辑。典型的一个文件如下，AC_CONFIG_SRCDIR,AC_CONFIG_HEADER 这两项还不知道干什么用的，如果不注释掉后面 automake 会出现错误，那就先注释掉吧。重点修改 AC_INIT，AC_INIT_AUTOMAKE。AC_CHECK 那些不用管，后面提示-lglui 提示要注意，这是需要链接的库文件，这里链接 glui 这个库。</p>
+<pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile"><span class="token comment">#                                               -- Autoconf --</span>
+<span class="token comment"># Process this file with autoconf to produce a configure script.</span>
+
+AC_PREREQ<span class="token punctuation">(</span>2.61<span class="token punctuation">)</span>
+AC_INIT<span class="token punctuation">(</span>TSPdemo, 1.0, moorekang<span class="token operator">@</span>gamil.com<span class="token punctuation">)</span>
+AM_INIT_AUTOMAKE<span class="token punctuation">(</span>TSPdemo, 1.0<span class="token punctuation">)</span>
+<span class="token comment">#AC_CONFIG_SRCDIR([Elastic_Alg.cpp])</span>
+<span class="token comment">#AC_CONFIG_HEADER([config.h])</span>
+
+
+<span class="token comment"># Checks for programs.</span>
+AC_PROG_CXX
+AC_PROG_CC
+
+
+<span class="token comment"># Checks for libraries.</span>
+AC_CHECK_LIB<span class="token punctuation">(</span>[glui], [main]<span class="token punctuation">)</span>
+AC_CHECK_LIB<span class="token punctuation">(</span>[glut], [main]<span class="token punctuation">)</span>
+
+<span class="token comment"># Checks for header files.</span>
+AC_HEADER_STDC
+AC_CHECK_HEADERS<span class="token punctuation">(</span>[stdlib.h]<span class="token punctuation">)</span>
+
+<span class="token comment"># Checks for typedefs, structures, and compiler characteristics.</span>
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_SIZE_T
+
+
+<span class="token comment"># Checks for library functions.</span>
+AC_CHECK_FUNCS<span class="token punctuation">(</span>[sqrt]<span class="token punctuation">)</span>
+<span class="token comment">#AC_CONFIG_FILES([makefile])</span>
+AC_OUTPUT<span class="token punctuation">(</span>Makefile<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>编写 Makefile.am，如下面这样。和 makefile 一样，写上可执行文件依赖于的源文件，_LDADD 是要链接的库文件名。</p>
+<pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile">AUTOMAKE_OPTIONS<span class="token operator">=</span>foreign
+bin_PROGRAMS<span class="token operator">=</span>TSPdemo
+TSPdemo_SOURCES<span class="token operator">=</span> Elastic_Alg.cpp  MyMap.cpp   mathlib.cpp \
+Elastic_Alg.h    MyMap.h      mathlib.h \
+LaoMan.cpp       SOM.cpp        pointdef.h \
+LaoMan.h         SOM.h      main.cpp
+TSPdemo_LDADD <span class="token operator">=</span> -lglut<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>然后执行 aclocal，和 autoconf，最后 automake —add-missing 生成 configure 文件。这就完成了，下面就是 unix 下编译安装软件的三个步骤了，./configure，make, makeinstall 等。</p>
+<p>写得比较粗略，详细查看<a target="_blank" rel="noopener" href="http://wenku.baidu.com/view/b01bed02de80d4d8d15a4f4e.html">这个文档</a>。</p>
+<!-- Page published by Emacs Muse ends here -->
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Linux" >
+    <span class="tag-code">Linux</span>
+  </a>
+
+  <a href="/tags#Backup" >
+    <span class="tag-code">Backup</span>
+  </a>
+
+  <a href="/tags#makefile" >
+    <span class="tag-code">makefile</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2010/08/21/emacs-for-fun.html">
+        <span class="nav-arrow">← </span>
+        
+          Emacs 自虐
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2010/08/20/zheteng.html">
+        
+          折腾记录
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8-Makefile"><span class="toc-nav-text">使用 Makefile</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8-automake-%E7%AD%89%E5%B7%A5%E5%85%B7"><span class="toc-nav-text">使用 automake 等工具</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2010/08/21/using-automake.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

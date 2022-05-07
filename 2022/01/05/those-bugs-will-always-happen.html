@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="那些年，我们终将碰上的 Bug | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    那些年，我们终将碰上的 Bug |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>那些年，我们终将碰上的 Bug</h2>
+  <p class="post-date">2022-01-05</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="/images/ob_pasted-image-20220103215102.png" alt=""></p>
+<p>2022 年的新年钟声刚敲响，时钟从 2021 年 12 月 31 日跳转到 2022 年 1  月 1 日，微软 Exchange 准时给大家带来了第一个世界范围内的 Bug。人们写好的新年祝福等邮件，突然发不出去了！大量用户在 Reddit 、Twitter 上亮出新年第一骂。</p>
+<p>那些正准备休假的倒霉的 IT 管理员，被紧急电话呼进公司，排查后发现邮件队列卡住了，日志里显示的是：</p>
+<p><img src="/images/ob_pasted-image-20220103215401.png" alt=""></p>
+<p>随后微软官方确认了这个 Bug。 这些错误是由 Microsoft Exchange Server 检查 FIP-FS 防病毒扫描引擎的版本，并试图将日期存储在带符号的 int32 变量中引起的。</p>
+<p><img src="/images/ob_pasted-image-20220103214745.png" alt=""></p>
+<p>在这个变量中使用了 <code>yymmddHHMM</code> 这种格式的约定，我们知道 int32 能表示的最大值是 2,147,483,647，但是到了 2020.01.01  这个值将是 2,201,010,001，所以就溢出了！</p>
+<p>这是一个典型的类似<code>千年虫</code> 问题，即由于时间的数据格式不对导致溢出或者日期逻辑错误，进而导致大量软件出现 Bug。千年虫的问题很多是因为很多老程序使用了两位来表示年份，比如 99 代表 1999 年，那 2000 年只能用 <code>00</code> 来表示了，但是 00 在程序里本意指的是 1900。</p>
+<p>可能现在的新生代程序员会感叹，这些老古董为什么会犯这样低级的错误？</p>
+<p><img src="/images/ob_pasted-image-20220104122103.png" alt=""></p>
+<p>这就牵扯到一些更复杂的问题：</p>
+<p>一个是约定习俗，1931 年后很多人在写年份的时候，自然就开始用两位来代表年份，因为 1931 年后年和日已经不重合了，例如写成 35 ，任何人看了都是理解为 1935 年。 </p>
+<p>另一个原因是内存曾经又贵又稀缺，早期核心内存的价格是每比特 1 美元，老一辈程序员在写代码的时候都是按 bit 抠的。 前美联储主席 Alan Greenspan 曾经也写过程序：</p>
+<blockquote>
+<p>我是造成这个问题的罪魁祸首之一。<br>我曾在 20 世纪 60 年代和 70 年代编写过这些程序，<br>我为自己能够在程序中挤出一些空格元素而感到自豪，<br>因为我不需要在年份前加上一个 19。</p>
+<p>在当时，这是非常重要的。<br>在我们开始编写程序之前，<br>我们曾经花了很多时间进行各种数学练习，<br>这样它们就可以很清楚地根据空间和容量的使用进行划分。</p>
+<p>我们从来没有想到，这些项目会持续几年以上。</p>
+</blockquote>
+<p>“过早优化是万恶之源”，高老头真是诚不我欺：</p>
+<p><img src="/images/ob_pasted-image-20220104114834.png" alt=""></p>
+<p>这种类型的 Bug 是可以预测的，比如千年虫问题，其实在 1985 年左右就已经有计算机专家发现了。问题是代码已经写好并且运行了，甚至因为早期的系统和软件通用性不高，有很多固化在芯片内部的程序，所以要解决也是大费周折。而且日期的问题与各个地方的不同习俗也有关系，比如台湾某些程序在 2011 年出现了日期溢出问题，大家考虑一下为什么😉？</p>
+<p>总而言之，这些 Bug 就很神奇，我们知道在某些年份这类 Bug 必然会发生，但是我们无法完全消除，我们可以简称为 <strong>那些年，我们终将碰上的 Bug</strong>。</p>
+<p>我们可以列举一下今后会碰到 Bug 的重要年份：</p>
+<h3 id="GPS-星期技术归零"><a href="#GPS-星期技术归零" class="headerlink" title="GPS 星期技术归零"></a>GPS 星期技术归零</h3><p>GPS(全球定位系统) 广播时采用周计数 (WN) + 周内时 (TOW) 的方式组合发布，早期的 GPS 采用 10bits 存储 WN，所以当计数达到 1024 时会翻转为 0。因此每 1024 周 (也就是 19.6 年) 会轮回一次。</p>
+<p>最近几年发生是 1999，2019，下一次预计就是 2038 年。</p>
+<p><img src="/images/ob_pasted-image-20220104232522.png" alt=""></p>
+<p>2019 年的这次看起来没有发生特别严重的事故，霍尼韦尔的飞行管理和导航软件因为没有及时打上补丁导致航班延误。一些 2012 年之前生产的 iPhone 和 iPad 可能因此连不上网络。</p>
+<p>为了解决这一问题，现代化的 GPS 导航消息使用 13 位字段，该字段重复周期变成了 8,192 周（157 岁），也就是说会直到 2137 年附近才清零。</p>
+<h2 id="Unix-系统-time-溢出"><a href="#Unix-系统-time-溢出" class="headerlink" title="Unix 系统 time 溢出"></a>Unix 系统 time 溢出</h2><p><img src="/images/ob_pasted-image-20220104235957.png" alt=""></p>
+<p><strong>2038 年将是软件历史上史诗级别的灾难年。</strong></p>
+<p>因为 Unix 系统最初实现的时候采用的是有符号整数 int 来保存时间，而时间系统是由 Epoch 开始计算起，单位为秒，Epoch 则是指定为 1970 年 1 月 1 日凌晨 00:00:00，格林威治时间。</p>
+<p>很多古老的 UNIX 系统都是用 32 位元来记录时间，正值表示为 1970 以后，负值则表示 1970 年以前。也就是说最大为 0xFFFFFFFF 的一半，除以一天 86400 秒的话，就是 68 年。1970 年往后延 68 年刚好是 2038 年。</p>
+<p>2038 年问题比 2000 的千年虫问题更麻烦。虽然目前很多 OS 和硬件已经升级到 64 位系统，32 位的嵌入式系统仍然大量运行。另外因为这涉及到系统层面的改动，如果我们直接修改 time_t 的定义，则会出现兼容性问题。</p>
+<p>乐观情况，在还剩下不到 20 年的时间里，这些 32 位的系统逐渐被 64 位替换掉，这样就不会出现大问题。有可能导致严重问题的是那些无法升级的嵌入式系统，运行这些系统的设备寿命通常比较长，例如交通系统、汽车的稳定控制系统等。</p>
+<h2 id="2106-年"><a href="#2106-年" class="headerlink" title="2106 年"></a>2106 年</h2><p>很多文件格式、通讯协议采用的是类似 Unix 的日期格式，差别是把时间存储在无符号 32 bit 整数里。按照这个范围计算，日期将在 2106 年溢出。</p>
+<h2 id="4501-年"><a href="#4501-年" class="headerlink" title="4501  年"></a>4501  年</h2><p>Microsoft Outlook 使用 4501 年 1 月 1 日作为“none”或“empty”的占位符，不知道那天会出现什么神奇的 Bug，反正我们已经不在了。</p>
+<hr>
+<p>这种类型的 Bug 其实还有很多，时间和日期是程序和系统中非常重要的一个概念，在分布式系统中时间也很容易造成 Bug。我们作为程序员在写代码的时候，<strong>尽量眼光放远一点</strong>，多想想自己的程序一千年以后还在跑🤣，这样大概就没这类问题了。</p>
+<p>不过一千年后还在运行的代码，得多伟大。这时候我脑海里回想起来那首歌：</p>
+<pre class="line-numbers language-none"><code class="language-none">别等到 一千年以后
+所有人都遗忘了我
+那时红色黄昏的沙漠
+能有谁 解开缠绕千年的寂寞<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#技术" >
+    <span class="tag-code">技术</span>
+  </a>
+
+  <a href="/tags#写作" >
+    <span class="tag-code">写作</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2022/01/07/how-to-beat-anxiety.html">
+        <span class="nav-arrow">← </span>
+        
+          35 岁，我用这三种方法克服焦虑
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2022/01/03/what-is-web3.html">
+        
+          什么是 Web3
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#GPS-%E6%98%9F%E6%9C%9F%E6%8A%80%E6%9C%AF%E5%BD%92%E9%9B%B6"><span class="toc-nav-text">GPS 星期技术归零</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Unix-%E7%B3%BB%E7%BB%9F-time-%E6%BA%A2%E5%87%BA"><span class="toc-nav-text">Unix 系统 time 溢出</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2106-%E5%B9%B4"><span class="toc-nav-text">2106 年</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4501-%E5%B9%B4"><span class="toc-nav-text">4501  年</span></a>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2022/01/05/those-bugs-will-always-happen.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

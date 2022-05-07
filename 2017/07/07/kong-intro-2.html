@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="Kong 源码分析：启动 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="分析 Kong 的启动过程，Kong 其实就是跑了很多 Lua 代码的 Nginx" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    Kong 源码分析：启动 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Kong 源码分析：启动</h2>
+  <p class="post-date">2017-07-07</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="Kong-的初始化过程"><a href="#Kong-的初始化过程" class="headerlink" title="Kong 的初始化过程"></a>Kong 的初始化过程</h3><p>安装好 Kong 之后我们是用命令<code>sudo ./bin/kong start -c kong.conf -vv</code>来启动。其中 kong.conf 为配置文件，<code>-vv</code>选项打印出一些重要信息展示出来，方便发现问题。</p>
+<p>可以看到<code>./bin/kong</code>是一个脚本，是用的<code>#!/usr/local/openresty/bin/resty</code>程序来执行，而 resty 是 OpenResty 的一个 Perl 可执行脚本。kong 的内容很简单，就是一个入口函数调用：<br><code>require(&quot;kong.cmd.init&quot;)(arg)</code></p>
+<p>所以我们可以从 cmd/init.lua 这个文件开始入手看启动过程。一翻开 init.lua 这个文件，发现其实不过是个 wrapper，解析了 args 之后就是调用 start，stop，quit 等命令。然后我们顺藤摸瓜找 cmd/start.lua 文件，整个启动过程就在这里了：</p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">local</span> conf <span class="token operator">=</span> <span class="token function">assert</span><span class="token punctuation">(</span><span class="token function">conf_loader</span><span class="token punctuation">(</span>args<span class="token punctuation">.</span>conf<span class="token punctuation">,</span> <span class="token punctuation">&#123;</span>
+  prefix <span class="token operator">=</span> args<span class="token punctuation">.</span>prefix
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">local</span> err
+<span class="token keyword">local</span> dao <span class="token operator">=</span> <span class="token function">assert</span><span class="token punctuation">(</span>DAOFactory<span class="token punctuation">.</span><span class="token function">new</span><span class="token punctuation">(</span>conf<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token function">xpcall</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>prefix_handler<span class="token punctuation">.</span><span class="token function">prepare_prefix</span><span class="token punctuation">(</span>conf<span class="token punctuation">,</span> args<span class="token punctuation">.</span>nginx_conf<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>dao<span class="token punctuation">:</span><span class="token function">run_migrations</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>serf_signals<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span>conf<span class="token punctuation">,</span> dao<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>nginx_signals<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span>conf<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Kong started"</span><span class="token punctuation">)</span>
+<span class="token keyword">end</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span>
+  err <span class="token operator">=</span> e <span class="token comment">-- cannot throw from this function</span>
+<span class="token keyword">end</span><span class="token punctuation">)</span>  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>从代码上来看很直观，首先 conf_loader 载入配置文件，DAOFactory 构建数据库连接层，prefix_handler.prepare_prefix 是准备一些由程序生成的配置文件。dao:run_migrations 是迁移表结构到数据库，类似其他 Web 框架。serf_signals 是启动 serf 程序，nginx_signals 是启动 nginx 进程。</p>
+<h3 id="读取配置文件-conf-loader"><a href="#读取配置文件-conf-loader" class="headerlink" title="读取配置文件 conf_loader"></a>读取配置文件 conf_loader</h3><p>conf_loader 读取的当然是命令行里面传入的 kong.conf 文件，打开 conf_loader.lua 看了看，是是用一个 lua 第三方库来做文件解析的。<code>local pl_config = require &quot;pl.config&quot;</code>，最开始不太知道这个 pl 是什么，经过搜索后才知道是这里<a target="_blank" rel="noopener" href="https://github.com/stevedonovan/Penlight/tree/master/lua/pl">定义的</a>，在 kong.rockspec 里面有定义了该库的依赖<code>&quot;penlight == 1.4.1&quot;</code>。读取配置的整个过程比较琐碎，最后回构建一个解析好的 conf 表。这里学到了 Lua 里面的 setmetatable 设置元表的方法，table 作为 Lua 里面的最基本数据结构，setmetatable 可以方便的绑定一个 key 和其对应的方法。看起来也像是面向对象的风格，在 conf_loader 的最后部分是：</p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">return</span> <span class="token function">setmetatable</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+  load <span class="token operator">=</span> load<span class="token punctuation">,</span>
+  add_default_path <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span>
+    DEFAULT_PATHS<span class="token punctuation">[</span><span class="token operator">#</span>DEFAULT_PATHS<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> path
+  <span class="token keyword">end</span><span class="token punctuation">,</span>
+  <span class="token punctuation">......</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span>
+  __call <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>_<span class="token punctuation">,</span> <span class="token punctuation">...</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token function">load</span><span class="token punctuation">(</span><span class="token punctuation">...</span><span class="token punctuation">)</span>
+  <span class="token keyword">end</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这样其他地方调用的时候<code>local conf, err, errors = conf_loader(args.conf)</code>自然就把 args.conf 传入 load，返回解析后的结果。</p>
+<h3 id="prepare-prefix-动态生成-Nginx-和-serf-的配置"><a href="#prepare-prefix-动态生成-Nginx-和-serf-的配置" class="headerlink" title="prepare_prefix 动态生成 Nginx 和 serf 的配置"></a>prepare_prefix 动态生成 Nginx 和 serf 的配置</h3><p>prefix_handler.lua 这个文件主要在准备一些 Nginx 的配置文件和 serf 的配置文件。prepare_prefix 函数前半部分在创建各个子目录，logs、serf、pids、以及各个日志文件。关于 Kong 的 config 部分需要参考一下<a target="_blank" rel="noopener" href="https://getkong.org/docs/0.10.x/configuration/">这里</a>。这个函数比较长，重要的部分是生成 Nginx 的配置文件。<br>可以看到 compile_kong_conf 函数其实是是用 kong/templates 目录下的 nginx_kong.lua 和 nginx.lua 分别生成两个文件，其中 nginx_kong.lua 里面包含了嵌入 Kong 的 Lua 代码的逻辑。</p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token function">init_by_lua_block</span> <span class="token punctuation">&#123;</span>
+    require <span class="token string">'luarocks.loader'</span>
+    require <span class="token string">'resty.core'</span>
+    kong <span class="token operator">=</span> require <span class="token string">'kong'</span>
+    kong<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+
+location <span class="token operator">/</span> <span class="token punctuation">&#123;</span> 
+  <span class="token function">rewrite_by_lua_block</span> <span class="token punctuation">&#123;</span>
+      kong<span class="token punctuation">.</span><span class="token function">rewrite</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token function">access_by_lua_block</span> <span class="token punctuation">&#123;</span>
+      kong<span class="token punctuation">.</span><span class="token function">access</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token function">header_filter_by_lua_block</span> <span class="token punctuation">&#123;</span>
+      kong<span class="token punctuation">.</span><span class="token function">header_filter</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token function">body_filter_by_lua_block</span> <span class="token punctuation">&#123;</span>
+      kong<span class="token punctuation">.</span><span class="token function">body_filter</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token function">log_by_lua_block</span> <span class="token punctuation">&#123;</span>
+      kong<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>因此我们可以知道 Kong 每次 reload 或者启动的时候会生成新的 Nginx 配置文件，所以我们如果要加入自己的配置可以直接修改 nginx_kong.lua 文件。另外我在使用的时候发现一个小问题，Kong 把 serf 的 node_id 存在一个文件里，如果我们把之前跑过 Kong 的机器做了镜像，然后再启动一个新的实例时，这个 node_id 文件既然存在则没有重新生成，最终导致两台 kong 实例并没有相互通信形成一个集群。我认为这里其实可以再检查一下 node_id 的文件和本机的 ip 是否一致，如果不一致则重新生成。</p>
+<h3 id="dao-run-migrations"><a href="#dao-run-migrations" class="headerlink" title="dao:run_migrations()"></a>dao:run_migrations()</h3><p>初始化过程的下一步则是执行数据库操作，Kong 目前只支持 cassandra 和 Postgres，个人认为应该增加 Redis 的支持。</p>
+<h3 id="serf-signals-start"><a href="#serf-signals-start" class="headerlink" title="serf_signals.start"></a>serf_signals.start</h3><p>之前提到过 serf 是用来保证 kong instance 之间的通信的，启动的时候的一个很重要参数是<code>--event-handler</code>，参数的内容是一个可执行脚本 (通常叫做 serf_event.sh)，文件的内容是前面生成配置文件的时候写入的。默认情况下 serf 会监听在 7946 端口，如果多台 server 需要形成一个集群，这个端口之间需要能相互通信。这里就有一个问题，在一个新的 server 刚启动的时候，该 server 是如何发现其他节点的呢？我们可以看到 serf_signals.lua 里的 start 函数调用了 serf:autojoin() 函数，跟踪到 autojoin 里面看代码，其实是从数据库里读取出其他 nodes 的信息，然后依次告诉对方新同志加入了，然后把自己的节点信息写入到数据库里。自然如果要退出也需要把自己的信息从数据库里删掉。</p>
+<h3 id="nginx-signals-start"><a href="#nginx-signals-start" class="headerlink" title="nginx_signals.start"></a>nginx_signals.start</h3><p>启动的最后一步即是 Nginx 的启动，其实最终执行的命令就是：</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">/usr/local/openresty/nginx/sbin/nginx -p /usr/local/kong -c nginx.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过上面的分析，可以总结 Kong 的启动过程即是：解析输入参数，验证参数合法性并生成必要的目录和配置文件，执行数据库操作，启动 serf，启动 Nginx。最终其实就是一个 OpenResty 启动过程，嵌入 Kong 里面的 core 部分的 Lua 代码。后面继续分析其可扩展的插件机制。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Lua" >
+    <span class="tag-code">Lua</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2017/07/16/kong-intro-3.html">
+        <span class="nav-arrow">← </span>
+        
+          Kong 源码分析：插件
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2017/07/02/kong-intro.html">
+        
+          Kong 源码分析
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Kong-%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B"><span class="toc-nav-text">Kong 的初始化过程</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E8%AF%BB%E5%8F%96%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-conf-loader"><span class="toc-nav-text">读取配置文件 conf_loader</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#prepare-prefix-%E5%8A%A8%E6%80%81%E7%94%9F%E6%88%90-Nginx-%E5%92%8C-serf-%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-nav-text">prepare_prefix 动态生成 Nginx 和 serf 的配置</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#dao-run-migrations"><span class="toc-nav-text">dao:run_migrations()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#serf-signals-start"><span class="toc-nav-text">serf_signals.start</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#nginx-signals-start"><span class="toc-nav-text">nginx_signals.start</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2017/07/07/kong-intro-2.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

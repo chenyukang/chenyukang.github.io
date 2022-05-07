@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="Kong 集群 Left Cluster Node 问题 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    Kong 集群 Left Cluster Node 问题 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Kong 集群 Left Cluster Node 问题</h2>
+  <p class="post-date">2018-03-04</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>Kong 在实践中会有一些疑惑的地方，这里记录一下。注意这里记录的 Kong 集群部署的问题是 0.10.3 版本的，最新 Kong 版本已经不是通过 serf 来管理不同节点之间的配置同步问题。</p>
+<p>在 Kong 多节点部署的时候，有时候某个节点停掉后，我们在后台可以看到 left 的信息，而且这个 left 信息会保留一段不短的时间。类似于如下： </p>
+<p><img src="/images/kong-left-0133521.png" alt="kong-left"></p>
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>管理后台 Konga 是通过 api 获取的节点信息，在<code>kong/kong/api/routes/cluster.lua</code>文件里可以看到如下路由处理逻辑： </p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua">GET <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> dao_factory<span class="token punctuation">,</span> helpers<span class="token punctuation">)</span>
+  <span class="token keyword">local</span> members<span class="token punctuation">,</span> err <span class="token operator">=</span> singletons<span class="token punctuation">.</span>serf<span class="token punctuation">:</span><span class="token function">members</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> err <span class="token keyword">then</span>
+    <span class="token keyword">return</span> responses<span class="token punctuation">.</span><span class="token function">send_HTTP_INTERNAL_SERVER_ERROR</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span>
+  <span class="token keyword">end</span>
+
+  <span class="token keyword">local</span> result <span class="token operator">=</span> <span class="token punctuation">&#123;</span>data <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>
+  <span class="token keyword">for</span> _<span class="token punctuation">,</span> v <span class="token keyword">in</span> <span class="token function">pairs</span><span class="token punctuation">(</span>members<span class="token punctuation">)</span> <span class="token keyword">do</span>
+    <span class="token keyword">if</span> <span class="token keyword">not</span> self<span class="token punctuation">.</span>params<span class="token punctuation">.</span>status <span class="token keyword">or</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>params<span class="token punctuation">.</span>status <span class="token keyword">and</span> v<span class="token punctuation">.</span>status <span class="token operator">==</span> self<span class="token punctuation">.</span>params<span class="token punctuation">.</span>status<span class="token punctuation">)</span> <span class="token keyword">then</span>
+      <span class="token function">table_insert</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>data<span class="token punctuation">,</span> <span class="token punctuation">&#123;</span>
+        name <span class="token operator">=</span> v<span class="token punctuation">.</span>name<span class="token punctuation">,</span>
+        address <span class="token operator">=</span> v<span class="token punctuation">.</span>addr<span class="token punctuation">,</span>
+        status <span class="token operator">=</span> v<span class="token punctuation">.</span>status
+      <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token keyword">end</span>
+  <span class="token keyword">end</span>
+
+  result<span class="token punctuation">.</span>total <span class="token operator">=</span> <span class="token operator">#</span>result<span class="token punctuation">.</span>data
+  <span class="token keyword">return</span> responses<span class="token punctuation">.</span><span class="token function">send_HTTP_OK</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span>
+<span class="token keyword">end</span><span class="token punctuation">,</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>具体<code>serf:members()</code>的实现在 serf.lua 里面可以看到，就是执行了<code>serf cluster members</code>命令获取结果然后返回 JSON。所以我们在服务器上执行这个命令其实也可以看到类似的结果： </p>
+<p><img src="/images/kong-left-cmd.png" alt="kong-left-cmd"></p>
+<p>那么问题的根源当然是在 Serf 本身里面，通过看文档发现原来确实是有一定延迟的。</p>
+<blockquote>
+<p>Serf keeps the state of dead nodes around for a set amount of time, so that when full syncs are requested, the requester also receives information about dead nodes. Because SWIM doesn’t do full syncs, SWIM deletes dead node state immediately upon learning that the node is dead. This change again helps the cluster converge more quickly.</p>
+<p><a target="_blank" rel="noopener" href="https://www.serf.io/docs/internals/gossip.html#lifeguard-enhancements">参考 serf 文档»</a></p>
+</blockquote>
+<h4 id="serf-的具体实现"><a href="#serf-的具体实现" class="headerlink" title="serf 的具体实现"></a>serf 的具体实现</h4><p>接着稍微看了一下 Serf 的代码，果然 Go 的项目代码直观好读。在 Serf 这个结构体里面保存了一个 leftMembers 的状态列表，每次收到 left 事件的时候处理逻辑是： </p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// handleNodeLeaveIntent is called when an intent to leave is received.</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>Serf<span class="token punctuation">)</span> <span class="token function">handleNodeLeaveIntent</span><span class="token punctuation">(</span>leaveMsg <span class="token operator">*</span>messageLeave<span class="token punctuation">)</span> <span class="token builtin">bool</span> <span class="token punctuation">&#123;</span>
+	<span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span>
+    
+	<span class="token comment">// State transition depends on current state</span>
+	<span class="token keyword">switch</span> member<span class="token punctuation">.</span>Status <span class="token punctuation">&#123;</span>
+	<span class="token keyword">case</span> StatusAlive<span class="token punctuation">:</span>
+		member<span class="token punctuation">.</span>Status <span class="token operator">=</span> StatusLeaving
+		member<span class="token punctuation">.</span>statusLTime <span class="token operator">=</span> leaveMsg<span class="token punctuation">.</span>LTime
+		<span class="token keyword">return</span> <span class="token boolean">true</span>
+	<span class="token keyword">case</span> StatusFailed<span class="token punctuation">:</span>
+		member<span class="token punctuation">.</span>Status <span class="token operator">=</span> StatusLeft
+		member<span class="token punctuation">.</span>statusLTime <span class="token operator">=</span> leaveMsg<span class="token punctuation">.</span>LTime
+
+		<span class="token comment">// Remove from the failed list and add to the left list. We add</span>
+		<span class="token comment">// to the left list so that when we do a sync, other nodes will</span>
+		<span class="token comment">// remove it from their failed list.</span>
+		s<span class="token punctuation">.</span>failedMembers <span class="token operator">=</span> <span class="token function">removeOldMember</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>failedMembers<span class="token punctuation">,</span> member<span class="token punctuation">.</span>Name<span class="token punctuation">)</span>
+		s<span class="token punctuation">.</span>leftMembers <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>leftMembers<span class="token punctuation">,</span> member<span class="token punctuation">)</span>
+        
+        <span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token punctuation">.</span>
+        
+		<span class="token keyword">return</span> <span class="token boolean">true</span>
+	<span class="token keyword">default</span><span class="token punctuation">:</span>
+		<span class="token keyword">return</span> <span class="token boolean">false</span>
+	<span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过索引变量发现这个列表会定时通过<code>handleReap</code>函数更新，逻辑如下： </p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// handleReap periodically reaps the list of failed and left members, as well</span>
+<span class="token comment">// as old buffered intents.</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>Serf<span class="token punctuation">)</span> <span class="token function">handleReap</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	<span class="token keyword">for</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">select</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">case</span> <span class="token operator">&lt;-</span>time<span class="token punctuation">.</span><span class="token function">After</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>ReapInterval<span class="token punctuation">)</span><span class="token punctuation">:</span>
+			s<span class="token punctuation">.</span>memberLock<span class="token punctuation">.</span><span class="token function">Lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+			now <span class="token operator">:=</span> time<span class="token punctuation">.</span><span class="token function">Now</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+			s<span class="token punctuation">.</span>failedMembers <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">reap</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>failedMembers<span class="token punctuation">,</span> now<span class="token punctuation">,</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>ReconnectTimeout<span class="token punctuation">)</span>
+			s<span class="token punctuation">.</span>leftMembers <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">reap</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>leftMembers<span class="token punctuation">,</span> now<span class="token punctuation">,</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>TombstoneTimeout<span class="token punctuation">)</span>
+			<span class="token function">reapIntents</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span>recentIntents<span class="token punctuation">,</span> now<span class="token punctuation">,</span> s<span class="token punctuation">.</span>config<span class="token punctuation">.</span>RecentIntentTimeout<span class="token punctuation">)</span>
+			s<span class="token punctuation">.</span>memberLock<span class="token punctuation">.</span><span class="token function">Unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+		<span class="token keyword">case</span> <span class="token operator">&lt;-</span>s<span class="token punctuation">.</span>shutdownCh<span class="token punctuation">:</span>
+			<span class="token keyword">return</span>
+		<span class="token punctuation">&#125;</span>
+	<span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>所以看起来这里相关的 Timeout 是<code>s.config.TombstoneTimeout</code>, 接着需要看看<code>reap</code>到底做了什么，这里果然是把到了一定时间间隔的节点删掉了：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// reap is called with a list of old members and a timeout, and removes</span>
+<span class="token comment">// members that have exceeded the timeout. The members are removed from</span>
+<span class="token comment">// both the old list and the members itself. Locking is left to the caller.</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>s <span class="token operator">*</span>Serf<span class="token punctuation">)</span> <span class="token function">reap</span><span class="token punctuation">(</span>old <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">*</span>memberState<span class="token punctuation">,</span> now time<span class="token punctuation">.</span>Time<span class="token punctuation">,</span> timeout time<span class="token punctuation">.</span>Duration<span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">*</span>memberState <span class="token punctuation">&#123;</span>
+	n <span class="token operator">:=</span> <span class="token function">len</span><span class="token punctuation">(</span>old<span class="token punctuation">)</span>
+	<span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">&#123;</span>
+		m <span class="token operator">:=</span> old<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+
+		<span class="token comment">// Skip if the timeout is not yet reached</span>
+		<span class="token keyword">if</span> now<span class="token punctuation">.</span><span class="token function">Sub</span><span class="token punctuation">(</span>m<span class="token punctuation">.</span>leaveTime<span class="token punctuation">)</span> <span class="token operator">&lt;=</span> timeout <span class="token punctuation">&#123;</span>
+			<span class="token keyword">continue</span>
+		<span class="token punctuation">&#125;</span>
+
+		<span class="token comment">// Delete from the list</span>
+		old<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> old<span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> old<span class="token punctuation">[</span>n<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token boolean">nil</span>
+		old <span class="token operator">=</span> old<span class="token punctuation">[</span><span class="token punctuation">:</span>n<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+		n<span class="token operator">--</span>
+		i<span class="token operator">--</span>
+
+		<span class="token operator">...</span><span class="token operator">...</span><span class="token operator">...</span><span class="token punctuation">.</span>
+	<span class="token punctuation">&#125;</span>
+
+	<span class="token keyword">return</span> old
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>那么这个时间间隔是多久呢，在<code>serf/config.go</code>有一个默认配置： </p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">TombstoneTimeout<span class="token punctuation">:</span>             <span class="token number">24</span> <span class="token operator">*</span> time<span class="token punctuation">.</span>Hour<span class="token punctuation">,</span>	<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>serf 这个软件值得好好分析一下，节点的状态同步和事件处理都是分布式软件的基础，后续继续看看这个<code>gossip protocol based on SWIM</code>的具体实现。另外<a target="_blank" rel="noopener" href="https://www.hashicorp.com/">hashicorp</a>这个公司的开源代码和文档都非常好，值得学习一番。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Tools" >
+    <span class="tag-code">Tools</span>
+  </a>
+
+  <a href="/tags#Kong" >
+    <span class="tag-code">Kong</span>
+  </a>
+
+  <a href="/tags#Golang" >
+    <span class="tag-code">Golang</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2018/03/10/sql-injection-attack.html">
+        <span class="nav-arrow">← </span>
+        
+          SQL Injection attack
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2018/03/02/docker-postgres-password.html">
+        
+          Docker compose 初始化失败问题
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-nav-text">问题</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%88%86%E6%9E%90"><span class="toc-nav-text">分析</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#serf-%E7%9A%84%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="toc-nav-text">serf 的具体实现</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-nav-text">其他</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2018/03/04/kong-cluster-left-node.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

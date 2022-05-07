@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="编译 WebAssembly 模块 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    编译 WebAssembly 模块 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>编译 WebAssembly 模块</h2>
+  <p class="post-date">2021-12-16</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>最近一年经常接触了 WebAssembly , 我把一些老的 C/C++ 代码通过 <a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/downloads.html">emcc</a> 编译为 wasm 模块，也可以把 Rust 代码编译为 wasm。</p>
+<p>这里做一个简单的总结，以及我在编译过程中碰到的问题。</p>
+<h2 id="WebAssembly-的优势"><a href="#WebAssembly-的优势" class="headerlink" title="WebAssembly 的优势"></a>WebAssembly 的优势</h2><p><img src="/images/ob_pasted-image-20211215191320.png" alt=""></p>
+<p>WebAsembly 定义了一个<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/portability/">可移植</a>、体积小、加载快的<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/mvp/#binary-format">二进制格式</a>作为编译结果。通过充分发挥通用硬件的能力（包括<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Mobile_device">移动设备</a>以及<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Internet_of_Things">物联网</a>），使其在大多数平台上能达到原生的执行效率。借助 wasi，WebAssembly 还可能运行在服务端。WebAssembly 的目标包括：</p>
+<ol>
+<li>现有的 <a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/web/">Web 平台</a>完美结合并在其中运行：<ul>
+<li>维护无版本、<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/feature-test/">特性可测试</a>、向后兼容的 Web 演变过程；</li>
+<li>和 JavaScript 执行在相同的语意环境中；</li>
+<li>允许和 JavaScript 相互的同步调用；</li>
+<li>严格遵守同源策略以及浏览器安全策略；</li>
+<li>和 JavaScript 一样，可以访问相同的 Web API 去调用浏览器的功能；以及</li>
+<li>定义一个可与二进制格式相互转化的人类可编辑的文本格式，并且支持查看源码的功能。</li>
+</ul>
+</li>
+<li>被设计为也可以支持<a target="_blank" rel="noopener" href="https://www.wasm.com.cn/docs/non-web/">非浏览器嵌入</a>的运行形式，这样就可能在某些场景下替代 Docker。</li>
+</ol>
+<h2 id="C-C-gt-wasm"><a href="#C-C-gt-wasm" class="headerlink" title="C/C++ =&gt; wasm"></a>C/C++ =&gt; wasm</h2><p>首先需要安装 Emscripten  SDK:<br><a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/downloads.html">https://emscripten.org/docs/getting_started/downloads.html</a></p>
+<p>移植一个 C/C++ 项目到 WebAssembly , 最简单的办法是把类似 gcc 命令换成 emcc，难点在于动态链接的第三方库，我们需要改成静态链接。一些常用的库已经被移植了，例如<em>libc</em>, <em>libc++</em> and <em>SDL</em>，这些我们不需要手动处理。不在 emcc 预装里的库，我们只需要在编译的过程中加一些额外的参数，例如我下面这个项目就用到了 PNG，JPEG 这些库：</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">emcc -c dbgutil.c -o dbgutil.o
+emcc -c qrtest.c -o qrtest.o
+emcc -c decode.c -o decode.o
+emcc -c identify.c -o identify.o
+emcc -c quirc.c -o quirc.o
+emcc -c version_db.c -o version_db.o
+emcc -g -Oz --llvm-lto <span class="token number">1</span>  -s STANDALONE_WASM *.o -o qrtest.wasm  -lm  -s USE_LIBJPEG -s USE_LIBPNG <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>另外 emcc 编译出来的 wasm 模块默认只能做纯计算，没有网络、系统文件等。如果有系统调用则需要运行在浏览器中，用浏览器的接口来模拟某些 C 函数调用，例如 C 语言中的系统调用 <code>time</code> 在 emcc 中被替成为了 JavaScript  代码：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token function-variable function">clock</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>_clock<span class="token punctuation">.</span>start <span class="token operator">===</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span> _clock<span class="token punctuation">.</span>start <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> _clock<span class="token punctuation">.</span>start<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> <span class="token function">cDefine</span><span class="token punctuation">(</span><span class="token string">'CLOCKS_PER_SEC'</span><span class="token punctuation">)</span> <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span> <span class="token operator">/</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="Rust-gt-wasm"><a href="#Rust-gt-wasm" class="headerlink" title="Rust =&gt; wasm"></a>Rust =&gt; wasm</h2><p>Rust 是对 WebAssembly  支持得特别好的编程语言。我们可以使用 wasm-pack，或者安装 target:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">rustup target <span class="token function">add</span> wasm32-wasi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>然后在编译命令后面加参数：<br><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cargo build --target wasm32-wasi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></p>
+<p>系统函数同样是个问题，有的第三方库可能会支持 wasm 格式，例如 <a target="_blank" rel="noopener" href="https://docs.rs/getrandom/latest/getrandom/#webassembly-support">getrandom - Rust (docs.rs)</a>。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://emscripten.org/">Main — Emscripten 3.0.1-git (dev) documentation</a><br><a target="_blank" rel="noopener" href="https://marcoselvatici.github.io/WASM_tutorial/">WASM Tutorial (marcoselvatici.github.io)</a><br><a target="_blank" rel="noopener" href="https://rustwasm.github.io/docs/book/">Introduction - Rust and WebAssembly (rustwasm.github.io)</a></p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#WebAssembly" >
+    <span class="tag-code">WebAssembly</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2021/12/27/baidu-die-for-reason.html">
+        <span class="nav-arrow">← </span>
+        
+          百度是如何死掉的
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2021/12/14/why-open-source.html">
+        
+          为什么要开源
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#WebAssembly-%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-nav-text">WebAssembly 的优势</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#C-C-gt-wasm"><span class="toc-nav-text">C&#x2F;C++ &#x3D;&gt; wasm</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Rust-gt-wasm"><span class="toc-nav-text">Rust &#x3D;&gt; wasm</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%8F%82%E8%80%83"><span class="toc-nav-text">参考</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2021/12/16/compiling-to-wasm.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

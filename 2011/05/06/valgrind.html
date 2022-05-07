@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="valgrind | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    valgrind |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>valgrind</h2>
+  <p class="post-date">2011-05-06</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box" style="max-width: 850px" >
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>纪念一下跑测试跑了几天才找出的一个内存泄漏，这个函数源于 UNP，还以为 UNP 有 bug 呢，找到原书当 getaddreinfo 失败或者 res==NULL 的时候直接退出了。但是写这个代码的同学当然不想连接不上直接退出，于是忘记了 freeaddrinfo 调用直接返回，那个 struct addrinfo 就没释放。很多错误都是这种，涉及到库函数的时候更加难查。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">tcp_connect</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span> host<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> serv<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">int</span>    sockfd<span class="token punctuation">,</span> n<span class="token punctuation">;</span>
+    <span class="token keyword">struct</span> <span class="token class-name">addrinfo</span> hints<span class="token punctuation">,</span> res<span class="token punctuation">,</span> ressave<span class="token punctuation">;</span>
+
+    <span class="token function">bzero</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>hints<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">addrinfo</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    hints<span class="token punctuation">.</span>ai_family <span class="token operator">=</span> AF_UNSPEC<span class="token punctuation">;</span>
+    hints<span class="token punctuation">.</span>ai_socktype <span class="token operator">=</span> SOCK_STREAM<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token punctuation">(</span>n <span class="token operator">=</span> <span class="token function">getaddrinfo</span><span class="token punctuation">(</span>host<span class="token punctuation">,</span> serv<span class="token punctuation">,</span> <span class="token operator">&amp;</span>hints<span class="token punctuation">,</span> <span class="token operator">&amp;</span>res<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token function">log_sprintf</span><span class="token punctuation">(</span>“tcp_connect error <span class="token keyword">for</span> <span class="token operator">%</span>s<span class="token punctuation">,</span> <span class="token operator">%</span>s<span class="token operator">:</span> <span class="token operator">%</span>s”<span class="token punctuation">,</span> host<span class="token punctuation">,</span> serv<span class="token punctuation">,</span> <span class="token function">gai_strerror</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">freeaddrinfo</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//oops: memory leak</span>
+
+        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    ressave <span class="token operator">=</span> res<span class="token punctuation">;</span>
+
+    <span class="token keyword">do</span> <span class="token punctuation">&#123;</span>
+        sockfd <span class="token operator">=</span> <span class="token function">socket</span><span class="token punctuation">(</span>res<span class="token operator">-></span>ai_family<span class="token punctuation">,</span> res<span class="token operator">-></span>ai_socktype<span class="token punctuation">,</span> res<span class="token operator">-></span>ai_protocol<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>sockfd <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+                <span class="token keyword">continue</span><span class="token punctuation">;</span>       <span class="token operator">/</span> ignore this one <span class="token operator">/</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">connect</span><span class="token punctuation">(</span>sockfd<span class="token punctuation">,</span> res<span class="token operator">-></span>ai_addr<span class="token punctuation">,</span> res<span class="token operator">-></span>ai_addrlen<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>          <span class="token operator">/</span> success <span class="token operator">/</span>
+        <span class="token function">close</span><span class="token punctuation">(</span>sockfd<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token operator">/</span> ignore this one <span class="token operator">/</span>
+
+    <span class="token punctuation">&#125;</span> <span class="token keyword">while</span> <span class="token punctuation">(</span> <span class="token punctuation">(</span>res <span class="token operator">=</span> res<span class="token operator">-></span>ai_next<span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>res <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>        <span class="token operator">/</span> errno set from final <span class="token function">connect</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token function">log_sprintf</span><span class="token punctuation">(</span>“tcp_connect error <span class="token keyword">for</span> <span class="token operator">%</span>s<span class="token punctuation">,</span> <span class="token operator">%</span>s”<span class="token punctuation">,</span> host<span class="token punctuation">,</span> serv<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">freeaddrinfo</span><span class="token punctuation">(</span>ressave<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//oops: memory leak</span>
+        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token function">freeaddrinfo</span><span class="token punctuation">(</span>ressave<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span><span class="token punctuation">(</span>sockfd<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上一篇博文中说到自己包装的内存检测方法，这还有个问题当时没发现，就是那个包装 malloc 之类的方法对于库函数中的内存申请调用没法记录，所以是不会发现上面这个 bug 的。这个 Memwatch 倒是把原生的 malloc 都重定义了，但是最好的 Linux 下检测内存泄漏的工具还是 valgrind，这真是个神器，在代码上不用做一点修改，这东西甚至能测试程序的 cache 命中率。看了一下 valgrind 的相关论文，对于检测方法都是一种称之为 shadow value 的方法，也就是用信息来记录每一个 byte 内存的使用情况。这种方式的一个缺点都是会拖慢速度，前面提到的那种稍微包装了一下的方式可能还好 (因为使用的是静态数组), Memwatch 里面使用了不少链表也会拖慢速度。再看看 valgrind 的实现，以后工作可能会碰上类似的。</p>
+<p><a target="_blank" rel="noopener" href="http://valgrind.org/docs/pubs.html">更多 valgrind</a></p>
+<p><a target="_blank" rel="noopener" href="http://hi.baidu.com/sgj_22/blog/item/c437bc10c21be00a203f2e89.html">更多 Memwatch</a></p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Tools" >
+    <span class="tag-code">Tools</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2011/05/22/memcached.html">
+        <span class="nav-arrow">← </span>
+        
+          读 memcached
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2011/04/25/memleak2.html">
+        
+          内存又泄漏
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2011/05/06/valgrind.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

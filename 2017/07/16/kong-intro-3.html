@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="Kong 源码分析：插件 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    Kong 源码分析：插件 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Kong 源码分析：插件</h2>
+  <p class="post-date">2017-07-16</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="插件的强大之处"><a href="#插件的强大之处" class="headerlink" title="插件的强大之处"></a>插件的强大之处</h3><p>在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提供了提供模块开发机制，但是相对来说更底层一些，并且需要使用 C/C++ 来开发，对于很多开发人员来说 Nginx 仍为一个黑盒。OpenResty 集成了很多好用插件，并提供了通过 Lua 扩展 Nginx 的机制，所以 OpenResty 相对来说更灵活。而 Kong 在 OpenResty 基础上提供的插件机制更灵活，在于： </p>
+<blockquote>
+<p>​        复用：OpenResty 的复用在于函数级别，我们可以把一些通用的 Lua 函数引入各个项目。而 Kong 的插件复用可以通过 API 修改一下配置即可。是否启用某个插件，这只是数据配置问题，启用与否不会涉及到代码的改动。</p>
+</blockquote>
+<blockquote>
+<p>抽象、统一: Kong 实现了基础的插件配置的存储和更新机制，所以我们只需按照要求定义插件配置的数据类型，插件实现的时候不用再去关心这些细节。</p>
+</blockquote>
+<blockquote>
+<p>灵活、组合: OpenResty 的一些处理部分有限制，比如 access_by_lua 在同一个 location 能调用一次， 当然我们可以把多个处理逻辑都放在这里，这又涉及到代码改动。 而 Kong 可以依次调用各个插件对应的 phase，并且通过引入优先级来解决前后顺序问题。</p>
+</blockquote>
+<p>插件开发的原则是提供机制，而非实现，在做插件开发的时候一定需要考虑这个插件能否满足一类相似的需求，这样我们只需要做一下参数的配置就能把插件启动在另外一个站点上。</p>
+<p>对于插件这块我的疑问在于这套机制如何运行的？如何找到站点对应的插件？如此多的插件是否会有性能问题？​</p>
+<h3 id="Kong-插件的运行机制"><a href="#Kong-插件的运行机制" class="headerlink" title="Kong 插件的运行机制"></a>Kong 插件的运行机制</h3><p>在上一文 Kong 初始化分析中，我们看到 nginx_kong.lua 模板文件里面有这么一段代码：</p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua">location <span class="token operator">/</span> <span class="token punctuation">&#123;</span> 
+  <span class="token function">rewrite_by_lua_block</span> <span class="token punctuation">&#123;</span>
+      kong<span class="token punctuation">.</span><span class="token function">rewrite</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token function">access_by_lua_block</span> <span class="token punctuation">&#123;</span>
+      kong<span class="token punctuation">.</span><span class="token function">access</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token function">header_filter_by_lua_block</span> <span class="token punctuation">&#123;</span>
+      kong<span class="token punctuation">.</span><span class="token function">header_filter</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token function">body_filter_by_lua_block</span> <span class="token punctuation">&#123;</span>
+      kong<span class="token punctuation">.</span><span class="token function">body_filter</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token function">log_by_lua_block</span> <span class="token punctuation">&#123;</span>
+      kong<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在 kong.lua 文件里面， kong.access 的实现是这样的：</p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">function</span> Kong<span class="token punctuation">.</span><span class="token function">access</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  core<span class="token punctuation">.</span>access<span class="token punctuation">.</span><span class="token function">before</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">for</span> plugin<span class="token punctuation">,</span> plugin_conf <span class="token keyword">in</span> 
+      <span class="token function">plugins_iterator</span><span class="token punctuation">(</span>singletons<span class="token punctuation">.</span>loaded_plugins<span class="token punctuation">,</span> <span class="token keyword">true</span><span class="token punctuation">)</span> <span class="token keyword">do</span>
+    plugin<span class="token punctuation">.</span>handler<span class="token punctuation">:</span><span class="token function">access</span><span class="token punctuation">(</span>plugin_conf<span class="token punctuation">)</span>
+  <span class="token keyword">end</span>
+
+  core<span class="token punctuation">.</span>access<span class="token punctuation">.</span><span class="token function">after</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>从这里可以看出 Kong 的插件运行机制就是从 loaded_plugins 里面依次执行。 学习 Kong 插件开发的方法是参考现有的一些插件实现，学着写几个就会了。用户自己定义的插件是在 base_plugin 基类上继承而来。Kong 里面使用的了<a target="_blank" rel="noopener" href="https://github.com/rxi/classic"> 这套 class 机制</a>，可以看到使用 Lua 实现面向对象还是很简单的。</p>
+<h3 id="singletons-loaded-plugins"><a href="#singletons-loaded-plugins" class="headerlink" title="singletons.loaded_plugins"></a>singletons.loaded_plugins</h3><p><a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L156">singletons.loaded_plugins</a>在这里初始化的，在具体<a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L70">实现过程中</a>就是从数据库里面把插件配置读出，</p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">local</span> ok<span class="token punctuation">,</span> handler <span class="token operator">=</span> utils<span class="token punctuation">.</span><span class="token function">load_module_if_exists</span><span class="token punctuation">(</span><span class="token string">"kong.plugins."</span> <span class="token operator">..</span> plugin <span class="token operator">..</span> <span class="token string">".handler"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p> 在每一个插件在 handler.lua 的最后都是 return XXXXHandler，所以在调用 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L105">handler()</a>后我们在内存中导入了插件的对象。另外在初始化后需要<a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L116">按照优先级来排序</a>，以此来保证各个插件之间的执行顺序。</p>
+<p>从上面的分析上看出，插件导入后都会在内存中的全局对象中存储，后面的开销在于依次迭代插件。</p>
+<h3 id="plugins-iterator"><a href="#plugins-iterator" class="headerlink" title="plugins_iterator"></a>plugins_iterator</h3><p>我们再来看看某个站点是否启用某个插件是如何处理的，最主要的实现在于 plugins_iterator 这个函数。首先我们得理解如何确定当前 request 对应的唯一标识符， 在 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/blog-ref/kong/core/handler.lua#L128">core.handler.access</a> 的过程中保存了经过路由后的 api 在 ngx.ctx 里，这个 ngx.ctx 会在整个 request 处理过程中反复被使用。再回到 plugins_interator 函数，这个函数的参数有两个，后一个叫 access_or_cert_ctx， 因为对于一个 request 处理中 plugins_iterator 会调用多次，这个参数的作用在于判断是否是第一个调用这个函数。第一次调用可能发生在<a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L219">ssl_certificate</a>或者<a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L297">access</a> 阶段， 因为在 ctx 里面 Kong 还是初始化了一个叫做<code>ctx.plugins_for_request</code>的变量来存储当前 request 启用的插件，这样后续 iterator 阶段就完全不会去重复 load 插件配置，这样做当然是为了性能上的考虑。</p>
+<p>读取插件配置的函数调用是： </p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">if</span> api <span class="token keyword">then</span>
+   plugin_configuration <span class="token operator">=</span> <span class="token function">load_plugin_configuration</span><span class="token punctuation">(</span>api<span class="token punctuation">.</span>id<span class="token punctuation">,</span> consumer_id<span class="token punctuation">,</span> plugin<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/blog-ref/kong/core/plugins_iterator.lua#L38">load_plugin_configuration</a>也会首先尝试从内存缓存中取，如果取不到再从数据库中取出，然后存储在缓存中。</p>
+<p>从上面的分析看出，插件相关的读取和执行在大部分时间里是完全不会去读数据库的，所以性能损失并不会大。</p>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p>Kong 的插件部分并没有错误处理部分，从现有代码上看错误处理分两个部分：</p>
+<p>一种方式是<a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/blog-ref/kong/tools/responses.lua">responses.lua</a>， 如果是在 Kong 的 Lua 代码部分检查出来的错误一般使用类似<a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/blog-ref/kong/kong.lua#L250">responses.send(500)</a>这样的方式来向客户端返回错误码。</p>
+<p>第二种是通过 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/blog-ref/kong/templates/nginx_kong.lua#L81">kong_error_handler</a>。 这种错误可能是执行了 ngx.exit(500) 之类的代码或者是 Nginx 内部触发的。</p>
+<p>这在某些情况下对用户不友好，我们不能只简单地返回一个错误信息，有的时候我们需要展示一个漂亮些的错误页面或者是把请求转到别的降级站点，对于这个需求我做了<a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/tree/custom-error-handle">一个分支来扩展错误处理</a>。 目前实现还未完整，不过已经可以定制化错误页面了。 这里增加了一个 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/custom-error-handle/kong/templates/nginx_kong.lua#L113">ngx.var.api_id</a>，这个变量的初始化也在 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/kong/blob/60c934c851f41dfd6a921995a2568905284af742/kong/core/handler.lua#L98">core.access 阶段</a>。因为存储在 ngx.ctx 里的这些信息在执行了 ngx.exit 之后已经释放了，所以我需要一个 ngx.var 级别的变量存储 api_id，然后使用这个变量来判断 error-handler 插件是否启用。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Lua" >
+    <span class="tag-code">Lua</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2017/07/22/kong-intro-4.html">
+        <span class="nav-arrow">← </span>
+        
+          Kong 源码分析：缓存
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2017/07/07/kong-intro-2.html">
+        
+          Kong 源码分析：启动
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%8F%92%E4%BB%B6%E7%9A%84%E5%BC%BA%E5%A4%A7%E4%B9%8B%E5%A4%84"><span class="toc-nav-text">插件的强大之处</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Kong-%E6%8F%92%E4%BB%B6%E7%9A%84%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="toc-nav-text">Kong 插件的运行机制</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#singletons-loaded-plugins"><span class="toc-nav-text">singletons.loaded_plugins</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#plugins-iterator"><span class="toc-nav-text">plugins_iterator</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="toc-nav-text">错误处理</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2017/07/16/kong-intro-3.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>

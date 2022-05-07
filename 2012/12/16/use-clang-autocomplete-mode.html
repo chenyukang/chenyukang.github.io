@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="Clang is Making Emacs Smarter | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    Clang is Making Emacs Smarter |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Clang is Making Emacs Smarter</h2>
+  <p class="post-date">2012-12-16</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box" style="max-width: 850px" >
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>在 Emacs 下自动补全总是个问题，对于同一个 buffer 内的基于 symbol 补全 auto-complete-mode 做得非常好了，但是因为没有进行代码的分析，所以像结构体的成员变量或者类的成员函数的补全是不可能的。当然你可能试过这个号称最智能的<a target="_blank" rel="noopener" href="http://cx4a.org/software/gccsense/">GCCSence</a>,但是我觉得这个东西够复杂的，在使用之前还需要用户手动运行一个命令来用 Gcc 处理一遍，它还会把一些东西放在 sqlite 数据库里面。这大概是因为 Gcc 不编译做静态分析工具造成的，在<a target="_blank" rel="noopener" href="http://lwn.net/Articles/493599/">这里</a>、<a target="_blank" rel="noopener" href="http://lwn.net/Articles/493627/">这里</a>、<a target="_blank" rel="noopener" href="http://lwn.net/Articles/493630/">这里</a>有讨论，Google 的一个静态分析的项目从 Gcc 迁移到 LLVM，重点是这：</p>
+<pre><code>The gcc version has been difficult to support and maintain, due mainly to the fact that the GIMPLE intermediate language was never designed for static analysis. The abstract syntax tree provided by Clang is an easier data structure to work with for front-end analyses of this kind.
+</code></pre><p>这个 thread 挺好玩的，后面变成了一大群人争论 functional programming 和 Imperative Programming。这篇<a target="_blank" rel="noopener" href="http://fpcomplete.com/the-downfall-of-imperative-programming/">The Downfall of Imperative Programming</a>再好好看看。</p>
+<p>回到正题，我最近切换到 Mac 下。因为在 Mac OS X 下编译器变成了 Clang， Clang 是基于 LLVM 的。LLVM 对于分析代码是有比较方便的支持，所以基于 LLVM 有各种分析源程序的工具了，Xcode 下的一些辅助开发的工具还是很舒服的。前些天突然想到那么会不会有个东西来作为 Emacs 的自动补全的后端，一搜果然有了这个<a target="_blank" rel="noopener" href="https://github.com/mikeandmore/auto-complete-clang">auto-complete-clang</a>，使用了一下非常的方便。其实看看其代码是在后面调用 Clang 的，比如在 main.cc 源文件里面写一些代码：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;string></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;vector></span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Demo</span><span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">void</span> <span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">private</span><span class="token operator">:</span>
+    <span class="token keyword">int</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    std<span class="token double-colon punctuation">::</span>string s<span class="token punctuation">;</span>
+    Demo demo<span class="token punctuation">;</span>
+    demo<span class="token punctuation">.</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>结果还是非常精准的，不想截图了。后端运行的命令其实是：<br><pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">cmd: clang -cc1 main.cc -fsyntax-only -code-completion-at main.cc:18:10<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></p>
+<p>所得到的结果是：<br><pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">COMPLETION: Demo : Demo::
+COMPLETION: operator&#x3D; : [#Demo &amp;#]operator&#x3D;(&lt;#const Demo &amp;#&gt;)
+COMPLETION: print : [#void#]print()
+COMPLETION: test : [#void#]test()
+COMPLETION: value : [#int#]value
+COMPLETION: ~Demo : [#void#]~Demo()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
+<p>auto-complete-clang 做的事情就是把这个结果再展示出来，其实这条命令也做了语法检查的，所以加上一个语法检查的功能应该也是可以的。一搜果然还是有了，看这个<a target="_blank" rel="noopener" href="http://duncan.mac-vicar.com/2011/08/30/realtime-syntax-checking-with-emacs/">Realtime syntax checking with emacs</a>，需要翻墙，不过代码在<a target="_blank" rel="noopener" href="https://github.com/dmacvicar/duncan-emacs-setup/tree/master/site-lisp">Github 上</a>。其实其后端运行的命令是：</p>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">cmd: clang  -fsyntax-only -fno-exceptions main.cc<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>最近用这个插件，基本代码都会是一遍编译通过啊，哈哈。Clang 错误提示也人性化一点，比如在 Xcode 下会提示你想的是不是”XXX”之类的。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Emacs" >
+    <span class="tag-code">Emacs</span>
+  </a>
+
+  <a href="/tags#LLVM" >
+    <span class="tag-code">LLVM</span>
+  </a>
+
+  <a href="/tags#Gcc" >
+    <span class="tag-code">Gcc</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/2012/12/26/browser-objs-in-ruby.html">
+        <span class="nav-arrow">← </span>
+        
+          Browser objs and class hie ...
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/2012/12/13/have-a-try-for-ninja.html">
+        
+          Have a try on Ninja
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2012/12/16/use-clang-autocomplete-mode.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
