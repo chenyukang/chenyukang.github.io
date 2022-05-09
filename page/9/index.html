@@ -56,28 +56,6 @@
 
   
   
-      <!-- MathJax support START -->
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <!-- MathJax support END -->
-  
 
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -182,298 +160,582 @@
   </div>
 </header>
 
-    <main class="app-body" style="max-width: 760px">
-    
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/deep-work/">《深度工作 - 如何有效使用每一点脑力》读后</a>
-      </h2>
-      <p class="article-date">September 14, 2017
-          
-              
-  <a href="/tags#Books" >
-    <span class="tag-code">Books</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                深度工作这本书主要讲解了一些时间和精力管理方面的东西，人到了一定年龄就会觉得时间不够用，日子过得太快，每天觉得都没干什么就过去了。工作几年后这种感觉时不时袭来。反而是如果某段时间一直有一个阶段性的目标，就会觉得很踏实，进度和效率也可以。那种完全沉浸在思考中的状态真的也并不是累，相反所得到 .....
-            
-        
-      </div>
       
-          <a class="more" href="/p/deep-work/">阅读全文</a>
-      
-    </article>
   
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/kong-new-release/">Kong 的 0.11.0 版本</a>
-      </h2>
-      <p class="article-date">September 12, 2017
-          
-              
-  <a href="/tags#Kong" >
-    <span class="tag-code">Kong</span>
-  </a>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
+  <div id="home-banner">
+    <div class="app-body" style="max-width: 760px; text-align: left; padding-top: 0px;">
+      <main class="home-body">
+        
 
-          
-      </p>
-      <div class="article-summary">
+
+        
+        <h2> 当前 9，共 21 页 </h2>
         
         
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/deep-work/">《深度工作 - 如何有效使用每一点脑力》读后</a>
+          </h3>
+          <p class="article-date">2017-09-14</p>
+          <div class="article-summary">
             
-                Kong 发布了新的版本0.11.0，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了 serf，这样整个 Kong 节点之间的缓存同步方式变化了。开发者给出的理由如下： 
+            
+            深度工作这本书主要讲解了一些时间和精力管理方面的东西，人到了一定年龄就会觉得时间不够用，日子过得太快，每天觉得都没干什么就过去了。工作几年后这种感觉时不时袭来。反而是如果某段时间一直有一个阶段性的目标，就会觉得很踏实，进度和效率也可以。那种完全沉浸在思考中的状态真的也并不是累，相反所 ...... 
+            
+          </div>
+        </article>
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/kong-new-release/">Kong 的 0.11.0 版本</a>
+          </h3>
+          <p class="article-date">2017-09-12</p>
+          <div class="article-summary">
+            
+            
+            Kong 发布了新的版本0.11.0，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了 serf，这样整个 Kong 节点之间的缓存同步方式变化了。开发者给出的理由如下： 
 
 依赖 serf，serf 并不属于 Nginx/OpenResty
-这种依赖相互间通信来同步的机制对于 .....
+这种依赖相互间通信来同步的机制 ...... 
             
+          </div>
+        </article>
         
-      </div>
-      
-          <a class="more" href="/p/kong-new-release/">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/lua-time-related/">Lua 时间处理</a>
-      </h2>
-      <p class="article-date">September 12, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
+        <article class="article-card">
+          <h3>
+            <a href="/p/lua-time-related/">Lua 时间处理</a>
+          </h3>
+          <p class="article-date">2017-09-12</p>
+          <div class="article-summary">
             
-                我需要用 Lua 处理一个与时间相关的问题，比如我们在配置文件里面配置一个日期 (北京时间)，然后在 Openresty 里面判断当前时间是否在这个日期之前或者之后来做对应的逻辑。
+            
+            我需要用 Lua 处理一个与时间相关的问题，比如我们在配置文件里面配置一个日期 (北京时间)，然后在 Openresty 里面判断当前时间是否在这个日期之前或者之后来做对应的逻辑。
 Lua 的时间处理还有点麻烦，主要是自带的相关库函数比较少。
 
-os.time()             .....
+os.time()           ...... 
             
+          </div>
+        </article>
         
-      </div>
-      
-          <a class="more" href="/p/lua-time-related/">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/pl-practice-with-exercism/">使用 exercism 来练手学语言</a>
-      </h2>
-      <p class="article-date">August 22, 2017
-          
-              
-  <a href="/tags#PL" >
-    <span class="tag-code">PL</span>
-  </a>
+        <article class="article-card">
+          <h3>
+            <a href="/p/pl-practice-with-exercism/">使用 exercism 来练手学语言</a>
+          </h3>
+          <p class="article-date">2017-08-22</p>
+          <div class="article-summary">
+            
+            
+            有时候我们想学一门编程语言，但是光看看书和代码用例总是找不到感觉，这时候我们应该尝试写点不短不长的程序片段，可能是一个函数，或者是实现一个简单的算法。最近我发现这个叫做exercism.io的网站不错，自己也在闲余时间在上面看看。
+这里支持 30 多种编程语言，每种语言大概有 80  ...... 
+            
+          </div>
+        </article>
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/migrate-to-hexo/">从 Jekyll 换成 Hexo</a>
+          </h3>
+          <p class="article-date">2017-08-12</p>
+          <div class="article-summary">
+            
+            
+            昨天看到自己的 Blog 在移动端显示丑死了，所以想着优化一下，找一个 mobile first 的风格试试。顺便把 blog 从 jekyll 换成了 Hexo。最后找到这个 hexo 的主题非常顺眼，便拿来用了，感谢yanm1ng为大家提供如此优秀的主题。回想起自己之前用过搜狐博 ...... 
+            
+          </div>
+        </article>
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/kong-intro-5/">Kong 源码分析：事件</a>
+          </h3>
+          <p class="article-date">2017-07-23</p>
+          <div class="article-summary">
+            
+            
+            Kong 的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。
+worker 模型假设我们对 Kong 做了一个更改的请求，这个请求通常是通过 admin_api 这个路由处理的。也就是说最终执行数据库操作的动作是在一个 Nginx worker 进程里。因 ...... 
+            
+          </div>
+        </article>
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/kong-intro-4/">Kong 源码分析：缓存</a>
+          </h3>
+          <p class="article-date">2017-07-22</p>
+          <div class="article-summary">
+            
+            
+            Nginx 里的缓存使用在 Kong 里面我们缓存的内容大部分是配置，不管是 API 本身的配置还是插件相关的配置，缓存之后就存储在内存中。
+Kong 里的缓存基础代码在 tools/database_cache.lua 文件里面。这里又分两种类型的缓存，一种是shared dict ...... 
+            
+          </div>
+        </article>
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/kong-intro-3/">Kong 源码分析：插件</a>
+          </h3>
+          <p class="article-date">2017-07-16</p>
+          <div class="article-summary">
+            
+            
+            插件的强大之处在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提供了提供模块开发机制，但是相对来说更底层一些，并且需要使用 C/C++ 来开发，对于很多开发人员来说 Nginx 仍为一个黑盒。OpenResty 集成了很多好用插件，并 ...... 
+            
+          </div>
+        </article>
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/kong-intro-2/">Kong 源码分析：启动</a>
+          </h3>
+          <p class="article-date">2017-07-07</p>
+          <div class="article-summary">
+            
+            
+            Kong 的初始化过程安装好 Kong 之后我们是用命令sudo ./bin/kong start -c kong.conf -vv来启动。其中 kong.conf 为配置文件，-vv选项打印出一些重要信息展示出来，方便发现问题。
+可以看到./bin/kong是一个脚本，是用的#!/ ...... 
+            
+          </div>
+        </article>
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/kong-intro/">Kong 源码分析</a>
+          </h3>
+          <p class="article-date">2017-07-02</p>
+          <div class="article-summary">
+            
+            
+            缘由最近在工作上接触了Kong这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一些涉及各个系统的功能就很困难。比如我们前段时间实现的灰度系统就把人折腾得很惨。因为我们的设计中有一些 http header 需要在各个系统之间传递。每个项目的 Ngin ...... 
+            
+          </div>
+        </article>
+        
 
-          
-      </p>
-      <div class="article-summary">
         
-        
-            
-                有时候我们想学一门编程语言，但是光看看书和代码用例总是找不到感觉，这时候我们应该尝试写点不短不长的程序片段，可能是一个函数，或者是实现一个简单的算法。最近我发现这个叫做exercism.io的网站不错，自己也在闲余时间在上面看看。
-这里支持 30 多种编程语言，每种语言大概有 80 个左 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/p/pl-practice-with-exercism/">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/migrate-to-hexo/">从 Jekyll 换成 Hexo</a>
-      </h2>
-      <p class="article-date">August 12, 2017
-          
-              
-  <a href="/tags#Blog" >
-    <span class="tag-code">Blog</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                昨天看到自己的 Blog 在移动端显示丑死了，所以想着优化一下，找一个 mobile first 的风格试试。顺便把 blog 从 jekyll 换成了 Hexo。最后找到这个 hexo 的主题非常顺眼，便拿来用了，感谢yanm1ng为大家提供如此优秀的主题。回想起自己之前用过搜狐博客， .....
-            
-        
-      </div>
-      
-          <a class="more" href="/p/migrate-to-hexo/">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/kong-intro-5/">Kong 源码分析：事件</a>
-      </h2>
-      <p class="article-date">July 23, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Kong 的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。
-worker 模型假设我们对 Kong 做了一个更改的请求，这个请求通常是通过 admin_api 这个路由处理的。也就是说最终执行数据库操作的动作是在一个 Nginx worker 进程里。因为操 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/p/kong-intro-5/">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/kong-intro-4/">Kong 源码分析：缓存</a>
-      </h2>
-      <p class="article-date">July 22, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Nginx 里的缓存使用在 Kong 里面我们缓存的内容大部分是配置，不管是 API 本身的配置还是插件相关的配置，缓存之后就存储在内存中。
-Kong 里的缓存基础代码在 tools/database_cache.lua 文件里面。这里又分两种类型的缓存，一种是shared dict,  .....
-            
-        
-      </div>
-      
-          <a class="more" href="/p/kong-intro-4/">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/kong-intro-3/">Kong 源码分析：插件</a>
-      </h2>
-      <p class="article-date">July 16, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                插件的强大之处在我自己使用 Kong 的过程中，最方便的还是在于 Kong 的强大的插件机制。 Nginx 本身提供了提供模块开发机制，但是相对来说更底层一些，并且需要使用 C/C++ 来开发，对于很多开发人员来说 Nginx 仍为一个黑盒。OpenResty 集成了很多好用插件，并提供 .....
-            
-        
-      </div>
-      
-          <a class="more" href="/p/kong-intro-3/">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/kong-intro-2/">Kong 源码分析：启动</a>
-      </h2>
-      <p class="article-date">July 7, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                Kong 的初始化过程安装好 Kong 之后我们是用命令sudo ./bin/kong start -c kong.conf -vv来启动。其中 kong.conf 为配置文件，-vv选项打印出一些重要信息展示出来，方便发现问题。
-可以看到./bin/kong是一个脚本，是用的#!/us .....
-            
-        
-      </div>
-      
-          <a class="more" href="/p/kong-intro-2/">阅读全文</a>
-      
-    </article>
-  
-    <article class="article-card">
-      <h2 class="article-head" font-color="red">
-        <a href="/p/kong-intro/">Kong 源码分析</a>
-      </h2>
-      <p class="article-date">July 2, 2017
-          
-              
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
-  </a>
-
-          
-      </p>
-      <div class="article-summary">
-        
-        
-            
-                缘由最近在工作上接触了Kong这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一些涉及各个系统的功能就很困难。比如我们前段时间实现的灰度系统就把人折腾得很惨。因为我们的设计中有一些 http header 需要在各个系统之间传递。每个项目的 Nginx  .....
-            
-        
-      </div>
-      
-          <a class="more" href="/p/kong-intro/">阅读全文</a>
-      
-    </article>
-  
-
-  
-    <div class="guide-pager">
+        <div class="guide-pager">
   
     <a href="/page/8/"><span class="page-arrow">← </span>Prev</a>
   
+    <a><span class="page-arrow"> 9 / 21 </span></a>
   
     <a href="/page/10/">Next<span class="page-arrow"> →</span></a>
   
 </div>
 
-  
-</main>
-
-
+        
+    </div>
+    </main>
     <div class="scroll-top">
   <span class="arrow-icon"></span>
 </div>
