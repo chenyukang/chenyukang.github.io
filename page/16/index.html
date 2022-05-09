@@ -577,156 +577,80 @@
 
 
         
-        <h2> 当前 16，共 21 页 </h2>
+        <h2> 当前 16，共 41 页 </h2>
         
         
         
         <article class="article-card">
           <h3>
-            <a href="/p/branch_prediction/">分支预测优化</a>
+            <a href="/p/overcommit/">使用 overcommit 生成 git hooks</a>
           </h3>
-          <p class="article-date">2012-07-11</p>
+          <p class="article-date">2018-02-26</p>
           <div class="article-summary">
             
             
-            问题Stack_overflow 上有这么一个帖子：为什么排序后会快很多，说是下面这段代码比较诡异，引发了比较多的回复，一起来看看。
-#include &lt;algorithm>
-#include &lt;ctime>
-#include &lt;iostream>
+            git hooks很方便地可以在 git 操作流程的各个阶段加入 hooks，比如执行一些脚本来检查代码风格、跑单元测试、做代码静态检查等。git hooks 的试用方法是在.git/hooks 目录下写各种脚本，但是.git 目录的这些脚本是不会 checkin 到 repo 里的 ...... 
+            
+          </div>
+        </article>
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/nginx-https-too-many-redirect/">Nginx https too many redirect</a>
+          </h3>
+          <p class="article-date">2018-02-23</p>
+          <div class="article-summary">
+            
+            
+            Http 请求在经过多层 Nginx 的时候，通常强制 http 跳转到 https 的时候会这样配置：
+return 302 https://$host$request_uri; 
+## 需要注意这里是 request_uri 而不是 uri，否则会引起安全问题
+但是如果是多层 N ...... 
+            
+          </div>
+        </article>
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/linux-source/">Linux 当前 shell 执行命令</a>
+          </h3>
+          <p class="article-date">2018-02-22</p>
+          <div class="article-summary">
+            
+            
+            Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要 unset 当前 shell 的环境变量等，
+#!/usr/bin/env zsh
 
-int mai ...... 
+if [ -z $http_proxy ]; then
+    echo "not  ...... 
             
           </div>
         </article>
         
         <article class="article-card">
           <h3>
-            <a href="/p/gdb-with-libso/">GDB 调试动态链接库</a>
+            <a href="/p/ruby-open-vul/">Ruby 的 open 函数导致命令执行</a>
           </h3>
-          <p class="article-date">2012-06-25</p>
+          <p class="article-date">2018-02-12</p>
           <div class="article-summary">
             
             
-            今天解决了一个长期会碰到的问题，就是用 GDB 如何来调试动态链接库。我这个问题的难点是我的需要调试代码是在动态链接库里面，但是启动的不是普通的可以调试的二进制文件，换句话说这不是我所能控制的代码所编译出来的，甚至可能是由脚本程序来控制启动的。这个问题时不时地困扰着我，总结一下尝试过 ...... 
-            
-          </div>
-        </article>
-        
-        <article class="article-card">
-          <h3>
-            <a href="/p/bsfl-bitmap/">bsfl 指令和 Bitmap 的一个优化</a>
-          </h3>
-          <p class="article-date">2012-06-20</p>
-          <div class="article-summary">
-            
-            
-            如何找出 int 中第一个 1对于这个问题我们可以从最原始的做法开始，如果没找到 1 返回 0，如果第一位为 1 返回 1。所以代码很简单如下：
-static int first_onebit(int x)&#123;
-    if(!x)
-        return 0;
-    ...... 
-            
-          </div>
-        </article>
-        
-        <article class="article-card">
-          <h3>
-            <a href="/p/try-jekyll-git/">使用 Jekyll 和 Github 搭建博客</a>
-          </h3>
-          <p class="article-date">2012-06-13</p>
-          <div class="article-summary">
-            
-            
-            为什么要折腾折腾了几次终于把博客从 wordpress 搬到 Github 了，迁徙这事本来是够麻烦的，而且也比较无聊。不过最终还是抑制不住诱惑，这有下面几点点好处。
+            说明首先看看 open 函数的文档说明：https://apidock.com/ruby/v1_9_3_392/Kernel/open/class： 
 
-
-编辑方便，专注写作
-在线下编辑，可以随便选择自己喜欢的编辑器。当然 wordpress 也有离线编辑工具，不过  ...... 
+If path starts with a pipe character, a subprocess is created, co ...... 
             
           </div>
         </article>
         
         <article class="article-card">
           <h3>
-            <a href="/p/find-duplicated-cycle-detection/">Find duplicated Number and Cycle detection</a>
+            <a href="/p/bucklescript-and-reason/">BuckleScript and Reason</a>
           </h3>
-          <p class="article-date">2012-04-11</p>
+          <p class="article-date">2017-09-17</p>
           <div class="article-summary">
             
             
-            一个有趣的问题，据说这个题目耗费了 Don Knuth 24 小时解决。一起来看看。
-
- You are given an array of integers of length n, where each element ranges  from 0 to n - 2, inclu ...... 
-            
-          </div>
-        </article>
-        
-        <article class="article-card">
-          <h3>
-            <a href="/p/eproject/">eproject</a>
-          </h3>
-          <p class="article-date">2012-03-08</p>
-          <div class="article-summary">
-            
-            
-            我之前一直用的是 project-mode.el 来管理项目，在碰上代码很多的工程时还是有点不方便，源文件太多速度有点慢。快速检索文件还是可以，需要指定代码目录，可以增加目录。工程的概念还是不太直观，主要用来快速查找文件。 以前看有同学推荐过 eproject，当时没仔细看。这会儿想 ...... 
-            
-          </div>
-        </article>
-        
-        <article class="article-card">
-          <h3>
-            <a href="/p/a-emacs-func/">A Emacs func</a>
-          </h3>
-          <p class="article-date">2011-12-21</p>
-          <div class="article-summary">
-            
-            
-            这个操作好像经常要用到，拷贝当前光标连续的一段字符串 (除了空白和换行), 写了个小函数来实现。
-(defun get-continue-string ()
-  (interactive)
-  (skip-chars-backward &quot;^ \n&quot;)
-  (set ...... 
-            
-          </div>
-        </article>
-        
-        <article class="article-card">
-          <h3>
-            <a href="/p/basketball/">A Basket-Ball Demo</a>
-          </h3>
-          <p class="article-date">2011-10-20</p>
-          <div class="article-summary">
-            
-            
-            最近闲暇时间用 C++ 写了个小 Demo，一个小小的篮球模拟。在学校的时候看过《人工智能编程精粹》，里面有个足球模拟，看起来还比较逼真。我这个篮球模拟是比较类似的，主要好玩的地方是在于状态机。图形方面做得很简单，还是用 OpenGL 来实现的，另外用了一个库 glui，这个东西很好 ...... 
-            
-          </div>
-        </article>
-        
-        <article class="article-card">
-          <h3>
-            <a href="/p/xingshi/">姓氏的消失</a>
-          </h3>
-          <p class="article-date">2011-09-25</p>
-          <div class="article-summary">
-            
-            
-            前些天看到一篇文章有点意思。假设，人口的数目不变，儿子的姓氏随着父亲，那么随着时间的推移一代一代的演化，最后所有的人都只有一个姓了。具体用个例子描述就是：100 个父亲，按照上面的假设会有 100 个儿子，也就是平均每个父亲在下一代会有一个儿子，假设某个父亲姓”王”，并且王在父亲这一 ...... 
-            
-          </div>
-        </article>
-        
-        <article class="article-card">
-          <h3>
-            <a href="/p/life_in_shangha/">在外漂着</a>
-          </h3>
-          <p class="article-date">2011-08-18</p>
-          <div class="article-summary">
-            
-            
-            来上海有一段时间了，在这段时间里一切都还好。
-刚来这边一切都感觉比较新鲜，现在慢慢习惯了。在这边的生活比较规律，每天早上八点四十起来，洗刷完毕，早饭是面包片和同事磨的豆浆。这近两个月早餐都是这样，我觉得挺好的，一点都还没感觉到腻，带黑芝麻或者葡萄干的面包片真的很好吃！每天的九点钟开始 ...... 
+            BuckleScript虽然我不是前端工程师，不过因为喜欢 OCaml，所以偶尔关注 BuckleScript 有一段时间了，今天又花时间看了看文档和代码。BuckleScript 是张宏波主导开发的开源项目，『有希望成为第一个完全由国人设计主导实现并被世界各地广泛使用的编译器』，不 ...... 
             
           </div>
         </article>
@@ -737,7 +661,7 @@ static int first_onebit(int x)&#123;
   
     <a href="/page/15/"><span class="page-arrow">← </span>Prev</a>
   
-    <a><span class="page-arrow"> 16 / 21 </span></a>
+    <a><span class="page-arrow"> 16 / 41 </span></a>
   
     <a href="/page/17/">Next<span class="page-arrow"> →</span></a>
   
