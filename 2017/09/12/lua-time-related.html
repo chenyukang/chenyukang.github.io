@@ -204,9 +204,9 @@
 <p>在 OpenResty 的世界里，不推荐使用这里的标准时间函数，因为这些函数通常会引发不止一个昂贵的系统调用，同时无法为 LuaJIT JIT 编译，对性能造成较大影响。推荐使用 ngx_lua 模块提供的带缓存的时间接口，如 <code>ngx.today</code>, <code>ngx.time</code>, <code>ngx.utctime</code>, <code>ngx.localtime</code>, <code>ngx.now</code>, <code>ngx.http_time</code>，以及 <code>ngx.cookie_time</code> 等。</p>
 </blockquote>
 <p><a target="_blank" rel="noopener" href="https://github.com/stevedonovan/Penlight/blob/master/lua/pl/Date.lua">Penlight</a>库也有很多日期相关的函数封装，不过大多也都使用了 os 相关函数。为了避免多次调用 get_timezone_offset_with_utc我使用了 Kong 里面自带的 cache 相关函数做一下缓存：</p>
-<pre class="line-numbers language-Lua" data-language="Lua"><code class="language-Lua">-- 缓存上面的时区差，减少系统调用
-local offset_with_cst, err &#x3D;
-  cache.get_or_set(&quot;timezone_offset&quot;, nil, get_timezone_offset_with_utc, nil)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token comment">-- 缓存上面的时区差，减少系统调用</span>
+<span class="token keyword">local</span> offset_with_cst<span class="token punctuation">,</span> err <span class="token operator">=</span>
+  cache<span class="token punctuation">.</span><span class="token function">get_or_set</span><span class="token punctuation">(</span><span class="token string">"timezone_offset"</span><span class="token punctuation">,</span> <span class="token keyword">nil</span><span class="token punctuation">,</span> get_timezone_offset_with_utc<span class="token punctuation">,</span> <span class="token keyword">nil</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 </section>
 
     <p></p>
