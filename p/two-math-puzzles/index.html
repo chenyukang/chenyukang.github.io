@@ -174,7 +174,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>前些天在老码农群里看到一个数学 Puzzle，让我联想到另一个红眼睛蓝眼睛的问题，都涉及到一点递归和博弈的意思，仔细思考一下有些趣味，分享给大家。</p>
+    <section class="markdown-content"><p>前些天在老码农群里看到一个数学 Puzzle，让我联想到另一个红眼睛蓝眼睛的问题，感觉都涉及到一点递归和博弈的意思，仔细思考一下有些趣味，分享给大家。</p>
 <h2 id="Sum-and-Product"><a href="#Sum-and-Product" class="headerlink" title="Sum and Product"></a>Sum and Product</h2><p><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=31293611">Sum and Product</a></p>
 <p>随机选择两个数字，都是小于 100 的正整数。Sandy 被告知数字的总和，而 Peter 被告知数字的乘积，假设两个人都是足够理智的情况下，Sandy 和 Peter 之间发生了这个对话：</p>
 <pre class="line-numbers language-none"><code class="language-none">Peter: I don&#39;t know the numbers.  
@@ -194,7 +194,7 @@ Sandy: I don&#39;t know the numbers.
 Peter: I do know the numbers.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>那么这两个数字是多少？</p>
 <p>先自己别看屏幕想个几分钟😏</p>
-<p>注意前提是两个人都理智，知道如何通过目前的情况去推算。从 1 到 100 两两组合一共有 4590 对数字。</p>
+<p>注意前提是两个人都聪明和理智，知道如何通过目前的情况去推算。从 1 到 100 两两组合一共有 4590 对数字。</p>
 <p>Sandy 说我不知道，其实里面隐含着一些信息，因为他知道两个数字之和，所以他说”我不知道”意味着肯定不是 1 + 1, 1 + 2 … 这种组合，因为这些组合的和在这 4590 对数字中是唯一的。因此 Peter 可以根据 Sandy 的信息排除掉这些组合。</p>
 <p>类似的 Peter 每次说”我不知道“的情况下也可以排除一些组合，依次类推如果经过七轮之后，Peter 说我知道了那个组合，也就有了答案。</p>
 <p>通过下面这个 Python 程序更容易理解：</p>
