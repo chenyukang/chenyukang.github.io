@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="两个有趣的数学 Puzzle | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    两个有趣的数学 Puzzle |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>两个有趣的数学 Puzzle</h2>
+  <p class="post-date">2022-05-13</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>前些天在老码农群里看到一个数学 Puzzle，让我联想到另一个红眼睛蓝眼睛的问题，都涉及到一点递归和博弈的意思，仔细思考一下有些趣味，分享给大家。</p>
+<h2 id="Sum-and-Product"><a href="#Sum-and-Product" class="headerlink" title="Sum and Product"></a>Sum and Product</h2><p><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=31293611">Sum and Product</a></p>
+<p>随机选择两个数字，都是小于 100 的正整数。Sandy 被告知数字的总和，而 Peter 被告知数字的乘积，假设两个人都是足够理智的情况下，Sandy 和 Peter 之间发生了这个对话：</p>
+<pre class="line-numbers language-none"><code class="language-none">Peter: I don&#39;t know the numbers.  
+Sandy: I don&#39;t know the numbers.  
+Peter: I don&#39;t know the numbers.  
+Sandy: I don&#39;t know the numbers.  
+Peter: I don&#39;t know the numbers.  
+Sandy: I don&#39;t know the numbers.  
+Peter: I don&#39;t know the numbers.  
+Sandy: I don&#39;t know the numbers.  
+Peter: I don&#39;t know the numbers.  
+Sandy: I don&#39;t know the numbers.  
+Peter: I don&#39;t know the numbers.  
+Sandy: I don&#39;t know the numbers.  
+Peter: I don&#39;t know the numbers.  
+Sandy: I don&#39;t know the numbers.  
+Peter: I do know the numbers.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>那么这两个数字是多少？</p>
+<p>先自己别看屏幕想个几分钟😏</p>
+<p>注意前提是两个人都理智，知道如何通过目前的情况去推算。从 1 到 100 两两组合一共有 4590 对数字。</p>
+<p>Sandy 说我不知道，其实里面隐含着一些信息，因为他知道两个数字之和，所以他说”我不知道”意味着肯定不是 1 + 1, 1 + 2 … 这种组合，因为这些组合的和在这 4590 对数字中是唯一的。因此 Peter 可以根据 Sandy 的信息排除掉这些组合。</p>
+<p>类似的 Peter 每次说”我不知道“的情况下也可以排除一些组合，依次类推如果经过七轮之后，Peter 说我知道了那个组合，也就有了答案。</p>
+<p>通过下面这个 Python 程序更容易理解：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> collections <span class="token keyword">import</span> defaultdict
+
+<span class="token comment"># build pairs</span>
+pairs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        pairs<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">singles_operation</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    results <span class="token operator">=</span> defaultdict<span class="token punctuation">(</span><span class="token builtin">list</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> a<span class="token punctuation">,</span> b <span class="token keyword">in</span> pairs<span class="token punctuation">:</span>
+        results<span class="token punctuation">[</span>f<span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+    singles <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>k<span class="token punctuation">,</span> value<span class="token punctuation">)</span> <span class="token keyword">in</span> results<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># We want to return only the product/sum with one result because if</span>
+        <span class="token comment">#   peter/sandy have this product/sum, then they'll know the two numbers</span>
+        <span class="token keyword">if</span> <span class="token builtin">len</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            singles<span class="token punctuation">.</span>extend<span class="token punctuation">(</span>value<span class="token punctuation">)</span>
+
+    <span class="token comment"># Sorted for readability</span>
+    <span class="token keyword">return</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>singles<span class="token punctuation">,</span> key<span class="token operator">=</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> x<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">def</span> <span class="token function">remove_products</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    singles <span class="token operator">=</span> singles_operation<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">,</span> y<span class="token punctuation">:</span> x <span class="token operator">*</span> y<span class="token punctuation">)</span>
+
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'peter removed'</span><span class="token punctuation">,</span> singles<span class="token punctuation">)</span>
+    <span class="token keyword">for</span> s <span class="token keyword">in</span> singles<span class="token punctuation">:</span>
+        pairs<span class="token punctuation">.</span>remove<span class="token punctuation">(</span>s<span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">remove_sums</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    singles <span class="token operator">=</span> singles_operation<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">,</span> y<span class="token punctuation">:</span> x <span class="token operator">+</span> y<span class="token punctuation">)</span>
+
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'sandy removed'</span><span class="token punctuation">,</span> singles<span class="token punctuation">)</span>
+    <span class="token keyword">for</span> s <span class="token keyword">in</span> singles<span class="token punctuation">:</span>
+        pairs<span class="token punctuation">.</span>remove<span class="token punctuation">(</span>s<span class="token punctuation">)</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    remove_products<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    remove_sums<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># This is the result because it returns the only pair with a product</span>
+<span class="token comment">#   not created by anything else left in the list.</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'result'</span><span class="token punctuation">,</span> singles_operation<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">,</span> y<span class="token punctuation">:</span> x <span class="token operator">*</span> y<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="红眼睛、蓝眼睛悖论"><a href="#红眼睛、蓝眼睛悖论" class="headerlink" title="红眼睛、蓝眼睛悖论"></a>红眼睛、蓝眼睛悖论</h2><p>此问题最早据说是澳大利亚的华裔数学神童陶哲轩在网上贴出来的：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/21262930">红眼睛、蓝眼睛</a></li>
+<li><a target="_blank" rel="noopener" href="https://terrytao.wordpress.com/2008/02/05/the-blue-eyed-islanders-puzzle/">The blue-eyed islanders puzzle</a></li>
+</ul>
+<p>说一个岛上有 100 个人，其中有 5 个红眼睛，95 个蓝眼睛。这个岛有三个奇怪的宗教规则。  </p>
+<ol>
+<li>他们不能照镜子，不能看自己眼睛的颜色。  </li>
+<li>他们不能告诉别人对方的眼睛是什么颜色。  </li>
+<li>一旦有人知道了自己的眼睛颜色，他就必须在<strong>当天夜里</strong>自杀。<br>注：<strong>虽然题设了有 5 个红眼睛，但岛民是不知道具体数字的。</strong>  </li>
+</ol>
+<p>某天，有个旅行者到了这个岛上。由于不知道这里的规矩，所以他在和全岛人一起狂欢的时候，不留神就说了一句话：<strong>你们这里有红眼睛的人。</strong></p>
+<p>最后的问题是：假设这个岛上的人足够聪明，每个人都可以做出缜密的逻辑推理。请问这个岛上将会发生什么？</p>
+<p>这个问题不简单，这个游客说的话看起来没提供什么新的信息，但却能导致诡异的结果，因为 “大家都知道”和“大家知道大家都知道”是不一样的。</p>
+<p>李永乐的这个讲解非常好，感谢 <a target="_blank" rel="noopener" href="https://github.com/SedationH">SedationH</a>  在评论区推荐给我：</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Ws411N77m">你真的看懂《皇帝的新装》了吗？心知肚明和说出来有啥区别？李永乐老师讲“呐喊”的力量</a></p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#技术" >
+    <span class="tag-code">技术</span>
+  </a>
+
+  <a href="/tags#编程" >
+    <span class="tag-code">编程</span>
+  </a>
+
+  <a href="/tags#数学" >
+    <span class="tag-code">数学</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/2022/05/11/brave.html">
+        
+          22 年前，我曾不够勇敢
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Sum-and-Product"><span class="toc-nav-text">Sum and Product</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BA%A2%E7%9C%BC%E7%9D%9B%E3%80%81%E8%93%9D%E7%9C%BC%E7%9D%9B%E6%82%96%E8%AE%BA"><span class="toc-nav-text">红眼睛、蓝眼睛悖论</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2022/05/13/two-math-puzzles.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
