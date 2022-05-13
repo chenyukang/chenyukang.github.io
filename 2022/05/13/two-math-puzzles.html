@@ -194,9 +194,9 @@ Sandy: I don&#39;t know the numbers.
 Peter: I do know the numbers.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>那么这两个数字是多少？</p>
 <p>先自己别看屏幕想个几分钟😏</p>
-<p>注意前提是两个人都聪明和理智，知道如何通过目前的情况去推算。从 1 到 100 两两组合一共有 4590 对数字。</p>
-<p>Sandy 说我不知道，其实里面隐含着一些信息，因为他知道两个数字之和，所以他说”我不知道”意味着肯定不是 1 + 1, 1 + 2 … 这种组合，因为这些组合的和在这 4590 对数字中是唯一的。因此 Peter 可以根据 Sandy 的信息排除掉这些组合。</p>
-<p>类似的 Peter 每次说”我不知道“的情况下也可以排除一些组合，依次类推如果经过七轮之后，Peter 说我知道了那个组合，也就有了答案。</p>
+<p>注意前提是两个人都聪明和理智，知道如何通过目前的情况去推算。</p>
+<p>从 1 到 100 两两组合一共有 4590 对数字。Sandy 说<em>我不知道</em>，其实里面隐含着一些信息，因为他知道两个数字之和，所以他说<em>我不知道</em>意味着肯定不是 1 + 1, 1 + 2 … 这种组合，因为这些组合的和在这 4590 对数字中是唯一的。因此 Peter 可以根据 Sandy 的信息排除掉这些组合。</p>
+<p>类似的 Peter 每次说<em>我不知道</em>的情况下也可以排除一些组合，依次类推如果经过七轮之后，Peter 说我知道了那个组合，也就有了答案。</p>
 <p>通过下面这个 Python 程序更容易理解：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> collections <span class="token keyword">import</span> defaultdict
 
@@ -249,12 +249,13 @@ pairs <span class="token operator">=</span> <span class="token punctuation">[</s
 <li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/21262930">红眼睛、蓝眼睛</a></li>
 <li><a target="_blank" rel="noopener" href="https://terrytao.wordpress.com/2008/02/05/the-blue-eyed-islanders-puzzle/">The blue-eyed islanders puzzle</a></li>
 </ul>
-<p>说一个岛上有 100 个人，其中有 5 个红眼睛，95 个蓝眼睛。这个岛有三个奇怪的宗教规则。  </p>
+<p>一个岛上有 100 个人，其中有 5 个红眼睛，95 个蓝眼睛。这个岛有三个奇怪的宗教规则。  </p>
 <ol>
 <li>他们不能照镜子，不能看自己眼睛的颜色。  </li>
 <li>他们不能告诉别人对方的眼睛是什么颜色。  </li>
-<li>一旦有人知道了自己的眼睛颜色，他就必须在<strong>当天夜里</strong>自杀。<br>注：<strong>虽然题设了有 5 个红眼睛，但岛民是不知道具体数字的。</strong>  </li>
+<li>一旦有人知道了自己的眼睛颜色，他就必须在<strong>当天夜里</strong>自杀。</li>
 </ol>
+<p>注：<strong>虽然题设了有 5 个红眼睛，但岛民是不知道具体数字的。</strong>  </p>
 <p>某天，有个旅行者到了这个岛上。由于不知道这里的规矩，所以他在和全岛人一起狂欢的时候，不留神就说了一句话：<strong>你们这里有红眼睛的人。</strong></p>
 <p>最后的问题是：假设这个岛上的人足够聪明，每个人都可以做出缜密的逻辑推理。请问这个岛上将会发生什么？</p>
 <p>这个问题不简单，这个游客说的话看起来没提供什么新的信息，但却能导致诡异的结果，因为 “大家都知道”和“大家知道大家都知道”是不一样的。</p>
