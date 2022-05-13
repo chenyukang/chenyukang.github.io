@@ -197,7 +197,7 @@ Peter: I do know the numbers.<span aria-hidden="true" class="line-numbers-rows">
 <p>注意前提是两个人都聪明和理智，知道如何通过目前的情况去推算。</p>
 <p>从 1 到 100 两两组合一共有 4590 对数字。Sandy 说<em>我不知道</em>，其实里面隐含着一些信息，因为他知道两个数字之和，所以他说<em>我不知道</em>意味着肯定不是 1 + 1, 1 + 2 … 这种组合，因为这些组合的和在这 4590 对数字中是唯一的。因此 Peter 可以根据 Sandy 的信息排除掉这些组合。</p>
 <p>类似的 Peter 每次说<em>我不知道</em>的情况下也可以排除一些组合，依次类推如果经过七轮之后，Peter 说我知道了那个组合，也就有了答案。</p>
-<p>通过下面这个 Python 程序更容易理解：</p>
+<p>通过下面这个 Python 程序更容易理解，源处 <a target="_blank" rel="noopener" href="https://gist.github.com/jacobgardner/ea202587e46672a89b43">Peter And Sandy</a> ：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> collections <span class="token keyword">import</span> defaultdict
 
 <span class="token comment"># build pairs</span>
@@ -215,7 +215,7 @@ pairs <span class="token operator">=</span> <span class="token punctuation">[</s
     singles <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
     <span class="token keyword">for</span> <span class="token punctuation">(</span>k<span class="token punctuation">,</span> value<span class="token punctuation">)</span> <span class="token keyword">in</span> results<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
         <span class="token comment"># We want to return only the product/sum with one result because if</span>
-        <span class="token comment">#   peter/sandy have this product/sum, then they'll know the two numbers</span>
+        <span class="token comment"># peter/sandy have this product/sum, then they'll know the two numbers</span>
         <span class="token keyword">if</span> <span class="token builtin">len</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
             singles<span class="token punctuation">.</span>extend<span class="token punctuation">(</span>value<span class="token punctuation">)</span>
 
