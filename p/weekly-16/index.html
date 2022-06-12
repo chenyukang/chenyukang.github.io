@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="第 16 期，每天写笔记；写个操作系统来治疗自己；软件工程师如何投入到创作者经济中 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    第 16 期，每天写笔记；写个操作系统来治疗自己；软件工程师如何投入到创作者经济中 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>第 16 期，每天写笔记；写个操作系统来治疗自己；软件工程师如何投入到创作者经济中</h2>
+  <p class="post-date">2022-06-12</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>上周因为家里的事情太忙而断更了一次周刊，没想到收到一些读者的催更😁，看来周期性的更新不止是自己形成了一些写作习惯，有的读者也形成了阅读习惯。</p>
+<p>随着家庭事务增多，独处的时间少了很多，所以没法保证周期性更新，我觉得这没必要强求，写些什么，什么时候写，有感而发挺好的。</p>
+<h2 id="每天写笔记"><a href="#每天写笔记" class="headerlink" title="每天写笔记"></a>每天写笔记</h2><p>近些年笔记管理类软件很火，很多人都在构建自己的第二大脑。而 <a target="_blank" rel="noopener" href="https://twitter.com/dvassallo/status/1534774398200098816">Daniel Vassallo</a> 分享了一下他的看法：</p>
+<p><img src="/images/ob_2022-06-10-183418.png" alt=""><br>在这条推特下面确实有不少人回复说放弃了每天写笔记，原因在于：</p>
+<ul>
+<li>记笔记需要花费时间</li>
+<li>记下的东西大多没用，不会再花时间去看</li>
+<li>重要的东西大脑自然会记下来，不重要的忘记了就算了</li>
+</ul>
+<p>我之前间歇性记录笔记，现在经常记录笔记，这里分享一下自己的体会和经验。我之前也觉得记录笔记太花费时间，特别是我有一些强迫症，如果文档的格式不对或者整个笔记的目录没有整理好，自己感觉就不舒服，所以就会花时间去搞这些。</p>
+<p>但这偏离了记录笔记的原本目标，我们记录笔记的目的是：</p>
+<ul>
+<li>整理思路和想法</li>
+<li>记录 todo，备份常用信息，让自己更有效率</li>
+<li>根据自己的想法和笔记来创作</li>
+</ul>
+<p>在我使用 Obsidian 之后，我逐渐地把记录笔记的时间花费降低了。首先我并不刻意组织文件目录，我只有几个固定的目录，比如 Daily 来存放每天的日志，Pub 来存放会发布出去的内容。这种简单的组织形式减轻了我的心理负担。</p>
+<p><img src="/images/ob_2022-06-10-184646.png" alt=""></p>
+<p>然后我所有笔记通过双链和标签来组织，搜索也是通过关键词和标签：<br><img src="/images/ob_2022-06-10-184805.png" alt=""></p>
+<p>每天我都会像 Roam Research 那样随手把自己的一些想法和日常、看到的好东西、读书笔记、照片、链接等记录到 Daily 的文件夹里，如果是打算以后要做的事情就会再加上一个 todo 标志。</p>
+<p>最近我研究了一下 Telegram 的 bot 接口，然后写了个简单的程序 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/obweb/blob/main/backend/bot.js">obweb/bot.js</a> 来在 Telegram 手机端提交 Daily Notes，不得不说客户端的这种方式比 web 形式方便很多。</p>
+<p><img src="/images/ob_9c2bd540b47265c6d5916eb0c88500f.jpg" alt=""></p>
+<p>顺便分享一下，最近我用 Telegram 比较多，这东西比微信好用多了，并且开放 100 倍，我实现这个笔记 bot 从看文档到完成几乎一小时搞定，而微信估计一个星期还没申请下来接口权限 🤣。关于 Telegram 这还有很多玩法，参考 <a target="_blank" rel="noopener" href="https://reorx.com/blog/sharing-my-footprints-automation/">使用自动化工作流聚合信息摄入和输出</a>。</p>
+<p>我让自己提交记录非常迅速，在手机端就是 append only 式地提交，有时候也使用语音输入，而要大量编辑的时候则使用大屏幕来进行。我尝试过热门的卡片笔记法，但最终还是没有沿用下来，对我而言还是有些复杂，我要找适合自己的方式来记录笔记。</p>
+<p>这一年几乎每天都记录日志，我的感受是好像自己运行的是调试模式，我打开每天的 Daily 就能很快回想起我那天干了什么，产生了什么想法，总体而言我觉得很不错。</p>
+<p><img src="/images/ob_2022-06-10-045806.png" alt=""></p>
+<h2 id="写个操作系统来治疗自己"><a href="#写个操作系统来治疗自己" class="headerlink" title="写个操作系统来治疗自己"></a>写个操作系统来治疗自己</h2><p><a target="_blank" rel="noopener" href="https://awesomekling.github.io/I-quit-my-job-to-focus-on-SerenityOS-full-time/">I quit my job to focus on SerenityOS full time</a></p>
+<p>Andreas Kling 是一个瑞典程序员，从 2018 年 10 月，他刚刚在瑞典的一家戒毒所完成了为期 3 个月的康复计划。</p>
+<p>那段时间他无事可做，处于人生最低谷。所幸他想到了自己曾经很喜欢编程，也喜欢倒腾底层开发，所以他开始用编程来治疗自己。</p>
+<p>从一个简单的 ELF Parser，Ext2 文件系统，一些 GUI 开发，通过不断的日夜编程，他逐渐地开发出一个几乎日常可用的操作系统 <a target="_blank" rel="noopener" href="https://www.serenityos.org/"><strong>SerenityOS</strong></a>，并且也找到了一份开发的工作。随着捐赠越来越多，他辞职全职做自己的操作系统了。</p>
+<p>可以说 Andreas 通过编程治愈了自己，让自己能够进入心流状态，远离了毒品。这个故事引起了很多人的共鸣。</p>
+<blockquote>
+<p>As you probably understand, I’m not trying to get rich by doing this. I’m just a human being trying to stay sane and healthy, and it just so happens that my therapy/self-care project resonates with thousands of people, many of whom want to support it and see where it goes.</p>
+</blockquote>
+<p>目前一群对计算机感兴趣的学习者围绕 SerenityOS 建立起一个热闹的社区，最近他们还开始着手解决 C++ 开发中的内存问题，开始创建一门新的编程语言 <a target="_blank" rel="noopener" href="https://awesomekling.github.io/Memory-safety-for-SerenityOS/">Memory safety for SerenityOS</a>。</p>
+<p>在如今资料浩瀚的时代，写个玩具操作系统不难，但是把一个操作系统做到基本可用，还包括图形界面、浏览器、音乐播放器、画图工具等等，这想想都头大。</p>
+<p><img src="/images/ob_2022-06-10-204824.png" alt=""></p>
+<p>我在学校的时候读过于渊写的<a target="_blank" rel="noopener" href="https://book.douban.com/subject/1422377/">自己动手写操作系统</a>，这本书写得很详细也很用心。但我看完后觉得写操作系统还是很难，后来毕业工作后我业余时间继续在互联网上找资料看，我发现于渊的书让我觉得难是因为其中一大半都在折腾汇编，而我在 <a target="_blank" rel="noopener" href="https://wiki.osdev.org/Expanded_Main_Page">OSDev wiki</a> 上看到其实我们只需要 bootloader 部分写汇编，开发过程中应该尽快进入 C 编程，于是我边看资料边参考其他人的 hobby OS 折腾出来一个 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/Panda">Panda, A hobby OS</a>。</p>
+<p>如果你对计算机感兴趣，自己写一个简单的 OS 非常有帮助，这可以帮你克服对 OS 的恐惧。OS 是贴近硬件一些的复杂程序，开发过程中需要多看看硬件的相关文档，比如 Intel manual 之类的。另外你可以体会到程序开发中的抽象，如何从最底层一层一层地把系统和工具搭建起来，很有玩积木似的成就感。</p>
+<h2 id="软件工程师如何投入到创作者经济中"><a href="#软件工程师如何投入到创作者经济中" class="headerlink" title="软件工程师如何投入到创作者经济中"></a>软件工程师如何投入到创作者经济中</h2><p><a target="_blank" rel="noopener" href="https://blog.pragmaticengineer.com/how-to-become-a-full-time-creator/">Becoming a Full-Time Creator as a Software Engineer: Controversial Advice - The Pragmatic Engineer</a></p>
+<p>这篇文章很长也非常干货，我还在继续消化中。</p>
+<p><strong>Gergely Orosz</strong> 之前在 Uber 作为软件工程师工作，2020 年从 Uber 离开后他决定花 6 个月写一本书 <a target="_blank" rel="noopener" href="https://www.engguidebook.com/">Growing as a Developer</a>，然后再计划创建一个公司。</p>
+<p>结果他发现投入到创作者经济浪潮是个更明智的选择，他的 Substack 专栏 <a target="_blank" rel="noopener" href="https://newsletter.pragmaticengineer.com/">The Pragmatic Engineer</a>  已经是付费用户最多的科技类专栏。</p>
+<p>这篇长文中写了很多，本质上是在谈论如何不依赖公司来赚钱：</p>
+<blockquote>
+<p>Instead of talking about succeeding as a creator, I’ll instead talk about how to succeed as a small business.</p>
+</blockquote>
+<p>其中的一些建议是：</p>
+<ul>
+<li>要更具有产品思维</li>
+<li>尝试在网上卖出一些东西</li>
+<li>理解其他人在做什么，如何做的</li>
+<li>为自己不擅长的部分花些钱</li>
+<li>尝试成为 tech influencer</li>
+</ul>
+<p>如果你打算不再成为公司雇员，那就没有了规则，这可能很可怕，但也充满了机会：</p>
+<blockquote>
+<p><strong>When you work for yourself, there are no rules, which is both scary, and a huge opportunity.</strong> After years of working for corporate, this means you need to let go of old habits and embrace new ones.</p>
+</blockquote>
+<p>在英文环境中，写个电子书在自己的网站和 newsletter 上销售是一种比较常见的模式，另外付费专栏也很多。</p>
+<p>国内像 Substack 这种平台有小报童和竹白，但感觉读者对这种技术类的内容付费意愿会弱很多。如果是写书或者专栏，通常会到极客时间这种平台上，这样平台会帮忙推广，但是会有抽成。</p>
+<p>我还在摸索内容创作，感兴趣的读者一起交流交流。</p>
+<h2 id="Humor"><a href="#Humor" class="headerlink" title="Humor"></a>Humor</h2><p><img src="/images/ob_obweb-2022-06-11-20-47-28.jpg" alt=""></p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#技术" >
+    <span class="tag-code">技术</span>
+  </a>
+
+  <a href="/tags#写作" >
+    <span class="tag-code">写作</span>
+  </a>
+
+  <a href="/tags#周刊" >
+    <span class="tag-code">周刊</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/p/bitcoin/">
+        
+          白话比特币和去中心化
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%AF%8F%E5%A4%A9%E5%86%99%E7%AC%94%E8%AE%B0"><span class="toc-nav-text">每天写笔记</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%86%99%E4%B8%AA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9D%A5%E6%B2%BB%E7%96%97%E8%87%AA%E5%B7%B1"><span class="toc-nav-text">写个操作系统来治疗自己</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%B8%88%E5%A6%82%E4%BD%95%E6%8A%95%E5%85%A5%E5%88%B0%E5%88%9B%E4%BD%9C%E8%80%85%E7%BB%8F%E6%B5%8E%E4%B8%AD"><span class="toc-nav-text">软件工程师如何投入到创作者经济中</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Humor"><span class="toc-nav-text">Humor</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/weekly-16/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW * 3 / 4}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
