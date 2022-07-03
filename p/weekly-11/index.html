@@ -221,7 +221,7 @@
   <span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>编译器开发中有个常用的概念是自举 (bootstrapping)，就是用这门语言实现的编译器编译新版本的编译器源码，一门新的编译型编程语言，实现自举是第一个里程碑。</p>
-<p>这里就牵涉到<strong>鸡生蛋还是蛋生鸡</strong>的问题，那第一个编译器肯定不是自身语言实现的，比如 C 第一个编译器是 B 语言写的，Rust 编译器的第一份源码是 OCaml 的。</p>
+<p>这里就牵涉到<strong>鸡生蛋还是蛋生鸡</strong>的问题，那第一个编译器肯定不是自身语言实现的，比如 C 第一个编译器是 B 语言写的， Rust 编译器的第一份源码是 OCaml 的。</p>
 <p>Ken Thompson 的做法可以理解为在自举过程中加入了特定的后门逻辑，导致编译出来的编译器都会有问题。</p>
 <p>这里有位作者在 Go 编译器上做了 PoC，<a target="_blank" rel="noopener" href="https://ekyu.moe/article/thompson-hack-on-golang/">为编译器植入隐藏后门——亲手实践 Thompson hack</a>。</p>
 <p>这类安全问题可以统称为信任链攻击，使用这种攻击手法，越底层的软件被动了手脚危害越大。一个 <code>npm install</code> 下去可能几百个第三方包就安装了，之前也出现过在 npm 包里加入挖矿代码这样的事。</p>
@@ -251,7 +251,7 @@
 <blockquote>
 <p> In other words, Berkeley UNIX was already doing “the right thing” five years before “Worse is Better” was written!</p>
 </blockquote>
-<p>而 Lisp Machine 对比 Unix，虽然设计精美、统一，但是却迅速陨落了。在软件开发中，这种新泽西方法似乎更有生命力，简单而言就是小步快跑，实现简单，快速出活。Unix 就是这样，虽然理论上看起来不够优雅，但是足够简单，可以很快地移植到不同的硬件上去，所以越来越流行：</p>
+<p>而 Lisp Machine 对比 Unix，虽然设计精美、统一，但是却迅速陨落了。在软件开发中，这种新泽西方法似乎更有生命力，简单而言就是小步快跑，实现简单，快速出活。 Unix 就是这样，虽然理论上看起来不够优雅，但是足够简单，可以很快地移植到不同的硬件上去，所以越来越流行：</p>
 <blockquote>
 <p>The worse-is-better philosophy means that implementation simplicity has highest priority, which means Unix and C are easy to port on such machines. Therefore, one expects that if the 50% functionality Unix and C support is satisfactory, they will start to appear everywhere. And they have, haven’t they? Unix and C are the ultimate computer viruses.</p>
 </blockquote>
