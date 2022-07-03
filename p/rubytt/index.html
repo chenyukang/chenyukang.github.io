@@ -102,6 +102,12 @@
       
         <li class="list-item">
           
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
             <a href="/about/" class="item-link">About</a>
           
         </li>
@@ -147,6 +153,12 @@
           <li class="menu-item">
             
               <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/links/" class="menu-link">Links</a>
             
           </li>
         
@@ -199,7 +211,7 @@ trans<span class="token punctuation">.</span><span class="token keyword">each</s
 <p>当然还是能找到函数中未使用的参数等问题。修复的办法是如果确定这些变量是不被使用的，就在前面加<code>_</code>，这样 rubytt 这样的 lint 类检查工具就跳过。后续我也正在做未定义变量的检查。</p>
 <h2 id="2-OCaml-的程序发布"><a href="#2-OCaml-的程序发布" class="headerlink" title="2. OCaml 的程序发布"></a>2. OCaml 的程序发布</h2><p>在做完上面的几个 feature 之后，我觉得可以尝试着把这个项目推广一下给同事们玩玩。如果让从来没接触过 OCaml 的朋友从头开始编译安装会显得很麻烦。所以我就尝试着把 rubytt 合并到 OCaml 的包管理仓库。于是在经过几次和 travis CI 的斗争后，终于发布了<a target="_blank" rel="noopener" href="https://opam.ocaml.org/packages/rubytt/rubytt.0.1/">rubytt.0.1</a> 。</p>
 <p>安装方法如下：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">gem <span class="token function">install</span> parallel ruby-progressbar
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">gem <span class="token function">install</span> parallel ruby-progressbar
 <span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> --force-yes ocaml ocaml-native-compilers camlp4-extra opam
 // brew <span class="token function">install</span> opam   <span class="token punctuation">(</span>MacOS<span class="token punctuation">)</span>
 <span class="token builtin class-name">eval</span> <span class="token variable"><span class="token variable">`</span>opam config <span class="token function">env</span><span class="token variable">`</span></span>

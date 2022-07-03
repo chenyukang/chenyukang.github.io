@@ -102,6 +102,12 @@
       
         <li class="list-item">
           
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
             <a href="/about/" class="item-link">About</a>
           
         </li>
@@ -152,6 +158,12 @@
         
           <li class="menu-item">
             
+              <a href="/links/" class="menu-link">Links</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
               <a href="/about/" class="menu-link">About</a>
             
           </li>
@@ -175,16 +187,16 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>这个操作好像经常要用到，拷贝当前光标连续的一段字符串 (除了空白和换行), 写了个小函数来实现。</p>
-<pre class="line-numbers language-elisp" data-language="elisp"><code class="language-elisp">(defun get-continue-string ()
-  (interactive)
-  (skip-chars-backward &quot;^ \n&quot;)
-  (setq low (point))
-  (skip-chars-forward &quot;^ \n&quot;)
-  (setq high (point))
-  (copy-region-as-kill low high)
-  (message (buffer-substring low high)))
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token defun"><span class="token keyword">defun</span> <span class="token function">get-continue-string</span> <span class="token punctuation">(</span><span class="token arguments"></span><span class="token punctuation">)</span></span>
+  <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token car">skip-chars-backward</span> <span class="token string">"^ \n"</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token keyword">setq</span> low <span class="token punctuation">(</span><span class="token car">point</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token car">skip-chars-forward</span> <span class="token string">"^ \n"</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token keyword">setq</span> high <span class="token punctuation">(</span><span class="token car">point</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token car">copy-region-as-kill</span> low high<span class="token punctuation">)</span>
+  <span class="token punctuation">(</span><span class="token keyword">message</span> <span class="token punctuation">(</span><span class="token car">buffer-substring</span> low high<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-(global-set-key (kbd &quot;C-x y&quot;) &#39;get-continue-string)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">(</span><span class="token car">kbd</span> <span class="token string">"C-x y"</span><span class="token punctuation">)</span> <span class="token quoted-symbol variable symbol">'get-continue-string</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </section>
 
     <p></p>

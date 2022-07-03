@@ -102,6 +102,12 @@
       
         <li class="list-item">
           
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
             <a href="/about/" class="item-link">About</a>
           
         </li>
@@ -147,6 +153,12 @@
           <li class="menu-item">
             
               <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/links/" class="menu-link">Links</a>
             
           </li>
         
@@ -223,7 +235,7 @@
 <pre class="line-numbers language-lua" data-language="lua"><code class="language-lua">serf event <span class="token operator">-</span>coalesce<span class="token operator">=</span><span class="token keyword">false</span> <span class="token operator">-</span>rpc<span class="token operator">-</span>addr<span class="token operator">=</span><span class="token number">127.0</span><span class="token number">.0</span><span class="token number">.1</span><span class="token punctuation">:</span><span class="token number">7373</span>  kong <span class="token string">'&#123;"type":"ENTITY_UPDATED","primary_key":["id"],"collection":"apis","entity":&#123;"id":"94acca76-d61a-429e-86a9-5abf2c61ee31"&#125;&#125;'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>这就出发了一个 serf event，其他 Kong 节点会收到此消息。</p>
 <h3 id="serf-Kong-节点之间通信"><a href="#serf-Kong-节点之间通信" class="headerlink" title="serf: Kong 节点之间通信"></a>serf: Kong 节点之间通信</h3><p>那么 Kong 节点收到消息之后是如何处理的呢？Kong 在启动的时候会在后台执行一个 serf 进程，类似这样：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">serf agent -profile wan -bind <span class="token number">0.0</span>.0.0:7946 -log-level err -rpc-addr <span class="token number">127.0</span>.0.1:7373 -event-handler member-join,member-leave,member-failed,member-update,member-reap,user:kong<span class="token operator">=</span>/usr/local/kong/serf/serf_event.sh -node Kang.local_0.0.0.0:7946_be3b9352808e4839a272f30ca6025650<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">serf agent -profile wan -bind <span class="token number">0.0</span>.0.0:7946 -log-level err -rpc-addr <span class="token number">127.0</span>.0.1:7373 -event-handler member-join,member-leave,member-failed,member-update,member-reap,user:kong<span class="token operator">=</span>/usr/local/kong/serf/serf_event.sh -node Kang.local_0.0.0.0:7946_be3b9352808e4839a272f30ca6025650<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>可以看看 serf_event.sh 这个脚本，内容如下：</p>
 <pre class="line-numbers language-lua" data-language="lua"><code class="language-lua">PAYLOAD<span class="token operator">=</span>`cat` <span class="token operator">#</span> Read from stdin
 <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token string">"$SERF_EVENT"</span> !<span class="token operator">=</span> <span class="token string">"user"</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>

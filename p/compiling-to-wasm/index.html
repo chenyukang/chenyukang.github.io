@@ -102,6 +102,12 @@
       
         <li class="list-item">
           
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
             <a href="/about/" class="item-link">About</a>
           
         </li>
@@ -152,6 +158,12 @@
         
           <li class="menu-item">
             
+              <a href="/links/" class="menu-link">Links</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
               <a href="/about/" class="menu-link">About</a>
             
           </li>
@@ -192,7 +204,7 @@
 </ol>
 <h2 id="C-C-gt-wasm"><a href="#C-C-gt-wasm" class="headerlink" title="C/C++ =&gt; wasm"></a>C/C++ =&gt; wasm</h2><p>首先需要安装 Emscripten  SDK:<br><a target="_blank" rel="noopener" href="https://emscripten.org/docs/getting_started/downloads.html">https://emscripten.org/docs/getting_started/downloads.html</a></p>
 <p>移植一个 C/C++ 项目到 WebAssembly , 最简单的办法是把类似 gcc 命令换成 emcc，难点在于动态链接的第三方库，我们需要改成静态链接。一些常用的库已经被移植了，例如<em>libc</em>, <em>libc++</em> and <em>SDL</em>，这些我们不需要手动处理。不在 emcc 预装里的库，我们只需要在编译的过程中加一些额外的参数，例如我下面这个项目就用到了 PNG，JPEG 这些库：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">emcc -c dbgutil.c -o dbgutil.o
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">emcc -c dbgutil.c -o dbgutil.o
 emcc -c qrtest.c -o qrtest.o
 emcc -c decode.c -o decode.o
 emcc -c identify.c -o identify.o
