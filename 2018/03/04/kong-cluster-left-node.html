@@ -188,7 +188,7 @@
   <article class="post-article">
     <section class="markdown-content"><h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>Kong 在实践中会有一些疑惑的地方，这里记录一下。注意这里记录的 Kong 集群部署的问题是 0.10.3 版本的，最新 Kong 版本已经不是通过 serf 来管理不同节点之间的配置同步问题。</p>
 <p>在 Kong 多节点部署的时候，有时候某个节点停掉后，我们在后台可以看到 left 的信息，而且这个 left 信息会保留一段不短的时间。类似于如下： </p>
-<p><img src="/images/kong-left-0133521.png" alt="kong-left"></p>
+<p><img src="/images/kong-left-0133521.png" alt="kong-left"><span class="image-caption">kong-left</span></p>
 <h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>管理后台 Konga 是通过 api 获取的节点信息，在<code>kong/kong/api/routes/cluster.lua</code>文件里可以看到如下路由处理逻辑： </p>
 <pre class="line-numbers language-lua" data-language="lua"><code class="language-lua">GET <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> dao_factory<span class="token punctuation">,</span> helpers<span class="token punctuation">)</span>
   <span class="token keyword">local</span> members<span class="token punctuation">,</span> err <span class="token operator">=</span> singletons<span class="token punctuation">.</span>serf<span class="token punctuation">:</span><span class="token function">members</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
@@ -211,7 +211,7 @@
   <span class="token keyword">return</span> responses<span class="token punctuation">.</span><span class="token function">send_HTTP_OK</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span>
 <span class="token keyword">end</span><span class="token punctuation">,</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>具体<code>serf:members()</code>的实现在 serf.lua 里面可以看到，就是执行了<code>serf cluster members</code>命令获取结果然后返回 JSON。所以我们在服务器上执行这个命令其实也可以看到类似的结果： </p>
-<p><img src="/images/kong-left-cmd.png" alt="kong-left-cmd"></p>
+<p><img src="/images/kong-left-cmd.png" alt="kong-left-cmd"><span class="image-caption">kong-left-cmd</span></p>
 <p>那么问题的根源当然是在 Serf 本身里面，通过看文档发现原来确实是有一定延迟的。</p>
 <blockquote>
 <p>Serf keeps the state of dead nodes around for a set amount of time, so that when full syncs are requested, the requester also receives information about dead nodes. Because SWIM doesn’t do full syncs, SWIM deletes dead node state immediately upon learning that the node is dead. This change again helps the cluster converge more quickly.</p>

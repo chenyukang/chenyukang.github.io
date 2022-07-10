@@ -189,7 +189,7 @@
     <section class="markdown-content"><p>最近在看一些图算法，发现拓扑排序频繁出现，这里写一下自己的一些总结。</p>
 <p>拓扑排序是对于有向无环图而言的 (DAG)，就是对于这个图所有的点 (V1, V2, … Vn) 找到一个点序列使得任意边 (u, v)， u 出现在 v 的前面。很容易证明，如果一个有向图中有环那么不存在拓扑排序。</p>
 <h2 id="现实中的问题"><a href="#现实中的问题" class="headerlink" title="现实中的问题"></a>现实中的问题</h2><p>首先来看现实中哪些问题需要拓扑排序的，课程排序，编译依赖问题，类似的凡是涉及到相关顺序的时间安排，比如 Rails 里面的初始化调用了库<a target="_blank" rel="noopener" href="http://ruby-doc.org/stdlib-2.0/libdoc/tsort/rdoc/TSort.html">Tsort</a>来进行排序。Unix 中有个命令也叫<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Tsort_(Unix">tsort</a>)，在有的 makefile 里面还直接使用了这个命令来解决依赖问题。</p>
-<h2 id="O-V-E-的算法"><a href="#O-V-E-的算法" class="headerlink" title="O(V+E) 的算法"></a>O(V+E) 的算法</h2><p><img src="/images/topologicalsort.png" alt="topologicalsort" class="img-center" width="250" height="250"/></p>
+<h2 id="O-V-E-的算法"><a href="#O-V-E-的算法" class="headerlink" title="O(V+E) 的算法"></a>O(V+E) 的算法</h2><p><img src="/images/topologicalsort.png" alt="topologicalsort" class="img-center" width="250" height="250"/><span class="image-caption">topologicalsort</span></p>
 <p>拓扑排序的基本算法是用 DFS，我们希望把有出度的点尽量排在前面，所以这里需要注意和 DFS 的区别。比如上面图中的一个 DFS 访问顺序是: 5 2 3 1 0 4，但是这不是一个拓扑排序，4 需要排在 0 的前面，5, 4, 0, 2, 3, 1。<br>拓扑排序中需要等迭代完节点的连接邻点后再把当前点压入栈。</p>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>

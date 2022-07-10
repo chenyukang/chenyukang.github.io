@@ -186,7 +186,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><img src="/images/lazy-eval.png" alt="lazy-eval" class="img-center" /></p>
+    <section class="markdown-content"><p><img src="/images/lazy-eval.png" alt="lazy-eval" class="img-center" /><span class="image-caption">lazy-eval</span></p>
 <h2 id="什么是惰性求值"><a href="#什么是惰性求值" class="headerlink" title="什么是惰性求值"></a>什么是惰性求值</h2><p>惰性在函数式编程语言中很常见，他的通俗解释就是一个变量或者表达式，不到必要的时候不会被 eval。比如函数在传递参数的时候，参数的值可以不确定。</p>
 <p>这种方式叫做 call-by-name，首先很明显这可能会造成一部分 performance 差异，如果一个表达式没有用到，那么计算出其结果是毫无意义的。而惰性求值是 memoized 的 call-by-name，叫做 call-by-need。<br>从技术实现上来说，一个表达式在计算其结果之前其状态是 Deferred 或者 Delayed 的，在计算之后将其结果存储下来并修改状态为 Value，之后再取就没有必要重新去计算。用一些 OCaml 代码来说明：</p>
 <pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml">

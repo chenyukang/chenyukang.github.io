@@ -188,7 +188,7 @@
   <article class="post-article">
     <section class="markdown-content"><p>Kong 的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。</p>
 <h3 id="worker-模型"><a href="#worker-模型" class="headerlink" title="worker 模型"></a>worker 模型</h3><p>假设我们对 Kong 做了一个更改的请求，这个请求通常是通过 admin_api 这个路由处理的。也就是说最终执行数据库操作的动作是在一个 Nginx worker 进程里。因为操作了数据库所以我们需要刷新这个 Kong 节点的所有 worker 的缓存，而且要把事件分发给其他 Kong 节点，让其他 Kong 节点刷新所有 worker 的缓存。</p>
-<p><img src="/images/kong-message.png" alt="kong-message" class="img-center"></p>
+<p><img src="/images/kong-message.png" alt="kong-message" class="img-center"><span class="image-caption">kong-message</span></p>
 <p>这就涉及到两部分：</p>
 <ol>
 <li>Kong 节点之间的消息通信，这是使用<a target="_blank" rel="noopener" href="https://www.serf.io/">serf</a>来实现的</li>

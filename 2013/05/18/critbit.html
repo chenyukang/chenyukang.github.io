@@ -231,8 +231,8 @@
 <span class="token punctuation">&#125;</span>critbit0_tree<span class="token punctuation">;</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>其中 child 是 void*指针，对于树的内部节点其指向的是子节点，对于叶子节点其指向的是字符串。<br>byte 用来表示当前节点匹配的长度，otherbits 是一个 mask，可以用来快速的取得不同最高位，在查询的过程中用这个来做 branch。</p>
-<p>具体的代码分析这里比较少，最复杂的函数是 critbit0_insert。在插入过程中需要记录下来 byte 和 otherbits,<br>并且更新前面的父节点。<br>​<br><img src="/images/critbit.png" alt="critbit" class="img-center" height="400" width="400" /></p>
-<p>然后再继续插入后的结构变化是：<br><img src="/images/critbit_insert.png" alt="critbit" class="img-center" height="400" width="400" /></p>
+<p>具体的代码分析这里比较少，最复杂的函数是 critbit0_insert。在插入过程中需要记录下来 byte 和 otherbits,<br>并且更新前面的父节点。<br>​<br><img src="/images/critbit.png" alt="critbit" class="img-center" height="400" width="400" /><span class="image-caption">critbit</span></p>
+<p>然后再继续插入后的结构变化是：<br><img src="/images/critbit_insert.png" alt="critbit" class="img-center" height="400" width="400" /><span class="image-caption">critbit</span></p>
 <p>下面记录一下其中的几个技巧。</p>
 <h4 id="align-指针最后一位用来做标志"><a href="#align-指针最后一位用来做标志" class="headerlink" title="align 指针最后一位用来做标志"></a>align 指针最后一位用来做标志</h4><p>树的结构需要一个标志变量来表示是否是内部节点或者是叶子节点。这个变量如何能省掉？<br>看上面的 void<em> root 和 void</em> child，都是即可以用来指向字符串又可以指向节点，一般申请过来的指针变量都是 align 好的，所以最低位为 0，这是可以拿来用的。因此对于内部节点我们可以在这个位上设置为 1，只是要注意在通过这个指针取值的时候需要减回去。</p>
 <p><code>a = (posix_memalign((void**)&amp;x, sizeof(void*), ulen+1))</code></p>

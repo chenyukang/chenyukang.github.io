@@ -186,7 +186,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><img src="/images/compiling.png" alt="My code is compiling" class="img-center"></p>
+    <section class="markdown-content"><p><img src="/images/compiling.png" alt="My code is compiling" class="img-center"><span class="image-caption">My code is compiling</span></p>
 <h2 id="什么是-Ninja"><a href="#什么是-Ninja" class="headerlink" title="什么是 Ninja"></a>什么是 Ninja</h2><p> 在 Unix/Linux 下通常使用 Makefile 来控制代码的编译，但是 Makefile 对于比较大的项目有时候会比较慢，看看上面那副漫画，代码在编译都变成了程序员放松的借口了。所以这个 Google 的程序员在开发 Chrome 的时候因为忍受不了 Makefile 的速度，自己重新开发出来一套新的控制编译的工具叫作<a target="_blank" rel="noopener" href="https://github.com/martine/ninja">Ninja</a>，Ninja 相对于 Makefile 这套工具更注重于编译速度。除了 Chrome 现在还有一些其他的比较大的项目也在开始使用 Ninja，比如 LLVM。我试用了一下感觉还是不错，比如编译 Cmake 时间大概是原来的 1/4。Ninja 试用 C++ 实现，<a target="_blank" rel="noopener" href="http://martine.github.com/ninja/manual.html">其支持的语法非常简单</a>，作者在这里说明了为了控制复杂度。</p>
 <h2 id="代码如何编译"><a href="#代码如何编译" class="headerlink" title="代码如何编译"></a>代码如何编译</h2><p>其实对于 C/C++ 和很多其他程序的编译都是一个道理，就是把一些源代码文件编译成目标文件，或者有的目标文件再编译到一个库里，然后再链接起来。所以 Ninja 的配置文件分为两个部分，rule 和文件依赖关系。看个简单的例子：</p>
 <pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile">cc<span class="token operator">=</span>gcc

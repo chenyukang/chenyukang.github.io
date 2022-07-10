@@ -190,7 +190,7 @@
 <p>调研了一阵子之后，我们所面临的是两条路，一是自己写一个类似于<a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/JD-Nignx-JEN">京东 JEN</a>的系统，在调研一圈之后我们发现 Kong 是比较适合自身业务需求的。二是在 Kong 的基础上做一些插件开发，然后集群部署 Kong 即可。</p>
 <p>我之前稍微看了一下介绍，认为 Kong 可能对我们来说太重了些。后来又仔细看了一阵源码，自己认为代码质量挺好，而且模块化和可扩张性做得很好，因此决定采用。</p>
 <h3 id="Kong-简介"><a href="#Kong-简介" class="headerlink" title="Kong 简介"></a>Kong 简介</h3><p>Kong 项目的目的是这样一幅图<a href="/images/kong-intro.png">kong-intro</a>：</p>
-<p><img src="/images/kong-intro.png" alt="kong-intro" class="img-center" style="width:320px;height:300px;"/></p>
+<p><img src="/images/kong-intro.png" alt="kong-intro" class="img-center" style="width:320px;height:300px;"/><span class="image-caption">kong-intro</span></p>
 <p>可以看到这正是我们要做的事情。使用 Kong 的优势在于：</p>
 <ol>
 <li>可扩展性，Kong 依赖一个数据库来实现配置存储，依赖 <a target="_blank" rel="noopener" href="https://www.serf.io">serf</a> 来实现 instance 之间的通信。任何一个节点修改了其他节点会收到通知并重新 reload 配置。</li>

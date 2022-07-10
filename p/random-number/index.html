@@ -186,7 +186,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><img src="/images/dilbert.jpg" alt="dicker" class="img-center" /></p>
+    <section class="markdown-content"><p><img src="/images/dilbert.jpg" alt="dicker" class="img-center" /><span class="image-caption">dicker</span></p>
 <p>随机数代表着不确定性，其在计算机中广泛使用，比如用作加密的 key、密码的生成、模拟，扑克游戏中，还有一些经典的算法 (比如<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Monte_Carlo_method">Monte Carlo</a>) 依赖随机数的产生。以下是一些随机数相关的问题简单总结。</p>
 <h2 id="随机数产生，真随机数和伪随机数生成器"><a href="#随机数产生，真随机数和伪随机数生成器" class="headerlink" title="随机数产生，真随机数和伪随机数生成器"></a>随机数产生，真随机数和伪随机数生成器</h2><p>随机数的产生是一个很有趣的问题。我们希望只通过计算机来产生随机数的时候会有一些困难，计算机擅长做确定的事情，按照制定的指令去依次执行。<br>有两种产生随机数的方法，真随机数和伪随机数，这两种有各自的优点和缺点。</p>
 <p>伪随机数生成器 (PRNG)，顾名思义产生的不是严格意义上的随机数，一般是通过一些数学公式 (或者计算好的表) 来产生。比如简单的<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Linear_congruential_generator">Linear congruential generator</a>，可以用来产生伪随机数。伪随机数的行为是可被预测的，但是在统计意义上来说是随机的。因为这个特点其所以使用范围有限，比如一些模拟程序。而且伪随机数有可能出现固定的周期，比如下面<a target="_blank" rel="noopener" href="http://www.random.org/analysis/#visual">这两幅图</a>分别是通过真正的随机数产生器和 Windows 下面的 PHP 的伪随机数生成器产生的 Bitmap，可以清楚地看到右边的那副图有规律可循。</p>
@@ -211,7 +211,7 @@
 <h2 id="随机数的使用"><a href="#随机数的使用" class="headerlink" title="随机数的使用"></a>随机数的使用</h2><p>涉及到随机数的程序要特别小心。比如一个很简单的程序，我们知道 C 语言中的 rand() 产生的随机数是有范围的，0～32767，如果我要生成范围在 0～10 的随机数如何做？<br>可能你会简单认为 rand()%10 可以得到 (惭愧我以前也这样用的)，但是这真的是随机的吗？如果你把 0～32767 的所有数字依次%10，统计一下可以发现有的数出现的次数要大一些，因此最后出现某些数的概率相应的要大一些。</p>
 <p>另外一个思考题，给一个 rand() 可以产生 [1, 5] 之间的随机整数，利用这个 rand 产生 [1, 7] 之间的随机整数？</p>
 <p>另写一个抽奖程序，从 30w 个用户中随机抽取 10w 个中奖用户？</p>
-<h2 id="写个好的洗牌程序不容易"><a href="#写个好的洗牌程序不容易" class="headerlink" title="写个好的洗牌程序不容易"></a>写个好的洗牌程序不容易</h2><p><img src="/images/dicker.jpg" alt="dicker" class="img-center" /></p>
+<h2 id="写个好的洗牌程序不容易"><a href="#写个好的洗牌程序不容易" class="headerlink" title="写个好的洗牌程序不容易"></a>写个好的洗牌程序不容易</h2><p><img src="/images/dicker.jpg" alt="dicker" class="img-center" /><span class="image-caption">dicker</span></p>
 <p>写一个对的洗牌程序看起来很容易，其实不然。Robert Sedgewick 说过：</p>
 <blockquote>
 <p>That’s a pretty tough thing to have happen if you’re implementing online poker.You might want to make sure that if you’re advertising that you’re doing a random shuffle that you go ahead and do so.”</p>
@@ -242,7 +242,7 @@
 <p>可以分析一下这里的好几处问题，这里的洗牌算法也有问题，52！个排列出现的概率不一样。拿三张牌来作为例子就明白了。</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">for</span> <span class="token punctuation">(</span>i is <span class="token number">1</span> to N<span class="token punctuation">)</span>
     Swap i with random position between <span class="token number">1</span> and N<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p><img src="/images/poker.gif" alt="dicker" class="img-center" /><br>可以看出 231, 213, 132 出现的次数要多一些，因此相对应的概率也大。</p>
+<p><img src="/images/poker.gif" alt="dicker" class="img-center" /><span class="image-caption">dicker</span><br>可以看出 231, 213, 132 出现的次数要多一些，因此相对应的概率也大。</p>
 <p>正确的洗牌程序算法是：</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">for</span> <span class="token punctuation">(</span>i is <span class="token number">1</span> to N<span class="token punctuation">)</span>
     Swap i with random position between i<span class="token operator">+</span><span class="token number">1</span> and N<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>

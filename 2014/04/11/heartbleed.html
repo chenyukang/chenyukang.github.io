@@ -186,7 +186,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><img src="/images/heartbleed.png" alt="heartbleed" class="img-center" height="200" width="200"/></p>
+    <section class="markdown-content"><p><img src="/images/heartbleed.png" alt="heartbleed" class="img-center" height="200" width="200"/><span class="image-caption">heartbleed</span></p>
 <p>这几天不断听到一个词“心血漏洞”，近年来影响最严重的互联网漏洞。今天小小地研究了一把，顺便把引起一些思考记录下来。</p>
 <h2 id="到底是什么样的代码"><a href="#到底是什么样的代码" class="headerlink" title="到底是什么样的代码"></a>到底是什么样的代码</h2><p>有一些 C 语言和开发经验的朋友看看这个<a target="_blank" rel="noopener" href="https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=96db9023b881d7cd9f379b0c154650d6c108e9a3;hp=0d7717fc9c83dafab8153cbd5e2180e6e04cc802">Fix</a>就能了解些具体细节了。<br>在网络传输中有一个叫做心跳的概念，简单来讲就是客户端发送一个简单的心跳包给服务端，服务端又返回给客户端，然后客户端检查传回来的内容是否是预期，这样就知道了当前的 TLS 通信是否正常。这个 Bug 不是协议的问题，而是具体实现的时候的遗漏了相关的逻辑。</p>
 <p>这个函数 dtls1_process_heartbeat 就是处理这块代码的，先读出长度和包类型，然后申请一段内存空间做一个 memcpy，其中长度为 write_length，而这里遗漏的就是这个长度的合法性检查。</p>
