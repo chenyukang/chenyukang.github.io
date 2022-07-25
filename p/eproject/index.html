@@ -186,8 +186,8 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>我之前一直用的是 project-mode.el 来管理项目，在碰上代码很多的工程时还是有点不方便，源文件太多速度有点慢。快速检索文件还是可以，需要指定代码目录，可以增加目录。工程的概念还是不太直观，主要用来快速查找文件。 以前看有同学推荐过 eproject，当时没仔细看。这会儿想自己写一个，而今天偶尔试用了一下这个<a target="_blank" rel="noopener" href="http://www.emacswiki.org/emacs/eproject">eproject.el</a>这才是真正需要的好东西啊。</p>
-<p>一个工程包含的是经常需要访问的文件，另一个重要的地方是可以自己绑定 Make, clean, run, configure 等命令。 一组常用命令加文件检索，非常方便。看下面的配置文件很清楚，make 绑定到了一组命令。</p>
+    <section class="markdown-content"><p>我之前一直用的是 project-mode.el 来管理项目，在碰上代码很多的工程时还是有点不方便，源文件太多速度有点慢。快速检索文件还是可以，需要指定代码目录，可以增加目录。工程的概念还是不太直观，主要用来快速查找文件。以前看有同学推荐过 eproject，当时没仔细看。这会儿想自己写一个，而今天偶尔试用了一下这个<a target="_blank" rel="noopener" href="http://www.emacswiki.org/emacs/eproject">eproject.el</a>这才是真正需要的好东西啊。</p>
+<p>一个工程包含的是经常需要访问的文件，另一个重要的地方是可以自己绑定 Make, clean, run, configure 等命令。一组常用命令加文件检索，非常方便。看下面的配置文件很清楚，make 绑定到了一组命令。</p>
 <pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token keyword">setq</span> prj-tools
       <span class="token punctuation">'(</span><span class="token punctuation">(</span><span class="token string">"Make"</span> <span class="token string">"cd ~/source/Panda/; ./run.sh -c;"</span> <span class="token string">"f9"</span><span class="token punctuation">)</span>
       <span class="token punctuation">(</span><span class="token string">"Clean"</span> <span class="token string">"cd ~/source/Panda/; ./run.sh -x;"</span> <span class="token string">"C-f9"</span><span class="token punctuation">)</span>

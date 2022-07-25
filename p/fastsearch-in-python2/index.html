@@ -194,7 +194,7 @@
 <li>最坏情况下不能比 O(nm) 时间复杂度差</li>
 <li>实现简单，对于实际中的查找大部分表现良好，最坏情况出现概率小</li>
 </ul>
-<p>标准的字符串查找算法不满足这些要求，KMP 的时间复杂度为 O(m+n)(初始化 O(m) 加第二部分 O(n)， Boyer-Moore 和其变形要求额外的空间，Python2.5 里面增加了这个结合了 Boyer-Moore 和 Sunday 的思想的变形实现。来看看这是怎么个神奇的算法，KMP 的思想是在每一次不匹配的情况下尽量的向右边移动，所以计算一个 Next 的移动下标数组。如果不匹配，最理想的情况下是向右边移动多长？应该是 m，这样就能尽量减少对比的次数。所以每次比较的时候先比较 p 的最后一个字符，比如 s=”aaaaaaad”，p=”aae”，如果从 s 的开头查找，只要发现第 3 个和 p 的第三个不一样，移动指标，移动多少？如果发现没有 e，最长能移动 p 的长度，就是 3。如果最后一个不匹配并且 s[i+m] 不是 p 中的字符就移动 m，否则移动 1。这里有两个问题：</p>
+<p>标准的字符串查找算法不满足这些要求，KMP 的时间复杂度为 O(m+n)(初始化 O(m) 加第二部分 O(n)，Boyer-Moore 和其变形要求额外的空间，Python2.5 里面增加了这个结合了 Boyer-Moore 和 Sunday 的思想的变形实现。来看看这是怎么个神奇的算法，KMP 的思想是在每一次不匹配的情况下尽量的向右边移动，所以计算一个 Next 的移动下标数组。如果不匹配，最理想的情况下是向右边移动多长？应该是 m，这样就能尽量减少对比的次数。所以每次比较的时候先比较 p 的最后一个字符，比如 s=”aaaaaaad”，p=”aae”，如果从 s 的开头查找，只要发现第 3 个和 p 的第三个不一样，移动指标，移动多少？如果发现没有 e，最长能移动 p 的长度，就是 3。如果最后一个不匹配并且 s[i+m] 不是 p 中的字符就移动 m，否则移动 1。这里有两个问题：</p>
 <blockquote>
 <p>如何知道 s 中的某一个字符是否是 p 中的一部分？<br>如何尽量移动 m 而不出现少找的情况？</p>
 </blockquote>
@@ -211,7 +211,7 @@ mlast <span class="token operator">=</span> m<span class="token operator">-</spa
 <span class="token keyword">else</span> 
      <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"s[i] is in pattern"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>其实我们是要判断一个 s 中的一个字符串没有出现在 p 中，取低 5 位不是可能产生冲突么？产生冲突也没问题，就像一个 Hash 只要一个元素算出来的 Key 指定的 slot 没元素不就能确定这个元素不在里面了么。</p>
-<p>第二个问题，有些巧妙。上面那个例子是因为 s 的最后一个字符没被匹配，所以能移动 m 的长度。如果这个例子 s=”aaacaaaacaa”，p=”aacaa”，第 5 个位置都为 a，最后一个匹配，但是 s 里面前几个其实不为 aacaa，所以需要移动，但是移动多少呢？如果移动 p 的长度，那从第 2 个位置开始的 aacaa 就没被检查到。所以需要一个变量记录在每次最后一个字母匹配的情况下向右移动的合理偏移量，在这里为 skip，初始化的时候计算出来，这最偏移量其实是计算的最小偏移量，就是移动 skip 个位置到第一个 s[m-1] 的位置。 整个实现既节省空间又速度快，强大。</p>
+<p>第二个问题，有些巧妙。上面那个例子是因为 s 的最后一个字符没被匹配，所以能移动 m 的长度。如果这个例子 s=”aaacaaaacaa”，p=”aacaa”，第 5 个位置都为 a，最后一个匹配，但是 s 里面前几个其实不为 aacaa，所以需要移动，但是移动多少呢？如果移动 p 的长度，那从第 2 个位置开始的 aacaa 就没被检查到。所以需要一个变量记录在每次最后一个字母匹配的情况下向右移动的合理偏移量，在这里为 skip，初始化的时候计算出来，这最偏移量其实是计算的最小偏移量，就是移动 skip 个位置到第一个 s[m-1] 的位置。整个实现既节省空间又速度快，强大。</p>
 <p>具体实现如下：</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">//如果 mode 为 FAST_COUNT，则查找 pattern 出现的次数</span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">FAST_COUNT</span> <span class="token expression"><span class="token number">1</span></span></span>

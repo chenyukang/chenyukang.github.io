@@ -195,7 +195,7 @@
 <p>The reason for this is the familiar dangling reference problem: we allocate a cell holding a number, save a reference to it in some data structure, use it for a while, then deallocate it and allocate a new cell holding a boolean, possibly reusing the same storage. Now we can have two names for the same storage cell—one with type Ref Nat and the other with type Ref Bool.</p>
 <h3 id="Pointer"><a href="#Pointer" class="headerlink" title="Pointer"></a>Pointer</h3><p>Pointer arithmetic is occasionally very useful (especially for implementing low-level components of run-time systems, such as garbage collectors), it cannot be tracked by most type systems: knowing that location n in the store contains a Float doesn’t tell us anything useful about the type of location n + 4. In C, pointer arithmetic is a notorious source of type safety violations.</p>
 <p>Store typings: 引入引用后类型系统需要处理 Cyclic reference structures，比如 double linked list。Store typings 就是一个 locations 到 typings 的映射。</p>
-<p>实现 fullref： 引用部分的实现非常简单，</p>
+<p>实现 fullref：引用部分的实现非常简单，</p>
 <pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmRef<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">)</span> <span class="token operator">-></span>
     TyRef<span class="token punctuation">(</span>typeof ctx t1<span class="token punctuation">)</span>
 <span class="token operator">|</span> TmLoc<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>l<span class="token punctuation">)</span> <span class="token operator">-></span>

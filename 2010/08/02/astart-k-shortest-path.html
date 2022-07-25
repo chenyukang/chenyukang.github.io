@@ -186,8 +186,8 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>那天师兄给面试，面到一道图算法题目，求图中两个点的前 K 短路径。当时觉得用 Dijkstra+heap 应该可以，不过也没想清楚。以前看到过这个，那时还没怎么仔细看图算法所以丢一边了， 今天好好看了一下。简单一点的解法是用 Dijkstra+Astar。典型的题目就是<a target="_blank" rel="noopener" href="http://acm.pku.edu.cn/JudgeOnline/problem?id=2449">POJ 2449</a>。   </p>
-<h2 id="A-算法"><a href="#A-算法" class="headerlink" title="A* 算法"></a>A* 算法</h2><p>再谈 A<em>算法。A</em>算法中的评估函数为 f(N)=cost(N)+h<em>(N)。其中 cost(N) 为从源点到 N 点的距离，h</em>(N) 为 N 点到终点的的一个评估路径长度，设 h(N) 为实际 N 点到终点的路径长度。只要满足条件： h<em>(N)&lt;=h(N)，那么用这个评估函数找到最短路径。具体证明看这篇论文<a target="_blank" rel="noopener" href="http://www.cs.auckland.ac.nz/compsci767s2c/projectReportExamples.d/astarNilsson.pdf">A Formal Basis for the Heuristic Determination of Minimum Cost Paths</a>。 其优势在于在选择每个路径 上的点的时候给予了 h(N) 这个启发，在搜索空间中尽量选择可能最有可能产生最优解的下一个状态，使得搜索的时间都相应地减少。A</em>算法的思想也是贪心 的，Dijkstra 是 A<em>的一个特例，当 h</em>(N)=0 时，A*就退化成了 Dijkstra 算法，那么就是盲目的扩展当前最短路径了。   </p>
+    <section class="markdown-content"><p>那天师兄给面试，面到一道图算法题目，求图中两个点的前 K 短路径。当时觉得用 Dijkstra+heap 应该可以，不过也没想清楚。以前看到过这个，那时还没怎么仔细看图算法所以丢一边了，今天好好看了一下。简单一点的解法是用 Dijkstra+Astar。典型的题目就是<a target="_blank" rel="noopener" href="http://acm.pku.edu.cn/JudgeOnline/problem?id=2449">POJ 2449</a>。   </p>
+<h2 id="A-算法"><a href="#A-算法" class="headerlink" title="A* 算法"></a>A* 算法</h2><p>再谈 A<em>算法。A</em>算法中的评估函数为 f(N)=cost(N)+h<em>(N)。其中 cost(N) 为从源点到 N 点的距离，h</em>(N) 为 N 点到终点的的一个评估路径长度，设 h(N) 为实际 N 点到终点的路径长度。只要满足条件：h<em>(N)&lt;=h(N)，那么用这个评估函数找到最短路径。具体证明看这篇论文<a target="_blank" rel="noopener" href="http://www.cs.auckland.ac.nz/compsci767s2c/projectReportExamples.d/astarNilsson.pdf">A Formal Basis for the Heuristic Determination of Minimum Cost Paths</a>。其优势在于在选择每个路径 上的点的时候给予了 h(N) 这个启发，在搜索空间中尽量选择可能最有可能产生最优解的下一个状态，使得搜索的时间都相应地减少。A</em>算法的思想也是贪心 的，Dijkstra 是 A<em>的一个特例，当 h</em>(N)=0 时，A*就退化成了 Dijkstra 算法，那么就是盲目的扩展当前最短路径了。   </p>
 <p>来个例子，下面这是一个城市的公路图网，一共有 18263 个点，23874 条边，视为无向图。我们知道起点和终点的坐标，现在我们要求某两点之间的最短路径。</p>
 <ol>
 <li>用 Dijkstra 算法来，其中白色的点表示搜索过程中访问了的点。可以看出 Dijkstra 算法有点像 BFS 向周围扩展，做了很多无用的搜索。当然这与图的形状也有一定关系。   </li>

@@ -197,7 +197,7 @@
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">% gcc -o app app.o -L. -ltest<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h3><a name="sec3" id="sec3"></a><br>Shared Library</h3>
 
-<p><p class="first">Shared lib 和 archive 的两个区别： 1，当进行的是动态链接，最后得到的可执行程序中不包含实际库中的执行代码，只是一个对库的引用。所以动态链接最后得到的可执行程序要小一些。 2 多个程序可以共享动态链接库，动态链接库不只是 obj 文件的集合，其中是单一的一个 obj 文件，包含了库中所有的信息，所以一个程序动态加载 shared lib 的时候是把库中所有的东西都加载了，而不是所引用的那部分。</p>
+<p><p class="first">Shared lib 和 archive 的两个区别：1，当进行的是动态链接，最后得到的可执行程序中不包含实际库中的执行代码，只是一个对库的引用。所以动态链接最后得到的可执行程序要小一些。2 多个程序可以共享动态链接库，动态链接库不只是 obj 文件的集合，其中是单一的一个 obj 文件，包含了库中所有的信息，所以一个程序动态加载 shared lib 的时候是把库中所有的东西都加载了，而不是所引用的那部分。</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">% gcc -c -fPIC test1.c
 % gcc -shared - fPIC libtest.so test1.o test2.o<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>-fPIC 选项指编译为位置独立的执行代码，这样可以动态加载，产生 libtest.so 文件。</p>

@@ -199,7 +199,7 @@ performing <span class="token keyword">lazy</span> computation
 <span class="token operator">-</span> <span class="token punctuation">:</span> float <span class="token operator">=</span> <span class="token number">4.</span>
 <span class="token punctuation">#</span> Lazy<span class="token punctuation">.</span>force v<span class="token punctuation">;;</span> <span class="token operator">-</span> <span class="token punctuation">:</span> float <span class="token operator">=</span> <span class="token number">4.</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>关键字 lazy 表示延迟计算这个表达式， Lazy.force 表示求值。可以看到第一次 force 的时候会打印出 performing…信息，后面的 force 就直接返回了 value。</p>
+<p>关键字 lazy 表示延迟计算这个表达式，Lazy.force 表示求值。可以看到第一次 force 的时候会打印出 performing…信息，后面的 force 就直接返回了 value。</p>
 <p>为了更好的理解这个概念，我们可以实现一把 Lazy。首先定义一个 lazy_state:</p>
 <pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token punctuation">#</span> <span class="token keyword">type</span> <span class="token type-variable function">'a</span> lazy_state <span class="token operator">=</span>
 <span class="token operator">|</span> Delayed <span class="token keyword">of</span> <span class="token punctuation">(</span>unit <span class="token operator">-></span> <span class="token type-variable function">'a</span><span class="token punctuation">)</span>

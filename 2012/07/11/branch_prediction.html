@@ -230,7 +230,7 @@
 <li>如果你猜对了，那么节省了不少时间。</li>
 <li>如果猜错了，火车停下来，等你撤销刚才的操作，再往前走，这会比较耗费时间。</li>
 </ul>
-<p>同样在执行指令的时候，cpu 也能做这样类似的工作。现代 cpu 都采用 <strong>指令流水线技术</strong> ，即处理器会预取下面要执行的一些指令，如果下面的指令正是需要被执行的那就节省了时间，如果在概率上大部分能猜对下面要运行的指令，那就提高了 cpu 的运行效率。更详细的图文介绍可以参考<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Branch_predictor">wiki</a>。简单的说明就是 cpu 会根据前面所执行的指令的历史，归纳出相应的模式，把预测的指令预取进来，然后继续沿着预测的指令执行。如果发现预测错误，则倒过来重新初始化预测表、刷新指令管道然后继续执行。所以看上面的例子：</p>
+<p>同样在执行指令的时候，cpu 也能做这样类似的工作。现代 cpu 都采用 <strong>指令流水线技术</strong>，即处理器会预取下面要执行的一些指令，如果下面的指令正是需要被执行的那就节省了时间，如果在概率上大部分能猜对下面要运行的指令，那就提高了 cpu 的运行效率。更详细的图文介绍可以参考<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Branch_predictor">wiki</a>。简单的说明就是 cpu 会根据前面所执行的指令的历史，归纳出相应的模式，把预测的指令预取进来，然后继续沿着预测的指令执行。如果发现预测错误，则倒过来重新初始化预测表、刷新指令管道然后继续执行。所以看上面的例子：</p>
 <pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">T = branch taken
 N = branch not taken
 
@@ -241,7 +241,7 @@ branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
 <p> 后面作者又加了一条 hack，把这段代码重新改写一下：</p>
 <pre><code>  if (data[c] &gt;= 128)       ====&gt;              int t = (data[c] - 128) &gt;&gt; 31; 
      sum += data[c];        ====&gt;              sum += ~t &amp; data[c];
-</code></pre><p> 那么前面是否排序就对这段代码效率没有影响了，同样是 2 秒多。 这和编译器的优化非常相关，不同的编译器的结果不一样，4.6.1 GCC 加上-O3 或者-ftree-vectorize 编译选项可以对这种情况进行优化，所以排序与否没有关系，而 VC++2010 却不能进行类似优化 (GCC 果然强大)。</p>
+</code></pre><p> 那么前面是否排序就对这段代码效率没有影响了，同样是 2 秒多。这和编译器的优化非常相关，不同的编译器的结果不一样，4.6.1 GCC 加上-O3 或者-ftree-vectorize 编译选项可以对这种情况进行优化，所以排序与否没有关系，而 VC++2010 却不能进行类似优化 (GCC 果然强大)。</p>
 <h2 id="一个优化例子"><a href="#一个优化例子" class="headerlink" title="一个优化例子"></a>一个优化例子</h2><p> 在 Linux kernel 里面会看到类似 likely 和 unlikely 这样的代码，从其名字就很直观的解释了其意义。看其定义为两个宏。</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c">include<span class="token operator">/</span>linux<span class="token operator">/</span>compiler<span class="token punctuation">.</span>h
 

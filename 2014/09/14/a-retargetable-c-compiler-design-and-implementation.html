@@ -197,7 +197,7 @@
 <p>getchr 逐个字符读取，cp 就是 input.c 里面的当前字符。跳过 BLANK，如果碰到 NEWLINE 则调用 input.c 读取下一行。</p>
 <p>token.h 看起来有很多列，这个文件被多个地方用到。是用宏来生成一些 Enum 里面的代码。比如 token type 和 expr type。</p>
 <p>gettok 顾名思义在 lex 运行的时候不断提供一个一个的 token，这主要是通过 cp 匹配 map 来判断，条件分支很多 (依据当前的第一个字符)。<code>register unsigned char* rpc</code>存储当前字符。<code>register 作为一个对编译器的提示，尽量用 register 来存储变量。事实上现在的编译器很多都能做 auto register allocation，有的时候编译器的选择可能比人的选择更好。register 在老的 C 代码里面可能更为常见。</code></p>
-<p>这个函数里面很多地方都用到了 goto，主要是在匹配关键字的时候区分 identifier。主要几大类是: number, keyword, identifier, string。 icon 处理数字的前缀，fcon 处理浮点数。</p>
+<p>这个函数里面很多地方都用到了 goto，主要是在匹配关键字的时候区分 identifier。主要几大类是：number, keyword, identifier, string。icon 处理数字的前缀，fcon 处理浮点数。</p>
 <p>Lexical analyzer 基本理论是自动状态机，没一个 token 可以根据相应的正则表达式来表示。有一些工具可以用来自动生成这些繁琐的代码，比如 LEX，更新一些的有 Flex 和 re2c。</p>
 <h2 id="error-c"><a href="#error-c" class="headerlink" title="error.c"></a>error.c</h2><p>终于来到 Parser 部分了，lcc 使用的是 recursive-descent，很多商业的编译器都是用的这种直观的算法，事实上对于大部分语言都足够了。recursive-descent 是自上而下的递归的，依据当前的 token 匹配语法结构。一个重要的问题是如何在处理的过程中给出适当的错误信息。error.c 里面的函数 test 和 expect 用来测试下一个 token 是否是预期的，expect 可以打印出错误信息。</p>
 <h2 id="tree-c"><a href="#tree-c" class="headerlink" title="tree.c"></a>tree.c</h2><p>最重要的数据结构 struct tree，AST 中的基本节点，包含子节点，和 operator 类型 (比如 AND，OR，NOT 等）。在构建 AST 的时候 root 函数经常被用到。</p>

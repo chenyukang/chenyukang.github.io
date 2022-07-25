@@ -188,7 +188,7 @@
   <article class="post-article">
     <section class="markdown-content"><p>前段时间继续做了 <a target="_blank" rel="noopener" href="http://github.com/chenyukang/rubytt">rubytt</a> 这个小项目，遇到一些问题。</p>
 <p>我想做一个自动检测未定义变量的功能，发现如果只是做静态分析，是很难做出来的。还有涉及到各种 gem 包的分析，这些工作量较大。可以看出在这个<a target="_blank" rel="noopener" href="https://github.com/chenyukang/rubytt/pull/21/files">PR</a>里我甚至用上了一些硬编码。</p>
-<p>然后我想做一个自动分析代码复杂度的功能，比如某些函数太长，或者逻辑太多之类的。这个我实现起来很快，也是比较简单的遍历语法树，递归统计逻辑操作和幅值操作的总数之类的。不过这些在 rubocop 里面都实现了，其中<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cyclomatic_complexity">Cyclomatic complexity</a>可用来衡量代码的复杂度。我仔细看了看 rubocop 的内容，这个项目里面做的检查还挺全的，不过很多都是风格类的检查。在我下一个项目一开始我就引入了 rubocop ，对于保证代码质量还是挺有帮助的。对于之前老的项目，如果不是一开始就保持代码风格和静态分析的检查，后面要追加就非常耗时了，往往大家也没有时间来做各种重构。</p>
+<p>然后我想做一个自动分析代码复杂度的功能，比如某些函数太长，或者逻辑太多之类的。这个我实现起来很快，也是比较简单的遍历语法树，递归统计逻辑操作和幅值操作的总数之类的。不过这些在 rubocop 里面都实现了，其中<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cyclomatic_complexity">Cyclomatic complexity</a>可用来衡量代码的复杂度。我仔细看了看 rubocop 的内容，这个项目里面做的检查还挺全的，不过很多都是风格类的检查。在我下一个项目一开始我就引入了 rubocop，对于保证代码质量还是挺有帮助的。对于之前老的项目，如果不是一开始就保持代码风格和静态分析的检查，后面要追加就非常耗时了，往往大家也没有时间来做各种重构。</p>
 <p>rubytt 暂时告一段落，作为一个业余项目还是花费了些时间，造轮子的过程中收获不少。</p>
 </section>
 

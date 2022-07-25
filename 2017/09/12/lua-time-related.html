@@ -189,7 +189,7 @@
     <section class="markdown-content"><p>我需要用 Lua 处理一个与时间相关的问题，比如我们在配置文件里面配置一个日期 (北京时间)，然后在 Openresty 里面判断当前时间是否在这个日期之前或者之后来做对应的逻辑。</p>
 <p>Lua 的时间处理还有点麻烦，主要是自带的相关库函数比较少。</p>
 <blockquote>
-<p>os.time()                &lt;== 返回当前系统的日历时间， 1505181586<br>os.date()                &lt;== 返回本地化的时间字符串，Tue Sep 12 09:59:56 2017<br>os.clock()               &lt;== 返回执行该程序 CPU 花去的时钟秒数，这里是 1156.726</p>
+<p>os.time()                &lt;== 返回当前系统的日历时间，1505181586<br>os.date()                &lt;== 返回本地化的时间字符串，Tue Sep 12 09:59:56 2017<br>os.clock()               &lt;== 返回执行该程序 CPU 花去的时钟秒数，这里是 1156.726</p>
 </blockquote>
 <p>我首先需要一个日期字符串转换为时间戳的函数，找来找去有了这么一个函数，使用正则表达式然后组成表：</p>
 <pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">function</span> <span class="token function">convert_time</span><span class="token punctuation">(</span>time_str<span class="token punctuation">)</span>
