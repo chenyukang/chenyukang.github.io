@@ -190,7 +190,7 @@
 <p>契机是那天 Rust Issue 到了 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues/100000">10000</a>这个里程碑，我点进去看了看。想起去年花了一周业余时间做过一个去重复的 diagnostics PR，就顺便看了看些最近的一些 issue，我发现有一个看起来比较适合的 issue，就 assign 给了自己。</p>
 <p>过了两天居然在 Teams 收到公司的同事的消息，他问我这个 issue 什么时候能解决，因为 raw-dylib 功能要稳定了，他还在等这个 issue。我平时工作基本不会被催，没想到随便接个开源 issue 会被催，哈哈。于是我很快发了 PR，另外看了看这个 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues/58713">raw-dylib 功能</a>，这涉及到 Rust 链接 dll 相关的，Windows 上不少 Rust 问题依赖这个 RFC。</p>
 <p>后面我接着做了几个 diagnostics 方面的 issue，这类问题是最适合 compiler 开发新手的，因为通常来说修复并不复杂。我在这个过程中基本看完了 Rust Parser 这部分的代码。</p>
-<p>初学 Rust 一个很重要的技能就是理解 Rust 的报错信息，很多适合是编译器在提示我们写程序。编译器的报错信息特别重要，太少则说明不了问题，太详细则让人抓狂。Rust compiler 在报错这方面真的非常好，基本都是源自于开发者发现了更好的报错方式，自己加上去。</p>
+<p>初学 Rust 一个很重要的技能就是理解 Rust 的报错信息，很多时候是编译器在提示我们写程序。编译器的报错信息特别重要，太少则说明不了问题，太详细则让人抓狂。Rust compiler 在报错这方面真的非常好，基本都是源自于开发者发现了更好的报错方式，自己加上去。</p>
 <p>我在做的过程中，发现 Rust 编译器的提示很人性化，比如 Parser 发现你该写 <code>pub</code> 的地方写了个 <code>public</code> ，则会提示你是不是应该写 <code>pub</code>，比如你写了个 <code>import mod</code>，则会提示你是不是应该写 <code>use</code>，甚至发现不容易显示的 Unicode chars，则会提示这里要注意哦。关于生命周期的提示，有的还会加上各种好看的图线标识。</p>
 <p>甚至，他们最近开始做 diagnostics 的语言本地化了<a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues/100717">Diagnostic Translation</a></p>
 <p>另外 Rust 的提示在类型推导后也可以加上更多有用信息，如果我们确定这里的提示就是唯一的修复方法，则可通过 rust-fix 自动修复，所以你能看到 Rust compiler 这个 repo 的单元测试里面有很多 .fix 后缀的对比文件。</p>
