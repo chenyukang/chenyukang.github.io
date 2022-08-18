@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="为 Rust 做些小贡献 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    为 Rust 做些小贡献 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/links/" class="menu-link">Links</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>为 Rust 做些小贡献</h2>
+  <p class="post-date">2022-08-18</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box" style="max-width: 850px" >
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>有一段时间没有写文章了，最近沉迷于给 Rust Compiler 做些贡献，这里分享一下自己的收获和感受。</p>
+<p>契机是那天 Rust Issue 到了 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues/100000">10000</a>这个里程碑，我点进去看了看。想起去年花了一周业余时间做过一个去重复的 diagnostics PR，就顺便看了看些最近的一些 issue，我发现有一个看起来比较适合的 issue，就 assign 给了自己。</p>
+<p>过了两天居然在 Teams 收到公司的同事的消息，他问我这个 issue 什么时候能解决，因为 raw-dylib 功能要稳定了，他还在等这个 issue。我平时工作基本不会被催，没想到随便接个开源 issue 会被催，哈哈。于是我很快发了 PR，另外看了看这个 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues/58713">raw-dylib 功能</a>，这涉及到 Rust 链接 dll 相关的，Windows 上不少 Rust 问题依赖这个 RFC。</p>
+<p>后面我接着做了几个 diagnostics 方面的 issue，这类问题是最适合 compiler 开发新手的，因为通常来说修复并不复杂。我在这个过程中基本看完了 Rust Parser 这部分的代码。</p>
+<p>初学 Rust 一个很重要的技能就是理解 Rust 的报错信息，很多适合是编译器在提示我们写程序。编译器的报错信息特别重要，太少则说明不了问题，太详细则让人抓狂。Rust compiler 在报错这方面真的非常好，基本都是源自于开发者发现了更好的报错方式，自己加上去。</p>
+<p>我在做的过程中，发现 Rust 编译器的提示很人性化，比如 Parser 发现你该写 <code>pub</code> 的地方写了个 <code>public</code> ，则会提示你是不是应该写 <code>pub</code>，比如你写了个 <code>import mod</code>，则会提示你是不是应该写 <code>use</code>，甚至发现不容易显示的 Unicode chars，则会提示这里要注意哦。关于生命周期的提示，有的还会加上各种好看的图线标识。</p>
+<p>甚至，他们最近开始做 diagnostics 的语言本地化了<a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues/100717">Diagnostic Translation · Issue #100717 </a></p>
+<p>另外 Rust 的提示在类型推导后也可以加上更多有用信息，如果我们确定这里的提示就是唯一的修复方法，则可通过 rust-fix 自动修复，所以你能看到 Rust compiler 这个 repo 的单元测试里面有很多 .fix 后缀的对比文件。</p>
+<p>我最近在修的<a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/100502">另外一个 Bug</a> 是来自 Tikv 项目发现的，当函数参数中有 <code>Arc::default()</code>的时候，从类型分析的结果看，这个参数可以满足多个其他参数，这样在分析缺少的参数给出合适的提示时就会有问题，那个算法导致死循环。我花了比较多时间写出最小化的测试用例，最后给出了一个修复。我还挺喜欢分析这类 Bug，像小说一般充满了悬疑。</p>
+<p>在这段时间里，我也和一些公司里全职做 Rust 相关的同事聊了聊，发现微软已经有几个组在全职做了，主要集中在 Rust 和 Windows、开发工具相关方面。另外和社区里其他几个开发者沟通了一下，华为的也有一些。</p>
+<p>Rust 纯粹是互联网上自由生长出来的一门语言，创始人早已经退出主导，主要的核心成员都是社区自由组成的，这里并没有一个绝对意义上的独裁者。我碰到的几乎都是在凭热情做贡献，比如最近一年很活跃的 <a target="_blank" rel="noopener" href="https://github.com/compiler-errors">compiler-errors</a> 这个开发者，有一次我催他 review PR，他说我不是全职在做 Rust，所以时间需要自己安排，不要催。我接着和他聊了聊，他的日常工作和 Rust 完全无关，花这么多时间就是爱好而已。</p>
+<p>这里足够开放，基本上你想参与到 Rust 开发中来，这个门槛是不高的。</p>
+<p>我并不是鼓吹 Rust 有多好，Rust 自然还有很多问题，学习成本比较陡峭，而且也并不适合很多日常项目。如果从功利角度考虑，投入产出比不高。</p>
+<p>我只觉得 Rust 很好玩，又足够开放，吸收了多年编程语言方面的理论，完全出自开源社区和一线开发者，一切讲究实用，所以又没有 OCaml、Hashkell 那种学究气，对编程语言感兴趣的朋友可以多关注一下。</p>
+<p>为什么我能沉下去做一些看似繁琐的开源工作，这里有几个方面：</p>
+<p>第一，我本身对编程语言的实现挺有兴趣的，几年前我基本看完了 EOPL 这本书，也做了很多里面的小解释器。可以说，编译这块算是程序员的一个小浪漫。带着问题看代码比较容易看进去，看完 Parser 这块之后，我打算再看看类型分析。</p>
+<p>第二，Rust 这几年工具链有很大提高，比如 Rust compiler 这样的大项目，VSCode + Rust Analyzer 就能很好应对，几乎能做到所有的变量跳转，函数调用跳转和调用关系分析，类型提示等等。Rust 在这样的大型项目和多人维护的项目上能体现出优势，有编译器的和类型系统的帮助，查阅代码和写代码体验和效率都好很多，这与我日常工作中需要在一堆年代久远的 PowerShell 中翻来覆去好太多了。</p>
+<p>第三，最近两年在日常工作中，我接触到了大量历史悠久的代码，这些代码其实很丑陋，但每年能为公司赚不少钱。我们常说提高编程技能需要向优秀的代码学习，但我发现被迫接触一些丑陋的历史代码对编程的心性大有裨益，因为今后你看很多代码都美得很，编程和调试时候的耐心好了很多。</p>
+<p>感兴趣的可以交流交流🙌</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Rust" >
+    <span class="tag-code">Rust</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/p/obsidian-speech/">
+        
+          让 Obsidian 朗读你的文字
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/contribute-to-rust/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW * 3 / 4}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
