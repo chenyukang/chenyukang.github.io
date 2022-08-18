@@ -192,7 +192,7 @@
 <p>后面我接着做了几个 diagnostics 方面的 issue，这类问题是最适合 compiler 开发新手的，因为通常来说修复并不复杂。我在这个过程中基本看完了 Rust Parser 这部分的代码。</p>
 <p>初学 Rust 一个很重要的技能就是理解 Rust 的报错信息，很多适合是编译器在提示我们写程序。编译器的报错信息特别重要，太少则说明不了问题，太详细则让人抓狂。Rust compiler 在报错这方面真的非常好，基本都是源自于开发者发现了更好的报错方式，自己加上去。</p>
 <p>我在做的过程中，发现 Rust 编译器的提示很人性化，比如 Parser 发现你该写 <code>pub</code> 的地方写了个 <code>public</code> ，则会提示你是不是应该写 <code>pub</code>，比如你写了个 <code>import mod</code>，则会提示你是不是应该写 <code>use</code>，甚至发现不容易显示的 Unicode chars，则会提示这里要注意哦。关于生命周期的提示，有的还会加上各种好看的图线标识。</p>
-<p>甚至，他们最近开始做 diagnostics 的语言本地化了<a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues/100717">Diagnostic Translation · Issue #100717 </a></p>
+<p>甚至，他们最近开始做 diagnostics 的语言本地化了<a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues/100717">Diagnostic Translation</a></p>
 <p>另外 Rust 的提示在类型推导后也可以加上更多有用信息，如果我们确定这里的提示就是唯一的修复方法，则可通过 rust-fix 自动修复，所以你能看到 Rust compiler 这个 repo 的单元测试里面有很多 .fix 后缀的对比文件。</p>
 <p>我最近在修的<a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/100502">另外一个 Bug</a> 是来自 Tikv 项目发现的，当函数参数中有 <code>Arc::default()</code>的时候，从类型分析的结果看，这个参数可以满足多个其他参数，这样在分析缺少的参数给出合适的提示时就会有问题，那个算法导致死循环。我花了比较多时间写出最小化的测试用例，最后给出了一个修复。我还挺喜欢分析这类 Bug，像小说一般充满了悬疑。</p>
 <p>在这段时间里，我也和一些公司里全职做 Rust 相关的同事聊了聊，发现微软已经有几个组在全职做了，主要集中在 Rust 和 Windows、开发工具相关方面。另外和社区里其他几个开发者沟通了一下，华为的也有一些。</p>
