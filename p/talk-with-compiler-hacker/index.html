@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="和 Rust Compiler 开发者面基 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    和 Rust Compiler 开发者面基 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/links/" class="menu-link">Links</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>和 Rust Compiler 开发者面基</h2>
+  <p class="post-date">2022-11-23</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box" style="max-width: 850px" >
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>很久没有更新博客了，最近两个月我在开心地写代码，今天想写篇文章，赶紧抓住这个冲动。</p>
+<p>上周和 Rust compiler 的一个核心开发 <a target="_blank" rel="noopener" href="https://github.com/compiler-errors">compiler-errors</a> 约了个线上面基。今天想写写我们沟通的主要几个方面，因为大部分都是技术相关的问题，所以我觉得写出来和大家分享一下没关系。</p>
+<p>他对 Rust 项目贡献时间刚好满一年，这期间做了 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pulls?q=is%3Apr+is%3Amerged+author%3Acompiler-errors+sort%3Acreated-asc">400 多个 PR</a>，效率实在太高。我在 Rust 社区混了两个月了，这期间提交的很多 PR 都是他帮忙 Review 的，开发过程中碰到问题我也会向他请教。有次偶然看到他 Twitter 放开了自己的时间表，任何对 Rust compiler 的开发者都可以约个时间聊聊，所以我就约了个线上会议。</p>
+<p>首先我问了一个比较宽泛的问题：你如何调试编译器，因为我发现你解决问题非常快。</p>
+<p>compiler-errors: 首先对于一个问题，我会尝试构建一个最小能重现问题的代码用例，根据报错信息或者代码栈看源代码，rust-analyzer 对看代码帮助非常大，我们基本可以很快跳转到任何变量或者函数的定义。使用 VsCode 的 terminal 运行命令，错误栈里的文件信息里面有源代码的路径，ctrl 按下去可以直接跳转到对应的代码行。我对 compiler 的很多部分都了解一些，主要是因为看了不少代码，有时候一看错误信息就能大致判断出问题的位置，如果有必要再去看运行的日志。</p>
+<p><em>VsCode terminal 运行命令直接跳转文件位置这个我学到了，我之前一直习惯在系统终端运行命令，VsCode 只是用来编辑代码。</em></p>
+<p>我：你是否使用 GDB 之类的调试器？<br><strong>compiler-errors:</strong> 我基本不用这个，因为使用 GDB 调试需要另外开一些编译选项，这会让编译变得很慢，而且运行的时候也会变得很慢。我记得很早之前使用过一次，感觉不太好。</p>
+<p>我：我进行了两个月的 Rust compiler 开发，所以接触到了很多语言的细节，给我的感受是 Rust 像是一个大杂烩，我能看到 Ruby 的影子，比如链式调用这样的风格，也能看到很多函数式编程的影子，所以这很独特，但我会担心 Rust 未来的发展，是否会太过独特而导致只有一小群人在使用。</p>
+<p><strong>compiler-errors:</strong> 对此我也不是很确定，确实 Rust 比较复杂，有很多问题还没解决，初学者上手的难度比较高，但一个开发者不用掌握所有 Rust 的边边角角也能开始开发，我很肯定，Rust 对于编写和维护大型的、对性能、安全型要求高的项目来说是非常合适的。比如 Rust compiler 这个项目本身，这么庞大的项目我们在 Review 代码的时候其实是比较简单的，主要看实现的逻辑是否有问题，而不会担心内存方面的问题，而且我们也有信心不断地对代码进行重构。Rust 从学术界的编程语言借鉴了不少东西，比如 OCaml 是一门很精美的语言，但是很多年一来一直对并行这块支持不好，工业界的使用范围也比较少。</p>
+<p><em>这些感受和我基本一致，在这么多年我断断续续的学习 Rust 过程中，我从未掌握过 Rust 的所有内容，但我发现从代码层面理解一个 Rust 项目非常容易，我接触过的几个领域的项目都是如此，比如 wasmer, youki, compiler，因为 Cargo 和统一的代码组织方式，还有 rust-analyzer 这样的工具辅助，理解代码相对来说容易很多。</em></p>
+<p>接着我让他帮忙简单看了看我正在做的一个相对比较大的 PR，而后聊了一下他在 aws 工作的情况，这些就不细写了。</p>
+<p>期间也问了一个我觉得自己看代码还没理解的部分，就是 method lookup 的相关实现，他说最好在一个 session 里面来分享这些，这样其他人也可以看到。Compiler team 会定时组织一些技术分享，视频都会上传到 Youtube，感兴趣的可以在这里看：<a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=RustcContributor%3A%3Aexplore">RustcContributor::explore - YouTube</a></p>
+<p>我觉得这种线上面基的经历不错，可以认识一些人，得到一些交流。这一年我基本都在家办公，现实中除了和同事沟通，认识新人的机会比较少。所以我也打算搞一个线上预约，如果想和我交流的可以在这里选择一个时间，我们沟通半小时：<a target="_blank" rel="noopener" href="https://calendly.com/cyukang/30min">https://calendly.com/cyukang/30min</a></p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#写作" >
+    <span class="tag-code">写作</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/p/unconscious-bias/">
+        
+          无意识偏见
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/talk-with-compiler-hacker/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW * 3 / 4}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2022 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
