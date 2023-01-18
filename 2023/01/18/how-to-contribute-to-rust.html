@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="程序员的喵">
+  <meta property="og:title" content="为 Rust 做贡献的经验分享 | 程序员的喵" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="程序员的喵; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    为 Rust 做贡献的经验分享 |
+    程序员的喵
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77282254-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-77282254-1');
+  </script>
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>程序员的喵</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/links/" class="menu-link">Links</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>为 Rust 做贡献的经验分享</h2>
+  <p class="post-date">2023-01-18</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>2022 年下半年我花了很多时间为 Rust 做贡献，最近一个阶段性的收获是我获得了 <a target="_blank" rel="noopener" href="https://foundation.rust-lang.org/news/community-grants-program-awards-announcement-introducing-our-latest-project-grantees/">Rust Foundation 项目资助</a> 🙌。</p>
+<p>这个收获完全是副产物，我在 8 月份开始做这些的时候不知道 Rust Foundation 有这类资助，在为 Rust compiler 做了 30 多个 PR 后我发现了这个资助项目，然后很快就发起了申请。我的项目计划是：</p>
+<blockquote>
+<p>To support contributions to the Rust compiler, and to continue to blog about the experience, sharing the learning experience, knowledge, and skills with others.</p>
+</blockquote>
+<p>所以除去写代码，最近几个月我会写一些 Rust 相关的技术文章。我之前写过一篇 <a href="https://catcoding.me/p/my-experience-learning-rust/">我如何学“会”了 Rust</a> ，分享了一些去年通过做开源项目来学习 Rust 的相关经验。</p>
+<p>这篇主要集中在如何参与到 Rust compiler 相关的开发中来，但我觉得纯写技术文章会有些单调，而且很多资料都有官方文档，翻译为中文意义不大，所以这篇我主要写自己的感受和经验。</p>
+<h2 id="我如何开始"><a href="#我如何开始" class="headerlink" title="我如何开始"></a>我如何开始</h2><p>我一直是通过为项目做贡献来学习 Rust，因为纯看书或者文档我觉得收获不大，大概是年纪大了看了就忘记了🐸。</p>
+<p>很多事情都不是规划好的，我觉得生活充满了随机性，但我会努力和乐观些，并保持好奇心。好奇心对程序员很重要，这是源动力。</p>
+<p>我的第一个 Rust compiler 的 PR 是在 2021 年 9 月做的 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/88493">Remove duplicated diagnostics</a> 。这是我在使用 Rust 的开发过程中发现的问题，一时兴起翻看 compiler 的代码想知道这个现象是如何产生的，毕竟这看起来很容易 debug。</p>
+<p>事实证明我低估了上手的难度，这个问题我大概花了一周的业余时间，期间当然也花了不少时间去看文档，我还尝试使用 gdb 去一行行跟踪代码。最终的修复虽然也比较简单，但是代码 review 来回好多次。</p>
+<p>做完第一个 PR 之后，我觉得很有成就感，但随即我就去搞其他的了。一直到 2022 年的 8 月，我偶然又看了几个 issue，感觉有一些 parser 和报错信息相关的问题比较容易解决，所以就又开始做了。过段时间刚好是微软的 hackthon，有两周左右时间可以用来学习感兴趣的东西，所以我的时间比较多地投入到上面，一直到现在都会规律性地给 Rust 做贡献。</p>
+<p>我解决的问题比较零碎，很多都涉及 diagnostics，也有些涉及 Infra 之类的，还有些是纯粹编译器里的 bugfix，我喜欢解决一个个独立的 issue，这让我觉得每个新的问题都是一个小谜题，而做稍大一些的改动需要耗费更持久的精力。后续我会试着找一些固定的方向做。</p>
+<h2 id="贡献流程"><a href="#贡献流程" class="headerlink" title="贡献流程"></a>贡献流程</h2><p>Rust 编译器的仓库里面包含了上万个测试用例，不管是解决 bug 还是做一些新功能开发，最好先写一些最小测试用例，然后不断修改代码、编译、测试，直到用例测试通过。</p>
+<p>编译型语言最大的弊端是失去了 interactive programming 的乐趣，特别是 Rust 这种编译特别耗时的语言，不是很适合做探索式编程，我的办法是编译的时候就继续看代码，还有在关键的地方多加一些日志信息。</p>
+<p>在这个过程中，最耗时的可能是代码 review 这个阶段，PR 发出来之后 rustbot 会从列表中随机挑选一个 maintainer 来 review 代码，但因为目前很多 maintainer 的 review list 积累过长，所以需要等待很久才能开始。目前社区正在讨论如何解决这个问题 <a target="_blank" rel="noopener" href="https://internals.rust-lang.org/t/did-we-start-reviewing-prs-slower/18033">Did we start reviewing PRs slower?</a>，我的解决办法是 PR 发出之后就开始解决其他问题，如果有反馈再切回这个分支来修改。</p>
+<p><img src="/images/ob_pasted-image-20230117125646.png" alt=""><br>对于比较大的开源项目，需要用大量时间去和其他人沟通和讨论，所以写作能力很重要。看文档、理解代码、调试代码、和其他人交流，这些是软件开发中的核心能力，在做开源工作时得到很好的提升，可以很快地迁移到其他项目上。</p>
+<h2 id="如何选择-issue"><a href="#如何选择-issue" class="headerlink" title="如何选择 issue"></a>如何选择 issue</h2><p>大家可能会有个误解，认为要为编译器做贡献必须得对 Rust 很了解。我认为不是的，以我的经验和水平算也不上很资深的 Rust 开发人员，我并没有在实际工作和生产环境使用过 Rust，但对编译器做贡献并不需要对语言本身了如指掌。</p>
+<p>如果涉及到语言本身的语义、语法的改动，则需要 RFC 的流程，经过社区大量的讨论，这些对于新手来说相对不容易，但编译器项目里面本身有很多用户发现的问题、流程改进、bugfix、重构、优化等需要做，所以新手最适合从解决 issue 开始。</p>
+<p>当掌握了 Rust 的主要的语法，能看懂大部分代码的情况下就可以开始，新手需要通过一些简单的问题来上手，带着问题看代码更有效果。</p>
+<p>但刚开始，你可能不知道自己能解决什么问题，可以从 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues?q=is%3Aissue+is%3Aopen+label%3AE-mentor">E-mentor</a>, <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues?q=is%3Aissue+is%3Aopen+label%3AE-easy">E-easy</a>, <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues?q=is%3Aissue+is%3Aopen+label%3AE-help-wanted">E-help-wanted</a> 这类标签去找一些相对简单的问题来解决。但如果找不到适合的，也可以随机找一些自己能看懂的问题，试着去解决。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues?q=is%3Aissue+is%3Aopen+label%3AA-diagnostics">A-diagnostics</a> 的问题通常是完善或者修复 rustc 的报错信息，这类问题适合新手。Rust 编译器里面很多代码都是为了给用户提供尽量有用的报错信息，Rust 在这块的关注和投入超过绝大部分编程语言，正如 <a target="_blank" rel="noopener" href="https://github.com/estebank">estebank</a>写道：</p>
+<blockquote>
+<p>We spent decades trying to invent a sufficiently smart compiler when we should have been inventing a sufficiently empathetic one.</p>
+</blockquote>
+<p>既然 Rust 学习曲线比较陡峭，我们应该让编译器善解人意。这类问题通常需要去理解 AST，推测用户的编程意图，给他们提供有用的帮助信息。</p>
+<p>我们可以通过搜索关键字的方式来找到错误信息对应的代码，但并不是所有的这类问题都容易解决，有的时候需要在不同的阶段中去验证，比如我这个 PR <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/101975">Suggest to use . instead of ::</a>，方法调用报错是在 <code>resolve</code> 阶段出现的，但是我们需要等到 <code>hir typeck</code> 阶段才能去复核是否能给出帮助信息。</p>
+<p>有的 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues?q=is%3Aissue+is%3Aopen+label%3AI-ICE">ICE</a> 问题也比较容易解决，比如一些 corner case 没用处理的情况，通常有一个粗暴的解决方法，但从各种修复方案中权衡利弊也是门艺术。</p>
+<h2 id="如何发现问题"><a href="#如何发现问题" class="headerlink" title="如何发现问题"></a>如何发现问题</h2><p>做编译器开发，一个重要的转变是从语言的使用者变成改进者，编程语言是工具，编译器也就是另外一个软件，这都是可以改进的。如果视角变了，就能发现很多问题。</p>
+<p>有一天在 Twitter 上看到这个分享，我的疑问是为什么编译器会同时出现两个建议，第一个明显是只适合关心返回结果的情况：</p>
+<p><img src="/images/ob_pasted-image-20230117005319.png" alt=""></p>
+<p>所以我记录下来，随后发起一个 PR 对此做了修复 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/104875">Properly handle postfix inc/dec</a>。</p>
+<p>发现问题的另一个来源是日常使用，比如我在日常使用 Rust 时发现如果我少输入了一个 ‘}’，编译器可能无法指出括号不匹配的位置，而且如果源文件很长可能会报出大量错误，这是因为大括号的不匹配没用得到适当的处理，导致 parser 出来的语法树是完全不对的，而编译器总是尝试去从错误中恢复。这种情况下除了指出缺少 ‘}’，给出其他信息都是无法帮助用户尽快修复问题的，所以我做了另一个 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/104012">PR 去解决这个问题</a>。</p>
+<h2 id="一些小贴士"><a href="#一些小贴士" class="headerlink" title="一些小贴士"></a>一些小贴士</h2><p><a target="_blank" rel="noopener" href="https://rustc-dev-guide.rust-lang.org/getting-started.html">Guide to Rustc Development</a> 这个文档需要经常看，这份文档相对源码可能有些地方不够新，但对了解编译器的各个主题概要非常有帮助。</p>
+<p>Rust 有一个不那么完整的 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/reference/">Reference</a>，如果你看不懂某部分代码，很可能是不知道相关的名词，这时候翻看这个 reference 就会很有帮助。</p>
+<p>在 rustc 的开发过程中，<code>x.py</code> 是经常使用到的命令，我把自己常用的命令写成了一个 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/share/blob/main/justfile">justfile 配置文件</a>，这样做测试、查日志、rebase 之类的会比较方便。</p>
+<p><strong>在调试过程中，日志加上读代码比 gdb 一行行去跟踪更有用</strong>。通过阅读代码，在关键的步骤打印日志，通过运行时的日志去验证自己的猜想，这样我们可以在脑海中获得代码的主要流程和组织结构，而通过 gdb 跟踪容易迷失在具体的细节里。</p>
+<p>使用 rust-analyzer 读 Rust 代码很容易，特别是 <code>show call hierarchy</code> 对理解函数调用特别有用。强类型系统对于写代码可能是一个负担，但对于阅读和理解代码绝对有很大的好处，类型就是文档。</p>
+<p>在开发过程中如果遇到问题，可以去 <a target="_blank" rel="noopener" href="https://rust-lang.zulipchat.com/#narrow/stream/182449-t-compiler.2Fhelp">t-compiler/help</a> 发帖求帮助，zulip 是 Rust 编译器开发人员使用的讨论工具，你也可以在上面通过用户名找具体的人讨论问题，通常大家都是很乐于帮助的。</p>
+<p>另一个好的学习方法是去 review 其他人的 PR，刚开始看不懂没关系，可以看看大致思路。有的 issue 如果我感兴趣但没时间去解决我会点击订阅通知，这样 issue 如果被 close 我会收到邮件，我可能会去看看 PR。</p>
+<p>国内开发人员在做开源的时候所会面临的一个问题是语言障碍，这只能通过长时间的不断练习能提高。如果想中文沟通，欢迎找我交流。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果你对编译方面的开发不感兴趣，也可以试着去找其他领域，Rust 在 Infra、WebAssembly 和 Web 开发、嵌入式、游戏、安全等领域都在快速发展。另外，对 Rust 做贡献限制于写代码，报出好的 issue、改善文档和翻译、加入讨论这些都属于社区贡献。</p>
+<p>如果你只是想了解一些编译相关的知识，这些资料非常适合入门：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://craftinginterpreters.com/">Crafting Interpreters</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/rui314/9cc">9cc: A Small C Compiler</a> </li>
+<li><a target="_blank" rel="noopener" href="https://github.com/utam0k/r9cc">r9cc: Toy C compiler</a></li>
+</ul>
+<p>创造运气在于多做并且让更多人知道，做开源和分享对程序员来说是一个创造运气的事。希望我的分享对你有用。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Rust" >
+    <span class="tag-code">Rust</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/2023/01/02/2022-summary.html">
+        
+          我的 2022
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%88%91%E5%A6%82%E4%BD%95%E5%BC%80%E5%A7%8B"><span class="toc-nav-text">我如何开始</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%B4%A1%E7%8C%AE%E6%B5%81%E7%A8%8B"><span class="toc-nav-text">贡献流程</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9-issue"><span class="toc-nav-text">如何选择 issue</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A6%82%E4%BD%95%E5%8F%91%E7%8E%B0%E9%97%AE%E9%A2%98"><span class="toc-nav-text">如何发现问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%80%E4%BA%9B%E5%B0%8F%E8%B4%B4%E5%A3%AB"><span class="toc-nav-text">一些小贴士</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-nav-text">总结</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2023/01/18/how-to-contribute-to-rust.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW * 3 / 4}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2023 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
