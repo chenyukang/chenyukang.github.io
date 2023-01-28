@@ -218,7 +218,7 @@
 <p>有一天在 Twitter 上看到这个分享，我的疑问是为什么编译器会同时出现两个建议，第一个明显是只适合关心返回结果的情况：</p>
 <p><img src="/images/ob_pasted-image-20230117005319.png" alt=""></p>
 <p>所以我记录下来，随后发起一个 PR 对此做了修复 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/104875">Properly handle postfix inc/dec</a>。</p>
-<p>发现问题的另一个来源是日常使用，比如我在日常使用 Rust 时发现如果我少输入了一个 ‘}’，编译器可能无法指出括号不匹配的位置，而且如果源文件很长可能会报出大量错误，这是因为大括号的不匹配没 y 得到适当的处理，导致 parser 出来的语法树是完全不对的，而编译器总是尝试去从错误中恢复。这种情况下除了指出缺少 ‘}’，给出其他信息都是无法帮助用户尽快修复问题的，所以我做了另一个 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/104012">PR 去解决这个问题</a>。</p>
+<p>发现问题的另一个来源是日常使用，比如我在日常使用 Rust 时发现如果我少输入了一个 ‘}’，编译器可能无法指出括号不匹配的位置，而且如果源文件很长可能会报出大量错误，这是因为大括号的不匹配没有得到适当的处理，导致 parser 出来的语法树是完全不对的，而编译器总是尝试去从错误中恢复。这种情况下除了指出缺少 ‘}’，给出其他信息都是无法帮助用户尽快修复问题的，所以我做了另一个 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/104012">PR 去解决这个问题</a>。</p>
 <h2 id="一些小贴士"><a href="#一些小贴士" class="headerlink" title="一些小贴士"></a>一些小贴士</h2><p><a target="_blank" rel="noopener" href="https://rustc-dev-guide.rust-lang.org/getting-started.html">Guide to Rustc Development</a> 这个文档需要经常看，这份文档相对源码可能有些地方不够新，但对了解编译器的各个主题概要非常有帮助。</p>
 <p>Rust 有一个不那么完整的 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/reference/">Reference</a>，如果你看不懂某部分代码，很可能是不知道相关的名词，这时候翻看这个 reference 就会很有帮助。</p>
 <p>在 rustc 的开发过程中，<code>x.py</code> 是经常使用到的命令，我把自己常用的命令写成了一个 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/share/blob/main/justfile">justfile 配置文件</a>，这样做测试、查日志、rebase 之类的会比较方便。</p>
