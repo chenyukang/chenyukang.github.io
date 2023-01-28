@@ -213,12 +213,12 @@
 </blockquote>
 <p>既然 Rust 学习曲线比较陡峭，我们应该让编译器善解人意。这类问题通常需要去理解 AST，推测用户的编程意图，给他们提供有用的帮助信息。</p>
 <p>我们可以通过搜索关键字的方式来找到错误信息对应的代码，但并不是所有的这类问题都容易解决，有的时候需要在不同的阶段中去验证，比如我这个 PR <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/101975">Suggest to use . instead of ::</a>，方法调用报错是在 <code>resolve</code> 阶段出现的，但是我们需要等到 <code>hir typeck</code> 阶段才能去复核是否能给出帮助信息。</p>
-<p>有的 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues?q=is%3Aissue+is%3Aopen+label%3AI-ICE">ICE</a> 问题也比较容易解决，比如一些 corner case 没用处理的情况，通常有一个粗暴的解决方法，但从各种修复方案中权衡利弊也是门艺术。</p>
+<p>有的 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues?q=is%3Aissue+is%3Aopen+label%3AI-ICE">ICE</a> 问题也比较容易解决，比如一些 corner case 没有处理的情况，通常有一个粗暴的解决方法，但从各种修复方案中权衡利弊也是门艺术。</p>
 <h2 id="如何发现问题"><a href="#如何发现问题" class="headerlink" title="如何发现问题"></a>如何发现问题</h2><p>做编译器开发，一个重要的转变是从语言的使用者变成改进者，编程语言是工具，编译器也就是另外一个软件，这都是可以改进的。如果视角变了，就能发现很多问题。</p>
 <p>有一天在 Twitter 上看到这个分享，我的疑问是为什么编译器会同时出现两个建议，第一个明显是只适合关心返回结果的情况：</p>
 <p><img src="/images/ob_pasted-image-20230117005319.png" alt=""></p>
 <p>所以我记录下来，随后发起一个 PR 对此做了修复 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/104875">Properly handle postfix inc/dec</a>。</p>
-<p>发现问题的另一个来源是日常使用，比如我在日常使用 Rust 时发现如果我少输入了一个 ‘}’，编译器可能无法指出括号不匹配的位置，而且如果源文件很长可能会报出大量错误，这是因为大括号的不匹配没用得到适当的处理，导致 parser 出来的语法树是完全不对的，而编译器总是尝试去从错误中恢复。这种情况下除了指出缺少 ‘}’，给出其他信息都是无法帮助用户尽快修复问题的，所以我做了另一个 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/104012">PR 去解决这个问题</a>。</p>
+<p>发现问题的另一个来源是日常使用，比如我在日常使用 Rust 时发现如果我少输入了一个 ‘}’，编译器可能无法指出括号不匹配的位置，而且如果源文件很长可能会报出大量错误，这是因为大括号的不匹配没 y 得到适当的处理，导致 parser 出来的语法树是完全不对的，而编译器总是尝试去从错误中恢复。这种情况下除了指出缺少 ‘}’，给出其他信息都是无法帮助用户尽快修复问题的，所以我做了另一个 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/104012">PR 去解决这个问题</a>。</p>
 <h2 id="一些小贴士"><a href="#一些小贴士" class="headerlink" title="一些小贴士"></a>一些小贴士</h2><p><a target="_blank" rel="noopener" href="https://rustc-dev-guide.rust-lang.org/getting-started.html">Guide to Rustc Development</a> 这个文档需要经常看，这份文档相对源码可能有些地方不够新，但对了解编译器的各个主题概要非常有帮助。</p>
 <p>Rust 有一个不那么完整的 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/reference/">Reference</a>，如果你看不懂某部分代码，很可能是不知道相关的名词，这时候翻看这个 reference 就会很有帮助。</p>
 <p>在 rustc 的开发过程中，<code>x.py</code> 是经常使用到的命令，我把自己常用的命令写成了一个 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/share/blob/main/justfile">justfile 配置文件</a>，这样做测试、查日志、rebase 之类的会比较方便。</p>
