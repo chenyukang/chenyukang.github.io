@@ -222,7 +222,7 @@
 <h2 id="一些小贴士"><a href="#一些小贴士" class="headerlink" title="一些小贴士"></a>一些小贴士</h2><p><a target="_blank" rel="noopener" href="https://rustc-dev-guide.rust-lang.org/getting-started.html">Guide to Rustc Development</a> 这个文档需要经常看，这份文档相对源码可能有些地方不够新，但对了解编译器的各个主题概要非常有帮助。</p>
 <p>Rust 有一个不那么完整的 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/reference/">Reference</a>，如果你看不懂某部分代码，很可能是不知道相关的名词，这时候翻看这个 reference 就会很有帮助。</p>
 <p>在 rustc 的开发过程中，<code>x.py</code> 是经常使用到的命令，我把自己常用的命令写成了一个 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/share/blob/main/justfile">justfile 配置文件</a>，这样做测试、查日志、rebase 之类的会比较方便。</p>
-<p><strong>在调试过程中，日志加上读代码比 gdb 一行行去跟踪更有用</strong>。通过阅读代码，在关键的步骤打印日志，通过运行时的日志去验证自己的猜想，这样我们可以在脑海中获得代码的主要流程和组织结构，而通过 gdb 跟踪容易迷失在具体的细节里。</p>
+<p>在调试过程中，日志加上读代码比 gdb 一行行去跟踪更有用。通过阅读代码，在关键的步骤打印日志，通过运行时的日志去验证自己的猜想，这样我们可以在脑海中获得代码的主要流程和组织结构，而通过 gdb 跟踪容易迷失在具体的细节里。</p>
 <p>使用 rust-analyzer 读 Rust 代码很容易，特别是 <code>show call hierarchy</code> 对理解函数调用特别有用。强类型系统对于写代码可能是一个负担，但对于阅读和理解代码绝对有很大的好处，类型就是文档。</p>
 <p>在开发过程中如果遇到问题，可以去 <a target="_blank" rel="noopener" href="https://rust-lang.zulipchat.com/#narrow/stream/182449-t-compiler.2Fhelp">t-compiler/help</a> 发帖求帮助，zulip 是 Rust 编译器开发人员使用的讨论工具，你也可以在上面通过用户名找具体的人讨论问题，通常大家都是很乐于帮助的。</p>
 <p>另一个好的学习方法是去 review 其他人的 PR，刚开始看不懂没关系，可以看看大致思路。有的 issue 如果我感兴趣但没时间去解决我会点击订阅通知，这样 issue 如果被 close 我会收到邮件，我可能会去看看 PR。</p>
