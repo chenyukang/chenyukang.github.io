@@ -219,8 +219,11 @@
 <p>更让人吐血的是，此问题已报告给了苹果，<strong>然而苹果回应说这是“设计使然”</strong>！而你也会看到更多人在网络上反馈同样的性能问题，比如：</p>
 <p><a target="_blank" rel="noopener" href="https://www.reddit.com/r/linux/comments/tj12vw/hugo_runs_twice_as_fast_in_asahi_linux_than_macos/">Hugo runs twice as fast in Asahi Linux than macOS on the same M1 Mac system</a></p>
 <p>好了，如果你也会频繁跑大量的程序，可能也会受此影响。为什么我说”可能“，是因为这东西太复杂了，我还没搞清楚所有细节！官方文档关于 <code>SIP</code> 只有寥寥数语，如果你想了解更多关于 <code>SIP</code> 的资料，可以参考这篇：<a target="_blank" rel="noopener" href="https://derflounder.wordpress.com/2015/10/01/system-integrity-protection-adding-another-layer-to-apples-security-model/">System Integrity Protection – Adding another layer to Apple’s security model</a></p>
-<p>当我看这篇 wf</p>
-<p>如果你想关闭 <code>SIP</code>，还有那么点麻烦：</p>
+<p>当我看这篇文章的时候，以为可以配置一下 <code>/System/Library/Sandbox/rootless.conf</code>就可以忽略某些目录的文件，结果是我太幼稚了。我问 bjorn3 怎么回事，得到的回答是：</p>
+<blockquote>
+<p>The system file protection is only a small part of the protections against malware macOS has. Xprotect is a virus scanner which checks all executables against a liat of known malware. There is signature checking (AMFI) which also checks if the certificate the executable has been signed with has been revoked (using an internet service from apple). This also checks if the entitlements the executable declares are allowed or for example only allowed by apple signed executables (like the SIP bypass entitlement). There is also a check that the application is allowed to access certain protected directories like your documents or images directory. And there are a couple of other checks. These are performed independent of where the executable is stored.</p>
+</blockquote>
+<p>看起来就只有全关闭这条路了？如果你想关闭 <code>SIP</code>，还有那么点麻烦：</p>
 <ol>
 <li>重启 Mac，按住 Command + R 直到屏幕上出现苹果的标志和进度条，进入 Recovery 模式。(如果是新的 Mac 就在启动的时候长按住电源键)</li>
 <li>在屏幕上方的工具栏找到并打开终端，输入命令 <code>csrutil disable</code> ；</li>
