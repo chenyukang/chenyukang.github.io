@@ -195,6 +195,7 @@
 <p><img src="/images/ob_pasted-image-20230305225021.png" alt=""></p>
 <p>我实在想不通为什么会这样，因为我之前看到过 <a target="_blank" rel="noopener" href="https://twitter.com/m_ou_se/status/1413589063735681028">Mara Bos</a> 发的 M1 Mac 的数据，她大概只需要 9 分钟跑完所有的单元测试。</p>
 <p>然后我在 Rust 开发者论坛 rust-zulip 里发起一个<a target="_blank" rel="noopener" href="https://rust-lang.zulipchat.com/#narrow/stream/182449-t-compiler.2Fhelp/topic/Is.20there.20any.20performance.20issue.20for.20MacOS.3F">帖子</a>，很快得到了一些开发者的回复。刚开始有人怀疑是 <code>mdworker_shared</code> 进程的问题，这个进程是为 Spotlight 做索引用的，因为跑测试会不断生成新的临时文件，从 <code>htop</code> 上看这个进程会占用不少 CPU。但我把 Spotlight 彻底关闭掉，性能确实有一点点提高，但这明显不是根本原因。</p>
+<p>我怀疑是不是测试框架用的 threads 数目不对，看代码是通过这个 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/blob/0fbfc3e76916521b509b63286296dd0762170d34/library/test/src/helpers/concurrency.rs#L11">get_concurrency</a> 获取的，我通过</p>
 <p>Eric Huss 用的是 M2 Max，他跑测试花费的时间是 9 分钟，这个结果显然也不能匹配上高贵的 Max 配置。</p>
 <p>后来有人提到是不是因为 <code>SIP</code>，<strong>Huss 关闭 <code>SIP</code> 之后跑测试时间立马从 9 分钟减少到 1 分 36 秒 ! 这几乎是 5 倍多的提速。</strong> 另外，如果把 <code>SIP</code> 打开但把网络给关闭掉，同样能得到类似的提速。</p>
 <p>这就是说跑单元测试的时候系统在不断地发送网络请求，这也解释了为什么我对比国外的用户跑测试所用的时间会更长，因为我走了 VPN 啊！</p>
