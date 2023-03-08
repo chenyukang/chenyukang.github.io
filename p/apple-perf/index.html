@@ -198,7 +198,7 @@
 <p>我怀疑是不是测试框架用的 <code>threads</code> 数目不对，看代码是通过这个 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/blob/0fbfc3e76916521b509b63286296dd0762170d34/library/test/src/helpers/concurrency.rs#L11">get_concurrency</a> 获取的，我通过 <code>RUST_TEST_THREADS</code> 尝试把数目提高，但是也没卵用。</p>
 <p>Eric Huss 用的是 M2 Max，他跑测试花费的时间是 9 分钟，这个结果显然也不能匹配上高贵的 Max 配置。</p>
 <p>后来有人提到是不是因为 <code>SIP</code>，<strong>Huss 关闭 <code>SIP</code> 之后跑测试时间立马从 9 分钟减少到 1 分 36 秒 ! 这几乎是 5 倍多的提速。</strong> 另外，如果把 <code>SIP</code> 打开但把网络给关闭掉，同样能得到类似的提速。</p>
-<p>这就是说跑单元测试的时候系统在不断地发送网络请求，这也解释了为什么我对比国外的用户跑测试所用的时间会更长，因为我走了 VPN 啊！</p>
+<p>这就是说跑单元测试的时候系统在不断地发送网络请求，这也解释了为什么我对比国外的用户跑测试所用的时间会更长，因为我走了 VPN 啊！我关闭 <code>SIP</code> 之后测试时间从 16 分钟提高到 153 秒，这可是 10x 的提速！</p>
 <p>那么 <code>SIP</code> 是什么？</p>
 <p>这东西全称 <a target="_blank" rel="noopener" href="https://developer.apple.com/documentation/security/disabling_and_enabling_system_integrity_protection">System Integrity Protection</a>，译为系统完整性保护：</p>
 <blockquote>
