@@ -400,7 +400,7 @@
 <p>更深入了解可以读官方的这篇文章 <a target="_blank" rel="noopener" href="https://blog.rust-lang.org/2016/04/19/MIR.html">Introducing MIR</a>。MIR 都是一些比较原子性的操作，离 LLVM 的 IR 比较近，所以很方便后面代码生成部分。另外为了方便做 borrow checking MIR 也会在插入一些 scope 的标签。</p>
 <p>我们可以通过 <a target="_blank" rel="noopener" href="https://play.rust-lang.org/?version=stable&amp;mode=debug&amp;edition=2021&amp;gist=30074856e62e74e91f06abd19bd72ece">Rust Playground</a> 查看生成出来的 MIR，如何基于 MIR 做数据流分析可参考 <a target="_blank" rel="noopener" href="https://rustc-dev-guide.rust-lang.org/mir/dataflow.html">MIR dataflow</a>，在 MIR 上做 <a target="_blank" rel="noopener" href="https://rustc-dev-guide.rust-lang.org/borrow_check.html#major-phases-of-the-borrow-checker">borrow checking</a> 也会更精准，NLL(non-lexical lifetime) 就是这样解决的。</p>
 <h2 id="Codegen-代码生成"><a href="#Codegen-代码生成" class="headerlink" title="Codegen 代码生成"></a>Codegen 代码生成</h2><p>一直到这里为止，编译都是在做数据转换，把代码变成中间层表示，然后抽象的等级越来越低，最后把 MIR 生成 LLVM IR，然后生成二进制文件。</p>
-<p>Rust 后端可以是 LLVM、Cranelift 或者 GCC，这些都依赖于第三方库来实现，所以需要最大程度共享一些基础代码。</p>
+<p>Rust 后端可以是 LLVM、Cranelift 或者 GCC，这些都依赖于第三方库来实现，所以需要最大程度共享一些基础代码，Rust 编译器本身有自己的 LLVM 绑定包。</p>
 <p>在这个阶段也做了如下这些事情：</p>
 <ul>
 <li>为范性类型替换成具体的类型</li>
