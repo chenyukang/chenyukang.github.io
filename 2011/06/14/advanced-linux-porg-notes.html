@@ -194,15 +194,15 @@
 <p><p class="first">archive(静态链接) 为目标文件的集合，linker 从 archive 文件中找到 obj 文件进行链接。</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">% ar cr libtest.a test1.o test2.o<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>创建库文件 libtest.a(类似 windows 下 test.lib)，当 linker 处理 archive 文件的时候，将在库文件中查找当前已经处理但是还没定义的 symbols。所以库文件应该出现在命令的最后。</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">% gcc -o app app.o -L. -ltest<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">% gcc <span class="token parameter variable">-o</span> app app.o -L. <span class="token parameter variable">-ltest</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h3><a name="sec3" id="sec3"></a><br>Shared Library</h3>
 
 <p><p class="first">Shared lib 和 archive 的两个区别：1，当进行的是动态链接，最后得到的可执行程序中不包含实际库中的执行代码，只是一个对库的引用。所以动态链接最后得到的可执行程序要小一些。2 多个程序可以共享动态链接库，动态链接库不只是 obj 文件的集合，其中是单一的一个 obj 文件，包含了库中所有的信息，所以一个程序动态加载 shared lib 的时候是把库中所有的东西都加载了，而不是所引用的那部分。</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">% gcc -c -fPIC test1.c
-% gcc -shared - fPIC libtest.so test1.o test2.o<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">% gcc <span class="token parameter variable">-c</span> <span class="token parameter variable">-fPIC</span> test1.c
+% gcc <span class="token parameter variable">-shared</span> - fPIC libtest.so test1.o test2.o<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>-fPIC 选项指编译为位置独立的执行代码，这样可以动态加载，产生 libtest.so 文件。</p>
 <p>默认的库文件寻找路径变量：LD_LIBRARY_PATH<br>库文件之间的依赖关系：如果是动态链接，链接库会自动寻找到自己所依赖的其他库文件，如果是静态链接，必须为 linker 提供所有依赖的库文件名称。</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">% gcc -static -o tifftest tifftest.c -ltiff -ljpeg -lz -lm<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">% gcc <span class="token parameter variable">-static</span> <span class="token parameter variable">-o</span> tifftest tifftest.c <span class="token parameter variable">-ltiff</span> <span class="token parameter variable">-ljpeg</span> <span class="token parameter variable">-lz</span> <span class="token parameter variable">-lm</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>上面例子中 tiff 依赖 jpeg 库，因为是-static 链接，必须指明所有依赖的库文件。</p>
 <h3><a name="sec4" id="sec4"></a><br>Pros and Cons</h3>
 

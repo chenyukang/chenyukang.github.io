@@ -188,7 +188,7 @@
   <article class="post-article">
     <section class="markdown-content"><p>在程序挂掉的时候最好还是留点有用的遗言，特别是对于一些比较难重现的 Bug，也许这些信息会成为解决问题的关键。</p>
 <p>下面这个技巧可以让程挂掉的时候打印出来栈信息。这个办法来自<a target="_blank" rel="noopener" href="http://neugierig.org/software/blog/2012/06/backtraces.html">这里</a>, 我觉得把 SIGABRT、SIGBUS 信号加进去也挺好的，在此做了点修改。曾经尝也试过 glibc 的 backtrace 函数，，但是给的信息不全 (没有行号)，对此做得最好的还是 gdb。在终端可以用 gdb 获取某个进程的当前栈：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ gdb -p <span class="token number">5595</span> -batch -ex bt
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ gdb <span class="token parameter variable">-p</span> <span class="token number">5595</span> <span class="token parameter variable">-batch</span> <span class="token parameter variable">-ex</span> bt
 0xb7fb4410 <span class="token keyword">in</span> __kernel_vsyscall <span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token comment">#0  0xb7fb4410 in __kernel_vsyscall ()</span>
 <span class="token comment">#1  0xb7dc2d50 in nanosleep () from /lib/tls/i686/cmov/libc.so.6</span>

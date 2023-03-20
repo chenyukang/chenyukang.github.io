@@ -196,10 +196,10 @@
 <span class="token function">sleep</span> <span class="token number">3</span>
 <span class="token assign-left variable">pid</span><span class="token operator">=</span><span class="token variable"><span class="token variable">`</span>pidof ./image-api-go<span class="token variable">`</span></span>
 <span class="token builtin class-name">echo</span> <span class="token string">"begin record <span class="token variable">$pid</span> ..."</span>
-<span class="token function">rm</span> -rf ff.sqlite
+<span class="token function">rm</span> <span class="token parameter variable">-rf</span> ff.sqlite
 
-/home/coder/.local/bin/procpath record -i <span class="token number">1</span> -r <span class="token number">60</span> -d ff.sqlite -p <span class="token variable">$pid</span>
-/home/coder/.local/bin/procpath plot -d ff.sqlite -q rss -p <span class="token variable">$pid</span> -f rss.svg
+/home/coder/.local/bin/procpath record <span class="token parameter variable">-i</span> <span class="token number">1</span> <span class="token parameter variable">-r</span> <span class="token number">60</span> <span class="token parameter variable">-d</span> ff.sqlite <span class="token parameter variable">-p</span> <span class="token variable">$pid</span>
+/home/coder/.local/bin/procpath plot <span class="token parameter variable">-d</span> ff.sqlite <span class="token parameter variable">-q</span> rss <span class="token parameter variable">-p</span> <span class="token variable">$pid</span> <span class="token parameter variable">-f</span> rss.svg
 
 <span class="token builtin class-name">echo</span> <span class="token string">"recorded <span class="token variable">$pid</span> ...."</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>如果你看看 <a target="_blank" rel="noopener" href="https://heptapod.host/saajns/procpath/-/blob/branch/default/procpath/procfile.py">procpath 的代码</a>发现也非常简单，就是通过 Linux 系统下的 <code>/proc/&#123;pid&#125;</code> 下面的数据来进行统计的：</p>
@@ -208,16 +208,16 @@
 <h2 id="Hyperfine"><a href="#Hyperfine" class="headerlink" title="Hyperfine"></a>Hyperfine</h2><p><a target="_blank" rel="noopener" href="https://github.com/sharkdp/hyperfine">sharkdp/hyperfine: A command-line benchmarking tool</a></p>
 <p>这个 Rust 命令行工具可以用来批量跑程序，找出程序的耗时区间，生成的结果可以输出为 JOSN 格式，这样能用来可视化对比结果。</p>
 <p>比如我们使用这个工具来对比 <code>youki</code>、<code>crun</code>、<code>runc</code> 的性能，<a target="_blank" rel="noopener" href="https://github.com/containers/youki/pull/544#issuecomment-1118473648">add the benchmark result to README, containers/youki</a></p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">hyperfine --prepare <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> --warmup <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo ./youki create -b tutorial a &amp;&amp; sudo ./youki start a &amp;&amp; sudo ./youki delete -f a'</span>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">hyperfine <span class="token parameter variable">--prepare</span> <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> <span class="token parameter variable">--warmup</span> <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo ./youki create -b tutorial a &amp;&amp; sudo ./youki start a &amp;&amp; sudo ./youki delete -f a'</span>
 
-hyperfine --prepare <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> --warmup <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo crun create -b tutorial a &amp;&amp; sudo crun start a &amp;&amp; sudo crun delete -f a'</span>
+hyperfine <span class="token parameter variable">--prepare</span> <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> <span class="token parameter variable">--warmup</span> <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo crun create -b tutorial a &amp;&amp; sudo crun start a &amp;&amp; sudo crun delete -f a'</span>
 
-hyperfine --prepare <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> --warmup <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo runc create -b tutorial a &amp;&amp; sudo runc start a &amp;&amp; sudo runc delete -f a'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+hyperfine <span class="token parameter variable">--prepare</span> <span class="token string">'sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches'</span> <span class="token parameter variable">--warmup</span> <span class="token number">10</span> --min-runs <span class="token number">100</span> <span class="token string">'sudo runc create -b tutorial a &amp;&amp; sudo runc start a &amp;&amp; sudo runc delete -f a'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>跑出结果如下：<br><img src="/images/ob_2022-05-06-111156.png" alt=""></p>
 <p>这个工具的作者用 Rust 写了好几个非常好用的命令行工具，比如 <code>fd</code> 快速查找文件等。</p>
 <h2 id="wrk"><a href="#wrk" class="headerlink" title="wrk"></a>wrk</h2><p><a target="_blank" rel="noopener" href="https://github.com/wg/wrk">wg/wrk: Modern HTTP benchmarking tool</a></p>
 <p>这个工具可以用来批量发起 HTTP 请求，使用方法很简单：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">wrk -t12 -c400 -d30s http://127.0.0.1:8080/index.html<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">wrk <span class="token parameter variable">-t12</span> <span class="token parameter variable">-c400</span> <span class="token parameter variable">-d30s</span> http://127.0.0.1:8080/index.html<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>使用 12 个线程、保持 400 个 HTTP 连接，跑 30 秒。我以前使用这个工具来对接口进行压力测试，非常方便。</p>
 <p>还有个 Python 的测试工具叫作 <a target="_blank" rel="noopener" href="https://locust.io/">Locust - A modern load testing framework</a>，这个功能更强大一些，我们可以写 Python 脚本来扩展测试逻辑，当然也可以用来做压力测试。</p>
 <p><img src="/images/ob_2022-05-06-111856.png" alt=""></p>

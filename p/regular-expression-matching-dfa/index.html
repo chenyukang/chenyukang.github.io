@@ -187,13 +187,13 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>正则表达式匹配是一个经典问题，这里有一个<a target="_blank" rel="noopener" href="http://oj.leetcode.com/problems/regular-expression-matching/">问题</a>。<br>实现 isMatch，其中。表示任意一个字符，*表示 0 个或者任一个前面的字符：</p>
-<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">isMatch(&quot;aa&quot;,&quot;a&quot;)       → false
-isMatch(&quot;aa&quot;,&quot;aa&quot;)      → true
-isMatch(&quot;aaa&quot;,&quot;aa&quot;)     → false
-isMatch(&quot;aa&quot;, &quot;a*&quot;)     → true
-isMatch(&quot;aa&quot;, &quot;.*&quot;)     → true
-isMatch(&quot;ab&quot;, &quot;.*&quot;)     → true
-isMatch(&quot;aab&quot;, &quot;c*a*b&quot;) → true<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">isMatch<span class="token punctuation">(</span><span class="token string">"aa"</span>,<span class="token string">"a"</span><span class="token punctuation">)</span>       → <span class="token boolean">false</span>
+isMatch<span class="token punctuation">(</span><span class="token string">"aa"</span>,<span class="token string">"aa"</span><span class="token punctuation">)</span>      → <span class="token boolean">true</span>
+isMatch<span class="token punctuation">(</span><span class="token string">"aaa"</span>,<span class="token string">"aa"</span><span class="token punctuation">)</span>     → <span class="token boolean">false</span>
+isMatch<span class="token punctuation">(</span><span class="token string">"aa"</span>, <span class="token string">"a*"</span><span class="token punctuation">)</span>     → <span class="token boolean">true</span>
+isMatch<span class="token punctuation">(</span><span class="token string">"aa"</span>, <span class="token string">".*"</span><span class="token punctuation">)</span>     → <span class="token boolean">true</span>
+isMatch<span class="token punctuation">(</span><span class="token string">"ab"</span>, <span class="token string">".*"</span><span class="token punctuation">)</span>     → <span class="token boolean">true</span>
+isMatch<span class="token punctuation">(</span><span class="token string">"aab"</span>, <span class="token string">"c*a*b"</span><span class="token punctuation">)</span> → <span class="token boolean">true</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这是一个正则表达式问题的简化版本只有<code>.</code>和<code>*</code>，可以用递归来解决。正则表达式涉及到自动机理论，顺便再复习一下当年没好好学的东西。查找一番后发现了这篇 Russ Cox 写的文章非常好 (这家伙写了不少文章，xv6 里也有他的代码，现在在为 Go 项目工作)。于是我也尝试着用 DFA 来解决这个问题。</p>
 <h2 id="DFA-和-NFA-的概念"><a href="#DFA-和-NFA-的概念" class="headerlink" title="DFA 和 NFA 的概念"></a>DFA 和 NFA 的概念</h2><p>首先对于没一个正则表达式都有一个对应的 DFA 可以来表示，DFA 是 Deterministic Finite Automaton 的简称，还有 NFA(Non-deterministic Finite Automata)。NFA 对于一个字符的输入有可能存在多个以上的状态转移，而 DFA 对于没一个输入只存在一个选择。所以每一个 NFA 都可以转化为一个 DFA，但是一个 DFA 可以转化为多个 NFA。我们来看一个例子：</p>
 <p>对于正则表达<code>(a|b)*abb</code>的 NFA 和 DFA 分别表示为：</p>

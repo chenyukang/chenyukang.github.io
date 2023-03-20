@@ -189,7 +189,7 @@
     <section class="markdown-content"><h2 id="centos-环境变量"><a href="#centos-环境变量" class="headerlink" title="centos 环境变量"></a>centos 环境变量</h2><p>在配服务器 web 环境的时候，因为这个问题花费了不少时间。tomcat 找不到 java 的其他开发包，开始以为是服务器是 64 位的问题。</p>
 <p>最后因为在/etc/profile 文件里面设置为 export CLASSPATH=…,这个 export 貌似不能少。或者是因为命令 prelink -a 的作用起了效果，这个命令好像只是起到加速到作用。orz，我是被 ubuntu 宠坏了，什么 linux 命令都没怎么用咯。</p>
 <h2 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h2><p>mysql 配置局域网内都能访问。</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">1</span> mysql -h localhost -u root
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">1</span> mysql <span class="token parameter variable">-h</span> localhost <span class="token parameter variable">-u</span> root
 <span class="token number">2</span> mysql<span class="token operator">></span>GRANT ALL PRIVILEGES ON <span class="token builtin class-name">.</span> TO ‘root’@‘%’WITH GRANT OPTION
 <span class="token number">3</span> mysql<span class="token operator">></span>FLUSH PRIVILEGES
 <span class="token number">4</span> mysql<span class="token operator">></span>EXIT<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
