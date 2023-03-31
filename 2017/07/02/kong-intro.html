@@ -184,6 +184,7 @@
 
 <main class="app-body flex-box">
 
+
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><h3 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h3><p>最近在工作上接触了<a href="">Kong</a>这个开源项目，因为我们内部做微服务化重构，所以导致系统相互间通信比较复杂，如果想做一些涉及各个系统的功能就很困难。比如我们前段时间实现的灰度系统就把人折腾得很惨。因为我们的设计中有一些 http header 需要在各个系统之间传递。每个项目的 Nginx 里面都用了 Lua 写一些授权逻辑，最终这些逻辑分散在各个项目的 Nginx 层，维护困难。除了灰度，其他的一些比较基础的 Nginx 层功能也是各自为政。所以我们的教训是：在做微服务化之前，需要统一的、可扩张的 API 网关。我们希望网关性能好，并且扩张性足够好。使用 OpenResty 是很自然的选择，我们希望有一层 Nginx 是所有请求都会经过的，这层 Nginx 会负责做一些基础操作，当然最重要的是做流量转发。</p>
@@ -257,6 +258,8 @@
       <!-- No Comment -->
     
 
+
+
     <script src="https://utteranc.es/client.js"
       repo="chenyukang/chenyukang.github.io"
       issue-term="pathname"
@@ -264,6 +267,7 @@
       crossorigin="anonymous"
       async>
     </script>
+
 
   </article>
   <!-- Article END -->

@@ -184,6 +184,7 @@
 
 <main class="app-body flex-box">
 
+
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p><h3>内存泄漏</h3><br>上一次以为内存泄露查完了，发现服务器跑了比较长时间后又占用太多内存。刚好这段时间加了一些新的模块，又该查查了。整个服务器模块分的还行，但是中间经过几个人一起写，所以看起来就麻烦了。要解决问题还是必须找到泄露的代码段。在 C/C++ 中，只要用了指针这东西，很多逻辑上的问题也会产生内存泄露。在线下用上次封装 malloc 和 free 的方法测试，找不到产生内存泄露的样例，grep 了一下没有用原来的 malloc 之类的东西啊，那就应该是测试数量太少的问题。没法，从线上的 log 中导入一些天的访问记录，其中包含了一天的访问 url。试着用 Python 写个小程序把一天中所有的 url 依次往线下的服务器发送，这应该有几万条数据了。Python 中这相关的库够多的，可以用的 httplib，或者 webbrowser 模块中的 webbrowser.open(“url_address”,1),不过这得打开系统的默认的浏览器，并且好像还没关掉一个 tab 的接口。最合适这个简单任务的是 urllib 这个模块，下面这样就行了，往线下的服务器狂发请求吧：</p>
@@ -269,6 +270,8 @@
       <!-- No Comment -->
     
 
+
+
     <script src="https://utteranc.es/client.js"
       repo="chenyukang/chenyukang.github.io"
       issue-term="pathname"
@@ -276,6 +279,7 @@
       crossorigin="anonymous"
       async>
     </script>
+
 
   </article>
   <!-- Article END -->
