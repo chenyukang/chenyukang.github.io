@@ -188,20 +188,20 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p><img src="/images/ob_pasted-image-20230205134219.png" alt=""></p>
-<p>西西里岛，是位于意大利南部阳光而宁静的岛屿，正如电影《西西里岛的美丽传说》中演绎的那样，这里有着古老的历史和建筑，看起来和 IT 不沾边，却是 Redis 的作者 antriez 的居住地。</p>
-<p>Redis 是互联网的一个基础设施，这个世界上大量的网站背后都有 Redis 的影子。相比于 Redis 的流行度，很多程序员并不了解 antriez 的故事。最近我看了他几乎所有的博文，和你分享一下我了解到的趣事以及我们能从这位 70 后的上一代程序员身上学到什么。</p>
-<p>antriez 不是一个典型的意大利程序员，大部分当地人喜欢 boring-but-sure 的路径，IT 这行在当地算不得特别高薪的工作，大多数人不喜欢做过多探索，但 antriez 喜欢新东西和创造新东西。在一篇 10 年前的访谈中 antriez 谈到，住在意大利对程序员而言没有多大的影响，因为我们可以在互联网上经历有趣的一切：</p>
+<p>西西里岛，是位于意大利南部阳光而宁静的岛屿，正如电影《西西里岛的美丽传说》中演绎的那样，这里有着古老的历史和建筑，看起来和 IT 不沾边，却是 Redis 的作者 antirez 的居住地。</p>
+<p>Redis 是互联网的一个基础设施，这个世界上大量的网站背后都有 Redis 的影子。相比于 Redis 的流行度，很多程序员并不了解 antirez 的故事。最近我看了他几乎所有的博文，和你分享一下我了解到的趣事以及我们能从这位 70 后的上一代程序员身上学到什么。</p>
+<p>antirez 不是一个典型的意大利程序员，大部分当地人喜欢 boring-but-sure 的路径，IT 这行在当地算不得特别高薪的工作，大多数人不喜欢做过多探索，但 antirez 喜欢新东西和创造新东西。在一篇 10 年前的访谈中 antirez 谈到，住在意大利对程序员而言没有多大的影响，因为我们可以在互联网上经历有趣的一切：</p>
 <blockquote>
 <p>If your target is the world, being here is not a big limit for a programmer. The majority of interesting things are happening on the internet nowadays anyway.</p>
 </blockquote>
-<p>职业生涯初期，antriez 做过安全研究员，后来做过嵌入式、系统、Web 等领域的开发，他早年还发明了 Nmap 中的常用的扫描技术 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Idle_scan">idle scan</a>。</p>
-<p>2009 年，当时 antriez 在做一个网站实时统计，他认为现有数据库比如 MySQL 无法满足那种写入密集、查统计数据的需求，于是他着手解决这个问题。</p>
-<p>antriez 使用 Tcl 快速撸了一个名为 <a target="_blank" rel="noopener" href="https://gist.github.com/antirez/6ca04dd191bdb82aad9fb241013e88a8">LLOOGG Memory DB</a> 的模块，总共只有 300 行，但却解决了手里的问题并包含了 Redis 的核心设计，有 <code>protocol</code> 和 <code>list</code>，还有 6379 端口！</p>
-<p>随后 antriez 重新用 C 语言实现了新的版本，投入生产环境良好运行了几周，随后发表在 Hacker News 上并由此得到了更多关注，越来越多的公司开始在生产环境运行 Redis。</p>
+<p>职业生涯初期，antirez 做过安全研究员，后来做过嵌入式、系统、Web 等领域的开发，他早年还发明了 Nmap 中的常用的扫描技术 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Idle_scan">idle scan</a>。</p>
+<p>2009 年，当时 antirez 在做一个网站实时统计，他认为现有数据库比如 MySQL 无法满足那种写入密集、查统计数据的需求，于是他着手解决这个问题。</p>
+<p>antirez 使用 Tcl 快速撸了一个名为 <a target="_blank" rel="noopener" href="https://gist.github.com/antirez/6ca04dd191bdb82aad9fb241013e88a8">LLOOGG Memory DB</a> 的模块，总共只有 300 行，但却解决了手里的问题并包含了 Redis 的核心设计，有 <code>protocol</code> 和 <code>list</code>，还有 6379 端口！</p>
+<p>随后 antirez 重新用 C 语言实现了新的版本，投入生产环境良好运行了几周，随后发表在 Hacker News 上并由此得到了更多关注，越来越多的公司开始在生产环境运行 Redis。</p>
 <p><sub>这里谈点题外话，Redis 最初在 Ruby 社区受到了关注，随后 Github、Instagram 等站点开始使用 Redis。Ruby 社区曾经是潮流的引领者，比如 Git 最初发表 Linus 也搞不懂为什么 Ruby 社区的人们这么喜欢这东西，后来就有了 Rails 写的 Github。虽然 Ruby 现在略显式微，但我们应该感谢 Ruby 社区的好品味给业界发现和创造了这么多好东西。</sub></p>
 <p>如果只是用来做缓存，2003 年开始我们已经有了 memcached，比如我 2011 年刚工作那会儿 memcached 是更成熟通用的组件，我还仔细<a href="https://catcoding.me/p/memcached/">读过 memcached 的源码</a>，但为什么 Redis 能后来居上？</p>
 <p><img src="/images/ob_pasted-image-20230331121122.png" alt=""></p>
-<p>antriez 谈到主要有两点：</p>
+<p>antirez 谈到主要有两点：</p>
 <ul>
 <li>对于密集写入的场景，特别是缓存相关的需求，Redis 可以节省成本，性能也很好</li>
 <li>Redis 不只是缓存，而是一种不同形态的数据库，适合很多性能比正确性要求更高的场景</li>
@@ -209,18 +209,18 @@
 <blockquote>
 <p>In the field of programming languages there is a motto: a programming language is worth learning if it is different enough from all you already know to change your mind, exposing you to new abstractions. Well I think Redis definitely is a really different database, and will change the way you think about your data.</p>
 </blockquote>
-<p>antriez 从一开始就把 Redis 当作一个数据库来看待，而不只是缓存组件，简而言之 memcached 能做的 Redis 也行，而 Redis 能做到的 memcached 不行。</p>
+<p>antirez 从一开始就把 Redis 当作一个数据库来看待，而不只是缓存组件，简而言之 memcached 能做的 Redis 也行，而 Redis 能做到的 memcached 不行。</p>
 <p>Redis 天然支持各种常用的数据结构，比如 list、set、maps 等等，这些数据结构让 Redis 可以应对各种业务需求，可以说 Redis 开启了一个 KV 数据库的新时代。</p>
 <p>这个故事和 SQLite 的由来相得益彰，SQLite 的第一个版本只是个 Tcl 扩展，Git 的第一个版本只有 1200 行，这似乎印证了软件设计中的一个道理：运行良好的复杂系统往往由简单设计演化而来，而一个从开头设计的复杂系统往往不行，通过打补丁的方式通常也无法解决：</p>
 <blockquote>
 <p>A complex system that works is invariably found to have evolved from a simple system that worked. A complex system designed from scratch never works and cannot be patched up to make it work. You have to start over with a working simple system.” – John Gall</p>
 </blockquote>
-<p><sub>Redis 和 SQLite 都深受 Tcl 的影响，而 Tcl 是一门 1988 年发明有着 35 年历史的语言。Tcl 继承着 Unix 那种设计可组合、小巧的组件并保持简洁接口的设计风格，antriez 认为自己的程序理念深受 Tcl 的启发，特别是 Tcl 里 <code>All data types can be manipulated as strings</code> 和命令的风格延续到了 Redis 里。而 John Ousterhout 当年是为了解决 <a href="https://catcoding.me/p/3-years-in-eda/">EDA 开发</a>中的一个需求发明了 Tcl，在互联网浪潮还未掀起的 80、90 年代里 EDA 真算是个技术领域里的一颗明珠，衍生出了很多技术分支。</sub></p>
+<p><sub>Redis 和 SQLite 都深受 Tcl 的影响，而 Tcl 是一门 1988 年发明有着 35 年历史的语言。Tcl 继承着 Unix 那种设计可组合、小巧的组件并保持简洁接口的设计风格，antirez 认为自己的程序理念深受 Tcl 的启发，特别是 Tcl 里 <code>All data types can be manipulated as strings</code> 和命令的风格延续到了 Redis 里。而 John Ousterhout 当年是为了解决 <a href="https://catcoding.me/p/3-years-in-eda/">EDA 开发</a>中的一个需求发明了 Tcl，在互联网浪潮还未掀起的 80、90 年代里 EDA 真算是个技术领域里的一颗明珠，衍生出了很多技术分支。</sub></p>
 <p>Redis 的源码可作为 C 系统编程的典范，还包含了很多经典的数据结构的实现，你可以读读这本 <a target="_blank" rel="noopener" href="http://redisbook.com/index.html">Redis 设计与实现</a> 来领略一番。</p>
-<p>随后 Redis 被 VMWare 赞助，后来又成立了专门的 Redis Labs。虽然 Redis 从一开始就是个热门的开源项目，但我们可以从提交数排名可以看出，在这近 10 年间主要是 antriez 一个人在做贡献和维护。</p>
+<p>随后 Redis 被 VMWare 赞助，后来又成立了专门的 Redis Labs。虽然 Redis 从一开始就是个热门的开源项目，但我们可以从提交数排名可以看出，在这近 10 年间主要是 antirez 一个人在做贡献和维护。</p>
 <p><img src="/images/ob_screenshot-2023-03-30-at-09.29.44.png" alt=""></p>
 <p>这是一个较为奇怪的现象，毕竟 Redis 是一个如此通用的组件，Github 上的关注度也很高，来自各种场景的需求会非常多。</p>
-<p>但如果你仔细回顾 antriez 的风格，这就有了合理的解释。他认为对 Redis 来说，避免复杂度、保持稳定性是最重要的事，所以每天他面对众多的需求和 PR 时，大多数时候他都会说“No”，否则就会出现 <code>Less stable code base, more problems</code> 的恶性循环。</p>
+<p>但如果你仔细回顾 antirez 的风格，这就有了合理的解释。他认为对 Redis 来说，避免复杂度、保持稳定性是最重要的事，所以每天他面对众多的需求和 PR 时，大多数时候他都会说“No”，否则就会出现 <code>Less stable code base, more problems</code> 的恶性循环。</p>
 <blockquote>
 <p>The bugs you write in the first implementation are extremely hard to fix later. They don’t go away easily. Basically there’s this process where you say, okay, I want to change something, but I want the software to remain stable. So you start to think about it for weeks, the way you want to do it, without writing any code.</p>
 </blockquote>
@@ -233,18 +233,18 @@
 <p>This means, in turn, that people say, don’t worry, I can help you implement this. And you say, no. If you want to help me, you have to put more time into the design effort. Writing the code is the easy task. The hard task is understanding what to do and in what way to do it.</p>
 </blockquote>
 <p>我想，这也是我们作为程序员想要提升到更高层次必须意识到的一个方面，<strong>不要过多花时间关注在编码上，而应该是花时间在思考需求和问题、找到好的设计这些事情上</strong>。</p>
-<p>长久维护一个项目也会感觉到无聊，为了让自己保持兴趣，antriez 会尝试在不同的领域切换，比如一段时间做数据结构，过几周就切换到 cluster 之类的。并且除了 Redis 之外，他还在做更多 <a target="_blank" rel="noopener" href="http://antirez.com/news/86">side project</a>:</p>
+<p>长久维护一个项目也会感觉到无聊，为了让自己保持兴趣，antirez 会尝试在不同的领域切换，比如一段时间做数据结构，过几周就切换到 cluster 之类的。并且除了 Redis 之外，他还在做更多 <a target="_blank" rel="noopener" href="http://antirez.com/news/86">side project</a>:</p>
 <p>1) Load81, children programming environment.<br>2) Dump1090, software defined radio ADS-B decoder.<br>3) A Javascript ray tracer.<br>4) lua-cmsgpack, C implementation of msgpack for Lua.<br>5) linenoise line editing library. Used in Redis, but well, was not our top priority.<br>6) lamernews, Redis-based HN clone.<br>7) Gitan, a small Git web interface.<br>8) shapeme, images evolver using simulated annealing.<br>9) Disque, a distributed queue (work in progress right now).</p>
 <p>作为程序员 side project 是一种探索也是一种精神休息的方式，并且程序员通常会在 side project 中显得更有创造力：</p>
 <blockquote>
 <p>Like a writer will do her best when writing that novel that, maybe, nobody will pay a single cent for, and not when doing copywriting work for a well known company, programmers are likely to spend more energies in their open source side projects than during office hours, while writing another piece of a project they feel stupid, boring, pointless.</p>
 </blockquote>
 <p>我粗看了一下这些项目，都是 C 实现的并且风格统一，README 都会写些自己的思考和设计选择。</p>
-<p>antriez 喜欢写小的程序，这不只是因为可以控制复杂度，而是因为短小的程序自有其美 <a target="_blank" rel="noopener" href="http://antirez.com/news/74">Fascinating little programs</a>，老一代程序员喜欢在严苛的限制下挑战自己的技艺，比如 <a target="_blank" rel="noopener" href="http://antirez.com/news/108">Writing an editor in less than 1000 lines of code, just for fun</a>。</p>
+<p>antirez 喜欢写小的程序，这不只是因为可以控制复杂度，而是因为短小的程序自有其美 <a target="_blank" rel="noopener" href="http://antirez.com/news/74">Fascinating little programs</a>，老一代程序员喜欢在严苛的限制下挑战自己的技艺，比如 <a target="_blank" rel="noopener" href="http://antirez.com/news/108">Writing an editor in less than 1000 lines of code, just for fun</a>。</p>
 <p>独立维护一个影响如此大的开源项目会有巨大的心理压力，虽然用户并没有直接付钱，但维护者有责任去修复出现的问题。这种压力不一定是技术上的，也有来自社会方面的压力，比如不断有人指责他不把代码和 API 里的 master/slaver 替换掉。</p>
-<p>antriez 曾经在一篇采访中谈到想在家里组成一只小队伍来维护 Redis，后来又感叹到现在太难找靠谱的 C 程序员了，愿意做 system programming 的越来越少。</p>
-<p>antriez 在这篇文章中 <a target="_blank" rel="noopener" href="http://antirez.com/news/129">The struggles of an open source maintainer</a> 阐述了维护开源项目的难处，其中提到在 Redis 项目用户多了之后，自己需要一直处于在线状态。而他习惯的工作方式是工作一段时间然后彻底放空，他从来不习惯朝九晚五的定时工作制，甚至提到自己无法保持编程 40 分钟以上，他喜欢编码一会儿然后去带孩子或者运动一会儿再回来。</p>
-<p>除了编程之外，antriez 对红酒和运动也很有兴趣，而他更有追求的是在写作这件事情上，可以为了写作放弃编程，这让我想到了王小波。</p>
+<p>antirez 曾经在一篇采访中谈到想在家里组成一只小队伍来维护 Redis，后来又感叹到现在太难找靠谱的 C 程序员了，愿意做 system programming 的越来越少。</p>
+<p>antirez 在这篇文章中 <a target="_blank" rel="noopener" href="http://antirez.com/news/129">The struggles of an open source maintainer</a> 阐述了维护开源项目的难处，其中提到在 Redis 项目用户多了之后，自己需要一直处于在线状态。而他习惯的工作方式是工作一段时间然后彻底放空，他从来不习惯朝九晚五的定时工作制，甚至提到自己无法保持编程 40 分钟以上，他喜欢编码一会儿然后去带孩子或者运动一会儿再回来。</p>
+<p>除了编程之外，antirez 对红酒和运动也很有兴趣，而他更有追求的是在写作这件事情上，可以为了写作放弃编程，这让我想到了王小波。</p>
 <p>三年前，他发了一篇博文声明自己从 Redis 上退下来，因为他认为自己想做的是艺术家那样的创造性工作，编程也是自己表达方式的一种，而 Redis 发展到现在这个程度创意性事情更少，事务性的工作更多了，这不是自己所期望的：</p>
 <blockquote>
 <p>I write code in order to express myself, and I consider what I code an artifact, rather than just something useful to get things done. I would say that what I write is useful just as a side effect, but my first goal is to make something that is, in some way, beautiful. In essence, I would rather be remembered as a bad artist than a good programmer.</p>
@@ -254,8 +254,8 @@
 <blockquote>
 <p>I now know for sure: it is no coincidence that for hundreds of years writing has been considered the highest art in which to try one’s hand. By writing you look for things, and if you insist enough you end up really finding them.</p>
 </blockquote>
-<p>写完小说后 antriez 还有些犹豫到底是回到编程还是继续从事其他写作，或者是边写作一边做些技术。直到前段时间，暂别了两年之后 antriez 终于通过 <a target="_blank" rel="noopener" href="https://github.com/antirez/adventofcode2022">Advent of Code</a> 找回了编程的乐趣，他解决了 18 道题目，并且在过程中又折腾出来一门 stack-based 的编程语言。从 Twitter 上看，最近他在做一些 LoRa 设备上的小项目，也折腾 Flipper Zero 这样的极客设备。</p>
-<p>总之，antriez 的博客非常值得一读，其中有一篇 <a target="_blank" rel="noopener" href="http://antirez.com/news/61">英语是我 15 的伤痛</a> 让我很有共鸣，作为英语非母语的开发者，要融入到英语的环境中需要很多额外努力，而这是技术圈里大多数英文母语者根本不会在乎和谈论到的事。</p>
+<p>写完小说后 antirez 还有些犹豫到底是回到编程还是继续从事其他写作，或者是边写作一边做些技术。直到前段时间，暂别了两年之后 antirez 终于通过 <a target="_blank" rel="noopener" href="https://github.com/antirez/adventofcode2022">Advent of Code</a> 找回了编程的乐趣，他解决了 18 道题目，并且在过程中又折腾出来一门 stack-based 的编程语言。从 Twitter 上看，最近他在做一些 LoRa 设备上的小项目，也折腾 Flipper Zero 这样的极客设备。</p>
+<p>总之，antirez 的博客非常值得一读，其中有一篇 <a target="_blank" rel="noopener" href="http://antirez.com/news/61">英语是我 15 的伤痛</a> 让我很有共鸣，作为英语非母语的开发者，要融入到英语的环境中需要很多额外努力，而这是技术圈里大多数英文母语者根本不会在乎和谈论到的事。</p>
 <p>他的博客里还有些好文章：</p>
 <ul>
 <li>编程中保持心流，编程中如果有新的想法和问题发现，你可以先记录下来以后再回顾，这叫作 <a target="_blank" rel="noopener" href="http://antirez.com/news/51">Log driven programming</a>。</li>
@@ -265,8 +265,8 @@
 <li><a target="_blank" rel="noopener" href="http://antirez.com/news/112">The mythical 10x programmer</a></li>
 <li><a target="_blank" rel="noopener" href="http://antirez.com/news/135">Programming and Writing</a></li>
 </ul>
-<p>看了这么多 antriez 相关的文章后，最让我印象深刻的也是好奇心，并且在好奇心的驱使下不断去做有乐趣的事。</p>
-<p>保持兴趣，不只是技术上，生活上的兴趣也很重要，红酒、CrossFit、写作，以及冰激凌，antriez 和 Redis 的第一位用户 (老同事) 一直合开着一个冰激凌店！</p>
+<p>看了这么多 antirez 相关的文章后，最让我印象深刻的也是好奇心，并且在好奇心的驱使下不断去做有乐趣的事。</p>
+<p>保持兴趣，不只是技术上，生活上的兴趣也很重要，红酒、CrossFit、写作，以及冰激凌，antirez 和 Redis 的第一位用户 (老同事) 一直合开着一个冰激凌店！</p>
 </section>
 
     <p></p>
