@@ -238,7 +238,7 @@
 </ol>
 <p>实践中采用这种设计哲学的方式称作 MIT 方式，在这种方式下设计的是 Lisp 和 Lisp Machine(一种专门跑 Lisp 的硬件)。</p>
 <p>而 <strong>worse is better</strong> 的哲学认为简单性是最重要的，但为了保持简单可以一定程度上牺牲其他三个特性，这称之为  New Jersey 方式。这种方式下实现的产物是 C 和 Unix。</p>
-<p>为什么称为 New Jersey 方式 ? </p>
+<p>为什么称为 New Jersey 方式 ?</p>
 <p>因为 C/Unix 的创造者 Dennis Ritchie 和  Thompson 所在的学校 UC Berkeley 在 New Jersey，另外美国人喜欢调侃新泽西，觉得相比起附近高贵的纽约，这地方真是又土又穷。新泽西乡巴佬，赤裸裸的地域歧视和小讽刺啊！</p>
 <p>这篇文章中的主要例子是一个操作系统中的  <code>PC loser-ing</code> 问题，我看的时候没太看懂，然后搜到了这篇文章 <a target="_blank" rel="noopener" href="https://blog.reverberate.org/2011/04/eintr-and-pc-loser-ing-is-better-case.html">EINTR and PC loser-ing , The “Worse Is Better” case study</a>。这篇文章的推测我认为是对的，早期的 Unix 系统调用有一个 EINTR 返回状态 (被中断的系统调用)，表示系统调用过程中发生了中断，需要重试，所以调用的时候经常写这种代码：</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c">again<span class="token operator">:</span>

@@ -223,7 +223,7 @@
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Install SSH Key
   <span class="token key atrule">uses</span><span class="token punctuation">:</span> shimataro/ssh<span class="token punctuation">-</span>key<span class="token punctuation">-</span>action@v2
   <span class="token key atrule">with</span><span class="token punctuation">:</span>
-    <span class="token key atrule">key</span><span class="token punctuation">:</span> $<span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> secrets.SSH_KEY <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span> 
+    <span class="token key atrule">key</span><span class="token punctuation">:</span> $<span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> secrets.SSH_KEY <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>
     <span class="token key atrule">known_hosts</span><span class="token punctuation">:</span> <span class="token string">'just-a-placeholder'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>这样之后就可以在 Action 的后续步骤中像在本地一样使用 SSH 的方式来 clone repo 和提交代码了。<br>通过 ssh key 的方式我们也可以在 Github Action 中通过远程的方式来在其他服务器上执行命令，这对于要部署到服务器上的脚本来说是非常有用。</p>
 <p>具体可以参考这篇文章： <a target="_blank" rel="noopener" href="https://zellwk.com/blog/github-actions-deploy/">Deploying to a server via SSH and Rsync in a Github Action | Zell Liew (zellwk.com)</a></p>
