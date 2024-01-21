@@ -216,7 +216,8 @@ blah blah 一大堆错误 <span aria-hidden="true" class="line-numbers-rows"><sp
 <pre class="line-numbers language-console" data-language="console"><code class="language-console">Connection header did not include &#39;upgrade&#39;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>这看起来是服务端期望客户使用 Websocket，但是客户端只是在通过 Curl 发一个 GET 请求，并没有按照这个期望来。所以我继续问 Copilot：</p>
 <p><img src="/images/ob_pasted-image-20240120232647.png" alt=""></p>
-<p>他给的回复里的代码并没有直接修复问题，但里面的<br><code>you can separate the handlers for POST and GET requests</code><br>提示了我应该尝试对 HTTP endpoint 和 Websocket endpoint 的 handler 进行分开，所以我一下想到了修复方案：<br><img src="/images/ob_pasted-image-20240120232901.png" alt=""></p>
+<p>他给的回复里的代码并没有直接修复问题，但里面的<br><code>you can separate the handlers for POST and GET requests</code><br>提示了我应该尝试对 HTTP endpoint 和 Websocket endpoint 的 handler 进行分开，所以我一下想到了修复方案：</p>
+<p><img src="/images/ob_pasted-image-20240120232901.png" alt=""></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如今使用 Copilot 已经成为我的一个编程习惯，就如同之前我严重依赖 Google 一样，但这个工具明显比搜索引擎高级了一个维度，当然现在我还是依赖搜索，但使用比率明显下降了不少，搜索引擎更像是成了一个书签的角色了。</p>
 <p>我之前认为 Copliot 这种工具甚至是这辈程序员所不能体验到的东西，在我第一次尝试到 ChatGPT 居然可以理解一个函数，并且找出函数中的问题时，就感觉新的编程时代来临了。</p>
 <p>前段时间 Redis 的创始人在文章 <a target="_blank" rel="noopener" href="http://antirez.com/news/140">LLMs and Programming in the first days of 2024</a> 中写到：</p>
