@@ -649,6 +649,8 @@
   
   
   
+  
+  
 
   
 
@@ -662,6 +664,31 @@
         <h2> 当前 45，共 49 页 </h2>
         
         
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/gene-alg/">优化算法</a>
+          </h3>
+          <p class="article-date">2010-11-20</p>
+          <div class="article-summary">
+            
+            
+            <p><h2>POJ 2714</h2><br>最近又在 POJ 上做题，碰上<a target="_blank" rel="noopener" href="http://poj.org/problem?id=2714">2714</a>，题意是：</p>
+<p>输入 N，和 N 个点 (x,y)，从原点开始一共可以走 N 步，每一步可以随机选择移动 (x,y)，或者 (-x,-y)。N 的范围为 1-100。<br>输出最远能走到离开原点多远的地方，输出其距离。</p>
+<p>分析一下，用迭代肯定可以，不过 2^N 的复杂度肯定太高了。每步有两种选择，其本质是求一个长度为 N 的 0、1 序列使得最后的值最大，为一个优化问 题。这里贪心不能求到最优解，稍微证明一下就能得出。如果不贪心，或者把贪心的范围扩大一点，求出每一步完后的凸包呢，然后再在这步的基础上继续扩展下一 些节点，再求凸包，继续如此，最后求得凸包中距离最远的。求凸包的复杂度位 O(nlgn)，即最后的复杂度为 O(N^2lgN)，是可以接受的。</p>
+<p><h2>随机搜索</h2><br>以前看过《集体智慧编程》这本书，这里有一章是说的优化。稍微回顾一下其中的几个算法。对于优化问题，首先得找到一个评价函数，对于其某个方案评价函数能给出某个值评估方案的优劣。至于返回值越大还是越好没有规定，对于特定的问题选择特定的评价函数。随机搜索不是一种好的优化算法，但是却是后面的算法的根源。其基本思想是，我们随机长生一些解，看是否好，如果比当前更好，替换当前最优解，直到收敛了，或者猜测了足够的次数了。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">do</span><span class="token punctuation">&#123;</span>
+   solution<span class="token operator">=</span>rand_solution<span class="token punctuation">;</span>
+   value<span class="token operator">=</span><span class="token function">eval</span><span class="token punctuation">(</span>solution<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">if</span><span class="token punctuation">(</span>value<span class="token operator">></span>best<span class="token punctuation">)</span>
+       best<span class="token operator">=</span>value<span class="token punctuation">;</span>
+   times<span class="token operator">++</span><span class="token punctuation">;</span>
+   <span class="token comment">//测试是否收敛</span>
+<span class="token punctuation">&#125;</span><span class="token keyword">while</span><span class="token punctuation">(</span>times<span class="token operator">&lt;</span>max_iter<span class="token operator">&amp;&amp;</span><span class="token punctuation">(</span><span class="token operator">!</span>limit_flag<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这种盲目的猜测虽然有机会在某一次猜中最优解，但是效率肯定不怎么好。随机算法还是有一些问题可以适用，比如素数判定，如果能保证错误率很低很低也是可行的算法。<br>
+            
+          </div>
+        </article>
         
         <article class="article-card">
           <h3>
@@ -717,21 +744,6 @@ Muse 简介Muse 是由 EmacsWiki 衍生的，为 emacs 下的一个扩展模式�
             
             晚上睡在公司，这边除了晚上偶尔有施工的声音，一切都还不错。洗个热水澡，随便写写早点睡。嘈杂的音响放着这么王若琳的《有你的快乐》，标题就用这个吧，哈哈。
 关于工作：今年好像计算机专业的同学们还是非常好找工作，首先华为华赛来得非常早，然后就是腾讯，这几个公司就签了好多。成都很多同学都不想 ...... 
-            
-          </div>
-        </article>
-        
-        <article class="article-card">
-          <h3>
-            <a href="/p/beizidaoshui/">面试：杯子倒水</a>
-          </h3>
-          <p class="article-date">2010-10-14</p>
-          <div class="article-summary">
-            
-            
-            前些天纳拓的面试有一道题目：
-给你一个 3 升的杯子和一个 5 升的 (杯子是没有刻度的)，要你取 4 升水来 (水可以无限取)，请问该如何操作。这个题目今年面试出现了很多次，不过这次变化了一些。如何抽象出一个模型，如果写程序如何解，如果要求得杯子倒水的过程如何做？
-当时并没有一下想 ...... 
             
           </div>
         </article>
