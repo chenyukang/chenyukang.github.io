@@ -207,7 +207,7 @@
 <li>Reproducible builds，这是个极大地缓解供应链风险的办法，不同的人编译相同的源代码必然得到相同的二进制文件，binary file 不能存在于源码库中。Bitcoin 使用 Guix container 从源码编译所有的东西，<a target="_blank" rel="noopener" href="https://github.com/bitcoin/bitcoin/pull/15277">contrib: Enable building in Guix containers</a>，这个过程可以在任何 Linux 发行版上重现。在这个过程中，几乎所有的一切都从源码编译，所以会存在一个鸡生蛋蛋生鸡的问题，为了解决这个问题必然会需要一些 binary files，但最好是将这个范围限制到最小，<a target="_blank" rel="noopener" href="https://guix.gnu.org/manual/en/html_node/Preparing-to-Use-the-Bootstrap-Binaries.html">Preparing to Use the Bootstrap Binaries</a>。</li>
 <li>Don’t forget to verify yourself！</li>
 </ul>
-<p>另外比特币的安全在于 PoW 的设计，如果你要恶意修改数据，必须让网络中的大多数节点认同这个修改，而要达成这点的概率可以认为就是零。之前我对这点没有直观的感受，直到去年有一次我们的服务器被人利用漏洞登录了，他可以修改代码并重新运行节点，但任何恶意操作都无法造成实际的损失，因为这是一个去中心化的系统。</p>
+<p>另外比特币的安全在于 PoW 的设计，如果你要恶意修改数据，必须让网络中的大多数节点认同这个修改，而要达成这点的概率可以认为就是零。PoW 的设计本来就假设了少部分节点可能是恶意节点，除非黑客控制住了绝大部分节点才能造成破坏。</p>
 <h2 id="开源的可持续性"><a href="#开源的可持续性" class="headerlink" title="开源的可持续性"></a>开源的可持续性</h2><p>从这个安全事件我们可以继续探讨开源的可持续性这个问题。这个事件中 xz 的维护者 Lesse Collin 看起来已经是处于疲于应付的地步。从<a target="_blank" rel="noopener" href="https://github.com/xz-mirror/xz/graphs/contributors">贡献者统计</a>可以看到这么多年几乎就是他一个人在给项目提交代码，Jia Tan 通过两年的潜伏就成为了贡献者第二的开发者：</p>
 <p><img src="/images/ob_pasted-image-20240403140505.png" alt=""></p>
 <p>长时间维护一个被大量使用的开源项目是个巨大的负担，对维护者而言不仅仅是时间的投入，有时候也是精神上的折磨，即使开发者当初的有多好的愿景，但谁也无法保证常年的持续投入。关于这点可以阅读这篇文章，<a target="_blank" rel="noopener" href="https://kettanaito.com/blog/the-dark-side-of-open-source">The Dark Side of Open Source</a>。</p>
