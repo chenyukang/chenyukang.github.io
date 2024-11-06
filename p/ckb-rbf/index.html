@@ -180,7 +180,7 @@
 <p>例如 <a target="_blank" rel="noopener" href="https://www.notion.so/Dotbit-4-45e129cb4c434bd2902569aff67c4383?pvs=21">Dotbit 4 位域名注册拥堵</a> 这个事故发生过程中，<code>CKB</code> 的应用方无法使用任何方式来尽快让自己的交易被打包，这就是引入 <code>Replace-by-fee（RBF)</code> 的原因，我们需要一个机制来提高已经在交易池里交易的费用，替换掉旧的交易，让新的交易尽快被打包。</p>
 <p>在新的 <code>multi_index_map</code> 重构后，交易在 <code>pending</code> 阶段也会按照交易的 <code>score</code> 来优先处理 (通常费用高的交易 <code>score</code> 也会高)，这会避免高费用的交易被阻塞住，所以理论上述需要手动提高费用的情况会减少，但我们还是需要 RBF 来手动提高交易的费用，应对意外的情况。</p>
 <p>另外，RBF 可能将多个老的交易替换出去，因此也是将两个或多个支付合并为一的方法，例如下图所示，如果满足条件 <code>tx-a</code>, <code>tx-b</code>, <code>tx-c</code>, <code>tx-d</code> 都会被 <code>tx-e</code> 这个交易替换掉：</p>
-<p><img src="/images/ob_pasted-image-20241031103004.png" alt="500"><span class="image-caption">500</span></p>
+<p><img src="/images/ob_pasted-image-20241031103004.png" alt=""></p>
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki">bips/bip-0125.mediawiki</a></li>
 <li><a target="_blank" rel="noopener" href="https://bitcoincore.org/en/faq/optin_rbf/">Bitcoin Core :: Opt-in RBF FAQ</a></li>
@@ -189,7 +189,7 @@
 </ul>
 <p>中本聪最初的 Bitcoin 版本中就有引入一个 <code>nSequence</code> 的字段，如果相同交易的 <code>nSequence</code> 更高，就可以<a target="_blank" rel="noopener" href="https://github.com/trottier/original-bitcoin/blob/master/src/main.cpp#L434">替换</a>之前老的交易，这个实现的问题是没有支付额外的 fee，miner 没用动力去替换交易，另外因为没有 rate-limiting 从而导致可能被滥用，所以 Bitcoin 在 0.3.12 版本中禁止了这个功能。后来 Bitcoin 重新引入了新的 RBF 改进，主要包括需要支付额外的费用来替换老交易，另外为 RBF 指定了更多的限制条件。</p>
 <p>在 CKB 上我们之前做过两次 RBF 的相关调研，因为之前 <code>Pending</code> 是一个 FIFO 的数据结构，所以处理替换不是很方便，在 RBF in CKB(draft 2023.01.05) 尝试引入一个 <code>high priority queue</code> 来实现 <code>inject-replace</code>。交易池改造之后，整个交易池可当作一个优先队列，所以应对 <code>RBF</code> 会简单很多。</p>
-<h2 id="新增-RBF-的流程"><a href="#新增-RBF-的流程" class="headerlink" title="新增 RBF 的流程"></a>新增 <code>RBF</code> 的流程</h2><p><img src="/images/ob_rbf2.png" alt="600"><span class="image-caption">600</span></p>
+<h2 id="新增-RBF-的流程"><a href="#新增-RBF-的流程" class="headerlink" title="新增 RBF 的流程"></a>新增 <code>RBF</code> 的流程</h2><p><img src="/images/ob_rbf2.png" alt=""></p>
 <h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><ul>
 <li><code>pre-check</code> 为 entry 加入到 tx-pool 之前必须要做的检查，之前只是做双花的检查，新增 RBF 后如果双花检查失败（这里意味着冲突），继续做 RBF 的相关检查，如果 RBF 检查成功则也返回成功，否则直接返回错误。这里默认直接做 resolve_tx 的检查，如果成功则走正常流程，目的是不给正常流程增加额外成本。所以这就是<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/44331ec5b9fcda217f33c471057fa479bd36a89f/tx-pool/src/process.rs#L216-L255"><code>pre-check</code> 修改后的主要逻辑</a> 。</li>
 </ul>
@@ -206,7 +206,7 @@
 <h3 id="替换和提交"><a href="#替换和提交" class="headerlink" title="替换和提交"></a>替换和提交</h3><p>修改 <code>tx-pool</code> 的 <code>submit_entry</code> 函数，传入 <code>conflicts</code>，在新增 entry 之前把所有冲突的交易删除 放入 <code>rejected</code> 记录，另外确保所有检查完成了之后才做删除和写操作：<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/2be67e79acec94369a96f786d3041e6cb00cf1f2/tx-pool/src/process.rs#L99-L154">submit_entry 逻辑</a>。</p>
 <p>最终实现在这个 PR 里<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/4079">Tx pool Replace-by-fee</a>。</p>
 <h3 id="并发的-Bug"><a href="#并发的-Bug" class="headerlink" title="并发的 Bug"></a>并发的 Bug</h3><p>在最初的实现版本中，隐藏了一个并发的 bug 后来在测试发现了。RBF 的检查如果放在 <code>pre-check</code> 中，如果多个线程中的多个交易发生了冲突，input resolve 可能会出问题。<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/4258">Fix concurrency issue for RBF</a> 这个 PR 修复了这个问题，把 RBF 的冲突检查移动了 submit entry 之前，因为在这个函数里面会持有 write 锁。</p>
-<h3 id="cycling-attack"><a href="#cycling-attack" class="headerlink" title="cycling attack"></a>cycling attack</h3><p>后来我们在做闪电网络的时候又发现 RBF 可能会引入 cycling attack 的风险，所以又做了这么一个改进：<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/4561">Recover possible transaction in conflicted cache when RBF</a></p>
+<h3 id="cycling-attack"><a href="#cycling-attack" class="headerlink" title="cycling attack"></a>cycling attack</h3><p>后来我们在做闪电网络的时候又发现 RBF 可能会引入 cycling attack 的风险，ve’g<br>所以又做了这么一个改进：<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/4561">Recover possible transaction in conflicted cache when RBF</a>。</p>
 </section>
 
     <p></p>
