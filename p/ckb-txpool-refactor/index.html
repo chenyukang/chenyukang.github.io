@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="CatCoding">
+  <meta property="og:title" content="CKB 交易池重构 | CatCoding" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    CKB 交易池重构 |
+    CatCoding
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+
+<script defer src="https://analytics.us.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>CatCoding</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/links/" class="menu-link">Links</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>CKB 交易池重构</h2>
+  <p class="post-date">2024-11-06</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p> 在 11.9 号清迈的 <a target="_blank" rel="noopener" href="https://share.foresightnews.pro/article/detail/70811">CKCON</a> 会议上我会做一个关于 CKB 交易池的演讲，所以这段时间在整理之前做项目的时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，所以这些文档其实也是可以分享的。</p>
+<p>第一次听说 CKB 的读者可以参考这个文档以了解什么是 CKB 以及如何工作的：<a target="_blank" rel="noopener" href="https://docs.nervos.org/docs/getting-started/how-ckb-works">How CKB Works | Nervos CKB</a>。</p>
+<p>我加入 Cryptape 之后一年内做的主要工作，涉及到交易池重构、Replace-by-fee 功能、以及 new-verify。这是第一篇关于交易池重构的文章。</p>
+<h2 id="什么是交易池"><a href="#什么是交易池" class="headerlink" title="什么是交易池"></a>什么是交易池</h2><p>在 bitcoin 中交易池叫作 mempool，比如 <a target="_blank" rel="noopener" href="https://mempool.space/">mempool - Bitcoin Explorer</a> 这个网站就很好地展示了其当前的状态。</p>
+<p>交易池是 bitcoin 中的一个重要的组件，但感觉专门关于这块的资料很少，只能通过 PR 和邮件列表上的讨论看到一些文档。但交易池非常重要，因为一个交易要上链必须会通过交易池，而其中的交易打包算法涉及到如何选择合适的交易，这里面有很多因素需要考虑，所以在实现上也是比较复杂的。</p>
+<p>当一个交易被提交到一个节点时，或者一个节点从网络中同步到交易时，这个交易首先需要被加入到交易池中，交易池里会根据一定的算法去选择下一个需要被打包的交易，另外交易池作为一个缓存，我们需要为其设置一个最大的 size。所以交易池里面最重要的两个操作就是 packaging 和 evicting。</p>
+<p>交易池里面的交易存在父子关系，打包的时候需要从交易链的纬度去考虑，后面的 Replace by fee 这些功能也需要关注整个交易的所有子交易。</p>
+<p><img src="/images/ob_transaction-pool.jpg" alt="700"><span class="image-caption">700</span></p>
+<h2 id="交易池重构"><a href="#交易池重构" class="headerlink" title="交易池重构"></a>交易池重构</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>根据 RFC <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0020-ckb-consensus-protocol/0020-ckb-consensus-protocol.md#two-step-transaction-confirmation">consensus-protocol</a> 的设计，CKB 里的 tx-pool 采用了两段提交的方式：</p>
+<p><img src="/images/ob_pasted-image-20241031100804.png" alt="600"><span class="image-caption">600</span></p>
+<p>相应地在交易池最初实现的时候， <code>ckb</code> 的代码实现中 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/rc/v0.111.x/tx-pool/src/pool.rs">tx-pool</a> 同样采用了三个独立的队列，具体定义如下：</p>
+<ul>
+<li><code>pending</code> 交易刚加入到交易池时候的状态，我们每次只能处理不多于 <code>MAX_BLOCK_PROPOSALS_LIMIT</code> 个交易，交易需要先进入 <code>gap</code> 备选，具体代码逻辑在 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/3de5a20ce60619927f41f81d9584cab9d39d1275/tx-pool/src/block_assembler/mod.rs#L345C11-L345C11">update_proposals</a> 。</li>
+<li><code>gap</code> 已经被 proposed 了，但是还不能被打包，需要等一个块后才能被打包，所以这只是内部中间过渡状态。</li>
+<li><code>proposed</code> 交易可以加入到 <code>block_template.transactions</code> , 最终打包到 block 里，具体代码逻辑在 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/e75ab3faf0f7b1d182be2f1daa30f300cfefabc8/tx-pool/src/block_assembler/mod.rs#L195">block_assembler</a>。</li>
+</ul>
+<p>实现中 <code>pending</code> 和 <code>gap</code> 同样都是使用了 <code>PendingQueue(LinkedHashMap)</code>，而 <code>proposed</code> 采用了 <code>SortedTxMap(HashMap + BTreeSet)</code> ：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">struct</span> <span class="token type-definition class-name">TxPool</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">pub</span><span class="token punctuation">(</span><span class="token keyword">crate</span><span class="token punctuation">)</span> config<span class="token punctuation">:</span> <span class="token class-name">TxPoolConfig</span><span class="token punctuation">,</span>
+    <span class="token comment">/// The short id that has not been proposed</span>
+    <span class="token keyword">pub</span><span class="token punctuation">(</span><span class="token keyword">crate</span><span class="token punctuation">)</span> pending<span class="token punctuation">:</span> <span class="token class-name">PendingQueue</span><span class="token punctuation">,</span>
+    <span class="token comment">/// The proposal gap</span>
+    <span class="token keyword">pub</span><span class="token punctuation">(</span><span class="token keyword">crate</span><span class="token punctuation">)</span> gap<span class="token punctuation">:</span> <span class="token class-name">PendingQueue</span><span class="token punctuation">,</span>
+    <span class="token comment">/// Tx pool that finely for commit</span>
+    <span class="token keyword">pub</span><span class="token punctuation">(</span><span class="token keyword">crate</span><span class="token punctuation">)</span> proposed<span class="token punctuation">:</span> <span class="token class-name">ProposedPool</span><span class="token punctuation">,</span>
+
+    <span class="token punctuation">...</span><span class="token punctuation">.</span>
+
+    <span class="token keyword">pub</span><span class="token punctuation">(</span><span class="token keyword">crate</span><span class="token punctuation">)</span> expiry<span class="token punctuation">:</span> <span class="token keyword">u64</span><span class="token punctuation">,</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这样的实现存在以下问题：</p>
+<ul>
+<li><p>我们不容易对所有在交易池中的 entry 做统一排序，这样会存在以下问题：</p>
+<ul>
+<li>一个 fee 高的交易可能在 transaction 多的情况下在 pending 阶段一直卡着，因为我们在 pending 和 gap 阶段只是按照时间顺序来处理，只在 proposed 后的打包阶段按照交易费来处理。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/issues/3942">issue 3942</a> 交易池满了之后，我们需要选择一些 entry 做 evict，我们目前的 evict 逻辑很<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/fdee47bbd87c66d8a0e54c3ac1f5386cb9aba643/tx-pool/src/pool.rs#L322">简单粗暴</a>。我们希望尽量选择最小 descendants 的交易，这样能避免在 evict 过程中删除过多交易。我们目前在 pending 和 gap 阶段没有记录 descendants，而需要加入这个逻辑就和 proposed 阶段完全重复，而且因为不会统一排序，后续实现也不容易。</li>
+</ul>
+</li>
+<li><p>pending, gap 和 proposed 除了所采用的数据结构不同外，有很多逻辑雷同的代码，比如 entry 的新增和删除等操作，同样都维护了 deps 和 header_deps，resolve_conflict, resolve_conflict_header_dep, resolve_tx 等函数的逻辑也是类似的，但实现上有些细微差异，这导致长期来说代码不容易维护。</p>
+</li>
+<li>同样我们在 <code>tx-pool</code> 上对 entry 做迭代和查询时，需要依次针对 pending, gap, proposed 做相同的逻辑，比如 resolve_conflict_header_dep 这样的函数在 pool 中有几个类似的，甚至 get_tx_with_cycles 这样的函数，需要依次判断各个队列。</li>
+<li>实现其他功能不方便，比如我们如果要实现 Replace by fee，就需要找交易池中和新交易有冲突的交易，我们需要在三个数据结构上分别进行检查才能得到结果。</li>
+</ul>
+<h3 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h3><p>基于以上解决现有问题、应对未来的潜在需求、保持代码可维护性的角度，同时参考 <a target="_blank" rel="noopener" href="https://github.com/bitcoin/bitcoin/blob/322ec63b01499c1ec52d3912ee382ebd59f2366b/src/txmempool.h">Bitcoin txmempool</a> 的实现，我们提出引入 <strong>Multi_index_map</strong> 对 tx-pool 进行重构。</p>
+<p>总体方向是把所有的 <code>entry</code> 放入统一的数据结构中进行管理，加入一个新的字段 <code>status</code> 标识目前 <code>entry</code> 所处的阶段，然后通过 index_map 的方式根据不同的属性进行排序和迭代：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">enum</span> <span class="token type-definition class-name">Status</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">Pending</span><span class="token punctuation">,</span>
+    <span class="token class-name">Gap</span><span class="token punctuation">,</span>
+    <span class="token class-name">Proposed</span><span class="token punctuation">,</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token attribute attr-name">#[derive(MultiIndexMap, Clone)]</span>
+<span class="token keyword">pub</span> <span class="token keyword">struct</span> <span class="token type-definition class-name">PoolEntry</span> <span class="token punctuation">&#123;</span>
+    <span class="token attribute attr-name">#[multi_index(hashed_unique)]</span>
+    <span class="token keyword">pub</span> id<span class="token punctuation">:</span> <span class="token class-name">ProposalShortId</span><span class="token punctuation">,</span>
+    <span class="token attribute attr-name">#[multi_index(ordered_non_unique)]</span>
+    <span class="token keyword">pub</span> score<span class="token punctuation">:</span> <span class="token class-name">AncestorsScoreSortKey</span><span class="token punctuation">,</span>
+    <span class="token attribute attr-name">#[multi_index(ordered_non_unique)]</span>
+    <span class="token keyword">pub</span> status<span class="token punctuation">:</span> <span class="token class-name">Status</span><span class="token punctuation">,</span>
+    <span class="token attribute attr-name">#[multi_index(ordered_non_unique)]</span>
+    <span class="token keyword">pub</span> evict_key<span class="token punctuation">:</span> <span class="token class-name">EvictKey</span><span class="token punctuation">,</span>
+    <span class="token comment">// other sort key</span>
+    <span class="token keyword">pub</span> inner<span class="token punctuation">:</span> <span class="token class-name">TxEntry</span><span class="token punctuation">,</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>其中根据 Rust 社区的 <a target="_blank" rel="noopener" href="https://github.com/lun3x/multi_index_map">multi_index_map</a> 内部实现采用的数据结构看，性能上应该没有什么大问题：</p>
+<ul>
+<li>Hashed index retrievals are constant-time. (FxHashMap + Slab).</li>
+<li>Sorted indexes retrievals are logarithmic-time. (BTreeMap + Slab).</li>
+<li>Non-Unique Indexes<ul>
+<li>Hashed index retrievals are still constant-time with the total number of elements, but linear-time with the number of matching elements. (FxHashMap + (Slab * num_matches)).</li>
+<li>Sorted indexes retrievals are still logarithmic-time with total number of elements, but linear-time with the number of matching elements. (BTreeMap + (Slab * num_matches)).</li>
+<li>Iteration within an equal range of a non-unique index is fast, as the matching elements are stored contiguously in memory. Otherwise iteration is the same as unique indexes.</li>
+</ul>
+</li>
+</ul>
+<p>具体实现时我们是否把 inner 也放在 Slab 里面以后可以通过 benchmark 来选择，从实现的简洁性角度考虑统一放在一个数据结构里面更容易。</p>
+<p>目前的实现版本：<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/3993">Tx pool rewrite with multi_index_map #3993</a></p>
+<h2 id="实现结果"><a href="#实现结果" class="headerlink" title="实现结果"></a>实现结果</h2><p>我们首先只是做模块内的重构 (保持对外逻辑和以前一样)，当然考虑引入了新的数据结构，不管是从性能上还是内存占用上都会有一些影响。</p>
+<p>为了做统一排序这件额外的事，本质上我们引入了额外的 Map(FxHashMap 或 BTreeMap) 来存储，所以比以前需要更多内存。另外，我们有时候需要调用 <code>get_by_status</code> 来筛选某个状态的 entries，这在新的实现里面需要先从 index 里面找出 slab 的 id，然后再找到对应的 entry，所以必然也会比以前慢。</p>
+<p>从最终的性能对比结果上，除了内存会稍微有增加，性能上没有大的变化。另外我们在实现的过程中对所用到的 Rust 包 multi-index-map 做了一些贡献：<a target="_blank" rel="noopener" href="https://github.com/lun3x/multi_index_map/pull/23">Non-unique index support, capacity operations, performance improvement &amp; more by wyjin</a>。</p>
+<p>这是我入职后做的第一个主要工作，因为我们的各种测试比较齐全，所以做大的重写信心也比较足。Rust 的生态就有这种问题，如果一个 crate 不是被广泛使用的，必然还是会存在各种坑需要填。总体来说，第一个项目很顺利。做完这个重构之后对于后面的 Replace by fee 等功能也准备好了。</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#区块链" >
+    <span class="tag-code">区块链</span>
+  </a>
+
+  <a href="/tags#CKB" >
+    <span class="tag-code">CKB</span>
+  </a>
+
+  <a href="/tags#Rust" >
+    <span class="tag-code">Rust</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/p/xz-backdoor/">
+        
+          xz-backdoor 观感
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%A4%E6%98%93%E6%B1%A0"><span class="toc-nav-text">什么是交易池</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BA%A4%E6%98%93%E6%B1%A0%E9%87%8D%E6%9E%84"><span class="toc-nav-text">交易池重构</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-nav-text">问题</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%96%B9%E6%A1%88"><span class="toc-nav-text">方案</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%93%E6%9E%9C"><span class="toc-nav-text">实现结果</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/p/ckb-txpool-refactor/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW * 3 / 4}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2024 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
