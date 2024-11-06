@@ -183,9 +183,9 @@
 <p>交易池是 bitcoin 中的一个重要的组件，但感觉专门关于这块的资料很少，只能通过 PR 和邮件列表上的讨论看到一些文档。但交易池非常重要，因为一个交易要上链必须会通过交易池，而其中的交易打包算法涉及到如何选择合适的交易，这里面有很多因素需要考虑，所以在实现上也是比较复杂的。</p>
 <p>当一个交易被提交到一个节点时，或者一个节点从网络中同步到交易时，这个交易首先需要被加入到交易池中，交易池里会根据一定的算法去选择下一个需要被打包的交易，另外交易池作为一个缓存，我们需要为其设置一个最大的 size。所以交易池里面最重要的两个操作就是 packaging 和 evicting。</p>
 <p>交易池里面的交易存在父子关系，打包的时候需要从交易链的纬度去考虑，后面的 Replace by fee 这些功能也需要关注整个交易的所有子交易。</p>
-<p><img src="/images/ob_transaction-pool.jpg" alt="700"><span class="image-caption">700</span></p>
+<p><img src="/images/ob_transaction-pool.jpg" alt=""></p>
 <h2 id="交易池重构"><a href="#交易池重构" class="headerlink" title="交易池重构"></a>交易池重构</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>根据 RFC <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0020-ckb-consensus-protocol/0020-ckb-consensus-protocol.md#two-step-transaction-confirmation">consensus-protocol</a> 的设计，CKB 里的 tx-pool 采用了两段提交的方式：</p>
-<p><img src="/images/ob_pasted-image-20241031100804.png" alt="600"><span class="image-caption">600</span></p>
+<p><img src="/images/ob_pasted-image-20241031100804.png" alt=""></p>
 <p>相应地在交易池最初实现的时候， <code>ckb</code> 的代码实现中 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/rc/v0.111.x/tx-pool/src/pool.rs">tx-pool</a> 同样采用了三个独立的队列，具体定义如下：</p>
 <ul>
 <li><code>pending</code> 交易刚加入到交易池时候的状态，我们每次只能处理不多于 <code>MAX_BLOCK_PROPOSALS_LIMIT</code> 个交易，交易需要先进入 <code>gap</code> 备选，具体代码逻辑在 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/3de5a20ce60619927f41f81d9584cab9d39d1275/tx-pool/src/block_assembler/mod.rs#L345C11-L345C11">update_proposals</a> 。</li>
