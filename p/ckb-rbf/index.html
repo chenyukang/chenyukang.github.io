@@ -176,7 +176,8 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h2 id="Replace-by-fee"><a href="#Replace-by-fee" class="headerlink" title="Replace by fee"></a>Replace by fee</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>如果一个交易成功发送到交易池，但可能出现因为费用较低而一直得不到处理。之前 CKB 没有其他措施来处理这种情况。</p>
+    <section class="markdown-content"><p>CKB 相关技术文章第二篇。</p>
+<h2 id="Replace-by-fee"><a href="#Replace-by-fee" class="headerlink" title="Replace by fee"></a>Replace by fee</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>如果一个交易成功发送到交易池，但可能出现因为费用较低而一直得不到处理。之前 CKB 没有其他措施来处理这种情况。</p>
 <p>例如 <a target="_blank" rel="noopener" href="https://www.notion.so/Dotbit-4-45e129cb4c434bd2902569aff67c4383?pvs=21">Dotbit 4 位域名注册拥堵</a> 这个事故发生过程中，<code>CKB</code> 的应用方无法使用任何方式来尽快让自己的交易被打包，这就是引入 <code>Replace-by-fee（RBF)</code> 的原因，我们需要一个机制来提高已经在交易池里交易的费用，替换掉旧的交易，让新的交易尽快被打包。</p>
 <p>在新的 <code>multi_index_map</code> 重构后，交易在 <code>pending</code> 阶段也会按照交易的 <code>score</code> 来优先处理 (通常费用高的交易 <code>score</code> 也会高)，这会避免高费用的交易被阻塞住，所以理论上述需要手动提高费用的情况会减少，但我们还是需要 RBF 来手动提高交易的费用，应对意外的情况。</p>
 <p>另外，RBF 可能将多个老的交易替换出去，因此也是将两个或多个支付合并为一的方法，例如下图所示，如果满足条件 <code>tx-a</code>, <code>tx-b</code>, <code>tx-c</code>, <code>tx-d</code> 都会被 <code>tx-e</code> 这个交易替换掉：</p>
@@ -224,12 +225,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Rust" >
-    <span class="tag-code">Rust</span>
-  </a>
-
   <a href="/tags#CKB" >
     <span class="tag-code">CKB</span>
+  </a>
+
+  <a href="/tags#Rust" >
+    <span class="tag-code">Rust</span>
   </a>
 
       </div>
@@ -239,6 +240,13 @@
     
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/ckb-new-verify/">
+        <span class="nav-arrow">← </span>
+        
+          CKB new script verifi ...
+        
+      </a>
     
     
       <a class="nav-right" href="/p/ckb-txpool-refactor/">
