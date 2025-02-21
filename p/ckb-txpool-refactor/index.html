@@ -176,30 +176,13 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<h1 id="在-11-9-号清迈的-CKCON-会议上我会做一个关于-CKB-交易池的演讲，这是我准备的-slides-Key-Upgrades-of-the-CKB-Core-。所以这段时间在整理之前做项目的时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，所以这些文档其实也是可以分享的。"><a href="#在-11-9-号清迈的-CKCON-会议上我会做一个关于-CKB-交易池的演讲，这是我准备的-slides-Key-Upgrades-of-the-CKB-Core-。所以这段时间在整理之前做项目的时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，所以这些文档其实也是可以分享的。" class="headerlink" title=" 在 11.9 号清迈的 CKCON 会议上我会做一个关于 CKB 交易池的演讲，这是我准备的 slides Key Upgrades of the CKB Core 。所以这段时间在整理之前做项目的时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，所以这些文档其实也是可以分享的。"></a> 在 11.9 号清迈的 <a target="_blank" rel="noopener" href="https://share.foresightnews.pro/article/detail/70811">CKCON</a> 会议上我会做一个关于 CKB 交易池的演讲，这是我准备的 slides <a target="_blank" rel="noopener" href="https://ckb-tx-pool.vercel.app/1">Key Upgrades of the CKB Core</a> 。所以这段时间在整理之前做项目的时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，所以这些文档其实也是可以分享的。</h1><p> 在 11.9 号清迈的 ckconf 会议上我会做一个关于 CKB 交易池的演讲，所以这段时间在整理之前做项目时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，所以这些文档其实也是可以分享的。</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>23a61d549 (android backup: 2024-12-29 16-03-03)</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
+    <section class="markdown-content"><p>在 11.9 号清迈的 ckconf 会议上我会做一个关于 CKB 交易池的演讲，所以这段时间在整理之前做项目时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，这些文档其实也是可以分享的。</p>
 <p>第一次听说 CKB 的读者可以参考这个文档以了解什么是 CKB 以及如何工作的：<a target="_blank" rel="noopener" href="https://docs.nervos.org/docs/getting-started/how-ckb-works">How CKB Works | Nervos CKB</a>。</p>
 <p>我加入 Cryptape 之后一年内做的主要工作，涉及到交易池重构、Replace-by-fee 功能、以及 new-verify。这是第一篇关于交易池重构的文章。</p>
 <h2 id="什么是交易池"><a href="#什么是交易池" class="headerlink" title="什么是交易池"></a>什么是交易池</h2><p>在 bitcoin 中交易池叫作 mempool，比如 <a target="_blank" rel="noopener" href="https://mempool.space/">mempool - Bitcoin Explorer</a> 这个网站就很好地展示了其当前的状态。</p>
 <p>交易池是 bitcoin 中的一个重要的组件，但感觉专门关于这块的资料很少，只能通过 PR 和邮件列表上的讨论看到一些文档。但交易池非常重要，因为一个交易要上链必须会通过交易池，而其中的交易打包算法涉及到如何选择合适的交易，这里面有很多因素需要考虑，所以在实现上也是比较复杂的。</p>
 <p>当一个交易被提交到一个节点时，或者一个节点从网络中同步到交易时，这个交易首先需要被加入到交易池中，交易池里会根据一定的算法去选择下一个需要被打包的交易，另外交易池作为一个缓存，我们需要为其设置一个最大的 size。所以交易池里面最重要的两个操作就是 packaging 和 evicting。</p>
 <p>交易池里面的交易存在父子关系，打包的时候需要从交易链的纬度去考虑，后面的 Replace by fee 这些功能也需要关注整个交易的所有子交易。</p>
-<p><img src="/images/ob_transaction-pool.jpg" alt=""></p>
 <h2 id="交易池重构"><a href="#交易池重构" class="headerlink" title="交易池重构"></a>交易池重构</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>根据 RFC <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0020-ckb-consensus-protocol/0020-ckb-consensus-protocol.md#two-step-transaction-confirmation">consensus-protocol</a> 的设计，CKB 里的 tx-pool 采用了两段提交的方式：</p>
 <p><img src="/images/ob_pasted-image-20241031100804.png" alt=""></p>
 <p>相应地在交易池最初实现的时候， <code>ckb</code> 的代码实现中 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/rc/v0.111.x/tx-pool/src/pool.rs">tx-pool</a> 同样采用了三个独立的队列，具体定义如下：</p>
@@ -272,8 +255,7 @@
 <p>目前的实现版本：<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/3993">Tx pool rewrite with multi_index_map #3993</a></p>
 <h2 id="实现结果"><a href="#实现结果" class="headerlink" title="实现结果"></a>实现结果</h2><p>我们首先只是做模块内的重构 (保持对外逻辑和以前一样)，当然考虑引入了新的数据结构，不管是从性能上还是内存占用上都会有一些影响。</p>
 <p>为了做统一排序这件额外的事，本质上我们引入了额外的 Map(FxHashMap 或 BTreeMap) 来存储，所以比以前需要更多内存。另外，我们有时候需要调用 <code>get_by_status</code> 来筛选某个状态的 entries，这在新的实现里面需要先从 index 里面找出 slab 的 id，然后再找到对应的 entry，所以必然也会比以前慢。</p>
-<p>从最终的性能对比结果上，除了内存会稍微有增加，性能上没有大的变化。另外我们在实现的过程中对所用到的 Rust 包 multi-index-map 做了一些贡献：<a target="_blank" rel="noopener" href="https://github.com/lun3x/multi_index_map/pull/23">Non-unique index support, capacity operations, performance improvement &amp; more by wyjin</a>。</p>
-<p>这是我入职后做的第一个主要工作，因为我们的各种测试比较齐全，所以做大的重写信心也比较足。Rust 的生态就有这种问题，如果一个 crate 不是被广泛使用的，必然还是会存在各种坑需要填。总体来说，第一个项目很顺利。做完这个重构之后对于后面的 Replace by fee 等功能也准备好了。</p>
+<p>从最终的性能对比结果上，除了内存会稍微有增加，性能上没有大的变化。另外我们在实现的过程中对所用到的 Rust 包 multi-index-map 做了一些贡献：<a target="_blank" rel="noopener" href="https://github.com/lun3x/multi_index_map/pull/23">Non-unique index support, capacity operations, performance improvement &amp; more by wyjin</a></p>
 </section>
 
     <p></p>
@@ -353,7 +335,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#%E5%9C%A8-11-9-%E5%8F%B7%E6%B8%85%E8%BF%88%E7%9A%84-CKCON-%E4%BC%9A%E8%AE%AE%E4%B8%8A%E6%88%91%E4%BC%9A%E5%81%9A%E4%B8%80%E4%B8%AA%E5%85%B3%E4%BA%8E-CKB-%E4%BA%A4%E6%98%93%E6%B1%A0%E7%9A%84%E6%BC%94%E8%AE%B2%EF%BC%8C%E8%BF%99%E6%98%AF%E6%88%91%E5%87%86%E5%A4%87%E7%9A%84-slides-Key-Upgrades-of-the-CKB-Core-%E3%80%82%E6%89%80%E4%BB%A5%E8%BF%99%E6%AE%B5%E6%97%B6%E9%97%B4%E5%9C%A8%E6%95%B4%E7%90%86%E4%B9%8B%E5%89%8D%E5%81%9A%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%97%B6%E5%80%99%E5%86%99%E7%9A%84%E4%B8%80%E4%BA%9B%E6%96%87%E6%A1%A3%EF%BC%8C%E9%A1%BA%E4%BE%BF%E5%88%86%E4%BA%AB%E5%88%B0%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2%E4%B8%8A%E3%80%82%E6%97%A2%E7%84%B6%E6%88%91%E4%BB%AC%E6%95%B4%E4%B8%AA%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%BA%90%E7%A0%81%E9%83%BD%E6%98%AF%E5%85%AC%E5%BC%80%E7%9A%84%EF%BC%8C%E6%89%80%E4%BB%A5%E8%BF%99%E4%BA%9B%E6%96%87%E6%A1%A3%E5%85%B6%E5%AE%9E%E4%B9%9F%E6%98%AF%E5%8F%AF%E4%BB%A5%E5%88%86%E4%BA%AB%E7%9A%84%E3%80%82"><span class="toc-nav-text"> 在 11.9 号清迈的 CKCON 会议上我会做一个关于 CKB 交易池的演讲，这是我准备的 slides Key Upgrades of the CKB Core 。所以这段时间在整理之前做项目的时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，所以这些文档其实也是可以分享的。</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%A4%E6%98%93%E6%B1%A0"><span class="toc-nav-text">什么是交易池</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BA%A4%E6%98%93%E6%B1%A0%E9%87%8D%E6%9E%84"><span class="toc-nav-text">交易池重构</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-nav-text">问题</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%96%B9%E6%A1%88"><span class="toc-nav-text">方案</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%93%E6%9E%9C"><span class="toc-nav-text">实现结果</span></a></li></ol></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%A4%E6%98%93%E6%B1%A0"><span class="toc-nav-text">什么是交易池</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BA%A4%E6%98%93%E6%B1%A0%E9%87%8D%E6%9E%84"><span class="toc-nav-text">交易池重构</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-nav-text">问题</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%96%B9%E6%A1%88"><span class="toc-nav-text">方案</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%93%E6%9E%9C"><span class="toc-nav-text">实现结果</span></a></li></ol>
     
   </div>
 </aside>
