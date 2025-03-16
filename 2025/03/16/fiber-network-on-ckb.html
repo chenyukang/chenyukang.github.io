@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="CatCoding">
+  <meta property="og:title" content="Fiber Network: 基于 CKB 实现的闪电网络 | CatCoding" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    Fiber Network: 基于 CKB 实现的闪电网络 |
+    CatCoding
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+
+<script defer src="https://analytics.us.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>CatCoding</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/links/" class="menu-link">Links</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Fiber Network: 基于 CKB 实现的闪电网络</h2>
+  <p class="post-date">2025-03-16</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>最近一年我在做 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber">Fiber Network</a> 这个新的开源项目，上个月底刚好<a target="_blank" rel="noopener" href="https://x.com/FiberDevs/status/1895486339505893880">主网第一个版本发布</a>：</p>
+<p><img src="/images/ob_pasted-image-20250316084708.png" alt=""></p>
+<p>这个项目的挑战还是挺大的，上主网只是一个新的开始。我在开发过程中学到了很多东西，这是我前段时间写的一篇关于 Fiber 的大致介绍。</p>
+<h2 id="Fiber-简介"><a href="#Fiber-简介" class="headerlink" title="Fiber 简介"></a>Fiber 简介</h2><p>Fiber 是基于 CKB 构建的闪电网络协议，旨在实现快速、安全且高效的链下支付解决方案。借鉴了比特币闪电网络的核心理念，Fiber 针对 CKB 的独特架构进行了深度优化，提供低延迟、高吞吐量的支付通道，适用于微支付和高频交易等场景。与传统的闪电网络不同，Fiber 拥有多项关键特性：</p>
+<ul>
+<li><strong>多资产支持</strong>：不再局限于单一币种，能够处理多种资产交易，为复杂的跨链金融应用铺平道路。</li>
+<li><strong>可编程性</strong>：基于 CKB 的图灵完备智能合约，支持更复杂的条件执行和业务逻辑，拓展了支付通道的应用边界。</li>
+<li><strong>跨链互操作性</strong>：原生设计支持与其他 UTXO 链（如比特币）的闪电网络交互，提升了链间资产流动性和网络兼容性。</li>
+<li><strong>更灵活的状态管理</strong>：得益于 CKB 的 Cell 模型，Fiber 可以更高效地管理通道状态，降低链下交互的复杂度。</li>
+</ul>
+<p>在这篇文章中，我们将从源码层面介绍 Fiber 的整体架构和主要模块，以及项目的后续展望和规划。</p>
+<h3 id="前提知识"><a href="#前提知识" class="headerlink" title="前提知识"></a>前提知识</h3><ul>
+<li>Rust, and <a target="_blank" rel="noopener" href="https://github.com/slawlor/ractor">actor framework</a>，Fiber 是一个完全由 Rust 编程语言所实现的项目，另外我们在实现中采用了 actor model 的模式，依赖社区的项目 <a target="_blank" rel="noopener" href="https://github.com/slawlor/ractor">ractor</a> 框架。</li>
+<li>Lightning network，Fiber 的基本思想沿用了 Bitcoin 的闪电网络，基本原理是一致的，所以  <a target="_blank" rel="noopener" href="https://github.com/lnbook/lnbook">Mastering lightning network</a> 和 Bolts: <a target="_blank" rel="noopener" href="https://github.com/lightning/bolts">lightning/bolts</a> 是非常有用的参考资料。</li>
+<li>CKB transaction and contract，Fiber 会通过 RPC 与 CKB node 进行交互，比如 funding transaction 或者 shutdown commitment transaction 可能需要通过 RPC 提交给 CKB 的节点，所以掌握 Fiber 需要了解一些 CKB 合约开发方面的知识。</li>
+</ul>
+<h2 id="重要模块"><a href="#重要模块" class="headerlink" title="重要模块"></a>重要模块</h2><p>我们从最高纬度去看一个 Fiber Node，主要包含下面几个主要模块：</p>
+<p><img src="/images/ob_pasted-image-20250316082730.png" alt=""></p>
+<p>其中：</p>
+<ul>
+<li>Network Actor 是 Fiber Node 中负责节点内外的消息通信</li>
+<li>Network graph 包含一个节点对于整个网络里其他节点和 channel 的信息，当一个 Fiber Node 收到一个支付请求的时候，我们首先会尝试从 network graph 中找到一条路径能够触达收款节点，这个 network graph 结构是跟着网络上的 gossip 信息不断更新的</li>
+<li>PaymentSession 负责管理一个支付的生命周期</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/cryptape/fiber-sphinx">fiber-sphinx</a> 是我们自己实现的 onion packet 加解密 Rust 库</li>
+<li>Gossip 是 Fiber 节点之间的交换网络消息的协议，用于 Node 和 Channe 的发现和更新。</li>
+<li>Watchtower，这里负责监听 Fiber node 所关心的 channel 里面的重要事件，另外如果某个 Node 提交一个老的 commitment transaction，watch tower 负责发出 revocation transaction 来进行惩罚</li>
+<li>Cross hub，这个模块负责跨链的互操作，比如付款者通过 Bitcoin 的闪电网络发出 Bitcoin，而接收者收到的是 CKB，cross hub 这里会进行一个转换，将 Bitcoin 的 payment 和 invoice 和 Fiber 这边的 payment 和 invoice 进行映射管理</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber-scripts/tree/main">Fiber-script</a> 在一个单独的代码仓库，这里面包含了两个主要的合约，<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber-scripts/tree/main/contracts/funding-lock">funding-lock</a> 是一个资金锁定合约，使用 ckb-auth 库来实现一个 2-of-2 多重签名，<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber-scripts/tree/main/contracts/commitment-lock">commitment-lock</a> 实现了 <a target="_blank" rel="noopener" href="https://eprint.iacr.org/2022/1295">daric</a> 协议来作为 Fiber 的惩罚机制</li>
+</ul>
+<h3 id="Actor-Model-和-Channel-管理"><a href="#Actor-Model-和-Channel-管理" class="headerlink" title="Actor Model 和 Channel 管理"></a>Actor Model 和 Channel 管理</h3><p>Channel 的管理是闪电网络中非常重要、也是异常复杂的部分。其中的复杂性主要来自于 Channel 内部数据和状态的改变来自于网络上 peer 之间的交互，事件的处理可能存在并发上的问题，一个 Channel 的双边可能同时都有 TLC 的操作。</p>
+<p>闪电网络本质上是一个 P2P 系统，节点之间通过网络消息相互通信进而改变内部的数据状态，我们发现 Actor Model 非常适合这种场景：</p>
+<p><img src="/images/ob_pasted-image-20250316082740.png" alt=""></p>
+<p>Actor Model 极大地简化了代码实现的复杂度，使用 Actor model 后我们不需要使用锁来保护数据的更新，当一个  Message handle 结束的时候，我们会把 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/81014d36502b76e2637dfa414b5a3ee494942c41/src/fiber/channel.rs#L2276">channel state 的数据更新写入 db</a>。而像 rust lightning 如果没用使用 actor model，就可能会涉及到非常复杂的<a target="_blank" rel="noopener" href="https://github.com/lightningdevkit/rust-lightning/blob/b8b1ef3149f26992625a03d45c0307bfad70e8bd/lightning/src/ln/channelmanager.rs#L1167">锁相关的操作</a>。</p>
+<p>我们的所有的重要模块都采用了 Actor Model，<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/network.rs#L694-L789">Network Actor</a>负责节点内外的消息通信，比如一个节点要给另外一个节点发送 Open channel 的消息，这个消息首先会通过 Fiber node A 的 channel actor 发送到 network actor，node A 的 network actor 通过更底层的网络层 tentacle 发送到 node B 的 network actor，然后 network actor 再发给 node B 里面的所对应的 channel actor。</p>
+<p><img src="/images/ob_pasted-image-20250316082758.png" alt=""></p>
+<p>在一个 Fiber Node 内部，每一个新的 Channel 我们都会建立一个对应的 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/channel.rs#L301-L308">ChannelActor</a>，而这个 ChannelActorState 里面包含了这个 Channel 所需要持久化的所有的数据。采用 Actor Model 的另外一个好处就是我们能够在代码实现过程中直观地把 HTLC 网络协议相关的操作映射到一个函数里，比如下图中展示了 HTLC 在多个节点之间的流转过程，对于 A 到 B 之间的 AddTlc 操作，节点 A 里的 actor 0 所应对的代码实现就是 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/channel.rs#L1251">handle_add_tlc_command</a>，而节点 B 里的 actor 1 所对应的代码实现是 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/channel.rs#L1069">handle_add_tlc_peer_message</a>。</p>
+<p><img src="/images/ob_pasted-image-20250316082810.png" alt=""></p>
+<p>Channel 之间的 TLC 操作是复杂度非常高的部分，我们在实现上延用了 rust-lightning 的方式，<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/channel.rs#L2463-L2496">使用状态机来表示 TLC 的状态</a>，根据 actor 之间的 commitment_sign 和 revoke_ack 的消息来改变状态机，总的来说 AddTlc 的操作流程和两个 Peer TLC 状态的改变过程如下：</p>
+<p><img src="/images/ob_pasted-image-20250316082818.png" alt=""></p>
+<h3 id="支付和多跳路由"><a href="#支付和多跳路由" class="headerlink" title="支付和多跳路由"></a>支付和多跳路由</h3><p>每个 Fiber 节点都通过 Network graph 保存了自己对于整个网络的了解情况，本质上这是一个双向有向图，每一个 Fiber 节点对应于 Graph 里面的一个 vertex，每一个 Channel 对应于 Graph 里面的一个 edge，出于隐私保护的需求，Channel 的真实 balance 不会广播到网络中，所有 edge 的大小是 Channel 的 capacity。</p>
+<p>在支付开始前，发起者会通过路径规划找到一条通往收款者的路径，如果有多条路径就需要找到各方面综合考虑最优的路径，而在信息缺失的图中找到最优路径是一个在工程上非常具有挑战性的问题，<a target="_blank" rel="noopener" href="https://github.com/lnbook/lnbook/blob/develop/12_path_finding.asciidoc#pathfinding-what-problem-are-we-solving">Mastering Lightning Network 对这个问题有很详细的介绍</a>：</p>
+<p><img src="/images/ob_pasted-image-20250316082831.png" alt=""></p>
+<p>在 Fiber 中，支付动作由用户向 Fiber Node <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/rpc/payment.rs#L171-L209">通过 RPC 发起请求</a>，节点收到请求后会创建对应的 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/network.rs#L1866-L1871">PaymentSession</a> 来追踪支付的生命周期。</p>
+<p>目前我们的路径规划的算法是一个<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/graph.rs#L914-L925">变形的 Dijkstra 算法</a>，这个算法是通过 target 往 source 方向扩展的，搜索路径的过程中通过折算支付成功的概率、fee、TLC 的 lock time 这些因素到一个 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/graph.rs#L1110">weight 来进行排序</a>。其中的概率估算来自于每次支付的结果记录和分析，实现在 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/history.rs#L481-L506">eval_probability</a>。路径的选择质量好坏对于整个网络的效率和支付的成功率非常重要，这部分我们今后将会继续改进，<em>Multipart payments (MPP)</em> 也是一个今后可能要实现的功能。</p>
+<p>路径规划完成后下一步就是<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/network.rs#L1634-L1656">构建 Onion Packet</a>，然后给通过 source node 发起 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/network.rs#L1657-L1667">AddTlcCommand</a>。后续如果 TLC 失败或者成功会通过事件通知的方式处理。</p>
+<p>整个支付的过程可能会发生多次的重试，一个常见的场景就是我们使用 capacity 作为 Graph 里边的容量，可能路径规划出来的路线无法真实满足支付的大小，所以我们需要返回错误并更新 Graph，然后再继续自动发起<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/network.rs#L1767-L1772">下一次路径规划尝试进行支付</a>。</p>
+<h3 id="节点广播协议-Gossip"><a href="#节点广播协议-Gossip" class="headerlink" title="节点广播协议 Gossip"></a>节点广播协议 Gossip</h3><p>Fiber 的节点之间的通过相互发送广播消息交换新的 Node 和 Channel 信息，Fiber 中的 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/gossip.rs#L293-L331">Gossip 模块</a>实现了 <a target="_blank" rel="noopener" href="https://github.com/lightning/bolts/blob/master/07-routing-gossip.md">Botls 7 定义的 routing gossip</a>。在实现过程中我们的主要技术决策在这个 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/pull/308">PR: Refactor gossip protocol</a>里面有描述。</p>
+<p>当一个 Node 节点第一次启动的时候，会通过配置文件里的 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/network.rs#L3169-L3174">bootnode_addrs</a>来的连接第一批 peers，广播消息的类型有三类：<code>NodeAnnouncement</code> 、<code>ChannelAnnouncement</code> 、<code>ChannelUpdate</code> 。</p>
+<p>Fiber 会把收到的<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/store/store.rs#L482-L711">广播的原始数据保存下来</a>，这样方便通过 timestamp + message_id 组合的 cursor 来对广播消息进行检索，以方便来自 peer node 的 query 请求。</p>
+<p>当一个节点启动的时候，Graph 模块会通过 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/graph.rs#L361">load_from_store</a>来读取所有的 messages，重新构建自己的 network graph。</p>
+<p>我们采用基于订阅的方式在网络中传播消息。一个节点需要主动向另一个节点发送广播消息过滤器（BroadcastMessagesFilter），另一个节点收到了该消息之后会为其创建对应的 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/gossip.rs#L599-L614">PeerFilterActor</a>，在构造函数里创建 Gossip 消息订阅。通过基于订阅的模型这种方式，我们可以让其他节点接收在特定的 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/gossip.rs#L1027-L1049">cursor 之后接收到新保存的 Gossip 消息</a>。</p>
+<h3 id="隐私-Onion-加解密"><a href="#隐私-Onion-加解密" class="headerlink" title="隐私 Onion 加解密"></a>隐私 Onion 加解密</h3><p>处于隐私保护的需求，payment 的 TLC 在多个节点之间传播的时候，每个节点只能知道自己所需要的信息，比如当前节点接收的 TLC 的 amount、expiry、下一个传播的节点等信息，而无法获得其他不必要的信息，而且每个 hop 在发送 TLC 给下一个节点的时候也需要做相应的混淆。</p>
+<p>类似的，如果 payment 在某个节点传播的过程中发生了错误，这个节点也可能返回一个错误信息，而这个错误信息会通过 payment 的 route 反向传递给 payment 的发起节点。这个错误信息也是需要 Onion 加密的，这样确保中间节点无法理解错误的具体内容，而只有发送者能够获得错误内容。</p>
+<p>我们参考了 rust-lightning 在 <a target="_blank" rel="noopener" href="https://github.com/lightningdevkit/rust-lightning/blob/master/lightning/src/ln/onion_utils.rs">onion packet 的实现</a>，发现其实现方式还是不够通用 (会绑定于其项目的具体数据结构)，所以我们自己从头开始实现了 <a target="_blank" rel="noopener" href="https://github.com/cryptape/fiber-sphinx/blob/develop/docs/spec.md">fiber-sphinx</a>，更详细的内容请参考项目的 spec。</p>
+<p>涉及到 Onion 加解密的几个关键节点在这三个地方：</p>
+<ul>
+<li>send payment 的时候<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/network.rs#L1640-L1666">创建 onion packet</a>，作为 AddTlcCommand 里的一个字段发送给第一个 hop</li>
+<li>payment route 中的每个节点收到 TLC 之后，尝试去解开 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/channel.rs#L920-L937">Onion Packet 的一层</a>，就像是剥离一层洋葱皮一样，如果判断自己是接收者则处理 payment settle 相关的逻辑，如果发现后续还有接收者则处理了 TLC 相关的逻辑之后继续<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/channel.rs#L1037-L1064">往下一个 hop 传递剩下的 onion packet</a>。</li>
+<li>如果某个 Hop 在转发 TLC 的过程中出现错误就<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/channel.rs#L774-L797">生成一个新的包含有错误信息的 onion packet</a>，并向前一个 hop 发送 onion packet。</li>
+<li>payment 的发起者收到 TLC fail event 的时候，从其中<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/e7bb8874e308445fdf63a5bc538fc00c100f3dc9/src/fiber/network.rs#L1518-L1527">解开包含有错误信息的 onion packet</a>，然后根据错误信息去判断是否需要重试和更新 Network graph。</li>
+</ul>
+<p><img src="/images/ob_pasted-image-20250316082911.png" alt=""></p>
+<h3 id="Watchtower"><a href="#Watchtower" class="headerlink" title="Watchtower"></a>Watchtower</h3><p>Watchtower 是闪电网络中的重要安全机制，主要用于帮助离线用户防止资金被盗。它通过实时监测链上交易，并在发现违规行为时执行惩罚交易，从而维护闪电网络的公平性和安全性。</p>
+<p>Fiber 的 watchtower 实现在 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/b5c38a800e94aaa368a4c8a8699f5db0c08ecfbd/src/watchtower/actor.rs#L73-L124">WatchtowerActor</a>里，这个 actor 会监听 Fiber 节点中发生的关键事件，比如一个新的 Channel 创建成功时将会收到 <code>RemoteTxComplete</code>，watchtower 就在数据库里插入一条对应的记录来开始监听这个通道，Channel 双方协商成功关闭时会收到 <code>ChannelClosed</code>，watchtower 从数据库中移除对应的记录。</p>
+<p>在 Channel 中 TLC 交互时候，watchertower 将会收到 <code>RemoteCommitmentSigned</code> 和 <code>RevokeAndAckReceived</code>，分别去更新数据库中存储的 <code>revocation_data</code> 和 <code>settlement_data</code>，这些字段将会在后续创建 revocation transaction 和 settlement trasaction 的时候用到。</p>
+<p>Watchtower 的惩罚机制是通过<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/b5c38a800e94aaa368a4c8a8699f5db0c08ecfbd/src/watchtower/actor.rs#L266">比较 <code>commitment_number</code> </a>来判断 CKB 的链上交易是否使用了老的 commitment transaction，如果发现违规则构建一个 revocation transaction 提交到链上进行惩罚，否则就构建发送一个 settlement transaction 提交到链上。</p>
+<h3 id="其他技术决策"><a href="#其他技术决策" class="headerlink" title="其他技术决策"></a>其他技术决策</h3><ul>
+<li>存储：我们使用 RocksDB 作为存储层，写代码的过程中可以直接使用 serde 来序列化。但因为 scheme-less，所以不同版本的数据迁移仍然是一个挑战，我们通过这个<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/blob/develop/migrate/src/main.rs">独立程序</a>来解决，比较粗暴，但目前没想到更好的办法。</li>
+<li>序列化：节点间的消息使用 Molecule 进行序列化和反序列化，带来效率、兼容性和安全性优势。要确保确定性，这样相同的消息在所有节点上序列化方式相同，这对于签名生成和验证非常重要。</li>
+</ul>
+<h2 id="后续展望"><a href="#后续展望" class="headerlink" title="后续展望"></a>后续展望</h2><p>目前 Fiber 还处于前期活跃开发阶段，后续我们可能将继续做以下几个方面的改进：</p>
+<ul>
+<li>修复还未处理好的 corner case，增强项目整体的健壮性</li>
+<li>目前的 cross hub 还处于 Demo 阶段，我们会对这部分增加如 payment session 等功能</li>
+<li>完善支付路由规划算法，可能会引入其他路径搜索策略，以适应用户不同的路由偏好和需求</li>
+<li>扩展合约的功能，比如引入基于版本号的撤销机制和更安全的 Point Time-Locked Contracts</li>
+</ul>
+<p>Let’s scale P2P finance together! 🩵</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#区块链" >
+    <span class="tag-code">区块链</span>
+  </a>
+
+  <a href="/tags#CKB" >
+    <span class="tag-code">CKB</span>
+  </a>
+
+  <a href="/tags#Fiber" >
+    <span class="tag-code">Fiber</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/2025/01/01/2024-summary.html">
+        
+          2024：简单的理想生活
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Fiber-%E7%AE%80%E4%BB%8B"><span class="toc-nav-text">Fiber 简介</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%89%8D%E6%8F%90%E7%9F%A5%E8%AF%86"><span class="toc-nav-text">前提知识</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%87%8D%E8%A6%81%E6%A8%A1%E5%9D%97"><span class="toc-nav-text">重要模块</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Actor-Model-%E5%92%8C-Channel-%E7%AE%A1%E7%90%86"><span class="toc-nav-text">Actor Model 和 Channel 管理</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%94%AF%E4%BB%98%E5%92%8C%E5%A4%9A%E8%B7%B3%E8%B7%AF%E7%94%B1"><span class="toc-nav-text">支付和多跳路由</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E8%8A%82%E7%82%B9%E5%B9%BF%E6%92%AD%E5%8D%8F%E8%AE%AE-Gossip"><span class="toc-nav-text">节点广播协议 Gossip</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%9A%90%E7%A7%81-Onion-%E5%8A%A0%E8%A7%A3%E5%AF%86"><span class="toc-nav-text">隐私 Onion 加解密</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Watchtower"><span class="toc-nav-text">Watchtower</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96%E6%8A%80%E6%9C%AF%E5%86%B3%E7%AD%96"><span class="toc-nav-text">其他技术决策</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%90%8E%E7%BB%AD%E5%B1%95%E6%9C%9B"><span class="toc-nav-text">后续展望</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2025/03/16/fiber-network-on-ckb.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW * 3 / 4}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2025 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
