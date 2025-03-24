@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="CatCoding">
+  <meta property="og:title" content="Future 的大小对性能的影响 | CatCoding" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+
+  
+<script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+
+  
+  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    Future 的大小对性能的影响 |
+    CatCoding
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+  
+
+
+
+<script defer src="https://analytics.us.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>CatCoding</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/links/" class="menu-link">Links</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Future 的大小对性能的影响</h2>
+  <p class="post-date">2025-03-24</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+
+<main class="app-body flex-box">
+
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>在 Rust 异步编程中，有一种观点认为：<strong>Future 的大小显著影响性能</strong>。你是否怀疑过这个说法的真实性？如果是真的，这种性能差异的根源又是什么？今天，我翻阅了一些源码，并编写实验代码来一探究竟。</p>
+<h2 id="Future-的大小如何计算？"><a href="#Future-的大小如何计算？" class="headerlink" title="Future 的大小如何计算？"></a>Future 的大小如何计算？</h2><p>为了验证“Future 大小影响性能”这一说法是否成立，我们先从一些简单代码入手。首要任务是弄清楚一个 Future 的大小是如何确定的。毕竟，在编译器眼里，Future 只是一个 trait：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">trait</span> <span class="token type-definition class-name">Future</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">type</span> <span class="token type-definition class-name">Output</span><span class="token punctuation">;</span>
+    <span class="token keyword">fn</span> <span class="token function-definition function">poll</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">:</span> <span class="token class-name">Pin</span><span class="token operator">&lt;</span><span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token keyword">Self</span><span class="token operator">></span><span class="token punctuation">,</span> cx<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token class-name">Context</span><span class="token operator">&lt;</span><span class="token lifetime-annotation symbol">'_</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Poll</span><span class="token operator">&lt;</span><span class="token keyword">Self</span><span class="token punctuation">::</span><span class="token class-name">Output</span><span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>那么，其大小取决于实现这个 trait 的具体结构体吗？我翻阅了 smol 的源码，发现在 <a target="_blank" rel="noopener" href="https://github.com/smol-rs/async-executor/blob/2d72f8705b324c386d22227720d806ea8bc4e257/async-task/src/runnable.rs#L505-L535">spawn 一个 Future</a> 时，相关代码是这样处理的：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">unsafe</span> <span class="token keyword">fn</span> <span class="token function-definition function">spawn_unchecked</span><span class="token operator">&lt;</span><span class="token lifetime-annotation symbol">'a</span><span class="token punctuation">,</span> <span class="token class-name">F</span><span class="token punctuation">,</span> <span class="token class-name">Fut</span><span class="token punctuation">,</span> <span class="token class-name">S</span><span class="token operator">></span><span class="token punctuation">(</span>
+    <span class="token keyword">self</span><span class="token punctuation">,</span>
+    future<span class="token punctuation">:</span> <span class="token class-name">F</span><span class="token punctuation">,</span>
+    schedule<span class="token punctuation">:</span> <span class="token class-name">S</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token punctuation">(</span><span class="token class-name">Runnable</span><span class="token operator">&lt;</span><span class="token class-name">M</span><span class="token operator">></span><span class="token punctuation">,</span> <span class="token class-name">Task</span><span class="token operator">&lt;</span><span class="token class-name">Fut</span><span class="token punctuation">::</span><span class="token class-name">Output</span><span class="token punctuation">,</span> <span class="token class-name">M</span><span class="token operator">></span><span class="token punctuation">)</span>
+<span class="token keyword">where</span>
+    <span class="token class-name">F</span><span class="token punctuation">:</span> <span class="token class-name">FnOnce</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token lifetime-annotation symbol">'a</span> <span class="token class-name">M</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Fut</span><span class="token punctuation">,</span>
+    <span class="token class-name">Fut</span><span class="token punctuation">:</span> <span class="token class-name">Future</span> <span class="token operator">+</span> <span class="token lifetime-annotation symbol">'a</span><span class="token punctuation">,</span>
+    <span class="token class-name">S</span><span class="token punctuation">:</span> <span class="token class-name">Schedule</span><span class="token operator">&lt;</span><span class="token class-name">M</span><span class="token operator">></span><span class="token punctuation">,</span>
+    <span class="token class-name">M</span><span class="token punctuation">:</span> <span class="token lifetime-annotation symbol">'a</span><span class="token punctuation">,</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token comment">// Allocate large futures on the heap.</span>
+    <span class="token keyword">let</span> ptr <span class="token operator">=</span> <span class="token keyword">if</span> <span class="token namespace">mem<span class="token punctuation">::</span></span><span class="token function">size_of</span><span class="token punctuation">::</span><span class="token operator">&lt;</span><span class="token class-name">Fut</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">2048</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">let</span> future <span class="token operator">=</span> <span class="token closure-params"><span class="token closure-punctuation punctuation">|</span>meta<span class="token closure-punctuation punctuation">|</span></span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">let</span> future <span class="token operator">=</span> <span class="token function">future</span><span class="token punctuation">(</span>meta<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">Box</span><span class="token punctuation">::</span><span class="token function">pin</span><span class="token punctuation">(</span>future<span class="token punctuation">)</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+        <span class="token class-name">RawTask</span><span class="token punctuation">::</span><span class="token operator">&lt;</span>_<span class="token punctuation">,</span> <span class="token class-name">Fut</span><span class="token punctuation">::</span><span class="token class-name">Output</span><span class="token punctuation">,</span> <span class="token class-name">S</span><span class="token punctuation">,</span> <span class="token class-name">M</span><span class="token operator">></span><span class="token punctuation">::</span><span class="token function">allocate</span><span class="token punctuation">(</span>future<span class="token punctuation">,</span> schedule<span class="token punctuation">,</span> <span class="token keyword">self</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">RawTask</span><span class="token punctuation">::</span><span class="token operator">&lt;</span><span class="token class-name">Fut</span><span class="token punctuation">,</span> <span class="token class-name">Fut</span><span class="token punctuation">::</span><span class="token class-name">Output</span><span class="token punctuation">,</span> <span class="token class-name">S</span><span class="token punctuation">,</span> <span class="token class-name">M</span><span class="token operator">></span><span class="token punctuation">::</span><span class="token function">allocate</span><span class="token punctuation">(</span>future<span class="token punctuation">,</span> schedule<span class="token punctuation">,</span> <span class="token keyword">self</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">let</span> runnable <span class="token operator">=</span> <span class="token class-name">Runnable</span><span class="token punctuation">::</span><span class="token function">from_raw</span><span class="token punctuation">(</span>ptr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> task <span class="token operator">=</span> <span class="token class-name">Task</span> <span class="token punctuation">&#123;</span>
+        ptr<span class="token punctuation">,</span>
+        _marker<span class="token punctuation">:</span> <span class="token class-name">PhantomData</span><span class="token punctuation">,</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+    <span class="token punctuation">(</span>runnable<span class="token punctuation">,</span> task<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里可以看到 <code>mem::size_of::&lt;Fut&gt;()</code> 是在计算这个 Future 的大小，我来写个简单的 Future 验证：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">use</span> <span class="token namespace">async_executor<span class="token punctuation">::</span></span><span class="token class-name">Executor</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token namespace">futures_lite<span class="token punctuation">::</span></span>future<span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token namespace">std<span class="token punctuation">::</span>future<span class="token punctuation">::</span></span><span class="token class-name">Future</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token namespace">std<span class="token punctuation">::</span>pin<span class="token punctuation">::</span></span><span class="token class-name">Pin</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token namespace">std<span class="token punctuation">::</span>task<span class="token punctuation">::</span></span><span class="token punctuation">&#123;</span><span class="token class-name">Context</span><span class="token punctuation">,</span> <span class="token class-name">Poll</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">pub</span> <span class="token keyword">struct</span> <span class="token type-definition class-name">LargeFuture</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">pub</span> data<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token keyword">u8</span><span class="token punctuation">;</span> <span class="token number">10240</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">impl</span> <span class="token class-name">Future</span> <span class="token keyword">for</span> <span class="token class-name">LargeFuture</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">type</span> <span class="token type-definition class-name">Output</span> <span class="token operator">=</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">fn</span> <span class="token function-definition function">poll</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">:</span> <span class="token class-name">Pin</span><span class="token operator">&lt;</span><span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token keyword">Self</span><span class="token operator">></span><span class="token punctuation">,</span> _cx<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token class-name">Context</span><span class="token operator">&lt;</span><span class="token lifetime-annotation symbol">'_</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Poll</span><span class="token operator">&lt;</span><span class="token keyword">Self</span><span class="token punctuation">::</span><span class="token class-name">Output</span><span class="token operator">></span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">let</span> value <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"First byte: &#123;&#125;"</span><span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Poll</span><span class="token punctuation">::</span><span class="token class-name">Ready</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span>data<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">fn</span> <span class="token function-definition function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> ex <span class="token operator">=</span> <span class="token class-name">Executor</span><span class="token punctuation">::</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> large_future <span class="token operator">=</span> <span class="token class-name">LargeFuture</span> <span class="token punctuation">&#123;</span> data<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">0u8</span><span class="token punctuation">;</span> <span class="token number">10240</span><span class="token punctuation">]</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> res <span class="token operator">=</span> <span class="token namespace">future<span class="token punctuation">::</span></span><span class="token function">block_on</span><span class="token punctuation">(</span>ex<span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token keyword">async</span> <span class="token punctuation">&#123;</span> ex<span class="token punctuation">.</span><span class="token function">spawn</span><span class="token punctuation">(</span>large_future<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token keyword">await</span> <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"Result: &#123;&#125;"</span><span class="token punctuation">,</span> res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在上面那个 async-task 的 <code>spawn_unchecked</code> 函数加上日志，打印出来的大小为 <code>10256</code>，刚好比这个 struct 的大小大 16，顺着代码往上可以看到<a target="_blank" rel="noopener" href="https://github.com/smol-rs/async-executor/blob/2d72f8705b324c386d22227720d806ea8bc4e257/src/lib.rs#L250">这里</a>在原始的 Future 上做了一个封装，这里的意思是如果这个 Future 以后执行完，需要从 runtime 里面删掉：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">let</span> future <span class="token operator">=</span> <span class="token class-name">AsyncCallOnDrop</span><span class="token punctuation">::</span><span class="token function">new</span><span class="token punctuation">(</span>future<span class="token punctuation">,</span> <span class="token keyword">move</span> <span class="token closure-params"><span class="token closure-punctuation punctuation">|</span><span class="token closure-punctuation punctuation">|</span></span> <span class="token function">drop</span><span class="token punctuation">(</span>state<span class="token punctuation">.</span><span class="token function">active</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">try_remove</span><span class="token punctuation">(</span>index<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>这解释了尺寸略有增加的原因。对于结构体的尺寸，我们不难理解，但对于 async 函数，其大小又是如何计算的呢？这就涉及 Rust 编译器对 async 的转换机制。</p>
+<h2 id="异步状态机：冰山之下的庞然大物"><a href="#异步状态机：冰山之下的庞然大物" class="headerlink" title="异步状态机：冰山之下的庞然大物"></a>异步状态机：冰山之下的庞然大物</h2><p>当你写下一个简单的 <code>async fn</code> 函数时，Rust 编译器在幕后悄然完成了一场复杂的转换：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">async</span> <span class="token keyword">fn</span> <span class="token function-definition function">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">usize</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0u8</span><span class="token punctuation">;</span> <span class="token number">102400</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token namespace">future<span class="token punctuation">::</span></span><span class="token function">yield_now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token keyword">await</span><span class="token punctuation">;</span>
+    data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword">as</span> <span class="token keyword">usize</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这段代码会被编译器转化为一个庞大的状态机，负责追踪执行进度并保存所有跨越 <code>.await</code> 点的变量。转换后的结构体封装了状态切换的逻辑：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">enum</span> <span class="token type-definition class-name">FunctionState</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 初始状态</span>
+    <span class="token class-name">Initial</span><span class="token punctuation">,</span>
+
+    <span class="token comment">// yield_now 挂起后的状态，必须包含所有跨 await 点的变量</span>
+    <span class="token class-name">Suspended</span> <span class="token punctuation">&#123;</span>
+        data<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token keyword">u8</span><span class="token punctuation">;</span> <span class="token number">102400</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token comment">// 整个大数组必须保存！</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+
+    <span class="token comment">// 完成状态</span>
+    <span class="token class-name">Completed</span><span class="token punctuation">,</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">// 2. 定义状态机结构体</span>
+<span class="token keyword">struct</span> <span class="token type-definition class-name">FunctionFuture</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 当前状态</span>
+    state<span class="token punctuation">:</span> <span class="token class-name">FunctionState</span><span class="token punctuation">,</span>
+
+    <span class="token comment">// yield_now future</span>
+    yield_fut<span class="token punctuation">:</span> <span class="token class-name">Option</span><span class="token operator">&lt;</span><span class="token class-name">YieldNow</span><span class="token operator">></span><span class="token punctuation">,</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">impl</span> <span class="token class-name">Future</span> <span class="token keyword">for</span> <span class="token class-name">FunctionFuture</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 3. 为状态机实现 Future traitimpl Future for FunctionFuture &#123;</span>
+    <span class="token keyword">type</span> <span class="token type-definition class-name">Output</span> <span class="token operator">=</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">fn</span> <span class="token function-definition function">poll</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">:</span> <span class="token class-name">Pin</span><span class="token operator">&lt;</span><span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token keyword">Self</span><span class="token operator">></span><span class="token punctuation">,</span> cx<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token class-name">Context</span><span class="token operator">&lt;</span><span class="token lifetime-annotation symbol">'_</span><span class="token operator">></span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Poll</span><span class="token operator">&lt;</span><span class="token keyword">usize</span><span class="token operator">></span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 安全地获取可变引用</span>
+        <span class="token keyword">let</span> this <span class="token operator">=</span> <span class="token keyword">unsafe</span> <span class="token punctuation">&#123;</span> <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token function">get_unchecked_mut</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">match</span> <span class="token operator">&amp;</span><span class="token keyword">mut</span> this<span class="token punctuation">.</span>state <span class="token punctuation">&#123;</span>
+            <span class="token class-name">FunctionState</span><span class="token punctuation">::</span><span class="token class-name">Initial</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+                <span class="token comment">// 创建大数组及其长度</span>
+                <span class="token keyword">let</span> data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0u8</span><span class="token punctuation">;</span> <span class="token number">102400</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+                <span class="token comment">// 创建 yield future 并保存</span>
+                this<span class="token punctuation">.</span>yield_fut <span class="token operator">=</span> <span class="token class-name">Some</span><span class="token punctuation">(</span><span class="token namespace">future<span class="token punctuation">::</span></span><span class="token function">yield_now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                <span class="token comment">// 状态转换，保存所有需要跨越 await 的数据</span>
+                this<span class="token punctuation">.</span>state <span class="token operator">=</span> <span class="token class-name">FunctionState</span><span class="token punctuation">::</span><span class="token class-name">Suspended</span> <span class="token punctuation">&#123;</span> data <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+                <span class="token comment">// 立即轮询 yield</span>
+                <span class="token keyword">match</span> <span class="token class-name">Pin</span><span class="token punctuation">::</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">mut</span> this<span class="token punctuation">.</span>yield_fut<span class="token punctuation">.</span><span class="token function">as_mut</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">unwrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">poll</span><span class="token punctuation">(</span>cx<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token class-name">Poll</span><span class="token punctuation">::</span><span class="token class-name">Ready</span><span class="token punctuation">(</span>_<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+                        <span class="token comment">// 如果立即完成，返回结果</span>
+                        <span class="token keyword">if</span> <span class="token keyword">let</span> <span class="token class-name">FunctionState</span><span class="token punctuation">::</span><span class="token class-name">Suspended</span> <span class="token punctuation">&#123;</span> data <span class="token punctuation">&#125;</span> <span class="token operator">=</span> <span class="token operator">&amp;</span>this<span class="token punctuation">.</span>state <span class="token punctuation">&#123;</span>
+                            <span class="token keyword">let</span> result <span class="token operator">=</span> data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
+                            this<span class="token punctuation">.</span>state <span class="token operator">=</span> <span class="token class-name">FunctionState</span><span class="token punctuation">::</span><span class="token class-name">Completed</span><span class="token punctuation">;</span>
+                            <span class="token class-name">Poll</span><span class="token punctuation">::</span><span class="token class-name">Ready</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span>
+                        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+                            <span class="token macro property">unreachable!</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                        <span class="token punctuation">&#125;</span>
+                    <span class="token punctuation">&#125;</span>
+                    <span class="token class-name">Poll</span><span class="token punctuation">::</span><span class="token class-name">Pending</span> <span class="token operator">=></span> <span class="token class-name">Poll</span><span class="token punctuation">::</span><span class="token class-name">Pending</span><span class="token punctuation">,</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span>
+
+            <span class="token class-name">FunctionState</span><span class="token punctuation">::</span><span class="token class-name">Suspended</span> <span class="token punctuation">&#123;</span> data <span class="token punctuation">&#125;</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+                <span class="token comment">// 继续轮询 yield</span>
+                <span class="token keyword">match</span> <span class="token class-name">Pin</span><span class="token punctuation">::</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">mut</span> this<span class="token punctuation">.</span>yield_fut<span class="token punctuation">.</span><span class="token function">as_mut</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">unwrap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">poll</span><span class="token punctuation">(</span>cx<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                    <span class="token class-name">Poll</span><span class="token punctuation">::</span><span class="token class-name">Ready</span><span class="token punctuation">(</span>_<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+                        <span class="token comment">// yield 完成，读取数组首元素并返回</span>
+                        <span class="token keyword">let</span> result <span class="token operator">=</span> data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
+                        this<span class="token punctuation">.</span>state <span class="token operator">=</span> <span class="token class-name">FunctionState</span><span class="token punctuation">::</span><span class="token class-name">Completed</span><span class="token punctuation">;</span>
+                        <span class="token class-name">Poll</span><span class="token punctuation">::</span><span class="token class-name">Ready</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span>
+                    <span class="token punctuation">&#125;</span>
+                    <span class="token class-name">Poll</span><span class="token punctuation">::</span><span class="token class-name">Pending</span> <span class="token operator">=></span> <span class="token class-name">Poll</span><span class="token punctuation">::</span><span class="token class-name">Pending</span><span class="token punctuation">,</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span>
+
+            <span class="token class-name">FunctionState</span><span class="token punctuation">::</span><span class="token class-name">Completed</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+                <span class="token macro property">panic!</span><span class="token punctuation">(</span><span class="token string">"Future polled after completion"</span><span class="token punctuation">)</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到，<code>Suspended</code> 状态中包含了那个大数组。当状态从 <code>Initial</code> 切换到 <code>Suspended</code> 时，<code>data</code> 会被完整保留。</p>
+<p>由此可知，对于一个 async 函数，若临时变量需跨越 await 存活，就会被纳入状态机，导致编译时生成的 Future 大小显著增加。</p>
+<h2 id="尺寸对性能的影响"><a href="#尺寸对性能的影响" class="headerlink" title="尺寸对性能的影响"></a>尺寸对性能的影响</h2><p>明确了 Future 大小的定义后，我们接着通过代码验证其对性能的影响。在之前的 <code>mem::size_of::&lt;Fut&gt;() &gt;= 2048</code> 条件中可以看到，如果 Future 的大小过大，<code>Box::pin(future)</code> 会从堆上分配内存，理论上会带来额外开销。这种设计可能基于几点考量：小型 Future 直接嵌入任务结构体中，能提升缓存命中率；而大型 Future 若嵌入，会让任务结构体过于臃肿，占用过多栈空间，反而不利于性能。</p>
+<p>我通过实验验证，若 async 函数中包含较大的结构体，确实会导致 Future 执行变慢（即便计算逻辑相同）：</p>
+<pre class="line-numbers language-console" data-language="console"><code class="language-console">RESULTS:
+--------
+Small Future (64B): 100000 iterations in 30.863125ms (avg: 308ns per iteration)
+Medium Future (1KB): 100000 iterations in 61.100916ms (avg: 611ns per iteration)
+Large Future (3KB): 100000 iterations in 105.185292ms (avg: 1.051µs per iteration)
+Very Large Future (10KB): 100000 iterations in 273.469167ms (avg: 2.734µs per iteration)
+Huge Large Future (100KB): 100000 iterations in 5.896455959s (avg: 58.964µs per iteration)
+
+PERFORMANCE RATIOS (compared to Small Future):
+-------------------------------------------
+Medium Future (1KB): 1.98x slower
+Large Future (3KB): 3.41x slower
+Very Large Future (10KB): 8.88x slower
+Huge Large Future (100KB): 191.44x slower<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在微调这个 async 函数时，我发现了一些微妙的现象。为了让 <code>data</code> 跨越 await 存活，我特意在最后引用了它，以防编译器优化掉：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">async</span> <span class="token keyword">fn</span> <span class="token function-definition function">huge_large_future</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">u64</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1u8</span><span class="token punctuation">;</span> <span class="token number">102400</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// 10KB * 10</span>
+    <span class="token keyword">let</span> len <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token namespace">future<span class="token punctuation">::</span></span><span class="token function">yield_now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token keyword">await</span><span class="token punctuation">;</span>
+    <span class="token punctuation">(</span>data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> data<span class="token punctuation">[</span>len <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token keyword">u64</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>理论上，若改成下面这样，由于 <code>len</code> 在 await 前已计算完成，后面又没用引用到，生成的 Future 大小应该很小：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">async</span> <span class="token keyword">fn</span> <span class="token function-definition function">huge_large_future</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">u64</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1u8</span><span class="token punctuation">;</span> <span class="token number">102400</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// 10KB * 10</span>
+    <span class="token keyword">let</span> len <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token namespace">future<span class="token punctuation">::</span></span><span class="token function">yield_now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token keyword">await</span><span class="token punctuation">;</span>
+    <span class="token number">0</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">fn</span> <span class="token function-definition function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> ex <span class="token operator">=</span> <span class="token class-name">Executor</span><span class="token punctuation">::</span><span class="token function">new</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> task <span class="token operator">=</span> ex<span class="token punctuation">.</span><span class="token function">spawn</span><span class="token punctuation">(</span><span class="token function">huge_large_future</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">let</span> res <span class="token operator">=</span> <span class="token namespace">future<span class="token punctuation">::</span></span><span class="token function">block_on</span><span class="token punctuation">(</span>ex<span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token macro property">eprintln!</span><span class="token punctuation">(</span><span class="token string">"Result: &#123;&#125;"</span><span class="token punctuation">,</span> res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>然而，我发现 <code>data</code> 仍被保留在状态机中，即便 <code>len</code> 未被后续使用。这涉及到编译器如何判断变量是否跨越 await 存活的问题。当然，若显式限定 <code>data</code> 的生命周期在 await 之前，它就不会被纳入状态机：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">async</span> <span class="token keyword">fn</span> <span class="token function-definition function">huge_large_future</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">u64</span> <span class="token punctuation">&#123;</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">let</span> data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1u8</span><span class="token punctuation">;</span> <span class="token number">102400</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// 10KB * 10</span>
+        <span class="token keyword">let</span> len <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token namespace">future<span class="token punctuation">::</span></span><span class="token function">yield_now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token keyword">await</span><span class="token punctuation">;</span>
+    <span class="token number">0</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="编译器如何判断哪些变量应该保存"><a href="#编译器如何判断哪些变量应该保存" class="headerlink" title="编译器如何判断哪些变量应该保存"></a>编译器如何判断哪些变量应该保存</h2><p>我查阅了 Rust 编译器的源码，发现变量是否跨越 await 存活由 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/rust/blob/c089b1fe7d6b8ef5889f820fd8be4f78bb7efe42/compiler/rustc_mir_transform/src/coroutine.rs#L655-L660">locals_live_across_suspend_points 函数</a> 决定：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token comment">/// The basic idea is as follows:</span>
+<span class="token comment">/// - a local is live until we encounter a `StorageDead` statement. In</span>
+<span class="token comment">///   case none exist, the local is considered to be always live.</span>
+<span class="token comment">/// - a local has to be stored if it is either directly used after the</span>
+<span class="token comment">///   the suspend point, or if it is live and has been previously borrowed.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在我们的代码中，<code>let len = data.len()</code> 构成了对 <code>data</code> 的借用，因此 <code>data</code> 被保留在状态机中。或许这里仍有优化的空间？我去社区问问看。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>所有实验代码均可在以下链接找到：<a target="_blank" rel="noopener" href="https://github.com/chenyukang/async-executor/tree/yukang-post/examples">async-executor-examples</a>。</p>
+<p>在 Rust 异步编程中，代码的细微调整可能引发性能的显著波动。深入理解状态机生成的内在机制，能助你打造更高效的异步代码。下次编写 <code>async fn</code> 时，不妨自问：这个状态机究竟有多大？</p>
+</section>
+
+    <p></p>
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#编程" >
+    <span class="tag-code">编程</span>
+  </a>
+
+  <a href="/tags#Rust" >
+    <span class="tag-code">Rust</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+    
+      <a class="nav-right" href="/2025/03/16/fiber-network-on-ckb.html">
+        
+          Fiber Network: 基于 CKB  ...
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Future-%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%EF%BC%9F"><span class="toc-nav-text">Future 的大小如何计算？</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%BC%82%E6%AD%A5%E7%8A%B6%E6%80%81%E6%9C%BA%EF%BC%9A%E5%86%B0%E5%B1%B1%E4%B9%8B%E4%B8%8B%E7%9A%84%E5%BA%9E%E7%84%B6%E5%A4%A7%E7%89%A9"><span class="toc-nav-text">异步状态机：冰山之下的庞然大物</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%B0%BA%E5%AF%B8%E5%AF%B9%E6%80%A7%E8%83%BD%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-nav-text">尺寸对性能的影响</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E5%93%AA%E4%BA%9B%E5%8F%98%E9%87%8F%E5%BA%94%E8%AF%A5%E4%BF%9D%E5%AD%98"><span class="toc-nav-text">编译器如何判断哪些变量应该保存</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-nav-text">结语</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me/2025/03/24/future-size-perf.html';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW * 3 / 4}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2025 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
