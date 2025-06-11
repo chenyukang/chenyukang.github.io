@@ -1040,13 +1040,17 @@ h2.article-head {
 .catalog-container .toc-main {
   padding-left: 20px;
   border-left: 1px solid #e5e5e5;
-  width: 196px;
+  width: 260px;
   box-sizing: border-box;
 }
 .catalog-container .toc-main .toc-title {
-  font-size: 1.2em;
+  font-size: 1em;
   position: relative;
   padding-left: 28px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .catalog-container .toc-main .toc-title:before {
   content: '';
@@ -1066,6 +1070,25 @@ h2.article-head {
 }
 .catalog-container .toc-main .toc-nav::-webkit-scrollbar {
   display: none;
+}
+.catalog-container .toc-main .toc-nav li {
+  position: relative;
+  list-style: none;
+  line-height: 1.5;
+  text-align: left;
+  text-overflow: ellipsis;
+}
+.catalog-container .toc-main .toc-nav li a {
+  display: inline-block;
+  padding-left: 1em;
+  position: relative;
+}
+.catalog-container .toc-main .toc-nav li a::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #bbb;
+  font-size: 1em;
 }
 .catalog-container .toc-main ol {
   padding-left: 20px;
