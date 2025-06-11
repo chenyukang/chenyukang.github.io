@@ -171,18 +171,85 @@
 
 
 <main class="app-body project-app">
-<div class="center" id="loader" style="margin-top: 30px">
-    <div class="loader"></div>
-    </div>
-    <div class="card-container" id="all-project">
-    </div>
+  <div class="card-container">
+    <section class="project-card">
+      <a class="card-wrap" href="https://github.com/rust-lang/rust" target="_blank">
+        <div class="card-header"></div>
+        <h3 class="card-title">rust-lang/rust</h3>
+        <p class="card-description">Empowering everyone to build reliable and efficient software.</p>
+        <div class="card-footer">
+          <span><i class="fa fa-star"></i> 104k</span>
+          <span><i class="fa fa-code-fork"></i> 13.4k</span>
+        </div>
+      </a>
+    </section>
+    <section class="project-card">
+      <a class="card-wrap" href="https://github.com/nervosnetwork/ckb" target="_blank">
+        <div class="card-header"></div>
+        <h3 class="card-title">nervosnetwork/ckb</h3>
+        <p class="card-description">The Nervos CKB is a public permissionless blockchain, and the layer 1 of Nervos network.</p>
+        <div class="card-footer">
+          <span><i class="fa fa-star"></i> 1.2k</span>
+          <span><i class="fa fa-code-fork"></i> 237</span>
+        </div>
+      </a>
+    </section>
+    <section class="project-card">
+      <a class="card-wrap" href="https://github.com/chenyukang/eopl" target="_blank">
+        <div class="card-header"></div>
+        <h3 class="card-title">eopl</h3>
+        <p class="card-description">my solutions to EOPL3</p>
+        <div class="card-footer">
+          <span><i class="fa fa-star"></i> 366</span>
+          <span><i class="fa fa-code-fork"></i> 67</span>
+        </div>
+      </a>
+    </section>
+    <section class="project-card">
+      <a class="card-wrap" href="https://github.com/nervosnetwork/fiber" target="_blank">
+        <div class="card-header"></div>
+        <h3 class="card-title">nervosnetwork/fiber</h3>
+        <p class="card-description">Lightning Network for CKB</p>
+        <div class="card-footer">
+          <span><i class="fa fa-star"></i> 39</span>
+          <span><i class="fa fa-code-fork"></i> 16</span>
+        </div>
+      </a>
+    </section>
+    <section class="project-card">
+      <a class="card-wrap" href="https://github.com/chenyukang/talkGPT" target="_blank">
+        <div class="card-header"></div>
+        <h3 class="card-title">talkGPT</h3>
+        <p class="card-description">An simple Python program that help you talk with ChatGPT, practice Spoken English ...</p>
+        <div class="card-footer">
+          <span><i class="fa fa-star"></i> 93</span>
+          <span><i class="fa fa-code-fork"></i> 10</span>
+        </div>
+      </a>
+    </section>
+    <section class="project-card">
+      <a class="card-wrap" href="https://github.com/chenyukang/rubytt" target="_blank">
+        <div class="card-header"></div>
+        <h3 class="card-title">rubytt</h3>
+        <p class="card-description">Rubytt is a static Ruby code analyzer, written in OCaml</p>
+        <div class="card-footer">
+          <span><i class="fa fa-star"></i> 17</span>
+        </div>
+      </a>
+    </section>
+  </div>
 </main>
+
 <script>
 
  (function() {
      var url = 'http://catcoding.me/project/index.html';
      $('#article-banner').geopattern(url);
      $('.header').removeClass('fixed-header')
+     $('.card-header').each(function() {
+        var name = $(this).data('name');
+        $(this).geopattern(name);
+     })
      $.ajax({
          headers: {
              Accept: 'application/vnd.github.v3.raw'
