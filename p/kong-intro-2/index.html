@@ -194,7 +194,7 @@
   <span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Kong started"</span><span class="token punctuation">)</span>
 <span class="token keyword">end</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span>
   err <span class="token operator">=</span> e <span class="token comment">-- cannot throw from this function</span>
-<span class="token keyword">end</span><span class="token punctuation">)</span>  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token keyword">end</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>从代码上来看很直观，首先 conf_loader 载入配置文件，DAOFactory 构建数据库连接层，prefix_handler.prepare_prefix 是准备一些由程序生成的配置文件。dao:run_migrations 是迁移表结构到数据库，类似其他 Web 框架。serf_signals 是启动 serf 程序，nginx_signals 是启动 nginx 进程。</p>
 <h3 id="读取配置文件-conf-loader"><a href="#读取配置文件-conf-loader" class="headerlink" title="读取配置文件 conf_loader"></a>读取配置文件 conf_loader</h3><p>conf_loader 读取的当然是命令行里面传入的 kong.conf 文件，打开 conf_loader.lua 看了看，是是用一个 lua 第三方库来做文件解析的。<code>local pl_config = require &quot;pl.config&quot;</code>，最开始不太知道这个 pl 是什么，经过搜索后才知道是这里<a target="_blank" rel="noopener" href="https://github.com/stevedonovan/Penlight/tree/master/lua/pl">定义的</a>，在 kong.rockspec 里面有定义了该库的依赖<code>&quot;penlight == 1.4.1&quot;</code>。读取配置的整个过程比较琐碎，最后回构建一个解析好的 conf 表。这里学到了 Lua 里面的 setmetatable 设置元表的方法，table 作为 Lua 里面的最基本数据结构，setmetatable 可以方便的绑定一个 key 和其对应的方法。看起来也像是面向对象的风格，在 conf_loader 的最后部分是：</p>
 <pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">return</span> <span class="token function">setmetatable</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
@@ -217,7 +217,7 @@
     kong<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">&#125;</span>
 
-location <span class="token operator">/</span> <span class="token punctuation">&#123;</span> 
+location <span class="token operator">/</span> <span class="token punctuation">&#123;</span>
   <span class="token function">rewrite_by_lua_block</span> <span class="token punctuation">&#123;</span>
       kong<span class="token punctuation">.</span><span class="token function">rewrite</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
   <span class="token punctuation">&#125;</span>
@@ -260,6 +260,10 @@ location <span class="token operator">/</span> <span class="token punctuation">&
       <div class="tags">
         <span>Tags:</span>
         
+  <a href="/tags#Kong" >
+    <span class="tag-code">Kong</span>
+  </a>
+
   <a href="/tags#Lua" >
     <span class="tag-code">Lua</span>
   </a>
