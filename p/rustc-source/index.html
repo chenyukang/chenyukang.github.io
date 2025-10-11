@@ -274,7 +274,13 @@
 <p>相对 <code>Parsing</code>，宏展开是一个更为复杂的过程，<code>AST</code> 有了之后会 <code>driver</code> 会通过一下调用路径来逐个 crate 展开宏：</p>
 <pre><code>resolver_for_lowering -&gt; configure_and_expand -&gt; expand_crate -&gt; fully_expand_fragment
 </code></pre><p><a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/blob/master/compiler/rustc_expand/src/expand.rs#L409"><code>fully_expand_fragment</code></a> 这个函数是宏展开的主要算法，首先找到 AST 中的占位符，维护一个队列，然后不断地去展开直到所有的宏占位符都处理完毕，再统一加到 AST 中去，这是因为宏代码中也可能包含宏？如果某次迭代没有展开一个宏说明有语法问题。</p>
-<h3 id="Name-resolution"><a href="#Name-resolution" class="headerlink" title="Name resolution"></a>Name resolution</h3><p><code>Name resolution</code> 就是解析 <code>AST</code> 中的所有名字，包括变量名、函数名、类型名、生命周期的命名等等。<br>在宏展开的过程中，我们只处理了 <code>import</code>，而并没有关注所有的名字解析，所有的命名需要等到宏展开处理了之后专门来解析名字，这也是这部分代码很多函数的名字叫做 <code>late_*</code>，很多逻辑在一个叫作 <code>late.rs</code> 的文件里。但我们并没有看到一个 <code>early.rs</code> 的文件，因为被拆分成了三个文件：<code>build_reduced_graph.rs</code>, <code>macros.rs</code> 和 <code>imports.rs</code>。</p>
+<h3 id="Name-resolution"><a href="#Name-resolution" class="headerlink" title="Name resolution"></a>Name resolution</h3><p><code>Name resolution</code> 就是解析 <code>AST</code> 中的所有名字，包括变量名、函数名、类型名、生命周期的命名等等。总体来说，resolve 分两个阶段：</p>
+<ol>
+<li><strong>分两阶段</strong>：Early（宏展开期间）+ Late（展开后）</li>
+<li><strong>Early 构建骨架</strong>：模块结构、导入、宏路径</li>
+<li><strong>Late 填充细节</strong>：所有变量、类型、表达式的路径</li>
+</ol>
+<p>在宏展开的过程中，我们只处理了 <code>import</code>，而并没有关注所有的名字解析，所有的命名需要等到宏展开处理了之后专门来解析名字，这也是这部分代码很多函数的名字叫做 <code>late_*</code>，很多逻辑在一个叫作 <code>late.rs</code> 的文件里。但我们并没有看到一个 <code>early.rs</code> 的文件，因为被拆分成了三个文件：<code>build_reduced_graph.rs</code>, <code>macros.rs</code> 和 <code>imports.rs</code>。</p>
 <p>我们来写个程序包含一个明显的变量 <code>a</code> 未定义：<br><pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function-definition function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"&#123;&#125;"</span><span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></p>
