@@ -243,8 +243,12 @@
 </ul>
 <p>我们可以使用以下命令来把整个程序的 <code>AST</code> 打印出来，这对于编译器开发阶段比较有帮助：</p>
 <pre class="line-numbers language-console" data-language="console"><code class="language-console">rustc .&#x2F;p&#x2F;main.rs -Zunpretty&#x3D;ast-tree &gt; tree.log 2&gt;&amp;1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p><code>-Zunpretty=expanded</code>  打印宏展开后的的 ast tree。注意 Rust co</p>
-<p>另外，读这部代码结合 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/reference/">Rust Reference</a> 会容易很多，因为 parser 很多时候就是 reference 的直译，看懂了 reference 就容易看懂 parsing。</p>
+<p><code>-Zunpretty=expanded</code>  打印宏展开后的的 ast tree。注意 Rust compiler 是先解析 root crate，然后在宏展开后才会加载其他 submodules，为什么会这样处理：</p>
+<ul>
+<li>宏系统需要先展开才能确定模块结构</li>
+<li>支持条件编译、过程宏、动态路径</li>
+</ul>
+<p>读这部代码结合 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/reference/">Rust Reference</a> 会容易很多，因为 parser 很多时候就是 reference 的直译，看懂了 reference 就容易看懂 parsing。</p>
 <h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p>为什么 Rust 不用那些高级的 parsing 工具而采用手写的方式，我认为一个原因在于手写能给出更好的诊断信息，可以看到 <code>parser</code> 中很多代码在尝试从错误中恢复，比如用户写了下面这个程序：</p>
 <pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">const</span> <span class="token constant">FOO</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token keyword">u8</span><span class="token punctuation">;</span> <span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>当 Parser 处理到 <code>&#123;</code> 这个位置，这里看起来用户想写的是一个数组，但把 <code>[</code> 写成了 <code>&#123;</code>，<code>Parser</code> 中的这段代码会先把当前的状态存储为一个 <code>snapshot</code>，然后尝试 <code>1, 2, 3</code> 是否能 parse 成一个数组元素，如果是则能给出一个更为优化的诊断信息，如果不能则恢复到保存的 <code>snapshot</code>：</p>
