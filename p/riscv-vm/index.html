@@ -189,7 +189,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>I’ve always wanted to learn RISC-V. A few days ago, I finally got my hands dirty with it.</p>
+    <section class="markdown-content"><p>I’ve always wanted to learn RISC-V. A few days ago, I finally got my hands dirty with it now.</p>
 <p>This post will guide you through the process of building a simple RISC-V VM from the ground up, using Rust as our implementation language.</p>
 <h2 id="Understanding-the-Core-Concepts"><a href="#Understanding-the-Core-Concepts" class="headerlink" title="Understanding the Core Concepts"></a><strong>Understanding the Core Concepts</strong></h2><p>Before writing any code, I need to grasp the fundamentals of RISC-V.</p>
 <ul>
@@ -248,8 +248,7 @@
 
     <span class="token class-name">Some</span><span class="token punctuation">(</span>instruction<span class="token punctuation">)</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>Then we need to decode the integer into a RISC-V instruction. Here’s how we decode <code>IType</code> and <code>RType</code> instructions. The specifications for these two types are:</p>
-<p><img src="/images/ob_pasted-image-20250919114834.png" alt=""></p>
+<p>Then we need to decode the integer into a RISC-V instruction. Here’s how we decode <code>IType</code> and <code>RType</code> instructions. The specifications for these two types are:<br><img src="/images/ob_pasted-image-20251117091305.png" alt=""></p>
 <pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token comment">/// Decode 32-bit instruction into structured format</span>
 <span class="token keyword">fn</span> <span class="token function-definition function">decode</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">self</span><span class="token punctuation">,</span> code<span class="token punctuation">:</span> <span class="token keyword">u32</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Option</span><span class="token operator">&lt;</span><span class="token class-name">Instruction</span><span class="token operator">></span> <span class="token punctuation">&#123;</span>
     <span class="token keyword">let</span> opcode <span class="token operator">=</span> code <span class="token operator">&amp;</span> <span class="token number">0x7f</span><span class="token punctuation">;</span>
