@@ -219,11 +219,15 @@
 <li>监控不到位，关键组件的 500 错误可以说是救命的警告，但从他们的排查过程上看花费了更长的时间在是否是攻击。</li>
 <li>应该是没有 fuzzing 测试，这种 input 非法的情况甚至需要在单元测试和集成测试中体现。</li>
 </ol>
-<p>网络上很多人玩 Rust 的梗，典型的说法是<a target="_blank" rel="noopener" href="https://x.com/skywind3000/status/1991178281954238851">这种</a>:</p>
+<p>网络上很多人玩 Rust 的梗，典型的说法是<a target="_blank" rel="noopener" href="https://x.com/skywind3000/status/1991178281954238851">这种</a>和<a target="_blank" rel="noopener" href="https://x.com/LundukeJournal/status/1991226162442355102">这种</a>:</p>
 <blockquote>
 <p>Rust 过去天天宣传“一旦学会 rust，即便是新手也能写出健壮安全的代码”，而真的出现问题了，又开始指责写代码的人是菜鸟。</p>
 </blockquote>
-<p>这里有点混淆视听，因为 Rust 所说的要解决的安全问题是内存问题，不是逻辑问题。为什么 Cloudflare 要用 Rust 重写一些关键组件，可以看看他们之前的文章：<br><a target="_blank" rel="noopener" href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">Incident report on memory leak caused by Cloudflare parser bug</a></p>
+<blockquote>
+<p>Cloudflare Rewrote Their Core in Rust, Then Half of the Internet Went Down</p>
+</blockquote>
+<p>这里有点混淆视听，因为 Rust 所说的要解决的安全问题是内存问题，不是逻辑问题。另外，也不是因为重写导致的问题发生。</p>
+<p>为什么 Cloudflare 要用 Rust 重写一些关键组件，可以看看他们之前的文章：<br><a target="_blank" rel="noopener" href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">Incident report on memory leak caused by Cloudflare parser bug</a></p>
 <p>当然我承认在有的公司，可能有的团队完全是为了绩效或者纯个人偏好而发起重写老组件的项目。而更多公司确实是被内存安全问题折磨得怀疑人生才会去重写，像上面文中所说的安全事故是底裤被人扒了，自己还不知道，得让旁观者告诉你才发现。和这次事故的因为工程管理上所做成的安全事故有明显的分别。</p>
 <p>所以 Rust 所说的安全，是如何避免内存安全。这次就比如一个司机驾驶沃尔沃，结果碰上了山体滑坡被压死了，这种场景下就是换成任意其他品牌的车都会是一个结果。但如果你跑来说，看吧，沃尔沃号称安全，结果还不是一样死，这叫做虚假宣传。</p>
 <p>这不叫虚假宣传，而是你对车有了不切实际的幻想。沃尔沃确实不完美，但每个人都会有不同的选择偏好。正常人理解沃尔沃说的安全是大部分场景下、对比其他车会安全一点，而不是说用户买了沃尔沃就会长生不老。</p>
