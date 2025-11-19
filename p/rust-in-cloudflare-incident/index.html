@@ -191,9 +191,9 @@
   <article class="post-article">
     <section class="markdown-content"><p>这两天都在讨论  Cloudflare 的安全事故  <a target="_blank" rel="noopener" href="https://blog.cloudflare.com/18-november-2025-outage/">Cloudflare outage on November 18, 2025</a>，我也写点自己的想法。</p>
 <p>这个事故当然引起的范围特别广，我当时正在用 ChatGPT，突然再打开总是提示正在加载，我还以为是自己的 VPN 出了问题，第二天起来才知道 Cloudflare 跪了好久。</p>
-<p>没多久 Cloudflare 就发出来了一个非常详细的事故说明，我对里面的场景非常熟悉，因为我之前因为类似的原因把大疆的大部分流量都给搞挂了，具体请看<a href="https://catcoding.me/p/avoid-mistake/">谈谈工作中的犯错</a>中的配置错误。</p>
+<p>没多久 Cloudflare 就发出来了一个非常详细的事故说明。我对里面的场景非常熟悉，因为我之前因为类似的原因把大疆的大部分流量都给搞挂了，具体请看<a href="https://catcoding.me/p/avoid-mistake/">谈谈工作中的犯错</a>中的配置错误。</p>
 <p>这次事故里 Cloudflare 给出了一段 Rust 代码，所以讨论自然会集中在 Rust 上。但把事故归咎于 Rust 本身就不太合理。从他们的场景来看和我之前在 Kong 上做流量分发是非常类似的，无非是这里他们使用了机器学习的技术来判断一个流量是否为恶意请求，而文中所说的 features 文件是训练好的模型数据。</p>
-<p>根本原因是数据库的权限更改，导致查询出来的 features 是有重复的，size 变成期望的两倍。而这个错误的配置通过自动同步机制会同步到全球各个节点。每个节点会有一个 bot 模块，根据 features 去计算是否拦截请求，可以想象这是个典型的机器学习分类问题，比如带有什么特征的 HTTP agent、或者是请求的 payload size 之类的这些特征综合考虑来计算。这个 <a target="_blank" rel="noopener" href="https://www.cloudflare.com/application-services/products/bot-management/">Bot Management</a>具体内容可以参考其产品说明。</p>
+<p>根本原因是数据库的权限更改，导致查询出来的 features 是有重复的，size 变成期望的两倍。而这个错误的配置通过自动同步机制会同步到全球各个节点。每个节点会有一个 bot 模块，根据 features 去计算是否拦截请求，可以想象这是个典型的机器学习分类问题，比如带有什么特征的 HTTP agent、或者是请求的 payload 之类的这些特征综合考虑来计算。这个 <a target="_blank" rel="noopener" href="https://www.cloudflare.com/application-services/products/bot-management/">Bot Management</a>具体内容可以参考其产品说明。</p>
 <p>那么如果 features 坏了，这个机器学习模块 bot 能否正常工作？答案是不行的，这点文章已经说明：</p>
 <blockquote>
 <p>Both versions were affected by the issue, although the impact observed was different.</p>
@@ -212,7 +212,7 @@
 <p>当然这不是最佳实践，但这时候即使使用 <code>.expect(&quot;invalid bots input&quot;)</code> 这样的写法也好不到哪里去，同样会 500 错误，只是日志里面多留一条错误信息。因为如果不监控错误码，是没人立即发现问题所在的。</p>
 <p>更好的做法是对输入进行严格校验，例如检查特征数量和大小。如果不符合预期，应保留旧配置并拒绝加载新数据，而不是加载到一半才发现尺寸异常，更不应该没有 fallback 机制。</p>
 <p>当然这里代码没有完全开源，我们从短短的代码片段无法了解整个项目的场景。</p>
-<p>从这个经典的错误我们应该发现的是更高维度的警戒，从开发管理和运维角度有这些问题：</p>
+<p>从这个经典的错误我们应该发现的是更高维度的警戒，开发管理和运维上有这些问题：</p>
 <ol>
 <li>整个配置的更新居然没有灰度发布，比如你模型更新了应该是先同步到 5% 的节点，如果没有问题再继续同步到 20% 的节点，如果没问题再继续。如果有灰度更新，这次的事故不会造成这么大范围的影响，因为在早期应该就观察到了。即使是微软新版本操作系统的发布，都是会分成好几个阶段，比如 ring0, ring1 通常内部团队更新，这样问题就现在暴露在自家团队上。</li>
 <li>整个配置没有 fallback 机制或者全局开关，现在发现了问题，应该有一个安全的控制开关把配置切换到上一个能工作的配置。</li>
