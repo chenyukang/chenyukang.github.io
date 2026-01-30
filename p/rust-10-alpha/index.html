@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -192,35 +180,45 @@
     <section class="markdown-content"><p>Again, one article just for writing practice. :)</p>
 <p>Rust-lang <a target="_blank" rel="noopener" href="http://blog.rust-lang.org/2015/01/09/Rust-1.0-alpha.html">release alpha 1.0 today</a>. Rust aims to be a systems level programming language to replace C and C++. I hit Rust-lang about two month ago, and found it’s a funny language. Then I read some Rust code and also wrote a hobby project with it.</p>
 <p>There are several feature attract me:</p>
-<h3 id="Write-low-level-code-with-safety-guarantees"><a href="#Write-low-level-code-with-safety-guarantees" class="headerlink" title="Write low-level code with safety guarantees"></a>Write low-level code with safety guarantees</h3><p>Rust have the concept of onwership. For the resource in computation(this is usually refer to memory, file handler etc), the should be an owner. Rust try to solve the common errors caused by pointers in C/C++, such like dangling pointer, unfree pointer, double free issues. The borrow checker in compiler will keep the resource onwership move correctly with some rules. for more details please refer to <a target="_blank" rel="noopener" href="http://doc.rust-lang.org/nightly/intro.html#ownership">offical guide</a>. So as a newbie, writing code in Rust code seems always fighting with compiler. We can not just write code and then fix the memory later, the compiler refuses to accept anything which maybe unsafe, but this also make me think more about the code and design.<br>By the way, the error hints from compiler is very helpful, this is not like C++(specially templates got in).</p>
+<h3 id="Write-low-level-code-with-safety-guarantees"><a href="#Write-low-level-code-with-safety-guarantees" class="headerlink" title="Write low-level code with safety guarantees"></a>Write low-level code with safety guarantees</h3>
+<p>Rust have the concept of onwership. For the resource in computation(this is usually refer to memory, file handler etc), the should be an owner. Rust try to solve the common errors caused by pointers in C/C++, such like dangling pointer, unfree pointer, double free issues. The borrow checker in compiler will keep the resource onwership move correctly with some rules. for more details please refer to <a target="_blank" rel="noopener" href="http://doc.rust-lang.org/nightly/intro.html#ownership">offical guide</a>. So as a newbie, writing code in Rust code seems always fighting with compiler. We can not just write code and then fix the memory later, the compiler refuses to accept anything which maybe unsafe, but this also make me think more about the code and design.
+By the way, the error hints from compiler is very helpful, this is not like C++(specially templates got in).</p>
 <p>There are some <a target="_blank" rel="noopener" href="http://jaredly.github.io/2014/03/22/rust-vs-go/">comparisons</a> between Go and Rust, Gc is optional in Rust, compare Rust with Go is not sensible.</p>
 <p>Recent changes of removing runtime make Rust lower level. There are even some hobby projects writting OS with Rust, refer to <a target="_blank" rel="noopener" href="https://github.com/ckkashyap/unix">this</a> and <a target="_blank" rel="noopener" href="https://github.com/charliesome/rustboot">this</a>.</p>
-<h3 id="High-level-abstraction-for-system-programming"><a href="#High-level-abstraction-for-system-programming" class="headerlink" title="High level abstraction for system programming"></a>High level abstraction for system programming</h3><p>As a modern system programming, Rust is surprisingly expressive. I like the Ruby syntax, Rust has the same similarly mind-blowing effect. Rust carry some functional programming concepts, these make code looks just simple and elegant. Let’s have some trivial code snippet:</p>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token comment">// construct array with 0 3 6 ...</span>
-<span class="token keyword">let</span> v <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">..</span>10us<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token closure-params"><span class="token closure-punctuation punctuation">|</span>x<span class="token closure-punctuation punctuation">|</span></span> x <span class="token operator">*</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">::</span><span class="token operator">&lt;</span><span class="token class-name">Vec</span><span class="token operator">&lt;</span>_<span class="token operator">>></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">for</span> i <span class="token keyword">in</span> v<span class="token punctuation">.</span><span class="token function">into_iter</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"&#123;&#125;"</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token comment">// construct array with random values</span>
-<span class="token keyword">use</span> <span class="token namespace">std<span class="token punctuation">::</span></span>rand<span class="token punctuation">;</span>
-<span class="token keyword">let</span> v <span class="token operator">=</span> <span class="token class-name">Vec</span><span class="token punctuation">::</span><span class="token function">from_fn</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token closure-params"><span class="token closure-punctuation punctuation">|</span>_<span class="token closure-punctuation punctuation">|</span></span> <span class="token namespace">rand<span class="token punctuation">::</span></span><span class="token function">random</span><span class="token punctuation">::</span><span class="token operator">&lt;</span>uint<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p>Pattern match is so elegant:<br><pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">match</span> number <span class="token punctuation">&#123;</span>
-        <span class="token number">1</span> <span class="token operator">=></span> <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"One!"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-        <span class="token number">2</span> <span class="token operator">|</span> <span class="token number">3</span> <span class="token operator">|</span> <span class="token number">5</span> <span class="token operator">|</span> <span class="token number">7</span> <span class="token operator">|</span> <span class="token number">11</span> <span class="token operator">=></span> <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"This is a prime"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-        <span class="token number">13</span><span class="token punctuation">...</span><span class="token number">19</span> <span class="token operator">=></span> <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"A teen"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-        _ <span class="token operator">=></span> <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"Ain't special"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
-<p>Colsures, reminds me with Ruby’s block:<br><pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function-definition function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">let</span> captured_value <span class="token operator">=</span> <span class="token number">7u</span><span class="token punctuation">;</span>
-    <span class="token keyword">let</span> closure <span class="token operator">=</span> <span class="token closure-params"><span class="token closure-punctuation punctuation">|</span><span class="token operator">&amp;</span><span class="token punctuation">:</span>argument<span class="token closure-punctuation punctuation">|</span></span> <span class="token punctuation">&#123;</span>
-        <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"I captured this: &#123;&#125;"</span><span class="token punctuation">,</span> captured_value<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"Argument passed was: &#123;&#125;"</span><span class="token punctuation">,</span> argument<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token boolean">true</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-    <span class="token macro property">println!</span><span class="token punctuation">(</span><span class="token string">"Closure returned: &#123;&#125;"</span><span class="token punctuation">,</span> <span class="token function">closure</span><span class="token punctuation">(</span><span class="token string">"a string"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
+<h3 id="High-level-abstraction-for-system-programming"><a href="#High-level-abstraction-for-system-programming" class="headerlink" title="High level abstraction for system programming"></a>High level abstraction for system programming</h3>
+<p>As a modern system programming, Rust is surprisingly expressive. I like the Ruby syntax, Rust has the same similarly mind-blowing effect. Rust carry some functional programming concepts, these make code looks just simple and elegant. Let’s have some trivial code snippet:</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> construct array with 0 3 6 ...
+</span><span class="token keyword rust">let</span> v <span class="token operator rust">=</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token number integer decimal rust">0</span><span class="token operator rust">..</span>10us</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>.<span class="token function rust">map</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token function closure rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">|</span></span></span><span class="token function closure rust"><span class="token function parameters rust"><span class="token variable parameter rust">x</span><span class="token punctuation section parameters end rust">|</span></span> </span><span class="token function closure rust">x <span class="token operator rust">*</span> <span class="token number integer decimal rust">3</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>.<span class="token path rust">collect<span class="token punctuation accessor rust">::</span></span><span class="token generic rust"><span class="token punctuation definition generic begin rust">&lt;</span><span class="token generic rust">Vec<span class="token punctuation definition generic begin rust">&lt;</span><span class="token operator rust">_</span><span class="token punctuation definition generic end rust">&gt;</span></span><span class="token punctuation definition generic end rust">&gt;</span></span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+<span class="token keyword rust">for</span> i <span class="token operator rust">in</span> v.<span class="token function rust">into_iter</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span> <span class="support macro rust">println!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span><span class="token constant placeholder rust">{}</span><span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation separator rust">,</span> i<span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span> </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+</span></code></pre><pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> construct array with random values
+</span><span class="token keyword rust">use</span> <span class="token path rust">std<span class="token punctuation accessor rust">::</span></span>rand<span class="token punctuation terminator rust">;</span>
+<span class="token keyword rust">let</span> v <span class="token operator rust">=</span> <span class="token class-name rust">Vec</span><span class="token path rust"><span class="token punctuation accessor rust">::</span></span>from_fn<span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token number integer decimal rust">10</span><span class="token punctuation separator rust">,</span> <span class="token function closure rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">|</span></span></span><span class="token function closure rust"><span class="token function parameters rust">_<span class="token punctuation section parameters end rust">|</span></span> </span><span class="token function closure rust"><span class="token path rust">rand<span class="token punctuation accessor rust">::</span></span><span class="token path rust">random<span class="token punctuation accessor rust">::</span></span><span class="token generic rust"><span class="token punctuation definition generic begin rust">&lt;</span>uint<span class="token punctuation definition generic end rust">&gt;</span></span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+</span></code></pre>
+<p>Pattern match is so elegant:</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token keyword rust">match</span> number <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        <span class="token number integer decimal rust">1</span> <span class="token operator rust">=&gt;</span> <span class="support macro rust">println!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>One!<span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation separator rust">,</span>
+        <span class="token number integer decimal rust">2</span> <span class="token operator rust">|</span> <span class="token number integer decimal rust">3</span> <span class="token operator rust">|</span> <span class="token number integer decimal rust">5</span> <span class="token operator rust">|</span> <span class="token number integer decimal rust">7</span> <span class="token operator rust">|</span> <span class="token number integer decimal rust">11</span> <span class="token operator rust">=&gt;</span> <span class="support macro rust">println!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>This is a prime<span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation separator rust">,</span>
+        <span class="token number integer decimal rust">13</span><span class="token operator rust">...</span><span class="token number integer decimal rust">19</span> <span class="token operator rust">=&gt;</span> <span class="support macro rust">println!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>A teen<span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation separator rust">,</span>
+        <span class="token operator rust">_</span> <span class="token operator rust">=&gt;</span> <span class="support macro rust">println!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>Ain&#39;t special<span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation separator rust">,</span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+</span></code></pre>
+<p>Colsures, reminds me with Ruby’s block:</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token function rust"><span class="token function rust"><span class="token keyword function rust">fn</span> </span><span class="token function rust">main</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">(</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters end rust">)</span></span></span></span><span class="token function rust"> </span><span class="token function rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token keyword rust">let</span> captured_value <span class="token operator rust">=</span> 7u<span class="token punctuation terminator rust">;</span>
+    <span class="token keyword rust">let</span> <span class="token function rust">closure</span> <span class="token operator rust">=</span> <span class="token function closure rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">|</span></span></span><span class="token function closure rust"><span class="token function parameters rust"><span class="token operator rust">&amp;</span>:<span class="token variable parameter rust">argument</span><span class="token punctuation section parameters end rust">|</span></span> </span><span class="token function closure rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        <span class="support macro rust">println!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>I captured this: <span class="token constant placeholder rust">{}</span><span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation separator rust">,</span> captured_value<span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+        <span class="support macro rust">println!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>Argument passed was: <span class="token constant placeholder rust">{}</span><span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation separator rust">,</span> argument<span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+        <span class="token boolean rust">true</span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span><span class="token punctuation terminator rust">;</span>
+    <span class="support macro rust">println!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>Closure returned: <span class="token constant placeholder rust">{}</span><span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation separator rust">,</span> <span class="token function rust">closure</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>a string<span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
+</span></code></pre>
 <p>Almost every statement is an expression, this means that the statement returns a value. Blocks are also expression. This is good thing, we may write less “return”! Mixing with pattern match ends with a better sugar.</p>
 <p>Of course, nice syntax doesn’t really mean real expresiveness, There are more abstraction tools in Rust, like traits, macro definiation, generic types etc. I have tried some macros for testing in <a target="_blank" rel="noopener" href="https://github.com/chenyukang/rust-scm/blob/master/src/eval.rs">rust-scm</a>.</p>
-<h2 id="High-Speed"><a href="#High-Speed" class="headerlink" title="High Speed"></a>High Speed</h2><p>I have found my favorite interpeter language, it’s Ruby. But in real world, we need to write some code need critical time performance. For this kind of task, Rust maybe a good choice. <a target="_blank" rel="noopener" href="http://benchmarksgame.alioth.debian.org/u64q/rust.html">Benchmarks</a> show Rust is almost as fast as C++.</p>
-<h2 id="Community"><a href="#Community" class="headerlink" title="Community"></a>Community</h2><p>The Rust have a small, but exciting, openly community. The language have been evolving several years, most design discussion are open source. The core team <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues/17967">seems nice</a>.</p>
+<h2 id="High-Speed"><a href="#High-Speed" class="headerlink" title="High Speed"></a>High Speed</h2>
+<p>I have found my favorite interpeter language, it’s Ruby. But in real world, we need to write some code need critical time performance. For this kind of task, Rust maybe a good choice. <a target="_blank" rel="noopener" href="http://benchmarksgame.alioth.debian.org/u64q/rust.html">Benchmarks</a> show Rust is almost as fast as C++.</p>
+<h2 id="Community"><a href="#Community" class="headerlink" title="Community"></a>Community</h2>
+<p>The Rust have a small, but exciting, openly community. The language have been evolving several years, most design discussion are open source. The core team <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/issues/17967">seems nice</a>.</p>
 <p>Have a try for Rust.</p>
 </section>
 
@@ -240,12 +238,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Rust" >
-    <span class="tag-code">Rust</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -297,7 +295,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Write-low-level-code-with-safety-guarantees"><span class="toc-nav-text">Write low-level code with safety guarantees</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#High-level-abstraction-for-system-programming"><span class="toc-nav-text">High level abstraction for system programming</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#High-Speed"><span class="toc-nav-text">High Speed</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Community"><span class="toc-nav-text">Community</span></a>
+      <ol class="toc-nav"><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Write-low-level-code-with-safety-guarantees"><span class="toc-nav-text">Write low-level code with safety guarantees</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#High-level-abstraction-for-system-programming"><span class="toc-nav-text">High level abstraction for system programming</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#High-Speed"><span class="toc-nav-text">High Speed</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Community"><span class="toc-nav-text">Community</span></a></li></ol>
     
   </div>
 </aside>
@@ -308,7 +306,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/rust-10-alpha/';
+    var url = 'http://catcoding.me//p/rust-10-alpha/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -369,7 +367,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -394,8 +392,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

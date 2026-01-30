@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,33 +178,37 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Ruby 里一切都是对象，如何能看到 Ruby 内建的对象模型呢。这里有个小程序来查看 Ruby 内部构建好的的对象和类。ObjectSpace 可以迭代所有对象。</p>
-<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"> set <span class="token operator">=</span> <span class="token class-name">Set</span><span class="token punctuation">.</span><span class="token keyword">new</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
- ObjectSpace<span class="token punctuation">.</span>each_object <span class="token keyword">do</span> <span class="token operator">|</span>x<span class="token operator">|</span>
-   set<span class="token punctuation">.</span>add<span class="token punctuation">(</span>x<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
- <span class="token keyword">end</span>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token ruby">    set <span class="token operator assignment ruby">=</span> <span class="token class-name ruby">Set</span><span class="token punctuation accessor ruby">.</span><span class="token keyword special-method ruby">new</span><span class="token punctuation definition group begin ruby">(</span><span class="token punctuation definition group end ruby">)</span>
+    <span class="token class-name ruby">ObjectSpace</span><span class="token punctuation accessor ruby">.</span>each_object <span class="token keyword start-block ruby">do</span> <span class="token block parameters ruby"><span class="token punctuation definition parameters begin ruby">|</span></span><span class="token block parameters ruby"><span class="token variable parameter ruby">x</span><span class="token block parameters ruby"><span class="token punctuation definition parameters end ruby">|</span></span></span>
+      set<span class="token punctuation accessor ruby">.</span>add<span class="token punctuation definition group begin ruby">(</span>x<span class="token punctuation accessor ruby">.</span><span class="token function builtin ruby">class</span><span class="token punctuation definition group end ruby">)</span>
+    <span class="token keyword ruby">end</span>
 
-set<span class="token punctuation">.</span><span class="token keyword">each</span> <span class="token keyword">do</span> <span class="token operator">|</span>x<span class="token operator">|</span>
-  puts x
-<span class="token keyword">end</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+   set<span class="token punctuation accessor ruby">.</span>each <span class="token keyword start-block ruby">do</span> <span class="token block parameters ruby"><span class="token punctuation definition parameters begin ruby">|</span></span><span class="token block parameters ruby"><span class="token variable parameter ruby">x</span><span class="token block parameters ruby"><span class="token punctuation definition parameters end ruby">|</span></span></span>
+     <span class="token function builtin ruby">puts</span> x
+   <span class="token keyword ruby">end</span>
+   
+</span></code></pre>
 <p>下面这段就能根据对象，取得 class 对象，建立起类的继承图。</p>
-<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby">
-<span class="token comment"># Creates or updates a klass_tree.</span>
-<span class="token comment"># When updating no classes or objects are removed</span>
-<span class="token keyword">def</span> <span class="token method-definition"><span class="token function">object_browser</span></span><span class="token punctuation">(</span>classtree <span class="token operator">=</span> <span class="token class-name">ClassTreeNode</span><span class="token punctuation">.</span><span class="token keyword">new</span><span class="token punctuation">(</span>Kernel<span class="token punctuation">)</span><span class="token punctuation">)</span>
-  ObjectSpace<span class="token punctuation">.</span>each_object <span class="token keyword">do</span> <span class="token operator">|</span> x <span class="token operator">|</span>
-    classnode <span class="token operator">=</span> classtree
-    x<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span>ancestors<span class="token punctuation">.</span>reverse<span class="token punctuation">[</span><span class="token number">1.</span><span class="token punctuation">.</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span> \
-      <span class="token punctuation">.</span>inject<span class="token punctuation">(</span>classtree<span class="token punctuation">)</span><span class="token punctuation">&#123;</span> <span class="token operator">|</span> classnode<span class="token punctuation">,</span> klass <span class="token operator">|</span>
-      classnode<span class="token punctuation">.</span>add_class<span class="token punctuation">(</span>klass<span class="token punctuation">)</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">.</span>add_object<span class="token punctuation">(</span>x<span class="token punctuation">)</span>
-  <span class="token keyword">end</span>
-  classtree
-<span class="token keyword">end</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token ruby">
+  <span class="token comment number-sign ruby"><span class="token punctuation definition comment ruby">#</span> Creates or updates a klass_tree.
+</span>  <span class="token comment number-sign ruby"><span class="token punctuation definition comment ruby">#</span> When updating no classes or objects are removed
+</span>  <span class="token function ruby"><span class="token keyword def ruby">def</span></span><span class="token function ruby"> <span class="token function ruby">object_browser</span></span><span class="token function parameters ruby"><span class="token punctuation definition group begin ruby">(</span></span><span class="token function parameters ruby"><span class="token variable parameter ruby">classtree</span> </span><span class="token function parameters default-value ruby"><span class="token operator assignment ruby">=</span></span><span class="token function parameters default-value ruby"> <span class="token class-name ruby">ClassTreeNode</span><span class="token punctuation accessor ruby">.</span><span class="token keyword special-method ruby">new</span><span class="token punctuation definition group begin ruby">(</span><span class="token variable other constant ruby">Kernel</span><span class="token punctuation definition group end ruby">)</span></span><span class="token function parameters ruby"><span class="token punctuation definition group end ruby">)</span></span>
+    <span class="token class-name ruby">ObjectSpace</span><span class="token punctuation accessor ruby">.</span>each_object <span class="token keyword start-block ruby">do</span> <span class="token block parameters ruby"><span class="token punctuation definition parameters begin ruby">|</span></span><span class="token block parameters ruby"> <span class="token variable parameter ruby">x</span> <span class="token block parameters ruby"><span class="token punctuation definition parameters end ruby">|</span></span></span>
+      classnode <span class="token operator assignment ruby">=</span> classtree
+      x<span class="token punctuation accessor ruby">.</span><span class="token function builtin ruby">class</span><span class="token punctuation accessor ruby">.</span><span class="token function builtin ruby">ancestors</span><span class="token punctuation accessor ruby">.</span>reverse<span class="token punctuation section array ruby">[</span><span class="token number ruby">1</span><span class="token operator ruby">..</span><span class="token operator arithmetic ruby">-</span><span class="token number ruby">1</span><span class="token punctuation section array ruby">]</span> \
+        <span class="token punctuation accessor ruby">.</span>inject<span class="token punctuation definition group begin ruby">(</span>classtree<span class="token punctuation definition group end ruby">)</span><span class="token punctuation section scope ruby">{</span> <span class="token block parameters ruby"><span class="token punctuation definition parameters begin ruby">|</span></span><span class="token block parameters ruby"> <span class="token variable parameter ruby">classnode</span><span class="token punctuation separator ruby">,</span> <span class="token variable parameter ruby">klass</span> <span class="token block parameters ruby"><span class="token punctuation definition parameters end ruby">|</span></span></span>
+        classnode<span class="token punctuation accessor ruby">.</span>add_class<span class="token punctuation definition group begin ruby">(</span>klass<span class="token punctuation definition group end ruby">)</span>
+      <span class="token punctuation section scope ruby">}</span><span class="token punctuation accessor ruby">.</span>add_object<span class="token punctuation definition group begin ruby">(</span>x<span class="token punctuation definition group end ruby">)</span>
+    <span class="token keyword ruby">end</span>
+    classtree
+  <span class="token keyword ruby">end</span>
+
+</span></code></pre>
 <p>use this command to get image:</p>
-<p>  $ruby prog.rb &gt; class.dot; dot -Tpng class.dot -o class.png</p>
-<p>结果看起来像这样，所有对象都画出来比较多，看大图还稍微能看到一些。完整的代码在<a target="_blank" rel="noopener" href="https://gist.github.com/4380597">这里</a>。<br><img src="/images/class.png" alt="class in Ruby" class="img-center" /><span class="image-caption">class in Ruby</span><br><img src="/images/objs.png" alt="class in Ruby" class="img-center" /><span class="image-caption">class in Ruby</span></p>
+<p>$ruby prog.rb &gt; class.dot; dot -Tpng class.dot -o class.png</p>
+<p>结果看起来像这样，所有对象都画出来比较多，看大图还稍微能看到一些。完整的代码在<a target="_blank" rel="noopener" href="https://gist.github.com/4380597">这里</a>。
+<img src="/images/class.png" alt="class in Ruby" class="img-center" />
+<img src="/images/objs.png" alt="class in Ruby" class="img-center" /></p>
 </section>
 
     <p></p>
@@ -235,12 +227,12 @@ set<span class="token punctuation">.</span><span class="token keyword">each</spa
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Ruby" >
-    <span class="tag-code">Ruby</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -261,7 +253,7 @@ set<span class="token punctuation">.</span><span class="token keyword">each</spa
     
       <a class="nav-right" href="/p/use-clang-autocomplete-mode/">
         
-          Clang is Making Emacs  ...
+          Clang is Making Emacs Smarter
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -293,7 +285,7 @@ set<span class="token punctuation">.</span><span class="token keyword">each</spa
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/browser-objs-in-ruby/';
+    var url = 'http://catcoding.me//p/browser-objs-in-ruby/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -354,7 +346,7 @@ set<span class="token punctuation">.</span><span class="token keyword">each</spa
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -379,8 +371,6 @@ set<span class="token punctuation">.</span><span class="token keyword">each</spa
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

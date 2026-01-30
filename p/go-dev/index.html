@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,15 +177,20 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><img src="/images/golang-600x600.jpg" alt="Golang" class="img-center" height="320" width="320"/><span class="image-caption">Golang</span></p>
-<p>最近一直在用 Go 做开发，我们打算整一套和 Rails 对应的 Go 开发框架。一些代码在我们的<a target="_blank" rel="noopener" href="https://github.com/sipin">Github 小组里有</a>。这里的几个项目都用到了代码生成的方法，生成 Go 文件，最后的整个 web 程序被编译成一个可执行文件。<br>我们正在用一个项目来验证这个想法。其中：</p>
-<h3 id="1-xuanwu-玄武"><a href="#1-xuanwu-玄武" class="headerlink" title="1. xuanwu(玄武)"></a>1. xuanwu(玄武)</h3><p>根据 thrift 文件产生对应 MVC 里面的 Model。生成的 go 文件里面，一个 thrift 类型对应一个 go 里面的 type struct，生成的代码中包含一些基本的方法，比如 FindByID 等等，这都是根据 thrift 文件定义的对象属性自动生成的。这里用到了<a target="_blank" rel="noopener" href="https://github.com/wickman/ptsd">ptsd</a>来解析 thrift 文件，自己定义模板来生成 Go 代码。我后来加了<a target="_blank" rel="noopener" href="https://github.com/sipin/xuanwu/blob/master/crud.py">crud.py</a>和<a target="_blank" rel="noopener" href="https://github.com/sipin/xuanwu/blob/master/tmpl/crud.tmpl">crud.tmpl</a>来生成 Controller 的代码，这样 MVC 里面 Model 和 Controller 就都有了。不过对于 Go 这样的静态语言，生成代码这套方案有个难解决的问题就是如何在生成的代码基础上实现用户自定义。我们现在的解决办法是另外写一个对应的 fix 文件，在里面写入自己要重写的函数，另外写一个程序根据 gen 文件和 fix 文件来做一个基于函数定义的 diff，如果用户定义了就忽略自动生成的函数。好绕的方法，不过因为 Go 库里面自带的的 parser 和 AST，做这么一个 diff 程序还挺简单的。</p>
-<h3 id="2-gorazor-白虎"><a href="#2-gorazor-白虎" class="headerlink" title="2. gorazor(白虎)"></a>2. gorazor(白虎)</h3><p>功能是 MVC 里面的 view engine，从 C#里面的 razor 模仿而来，具体为什么要这么做 <a target="_blank" rel="noopener" href="https://github.com/sipin/gorazor/blob/master/docs/about_chinese.md">这个详细的中文文档</a> 里面说了。有了这个东西我们可以混着 html 写 Go 代码了。我是从这个项目开始正式学习 Go 的，整个开发过程还是比较顺利的。刚开始 lexer 大量使用了正则表达式，后来发现速度有些受影响就手动写了一部分。parser 部分现在还有些难看，后面继续重构一下。Debug 一直都是 Println，很多时候已经够用了。</p>
-<h3 id="3-web"><a href="#3-web" class="headerlink" title="3. web"></a>3. web</h3><p>在 web.go 的基础上做了一些自己的修改。</p>
+    <section class="markdown-content"><img src="/images/golang-600x600.jpg" alt="Golang" class="img-center" height="320" width="320"/>
+<p>最近一直在用 Go 做开发，我们打算整一套和 Rails 对应的 Go 开发框架。一些代码在我们的<a target="_blank" rel="noopener" href="https://github.com/sipin">Github 小组里有</a>。这里的几个项目都用到了代码生成的方法，生成 Go 文件，最后的整个 web 程序被编译成一个可执行文件。
+我们正在用一个项目来验证这个想法。其中：</p>
+<h3 id="1-xuanwu-玄武"><a href="#1-xuanwu-玄武" class="headerlink" title="1. xuanwu(玄武)"></a>1. xuanwu(玄武)</h3>
+<p>根据 thrift 文件产生对应 MVC 里面的 Model。生成的 go 文件里面，一个 thrift 类型对应一个 go 里面的 type struct，生成的代码中包含一些基本的方法，比如 FindByID 等等，这都是根据 thrift 文件定义的对象属性自动生成的。这里用到了<a target="_blank" rel="noopener" href="https://github.com/wickman/ptsd">ptsd</a>来解析 thrift 文件，自己定义模板来生成 Go 代码。我后来加了<a target="_blank" rel="noopener" href="https://github.com/sipin/xuanwu/blob/master/crud.py">crud.py</a>和<a target="_blank" rel="noopener" href="https://github.com/sipin/xuanwu/blob/master/tmpl/crud.tmpl">crud.tmpl</a>来生成 Controller 的代码，这样 MVC 里面 Model 和 Controller 就都有了。不过对于 Go 这样的静态语言，生成代码这套方案有个难解决的问题就是如何在生成的代码基础上实现用户自定义。我们现在的解决办法是另外写一个对应的 fix 文件，在里面写入自己要重写的函数，另外写一个程序根据 gen 文件和 fix 文件来做一个基于函数定义的 diff，如果用户定义了就忽略自动生成的函数。好绕的方法，不过因为 Go 库里面自带的的 parser 和 AST，做这么一个 diff 程序还挺简单的。</p>
+<h3 id="2-gorazor-白虎"><a href="#2-gorazor-白虎" class="headerlink" title="2. gorazor(白虎)"></a>2. gorazor(白虎)</h3>
+<p>功能是 MVC 里面的 view engine，从 C#里面的 razor 模仿而来，具体为什么要这么做 <a target="_blank" rel="noopener" href="https://github.com/sipin/gorazor/blob/master/docs/about_chinese.md">这个详细的中文文档</a> 里面说了。有了这个东西我们可以混着 html 写 Go 代码了。我是从这个项目开始正式学习 Go 的，整个开发过程还是比较顺利的。刚开始 lexer 大量使用了正则表达式，后来发现速度有些受影响就手动写了一部分。parser 部分现在还有些难看，后面继续重构一下。Debug 一直都是 Println，很多时候已经够用了。</p>
+<h3 id="3-web"><a href="#3-web" class="headerlink" title="3. web"></a>3. web</h3>
+<p>在 web.go 的基础上做了一些自己的修改。</p>
 <p>再说一下使用 Go 的一些感受，<code>大部分时候是很爽的</code>。对于喜欢 C 和 Python 的人来说上手 Go 是很容易的事情。Go 更像是一个更现代化的 C(而不是 C++)，因为简洁是其一个重要特性。和 Python 相似的地方是提倡一种事有一种解决方法，而不像 Ruby 那样有各种魔法写法，所以看别人的代码容易一些。Go 对代码的格式化有一些强制约定，但是缩进并不是语法的一部分，而是通过 gofmt 工具来自动纠正格式，这太方便了。再加上 goimport 这样的工具来自动加上或者移除不必要的 import，我现在写 Go 代码的时候基本不需要关心格式和 import 这些琐事，绑定 Emacs 快捷键保存文件以后基本都解决了。</p>
 <p><code>Go 的编译速度很快</code>，我的机器上这里 20w 行左右的 Go 代码基本编译在 13s 左右，这和 C++ 比起来要快很多很多。</p>
-<hr>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p><a target="_blank" rel="noopener" href="https://gist.github.com/chenyukang/9bbf1ef3be82fad7484f">我是这么配置 Emacs 的 Go 相关的东西的</a></p>
+<hr />
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3>
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/chenyukang/9bbf1ef3be82fad7484f">我是这么配置 Emacs 的 Go 相关的东西的</a></p>
 <p>其中 go-autocomplete 是来自动补全的，对于内置的库函数补全还是很好的。有的自定义的补全不出来。</p>
 <p>goimports 修正 import 的。</p>
 <p>gocover 是我自己写的一个程序，看到同事写在 Vim 里写 Go 代码的时候一个快捷键就跑相关的 pkg 的 testing，并把结果打印出来。对于 Go 的这么快的编译速度，真的可以边写代码迅速按下快捷键测试的结果就出来了 (还包括 coverage 噢)。于是我也写了个程序分析出当前编辑文件对应的 package 名字，设定好 GOPATH，然后去 tmp 目录跑测试。这个程序就是<a target="_blank" rel="noopener" href="https://gist.github.com/chenyukang/8b968320d959a6c25ec3">gocover</a>，我绑定到<code>C-x g</code>，太方便了。</p>
@@ -222,12 +215,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Go" >
-    <span class="tag-code">Go</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -241,14 +234,14 @@
       <a class="nav-left" href="/p/scheme-go/">
         <span class="nav-arrow">← </span>
         
-          A mini Scheme interpr ...
+          A mini Scheme interpreter written in Go
         
       </a>
     
     
       <a class="nav-right" href="/p/visualize-git-proj/">
         
-          Visualize Git Projects ...
+          Visualize Git Projects with Ubigraph
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -279,7 +272,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-xuanwu-%E7%8E%84%E6%AD%A6"><span class="toc-nav-text">1. xuanwu(玄武)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-gorazor-%E7%99%BD%E8%99%8E"><span class="toc-nav-text">2. gorazor(白虎)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-web"><span class="toc-nav-text">3. web</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-nav-text">其他</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-xuanwu-玄武"><span class="toc-nav-text">1. xuanwu(玄武)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-gorazor-白虎"><span class="toc-nav-text">2. gorazor(白虎)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-web"><span class="toc-nav-text">3. web</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#其他"><span class="toc-nav-text">其他</span></a></li></ol>
     
   </div>
 </aside>
@@ -290,7 +283,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/go-dev/';
+    var url = 'http://catcoding.me//p/go-dev/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -351,7 +344,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -376,8 +369,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

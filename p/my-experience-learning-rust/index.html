@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,7 +177,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><img src="/images/ob_pasted-image-20220421211405.png" alt=""></p>
+    <section class="markdown-content"><p><img src="/images/ob_pasted-image-20220421211405.png" alt="" /></p>
 <p>最近我打算把自己的小项目 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/obweb/">Obweb</a> 后端用 JavaScript 重写，之前是用 Rust 写的。</p>
 <p>重写基于以下考虑：</p>
 <ul>
@@ -206,10 +194,10 @@
 <p>当时我觉得 Rust 用起来还行，但是有些部分很复杂，比如指针还有 Borrow Checker，另外最大的问题当然是第三方库太少。</p>
 <p>那时还有一个印度程序员 ckkashyap 开了一个坑，用 Rust 写一个 Unix-like 的操作系统 <a target="_blank" rel="noopener" href="https://github.com/ckkashyap/rustix">rustix: Unix kernel in rust</a> ，我看有点意思就跟着做了几个 PR。没多久他就弃坑了，转去搞一门更小众的编程语言 Nim，打算重新用 Nim 实现 xv6 <a target="_blank" rel="noopener" href="https://github.com/ckkashyap/nim-xv6">nim-xv6: Translate xv6 to nim</a> 。不过我们一直保持联系，有时候在 gtalk 上聊聊。他工作了大概有 20 年，非常喜欢折腾。后来他换工作去了微软，碰巧随后几年我也去了微软，最近他给我发邮件说又开了新坑 <a target="_blank" rel="noopener" href="https://github.com/lispware/minilisp">lispware/minilisp</a> ，一起来搞啊，哈哈，我们这些 Polyglot Programmer 就是这么容易见异思迁。</p>
 <p>后来几年我也没太关注 Rust 了，只是偶尔看看官方的一些文章之类的。在这期间国内的数据库公司 PingCap 发展起来了，国内也出现了一些 Rust 语言爱好者。</p>
-<p>中间这些年，我有时会在 <a target="_blank" rel="noopener" href="https://exercism.org">https://exercism.org</a> 上写写练习，这些上面的编程题不是算法，而是一些典型的简单编程挑战，包含测试用例，非常适合用来练手在学的语言。</p>
-<p><img src="/images/ob_pasted-image-20220420174057.png" alt=""></p>
+<p>中间这些年，我有时会在 https://exercism.org 上写写练习，这些上面的编程题不是算法，而是一些典型的简单编程挑战，包含测试用例，非常适合用来练手在学的语言。</p>
+<p><img src="/images/ob_pasted-image-20220420174057.png" alt="" /></p>
 <p>这个网站更好的地方在于里面有一些各个语言的爱好者当导师，你可以选择让他们 review 你的代码，这样就可以从经验丰富的导师那里学一门语言的最佳实践：</p>
-<p><img src="/images/ob_pasted-image-20220420174816.png" alt=""></p>
+<p><img src="/images/ob_pasted-image-20220420174816.png" alt="" /></p>
 <p>最近一年多我重新关注 Rust，发现热度比之前好多了，Github 上不少项目都在用 Rust 写 (当然也可能是我自己之前关注了一些开发者，他们继续在折腾)，相关的生态和工具链也发展起来了，比如 rust-analyzer 加上 VSCode 的开发体验非常好，比如 Cargo 管理包很好用。</p>
 <p>Rust 近些年在区块链和 WebAssembly  两个领域发展得不错。我认为 Rust 适合那些性能和安全性要求比较高的项目，比如 Infrastructure、存储、交易之类的项目，而一般的纯业务之类的项目就不太适合。</p>
 <p>回顾起来发现 2021 年我参与的几个项目都和 Rust 相关：</p>
@@ -231,7 +219,7 @@
 <p>这种路线也许可以参考，但也别太当真，学会了的标准肯定是能拿来应用。我认为绝大部分书没有官方的文档更有价值，大部分课程还没有直接在开源项目中实践更有效。</p>
 <p>所以我建议不管是新手还是老鸟，要学一门新技术就去看官方文档，然后自己试着做些小项目，如果还想继续深入就做一些更大的项目，或是参与到开源项目中去。</p>
 <p>通常是技术不难学，但是领域知识比较难学，因为要实践某些领域知识需要相关环境和工作内容。</p>
-<hr>
+<hr />
 <p>2022 我打算好好学一下 JavaScript 😉</p>
 </section>
 
@@ -251,8 +239,8 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#编程" >
-    <span class="tag-code">编程</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -266,14 +254,14 @@
       <a class="nav-left" href="/p/weekly-10/">
         <span class="nav-arrow">← </span>
         
-          第 10 期，下一个 Google；最高形 ...
+          第 10 期，下一个 Google；最高形式的财富；冒名顶替综合症
         
       </a>
     
     
       <a class="nav-right" href="/p/weekly-9/">
         
-          第 9 期，理想中的开发者；Generati ...
+          第 9 期，理想中的开发者；Generative Art；学习 Container
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -305,7 +293,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/my-experience-learning-rust/';
+    var url = 'http://catcoding.me//p/my-experience-learning-rust/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -366,7 +354,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -391,8 +379,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

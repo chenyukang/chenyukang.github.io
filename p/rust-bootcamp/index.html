@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -194,52 +182,60 @@
 <p>从明天起，做一个 Rust 程序员，喂马、劈柴，周游世界。</p>
 </blockquote>
 <p>10 年前我开始写第一行 Rust 程序，到如今全职远程做 Rust 开源项目，也许我真能去过喂马劈柴周游世界了😆。但回想自己的学习旅程，其中有各种曲折有几度放弃的时候，如果你也想学习或者提高 Rust 方面的技能，我这篇文章里有一条更容易的路。</p>
-<h2 id="为什么学习-Rust"><a href="#为什么学习-Rust" class="headerlink" title="为什么学习 Rust"></a>为什么学习 Rust</h2><p>Rust 1.0 发布已经快 10 年，所以并不是一门新编程语言了，从发展的角度来看 Rust 已经度过了生存期，并进入了迅速发展的阶段。从目前可见的业界方向来说，Rust 主要在以下几个方面取得了成功：</p>
+<h2 id="为什么学习-Rust"><a href="#为什么学习-Rust" class="headerlink" title="为什么学习 Rust"></a>为什么学习 Rust</h2>
+<p>Rust 1.0 发布已经快 10 年，所以并不是一门新编程语言了，从发展的角度来看 Rust 已经度过了生存期，并进入了迅速发展的阶段。从目前可见的业界方向来说，Rust 主要在以下几个方面取得了成功：</p>
 <ul>
-<li>在基础软件领域成为有力竞争者<ul>
+<li>在基础软件领域成为有力竞争者
+<ul>
 <li>大量开源的 Rust <a target="_blank" rel="noopener" href="https://github.com/sts10/rust-command-line-utilities">命令行工具</a>和开发库，如果你使用 Python，可以通过  <a target="_blank" rel="noopener" href="https://pyo3.rs/v0.21.0-beta.0/">PyO3</a> 用 Rust 来写对性能要求更高的模块，还出现了 <a target="_blank" rel="noopener" href="https://github.com/apache/opendal">opendal</a> 这样优秀的基础库</li>
 <li>Cloudflare 使用 Rust 开发新的网关 <a target="_blank" rel="noopener" href="https://blog.cloudflare.com/pingora-open-source">Pingora</a></li>
 <li>开源数据库实现，比如 <a target="_blank" rel="noopener" href="https://qdrant.tech/">Qdrant</a>、 <a target="_blank" rel="noopener" href="https://risingwave.com/">RisingWave</a>、<a target="_blank" rel="noopener" href="https://github.com/datafuselabs/databend">databend</a></li>
 <li>AI 方面参考 <a target="_blank" rel="noopener" href="https://www.arewelearningyet.com/">Are we learning yet</a>，虽然 Rust ML 生态系统还很年轻并处于试验阶段，但已经出现了一些雄心勃勃的项目和模块，Hugging Face 开源了 <a target="_blank" rel="noopener" href="https://github.com/huggingface/candle">candle</a>机器学习框架</li>
 </ul>
 </li>
-<li>前端的基础设施<ul>
+<li>前端的基础设施
+<ul>
 <li>Rust 在前端领域发展迅速，Rust 是 WebAssembly 支持最好的编程语言，不少 Runtime 都是 Rust 实现的，比如 Wasmer</li>
 <li>大量前端基础工具在使用 Rust 重新实现，比如 <a target="_blank" rel="noopener" href="https://www.rspack.dev/">Rspack</a>、<a target="_blank" rel="noopener" href="https://vercel.com/blog/turbopack">Turbopack</a>、前几天又出现了 <a target="_blank" rel="noopener" href="https://github.com/rolldown/rolldown">rolldown</a>，<a target="_blank" rel="noopener" href="https://leerob.io/blog/rust">Rust Is The Future of JavaScript Infrastructure</a>似乎已经成为共识</li>
 </ul>
 </li>
-<li>操作系统<ul>
+<li>操作系统
+<ul>
 <li>Windows 开始使用 Rust 开发一些核心组件</li>
 <li>Rust 开始进入 Linux 内核，使得使用 Rust 开发 Linux module 成为可能</li>
 <li>Andriod 使用 Rust 开发更多组件，并有效减少了内存方面的漏洞，他们发布的 <a target="_blank" rel="noopener" href="https://google.github.io/comprehensive-rust/">Comprehensive Rust</a>是一个很好的学习资料。Google 开始尝到 Rust 的好处，并开始投入更多资金和人力，近期 <a target="_blank" rel="noopener" href="https://security.googleblog.com/2024/02/improving-interoperability-between-rust-and-c.html">Google 打算捐献 100 万美金给 Rust 基金会</a>着重解决 Rust 和 C++ 的互操作性</li>
 </ul>
 </li>
-<li>区块链领域<ul>
+<li>区块链领域
+<ul>
 <li>以我在这个领域工作一件多的经验来说，Rust 成为了区块链领域的标配，基本区块链相关的工作岗位 Rust 技能是一个极大的加分项</li>
 <li>大量公链使用 Rust 来开发</li>
 </ul>
 </li>
 <li>游戏开发，参考 <a target="_blank" rel="noopener" href="https://arewegameyet.rs/">Are we game yet?</a>，目前已经有成熟的游戏开发框架 <a target="_blank" rel="noopener" href="https://bevyengine.org/">Bevy Engine</a></li>
 </ul>
-<p>如果你对 Rust 的发展情况感兴趣，可以参考 <a target="_blank" rel="noopener" href="https://blog.rust-lang.org/2024/02/19/2023-Rust-Annual-Survey-2023-results.html">2023 Annual Rust Survey Results</a>。在内卷的 IT 市场，作为程序员选择一门小众的编程语言是避免过度竞争的方式，我之前介绍过其他人的类似经验，我们称之为 <a href="https://catcoding.me/p/weekly-13/">The Niche Programmer</a>。Rust 还未成为主流编程语言，但潜力和发展空间很大，而门槛相对其他语言比较高，所以我认为从求职的角度来考虑是值得一试的。</p>
+<p>如果你对 Rust 的发展情况感兴趣，可以参考 <a target="_blank" rel="noopener" href="https://blog.rust-lang.org/2024/02/19/2023-Rust-Annual-Survey-2023-results.html">2023 Annual Rust Survey Results</a>。在内卷的 IT 市场，作为程序员选择一门小众的编程语言是避免过度竞争的方式，我之前介绍过其他人的类似经验，我们称之为 <a target="_blank" rel="noopener" href="https://catcoding.me/p/weekly-13/">The Niche Programmer</a>。Rust 还未成为主流编程语言，但潜力和发展空间很大，而门槛相对其他语言比较高，所以我认为从求职的角度来考虑是值得一试的。</p>
 <p>之前提到 Google 投入更多的资金在 Rust 上面，钱进来后相关的职位就出来了 <a target="_blank" rel="noopener" href="https://foundation.rust-lang.org/careers/">C++/Rust Interop Initiative Software Engineer Lead</a>。</p>
-<h2 id="我学习-Rust-的体会"><a href="#我学习-Rust-的体会" class="headerlink" title="我学习 Rust 的体会"></a>我学习 Rust 的体会</h2><p>我 2014 年时践行每年学习一门新的编程语言，Rust 作为一门新的编程语言进入了我的视野。我开始使用  Rust 写些简单的个人学习项目，然后我继续做了 <a target="_blank" rel="noopener" href="https://exercism.org/tracks/rust/exercises">Rust exercises</a> 。</p>
+<h2 id="我学习-Rust-的体会"><a href="#我学习-Rust-的体会" class="headerlink" title="我学习 Rust 的体会"></a>我学习 Rust 的体会</h2>
+<p>我 2014 年时践行每年学习一门新的编程语言，Rust 作为一门新的编程语言进入了我的视野。我开始使用  Rust 写些简单的个人学习项目，然后我继续做了 <a target="_blank" rel="noopener" href="https://exercism.org/tracks/rust/exercises">Rust exercises</a> 。</p>
 <p>后续几年我偶尔看看 Rust 相关的新闻和项目，时不时动手写点代码都会有点磕磕碰碰。直到四年前开始在 Github 上给一些 Rust 开源项目贡献，两年前开始给 Rust 编译器做贡献，一年前开始全职从事 Rust 区块链相关的工作。</p>
 <p>从技术角度来说，Rust 非常有趣，这里面包含了近些年程序设计方面的一些良好实践。全职写 Rust 程序这一年多是我开发体验最好的阶段，当然有时候我们需要和编译器斗智斗勇、做类型体操，但很多问题在开发阶段给规避掉了。</p>
 <p>Rust 的最大问题还是在于学习门槛相对较高，因为在 Rust 中程序员接触最多的  <code>=</code> 语义都变了。从我个人体验来说，在学会了 Rust 语法后会陷入一个瓶颈，如果日常工作中不使用 Rust，就没有多少机会去实践，另外不知道做一些什么项目。</p>
 <p>我相信很多人同样如此，看了官方 tutorial 之后不知道如何下手，我想如果有一个经验丰富的老师带，会少走很多弯路，这就是我要介绍的极客时间训练营要解决的问题。</p>
-<p><img src="/images/ob_pasted-image-20240316231547.png" alt=""></p>
-<h2 id="极客时间-Rust-训练营"><a href="#极客时间-Rust-训练营" class="headerlink" title="极客时间 Rust 训练营"></a>极客时间 Rust 训练营</h2><p>说起来我与这个训练营还有些渊源。</p>
+<p><img src="/images/ob_pasted-image-20240316231547.png" alt="" /></p>
+<h2 id="极客时间-Rust-训练营"><a href="#极客时间-Rust-训练营" class="headerlink" title="极客时间 Rust 训练营"></a>极客时间 Rust 训练营</h2>
+<p>说起来我与这个训练营还有些渊源。</p>
 <p>当极客时间在筹划这个 Rust 训练营的时候，策划人员找到过我问我是否有意愿当这个课程的讲师。我还稍微犹豫了一下，因为我之前也想过如何在 Rust 领域做更多的分享，我很羡慕优秀的技术分享者比如 <a target="_blank" rel="noopener" href="https://www.youtube.com/@jonhoo">Jon Gjengset</a>能够非常自如地通过视频分享 Rust 方面的技术。当老师当然是个机会能从沟通和表达方面提高这方面的能力。</p>
 <p>后来考虑到自己时间方面安排不过来，我有全职工作、有业余的 Rust 社区工作、还有三个小孩，所以我应该真没时间去录制课程了，而且他们已经找到了我认为最合适的讲师：</p>
-<p><img src="/images/ob_pasted-image-20240316223445.png" alt=""></p>
+<p><img src="/images/ob_pasted-image-20240316223445.png" alt="" /></p>
 <p>我看了这个项目的大纲，陈天老师希望可以教大家怎么用 Rust 比较简单的语法和技巧，来完成 80% 的日常工作，主要是通过各种实践项目来学习，这也是我最推崇的 Learn by doing 的方式。</p>
 <p>有很多主题我都没怎么接触过，比如构建一个 ChatGPT 的应用、比如跨平台 GUI 之类的，所以我对这个课程很感兴趣，然后我和策划说能不能做这个项目的助教，后来沟通下来发现当助教也需要不少时间的，所以就没机会参与到具体的教学里面了。</p>
-<p><img src="/images/ob_pasted-image-20240316231751.png" alt=""></p>
+<p><img src="/images/ob_pasted-image-20240316231751.png" alt="" /></p>
 <p>总之，这个项目对于想学习 Rust 或者已经有一定 Rust 经验，但想获得更多实践经历的人是非常合适的。在和极客时间的相关人员沟通的过程中，我发现他们做事情很用心，这个训练营的课程质量我认为是有保证的。</p>
 <p>这个训练营一共是 15 周的课程安排，其中每周都会有明确的项目安排，课后还有助教答疑。关于训练营的更多信息请参考：<a target="_blank" rel="noopener" href="https://u.geekbang.org/subject/rust">极客时间训练营-Rust 训练营</a></p>
-<p><img src="/images/ob_rust-boot-20240318164451.png" alt=""></p>
-<h2 id="我与陈天老师的小故事"><a href="#我与陈天老师的小故事" class="headerlink" title="我与陈天老师的小故事"></a>我与陈天老师的小故事</h2><p>我最早知道陈天是他写的公众号《程序人生》，他是那种技术和文笔都非常棒的程序员，非常难得。我还看过他的 B 站上的技术讲解视频，他的演讲和分享都很流畅。陈天是极客时间《陈天 · Rust 编程第一课》专栏作者，已有 2.3w 人学过，广受好评。技术能力、演讲表达、对技术的热情这些都是讲师最重要的素质要求，所以陈天是这个训练营最好的讲师人选。</p>
+<p><img src="/images/ob_rust-boot-20240318164451.png" alt="" /></p>
+<h2 id="我与陈天老师的小故事"><a href="#我与陈天老师的小故事" class="headerlink" title="我与陈天老师的小故事"></a>我与陈天老师的小故事</h2>
+<p>我最早知道陈天是他写的公众号《程序人生》，他是那种技术和文笔都非常棒的程序员，非常难得。我还看过他的 B 站上的技术讲解视频，他的演讲和分享都很流畅。陈天是极客时间《陈天 · Rust 编程第一课》专栏作者，已有 2.3w 人学过，广受好评。技术能力、演讲表达、对技术的热情这些都是讲师最重要的素质要求，所以陈天是这个训练营最好的讲师人选。</p>
 <p>再分享一个小故事，我一年多前跳槽的时候还有些犹豫，因为自己的职业规划方面有些困惑，所以想找些人聊聊。当时我突然想到陈天之前从事过区块链方面的创业，后来从里面退出来了，所以我就想向他咨询一下。我没有他的联系方式，但灵机一动我想到了从 Git 的提交记录里面找 Email，然后抱着试一试的想法给他发了个邮件说明了自己的情况和困惑。没想到他很快给我回复了，并很详细地告诉我他对于区块链的想法，还有如何判断自己是否适合一个公司，通过各种途径了解公司的相关产品来作为决策的依据等等。</p>
 <p>我作为一个陌生人，陈天老师都会乐于给与指导和帮助，可见为人真的很好。还没能有幸和陈天老师现实中有所交流，我本来想用当助教的机会和陈天老师多学习，但时间方面安排不过来了。希望大家能在老师的的训练营学到知识、经验、还有探索技术的乐趣！</p>
 </section>
@@ -260,12 +256,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#写作" >
-    <span class="tag-code">写作</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Rust" >
-    <span class="tag-code">Rust</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -317,7 +313,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AD%A6%E4%B9%A0-Rust"><span class="toc-nav-text">为什么学习 Rust</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%88%91%E5%AD%A6%E4%B9%A0-Rust-%E7%9A%84%E4%BD%93%E4%BC%9A"><span class="toc-nav-text">我学习 Rust 的体会</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4-Rust-%E8%AE%AD%E7%BB%83%E8%90%A5"><span class="toc-nav-text">极客时间 Rust 训练营</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%88%91%E4%B8%8E%E9%99%88%E5%A4%A9%E8%80%81%E5%B8%88%E7%9A%84%E5%B0%8F%E6%95%85%E4%BA%8B"><span class="toc-nav-text">我与陈天老师的小故事</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#为什么学习-Rust"><span class="toc-nav-text">为什么学习 Rust</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#我学习-Rust-的体会"><span class="toc-nav-text">我学习 Rust 的体会</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#极客时间-Rust-训练营"><span class="toc-nav-text">极客时间 Rust 训练营</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#我与陈天老师的小故事"><span class="toc-nav-text">我与陈天老师的小故事</span></a></li></ol>
     
   </div>
 </aside>
@@ -328,7 +324,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/rust-bootcamp/';
+    var url = 'http://catcoding.me//p/rust-bootcamp/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -389,7 +385,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -414,8 +410,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

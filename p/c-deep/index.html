@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,93 +177,125 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h3>最名不副实的关键字 static</h3><br>这个关键字在 C 语言里面有两个作用，C++ 对这个关键词进行了扩展。<br><br>1：修饰变量，又分为局部变量和全局变量，被修饰的变量都存储在静态的内存区域。修饰静态变量，那么只有在这个文件内可以引用它，在其他文件里面即使使用 extern 也不能进行访问。所以一般是放在文件头部分。修饰局部变量，只有在定义的函数内访问，函数外不能访问，即使是在同文件内。<br><br>2：修饰函数，在函数前面添加 static，那么这个函数只能在该文件内使用。这样，不同人编写的函数，如果不在同文件内，可以不用担心函数名字 相同。<br><br><pre class="line-numbers language-c" data-language="c"><code class="language-c">main<span class="token punctuation">.</span>c
+    <section class="markdown-content"><h3>最名不副实的关键字 static</h3>
+这个关键字在 C 语言里面有两个作用，C++ 对这个关键词进行了扩展。
+<p>1：修饰变量，又分为局部变量和全局变量，被修饰的变量都存储在静态的内存区域。修饰静态变量，那么只有在这个文件内可以引用它，在其他文件里面即使使用 extern 也不能进行访问。所以一般是放在文件头部分。修饰局部变量，只有在定义的函数内访问，函数外不能访问，即使是在同文件内。</p>
+<p>2：修饰函数，在函数前面添加 static，那么这个函数只能在该文件内使用。这样，不同人编写的函数，如果不在同文件内，可以不用担心函数名字 相同。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c">main<span class="token punctuation accessor c">.</span><span class="token variable other member c">c</span>
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-   <span class="token function">Func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-   reutrn <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
+<span class="token keyword c">int</span> <span class="token function c"><span class="token function c">main</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+   <span class="token function-call c"><span class="token variable function c">Func</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+   reutrn <span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
 
-Def<span class="token punctuation">.</span>c
+Def<span class="token punctuation accessor c">.</span><span class="token variable other member c">c</span>
 
-<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">Func</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Func called\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><br><br>编译：gcc main.c Def.c -o main 链接错误</pre><br><h3><a id="sec2" name="sec2"></a>变量的命名</h3><br>min-length&amp;&amp;max-information<br><br>低精度数据向高精度数据扩展。<br><br><strong>被冤枉的关键字 sizeof 用法：sizeof(int), sizeof(i), sizeof i;</strong><br><br><strong></strong>if ,else float 类型值与 0 值比较，定义一个很小的数，在某个范围内。同时不要在一个很大的浮点数和很小的浮点数之间进行运算。<br><h3><a id="sec3" name="sec3"></a>循环注意点</h3><br>嵌套循环中，长循环放在内，短循环放在外面，这样可以减少 cpu 跨切循环层的次数，利用 cpu cache。循环里面的代码尽量短，一般不超过 20 行。如果不行就改为循环调用函数。<br><h3><a id="sec4" name="sec4"></a>void</h3><br>主要作用在于对函数参数的限定和函数返回值的限定。不能对 void 进行算法操作。<br><h3><a id="sec5" name="sec5"></a>const</h3><br>修饰指针的时候的记法，就近原则。const int <em>p ; p 可变，指向的对象不可变 int const </em>p ; p 可变，指向的对象不可变 int* const p; p 不可变，指向的对象可变<br><h3><a id="sec6" name="sec6"></a>struct 和 class 的区别</h3><br>在 C++ 中 struct 关键字与 class 一般可以通用，一个区别就是 struct 的成员默认情况下是 public 的，而 class 的是 private 的。<br><h3><a id="sec7" name="sec7"></a>union</h3><br>一个 union 只配置一个足够大的空间来容纳最大的数据成员，union 的作用在于压缩空间。<br><br>存储的大小端：<br><br><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">union</span>
-<span class="token punctuation">&#123;</span>
-  <span class="token keyword">int</span> i<span class="token punctuation">;</span>
-  <span class="token keyword">char</span> a<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span class="token operator">*</span>p<span class="token punctuation">,</span>u<span class="token punctuation">;</span>
+<span class="token keyword c">static</span> <span class="token keyword c">void</span> <span class="token function c"><span class="token function c">Func</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+  <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>Func called<span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre>
+<p>编译：gcc main.c Def.c -o main 链接错误</pre></p>
+<h3><a id="sec2" name="sec2"></a>变量的命名</h3>
+min-length&amp;&amp;max-information
+<p>低精度数据向高精度数据扩展。</p>
+<p><strong>被冤枉的关键字 sizeof 用法：sizeof(int), sizeof(i), sizeof i;</strong></p>
+<p><strong></strong>if ,else float 类型值与 0 值比较，定义一个很小的数，在某个范围内。同时不要在一个很大的浮点数和很小的浮点数之间进行运算。</p>
+<h3><a id="sec3" name="sec3"></a>循环注意点</h3>
+嵌套循环中，长循环放在内，短循环放在外面，这样可以减少 cpu 跨切循环层的次数，利用 cpu cache。循环里面的代码尽量短，一般不超过 20 行。如果不行就改为循环调用函数。
+<h3><a id="sec4" name="sec4"></a>void</h3>
+主要作用在于对函数参数的限定和函数返回值的限定。不能对 void 进行算法操作。
+<h3><a id="sec5" name="sec5"></a>const</h3>
+修饰指针的时候的记法，就近原则。const int *p ; p 可变，指向的对象不可变 int const *p ; p 可变，指向的对象不可变 int* const p; p 不可变，指向的对象可变
+<h3><a id="sec6" name="sec6"></a>struct 和 class 的区别</h3>
+在 C++ 中 struct 关键字与 class 一般可以通用，一个区别就是 struct 的成员默认情况下是 public 的，而 class 的是 private 的。
+<h3><a id="sec7" name="sec7"></a>union</h3>
+一个 union 只配置一个足够大的空间来容纳最大的数据成员，union 的作用在于压缩空间。
+<p>存储的大小端：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token union c"><span class="token keyword c">union</span>
+<span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token union c"><span class="token block c">
+  <span class="token keyword c">int</span> i<span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">char</span> a<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span><span class="token number c">2</span><span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token union c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span><span class="token operator c">*</span>p<span class="token punctuation separator c">,</span>u<span class="token punctuation terminator c">;</span>
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-  p<span class="token operator">=</span><span class="token operator">&amp;</span>amp<span class="token punctuation">;</span>u<span class="token punctuation">;</span>
-  p<span class="token operator">-</span><span class="token operator">&amp;</span>gt<span class="token punctuation">;</span>a<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token number">0x39</span><span class="token punctuation">;</span>
-  p<span class="token operator">-</span><span class="token operator">&amp;</span>gt<span class="token punctuation">;</span>a<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token number">0x38</span><span class="token punctuation">;</span>
-  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span>p<span class="token operator">-</span><span class="token operator">&amp;</span>gt<span class="token punctuation">;</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">PrintBinary</span><span class="token punctuation">(</span><span class="token number">14393</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">PrintBinary</span><span class="token punctuation">(</span><span class="token number">56</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">PrintBinary</span><span class="token punctuation">(</span><span class="token number">57</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">CheckSystem</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">==</span><span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Little endian\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">else</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Big endian\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword c">int</span> <span class="token function c"><span class="token function c">main</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+  p<span class="token operator assignment c">=</span><span class="token operator c">&amp;</span>amp<span class="token punctuation terminator c">;</span>u<span class="token punctuation terminator c">;</span>
+  p<span class="token operator arithmetic c">-</span><span class="token operator c">&amp;</span>gt<span class="token punctuation terminator c">;</span>a<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span><span class="token number c">0</span><span class="token punctuation section brackets end c">]</span></span><span class="token operator assignment c">=</span><span class="token number c">0x39</span><span class="token punctuation terminator c">;</span>
+  p<span class="token operator arithmetic c">-</span><span class="token operator c">&amp;</span>gt<span class="token punctuation terminator c">;</span>a<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span><span class="token number c">1</span><span class="token punctuation section brackets end c">]</span></span><span class="token operator assignment c">=</span><span class="token number c">0x38</span><span class="token punctuation terminator c">;</span>
+  <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%d</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span>p<span class="token operator arithmetic c">-</span><span class="token operator c">&amp;</span>gt<span class="token punctuation terminator c">;</span>i</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token function-call c"><span class="token variable function c">PrintBinary</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token number c">14393</span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token function-call c"><span class="token variable function c">PrintBinary</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token number c">56</span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token function-call c"><span class="token variable function c">PrintBinary</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token number c">57</span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token function-call c"><span class="token variable function c">CheckSystem</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token operator comparison c">==</span><span class="token number c">1</span><span class="token punctuation section group end c">)</span></span>
+    <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>Little endian<span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">else</span>
+    <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>Big endian<span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
 
-  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
+  <span class="token keyword c">return</span> <span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
 
 
-<span class="token number">11100000111001</span>
-<span class="token number">111000</span>
-<span class="token number">111001</span>
-Little endian  低字节存储在低地址<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><br><br><h3><a id="sec8" name="sec8"></a>指针，访问内存的钥匙</h3><br>前段时间听过一个面试题，就是如何读写某人地址，答案就是指针？<br><br><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token number c">11100000111001</span>
+<span class="token number c">111000</span>
+<span class="token number c">111001</span>
+Little endian  <span class="token function c"><span class="token function c">低字节存储在低地址</span></span><span class="token function c">
+</span></span></code></pre><h3><a id="sec8" name="sec8"></a>指针，访问内存的钥匙</h3>
+前段时间听过一个面试题，就是如何读写某人地址，答案就是指针？
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token preprocessor include c"><span class="token keyword import include c">#include</span> <span class="token string other lt-gt include c"><span class="token punctuation definition string begin c">&lt;</span>stdio.h<span class="token punctuation definition string end c">&gt;</span></span>
+</span>
+<span class="token keyword c">int</span> <span class="token function c"><span class="token function c">main</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    <span class="token keyword c">int</span> i<span class="token operator assignment c">=</span><span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">int</span>
+    pp<span class="token operator assignment c">=</span><span class="token operator c">&amp;</span>i<span class="token punctuation terminator c">;</span>
+    <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%x</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span>pp</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">int</span> p<span class="token operator assignment c">=</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token keyword c">int</span><span class="token punctuation section group end c">)</span></span><span class="token number c">0x12ff60</span><span class="token punctuation terminator c">;</span>
+    <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%x</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span>p</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+    <span class="token operator c">*</span>p<span class="token operator assignment c">=</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+    <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%d</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span>i</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+    <span class="token function-call c"><span class="token function C99 c">getchar</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">return</span> <span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">int</span>
-    pp<span class="token operator">=</span><span class="token operator">&amp;</span>i<span class="token punctuation">;</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%x\n"</span><span class="token punctuation">,</span>pp<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">int</span> p<span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token number">0x12ff60</span><span class="token punctuation">;</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%x\n"</span><span class="token punctuation">,</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token operator">*</span>p<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">getchar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><br><br>这段代码在 vc 中编译是能够运行的，但是在 gcc 中不行，gcc 中编译后 i 的地址并不是固定的，这样直接给指针赋值，写指向的地址出现访问越界。<br><h3><a id="sec9" name="sec9"></a>a 和&amp;a 的区别</h3>
-
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-  <span class="token keyword">int</span> a<span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">&#123;</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-  <span class="token keyword">int</span><span class="token operator">*</span> ptr<span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>amp<span class="token punctuation">;</span>a<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">int</span><span class="token operator">*</span> p<span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>amp<span class="token punctuation">;</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%x\n"</span><span class="token punctuation">,</span>ptr<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%x\n"</span><span class="token punctuation">,</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d,%d\n"</span><span class="token punctuation">,</span><span class="token operator">*</span><span class="token punctuation">(</span>a<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token operator">*</span><span class="token punctuation">(</span>ptr<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</span></code></pre>
+<p>这段代码在 vc 中编译是能够运行的，但是在 gcc 中不行，gcc 中编译后 i 的地址并不是固定的，这样直接给指针赋值，写指向的地址出现访问越界。</p>
+<h3><a id="sec9" name="sec9"></a>a 和&amp;a 的区别</h3>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">int</span> <span class="token function c"><span class="token function c">main</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+  <span class="token keyword c">int</span> a<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span><span class="token number c">5</span><span class="token punctuation section brackets end c">]</span></span><span class="token operator assignment c">=</span><span class="token block c"><span class="token punctuation section block begin c">{</span><span class="token number c">1</span><span class="token punctuation separator c">,</span><span class="token number c">2</span><span class="token punctuation separator c">,</span><span class="token number c">3</span><span class="token punctuation separator c">,</span><span class="token number c">4</span><span class="token punctuation separator c">,</span><span class="token number c">5</span><span class="token punctuation section block end c">}</span></span><span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">int</span><span class="token operator c">*</span> ptr<span class="token operator assignment c">=</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token keyword c">int</span><span class="token operator c">*</span><span class="token punctuation section group end c">)</span></span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token operator c">&amp;</span>amp<span class="token punctuation terminator c">;</span>a<span class="token operator arithmetic c">+</span><span class="token number c">1</span><span class="token punctuation section group end c">)</span></span><span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">int</span><span class="token operator c">*</span> p<span class="token operator assignment c">=</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token keyword c">int</span><span class="token operator c">*</span><span class="token punctuation section group end c">)</span></span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token operator c">&amp;</span>amp<span class="token punctuation terminator c">;</span>a<span class="token punctuation section group end c">)</span></span><span class="token punctuation terminator c">;</span>
+  <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%x</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span>ptr</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%x</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span>p</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%d</span>,<span class="token constant placeholder c">%d</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span><span class="token operator c">*</span><span class="token group c"><span class="token punctuation section group begin c">(</span>a<span class="token operator arithmetic c">+</span><span class="token number c">1</span><span class="token punctuation section group end c">)</span></span><span class="token punctuation separator c">,</span><span class="token operator c">*</span><span class="token group c"><span class="token punctuation section group begin c">(</span>ptr<span class="token operator arithmetic c">-</span><span class="token number c">1</span><span class="token punctuation section group end c">)</span></span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">return</span> <span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre>
 <p>bfeae860 bfeae84c 2,5 说明 ptr 和 a 的地址相差 5*4=20 个 byte。定义数组 int a<sup><a name="fnr.5" href="file:///home/heipang/document/wiki/Home_Page/Computer/%E6%B7%B1%E5%BA%A6%E6%8E%A2%E7%B4%A2C.html#fn.5">5</a></sup>; a 表示的是数组中首元素的地址，&amp;a 才是数组的首地址，两者的值是一样的，但是意义却不同。</p>
-<p><h3><a id="sec10" name="sec10"></a>数组当作函数参数传递</h3><br>传递的是指针，也就是数组的地址，但注意如果把指针本身传递进函数的时候进行了数组的拷贝，传递的是一个拷贝。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> p<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-  <span class="token keyword">char</span> c<span class="token operator">=</span>p<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-  <span class="token operator">*</span><span class="token punctuation">(</span>p<span class="token operator">+</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token operator">=</span><span class="token char">'X'</span><span class="token punctuation">;</span>
-  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%c\n"</span><span class="token punctuation">,</span>c<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
+<h3><a id="sec10" name="sec10"></a>数组当作函数参数传递</h3>
+传递的是指针，也就是数组的地址，但注意如果把指针本身传递进函数的时候进行了数组的拷贝，传递的是一个拷贝。
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">void</span> <span class="token function c"><span class="token function c">func</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token keyword c">char</span><span class="token operator c">*</span> <span class="token variable parameter c">p</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+  <span class="token keyword c">char</span> c<span class="token operator assignment c">=</span>p<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span><span class="token number c">3</span><span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+  <span class="token operator c">*</span><span class="token group c"><span class="token punctuation section group begin c">(</span>p<span class="token operator arithmetic c">+</span><span class="token number c">3</span><span class="token punctuation section group end c">)</span></span><span class="token operator assignment c">=</span><span class="token string single c"><span class="token punctuation definition string begin c">&#39;</span>X<span class="token punctuation definition string end c">&#39;</span></span><span class="token punctuation terminator c">;</span>
+  <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%c</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span>c</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-  <span class="token comment">//char* p="abcdef";</span>
-  <span class="token keyword">char</span> p<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token string">"abcdefg"</span><span class="token punctuation">;</span>
-  <span class="token function">func</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword c">int</span> <span class="token function c"><span class="token function c">main</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+  <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>char* p=&quot;abcdef&quot;;
+</span>  <span class="token keyword c">char</span> p<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span><span class="token punctuation section brackets end c">]</span></span><span class="token operator assignment c">=</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>abcdefg<span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation terminator c">;</span>
+  <span class="token function-call c"><span class="token variable function c">func</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">p</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token function-call c"><span class="token function C99 c">printf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%s</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span>p</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">return</span> <span class="token number c">0</span><span class="token punctuation terminator c">;</span>
 
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>注意上面的区别，如果是 char* p=”abcdef”，那么 p 为 main 函数的局部变量，”abcdef”的存储空间在静态内存中，func 函数中可以通过指针 p 去访问其内容，但如果改变其内容会发生访问越界。而 char p[]=”abcdefg”，其数组的内容是在栈上。</p>
-<p><h3><a id="sec11" name="sec11"></a>内存管理</h3><br>静态区：保存自动全局变量和 static 变量 (包括 static 全局和局部变量)。静态区的内容 在总个程序的生命周期内都存在，由编译器在编译的时候分配。栈 (堆栈):保存局部变量。栈上的内容只在函数的范围内存在，当函数运行结束，这些内容 也会自动被销毁。其特点是效率高，但空间大小有限。堆：由 malloc 系列函数或 new 操作符分配的内存。其生命周期由 free 或 delete 决定。在没有释放之前一直存在，直到程序结束。其特点是使用灵活，空间比较大，但容易出错。</p>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre>
+<p>注意上面的区别，如果是 char* p=“abcdef”，那么 p 为 main 函数的局部变量，“abcdef“的存储空间在静态内存中，func 函数中可以通过指针 p 去访问其内容，但如果改变其内容会发生访问越界。而 char p[]=“abcdefg”，其数组的内容是在栈上。</p>
+<h3><a id="sec11" name="sec11"></a>内存管理</h3>
+静态区：保存自动全局变量和 static 变量 (包括 static 全局和局部变量)。静态区的内容 在总个程序的生命周期内都存在，由编译器在编译的时候分配。栈 (堆栈):保存局部变量。栈上的内容只在函数的范围内存在，当函数运行结束，这些内容 也会自动被销毁。其特点是效率高，但空间大小有限。堆：由 malloc 系列函数或 new 操作符分配的内存。其生命周期由 free 或 delete 决定。在没有释放之前一直存在，直到程序结束。其特点是使用灵活，空间比较大，但容易出错。
 </section>
 
     <p></p>
@@ -294,12 +314,12 @@ Little endian  低字节存储在低地址<span aria-hidden="true" class="line-n
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#C" >
-    <span class="tag-code">C</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Books" >
-    <span class="tag-code">Books</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -310,17 +330,17 @@ Little endian  低字节存储在低地址<span aria-hidden="true" class="line-n
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/p/maze/">
+      <a class="nav-left" href="/p/pointerbug/">
         <span class="nav-arrow">← </span>
         
-          走出迷宫 - 路径搜索
+          指针指针
         
       </a>
     
     
-      <a class="nav-right" href="/p/concrete-abstractions/">
+      <a class="nav-right" href="/p/the-game-of-life/">
         
-          《Concrete Abstractions ...
+          The Game of Life
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -351,7 +371,7 @@ Little endian  低字节存储在低地址<span aria-hidden="true" class="line-n
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">最名不副实的关键字 static</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">变量的命名</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">循环注意点</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">void</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">const</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">struct 和 class 的区别</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">union</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">指针，访问内存的钥匙</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">a 和&amp;a 的区别</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">数组当作函数参数传递</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">内存管理</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#最名不副实的关键字-static"><span class="toc-nav-text">最名不副实的关键字 static</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#变量的命名"><span class="toc-nav-text">变量的命名</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#循环注意点"><span class="toc-nav-text">循环注意点</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#void"><span class="toc-nav-text">void</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#const"><span class="toc-nav-text">const</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#struct-和-class-的区别"><span class="toc-nav-text">struct 和 class 的区别</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#union"><span class="toc-nav-text">union</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#指针，访问内存的钥匙"><span class="toc-nav-text">指针，访问内存的钥匙</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#a-和-amp-a-的区别"><span class="toc-nav-text">a 和&amp;a 的区别</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#数组当作函数参数传递"><span class="toc-nav-text">数组当作函数参数传递</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#内存管理"><span class="toc-nav-text">内存管理</span></a></li></ol>
     
   </div>
 </aside>
@@ -362,7 +382,7 @@ Little endian  低字节存储在低地址<span aria-hidden="true" class="line-n
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/c-deep/';
+    var url = 'http://catcoding.me//p/c-deep/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -423,7 +443,7 @@ Little endian  低字节存储在低地址<span aria-hidden="true" class="line-n
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -448,8 +468,6 @@ Little endian  低字节存储在低地址<span aria-hidden="true" class="line-n
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

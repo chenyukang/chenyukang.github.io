@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -197,10 +185,11 @@
 <p>stats.c:负责统计信息，记录 get、set、delete、hits 的数目。以前缀作为 key。</p>
 <p>slabs.c：负责管理内存申请和释放，slabs 主要是为了避免内存碎片问题，同时提高申请内存的速度，其基本原理是大块地申请内存，根据不同的 slabclass 块大小分给 slabclass，申请内存的时候根据地址选择最适合的 slabclass，从中去下内存返回指针，释放的时候只是放在其空闲指针列表中 (不少地方都用到这样的方式)。slab_list 没什么用，因为释放的指针放在了 slots 里面啊！slabs 贪婪地使用内存，整个这东西的作用就是用内存空间来换时间效率的。</p>
 <p>memcached.c：主程序，分析设置参数默认值，分析参数根据参数修改配置参数。初始化 stats，assoc，conn，slabs 等。thread_init 启动线程，每一个线程都有自己的 struct event_base，setup_thread 函数初始化这些，最重要的设置 thread_libevent_process 来处理新的连接。一直到：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"> <span class="token operator">/</span> Create threads after we’ve done all the libevent setup<span class="token punctuation">.</span> <span class="token operator">/</span>
-<span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> nthreads<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">create_worker</span><span class="token punctuation">(</span>worker_libevent<span class="token punctuation">,</span> <span class="token operator">&amp;</span>threads<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"> <span class="token operator arithmetic c">/</span> Create threads after we’ve done all the libevent setup<span class="token punctuation accessor c">.</span> <span class="token operator arithmetic c">/</span>
+<span class="token keyword c">for</span> <span class="token group c"><span class="token punctuation section group begin c">(</span>i <span class="token operator assignment c">=</span> <span class="token number c">0</span><span class="token punctuation terminator c">;</span> i <span class="token operator comparison c">&lt;</span> nthreads<span class="token punctuation terminator c">;</span> i<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c">)</span></span> <span class="token block c"><span class="token punctuation section block begin c">{</span>
+    <span class="token function-call c"><span class="token variable function c">create_worker</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">worker_libevent<span class="token punctuation separator c">,</span> <span class="token operator c">&amp;</span>threads<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>i<span class="token punctuation section brackets end c">]</span></span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+<span class="token punctuation section block end c">}</span></span>
+</span></code></pre>
 <p>每个线程进入自己的 event_loop。</p>
 <p>当请求来临的时候对于每一个连接，增加一个事件来调用处理函数 event_handler。每个连接的处理过程是一个状态机，drive_machine(conn* c) 来处理，由 even_handler 来调用，状态转移这部分代码比较复杂，conn_listening —&gt; conn_new_cmd —&gt; conn_parse_cmd —&gt; conn_mwrite —&gt; conn_closing。process_command 来处理各种命令。</p>
 </section>
@@ -221,20 +210,20 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Linux" >
-    <span class="tag-code">Linux</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#C" >
-    <span class="tag-code">C</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Backup" >
-    <span class="tag-code">Backup</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#memcached" >
-    <span class="tag-code">memcached</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -287,7 +276,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/memcached/';
+    var url = 'http://catcoding.me//p/memcached/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -348,7 +337,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -373,8 +362,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

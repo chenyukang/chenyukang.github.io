@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,11 +178,12 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>今天看到<a target="_blank" rel="noopener" href="http://www.masteringemacs.org/articles/2012/10/02/iedit-interactive-multi-occurrence-editing-in-your-buffer/">Mastering Emacs</a>上介绍 iedit 插件的一篇文章。对于程序员来说，经常要重命名一个变量，之前我在 Emacs 下面使用替换命令来完成的，而 Iedit 可以编辑当前 buffer 里面多处相同的一个单词，编辑一处其他地方相同的 symbol 会自动被修改，这对于这样的操作是非常地直观有效，看下面这样的效果，图片来自<a target="_blank" rel="noopener" href="http://www.masteringemacs.org/articles/2012/10/02/iedit-interactive-multi-occurrence-editing-in-your-buffer/">Mastering Emacs</a>。</p>
-<p><img src="/images/iedit.png" alt="screen" class="img-center" /><span class="image-caption">screen</span></p>
+<img src="/images/iedit.png" alt="screen" class="img-center" />
 <p>最开始看到这个功能是在比较新的编辑器<a target="_blank" rel="noopener" href="http://www.sublimetext.com/">Sublime</a>上，算是编辑器里一个很好的小创新吧。</p>
 <p>另外在 buffer 中查找一个 symbol 也是经常需要的一个操作，我基本会用</p>
-<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">[</span>f3<span class="token punctuation">]</span> <span class="token quoted-symbol variable symbol">'highlight-symbol-next</span><span class="token punctuation">)</span>
-<span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token car">shift</span> f3<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token quoted-symbol variable symbol">'highlight-symbol-prev</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token lisp"><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>global<span class="token operator arithmetic lisp">-</span><span class="token function lisp">set</span><span class="token operator arithmetic lisp">-</span>key [f3] &#39;highlight<span class="token operator arithmetic lisp">-</span>symbol<span class="token operator arithmetic lisp">-</span>next<span class="token punctuation definition group end lisp">)</span></span>
+<span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>global<span class="token operator arithmetic lisp">-</span><span class="token function lisp">set</span><span class="token operator arithmetic lisp">-</span>key [<span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>shift f3<span class="token punctuation definition group end lisp">)</span></span>] &#39;highlight<span class="token operator arithmetic lisp">-</span>symbol<span class="token operator arithmetic lisp">-</span>prev<span class="token punctuation definition group end lisp">)</span></span>
+</span></code></pre>
 <p>来快速地在相同的 symbol 之间切换，这是来自 highlight-symbol.el 里面的。</p>
 <p>同样的操作也可以用 occur-mode 来实现，occur 的好处在于可以在另外一个窗口列出所找到结果大纲，这样更方便快速跳到相应的位置，这对于任何类型的文件都可以使用，而不止是可能需要静态分析后生成 tags 的程序。在<a target="_blank" rel="noopener" href="http://www.masteringemacs.org/articles/2011/07/20/searching-buffers-occur-mode/">Mastering Emacs</a>后面有一段代码使得 occur-mode 可以在当前所有打开的 buffer 里找关键字。</p>
 </section>
@@ -215,8 +204,8 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Emacs" >
-    <span class="tag-code">Emacs</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -269,7 +258,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/emacs-symbol-util/';
+    var url = 'http://catcoding.me//p/emacs-symbol-util/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -330,7 +319,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -355,8 +344,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

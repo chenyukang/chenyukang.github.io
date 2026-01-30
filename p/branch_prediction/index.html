@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,76 +177,85 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>Stack_overflow 上有这么一个<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-an-unsorted-array">帖子：为什么排序后会快很多</a>，说是下面这段代码比较诡异，引发了比较多的回复，一起来看看。</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;algorithm></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;ctime></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+    <section class="markdown-content"><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2>
+<p>Stack_overflow 上有这么一个<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-an-unsorted-array">帖子：为什么排序后会快很多</a>，说是下面这段代码比较诡异，引发了比较多的回复，一起来看看。</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++"><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>algorithm<span class="token punctuation definition string end c++">&gt;</span></span>
+</span><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>ctime<span class="token punctuation definition string end c++">&gt;</span></span>
+</span><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>iostream<span class="token punctuation definition string end c++">&gt;</span></span>
+</span>
+<span class="token keyword c">int</span> <span class="token function c++"><span class="token function c++">main</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++">
+</span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span> generate data
+</span>    <span class="token keyword c++">const</span> <span class="token keyword c">unsigned</span> arraySize <span class="token operator assignment c">=</span> <span class="token number c++">32768</span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">int</span> data<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>arraySize<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation terminator c++">;</span>
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token comment">// generate data</span>
-    <span class="token keyword">const</span> <span class="token keyword">unsigned</span> arraySize <span class="token operator">=</span> <span class="token number">32768</span><span class="token punctuation">;</span>
-    <span class="token keyword">int</span> data<span class="token punctuation">[</span>arraySize<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword c++">for</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">unsigned</span> c <span class="token operator assignment c">=</span> <span class="token number c++">0</span><span class="token punctuation terminator c++">;</span> c <span class="token operator comparison c">&lt;</span> arraySize<span class="token punctuation terminator c++">;</span> <span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span>c<span class="token punctuation section group end c++">)</span></span>
+        data<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>c<span class="token punctuation section brackets end c++">]</span></span> <span class="token operator assignment c">=</span> <span class="token function-call c++"><span class="token variable function c++">std<span class="token punctuation accessor c++">::</span></span><span class="token function C99 c">rand</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span> <span class="token operator arithmetic c">%</span> <span class="token number c++">256</span><span class="token punctuation terminator c++">;</span>
 
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> c <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> c <span class="token operator">&lt;</span> arraySize<span class="token punctuation">;</span> <span class="token operator">++</span>c<span class="token punctuation">)</span>
-        data<span class="token punctuation">[</span>c<span class="token punctuation">]</span> <span class="token operator">=</span> std<span class="token double-colon punctuation">::</span><span class="token function">rand</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token number">256</span><span class="token punctuation">;</span>
+    <span class="token function-call c++"><span class="token variable function c++">std<span class="token punctuation accessor c++">::</span></span><span class="token variable function c++">sort</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">data<span class="token punctuation separator c++">,</span> data <span class="token operator arithmetic c">+</span> arraySize</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>排序这行不注释掉下面的 for 循环会快得多
+</span>
+    <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span> test
+</span>    <span class="token class-name sys-types c">clock_t</span> start <span class="token operator assignment c">=</span> <span class="token function-call c++"><span class="token function C99 c">clock</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">long</span> <span class="token keyword c">long</span> sum <span class="token operator assignment c">=</span> <span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>
 
-    std<span class="token double-colon punctuation">::</span><span class="token function">sort</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> data <span class="token operator">+</span> arraySize<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//排序这行不注释掉下面的 for 循环会快得多</span>
+    <span class="token keyword c++">for</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">unsigned</span> i <span class="token operator assignment c">=</span> <span class="token number c++">0</span><span class="token punctuation terminator c++">;</span> i <span class="token operator comparison c">&lt;</span> <span class="token number c++">100000</span><span class="token punctuation terminator c++">;</span> <span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span>i<span class="token punctuation section group end c++">)</span></span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+        <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span> primary loop
+</span>        <span class="token keyword c++">for</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">unsigned</span> c <span class="token operator assignment c">=</span> <span class="token number c++">0</span><span class="token punctuation terminator c++">;</span> c <span class="token operator comparison c">&lt;</span> arraySize<span class="token punctuation terminator c++">;</span> <span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span>c<span class="token punctuation section group end c++">)</span></span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+            <span class="token keyword c++">if</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span>data<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>c<span class="token punctuation section brackets end c++">]</span></span> <span class="token operator comparison c">&gt;=</span> <span class="token number c++">128</span><span class="token punctuation section group end c++">)</span></span>
+                sum <span class="token operator assignment augmented c">+=</span> data<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>c<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation terminator c++">;</span>
+        <span class="token punctuation section block end c++">}</span></span>
+    <span class="token punctuation section block end c++">}</span></span>
 
-    <span class="token comment">// test</span>
-    clock_t start <span class="token operator">=</span> <span class="token function">clock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">long</span> <span class="token keyword">long</span> sum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">100000</span><span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token comment">// primary loop</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> c <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> c <span class="token operator">&lt;</span> arraySize<span class="token punctuation">;</span> <span class="token operator">++</span>c<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>data<span class="token punctuation">[</span>c<span class="token punctuation">]</span> <span class="token operator">>=</span> <span class="token number">128</span><span class="token punctuation">)</span>
-                sum <span class="token operator">+=</span> data<span class="token punctuation">[</span>c<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-
-    <span class="token keyword">double</span> elapsedTime <span class="token operator">=</span> <span class="token generic-function"><span class="token function">static_cast</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">double</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token function">clock</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> start<span class="token punctuation">)</span> <span class="token operator">/</span> CLOCKS_PER_SEC<span class="token punctuation">;</span>
-    std<span class="token double-colon punctuation">::</span>cout <span class="token operator">&lt;&lt;</span> elapsedTime <span class="token operator">&lt;&lt;</span> std<span class="token double-colon punctuation">::</span>endl<span class="token punctuation">;</span>
-    std<span class="token double-colon punctuation">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"sum = "</span> <span class="token operator">&lt;&lt;</span> sum <span class="token operator">&lt;&lt;</span> std<span class="token double-colon punctuation">::</span>endl<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token keyword c">double</span> elapsedTime <span class="token operator assignment c">=</span> <span class="token operator word cast c++">static_cast</span><span class="token punctuation section generic begin c++">&lt;</span><span class="token keyword c">double</span><span class="token punctuation section generic end c++">&gt;</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token function-call c++"><span class="token function C99 c">clock</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span> <span class="token operator arithmetic c">-</span> start<span class="token punctuation section group end c++">)</span></span> <span class="token operator arithmetic c">/</span> CLOCKS_PER_SEC<span class="token punctuation terminator c++">;</span>
+    std<span class="token punctuation accessor c++">::</span>cout <span class="token operator arithmetic c">&lt;&lt;</span> elapsedTime <span class="token operator arithmetic c">&lt;&lt;</span> std<span class="token punctuation accessor c++">::</span>endl<span class="token punctuation terminator c++">;</span>
+    std<span class="token punctuation accessor c++">::</span>cout <span class="token operator arithmetic c">&lt;&lt;</span> <span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>sum = <span class="token punctuation definition string end c">&quot;</span></span> <span class="token operator arithmetic c">&lt;&lt;</span> sum <span class="token operator arithmetic c">&lt;&lt;</span> std<span class="token punctuation accessor c++">::</span>endl<span class="token punctuation terminator c++">;</span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
+</span></code></pre>
 <ul>
 <li>如果把 std::sort(data, data + arraySize);注释掉，下面那段 for 循环所花费的时间是 11.54 秒。</li>
 <li>如果不注释掉，即排序后下面那段所用的时间是 1.93 秒。</li>
 </ul>
 <p>相差比较大。那个 for 循环总是要执行完的，为什么排序后会快不少？</p>
-<h2 id="分支预测"><a href="#分支预测" class="headerlink" title="分支预测"></a>分支预测</h2><p>  下面的获得票数最多的回复质量非常高，很生动细致地说明了 cpu 的分支预测技术。</p>
-<p><img src="/images/train.jpg" alt="Black Cube Theme" class="img-center" width="500px" /><span class="image-caption">Black Cube Theme</span></p>
-<p>  看上面这情形，如果在没有通讯设备的年代，如果你是这个火车枢纽的操作人员，<br>是不是要让火车驾驶员把车停下来，然后告诉你他需要往哪个方向行驶，等你完成转向操作的时候再继续行驶火车呢。也许有一些更好的办法，你可以猜测火车要往哪边行驶。</p>
+<h2 id="分支预测"><a href="#分支预测" class="headerlink" title="分支预测"></a>分支预测</h2>
+<p>下面的获得票数最多的回复质量非常高，很生动细致地说明了 cpu 的分支预测技术。</p>
+<img src="/images/train.jpg" alt="Black Cube Theme" class="img-center" width="500px" />
+<p>看上面这情形，如果在没有通讯设备的年代，如果你是这个火车枢纽的操作人员，
+是不是要让火车驾驶员把车停下来，然后告诉你他需要往哪个方向行驶，等你完成转向操作的时候再继续行驶火车呢。也许有一些更好的办法，你可以猜测火车要往哪边行驶。</p>
 <ul>
 <li>如果你猜对了，那么节省了不少时间。</li>
 <li>如果猜错了，火车停下来，等你撤销刚才的操作，再往前走，这会比较耗费时间。</li>
 </ul>
 <p>同样在执行指令的时候，cpu 也能做这样类似的工作。现代 cpu 都采用 <strong>指令流水线技术</strong>，即处理器会预取下面要执行的一些指令，如果下面的指令正是需要被执行的那就节省了时间，如果在概率上大部分能猜对下面要运行的指令，那就提高了 cpu 的运行效率。更详细的图文介绍可以参考<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Branch_predictor">wiki</a>。简单的说明就是 cpu 会根据前面所执行的指令的历史，归纳出相应的模式，把预测的指令预取进来，然后继续沿着预测的指令执行。如果发现预测错误，则倒过来重新初始化预测表、刷新指令管道然后继续执行。所以看上面的例子：</p>
-<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">T = branch taken
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown"><span class="text html markdown"><span class="token paragraph markdown">T = branch taken
 N = branch not taken
 
-data[] = 0, 1, 2, 3, 4, ... 126, 127, 128, 129, 130, ... 250, 251, 252, ...
+</span><span class="token paragraph markdown">data[] = 0, 1, 2, 3, 4, ... 126, 127, 128, 129, 130, ... 250, 251, 252, ...
 branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
 
-<span class="token code keyword">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p> 后面作者又加了一条 hack，把这段代码重新改写一下：</p>
-<pre><code>  if (data[c] &gt;= 128)       ====&gt;              int t = (data[c] - 128) &gt;&gt; 31; 
+</span><span class="token block-level markdown"><span class="markup raw block markdown">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)
+</span></span></span></code></pre>
+<p>后面作者又加了一条 hack，把这段代码重新改写一下：</p>
+  if (data[c] &gt;= 128)       ====&gt;              int t = (data[c] - 128) &gt;&gt; 31; 
      sum += data[c];        ====&gt;              sum += ~t &amp; data[c];
-</code></pre><p> 那么前面是否排序就对这段代码效率没有影响了，同样是 2 秒多。这和编译器的优化非常相关，不同的编译器的结果不一样，4.6.1 GCC 加上-O3 或者-ftree-vectorize 编译选项可以对这种情况进行优化，所以排序与否没有关系，而 VC++2010 却不能进行类似优化 (GCC 果然强大)。</p>
-<h2 id="一个优化例子"><a href="#一个优化例子" class="headerlink" title="一个优化例子"></a>一个优化例子</h2><p> 在 Linux kernel 里面会看到类似 likely 和 unlikely 这样的代码，从其名字就很直观的解释了其意义。看其定义为两个宏。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">include<span class="token operator">/</span>linux<span class="token operator">/</span>compiler<span class="token punctuation">.</span>h
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+<p>那么前面是否排序就对这段代码效率没有影响了，同样是 2 秒多。这和编译器的优化非常相关，不同的编译器的结果不一样，4.6.1 GCC 加上-O3 或者-ftree-vectorize 编译选项可以对这种情况进行优化，所以排序与否没有关系，而 VC++2010 却不能进行类似优化 (GCC 果然强大)。</p>
+<h2 id="一个优化例子"><a href="#一个优化例子" class="headerlink" title="一个优化例子"></a>一个优化例子</h2>
+<p>在 Linux kernel 里面会看到类似 likely 和 unlikely 这样的代码，从其名字就很直观的解释了其意义。看其定义为两个宏。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c">include<span class="token operator arithmetic c">/</span>linux<span class="token operator arithmetic c">/</span>compiler<span class="token punctuation accessor c">.</span><span class="token variable other member c">h</span>
 
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">likely</span><span class="token expression"><span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token function">__builtin_expect</span>   <span class="token punctuation">(</span><span class="token operator">!</span><span class="token operator">!</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span></span></span>
+<span class="token preprocessor macro c"><span class="token keyword import define c">#define</span></span><span class="token preprocessor macro c"> <span class="token function preprocessor c">likely</span></span><span class="token preprocessor macro parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token variable parameter c">x</span><span class="token punctuation section group end c">)</span></span></span><span class="token preprocessor macro c"> <span class="token function-call c"><span class="token variable function c">__builtin_expect</span>   <span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token operator arithmetic c">!</span><span class="token operator arithmetic c">!</span><span class="token group c"><span class="token punctuation section group begin c">(</span>x<span class="token punctuation section group end c">)</span></span><span class="token punctuation separator c">,</span> <span class="token number c">1</span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span></span>
 
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">unlikely</span><span class="token expression"><span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token function">__builtin_expect</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token operator">!</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p> Linux 内核开发者使用这两个宏来通过编译器提示 cpu：某一段代码很可能会执行，应该被预测，而有的情况出现的概率比较小，不必预测。类似这样的代码：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">likely</span><span class="token punctuation">(</span>some_cond<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">//this is often happen!</span>
-    <span class="token comment">/* Do something */</span>
-<span class="token punctuation">&#125;</span>
+<span class="token preprocessor macro c"><span class="token keyword import define c">#define</span></span><span class="token preprocessor macro c"> <span class="token function preprocessor c">unlikely</span></span><span class="token preprocessor macro parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token variable parameter c">x</span><span class="token punctuation section group end c">)</span></span></span><span class="token preprocessor macro c"> <span class="token function-call c"><span class="token variable function c">__builtin_expect</span> <span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token operator arithmetic c">!</span><span class="token operator arithmetic c">!</span><span class="token group c"><span class="token punctuation section group begin c">(</span>x<span class="token punctuation section group end c">)</span></span><span class="token punctuation separator c">,</span> <span class="token number c">0</span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span></span>
+</span></code></pre>
+<p>Linux 内核开发者使用这两个宏来通过编译器提示 cpu：某一段代码很可能会执行，应该被预测，而有的情况出现的概率比较小，不必预测。类似这样的代码：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token function-call c"><span class="token variable function c">likely</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">some_cond</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation section group end c">)</span></span> <span class="token block c"><span class="token punctuation section block begin c">{</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>this is often happen!
+</span>    <span class="token comment c"><span class="token punctuation definition comment c">/*</span> Do something <span class="token punctuation definition comment c">*/</span></span>
+<span class="token punctuation section block end c">}</span></span>
 
-<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">unlikely</span><span class="token punctuation">(</span>some_cond<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">//this is rare!</span>
-    <span class="token comment">/* Do something */</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token keyword c">if</span> <span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token function-call c"><span class="token variable function c">unlikely</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">some_cond</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation section group end c">)</span></span> <span class="token block c"><span class="token punctuation section block begin c">{</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>this is rare!
+</span>    <span class="token comment c"><span class="token punctuation definition comment c">/*</span> Do something <span class="token punctuation definition comment c">*/</span></span>
+<span class="token punctuation section block end c">}</span></span>
+</span></code></pre>
 <p>关于这个方面，在这篇论文<a target="_blank" rel="noopener" href="http://www.akkadia.org/drepper/cpumemory.pdf">What every Programmer should know about Memory</a>里面有更详细的讲述。分支预测在现代 cpu 上如此通用，竟然还有人利用这个来尝试破解 RSA 的，看这个<a target="_blank" rel="noopener" href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.80.1438&amp;rep=rep1&amp;type=pdf">On the Power of Simple Branch Prediction Analysis</a>。</p>
 </section>
 
@@ -278,16 +275,16 @@ branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#优化" >
-    <span class="tag-code">优化</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#分支预测" >
-    <span class="tag-code">分支预测</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -339,7 +336,7 @@ branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-nav-text">问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B"><span class="toc-nav-text">分支预测</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%80%E4%B8%AA%E4%BC%98%E5%8C%96%E4%BE%8B%E5%AD%90"><span class="toc-nav-text">一个优化例子</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#问题"><span class="toc-nav-text">问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#分支预测"><span class="toc-nav-text">分支预测</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一个优化例子"><span class="toc-nav-text">一个优化例子</span></a></li></ol>
     
   </div>
 </aside>
@@ -350,7 +347,7 @@ branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/branch_prediction/';
+    var url = 'http://catcoding.me//p/branch_prediction/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -411,7 +408,7 @@ branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -436,8 +433,6 @@ branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

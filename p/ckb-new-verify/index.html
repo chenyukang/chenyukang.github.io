@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,13 +178,16 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>CKB 相关技术文章第三篇。</p>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>CKB 的每一个交易在提交到交易池之前都会经过一个 script verification 的过程，本质上就是通过 CKB-VM 把交易里的 script 跑一遍，如果失败了则直接 reject，如果通过了才会继续后面的流程。</p>
-<p><img src="/images/ob_what-is-verification.png" alt=""></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2>
+<p>CKB 的每一个交易在提交到交易池之前都会经过一个 script verification 的过程，本质上就是通过 CKB-VM 把交易里的 script 跑一遍，如果失败了则直接 reject，如果通过了才会继续后面的流程。</p>
+<p><img src="/images/ob_what-is-verification.png" alt="" /></p>
 <p>这里的 script 就是一种可以在链上执行的二进制可执行文件，也可以称之为 CKB 上的合约。它是图灵完备的，我们通常可以通过 C、Rust 来实现这些 script，比如 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb-system-scripts">nervosnetwork/ckb-system-scripts</a> 就是 CKB 上的一些常用的系统合约。用户在发起交易的时候就设置好相关的 script，比如 lock script 是用来作为资产才所有权的鉴定，而 type script 通常用来定义 cell 转换的条件，比如发行一个 User Define Token 就需要指定好 UDT 所对应的 type script。script 是通过 RISC-V 指令集的虚拟机上运行的，更多内容可以参考 <a target="_blank" rel="noopener" href="https://docs.nervos.org/docs/script/intro-to-script">Intro to Script | Nervos CKB</a>。</p>
-<h2 id="大-cycle-交易的挑战"><a href="#大-cycle-交易的挑战" class="headerlink" title="大 cycle 交易的挑战"></a>大 cycle 交易的挑战</h2><p>通常一个简单的 script 在 CKB-VM 里面执行是非常快的，VM 上跑完之后会返回一个 cycle 数目，这个 cycle 数量很重要，我们用来衡量 script 校验所耗费的计算量。一个合约的 cycle 数多少，理论上来说依赖于 VM 跑的使用用了多少个指令，这由 VM 在跑的时候去计算 <a target="_blank" rel="noopener" href="https://docs.nervos.org/docs/script/vm-cycle-limits">VM Cycle Limits</a>。</p>
+<h2 id="大-cycle-交易的挑战"><a href="#大-cycle-交易的挑战" class="headerlink" title="大 cycle 交易的挑战"></a>大 cycle 交易的挑战</h2>
+<p>通常一个简单的 script 在 CKB-VM 里面执行是非常快的，VM 上跑完之后会返回一个 cycle 数目，这个 cycle 数量很重要，我们用来衡量 script 校验所耗费的计算量。一个合约的 cycle 数多少，理论上来说依赖于 VM 跑的使用用了多少个指令，这由 VM 在跑的时候去计算 <a target="_blank" rel="noopener" href="https://docs.nervos.org/docs/script/vm-cycle-limits">VM Cycle Limits</a>。</p>
 <p>随着业务的复杂，逐渐出现了一些大 cycles 的交易，跑这些交易可能会耗费更多的时间，但我们总不可能让 VM 一直占着 CPU，比如在处理新 block 的时候，<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/8cb49e4d727f337a2c80e210507a9e277bab3391/chain/src/verify.rs#L79-L87">CPU 应该在让渡出来</a>。但之前 CKB-VM 对这块的支持不够，为了达到变相的暂停，处理大 cycles 的时候我们可以设置一个 step cycles，假设我们设置为 100 cycles，每次启动的时候就把 max_cycles 设置为 100，这样 VM 在跑完 100 cycle 的时候会退出，返回的结果是 cycle limitation exceed，然后我们就知道这个 script 其实是没跑完的，先把状态保存为 suspend，然后切换到其他业务上做完处理之后再继续来跑。回来后如何才能恢复到之前的执行状态呢，这就需要保存 VM 的 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/aaa51583656f022ad64ec98d1fb0205fc2878dba/script/src/types.rs#L319-L333">snapshot</a>，相当于给 VM 当前状态打了一个快照：</p>
-<p><img src="/images/ob_ckb-vm-snapshot.png" alt=""><br>根据这个机制，我们老的 script 校验大交易的整个流程是通过一个 FIFO 的队列保存大交易，然后通过一个后台任务不断地从这个队列中取交易跑 VM，每次都跑 1000w cycle 左右，在这个过程中就可能切换出去，没跑完的交易继续放入队列等待下一次执行：</p>
-<p><img src="/images/ob_pasted-image-20241106114040.png" alt=""></p>
+<p><img src="/images/ob_ckb-vm-snapshot.png" alt="" />
+根据这个机制，我们老的 script 校验大交易的整个流程是通过一个 FIFO 的队列保存大交易，然后通过一个后台任务不断地从这个队列中取交易跑 VM，每次都跑 1000w cycle 左右，在这个过程中就可能切换出去，没跑完的交易继续放入队列等待下一次执行：</p>
+<p><img src="/images/ob_pasted-image-20241106114040.png" alt="" /></p>
 <p>对应到代码就是 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/develop/tx-pool/src/chunk_process.rs">ChunkProcess</a> 这个单独服务来处理的。由于 ChunkProcess 是一个单独的服务，它的处理流程和其他交易的处理流程是不一样的，这样会导致代码的复杂度增加，比如：</p>
 <ol>
 <li>要针对 ChunkProcess 里面的交易额外判断，<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/3d674d558e5574f0c77a52798775c903561a933a/tx-pool/src/process.rs#L321">例子 1</a>, <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/3d674d558e5574f0c77a52798775c903561a933a/tx-pool/src/process.rs#L350">例子 2</a></li>
@@ -204,7 +195,8 @@
 <li>代码中包含重复逻辑，比如 <code>chunk_process</code> 里的 <code>process_inner</code> 和 <code>_resumeble_process_tx</code>。</li>
 <li>由于它只能同时处理一个大 cycle 交易，在 tx pool 本身比较空闲的情况下如果收到了多个大 cycle 交易也不能并行处理，比如 .bit 团队之前有过反馈他们通过本地 rpc 同时提交多个大 cycle 交易会比较慢的问题。</li>
 </ol>
-<h2 id="CKV-VM-pause"><a href="#CKV-VM-pause" class="headerlink" title="CKV-VM pause"></a>CKV-VM pause</h2><p>这些问题的根本是 VM 只能通过 cycle step 的方式来暂停，有没有一种方式是我们任何时候想暂停就暂停，就是 event based 的方式。所以后来 CKB-VM 团队做了一些改进：</p>
+<h2 id="CKV-VM-pause"><a href="#CKV-VM-pause" class="headerlink" title="CKV-VM pause"></a>CKV-VM pause</h2>
+<p>这些问题的根本是 VM 只能通过 cycle step 的方式来暂停，有没有一种方式是我们任何时候想暂停就暂停，就是 event based 的方式。所以后来 CKB-VM 团队做了一些改进：</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb-vm/pull/348">ckb-vm 新的暂停方式</a></li>
 <li><a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb-vm/pull/345">feat: Add alternative snapshot design. #345</a></li>
@@ -212,23 +204,26 @@
 <li><a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/3752">CKB feature: thread-safe vm</a></li>
 </ul>
 <p>这个方法的本质是通过 VM 的 <code>set_pause</code> 接口，把一个 <code>Arc&lt;AtomicU8&gt;</code> 的 pause 共享变量设置给 VM。然后在 VM 外通过更新这个 pause 的变量让 VM 进入暂停状态或者继续执行，这样我们就不需要 dump snapshot 等操作，因为 VM 整个就还是在内存中等着：</p>
-<p><img src="/images/ob_ckb-vm-pause.png" alt=""></p>
-<h2 id="新的实现方案"><a href="#新的实现方案" class="headerlink" title="新的实现方案"></a>新的实现方案</h2><p>基于这些改进我们可以重新设计和实现 CKB verify 这部分的代码，主要是为了简化这部分代码，并且提高大交易处理的效率。这是一个典型的 queue based multiple worker 方案：</p>
-<p><img src="/images/ob_new-ckb-verify.png" alt=""></p>
+<p><img src="/images/ob_ckb-vm-pause.png" alt="" /></p>
+<h2 id="新的实现方案"><a href="#新的实现方案" class="headerlink" title="新的实现方案"></a>新的实现方案</h2>
+<p>基于这些改进我们可以重新设计和实现 CKB verify 这部分的代码，主要是为了简化这部分代码，并且提高大交易处理的效率。这是一个典型的 queue based multiple worker 方案：</p>
+<p><img src="/images/ob_new-ckb-verify.png" alt="" /></p>
 <p>主要的核心是就是这段异步执行 VM 的逻辑：<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/develop/script/src/verify.rs#L1166-L1269">chunk_run_with_signal</a>。做的过程中发现一些其他问题：</p>
 <ul>
-<li>交易提交的时候，<code>SubmitLocalTx</code> 和 <code>SubmitRemoteTx</code> 如果 verify 失败目前会立即返回 <code>Reject</code>，如果改成加入队列的方式，这个结果无法实时给到，所以做了如下改动：<ul>
+<li>交易提交的时候，<code>SubmitLocalTx</code> 和 <code>SubmitRemoteTx</code> 如果 verify 失败目前会立即返回 <code>Reject</code>，如果改成加入队列的方式，这个结果无法实时给到，所以做了如下改动：
+<ul>
 <li>优先处理本地的交易，本地提交的交易不会放入 queue，而是直接会在 RPC 的处理阶段执行</li>
 <li>所有的来自网络 peer 的交易都全到放入到 queue</li>
 </ul>
 </li>
-<li>后来 CKB vm 又新增了 spawn 的实现，所以会有 parent、child 的概念，那么<code>Child VM</code> 是执行 syscall 的时候执行 <code>machine.run</code> ，如果不改这块执行 child vm 的时候不可暂停<ul>
+<li>后来 CKB vm 又新增了 spawn 的实现，所以会有 parent、child 的概念，那么<code>Child VM</code> 是执行 syscall 的时候执行 <code>machine.run</code> ，如果不改这块执行 child vm 的时候不可暂停
+<ul>
 <li>后来我们讨论了之后决定 spawn 时把父的 <code>Pause</code> 传递给子，然后暂停的时候给父的 <code>Pause</code> 设置暂停，这样所有的子 machine 同样返回 <code>VMError::Pause</code> ，同时把当前的 machine 栈重新入栈，恢复的时候继续执行，这里逻辑比较重，相关代码实现：<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/6f643220c704138298e693b0ef737c56a98ed762/script/src/verify.rs#L1452">run_vms_child</a>。</li>
 </ul>
 </li>
 <li>后来用重新设计了 spawn，使用了一种新的 determined scheduler 的方式去管理所有的 vms 和 IO，之前和 VM 的使用者角度来说之前需要和 VM 交互，现在变成了都通过<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/8cb49e4d727f337a2c80e210507a9e277bab3391/script/src/scheduler.rs#L207-L236"> scheduler 来管理</a>。关于 spawn 的设计参考这个文档：<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/rfcs/pull/436/files">Update spawn syscalls</a>。</li>
 </ul>
-<hr>
+<hr />
 <p>整个 PR 在这里：<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/4291">New script verify with ckb-vm pause</a></p>
 </section>
 
@@ -248,12 +243,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#CKB" >
-    <span class="tag-code">CKB</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Rust" >
-    <span class="tag-code">Rust</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -305,7 +300,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-nav-text">背景</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A4%A7-cycle-%E4%BA%A4%E6%98%93%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-nav-text">大 cycle 交易的挑战</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#CKV-VM-pause"><span class="toc-nav-text">CKV-VM pause</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%96%B0%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88"><span class="toc-nav-text">新的实现方案</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#背景"><span class="toc-nav-text">背景</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#大-cycle-交易的挑战"><span class="toc-nav-text">大 cycle 交易的挑战</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#CKV-VM-pause"><span class="toc-nav-text">CKV-VM pause</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#新的实现方案"><span class="toc-nav-text">新的实现方案</span></a></li></ol>
     
   </div>
 </aside>
@@ -316,7 +311,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/ckb-new-verify/';
+    var url = 'http://catcoding.me//p/ckb-new-verify/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -377,7 +372,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -402,8 +397,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

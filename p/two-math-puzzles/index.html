@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,79 +178,82 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>前些天在老码农群里看到一个数学 Puzzle，让我联想到另一个红眼睛蓝眼睛的问题，感觉都涉及到一点递归和博弈的意思，仔细思考一下有些趣味，分享给大家。</p>
-<h2 id="Sum-and-Product"><a href="#Sum-and-Product" class="headerlink" title="Sum and Product"></a>Sum and Product</h2><p><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=31293611">Sum and Product</a></p>
+<h2 id="Sum-and-Product"><a href="#Sum-and-Product" class="headerlink" title="Sum and Product"></a>Sum and Product</h2>
+<p><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=31293611">Sum and Product</a></p>
 <p>随机选择两个数字，都是小于 100 的正整数。Sandy 被告知数字的总和，而 Peter 被告知数字的乘积，假设两个人都是足够理智的情况下，Sandy 和 Peter 之间发生了这个对话：</p>
-<pre class="line-numbers language-none"><code class="language-none">Peter: I don&#39;t know the numbers.
-Sandy: I don&#39;t know the numbers.
-Peter: I don&#39;t know the numbers.
-Sandy: I don&#39;t know the numbers.
-Peter: I don&#39;t know the numbers.
-Sandy: I don&#39;t know the numbers.
-Peter: I don&#39;t know the numbers.
-Sandy: I don&#39;t know the numbers.
-Peter: I don&#39;t know the numbers.
-Sandy: I don&#39;t know the numbers.
-Peter: I don&#39;t know the numbers.
-Sandy: I don&#39;t know the numbers.
-Peter: I don&#39;t know the numbers.
-Sandy: I don&#39;t know the numbers.
-Peter: I do know the numbers.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+Peter: I don't know the numbers.
+Sandy: I don't know the numbers.
+Peter: I don't know the numbers.
+Sandy: I don't know the numbers.
+Peter: I don't know the numbers.
+Sandy: I don't know the numbers.
+Peter: I don't know the numbers.
+Sandy: I don't know the numbers.
+Peter: I don't know the numbers.
+Sandy: I don't know the numbers.
+Peter: I don't know the numbers.
+Sandy: I don't know the numbers.
+Peter: I don't know the numbers.
+Sandy: I don't know the numbers.
+Peter: I do know the numbers.
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
 <p>那么这两个数字是多少？</p>
 <p>先自己别看屏幕想个几分钟😏</p>
 <p>注意前提是两个人都聪明和理智，知道如何通过目前的情况去推算。</p>
 <p>从 1 到 100 两两组合一共有 4590 对数字。Sandy 说<em>我不知道</em>，其实里面隐含着一些信息，因为他知道两个数字之和，所以他说<em>我不知道</em>意味着肯定不是 1 + 1, 1 + 2 … 这种组合，因为这些组合的和在这 4590 对数字中是唯一的。因此 Peter 可以根据 Sandy 的信息排除掉这些组合。</p>
 <p>类似的 Peter 每次说<em>我不知道</em>的情况下也可以排除一些组合，依次类推如果经过七轮之后，Peter 说我知道了那个组合，也就有了答案。</p>
 <p>通过下面这个 Python 程序更容易理解，源处 <a target="_blank" rel="noopener" href="https://gist.github.com/jacobgardner/ea202587e46672a89b43">Peter And Sandy</a> ：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> collections <span class="token keyword">import</span> defaultdict
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token python"><span class="token statement import python"><span class="token keyword import from python">from</span></span><span class="token statement import python"><span class="token import-source python"> <span class="token import-path python"><span class="token import-name python">collections</span></span> <span class="token statement import python"><span class="token keyword import python">import</span></span></span></span><span class="token statement import python"></span><span class="token statement import python"> <span class="token generic-name python">defaultdict</span></span>
 
-<span class="token comment"># build pairs</span>
-pairs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token comment number-sign python"><span class="token punctuation definition comment python">#</span> build pairs
+</span><span class="token qualified-name python"><span class="token generic-name python">pairs</span></span> <span class="token operator assignment python">=</span> <span class="token structure list python"><span class="token punctuation section list begin python">[</span><span class="token punctuation section list end python">]</span></span>
 
-<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-    <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        pairs<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token statement for python"><span class="token keyword flow for python">for</span> <span class="token generic-name python">i</span> <span class="token statement for python"><span class="token keyword flow for in python">in</span></span></span><span class="token statement for python"> <span class="token function-call python"><span class="token qualified-name python"><span class="token function builtin python">range</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token number integer decimal python">1</span><span class="token punctuation separator arguments python">,</span> <span class="token number integer decimal python">100</span></span><span class="token punctuation section arguments end python">)</span></span><span class="token punctuation section block for python">:</span></span>
+    <span class="token statement for python"><span class="token keyword flow for python">for</span> <span class="token generic-name python">j</span> <span class="token statement for python"><span class="token keyword flow for in python">in</span></span></span><span class="token statement for python"> <span class="token function-call python"><span class="token qualified-name python"><span class="token function builtin python">range</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token qualified-name python"><span class="token generic-name python">i</span></span><span class="token punctuation separator arguments python">,</span> <span class="token number integer decimal python">100</span></span><span class="token punctuation section arguments end python">)</span></span><span class="token punctuation section block for python">:</span></span>
+        <span class="token function-call python"><span class="token qualified-name python"><span class="token generic-name python">pairs</span><span class="token punctuation accessor dot python">.</span></span><span class="token qualified-name python"><span class="token variable function python">append</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token group python"><span class="token punctuation section group begin python">(</span><span class="token qualified-name python"><span class="token generic-name python">i</span></span><span class="token punctuation separator tuple python">,</span> <span class="token qualified-name python"><span class="token generic-name python">j</span></span><span class="token punctuation section group end python">)</span></span></span><span class="token punctuation section arguments end python">)</span></span>
 
-<span class="token keyword">def</span> <span class="token function">singles_operation</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    results <span class="token operator">=</span> defaultdict<span class="token punctuation">(</span><span class="token builtin">list</span><span class="token punctuation">)</span>
-    <span class="token keyword">for</span> a<span class="token punctuation">,</span> b <span class="token keyword">in</span> pairs<span class="token punctuation">:</span>
-        results<span class="token punctuation">[</span>f<span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token function python"><span class="token keyword function python">def</span> <span class="token function python"><span class="token generic-name python">singles_operation</span></span></span><span class="token function parameters python"><span class="token punctuation section parameters begin python">(</span></span><span class="token function parameters python"><span class="token variable parameter python">f</span><span class="token punctuation section parameters end python">)</span></span><span class="token function python"><span class="token punctuation section function begin python">:</span></span>
+    <span class="token qualified-name python"><span class="token generic-name python">results</span></span> <span class="token operator assignment python">=</span> <span class="token function-call python"><span class="token qualified-name python"><span class="token variable function python">defaultdict</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token qualified-name python"><span class="token class-name python">list</span></span></span><span class="token punctuation section arguments end python">)</span></span>
+    <span class="token statement for python"><span class="token keyword flow for python">for</span> <span class="token generic-name python">a</span><span class="token punctuation separator target-list python">,</span> <span class="token generic-name python">b</span> <span class="token statement for python"><span class="token keyword flow for in python">in</span></span></span><span class="token statement for python"> <span class="token qualified-name python"><span class="token generic-name python">pairs</span></span><span class="token punctuation section block for python">:</span></span>
+        <span class="token item-access python"><span class="token qualified-name python"><span class="token generic-name python">results</span></span></span><span class="token item-access python"><span class="token punctuation section brackets begin python">[</span></span><span class="token item-access arguments python"><span class="token function-call python"><span class="token qualified-name python"><span class="token variable function python">f</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token qualified-name python"><span class="token generic-name python">a</span></span><span class="token punctuation separator arguments python">,</span> <span class="token qualified-name python"><span class="token generic-name python">b</span></span></span><span class="token punctuation section arguments end python">)</span></span></span><span class="token item-access python"><span class="token punctuation section brackets end python">]</span></span><span class="token function-call python"><span class="token qualified-name python"><span class="token punctuation accessor dot python">.</span></span><span class="token qualified-name python"><span class="token variable function python">append</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token group python"><span class="token punctuation section group begin python">(</span><span class="token qualified-name python"><span class="token generic-name python">a</span></span><span class="token punctuation separator tuple python">,</span> <span class="token qualified-name python"><span class="token generic-name python">b</span></span><span class="token punctuation section group end python">)</span></span></span><span class="token punctuation section arguments end python">)</span></span>
 
-    singles <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span>k<span class="token punctuation">,</span> value<span class="token punctuation">)</span> <span class="token keyword">in</span> results<span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token comment"># We want to return only the product/sum with one result because if</span>
-        <span class="token comment"># peter/sandy have this product/sum, then they'll know the two numbers</span>
-        <span class="token keyword">if</span> <span class="token builtin">len</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
-            singles<span class="token punctuation">.</span>extend<span class="token punctuation">(</span>value<span class="token punctuation">)</span>
+    <span class="token qualified-name python"><span class="token generic-name python">singles</span></span> <span class="token operator assignment python">=</span> <span class="token structure list python"><span class="token punctuation section list begin python">[</span><span class="token punctuation section list end python">]</span></span>
+    <span class="token statement for python"><span class="token keyword flow for python">for</span> (<span class="token generic-name python">k</span><span class="token punctuation separator target-list python">,</span> <span class="token generic-name python">value</span>) <span class="token statement for python"><span class="token keyword flow for in python">in</span></span></span><span class="token statement for python"> <span class="token function-call python"><span class="token qualified-name python"><span class="token generic-name python">results</span><span class="token punctuation accessor dot python">.</span></span><span class="token qualified-name python"><span class="token variable function python">items</span></span><span class="token punctuation section arguments begin python">(</span><span class="token punctuation section arguments end python">)</span></span><span class="token punctuation section block for python">:</span></span>
+        <span class="token comment number-sign python"><span class="token punctuation definition comment python">#</span> We want to return only the product/sum with one result because if
+</span>        <span class="token comment number-sign python"><span class="token punctuation definition comment python">#</span> peter/sandy have this product/sum, then they&#39;ll know the two numbers
+</span>        <span class="token statement if python"><span class="token keyword flow conditional python">if</span> <span class="token function-call python"><span class="token qualified-name python"><span class="token function builtin python">len</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token qualified-name python"><span class="token generic-name python">value</span></span></span><span class="token punctuation section arguments end python">)</span></span> <span class="token operator comparison python">==</span> <span class="token number integer decimal python">1</span><span class="token punctuation section block conditional python">:</span></span>
+            <span class="token function-call python"><span class="token qualified-name python"><span class="token generic-name python">singles</span><span class="token punctuation accessor dot python">.</span></span><span class="token qualified-name python"><span class="token variable function python">extend</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token qualified-name python"><span class="token generic-name python">value</span></span></span><span class="token punctuation section arguments end python">)</span></span>
 
-    <span class="token comment"># Sorted for readability</span>
-    <span class="token keyword">return</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>singles<span class="token punctuation">,</span> key<span class="token operator">=</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> x<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token comment number-sign python"><span class="token punctuation definition comment python">#</span> Sorted for readability
+</span>    <span class="token keyword flow return python">return</span> <span class="token function-call python"><span class="token qualified-name python"><span class="token function builtin python">sorted</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token qualified-name python"><span class="token generic-name python">singles</span></span><span class="token punctuation separator arguments python">,</span> <span class="token variable parameter python">key</span><span class="token operator assignment python">=</span><span class="token function inline python"><span class="token keyword function inline python">lambda</span></span><span class="token function inline python"><span class="token function inline parameters python"> <span class="token variable parameter python">x</span></span><span class="token punctuation section function begin python">:</span></span> <span class="token item-access python"><span class="token qualified-name python"><span class="token generic-name python">x</span></span></span><span class="token item-access python"><span class="token punctuation section brackets begin python">[</span></span><span class="token item-access arguments python"><span class="token number integer decimal python">0</span></span><span class="token item-access python"><span class="token punctuation section brackets end python">]</span></span></span><span class="token punctuation section arguments end python">)</span></span>
 
 
-<span class="token keyword">def</span> <span class="token function">remove_products</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-    singles <span class="token operator">=</span> singles_operation<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">,</span> y<span class="token punctuation">:</span> x <span class="token operator">*</span> y<span class="token punctuation">)</span>
+<span class="token function python"><span class="token keyword function python">def</span> <span class="token function python"><span class="token generic-name python">remove_products</span></span></span><span class="token function parameters python"><span class="token punctuation section parameters begin python">(</span></span><span class="token function parameters python"><span class="token punctuation section parameters end python">)</span></span><span class="token function python"><span class="token punctuation section function begin python">:</span></span>
+    <span class="token qualified-name python"><span class="token generic-name python">singles</span></span> <span class="token operator assignment python">=</span> <span class="token function-call python"><span class="token qualified-name python"><span class="token variable function python">singles_operation</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token function inline python"><span class="token keyword function inline python">lambda</span></span><span class="token function inline python"><span class="token function inline parameters python"> <span class="token variable parameter python">x</span><span class="token punctuation separator parameters python">,</span> <span class="token variable parameter python">y</span></span><span class="token punctuation section function begin python">:</span></span> <span class="token qualified-name python"><span class="token generic-name python">x</span></span> <span class="token operator arithmetic python">*</span> <span class="token qualified-name python"><span class="token generic-name python">y</span></span></span><span class="token punctuation section arguments end python">)</span></span>
 
-    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'peter removed'</span><span class="token punctuation">,</span> singles<span class="token punctuation">)</span>
-    <span class="token keyword">for</span> s <span class="token keyword">in</span> singles<span class="token punctuation">:</span>
-        pairs<span class="token punctuation">.</span>remove<span class="token punctuation">(</span>s<span class="token punctuation">)</span>
+    <span class="token function-call python"><span class="token qualified-name python"><span class="token function builtin python">print</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token string python"><span class="token string single python"><span class="token punctuation definition string begin python">&#39;</span></span></span><span class="token string python"><span class="token string single python">peter removed<span class="token punctuation definition string end python">&#39;</span></span></span><span class="token punctuation separator arguments python">,</span> <span class="token qualified-name python"><span class="token generic-name python">singles</span></span></span><span class="token punctuation section arguments end python">)</span></span>
+    <span class="token statement for python"><span class="token keyword flow for python">for</span> <span class="token generic-name python">s</span> <span class="token statement for python"><span class="token keyword flow for in python">in</span></span></span><span class="token statement for python"> <span class="token qualified-name python"><span class="token generic-name python">singles</span></span><span class="token punctuation section block for python">:</span></span>
+        <span class="token function-call python"><span class="token qualified-name python"><span class="token generic-name python">pairs</span><span class="token punctuation accessor dot python">.</span></span><span class="token qualified-name python"><span class="token variable function python">remove</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token qualified-name python"><span class="token generic-name python">s</span></span></span><span class="token punctuation section arguments end python">)</span></span>
 
-<span class="token keyword">def</span> <span class="token function">remove_sums</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-    singles <span class="token operator">=</span> singles_operation<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">,</span> y<span class="token punctuation">:</span> x <span class="token operator">+</span> y<span class="token punctuation">)</span>
+<span class="token function python"><span class="token keyword function python">def</span> <span class="token function python"><span class="token generic-name python">remove_sums</span></span></span><span class="token function parameters python"><span class="token punctuation section parameters begin python">(</span></span><span class="token function parameters python"><span class="token punctuation section parameters end python">)</span></span><span class="token function python"><span class="token punctuation section function begin python">:</span></span>
+    <span class="token qualified-name python"><span class="token generic-name python">singles</span></span> <span class="token operator assignment python">=</span> <span class="token function-call python"><span class="token qualified-name python"><span class="token variable function python">singles_operation</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token function inline python"><span class="token keyword function inline python">lambda</span></span><span class="token function inline python"><span class="token function inline parameters python"> <span class="token variable parameter python">x</span><span class="token punctuation separator parameters python">,</span> <span class="token variable parameter python">y</span></span><span class="token punctuation section function begin python">:</span></span> <span class="token qualified-name python"><span class="token generic-name python">x</span></span> <span class="token operator arithmetic python">+</span> <span class="token qualified-name python"><span class="token generic-name python">y</span></span></span><span class="token punctuation section arguments end python">)</span></span>
 
-    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'sandy removed'</span><span class="token punctuation">,</span> singles<span class="token punctuation">)</span>
-    <span class="token keyword">for</span> s <span class="token keyword">in</span> singles<span class="token punctuation">:</span>
-        pairs<span class="token punctuation">.</span>remove<span class="token punctuation">(</span>s<span class="token punctuation">)</span>
+    <span class="token function-call python"><span class="token qualified-name python"><span class="token function builtin python">print</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token string python"><span class="token string single python"><span class="token punctuation definition string begin python">&#39;</span></span></span><span class="token string python"><span class="token string single python">sandy removed<span class="token punctuation definition string end python">&#39;</span></span></span><span class="token punctuation separator arguments python">,</span> <span class="token qualified-name python"><span class="token generic-name python">singles</span></span></span><span class="token punctuation section arguments end python">)</span></span>
+    <span class="token statement for python"><span class="token keyword flow for python">for</span> <span class="token generic-name python">s</span> <span class="token statement for python"><span class="token keyword flow for in python">in</span></span></span><span class="token statement for python"> <span class="token qualified-name python"><span class="token generic-name python">singles</span></span><span class="token punctuation section block for python">:</span></span>
+        <span class="token function-call python"><span class="token qualified-name python"><span class="token generic-name python">pairs</span><span class="token punctuation accessor dot python">.</span></span><span class="token qualified-name python"><span class="token variable function python">remove</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token qualified-name python"><span class="token generic-name python">s</span></span></span><span class="token punctuation section arguments end python">)</span></span>
 
-<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-    remove_products<span class="token punctuation">(</span><span class="token punctuation">)</span>
-    remove_sums<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token statement for python"><span class="token keyword flow for python">for</span> <span class="token generic-name python">i</span> <span class="token statement for python"><span class="token keyword flow for in python">in</span></span></span><span class="token statement for python"> <span class="token function-call python"><span class="token qualified-name python"><span class="token function builtin python">range</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token number integer decimal python">7</span></span><span class="token punctuation section arguments end python">)</span></span><span class="token punctuation section block for python">:</span></span>
+    <span class="token function-call python"><span class="token qualified-name python"><span class="token variable function python">remove_products</span></span><span class="token punctuation section arguments begin python">(</span><span class="token punctuation section arguments end python">)</span></span>
+    <span class="token function-call python"><span class="token qualified-name python"><span class="token variable function python">remove_sums</span></span><span class="token punctuation section arguments begin python">(</span><span class="token punctuation section arguments end python">)</span></span>
 
-<span class="token comment"># This is the result because it returns the only pair with a product</span>
-<span class="token comment">#   not created by anything else left in the list.</span>
-<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'result'</span><span class="token punctuation">,</span> singles_operation<span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">,</span> y<span class="token punctuation">:</span> x <span class="token operator">*</span> y<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="红眼睛、蓝眼睛悖论"><a href="#红眼睛、蓝眼睛悖论" class="headerlink" title="红眼睛、蓝眼睛悖论"></a>红眼睛、蓝眼睛悖论</h2><p>此问题最早据说是澳大利亚的华裔数学神童陶哲轩在网上贴出来的：</p>
+<span class="token comment number-sign python"><span class="token punctuation definition comment python">#</span> This is the result because it returns the only pair with a product
+</span><span class="token comment number-sign python"><span class="token punctuation definition comment python">#</span>   not created by anything else left in the list.
+</span><span class="token function-call python"><span class="token qualified-name python"><span class="token function builtin python">print</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token string python"><span class="token string single python"><span class="token punctuation definition string begin python">&#39;</span></span></span><span class="token string python"><span class="token string single python">result<span class="token punctuation definition string end python">&#39;</span></span></span><span class="token punctuation separator arguments python">,</span> <span class="token function-call python"><span class="token qualified-name python"><span class="token variable function python">singles_operation</span></span><span class="token punctuation section arguments begin python">(</span><span class="token function-call arguments python"><span class="token function inline python"><span class="token keyword function inline python">lambda</span></span><span class="token function inline python"><span class="token function inline parameters python"> <span class="token variable parameter python">x</span><span class="token punctuation separator parameters python">,</span> <span class="token variable parameter python">y</span></span><span class="token punctuation section function begin python">:</span></span> <span class="token qualified-name python"><span class="token generic-name python">x</span></span> <span class="token operator arithmetic python">*</span> <span class="token qualified-name python"><span class="token generic-name python">y</span></span></span><span class="token punctuation section arguments end python">)</span></span></span><span class="token punctuation section arguments end python">)</span></span>
+</span></code></pre><h2 id="红眼睛、蓝眼睛悖论"><a href="#红眼睛、蓝眼睛悖论" class="headerlink" title="红眼睛、蓝眼睛悖论"></a>红眼睛、蓝眼睛悖论</h2>
+<p>此问题最早据说是澳大利亚的华裔数学神童陶哲轩在网上贴出来的：</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/21262930">红眼睛、蓝眼睛</a></li>
-<li><a target="_blank" rel="noopener" href="https://terrytao.wordpress.com/2008/02/05/the-blue-eyed-islanders-puzzle/">The blue-eyed islanders puzzle</a></li>
+<li><a target="_blank" rel="noopener" href="https://terrytao.wordpress.com/2008/02/05/the-blue-eyed-islanders-puzzle/">The blue-eyed islanders puzzle</a></li>
 </ul>
 <p>一个岛上有 100 个人，其中有 5 个红眼睛，95 个蓝眼睛。这个岛有三个奇怪的宗教规则。</p>
 <ol>
@@ -294,16 +285,16 @@ pairs <span class="token operator">=</span> <span class="token punctuation">[</s
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#技术" >
-    <span class="tag-code">技术</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#编程" >
-    <span class="tag-code">编程</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#数学" >
-    <span class="tag-code">数学</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -317,7 +308,7 @@ pairs <span class="token operator">=</span> <span class="token punctuation">[</s
       <a class="nav-left" href="/p/weekly-13/">
         <span class="nav-arrow">← </span>
         
-          第 13 期，工程师的修炼与成长；Nich ...
+          第 13 期，工程师的修炼与成长；Niche 程序员；Sun 的第 8 号员工
         
       </a>
     
@@ -355,7 +346,7 @@ pairs <span class="token operator">=</span> <span class="token punctuation">[</s
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Sum-and-Product"><span class="toc-nav-text">Sum and Product</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%BA%A2%E7%9C%BC%E7%9D%9B%E3%80%81%E8%93%9D%E7%9C%BC%E7%9D%9B%E6%82%96%E8%AE%BA"><span class="toc-nav-text">红眼睛、蓝眼睛悖论</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Sum-and-Product"><span class="toc-nav-text">Sum and Product</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#红眼睛、蓝眼睛悖论"><span class="toc-nav-text">红眼睛、蓝眼睛悖论</span></a></li></ol>
     
   </div>
 </aside>
@@ -366,7 +357,7 @@ pairs <span class="token operator">=</span> <span class="token punctuation">[</s
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/two-math-puzzles/';
+    var url = 'http://catcoding.me//p/two-math-puzzles/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -427,7 +418,7 @@ pairs <span class="token operator">=</span> <span class="token punctuation">[</s
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -452,8 +443,6 @@ pairs <span class="token operator">=</span> <span class="token punctuation">[</s
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

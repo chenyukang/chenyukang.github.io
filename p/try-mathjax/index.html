@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -83,7 +71,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -213,37 +201,48 @@
   <article class="post-article">
     <section class="markdown-content"><p>使用 Jekyll 写作文章的时候有可能需要内嵌一些数学公式，<a target="_blank" rel="noopener" href="http://www.mathjax.org/">MathJax</a>就是用来干这个的，试用了一下感觉非常方便。步骤如下：</p>
 <ul>
-<li><p>修改 html 头部。</p>
+<li>
+<p>修改 html 头部。</p>
 <p>在每个页面开头加上这么一句，在 Jekyll 下可以通过修改 default.html 加上。</p>
 </li>
 </ul>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token operator">&lt;</span>script type<span class="token operator">=</span><span class="token string">"text/javascript"</span>
- src<span class="token operator">=</span><span class="token string">"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"</span><span class="token operator">></span>
-<span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++"><span class="token operator comparison c">&lt;</span>script type<span class="token operator assignment c">=</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>text/javascript<span class="token punctuation definition string end c">&quot;</span></span>
+ src<span class="token operator assignment c">=</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML<span class="token punctuation definition string end c">&quot;</span></span><span class="token operator comparison c">&gt;</span>
+<span class="token operator comparison c">&lt;</span><span class="token operator arithmetic c">/</span>script<span class="token operator comparison c">&gt;</span>
+</span></code></pre>
 <ul>
-<li><p>本地安装 kramdown。</p>
-<p>因为 rdiscount 和默认的 markdown 在解析带公式文件的时候都会出现<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/10987992/using-mathjax-with-jekyll">一些问题</a>，所以最简单办法还是安装 kramdown。<br><code>$ gem install kramdown</code></p>
+<li>
+<p>本地安装 kramdown。</p>
+<p>因为 rdiscount 和默认的 markdown 在解析带公式文件的时候都会出现<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/10987992/using-mathjax-with-jekyll">一些问题</a>，所以最简单办法还是安装 kramdown。
+<code> $ gem install kramdown</code></p>
+</li>
+<li>
+<p>修改_config.yml，把 markdown 选项修改为：</p>
+<p><code>markdown: kramdown</code></p>
 </li>
 </ul>
-<ul>
-<li><p>修改_config.yml，把 markdown 选项修改为：</p>
-<p> <code>markdown: kramdown</code></p>
-</li>
-</ul>
-<hr>
-<p>  然后在发布的时候就可以使用<code>$$</code>来把需要显示的数学式子扩起来。像这样：</p>
-<p>   <code>$$a^2 + b^2 = c^2$$</code></p>
-<p>  发布出来就是漂亮的公式了。</p>
+<hr />
+<p>然后在发布的时候就可以使用<code>$$</code>来把需要显示的数学式子扩起来。像这样：</p>
+<p><code>$$a^2 + b^2 = c^2$$</code></p>
+<p>发布出来就是漂亮的公式了。</p>
 <p>$$a^2 + b^2 = c^2$$</p>
 <p>$$x^my + a^2 + b^2 = c^2$$</p>
 <p>$$x_\mu$$</p>
-<p>  一些更酷的例子：</p>
-<p>$$ J_\alpha(x) = \sum\limits_{m=0}^\infty \frac{(-1)^m}{m! \, \Gamma(m + \alpha + 1)}{\left({\frac{x}{2}}\right)}^{2 m + \alpha} $$</p>
-<p>$$ \frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} =<br>1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}}<br>{1+\frac{e^{-8\pi}} {1+\ldots} } } } $$</p>
+<p>一些更酷的例子：</p>
+<p>$$ J_\alpha(x) = \sum\limits_{m=0}^\infty \frac{(-1)^m}{m! , \Gamma(m + \alpha + 1)}{\left({\frac{x}{2}}\right)}^{2 m + \alpha} $$</p>
+<p>$$ \frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} =
+1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}}
+{1+\frac{e^{-8\pi}} {1+\ldots} } } } $$</p>
 <p>$$ \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$$</p>
-<p>$$<br>\begin{aligned}<br>\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} = \frac{4\pi}{c}\vec{\mathbf{j}} \ \nabla \cdot \vec{\mathbf{E}} = 4 \pi \rho \<br>\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} = \vec{\mathbf{0}} \<br>\nabla \cdot \vec{\mathbf{B}} = 0 \end{aligned}<br>$$</p>
-<p>   不过我可能永远用不到这么复杂的表达式 :).</p>
-<p>   另外今天找了一个<a target="_blank" rel="noopener" href="http://jblevins.org/projects/markdown-mode/">markdown-mode.el</a>，在 Emacs 下编辑 Markdown 文件又方便了不少。<br>   Mac 下的 Markdown 编辑器<a target="_blank" rel="noopener" href="http://mouapp.com/">Mou</a>也是非常不错的。</p>
+<p>$$
+\begin{aligned}
+\nabla \times \vec{\mathbf{B}} -, \frac1c, \frac{\partial\vec{\mathbf{E}}}{\partial t} = \frac{4\pi}{c}\vec{\mathbf{j}} \ \nabla \cdot \vec{\mathbf{E}} = 4 \pi \rho \
+\nabla \times \vec{\mathbf{E}}, +, \frac1c, \frac{\partial\vec{\mathbf{B}}}{\partial t} = \vec{\mathbf{0}} \
+\nabla \cdot \vec{\mathbf{B}} = 0 \end{aligned}
+$$</p>
+<p>不过我可能永远用不到这么复杂的表达式 :).</p>
+<p>另外今天找了一个<a target="_blank" rel="noopener" href="http://jblevins.org/projects/markdown-mode/">markdown-mode.el</a>，在 Emacs 下编辑 Markdown 文件又方便了不少。
+Mac 下的 Markdown 编辑器<a target="_blank" rel="noopener" href="http://mouapp.com/">Mou</a>也是非常不错的。</p>
 </section>
 
     <p></p>
@@ -262,8 +261,8 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Jekyll" >
-    <span class="tag-code">Jekyll</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -316,7 +315,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/try-mathjax/';
+    var url = 'http://catcoding.me//p/try-mathjax/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -377,7 +376,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -402,8 +401,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

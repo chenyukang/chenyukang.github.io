@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,68 +177,84 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><img src="/images/dilbert.jpg" alt="dicker" class="img-center" /><span class="image-caption">dicker</span></p>
+    <section class="markdown-content"><img src="/images/dilbert.jpg" alt="dicker" class="img-center" />
 <p>随机数代表着不确定性，其在计算机中广泛使用，比如用作加密的 key、密码的生成、模拟，扑克游戏中，还有一些经典的算法 (比如<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Monte_Carlo_method">Monte Carlo</a>) 依赖随机数的产生。以下是一些随机数相关的问题简单总结。</p>
-<h2 id="随机数产生，真随机数和伪随机数生成器"><a href="#随机数产生，真随机数和伪随机数生成器" class="headerlink" title="随机数产生，真随机数和伪随机数生成器"></a>随机数产生，真随机数和伪随机数生成器</h2><p>随机数的产生是一个很有趣的问题。我们希望只通过计算机来产生随机数的时候会有一些困难，计算机擅长做确定的事情，按照制定的指令去依次执行。<br>有两种产生随机数的方法，真随机数和伪随机数，这两种有各自的优点和缺点。</p>
+<h2 id="随机数产生，真随机数和伪随机数生成器"><a href="#随机数产生，真随机数和伪随机数生成器" class="headerlink" title="随机数产生，真随机数和伪随机数生成器"></a>随机数产生，真随机数和伪随机数生成器</h2>
+<p>随机数的产生是一个很有趣的问题。我们希望只通过计算机来产生随机数的时候会有一些困难，计算机擅长做确定的事情，按照制定的指令去依次执行。
+有两种产生随机数的方法，真随机数和伪随机数，这两种有各自的优点和缺点。</p>
 <p>伪随机数生成器 (PRNG)，顾名思义产生的不是严格意义上的随机数，一般是通过一些数学公式 (或者计算好的表) 来产生。比如简单的<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Linear_congruential_generator">Linear congruential generator</a>，可以用来产生伪随机数。伪随机数的行为是可被预测的，但是在统计意义上来说是随机的。因为这个特点其所以使用范围有限，比如一些模拟程序。而且伪随机数有可能出现固定的周期，比如下面<a target="_blank" rel="noopener" href="http://www.random.org/analysis/#visual">这两幅图</a>分别是通过真正的随机数产生器和 Windows 下面的 PHP 的伪随机数生成器产生的 Bitmap，可以清楚地看到右边的那副图有规律可循。</p>
-<p>另外如 Borland 随机数生成器 Random 的实现：<br><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">long</span> <span class="token keyword">long</span> RandSeed <span class="token operator">=</span> #### <span class="token punctuation">;</span>
-<span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token function">Random</span><span class="token punctuation">(</span><span class="token keyword">long</span> max<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">long</span> <span class="token keyword">long</span> x <span class="token punctuation">;</span>
-    <span class="token keyword">double</span> i <span class="token punctuation">;</span>
-    <span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token keyword">final</span> <span class="token punctuation">;</span>
-    x <span class="token operator">=</span> <span class="token number">0xffffffff</span><span class="token punctuation">;</span>
-    x <span class="token operator">+=</span> <span class="token number">1</span> <span class="token punctuation">;</span>
+<p>另外如 Borland 随机数生成器 Random 的实现：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++"><span class="token keyword c">long</span> <span class="token keyword c">long</span> RandSeed <span class="token operator assignment c">=</span> #### <span class="token punctuation terminator c++">;</span>
+<span class="token keyword c">unsigned</span> <span class="token keyword c">long</span> <span class="token function c++"><span class="token function c++">Random</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token keyword c">long</span> <span class="token variable parameter c++">max</span><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++">
+</span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token keyword c">long</span> <span class="token keyword c">long</span> x <span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">double</span> i <span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">unsigned</span> <span class="token keyword c">long</span> final <span class="token punctuation terminator c++">;</span>
+    x <span class="token operator assignment c">=</span> <span class="token number c++">0xffffffff</span><span class="token punctuation terminator c++">;</span>
+    x <span class="token operator assignment augmented c">+=</span> <span class="token number c++">1</span> <span class="token punctuation terminator c++">;</span>
 
-    RandSeed <span class="token operator">*=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">long</span> <span class="token keyword">long</span><span class="token punctuation">)</span><span class="token number">134775813</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    RandSeed <span class="token operator">+=</span> <span class="token number">1</span> <span class="token punctuation">;</span>
-    RandSeed <span class="token operator">=</span> RandSeed <span class="token operator">%</span> x <span class="token punctuation">;</span>
-    i <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span>RandSeed<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span><span class="token number">0xffffffff</span> <span class="token punctuation">;</span>
-    <span class="token keyword">final</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>max <span class="token operator">*</span> i<span class="token punctuation">)</span> <span class="token punctuation">;</span>
+    RandSeed <span class="token operator assignment augmented c">*=</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">long</span> <span class="token keyword c">long</span><span class="token punctuation section group end c++">)</span></span><span class="token number c++">134775813</span><span class="token punctuation section group end c++">)</span></span><span class="token punctuation terminator c++">;</span>
+    RandSeed <span class="token operator assignment augmented c">+=</span> <span class="token number c++">1</span> <span class="token punctuation terminator c++">;</span>
+    RandSeed <span class="token operator assignment c">=</span> RandSeed <span class="token operator arithmetic c">%</span> x <span class="token punctuation terminator c++">;</span>
+    i <span class="token operator assignment c">=</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">double</span><span class="token punctuation section group end c++">)</span></span>RandSeed<span class="token punctuation section group end c++">)</span></span> <span class="token operator arithmetic c">/</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">double</span><span class="token punctuation section group end c++">)</span></span><span class="token number c++">0xffffffff</span> <span class="token punctuation terminator c++">;</span>
+    final <span class="token operator assignment c">=</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">long</span><span class="token punctuation section group end c++">)</span></span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span>max <span class="token operator c">*</span> i<span class="token punctuation section group end c++">)</span></span> <span class="token punctuation terminator c++">;</span>
 
-    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">long</span><span class="token punctuation">)</span><span class="token keyword">final</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><br>可以看到 Random 的最初一个随机数依赖于 seed，后一个随机数依赖前一个随机数。</p>
-<p>真随机数生成器 (RNG)，通过向计算机中引入一些不可预测的物理信息，比如键盘敲击和鼠标移动等。所以真随机数才是很难预测的或者根本来说不可预测。每个操作系统的实现有各自的区别，<br>比如 Linux 中产生随机数引入了物理噪音作为输入，比如 mac 地址可以用来初始化 entropy pool，随机源可以加入中断时间，硬盘的寻址时间等等。<br>接口是/dev/random、/dev/urandom、get_random_bytes()，其中 get_random_bytes 在内核中使用。<br>/dev/random 和/dev/urandom 的区别是/dev/random 强度更大并且是阻塞的，因为要收集更多熵。</p>
-<h2 id="随机数的使用"><a href="#随机数的使用" class="headerlink" title="随机数的使用"></a>随机数的使用</h2><p>涉及到随机数的程序要特别小心。比如一个很简单的程序，我们知道 C 语言中的 rand() 产生的随机数是有范围的，0～32767，如果我要生成范围在 0～10 的随机数如何做？<br>可能你会简单认为 rand()%10 可以得到 (惭愧我以前也这样用的)，但是这真的是随机的吗？如果你把 0～32767 的所有数字依次%10，统计一下可以发现有的数出现的次数要大一些，因此最后出现某些数的概率相应的要大一些。</p>
+    <span class="token keyword c++">return</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">unsigned</span> <span class="token keyword c">long</span><span class="token punctuation section group end c++">)</span></span>final<span class="token punctuation terminator c++">;</span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
+</span></code></pre>
+<p>可以看到 Random 的最初一个随机数依赖于 seed，后一个随机数依赖前一个随机数。</p>
+<p>真随机数生成器 (RNG)，通过向计算机中引入一些不可预测的物理信息，比如键盘敲击和鼠标移动等。所以真随机数才是很难预测的或者根本来说不可预测。每个操作系统的实现有各自的区别，
+比如 Linux 中产生随机数引入了物理噪音作为输入，比如 mac 地址可以用来初始化 entropy pool，随机源可以加入中断时间，硬盘的寻址时间等等。
+接口是/dev/random、/dev/urandom、get_random_bytes()，其中 get_random_bytes 在内核中使用。
+/dev/random 和/dev/urandom 的区别是/dev/random 强度更大并且是阻塞的，因为要收集更多熵。</p>
+<h2 id="随机数的使用"><a href="#随机数的使用" class="headerlink" title="随机数的使用"></a>随机数的使用</h2>
+<p>涉及到随机数的程序要特别小心。比如一个很简单的程序，我们知道 C 语言中的 rand() 产生的随机数是有范围的，0～32767，如果我要生成范围在 0～10 的随机数如何做？
+可能你会简单认为 rand()%10 可以得到 (惭愧我以前也这样用的)，但是这真的是随机的吗？如果你把 0～32767 的所有数字依次%10，统计一下可以发现有的数出现的次数要大一些，因此最后出现某些数的概率相应的要大一些。</p>
 <p>另外一个思考题，给一个 rand() 可以产生 [1, 5] 之间的随机整数，利用这个 rand 产生 [1, 7] 之间的随机整数？</p>
 <p>另写一个抽奖程序，从 30w 个用户中随机抽取 10w 个中奖用户？</p>
-<h2 id="写个好的洗牌程序不容易"><a href="#写个好的洗牌程序不容易" class="headerlink" title="写个好的洗牌程序不容易"></a>写个好的洗牌程序不容易</h2><p><img src="/images/dicker.jpg" alt="dicker" class="img-center" /><span class="image-caption">dicker</span></p>
+<h2 id="写个好的洗牌程序不容易"><a href="#写个好的洗牌程序不容易" class="headerlink" title="写个好的洗牌程序不容易"></a>写个好的洗牌程序不容易</h2><img src="/images/dicker.jpg" alt="dicker" class="img-center" />
 <p>写一个对的洗牌程序看起来很容易，其实不然。Robert Sedgewick 说过：</p>
 <blockquote>
-<p>That’s a pretty tough thing to have happen if you’re implementing online poker.You might want to make sure that if you’re advertising that you’re doing a random shuffle that you go ahead and do so.”</p>
+<p>That’s a pretty tough thing to have happen if you’re implementing online poker.You might want to make sure that if you’re advertising that you’re doing a random shuffle that you go ahead and do so.“</p>
 <p>—Robert Sedgewick, Professor of Computer Science, Princeton</p>
 </blockquote>
 <p>比如 ASF Software 在多年前写的一个流行的网上扑克游戏，其中的洗牌程序是这段 Pascal 代码：</p>
-<pre class="line-numbers language-pascal" data-language="pascal"><code class="language-pascal"><span class="token keyword">procedure</span> TDeck<span class="token punctuation">.</span>Shuffle<span class="token punctuation">;</span>
-<span class="token keyword">var</span>
-   ctr<span class="token punctuation">:</span> Byte<span class="token punctuation">;</span>
-   tmp<span class="token punctuation">:</span> Byte<span class="token punctuation">;</span>
-   random_number<span class="token punctuation">:</span> Byte<span class="token punctuation">;</span>
-<span class="token keyword">begin</span>
-   <span class="token comment">&#123; Fill the deck with unique cards &#125;</span>
-   <span class="token keyword">for</span> ctr <span class="token operator">:=</span> <span class="token number">1</span> <span class="token keyword">to</span> <span class="token number">52</span> <span class="token keyword">do</span>
-      Card<span class="token punctuation">[</span>ctr<span class="token punctuation">]</span> <span class="token operator">:=</span> ctr<span class="token punctuation">;</span>
-   <span class="token comment">&#123; Generate a new seed based on the system clock &#125;</span>
-   randomize<span class="token punctuation">;</span>
-   <span class="token comment">&#123; Randomly rearrange each card &#125;</span>
-   <span class="token keyword">for</span> ctr <span class="token operator">:=</span> <span class="token number">1</span> <span class="token keyword">to</span> <span class="token number">52</span> <span class="token keyword">do</span> <span class="token keyword">begin</span>
-      random_number <span class="token operator">:=</span> random<span class="token punctuation">(</span><span class="token number">51</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">;</span>
-      tmp <span class="token operator">:=</span> card<span class="token punctuation">[</span>random_number<span class="token punctuation">]</span><span class="token punctuation">;</span>
-      card<span class="token punctuation">[</span>random_number<span class="token punctuation">]</span> <span class="token operator">:=</span> card<span class="token punctuation">[</span>ctr<span class="token punctuation">]</span><span class="token punctuation">;</span>
-      card<span class="token punctuation">[</span>ctr<span class="token punctuation">]</span> <span class="token operator">:=</span> tmp<span class="token punctuation">;</span>
-   <span class="token keyword">end</span><span class="token punctuation">;</span>
-   CurrentCard <span class="token operator">:=</span> <span class="token number">1</span><span class="token punctuation">;</span>
-   JustShuffled <span class="token operator">:=</span> <span class="token keyword">True</span><span class="token punctuation">;</span>
-<span class="token keyword">end</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-pascal" data-language="pascal"><code class="language-pascal"><span class="token pascal"><span class="token function pascal"><span class="token keyword function pascal">procedure</span> <span class="token function pascal">TDeck.Shuffle</span></span>;
+<span class="token keyword pascal">var</span>
+   ctr: Byte;
+   tmp: Byte;
+   random_number: Byte;
+<span class="token keyword pascal">begin</span>
+   <span class="token comment pascal two"><span class="token punctuation definition comment pascal">{</span> Fill the deck with unique cards <span class="token punctuation definition comment pascal">}</span></span>
+   <span class="token keyword pascal">for</span> ctr := <span class="token number pascal">1</span> <span class="token keyword pascal">to</span> <span class="token number pascal">52</span> <span class="token keyword pascal">do</span>
+      Card[ctr] := ctr;
+   <span class="token comment pascal two"><span class="token punctuation definition comment pascal">{</span> Generate a new seed based on the system clock <span class="token punctuation definition comment pascal">}</span></span>
+   randomize;
+   <span class="token comment pascal two"><span class="token punctuation definition comment pascal">{</span> Randomly rearrange each card <span class="token punctuation definition comment pascal">}</span></span>
+   <span class="token keyword pascal">for</span> ctr := <span class="token number pascal">1</span> <span class="token keyword pascal">to</span> <span class="token number pascal">52</span> <span class="token keyword pascal">do</span> <span class="token keyword pascal">begin</span>
+      random_number := random(<span class="token number pascal">51</span>)+<span class="token number pascal">1</span>;
+      tmp := card[random_number];
+      card[random_number] := card[ctr];
+      card[ctr] := tmp;
+   <span class="token keyword pascal">end</span>;
+   CurrentCard := <span class="token number pascal">1</span>;
+   JustShuffled := True;
+<span class="token keyword pascal">end</span>;
+</span></code></pre>
 <p>可以分析一下这里的好几处问题，这里的洗牌算法也有问题，52！个排列出现的概率不一样。拿三张牌来作为例子就明白了。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">for</span> <span class="token punctuation">(</span>i is <span class="token number">1</span> to N<span class="token punctuation">)</span>
-    Swap i with random position between <span class="token number">1</span> and N<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p><img src="/images/poker.gif" alt="dicker" class="img-center" /><span class="image-caption">dicker</span><br>可以看出 231, 213, 132 出现的次数要多一些，因此相对应的概率也大。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">for</span> <span class="token group c"><span class="token punctuation section group begin c">(</span>i is <span class="token number c">1</span> to N<span class="token punctuation section group end c">)</span></span>
+    Swap i with random position between <span class="token number c">1</span> and N
+</span></code></pre><img src="/images/poker.gif" alt="dicker" class="img-center" />
+可以看出 231, 213, 132 出现的次数要多一些，因此相对应的概率也大。
 <p>正确的洗牌程序算法是：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">for</span> <span class="token punctuation">(</span>i is <span class="token number">1</span> to N<span class="token punctuation">)</span>
-    Swap i with random position between i<span class="token operator">+</span><span class="token number">1</span> and N<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>一个 32 位的数作为 seed，对于伪随机长生器是有问题的，因为如果给定 seed 伪随机产生器的行为是可以预测的。<br>32 的 seed 的所有可能值的个数为 2^32 个，这相比 52!(8.0658 * 10 ^ 67) 小得很多。所以对于 32 位的 seed，甚至可以用蛮力法来攻破。</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>摘自&lt;&lt;思考的乐趣&gt;&gt;10 个人坐在一起谈天，突然他们想知道他们的平均年薪是多少，但每个人都不愿意透露自己的工资数额，有没有什么办法让他们能够得到答案，并不用担心自己的年薪被曝光？<br>一个简单的协议模型，当然与随机数有点关系。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">for</span> <span class="token group c"><span class="token punctuation section group begin c">(</span>i is <span class="token number c">1</span> to N<span class="token punctuation section group end c">)</span></span>
+    Swap i with random position between i<span class="token operator arithmetic c">+</span><span class="token number c">1</span> and N
+</span></code></pre>
+<p>一个 32 位的数作为 seed，对于伪随机长生器是有问题的，因为如果给定 seed 伪随机产生器的行为是可以预测的。
+32 的 seed 的所有可能值的个数为 2^32 个，这相比 52!(8.0658 * 10 ^ 67) 小得很多。所以对于 32 位的 seed，甚至可以用蛮力法来攻破。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2>
+<p>摘自&lt;&lt;思考的乐趣&gt;&gt;10 个人坐在一起谈天，突然他们想知道他们的平均年薪是多少，但每个人都不愿意透露自己的工资数额，有没有什么办法让他们能够得到答案，并不用担心自己的年薪被曝光？
+一个简单的协议模型，当然与随机数有点关系。</p>
 <p>参考：</p>
 <p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Random_number_generation">Wiki: Random number generation</a>。</p>
 <p><a target="_blank" rel="noopener" href="http://www.cigital.com/papers/download/developer_gambling.php">How We Learned to Cheat at Online Poker: A Study in Software Security</a>。</p>
@@ -273,12 +277,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Algorithms" >
-    <span class="tag-code">Algorithms</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -330,7 +334,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%95%B0%E4%BA%A7%E7%94%9F%EF%BC%8C%E7%9C%9F%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%92%8C%E4%BC%AA%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8"><span class="toc-nav-text">随机数产生，真随机数和伪随机数生成器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-nav-text">随机数的使用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%86%99%E4%B8%AA%E5%A5%BD%E7%9A%84%E6%B4%97%E7%89%8C%E7%A8%8B%E5%BA%8F%E4%B8%8D%E5%AE%B9%E6%98%93"><span class="toc-nav-text">写个好的洗牌程序不容易</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-nav-text">其他</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#随机数产生，真随机数和伪随机数生成器"><span class="toc-nav-text">随机数产生，真随机数和伪随机数生成器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#随机数的使用"><span class="toc-nav-text">随机数的使用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#写个好的洗牌程序不容易"><span class="toc-nav-text">写个好的洗牌程序不容易</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#其他"><span class="toc-nav-text">其他</span></a></li></ol>
     
   </div>
 </aside>
@@ -341,7 +345,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/random-number/';
+    var url = 'http://catcoding.me//p/random-number/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -402,7 +406,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -427,8 +431,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

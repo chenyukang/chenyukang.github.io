@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,33 +177,41 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><div class="contents"><dl> <dt> <a href="#sec1">Muse 简介</a> </dt> <dt> <a href="#sec2">Muse 的配置</a> </dt> <dt> <a href="#sec3">Muse 中源代码高亮显示</a> </dt> <dt> <a href="#sec4">Muse 来写主页和博客</a> </dt> </dl></div></p>
-<h2>Muse 简介</h2><br>Muse 是由 <a target="_blank" rel="noopener" href="http://www.emacswiki.org/cgi-bin/wiki/">EmacsWiki</a> 衍生的，为 emacs 下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括 html,pdf，latex 等等。Muse 的编辑规则很简单，而且支持“所见即所得”的编辑方式可以让文档编辑更轻松。我使用这个工具已经快一年了，强烈推荐。这个 html 文件就是从 Muse 调用 htmlize 生成的。<br><br><h2><a name="sec2"></a><br>Muse 的配置</h2>
+    <section class="markdown-content"><div class="contents"><dl> <dt> <a href="#sec1">Muse 简介</a> </dt> <dt> <a href="#sec2">Muse 的配置</a> </dt> <dt> <a href="#sec3">Muse 中源代码高亮显示</a> </dt> <dt> <a href="#sec4">Muse 来写主页和博客</a> </dt> </dl></div>
+<h2>Muse 简介</h2>
+Muse 是由 <a href="http://www.emacswiki.org/cgi-bin/wiki/">EmacsWiki</a> 衍生的，为 emacs 下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括 html,pdf，latex 等等。Muse 的编辑规则很简单，而且支持“所见即所得”的编辑方式可以让文档编辑更轻松。我使用这个工具已经快一年了，强烈推荐。这个 html 文件就是从 Muse 调用 htmlize 生成的。
+<h2><a name="sec2"></a>
+Muse 的配置</h2>
+<p>从<a href="http://mwolson.org/static/dist/muse/muse-3.12.tar.gz">这里</a>下载最新版本的 Muse，比较简单的安装方法是解压后直接在目录下运行 make，然后把所有的文件都拷贝到 emacs 的一个加载目录下面 (比如～/.emacs.d/muse/)。设置.emacs 加入以下几行。</p>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token lisp"><span class="token comment semicolon lisp"><span class="token punctuation definition comment lisp">;</span>; 加载 muse
+</span><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp">require</span> &#39;muse<span class="token operator arithmetic lisp">-</span>mode<span class="token punctuation definition group end lisp">)</span></span>
+<span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp">require</span> &#39;muse<span class="token operator arithmetic lisp">-</span>html<span class="token punctuation definition group end lisp">)</span></span>&lt;/pre&gt;
+</span></code></pre>
+<p>然后就可以利用 Muse-mode 来方便地创建文档。这里有个<a href="http://mwolson.org/projects/MuseQuickStart.html">QuickStarted</a>，看一遍就基本掌握了编辑规则。编辑完成以后按键 C-u C-c C-t 即可发布该文档。</p>
+<h2><a name="sec3"></a>
+Muse 中源代码高亮显示</h2>
+在 Muse-mode 中编辑时是所见即所得样式的显示，但是有一个问题是代码不能高亮显示，要贴代码就有点不方便，解决的方法是要下载 htmlize.el，而且需要 1.34 以后的版本才支持这个功能，在<a href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el">这里</a>下载。使用方法也有说明。
+<h2><a name="sec4"></a>
+Muse 来写主页和博客</h2>
+很多搞学术的同学喜欢建一个看起来很严谨的静态主页，这样的主页用 Muse 来维护非常方便。对于 wordpress 的博客或者主页，一款离线撰写工具是必须的，在 windows 下可以用 WindowsLiveWriter,Linux 下也有相应工具。不过我大部分还是在自己电脑上用 Muse 来写完发布成 html 格式，然后再发布到主页上。首先我们需要建立一个主页的工程。比如我的：
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token lisp"><span class="token comment semicolon lisp"><span class="token punctuation definition comment lisp">;</span>;==新建一个 wiki 工程
+</span><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp">setq</span> muse<span class="token operator arithmetic lisp">-</span>project<span class="token operator arithmetic lisp">-</span>alist
+      &#39;<span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>MainPage<span class="token punctuation definition string end lisp">&quot;</span></span>
+         <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>~/document/blog/Home<span class="token punctuation definition string end lisp">&quot;</span></span> :default <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>index<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span>
+         <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>:base <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>html<span class="token punctuation definition string end lisp">&quot;</span></span> :path <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>~/document/blog/Home_Page<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span>
+        <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>Computer<span class="token punctuation definition string end lisp">&quot;</span></span>
+         <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>~/document/blog/Home/Computer/<span class="token punctuation definition string end lisp">&quot;</span></span> :default <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>index<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span>
+         <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>:base <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>html<span class="token punctuation definition string end lisp">&quot;</span></span> :path <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>~/document/blog/Home_Page/Computer<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span>
+        <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>Sport<span class="token punctuation definition string end lisp">&quot;</span></span>
+         <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>~/document/blog/Home/Sport<span class="token punctuation definition string end lisp">&quot;</span></span> :default <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>index<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span>
+         <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>:base <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>html<span class="token punctuation definition string end lisp">&quot;</span></span> :path <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>~/document/blog/Home_Page/Sports<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span>
+        <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>Other<span class="token punctuation definition string end lisp">&quot;</span></span>
+         <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>~/document/blog/Home/Other<span class="token punctuation definition string end lisp">&quot;</span></span> :defualt <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>index<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span>
+         <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>:base <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>html<span class="token punctuation definition string end lisp">&quot;</span></span> :path <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>~/document/blog/Home_Page/Other<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span>
 
-<p>从<a target="_blank" rel="noopener" href="http://mwolson.org/static/dist/muse/muse-3.12.tar.gz">这里</a>下载最新版本的 Muse，比较简单的安装方法是解压后直接在目录下运行 make，然后把所有的文件都拷贝到 emacs 的一个加载目录下面 (比如～/.emacs.d/muse/)。设置.emacs 加入以下几行。</p>
-<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token comment">;; 加载 muse</span>
-<span class="token punctuation">(</span><span class="token keyword">require</span> <span class="token quoted-symbol variable symbol">'muse-mode</span><span class="token punctuation">)</span>
-<span class="token punctuation">(</span><span class="token keyword">require</span> <span class="token quoted-symbol variable symbol">'muse-html</span><span class="token punctuation">)</span>&lt;/pre><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p>然后就可以利用 Muse-mode 来方便地创建文档。这里有个<a target="_blank" rel="noopener" href="http://mwolson.org/projects/MuseQuickStart.html">QuickStarted</a>，看一遍就基本掌握了编辑规则。编辑完成以后按键 C-u C-c C-t 即可发布该文档。</p>
-<p><h2><a name="sec3"></a><br>Muse 中源代码高亮显示</h2><br>在 Muse-mode 中编辑时是所见即所得样式的显示，但是有一个问题是代码不能高亮显示，要贴代码就有点不方便，解决的方法是要下载 htmlize.el，而且需要 1.34 以后的版本才支持这个功能，在<a target="_blank" rel="noopener" href="http://fly.srk.fer.hr/~hniksic/emacs/htmlize.el">这里</a>下载。使用方法也有说明。</p>
-<p><h2><a name="sec4"></a><br>Muse 来写主页和博客</h2><br>很多搞学术的同学喜欢建一个看起来很严谨的静态主页，这样的主页用 Muse 来维护非常方便。对于 wordpress 的博客或者主页，一款离线撰写工具是必须的，在 windows 下可以用 WindowsLiveWriter,Linux 下也有相应工具。不过我大部分还是在自己电脑上用 Muse 来写完发布成 html 格式，然后再发布到主页上。首先我们需要建立一个主页的工程。比如我的：</p>
-<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token comment">;;==新建一个 wiki 工程</span>
-<span class="token punctuation">(</span><span class="token keyword">setq</span> muse-project-alist
-      <span class="token punctuation">'(</span><span class="token punctuation">(</span><span class="token string">"MainPage"</span>
-         <span class="token punctuation">(</span><span class="token string">"~/document/blog/Home"</span> <span class="token lisp-property property">:default</span> <span class="token string">"index"</span><span class="token punctuation">)</span>
-         <span class="token punctuation">(</span><span class="token lisp-property property">:base</span> <span class="token string">"html"</span> <span class="token lisp-property property">:path</span> <span class="token string">"~/document/blog/Home_Page"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-        <span class="token punctuation">(</span><span class="token string">"Computer"</span>
-         <span class="token punctuation">(</span><span class="token string">"~/document/blog/Home/Computer/"</span> <span class="token lisp-property property">:default</span> <span class="token string">"index"</span><span class="token punctuation">)</span>
-         <span class="token punctuation">(</span><span class="token lisp-property property">:base</span> <span class="token string">"html"</span> <span class="token lisp-property property">:path</span> <span class="token string">"~/document/blog/Home_Page/Computer"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-        <span class="token punctuation">(</span><span class="token string">"Sport"</span>
-         <span class="token punctuation">(</span><span class="token string">"~/document/blog/Home/Sport"</span> <span class="token lisp-property property">:default</span> <span class="token string">"index"</span><span class="token punctuation">)</span>
-         <span class="token punctuation">(</span><span class="token lisp-property property">:base</span> <span class="token string">"html"</span> <span class="token lisp-property property">:path</span> <span class="token string">"~/document/blog/Home_Page/Sports"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-        <span class="token punctuation">(</span><span class="token string">"Other"</span>
-         <span class="token punctuation">(</span><span class="token string">"~/document/blog/Home/Other"</span> <span class="token lisp-property property">:defualt</span> <span class="token string">"index"</span><span class="token punctuation">)</span>
-         <span class="token punctuation">(</span><span class="token lisp-property property">:base</span> <span class="token string">"html"</span> <span class="token lisp-property property">:path</span> <span class="token string">"~/document/blog/Home_Page/Other"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</span></code></pre>
 <p>然后到相应目录下撰写 muse 文件，快捷键 C-c c-p 就发布了整个工程，在 Home_Page 相应的目录下生成了 html 的文件。看起来有点复杂，其实还是很方便的，代码高亮这个程序员都喜欢的功能肯定就不用操心了，同时在本机上留有个备份。这种 wiki 风格的网页还是很利于浏览。不过有一个弊端，图片插入虽然在撰写过程中能直接预览的，但是上传到 wordpress 上路径肯定会变，所以还是要再稍微编辑一下。</p>
-<p><img src="/images/muse.jpg" alt="screen" class="img-center" width="400" height="400"/><span class="image-caption">screen</span></p>
+<img src="/images/muse.jpg" alt="screen" class="img-center" width="400" height="400"/>
 </section>
 
     <p></p>
@@ -234,12 +230,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Emacs" >
-    <span class="tag-code">Emacs</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Tools" >
-    <span class="tag-code">Tools</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -291,7 +287,10 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link"><span class="toc-nav-text">Muse 简介</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link"><span class="toc-nav-text">Muse 的配置</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link"><span class="toc-nav-text">Muse 中源代码高亮显示</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link"><span class="toc-nav-text">Muse 来写主页和博客</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Muse-简介"><span class="toc-nav-text">Muse 简介</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Muse-的配置"><span class="toc-nav-text">
+Muse 的配置</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Muse-中源代码高亮显示"><span class="toc-nav-text">
+Muse 中源代码高亮显示</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Muse-来写主页和博客"><span class="toc-nav-text">
+Muse 来写主页和博客</span></a></li></ol>
     
   </div>
 </aside>
@@ -302,7 +301,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/emacs-muse/';
+    var url = 'http://catcoding.me//p/emacs-muse/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -363,7 +362,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -388,8 +387,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

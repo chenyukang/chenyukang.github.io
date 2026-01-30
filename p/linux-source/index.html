@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,24 +178,25 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Linux shell 执行脚本的时候一般是会 fork 出一个子 shell，这样在有的时候就不方便了，比如要 unset 当前 shell 的环境变量等，</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/usr/bin/env zsh</span>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">#!/usr/bin/env zsh
 
-<span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token parameter variable">-z</span> <span class="token variable">$http_proxy</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
-    <span class="token builtin class-name">echo</span> <span class="token string">"not using proxy, set it now ... "</span><span class="token punctuation">;</span>
-    <span class="token builtin class-name">export</span> <span class="token assign-left variable">http_proxy</span><span class="token operator">=</span><span class="token string">"http://127.0.0.1:1087"</span><span class="token punctuation">;</span>
-    <span class="token builtin class-name">export</span> <span class="token assign-left variable">https_proxy</span><span class="token operator">=</span><span class="token string">"https://127.0.0.1:1087"</span><span class="token punctuation">;</span>
-    <span class="token builtin class-name">echo</span> <span class="token variable">$http_proxy</span><span class="token punctuation">;</span>
-<span class="token keyword">else</span>
-    <span class="token builtin class-name">echo</span> <span class="token string">"using proxy now, unset it now ..."</span><span class="token punctuation">;</span>
-    <span class="token builtin class-name">unset</span> http_proxy<span class="token punctuation">;</span>
-    <span class="token builtin class-name">unset</span> https_proxy<span class="token punctuation">;</span>
-    <span class="token builtin class-name">echo</span> <span class="token variable">$http_proxy</span><span class="token punctuation">;</span>
-<span class="token keyword">fi</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+if [ -z $http_proxy ]; then
+    echo &quot;not using proxy, set it now ... &quot;;
+    export http_proxy=&quot;http://127.0.0.1:1087&quot;;
+    export https_proxy=&quot;https://127.0.0.1:1087&quot;;
+    echo $http_proxy;
+else
+    echo &quot;using proxy now, unset it now ...&quot;;
+    unset http_proxy;
+    unset https_proxy;
+    echo $http_proxy;
+fi
+
+</code></pre>
 <p>这时候需要执行 <code>. ./proxy_toggle.sh</code> 或者 <code>source ./proxy_toggle.sh</code>。</p>
 <p><code>.</code> (a period) is a <a target="_blank" rel="noopener" href="http://www.gnu.org/software/bash/manual/bashref.html#Bourne-Shell-Builtins">bash shell built-in command</a> that executes the commands from a file passed as argument, in the current shell. <code>source</code> is a synonym for <code>.</code></p>
 <p>From Bash man page:</p>
-<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">. filename [arguments]
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown"><span class="text html markdown"><span class="token paragraph markdown">. filename [arguments]
 source filename [arguments]
        Read  and  execute  commands  from filename in the current shell
        environment and return the exit status of the last command  exe‐
@@ -222,8 +211,8 @@ source filename [arguments]
        positional  parameters  are unchanged.  The return status is the
        status of the last command exited within the  script  (0  if  no
        commands  are  executed),  and false if filename is not found or
-       cannot be read.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</section>
+       cannot be read.
+</span></span></code></pre></section>
 
     <p></p>
 
@@ -247,7 +236,7 @@ source filename [arguments]
       <a class="nav-left" href="/p/nginx-https-too-many-redirect/">
         <span class="nav-arrow">← </span>
         
-          Nginx https too many  ...
+          Nginx https too many redirect
         
       </a>
     
@@ -286,7 +275,7 @@ source filename [arguments]
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/linux-source/';
+    var url = 'http://catcoding.me//p/linux-source/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -347,7 +336,7 @@ source filename [arguments]
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -372,8 +361,6 @@ source filename [arguments]
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

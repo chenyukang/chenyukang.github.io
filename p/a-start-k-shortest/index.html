@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,50 +178,58 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>我之前写过<a target="_blank" rel="noopener" href="http://cyukang.com/2010/08/02/astart-k-shortest-path.html">一篇图文并茂的文章</a>来介绍这个算法，有好几次有朋友反馈说对自己有帮助，深感荣幸。这次再次写这个也是因为帮忙于一个朋友解决这类问题，这里再成一篇，稍显罗嗦。</p>
-<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>无向图 G，需要求出 S-&gt;T 点的前 k 短路径，要求路径中没有环。(所有的边的权值不为负)</p>
-<h2 id="A-算法求解-kth-shortest-问题"><a href="#A-算法求解-kth-shortest-问题" class="headerlink" title="A*算法求解 kth-shortest 问题"></a>A*算法求解 kth-shortest 问题</h2><p><code>A*</code>算法已经被广泛运用于路径规划问题中，同时<code>A*</code>算法作为一种启发式算法的框架，可用于多种搜索问题，还是先回顾一下<code>A*</code>的基本符号：</p>
-<hr>
-<p><code>f(s)=g(s)+h(s)</code>，其中<code>h(s)&lt;=h*(s)</code>，<code>h*(s)</code>是某点到终点的真实代价，<code>h(s)</code>是估计代价，<br>并且对 s 的任意后继 t 有：<code>h(t)+w(s,t)&gt;=h(s)</code>，其中<code>w(s,t)</code>是从 s 转移到 t 的代价，符合这条件的评估函数<code>f(s)</code>可以得到正确的最短路径。</p>
-<hr>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2>
+<p>无向图 G，需要求出 S-&gt;T 点的前 k 短路径，要求路径中没有环。(所有的边的权值不为负)</p>
+<h2 id="A-算法求解-kth-shortest-问题"><a href="#A-算法求解-kth-shortest-问题" class="headerlink" title="A*算法求解 kth-shortest 问题"></a>A*算法求解 kth-shortest 问题</h2>
+<p><code>A*</code>算法已经被广泛运用于路径规划问题中，同时<code>A*</code>算法作为一种启发式算法的框架，可用于多种搜索问题，还是先回顾一下<code>A*</code>的基本符号：</p>
+<hr />
+<p><code>f(s)=g(s)+h(s)</code>，其中<code>h(s)&lt;=h*(s)</code>，<code>h*(s)</code>是某点到终点的真实代价，<code>h(s)</code>是估计代价，
+并且对 s 的任意后继 t 有：<code>h(t)+w(s,t)&gt;=h(s)</code>，其中<code>w(s,t)</code>是从 s 转移到 t 的代价，符合这条件的评估函数<code>f(s)</code>可以得到正确的最短路径。</p>
+<hr />
 <p>而这里评估函数<code>f(s)</code>是<code>A*</code>算法的关键，其效率都取决于此，退化的<code>A*</code>算法就是宽度搜索 (即启发函数 h(s) 为常数)。另外<code>A*</code>算法的最优性证明在<a target="_blank" rel="noopener" href="http://www.cs.auckland.ac.nz/compsci767s2c/projectReportExamples.d/astarNilsson.pdf">这篇论文</a>里有阐述。</p>
 <p>所以如果能确切的计算出来<code>h*(s)</code>，那么评估函数 f(s) 将是 s 点的最短路径，这可算是一个最优的启发函数。可以利用 Dijkstra 算法来求解出各个点到 T 点的最短路径，假设第 i 个节点到 T 的最短路径计为<code>Dist_T(i)</code>，<code>Dist_T(i)</code>作为<code>A*</code>函数中的启发函数<code>h(s)</code>，从 S 开始搜索，因此算法描述如下：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> <span class="token function">Astar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span>dist<span class="token punctuation">[</span>S<span class="token punctuation">]</span><span class="token operator">==</span>INF<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-    priority_queue<span class="token operator">&lt;</span>Node<span class="token operator">></span> Q<span class="token punctuation">;</span>      <span class="token comment">//极小堆，定点为 f(s)=g(s)+h(s) 最小的节点</span>
-    Q<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token function">Node</span><span class="token punctuation">(</span>S<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">//源点 S 加入堆，估计代价为 0</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token operator">!</span>Q<span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-        <span class="token keyword">int</span> len<span class="token operator">=</span>Q<span class="token punctuation">.</span><span class="token function">top</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>len<span class="token punctuation">;</span>
-        <span class="token keyword">int</span> u<span class="token operator">=</span>Q<span class="token punctuation">.</span><span class="token function">top</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>v<span class="token punctuation">;</span>
-        Q<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        cnt<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token operator">++</span><span class="token punctuation">;</span>       <span class="token comment">//节点 u 访问一次</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>cnt<span class="token punctuation">[</span>T<span class="token punctuation">]</span><span class="token operator">==</span>K<span class="token punctuation">)</span>
-            <span class="token keyword">return</span> len<span class="token punctuation">;</span> <span class="token comment">//第 K 次从队列弹出的值为 kth-shortest 的值</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>cnt<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token operator">></span>K<span class="token punctuation">)</span>
-            <span class="token keyword">continue</span><span class="token punctuation">;</span>
-        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span>Adj<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token comment">//取 v 节点的临接节点计算评估函数并加入优先队列</span>
-            <span class="token keyword">int</span> v <span class="token operator">=</span> Adj<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>v<span class="token punctuation">;</span>
-            <span class="token keyword">int</span> eval <span class="token operator">=</span> len <span class="token operator">+</span> <span class="token function">Dist</span><span class="token punctuation">(</span>u<span class="token punctuation">,</span>v<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token function">Dist_T</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            Q<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token function">Node</span><span class="token punctuation">(</span>v<span class="token punctuation">,</span> eval<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++"><span class="token keyword c">int</span> <span class="token function c++"><span class="token function c++">Astar</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>S<span class="token punctuation section brackets end c++">]</span></span><span class="token operator comparison c">==</span>INF<span class="token punctuation section group end c++">)</span></span> <span class="token keyword c++">return</span> <span class="token operator arithmetic c">-</span><span class="token number c++">1</span><span class="token punctuation terminator c++">;</span>
+    priority_queue<span class="token punctuation section generic begin c++">&lt;</span>Node<span class="token punctuation section generic end c++">&gt;</span> Q<span class="token punctuation terminator c++">;</span>      <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>极小堆，定点为 f(s)=g(s)+h(s) 最小的节点
+</span>    Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">push</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token function-call c++"><span class="token variable function c++">Node</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">S<span class="token punctuation separator c++">,</span><span class="token number c++">0</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>           <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>源点 S 加入堆，估计代价为 0
+</span>    <span class="token keyword c++">while</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token operator arithmetic c">!</span>Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">empty</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation section group end c++">)</span></span><span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+        <span class="token keyword c">int</span> len<span class="token operator assignment c">=</span>Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">top</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">len</span><span class="token punctuation terminator c++">;</span>
+        <span class="token keyword c">int</span> u<span class="token operator assignment c">=</span>Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">top</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">v</span><span class="token punctuation terminator c++">;</span>
+        Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">pop</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+        cnt<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation terminator c++">;</span>       <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>节点 u 访问一次
+</span>        <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>cnt<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>T<span class="token punctuation section brackets end c++">]</span></span><span class="token operator comparison c">==</span>K<span class="token punctuation section group end c++">)</span></span>
+            <span class="token keyword c++">return</span> len<span class="token punctuation terminator c++">;</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>第 K 次从队列弹出的值为 kth-shortest 的值
+</span>        <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>cnt<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token operator comparison c">&gt;</span>K<span class="token punctuation section group end c++">)</span></span>
+            <span class="token keyword c++">continue</span><span class="token punctuation terminator c++">;</span>
+        <span class="token keyword c++">for</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">int</span> i<span class="token operator assignment c">=</span><span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>i<span class="token operator comparison c">&lt;</span>Adj<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">size</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>i<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c++">)</span></span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+            <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>取 v 节点的临接节点计算评估函数并加入优先队列
+</span>            <span class="token keyword c">int</span> v <span class="token operator assignment c">=</span> Adj<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>i<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">v</span><span class="token punctuation terminator c++">;</span>
+            <span class="token keyword c">int</span> eval <span class="token operator assignment c">=</span> len <span class="token operator arithmetic c">+</span> <span class="token function-call c++"><span class="token variable function c++">Dist</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">u<span class="token punctuation separator c++">,</span>v</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span> <span class="token operator arithmetic c">+</span> <span class="token function-call c++"><span class="token variable function c++">Dist_T</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">v</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+            Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">push</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token function-call c++"><span class="token variable function c++">Node</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">v<span class="token punctuation separator c++">,</span> eval</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+        <span class="token punctuation section block end c++">}</span></span>
+    <span class="token punctuation section block end c++">}</span></span>
+    <span class="token keyword c++">return</span> <span class="token operator arithmetic c">-</span><span class="token number c++">1</span><span class="token punctuation terminator c++">;</span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
+</span></code></pre>
 <p>因为没有标识哪些节点访问过哪些节点没有访问过，所以这种方法计算出来的结果路径可能含有环，即可能出现 1-&gt;2-&gt;3-&gt;2-&gt;5，为了避免这样的情况可以在每个扩张 Node 里面增加当前路径已经访问过的点，在进行下一次扩张的时候可以避免访问这些已经在路径中的节点。但是这样所需要的空间复杂度是巨大的，所以需要再次用一些剪枝办法来避免过多的扩展。</p>
-<h2 id="一个优化"><a href="#一个优化" class="headerlink" title="一个优化"></a>一个优化</h2><p><code>A*</code>算法在扩展节点的时候，如果我们能筛除掉更多无用的节点，那么都可以利于减少搜索的空间复杂度和时间复杂度。当 k 取值较小的时候，即当我们并不需要知道所有路径长度和其排序，而只需要知道前 k(假设 k&lt;=10) 段的路径，这里加上一个剪枝会有很大的优化。假设我们事前知道 kth-shortest 的最大值，就能在扩张的时候加入这个限制，避免大部分的无用的节点扩张。</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span>Adj<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token comment">//取 v 节点的临接节点计算评估函数并加入优先队列</span>
-    <span class="token keyword">int</span> v <span class="token operator">=</span> Adj<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>v<span class="token punctuation">;</span>
-    <span class="token keyword">int</span> eval <span class="token operator">=</span> len <span class="token operator">+</span> <span class="token function">Dist</span><span class="token punctuation">(</span>u<span class="token punctuation">,</span>v<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token function">Dist_T</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span>eval <span class="token operator">></span> max_dist<span class="token punctuation">)</span>
-        <span class="token keyword">continue</span><span class="token punctuation">;</span>
-    <span class="token keyword">else</span>
-        Q<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token function">Node</span><span class="token punctuation">(</span>v<span class="token punctuation">,</span> eval<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="一个优化"><a href="#一个优化" class="headerlink" title="一个优化"></a>一个优化</h2>
+<p><code>A*</code>算法在扩展节点的时候，如果我们能筛除掉更多无用的节点，那么都可以利于减少搜索的空间复杂度和时间复杂度。当 k 取值较小的时候，即当我们并不需要知道所有路径长度和其排序，而只需要知道前 k(假设 k&lt;=10) 段的路径，这里加上一个剪枝会有很大的优化。假设我们事前知道 kth-shortest 的最大值，就能在扩张的时候加入这个限制，避免大部分的无用的节点扩张。</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++"><span class="token keyword c++">for</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">int</span> i<span class="token operator assignment c">=</span><span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>i<span class="token operator comparison c">&lt;</span>Adj<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">size</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>i<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c++">)</span></span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span><span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>取 v 节点的临接节点计算评估函数并加入优先队列
+</span>    <span class="token keyword c">int</span> v <span class="token operator assignment c">=</span> Adj<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>i<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">v</span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">int</span> eval <span class="token operator assignment c">=</span> len <span class="token operator arithmetic c">+</span> <span class="token function-call c++"><span class="token variable function c++">Dist</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">u<span class="token punctuation separator c++">,</span>v</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span> <span class="token operator arithmetic c">+</span> <span class="token function-call c++"><span class="token variable function c++">Dist_T</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">v</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>eval <span class="token operator comparison c">&gt;</span> max_dist<span class="token punctuation section group end c++">)</span></span>
+        <span class="token keyword c++">continue</span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">else</span>
+        Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">push</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token function-call c++"><span class="token variable function c++">Node</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">v<span class="token punctuation separator c++">,</span> eval</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+<span class="token punctuation section block end c++">}</span></span>
+</span></code></pre>
 <p>如何知道 kth-shortest 的最大值这个临界点呢？假设我们知道某条经过点 v 的 S-&gt;T 路径的最短长度，即对于所有的点 v1,v2,v3,….vn，有 dist(v1) 为 S-&gt;…-&gt;v1-&gt; …-&gt;路径的长度，一共 n 个 dist，把这 n 个 dist 排序以后，取第 k 小的 dist(v_kth_smallest) 即为 kth-shortest。如何计算出 dist(v)，通过 Dijkstra(T) 可以计算出 v 到 T 的最短路径，同样可以通过 Dijkstra(S) 可以计算出 S 到 v 的最短路径 Dist_S(v)，这里有如下定理：</p>
-<p>对于任意最短路径 S-&gt;K 中，假设经过点 v，则必有：min(S-&gt;v) 和 min(v-&gt;T)。<br>因此要计算经过 v 的从 S-&gt;K 的最短路径可以用：min_dist(v) = Dist_S(v) + Dist_T(v)</p>
+<p>对于任意最短路径 S-&gt;K 中，假设经过点 v，则必有：min(S-&gt;v) 和 min(v-&gt;T)。
+因此要计算经过 v 的从 S-&gt;K 的最短路径可以用：min_dist(v) = Dist_S(v) + Dist_T(v)</p>
 <p>因此如果我们用这种方法计算出 Dist(v)，那么最后第 k 小的 dist(v_kth_smallest) &gt;= kth-shortest。这对于<code>A*</code>算法的最后结果没有影响，但是同样可以作为一个条件来删除掉大部分不符合条件的节点，因此得到一个很好的优化方案。这个优化可以用于<code>k&lt;N</code>时的 kth 最短路径问题，可以预见 k 越小剪枝效果越好。</p>
 <p>据我实现在 18600 个节点的图上，这个算法比<a target="_blank" rel="noopener" href="http://mansci.journal.informs.org/content/17/11/712.abstract">Yen’s 算法</a>快了很多倍，甚至在我的 PC(3G 内存) 机上，后者在算到 k=3 的时候内存就支持不住了。</p>
-<h2 id="算法复杂度分析"><a href="#算法复杂度分析" class="headerlink" title="算法复杂度分析"></a>算法复杂度分析</h2><p>假设图 G 有 m 条边和 n 个节点，Dijkstra 算法的复杂度为<code>((m+n)log n)</code>(二叉树实现的优先队列)。<code>A*</code>算法的时间复杂度取决于启发函数，事实我还不清楚如何分析这样的算法的时间复杂度和空间复杂度，根据<a target="_blank" rel="noopener" href="http://richardxx.yo2.cn/articles/%E6%9C%80%E7%9F%AD%E8%B7%AFdijkstra%E7%AE%97%E6%B3%95%E7%9A%84%E4%B8%80%E4%BA%9B%E6%89%A9%E5%B1%95%E9%97%AE%E9%A2%98.html">这篇文章</a>来说是<code>O(delta*V^2*(lgV+lg(delta)))</code>的。</p>
+<h2 id="算法复杂度分析"><a href="#算法复杂度分析" class="headerlink" title="算法复杂度分析"></a>算法复杂度分析</h2>
+<p>假设图 G 有 m 条边和 n 个节点，Dijkstra 算法的复杂度为<code>((m+n)log n)</code>(二叉树实现的优先队列)。<code>A*</code>算法的时间复杂度取决于启发函数，事实我还不清楚如何分析这样的算法的时间复杂度和空间复杂度，根据<a target="_blank" rel="noopener" href="http://richardxx.yo2.cn/articles/%E6%9C%80%E7%9F%AD%E8%B7%AFdijkstra%E7%AE%97%E6%B3%95%E7%9A%84%E4%B8%80%E4%BA%9B%E6%89%A9%E5%B1%95%E9%97%AE%E9%A2%98.html">这篇文章</a>来说是<code>O(delta*V^2*(lgV+lg(delta)))</code>的。</p>
 <p>如果哪位知道如何分析 A*算法的复杂度，劳烦请教。</p>
 </section>
 
@@ -253,12 +249,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Algorithms" >
-    <span class="tag-code">Algorithms</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -272,7 +268,7 @@
       <a class="nav-left" href="/p/3d-python-call-path/">
         <span class="nav-arrow">← </span>
         
-          UbiGraph 动态显示 Python  ...
+          UbiGraph 动态显示 Python 函数调用
         
       </a>
     
@@ -310,7 +306,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-nav-text">问题描述</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#A-%E7%AE%97%E6%B3%95%E6%B1%82%E8%A7%A3-kth-shortest-%E9%97%AE%E9%A2%98"><span class="toc-nav-text">A*算法求解 kth-shortest 问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%80%E4%B8%AA%E4%BC%98%E5%8C%96"><span class="toc-nav-text">一个优化</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E7%AE%97%E6%B3%95%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="toc-nav-text">算法复杂度分析</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#问题描述"><span class="toc-nav-text">问题描述</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#A-算法求解-kth-shortest-问题"><span class="toc-nav-text">A*算法求解 kth-shortest 问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一个优化"><span class="toc-nav-text">一个优化</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#算法复杂度分析"><span class="toc-nav-text">算法复杂度分析</span></a></li></ol>
     
   </div>
 </aside>
@@ -321,7 +317,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/a-start-k-shortest/';
+    var url = 'http://catcoding.me//p/a-start-k-shortest/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -382,7 +378,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -407,8 +403,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

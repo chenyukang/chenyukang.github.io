@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,88 +177,95 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>正则表达式匹配是一个经典问题，这里有一个<a target="_blank" rel="noopener" href="http://oj.leetcode.com/problems/regular-expression-matching/">问题</a>。<br>实现 isMatch，其中。表示任意一个字符，*表示 0 个或者任一个前面的字符：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">isMatch<span class="token punctuation">(</span><span class="token string">"aa"</span>,<span class="token string">"a"</span><span class="token punctuation">)</span>       → <span class="token boolean">false</span>
-isMatch<span class="token punctuation">(</span><span class="token string">"aa"</span>,<span class="token string">"aa"</span><span class="token punctuation">)</span>      → <span class="token boolean">true</span>
-isMatch<span class="token punctuation">(</span><span class="token string">"aaa"</span>,<span class="token string">"aa"</span><span class="token punctuation">)</span>     → <span class="token boolean">false</span>
-isMatch<span class="token punctuation">(</span><span class="token string">"aa"</span>, <span class="token string">"a*"</span><span class="token punctuation">)</span>     → <span class="token boolean">true</span>
-isMatch<span class="token punctuation">(</span><span class="token string">"aa"</span>, <span class="token string">".*"</span><span class="token punctuation">)</span>     → <span class="token boolean">true</span>
-isMatch<span class="token punctuation">(</span><span class="token string">"ab"</span>, <span class="token string">".*"</span><span class="token punctuation">)</span>     → <span class="token boolean">true</span>
-isMatch<span class="token punctuation">(</span><span class="token string">"aab"</span>, <span class="token string">"c*a*b"</span><span class="token punctuation">)</span> → <span class="token boolean">true</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <section class="markdown-content"><p>正则表达式匹配是一个经典问题，这里有一个<a target="_blank" rel="noopener" href="http://oj.leetcode.com/problems/regular-expression-matching/">问题</a>。
+实现 isMatch，其中。表示任意一个字符，*表示 0 个或者任一个前面的字符：</p>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">isMatch</span></span><span class="token function-call arguments shell">(<span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>aa<span class="token punctuation definition string end shell">&quot;</span></span>,<span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>a<span class="token punctuation definition string end shell">&quot;</span></span></span><span class="token function-call shell"></span><span class="token post-cmd shell">)</span>       <span class="token function-call shell"><span class="token variable function shell">→</span></span><span class="token function-call arguments shell"> false</span>
+<span class="token function-call shell"><span class="token variable function shell">isMatch</span></span><span class="token function-call arguments shell">(<span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>aa<span class="token punctuation definition string end shell">&quot;</span></span>,<span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>aa<span class="token punctuation definition string end shell">&quot;</span></span></span><span class="token function-call shell"></span><span class="token post-cmd shell">)</span>      <span class="token function-call shell"><span class="token variable function shell">→</span></span><span class="token function-call arguments shell"> true</span>
+<span class="token function-call shell"><span class="token variable function shell">isMatch</span></span><span class="token function-call arguments shell">(<span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>aaa<span class="token punctuation definition string end shell">&quot;</span></span>,<span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>aa<span class="token punctuation definition string end shell">&quot;</span></span></span><span class="token function-call shell"></span><span class="token post-cmd shell">)</span>     <span class="token function-call shell"><span class="token variable function shell">→</span></span><span class="token function-call arguments shell"> false</span>
+<span class="token function-call shell"><span class="token variable function shell">isMatch</span></span><span class="token function-call arguments shell">(<span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>aa<span class="token punctuation definition string end shell">&quot;</span></span>, <span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>a*<span class="token punctuation definition string end shell">&quot;</span></span></span><span class="token function-call shell"></span><span class="token post-cmd shell">)</span>     <span class="token function-call shell"><span class="token variable function shell">→</span></span><span class="token function-call arguments shell"> true</span>
+<span class="token function-call shell"><span class="token variable function shell">isMatch</span></span><span class="token function-call arguments shell">(<span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>aa<span class="token punctuation definition string end shell">&quot;</span></span>, <span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>.*<span class="token punctuation definition string end shell">&quot;</span></span></span><span class="token function-call shell"></span><span class="token post-cmd shell">)</span>     <span class="token function-call shell"><span class="token variable function shell">→</span></span><span class="token function-call arguments shell"> true</span>
+<span class="token function-call shell"><span class="token variable function shell">isMatch</span></span><span class="token function-call arguments shell">(<span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>ab<span class="token punctuation definition string end shell">&quot;</span></span>, <span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>.*<span class="token punctuation definition string end shell">&quot;</span></span></span><span class="token function-call shell"></span><span class="token post-cmd shell">)</span>     <span class="token function-call shell"><span class="token variable function shell">→</span></span><span class="token function-call arguments shell"> true</span>
+<span class="token function-call shell"><span class="token variable function shell">isMatch</span></span><span class="token function-call arguments shell">(<span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>aab<span class="token punctuation definition string end shell">&quot;</span></span>, <span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>c*a*b<span class="token punctuation definition string end shell">&quot;</span></span></span><span class="token function-call shell"></span><span class="token post-cmd shell">)</span> <span class="token function-call shell"><span class="token variable function shell">→</span></span><span class="token function-call arguments shell"> true</span>
+</span></code></pre>
 <p>这是一个正则表达式问题的简化版本只有<code>.</code>和<code>*</code>，可以用递归来解决。正则表达式涉及到自动机理论，顺便再复习一下当年没好好学的东西。查找一番后发现了这篇 Russ Cox 写的文章非常好 (这家伙写了不少文章，xv6 里也有他的代码，现在在为 Go 项目工作)。于是我也尝试着用 DFA 来解决这个问题。</p>
-<h2 id="DFA-和-NFA-的概念"><a href="#DFA-和-NFA-的概念" class="headerlink" title="DFA 和 NFA 的概念"></a>DFA 和 NFA 的概念</h2><p>首先对于没一个正则表达式都有一个对应的 DFA 可以来表示，DFA 是 Deterministic Finite Automaton 的简称，还有 NFA(Non-deterministic Finite Automata)。NFA 对于一个字符的输入有可能存在多个以上的状态转移，而 DFA 对于没一个输入只存在一个选择。所以每一个 NFA 都可以转化为一个 DFA，但是一个 DFA 可以转化为多个 NFA。我们来看一个例子：</p>
+<h2 id="DFA-和-NFA-的概念"><a href="#DFA-和-NFA-的概念" class="headerlink" title="DFA 和 NFA 的概念"></a>DFA 和 NFA 的概念</h2>
+<p>首先对于没一个正则表达式都有一个对应的 DFA 可以来表示，DFA 是 Deterministic Finite Automaton 的简称，还有 NFA(Non-deterministic Finite Automata)。NFA 对于一个字符的输入有可能存在多个以上的状态转移，而 DFA 对于没一个输入只存在一个选择。所以每一个 NFA 都可以转化为一个 DFA，但是一个 DFA 可以转化为多个 NFA。我们来看一个例子：</p>
 <p>对于正则表达<code>(a|b)*abb</code>的 NFA 和 DFA 分别表示为：</p>
-<p><img src="/images/nfa.jpeg" alt="nfa" class="img-center"/><span class="image-caption">nfa</span></p>
-<p><img src="/images/dfa.jpeg" alt="dfa" class="img-center"/><span class="image-caption">dfa</span></p>
+<img src="/images/nfa.jpeg" alt="nfa" class="img-center"/>
+<img src="/images/dfa.jpeg" alt="dfa" class="img-center"/>
 <p>DFA 的状态数目和 NFA 一样，但是一般实践过程中 DFA 的状态转移要多，所以 DFA 相对来说要难构造一些，同时 DFA 比 NFA 需要的内存空间更大。正因为在 NFA 中一个状态可能向多个状态转移，在极端的情况下其效率比不过 DFA。更多关于正则分类可以参考<a target="_blank" rel="noopener" href="http://kb.cnblogs.com/page/86751/">正则表达式引擎及其分类</a>。</p>
 <p>对于 NFA 不同的实现效率会不一样，这也是 Russ 的文章里所说的。Russ 的文章里面介绍了 Thompson NFA 算法实现 (没错就是发明 C 的那神)，一些老的 Unix 工具是用的这个算法，比如 Awk，Tcl，GNU grep 等，而一些更通用的编程语言用的是基于回溯的一种 NFA 实现，比如 Perl/Python。通过数据比较，在最坏的情况下用 Thompson NFA 实现的 awk 表现比匹配回溯的 NFA 要好很多倍。最坏情况下的复杂度不一样，回溯 NFA 是 O(2^N)，而 Thompson 的复杂度是 O(N^2)。文中的代码可以号好看看，非常简洁的 C 实现。</p>
-<h2 id="一个尝试实现"><a href="#一个尝试实现" class="headerlink" title="一个尝试实现"></a>一个尝试实现</h2><p>对上面那个问题我尝试着实现了一个程序构建 DFA 来解决，提交上去完成 439 个测试用例只用了 28ms，相对于递归版本的需要 104ms。也可能 LeetCode 上面的测试数据太少，比较的意义不大。代码长度当然要比递归的长不少。<br>定义 State：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">enum</span> <span class="token class-name">OpType</span> <span class="token punctuation">&#123;</span>
-    ZERO_PLUS_ONE<span class="token punctuation">,</span>
-    ANY_ONE<span class="token punctuation">,</span>
-    MUST_ONE
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-<span class="token keyword">struct</span> <span class="token class-name">State</span> <span class="token punctuation">&#123;</span>
-    OpType         type<span class="token punctuation">;</span>
-    <span class="token keyword">int</span>            id<span class="token punctuation">;</span>
-    <span class="token keyword">char</span>           value<span class="token punctuation">;</span>
-    <span class="token keyword">bool</span>           end<span class="token punctuation">;</span>
-    State<span class="token operator">*</span>         prev<span class="token punctuation">;</span>
-    vector<span class="token operator">&lt;</span>State<span class="token operator">*</span><span class="token operator">></span> next<span class="token punctuation">;</span>
+<h2 id="一个尝试实现"><a href="#一个尝试实现" class="headerlink" title="一个尝试实现"></a>一个尝试实现</h2>
+<p>对上面那个问题我尝试着实现了一个程序构建 DFA 来解决，提交上去完成 439 个测试用例只用了 28ms，相对于递归版本的需要 104ms。也可能 LeetCode 上面的测试数据太少，比较的意义不大。代码长度当然要比递归的长不少。
+定义 State：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++"><span class="token enum c++"><span class="token keyword c++">enum</span> <span class="entity name enum c++">OpType</span></span><span class="token enum c++"> <span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token enum c++"><span class="token block c++">
+    ZERO_PLUS_ONE<span class="token punctuation separator c++">,</span>
+    ANY_ONE<span class="token punctuation separator c++">,</span>
+<span class="token assumed-macro c">    MUST_ONE
+</span></span></span><span class="token enum c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span><span class="token punctuation terminator c++">;</span>
+<span class="token struct c++"><span class="token keyword c++">struct</span> <span class="entity name struct c++">State</span></span><span class="token struct c++"> <span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token struct c++"><span class="token block c++">
+    OpType         type<span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">int</span>            id<span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">char</span>           value<span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">bool</span>           end<span class="token punctuation terminator c++">;</span>
+    State<span class="token operator c++">*</span>         prev<span class="token punctuation terminator c++">;</span>
+    vector<span class="token punctuation section generic begin c++">&lt;</span>State<span class="token operator c">*</span><span class="token punctuation section generic end c++">&gt;</span> next<span class="token punctuation terminator c++">;</span>
 
-    <span class="token function">State</span><span class="token punctuation">(</span>OpType t<span class="token punctuation">,</span> <span class="token keyword">int</span> i<span class="token punctuation">,</span> <span class="token keyword">char</span> v<span class="token punctuation">,</span> State <span class="token operator">*</span>p<span class="token punctuation">)</span> <span class="token operator">:</span>
-        <span class="token function">type</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">id</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">value</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">end</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">prev</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>type <span class="token operator">==</span> ZERO_PLUS_ONE<span class="token punctuation">)</span>
-            next<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
-        <span class="token keyword">if</span><span class="token punctuation">(</span>p <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
-            prev <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
+    <span class="token method constructor c++"><span class="token function constructor c++">State</span></span><span class="token method parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method parameters c++"><span class="token group c++">OpType <span class="token variable parameter c++">t</span><span class="token punctuation separator c++">,</span> <span class="token keyword c">int</span> <span class="token variable parameter c++">i</span><span class="token punctuation separator c++">,</span> <span class="token keyword c">char</span> <span class="token variable parameter c++">v</span><span class="token punctuation separator c++">,</span> State <span class="token operator c">*</span><span class="token variable parameter c++">p</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span><span class="token method c++"> </span><span class="token method constructor initializer-list c++"><span class="token punctuation separator initializer-list c++">:</span>
+        <span class="token variable other readwrite member c++">type</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span><span class="token group c++">t</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span><span class="token punctuation separator c++">,</span> <span class="token variable other readwrite member c++">id</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span><span class="token group c++">i</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span><span class="token punctuation separator c++">,</span> <span class="token variable other readwrite member c++">value</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span><span class="token group c++">v</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span><span class="token punctuation separator c++">,</span> <span class="token variable other readwrite member c++">end</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span><span class="token group c++"><span class="token boolean c">false</span></span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span><span class="token punctuation separator c++">,</span> <span class="token variable other readwrite member c++">prev</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span><span class="token group c++">p</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span> </span><span class="token method c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token method c++"><span class="token block c++">
+        <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>type <span class="token operator comparison c">==</span> ZERO_PLUS_ONE<span class="token punctuation section group end c++">)</span></span>
+            next<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">push_back</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token variable language c++">this</span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span> 
+        <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>p <span class="token operator comparison c">==</span> <span class="token boolean c">NULL</span><span class="token punctuation section group end c++">)</span></span>
+            prev <span class="token operator assignment c">=</span> <span class="token variable language c++">this</span><span class="token punctuation terminator c++">;</span>
+    </span></span><span class="token method c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
 
-    <span class="token keyword">void</span> <span class="token function">add</span><span class="token punctuation">(</span>State<span class="token operator">*</span> n<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        next<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// 匹配任意，前驱加上当前需要添加的状态</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>type <span class="token operator">==</span> ZERO_PLUS_ONE <span class="token operator">&amp;&amp;</span> prev <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> 
-            prev<span class="token operator">-></span><span class="token function">add</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token keyword c">void</span> <span class="token method c++"><span class="token function c++">add</span></span><span class="token method parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method parameters c++"><span class="token group c++">State<span class="token operator c">*</span> <span class="token variable parameter c++">n</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span><span class="token method c++"> </span><span class="token method c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token method c++"><span class="token block c++">
+        next<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">push_back</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"><span class="token group c++">n</span></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+        <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span> 匹配任意，前驱加上当前需要添加的状态
+</span>        <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>type <span class="token operator comparison c">==</span> ZERO_PLUS_ONE <span class="token operator arithmetic c">&amp;&amp;</span> prev <span class="token operator comparison c">!=</span> <span class="token boolean c">NULL</span><span class="token punctuation section group end c++">)</span></span> 
+            prev<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token method-call c++"><span class="token variable function member c++">add</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"><span class="token group c++">n</span></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    </span></span><span class="token method c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
+</span></span><span class="token struct c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span><span class="token punctuation terminator c++">;</span>
+</span></code></pre>
 <p>构建 DFA 的过程如下，注释的部分需要注意：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">State<span class="token operator">*</span> <span class="token function">construct_dfa</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> pattern<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span>pattern <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
-    <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> p <span class="token operator">=</span> pattern<span class="token punctuation">;</span>
-    State<span class="token operator">*</span> start <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">State</span><span class="token punctuation">(</span>ANY_ONE<span class="token punctuation">,</span> Num<span class="token punctuation">,</span> <span class="token char">'.'</span><span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    State<span class="token operator">*</span> cur   <span class="token operator">=</span> start<span class="token punctuation">;</span>
-    State<span class="token operator">*</span> next  <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
-    <span class="token keyword">char</span>   prev  <span class="token operator">=</span> <span class="token char">'.'</span><span class="token punctuation">;</span>
-    Num <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token operator">*</span>p <span class="token operator">&amp;&amp;</span> <span class="token operator">*</span>p <span class="token operator">!=</span> <span class="token char">'\0'</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">(</span>p<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token char">'*'</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            OpType type<span class="token punctuation">;</span>
-            <span class="token keyword">char</span> value<span class="token punctuation">;</span>
-            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">*</span>p <span class="token operator">==</span> <span class="token char">'*'</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                type <span class="token operator">=</span> ZERO_PLUS_ONE<span class="token punctuation">;</span> <span class="token comment">//匹配 0 个或者多个</span>
-                value <span class="token operator">=</span> prev<span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-                value <span class="token operator">=</span> <span class="token operator">*</span>p<span class="token punctuation">;</span>
-                type <span class="token operator">=</span> <span class="token operator">*</span>p <span class="token operator">==</span> <span class="token char">'.'</span><span class="token operator">?</span> ANY_ONE <span class="token operator">:</span> MUST_ONE<span class="token punctuation">;</span> <span class="token comment">//匹配任意一个。或者指定的字符</span>
-            <span class="token punctuation">&#125;</span>
-            next <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">State</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> Num<span class="token punctuation">,</span> value<span class="token punctuation">,</span> cur<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            prev <span class="token operator">=</span> <span class="token operator">*</span>p<span class="token punctuation">,</span> p<span class="token operator">++</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-            next <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">State</span><span class="token punctuation">(</span>ZERO_PLUS_ONE<span class="token punctuation">,</span> Num<span class="token punctuation">,</span> <span class="token operator">*</span>p<span class="token punctuation">,</span> cur<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            prev <span class="token operator">=</span> <span class="token char">'*'</span><span class="token punctuation">,</span> p<span class="token operator">+=</span><span class="token number">2</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-        cur<span class="token operator">-></span><span class="token function">add</span><span class="token punctuation">(</span>next<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        cur <span class="token operator">=</span> next<span class="token punctuation">;</span>
-        Num<span class="token operator">++</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    cur<span class="token operator">-></span>end <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token comment">// 例如  ab*a*c*  对于 "a"，即使后面几个*, "a"也算是一个 end，</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span>cur<span class="token operator">-></span>type <span class="token operator">==</span> ZERO_PLUS_ONE<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        cur <span class="token operator">=</span> cur<span class="token operator">-></span>prev<span class="token punctuation">;</span>
-        cur<span class="token operator">-></span>end <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">return</span> start<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++">State<span class="token operator c++">*</span> <span class="token function c++"><span class="token function c++">construct_dfa</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token keyword c++">const</span> <span class="token keyword c">char</span><span class="token operator c">*</span> <span class="token variable parameter c++">pattern</span><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++"> </span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>pattern <span class="token operator comparison c">==</span> <span class="token boolean c">NULL</span><span class="token punctuation section group end c++">)</span></span> <span class="token keyword c++">return</span> <span class="token boolean c">NULL</span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">const</span> <span class="token keyword c">char</span><span class="token operator c">*</span> p <span class="token operator assignment c">=</span> pattern<span class="token punctuation terminator c++">;</span>
+    State<span class="token operator c">*</span> start <span class="token operator assignment c">=</span> <span class="token keyword c++">new</span> <span class="token function-call c++"><span class="token variable function c++">State</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">ANY_ONE<span class="token punctuation separator c++">,</span> Num<span class="token punctuation separator c++">,</span> <span class="token string single c"><span class="token punctuation definition string begin c">&#39;</span>.<span class="token punctuation definition string end c">&#39;</span></span><span class="token punctuation separator c++">,</span> <span class="token boolean c">NULL</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    State<span class="token operator c">*</span> cur   <span class="token operator assignment c">=</span> start<span class="token punctuation terminator c++">;</span>
+    State<span class="token operator c">*</span> next  <span class="token operator assignment c">=</span> <span class="token boolean c">NULL</span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">char</span>   prev  <span class="token operator assignment c">=</span> <span class="token string single c"><span class="token punctuation definition string begin c">&#39;</span>.<span class="token punctuation definition string end c">&#39;</span></span><span class="token punctuation terminator c++">;</span>
+    Num <span class="token operator assignment c">=</span> <span class="token number c++">1</span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">while</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token operator c">*</span>p <span class="token operator arithmetic c">&amp;&amp;</span> <span class="token operator c">*</span>p <span class="token operator comparison c">!=</span> <span class="token string single c"><span class="token punctuation definition string begin c">&#39;</span><span class="constant character escape c">\0</span><span class="token punctuation definition string end c">&#39;</span></span><span class="token punctuation section group end c++">)</span></span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+        <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token operator c">*</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>p<span class="token operator arithmetic c">+</span><span class="token number c++">1</span><span class="token punctuation section group end c++">)</span></span> <span class="token operator comparison c">!=</span> <span class="token string single c"><span class="token punctuation definition string begin c">&#39;</span>*<span class="token punctuation definition string end c">&#39;</span></span><span class="token punctuation section group end c++">)</span></span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+            OpType type<span class="token punctuation terminator c++">;</span>
+            <span class="token keyword c">char</span> value<span class="token punctuation terminator c++">;</span>
+            <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token operator c">*</span>p <span class="token operator comparison c">==</span> <span class="token string single c"><span class="token punctuation definition string begin c">&#39;</span>*<span class="token punctuation definition string end c">&#39;</span></span><span class="token punctuation section group end c++">)</span></span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+                type <span class="token operator assignment c">=</span> ZERO_PLUS_ONE<span class="token punctuation terminator c++">;</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>匹配 0 个或者多个
+</span>                value <span class="token operator assignment c">=</span> prev<span class="token punctuation terminator c++">;</span>
+            <span class="token punctuation section block end c++">}</span></span> <span class="token keyword c++">else</span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+                value <span class="token operator assignment c">=</span> <span class="token operator c">*</span>p<span class="token punctuation terminator c++">;</span>
+                type <span class="token operator assignment c">=</span> <span class="token operator c">*</span>p <span class="token operator comparison c">==</span> <span class="token string single c"><span class="token punctuation definition string begin c">&#39;</span>.<span class="token punctuation definition string end c">&#39;</span></span><span class="token operator ternary c">?</span> ANY_ONE <span class="token operator ternary c">:</span> MUST_ONE<span class="token punctuation terminator c++">;</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>匹配任意一个。或者指定的字符
+</span>            <span class="token punctuation section block end c++">}</span></span>
+            next <span class="token operator assignment c">=</span> <span class="token keyword c++">new</span> <span class="token function-call c++"><span class="token variable function c++">State</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">type<span class="token punctuation separator c++">,</span> Num<span class="token punctuation separator c++">,</span> value<span class="token punctuation separator c++">,</span> cur</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+            prev <span class="token operator assignment c">=</span> <span class="token operator c">*</span>p<span class="token punctuation separator c++">,</span> p<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation terminator c++">;</span>
+        <span class="token punctuation section block end c++">}</span></span> <span class="token keyword c++">else</span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+            next <span class="token operator assignment c">=</span> <span class="token keyword c++">new</span> <span class="token function-call c++"><span class="token variable function c++">State</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">ZERO_PLUS_ONE<span class="token punctuation separator c++">,</span> Num<span class="token punctuation separator c++">,</span> <span class="token operator c">*</span>p<span class="token punctuation separator c++">,</span> cur</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+            prev <span class="token operator assignment c">=</span> <span class="token string single c"><span class="token punctuation definition string begin c">&#39;</span>*<span class="token punctuation definition string end c">&#39;</span></span><span class="token punctuation separator c++">,</span> p<span class="token operator assignment augmented c">+=</span><span class="token number c++">2</span><span class="token punctuation terminator c++">;</span>
+        <span class="token punctuation section block end c++">}</span></span>
+        cur<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token method-call c++"><span class="token variable function member c++">add</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"><span class="token group c++">next</span></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+        cur <span class="token operator assignment c">=</span> next<span class="token punctuation terminator c++">;</span>
+        Num<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation terminator c++">;</span>
+    <span class="token punctuation section block end c++">}</span></span>
+    cur<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">end</span> <span class="token operator assignment c">=</span> <span class="token boolean c">true</span><span class="token punctuation terminator c++">;</span>
+    <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span> 例如  ab*a*c*  对于 &quot;a&quot;，即使后面几个*, &quot;a&quot;也算是一个 end，
+</span>    <span class="token keyword c++">while</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>cur<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">type</span> <span class="token operator comparison c">==</span> ZERO_PLUS_ONE<span class="token punctuation section group end c++">)</span></span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+        cur <span class="token operator assignment c">=</span> cur<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">prev</span><span class="token punctuation terminator c++">;</span>
+        cur<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">end</span> <span class="token operator assignment c">=</span> <span class="token boolean c">true</span><span class="token punctuation terminator c++">;</span>
+    <span class="token punctuation section block end c++">}</span></span>
+    <span class="token keyword c++">return</span> start<span class="token punctuation terminator c++">;</span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
+</span></code></pre>
 <p>匹配的过程就是一个搜索的过程，需要注意避免重复访问，另外如果下一层要访问的为空就可以退出整个搜索过程了，整个代码看这个<a target="_blank" rel="noopener" href="https://gist.github.com/chenyukang/8265615">Gist</a>。</p>
 </section>
 
@@ -290,12 +285,12 @@ isMatch<span class="token punctuation">(</span><span class="token string">"aab"<
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Algorithms" >
-    <span class="tag-code">Algorithms</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -316,7 +311,7 @@ isMatch<span class="token punctuation">(</span><span class="token string">"aab"<
     
       <a class="nav-right" href="/p/kernel-analysis-process-defunct/">
         
-          Kernel analysis: Defun ...
+          Kernel analysis: Defunct Process
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -347,7 +342,7 @@ isMatch<span class="token punctuation">(</span><span class="token string">"aab"<
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#DFA-%E5%92%8C-NFA-%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-nav-text">DFA 和 NFA 的概念</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%80%E4%B8%AA%E5%B0%9D%E8%AF%95%E5%AE%9E%E7%8E%B0"><span class="toc-nav-text">一个尝试实现</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#DFA-和-NFA-的概念"><span class="toc-nav-text">DFA 和 NFA 的概念</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一个尝试实现"><span class="toc-nav-text">一个尝试实现</span></a></li></ol>
     
   </div>
 </aside>
@@ -358,7 +353,7 @@ isMatch<span class="token punctuation">(</span><span class="token string">"aab"<
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/regular-expression-matching-dfa/';
+    var url = 'http://catcoding.me//p/regular-expression-matching-dfa/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -419,7 +414,7 @@ isMatch<span class="token punctuation">(</span><span class="token string">"aab"<
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -444,8 +439,6 @@ isMatch<span class="token punctuation">(</span><span class="token string">"aab"<
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,148 +177,157 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>那天师兄给面试，面到一道图算法题目，求图中两个点的前 K 短路径。当时觉得用 Dijkstra+heap 应该可以，不过也没想清楚。以前看到过这个，那时还没怎么仔细看图算法所以丢一边了，今天好好看了一下。简单一点的解法是用 Dijkstra+Astar。典型的题目就是<a target="_blank" rel="noopener" href="http://acm.pku.edu.cn/JudgeOnline/problem?id=2449">POJ 2449</a>。   </p>
-<h2 id="A-算法"><a href="#A-算法" class="headerlink" title="A* 算法"></a>A* 算法</h2><p>再谈 A<em>算法。A</em>算法中的评估函数为 f(N)=cost(N)+h<em>(N)。其中 cost(N) 为从源点到 N 点的距离，h</em>(N) 为 N 点到终点的的一个评估路径长度，设 h(N) 为实际 N 点到终点的路径长度。只要满足条件：h<em>(N)&lt;=h(N)，那么用这个评估函数找到最短路径。具体证明看这篇论文<a target="_blank" rel="noopener" href="http://www.cs.auckland.ac.nz/compsci767s2c/projectReportExamples.d/astarNilsson.pdf">A Formal Basis for the Heuristic Determination of Minimum Cost Paths</a>。其优势在于在选择每个路径 上的点的时候给予了 h(N) 这个启发，在搜索空间中尽量选择可能最有可能产生最优解的下一个状态，使得搜索的时间都相应地减少。A</em>算法的思想也是贪心 的，Dijkstra 是 A<em>的一个特例，当 h</em>(N)=0 时，A*就退化成了 Dijkstra 算法，那么就是盲目的扩展当前最短路径了。   </p>
+    <section class="markdown-content"><p>那天师兄给面试，面到一道图算法题目，求图中两个点的前 K 短路径。当时觉得用 Dijkstra+heap 应该可以，不过也没想清楚。以前看到过这个，那时还没怎么仔细看图算法所以丢一边了，今天好好看了一下。简单一点的解法是用 Dijkstra+Astar。典型的题目就是<a href="http://acm.pku.edu.cn/JudgeOnline/problem?id=2449">POJ 2449</a>。   </p>
+<h2 id="A-算法"><a href="#A-算法" class="headerlink" title="A* 算法"></a>A* 算法</h2>
+<p>再谈 A<em>算法。A</em>算法中的评估函数为 f(N)=cost(N)+h*(N)。其中 cost(N) 为从源点到 N 点的距离，h*(N) 为 N 点到终点的的一个评估路径长度，设 h(N) 为实际 N 点到终点的路径长度。只要满足条件：h*(N)&lt;=h(N)，那么用这个评估函数找到最短路径。具体证明看这篇论文<a href="http://www.cs.auckland.ac.nz/compsci767s2c/projectReportExamples.d/astarNilsson.pdf">A Formal Basis for the Heuristic Determination of Minimum Cost Paths</a>。其优势在于在选择每个路径 上的点的时候给予了 h(N) 这个启发，在搜索空间中尽量选择可能最有可能产生最优解的下一个状态，使得搜索的时间都相应地减少。A<em>算法的思想也是贪心 的，Dijkstra 是 A</em>的一个特例，当 h*(N)=0 时，A*就退化成了 Dijkstra 算法，那么就是盲目的扩展当前最短路径了。   </p>
 <p>来个例子，下面这是一个城市的公路图网，一共有 18263 个点，23874 条边，视为无向图。我们知道起点和终点的坐标，现在我们要求某两点之间的最短路径。</p>
 <ol>
-<li>用 Dijkstra 算法来，其中白色的点表示搜索过程中访问了的点。可以看出 Dijkstra 算法有点像 BFS 向周围扩展，做了很多无用的搜索。当然这与图的形状也有一定关系。   </li>
+<li> 用 Dijkstra 算法来，其中白色的点表示搜索过程中访问了的点。可以看出 Dijkstra 算法有点像 BFS 向周围扩展，做了很多无用的搜索。当然这与图的形状也有一定关系。   </li>
 </ol>
 <p>[Dijkstra 访问 18191 个点]</p>
-<p><img title="Dij" src="/images/Dij.jpg" alt="" width="532" height="510" align="center"></p>
+<img title="Dij" src="/images/Dij.jpg" alt="" width="532" height="510" align="center">
+<p> </p>
 <ol start="2">
-<li>用 A<em>算法，设 S 为起点，T 为终点，启发函数为 F(N)=Path_Dist(S-&gt;N)+Dist(N-&gt;T)。在搜索过程中 Path_Dist 一直维持着 S-&gt;N 的路径长度，Disk(N-&gt;T) 的计算可以有多钟选择，这里我选择 Dist(N-&gt;T)=sqrt(|Xn-Xt|</em>|Xn-Xt|+|Yn-Yt|<em>|Yn-Yt|),这个为两点之间的理论最短路径，肯定是满足条件 h</em>(N) &lt;= h(N) 的，那么能得到最优解。可以看到搜索偏向于目标点的方向。   </li>
+<li> 用 A<em>算法，设 S 为起点，T 为终点，启发函数为 F(N)=Path_Dist(S-&gt;N)+Dist(N-&gt;T)。在搜索过程中 Path_Dist 一直维持着 S-&gt;N 的路径长度，Disk(N-&gt;T) 的计算可以有多钟选择，这里我选择 Dist(N-&gt;T)=sqrt(|Xn-Xt|</em>|Xn-Xt|+|Yn-Yt|<em>|Yn-Yt|),这个为两点之间的理论最短路径，肯定是满足条件 h</em>(N) &lt;= h(N) 的，那么能得到最优解。可以看到搜索偏向于目标点的方向。   </li>
 </ol>
-<p>[A* 两点之间距离为评估函数 访问 4398 个点]<br><a href="/images/Astar.jpg"><img class="size-full wp-image-77 " title="Astar" src="/images/Astar.jpg" alt="" width="526" height="499" align="center"></a></p>
+<p>[A* 两点之间距离为评估函数 访问 4398 个点]
+<a href="/images/Astar.jpg"><img class="size-full wp-image-77 " title="Astar" src="/images/Astar.jpg" alt="" width="526" height="499" align="center"></a></p>
+<p> </p>
 <ol start="3">
-<li>另外 (x+y)/2 &lt;= sqrt(x^2+y^2)，所以也可以选择 (|Xn-Xt|+|Yn-Yt|)/2 作为启发函数。但为了节省这个 sqrt 的操作，代价就是访问了更多的点。   </li>
+<li>另外 (x+y)/2 &lt;= sqrt(x^2+y^2)，所以也可以选择 (|Xn-Xt|+|Yn-Yt|)/2 作为启发函数。但为了节省这个 sqrt 的操作，代价就是访问了更多的点。   </li>
 </ol>
-<p>[A* (x+y)/2 作为启发函数 访问 14374 个点]<br><a href="/images/Astar3.jpg"><img class="size-full wp-image-79 " title="Astar3" src="/images/Astar3.jpg" alt="" width="559" height="503" align="center"></a></p>
+<p>[A* (x+y)/2 作为启发函数 访问 14374 个点]
+<a href="/images/Astar3.jpg"><img class="size-full wp-image-79 " title="Astar3" src="/images/Astar3.jpg" alt="" width="559" height="503" align="center"></a></p>
+<p> </p>
 <ol start="4">
-<li>可以做得更好，修改启发函数。Dist(N-&gt;T)=|Xn-Xt|+|Yn-Yt|，这为曼哈顿函数，这样就不满足条件 h*(N)&lt;=h(N) 了。所以得不到最优解，但是速度上会快很多，搜索的点也会减少很多。   </li>
+<li>可以做得更好，修改启发函数。Dist(N-&gt;T)=|Xn-Xt|+|Yn-Yt|，这为曼哈顿函数，这样就不满足条件 h*(N)&lt;=h(N) 了。所以得不到最优解，但是速度上会快很多，搜索的点也会减少很多。   </li>
 </ol>
-<p>[A* 曼哈顿距离作为启发函数 访问 296 个点]<br><a href="/images/Astar2.jpg"><img class="size-full wp-image-78  " title="Astar2" src="/images/Astar2.jpg" alt="" width="556" height="508" align="center"></a></p>
-<p>大概能得到一个规律，搜索效率依赖于 h<em>(N) 的启发作用，当 h</em>(N) &lt;= h(N) 时候，我们能得到最优解，用第二种启发函数能也满足最优解的条件，但是因为启发用少了所以访问了更多的点。当 h<em>(N)&gt;h(N) 时，得到的可能是比较优的解 (非最短路径)，可以认为因为得到的启发更多 (多到超出了得到最优解的条件限制)，所以能取得更快的效率。这又是一个普遍的问题，在速度、精确度两者之间经常会只能二选一，对于不同的应用从中作出折中。上面那篇论文证明了，对于刚才举例的这个问题，用两点之间的直线距离最为启发函数的 A</em>算法是所有能得到最优解的算法中访问点最少的。启发函数对于特定的问题有特定的取法，那么 A*作为一个搜索的算法框架用处还是挺多的。   </p>
-<h2 id="Dijkstra＋A-求-k-短路径"><a href="#Dijkstra＋A-求-k-短路径" class="headerlink" title="Dijkstra＋A* 求 k 短路径"></a>Dijkstra＋A* 求 k 短路径</h2><p>当然这个算法不是我想出来的，这里只是说一下看后自己的理解。在 A<em>算法中，优先队列出来的点如果扩展到了终点，那么 就得到了最短路径。如果能得到实际的评估函数 (也就是 h</em>(N))，那么第二次 从优先队列里面弹出来的就是第 2 段的路径，依次直到 k 短。如何得到 h(N),就是图中各个点到 T 的实际最短路径距离，可以从图的反向图以 T 为源点进行 Dijkstra 算法，最后 Dist[N] 就可以作为 h(N)。然后以 cnt[N] 表示 N 点从优先队列里面弹出来的次数。K-shortest 问题还有更快的解法，不过还没看，这里有<a target="_blank" rel="noopener" href="http://www.mat.uc.pt/~eqvm/cientificos/investigacao/r_papers.html">大把论文</a>。这里还分结果路径中是否可以有环，像现实中公路网肯定是要求无环的 k-shortest path。下面这个算法是可以有环的。 </p>
-<p>完整代码如下：   </p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">
-<span class="token comment">//7040K 282MS</span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+<p>[A* 曼哈顿距离作为启发函数 访问 296 个点]
+<a href="/images/Astar2.jpg"><img class="size-full wp-image-78  " title="Astar2" src="/images/Astar2.jpg" alt="" width="556" height="508" align="center"></a></p>
+<p> 
+大概能得到一个规律，搜索效率依赖于 h*(N) 的启发作用，当 h*(N) &lt;= h(N) 时候，我们能得到最优解，用第二种启发函数能也满足最优解的条件，但是因为启发用少了所以访问了更多的点。当 h*(N)&gt;h(N) 时，得到的可能是比较优的解 (非最短路径)，可以认为因为得到的启发更多 (多到超出了得到最优解的条件限制)，所以能取得更快的效率。这又是一个普遍的问题，在速度、精确度两者之间经常会只能二选一，对于不同的应用从中作出折中。上面那篇论文证明了，对于刚才举例的这个问题，用两点之间的直线距离最为启发函数的 A<em>算法是所有能得到最优解的算法中访问点最少的。启发函数对于特定的问题有特定的取法，那么 A</em>作为一个搜索的算法框架用处还是挺多的。   </p>
+<h2 id="Dijkstra＋A-求-k-短路径"><a href="#Dijkstra＋A-求-k-短路径" class="headerlink" title="Dijkstra＋A* 求 k 短路径"></a>Dijkstra＋A* 求 k 短路径</h2>
+<p>当然这个算法不是我想出来的，这里只是说一下看后自己的理解。在 A<em>算法中，优先队列出来的点如果扩展到了终点，那么 就得到了最短路径。如果能得到实际的评估函数 (也就是 h</em>(N))，那么第二次 从优先队列里面弹出来的就是第 2 段的路径，依次直到 k 短。如何得到 h(N),就是图中各个点到 T 的实际最短路径距离，可以从图的反向图以 T 为源点进行 Dijkstra 算法，最后 Dist[N] 就可以作为 h(N)。然后以 cnt[N] 表示 N 点从优先队列里面弹出来的次数。K-shortest 问题还有更快的解法，不过还没看，这里有<a href="http://www.mat.uc.pt/~eqvm/cientificos/investigacao/r_papers.html">大把论文</a>。这里还分结果路径中是否可以有环，像现实中公路网肯定是要求无环的 k-shortest path。下面这个算法是可以有环的。 </p>
+<p>完整代码如下：   </p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++">
+<span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>7040K 282MS
+</span><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>iostream<span class="token punctuation definition string end c++">&gt;</span></span>
+</span>
+<span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>queue<span class="token punctuation definition string end c++">&gt;</span></span>
+</span><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>vector<span class="token punctuation definition string end c++">&gt;</span></span>
+</span><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>stdio.h<span class="token punctuation definition string end c++">&gt;</span></span>
+</span><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>cstring<span class="token punctuation definition string end c++">&gt;</span></span>
+</span><span class="token keyword c++">using</span> <span class="token keyword c++">namespace</span> std<span class="token punctuation terminator c++">;</span>
 
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;queue></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;vector></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;cstring></span></span>
-<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+<span class="token keyword c++">const</span> <span class="token keyword c">int</span> MAXN<span class="token operator assignment c">=</span><span class="token number c++">1001</span><span class="token punctuation terminator c++">;</span>
+<span class="token keyword c++">const</span> <span class="token keyword c">int</span> INF<span class="token operator assignment c">=</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token number c++">1</span><span class="token operator arithmetic c">&lt;&lt;</span><span class="token number c++">20</span><span class="token punctuation section group end c++">)</span></span><span class="token punctuation terminator c++">;</span>
+<span class="token keyword c">int</span> N<span class="token punctuation separator c++">,</span>M<span class="token punctuation terminator c++">;</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>N 个点 M 条边
+</span>
+<span class="token keyword c">int</span> S<span class="token punctuation separator c++">,</span>T<span class="token punctuation separator c++">,</span>K<span class="token punctuation terminator c++">;</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>起点和终点
+</span><span class="token keyword c++">typedef</span> <span class="token keyword c++">struct</span> _Edge
+<span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+    <span class="token keyword c">int</span> v<span class="token punctuation terminator c++">;</span><span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>边顶点
+</span>
+    <span class="token keyword c">int</span> len<span class="token punctuation terminator c++">;</span><span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>边长度
+</span><span class="token punctuation section block end c++">}</span></span><span class="token class-name typedef c++">Edge</span><span class="token punctuation terminator c++">;</span>
 
-<span class="token keyword">const</span> <span class="token keyword">int</span> MAXN<span class="token operator">=</span><span class="token number">1001</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> <span class="token keyword">int</span> INF<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">&lt;&lt;</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">int</span> N<span class="token punctuation">,</span>M<span class="token punctuation">;</span> <span class="token comment">//N 个点 M 条边</span>
+<span class="token keyword c">int</span> dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>MAXN<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation terminator c++">;</span>
+<span class="token keyword c">int</span> cnt<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>MAXN<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation terminator c++">;</span>
 
-<span class="token keyword">int</span> S<span class="token punctuation">,</span>T<span class="token punctuation">,</span>K<span class="token punctuation">;</span> <span class="token comment">//起点和终点</span>
-<span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_Edge</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> v<span class="token punctuation">;</span><span class="token comment">//边顶点</span>
+<span class="token keyword c">bool</span> mark<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>MAXN<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation terminator c++">;</span>
 
-    <span class="token keyword">int</span> len<span class="token punctuation">;</span><span class="token comment">//边长度</span>
-<span class="token punctuation">&#125;</span>Edge<span class="token punctuation">;</span>
+<span class="token struct c++"><span class="token keyword c++">struct</span> <span class="entity name struct c++">Node</span></span><span class="token struct c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token struct c++"><span class="token block c++">
+    <span class="token keyword c">int</span> v<span class="token punctuation separator c++">,</span>len<span class="token punctuation terminator c++">;</span>
+    <span class="token method constructor c++"><span class="token function constructor c++">Node</span></span><span class="token method parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method parameters c++"><span class="token group c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span><span class="token method c++"> </span><span class="token method c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token method c++"></span><span class="token method c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token method constructor c++"><span class="token function constructor c++">Node</span></span><span class="token method parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method parameters c++"><span class="token group c++"><span class="token keyword c">int</span> <span class="token variable parameter c++">a</span><span class="token punctuation separator c++">,</span><span class="token keyword c">int</span> <span class="token variable parameter c++">b</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span><span class="token method constructor initializer-list c++"><span class="token punctuation separator initializer-list c++">:</span><span class="token variable other readwrite member c++">v</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span><span class="token group c++">a</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span><span class="token punctuation separator c++">,</span><span class="token variable other readwrite member c++">len</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span><span class="token group c++">b</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span> </span><span class="token method c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token method c++"></span><span class="token method c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
+</span></span><span class="token struct c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span><span class="token punctuation terminator c++">;</span>
 
-<span class="token keyword">int</span> dist<span class="token punctuation">[</span>MAXN<span class="token punctuation">]</span><span class="token punctuation">;</span>
-<span class="token keyword">int</span> cnt<span class="token punctuation">[</span>MAXN<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword c">bool</span> <span class="token function c++"><span class="token function c++">operator &lt;</span></span><span class="token function c++"> </span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token keyword c++">const</span> Node<span class="token operator c">&amp;</span> <span class="token variable parameter c++">a</span><span class="token punctuation separator c++">,</span><span class="token keyword c++">const</span> Node<span class="token operator c">&amp;</span> <span class="token variable parameter c++">b</span><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++">
+</span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token keyword c++">return</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span>a<span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">len</span><span class="token operator arithmetic c">+</span>dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>a<span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">v</span><span class="token punctuation section brackets end c++">]</span></span> <span class="token operator comparison c">&gt;</span> b<span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">len</span><span class="token operator arithmetic c">+</span>dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>b<span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">v</span><span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation section group end c++">)</span></span><span class="token punctuation terminator c++">;</span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
 
-<span class="token keyword">bool</span> mark<span class="token punctuation">[</span>MAXN<span class="token punctuation">]</span><span class="token punctuation">;</span>
+vector<span class="token punctuation section generic begin c++">&lt;</span>Edge<span class="token punctuation section generic end c++">&gt;</span> Adj<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>MAXN<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation terminator c++">;</span><span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>图的邻接表表示
+</span>vector<span class="token punctuation section generic begin c++">&lt;</span>Edge<span class="token punctuation section generic end c++">&gt;</span> Rev<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>MAXN<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation terminator c++">;</span><span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>图的逆图
+</span>
+<span class="token keyword c">void</span> <span class="token function c++"><span class="token function c++">Init_graph</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++">
+</span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token keyword c">int</span> u<span class="token punctuation separator c++">,</span>v<span class="token punctuation separator c++">,</span>l<span class="token punctuation terminator c++">;</span>
+    Edge edge<span class="token punctuation terminator c++">;</span>
+    <span class="token function-call c++"><span class="token function C99 c">scanf</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%d</span><span class="token constant placeholder c">%d</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c++">,</span><span class="token operator c">&amp;</span>N<span class="token punctuation separator c++">,</span><span class="token operator c">&amp;</span>M</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">for</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">int</span> i<span class="token operator assignment c">=</span><span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>i<span class="token operator comparison c">&lt;</span>M<span class="token punctuation terminator c++">;</span>i<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c++">)</span></span>
+    <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+        <span class="token function-call c++"><span class="token function C99 c">scanf</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%d</span><span class="token constant placeholder c">%d</span><span class="token constant placeholder c">%d</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c++">,</span><span class="token operator c">&amp;</span>u<span class="token punctuation separator c++">,</span><span class="token operator c">&amp;</span>v<span class="token punctuation separator c++">,</span><span class="token operator c">&amp;</span>l</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+        edge<span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">v</span><span class="token operator assignment c">=</span>v<span class="token punctuation terminator c++">;</span>
+        edge<span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">len</span><span class="token operator assignment c">=</span>l<span class="token punctuation terminator c++">;</span>
+        Adj<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">push_back</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"><span class="token group c++">edge</span></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+        edge<span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">v</span><span class="token operator assignment c">=</span>u<span class="token punctuation terminator c++">;</span>
+        Rev<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>v<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">push_back</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"><span class="token group c++">edge</span></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token punctuation section block end c++">}</span></span>
+    <span class="token function-call c++"><span class="token function C99 c">scanf</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%d</span><span class="token constant placeholder c">%d</span><span class="token constant placeholder c">%d</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c++">,</span><span class="token operator c">&amp;</span>S<span class="token punctuation separator c++">,</span><span class="token operator c">&amp;</span>T<span class="token punctuation separator c++">,</span><span class="token operator c">&amp;</span>K</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span><span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>计算 S 到 T 的第 K 短路径
+</span>
+    <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>S<span class="token operator comparison c">==</span>T<span class="token punctuation section group end c++">)</span></span> K<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation terminator c++">;</span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
 
-<span class="token keyword">struct</span> <span class="token class-name">Node</span><span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> v<span class="token punctuation">,</span>len<span class="token punctuation">;</span>
-    <span class="token function">Node</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-    <span class="token function">Node</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token punctuation">,</span><span class="token keyword">int</span> b<span class="token punctuation">)</span><span class="token operator">:</span><span class="token function">v</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token function">len</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>Dijkstra 算法 找出各个点到 T 的最短距离
+</span><span class="token keyword c">void</span> <span class="token function c++"><span class="token function c++">Dijkstra</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++">
+</span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token function-call c++"><span class="token function C99 c">memset</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">mark<span class="token punctuation separator c++">,</span><span class="token boolean c">false</span><span class="token punctuation separator c++">,</span><span class="token operator word c++">sizeof</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span><span class="token group c++">mark</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">for</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">int</span> i<span class="token operator assignment c">=</span><span class="token number c++">1</span><span class="token punctuation terminator c++">;</span>i<span class="token operator comparison c">&lt;=</span>N<span class="token punctuation terminator c++">;</span>i<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c++">)</span></span>
+        dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>i<span class="token punctuation section brackets end c++">]</span></span><span class="token operator assignment c">=</span>INF<span class="token punctuation terminator c++">;</span>
+    dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>T<span class="token punctuation section brackets end c++">]</span></span><span class="token operator assignment c">=</span><span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">int</span> u<span class="token punctuation separator c++">,</span>v<span class="token punctuation separator c++">,</span>min<span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">while</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token number c++">1</span><span class="token punctuation section group end c++">)</span></span>
+    <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+        u<span class="token operator assignment c">=</span><span class="token operator arithmetic c">-</span><span class="token number c++">1</span><span class="token punctuation separator c++">,</span>min<span class="token operator assignment c">=</span>INF<span class="token punctuation terminator c++">;</span>
+        <span class="token keyword c++">for</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">int</span> i<span class="token operator assignment c">=</span><span class="token number c++">1</span><span class="token punctuation terminator c++">;</span>i<span class="token operator comparison c">&lt;=</span>N<span class="token punctuation terminator c++">;</span>i<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c++">)</span></span>
+            <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token operator arithmetic c">!</span>mark<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>i<span class="token punctuation section brackets end c++">]</span></span> <span class="token operator arithmetic c">&amp;&amp;</span> dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>i<span class="token punctuation section brackets end c++">]</span></span><span class="token operator comparison c">&lt;</span>min<span class="token punctuation section group end c++">)</span></span>
+            <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+                min<span class="token operator assignment c">=</span>dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>i<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation terminator c++">;</span>
+                u<span class="token operator assignment c">=</span>i<span class="token punctuation terminator c++">;</span>
+            <span class="token punctuation section block end c++">}</span></span>
+        <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>u<span class="token operator comparison c">==</span><span class="token operator arithmetic c">-</span><span class="token number c++">1</span><span class="token punctuation section group end c++">)</span></span> <span class="token keyword c++">break</span><span class="token punctuation terminator c++">;</span>
+        mark<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token operator assignment c">=</span><span class="token boolean c">true</span><span class="token punctuation terminator c++">;</span>
+        <span class="token keyword c++">for</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">int</span> k<span class="token operator assignment c">=</span><span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>k<span class="token operator comparison c">&lt;</span>Rev<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">size</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>k<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c++">)</span></span>
+        <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+            v<span class="token operator assignment c">=</span>Rev<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>k<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">v</span><span class="token punctuation terminator c++">;</span>
+            <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token operator arithmetic c">!</span>mark<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>v<span class="token punctuation section brackets end c++">]</span></span> <span class="token operator arithmetic c">&amp;&amp;</span> dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>v<span class="token punctuation section brackets end c++">]</span></span><span class="token operator comparison c">&gt;</span>dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token operator arithmetic c">+</span>Rev<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>k<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">len</span><span class="token punctuation section group end c++">)</span></span>
+                dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>v<span class="token punctuation section brackets end c++">]</span></span><span class="token operator assignment c">=</span>dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token operator arithmetic c">+</span>Rev<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>u<span class="token punctuation section brackets end c++">]</span></span><span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>k<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">len</span><span class="token punctuation terminator c++">;</span>
+        <span class="token punctuation section block end c++">}</span></span>
+    <span class="token punctuation section block end c++">}</span></span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
 
-<span class="token keyword">bool</span> <span class="token keyword">operator</span> <span class="token operator">&lt;</span> <span class="token punctuation">(</span><span class="token keyword">const</span> Node<span class="token operator">&amp;</span> a<span class="token punctuation">,</span><span class="token keyword">const</span> Node<span class="token operator">&amp;</span> b<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">return</span> <span class="token punctuation">(</span>a<span class="token punctuation">.</span>len<span class="token operator">+</span>dist<span class="token punctuation">[</span>a<span class="token punctuation">.</span>v<span class="token punctuation">]</span> <span class="token operator">></span> b<span class="token punctuation">.</span>len<span class="token operator">+</span>dist<span class="token punctuation">[</span>b<span class="token punctuation">.</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
+<span class="token keyword c">int</span> <span class="token function c++"><span class="token function c++">Astar</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++">
+</span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>dist<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>S<span class="token punctuation section brackets end c++">]</span></span><span class="token operator comparison c">==</span>INF<span class="token punctuation section group end c++">)</span></span> <span class="token keyword c++">return</span> <span class="token operator arithmetic c">-</span><span class="token number c++">1</span><span class="token punctuation terminator c++">;</span>
+    <span class="token function-call c++"><span class="token function C99 c">memset</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">cnt<span class="token punctuation separator c++">,</span><span class="token number c++">0</span><span class="token punctuation separator c++">,</span><span class="token operator word c++">sizeof</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span><span class="token group c++">cnt</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    priority_queue<span class="token punctuation section generic begin c++">&lt;</span>Node<span class="token punctuation section generic end c++">&gt;</span> Q<span class="token punctuation terminator c++">;</span>
+    Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">push</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token function-call c++"><span class="token variable function c++">Node</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">S<span class="token punctuation separator c++">,</span><span class="token number c++">0</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">while</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token operator arithmetic c">!</span>Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">empty</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation section group end c++">)</span></span>
+    <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+        <span class="token keyword c">int</span> len<span class="token operator assignment c">=</span>Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">top</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">len</span><span class="token punctuation terminator c++">;</span>
+        <span class="token keyword c">int</span> v<span class="token operator assignment c">=</span>Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">top</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">v</span><span class="token punctuation terminator c++">;</span>
+        Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">pop</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+        cnt<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>v<span class="token punctuation section brackets end c++">]</span></span><span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation terminator c++">;</span>
+        <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>cnt<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>T<span class="token punctuation section brackets end c++">]</span></span><span class="token operator comparison c">==</span>K<span class="token punctuation section group end c++">)</span></span>
+            <span class="token keyword c++">return</span> len<span class="token punctuation terminator c++">;</span>
+        <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>cnt<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>v<span class="token punctuation section brackets end c++">]</span></span><span class="token operator comparison c">&gt;</span>K<span class="token punctuation section group end c++">)</span></span>
+            <span class="token keyword c++">continue</span><span class="token punctuation terminator c++">;</span>
+        <span class="token keyword c++">for</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">int</span> i<span class="token operator assignment c">=</span><span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>i<span class="token operator comparison c">&lt;</span>Adj<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>v<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">size</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>i<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c++">)</span></span>
+            Q<span class="token punctuation accessor dot c++">.</span><span class="token method-call c++"><span class="token variable function member c++">push</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token function-call c++"><span class="token variable function c++">Node</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">Adj<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>v<span class="token punctuation section brackets end c++">]</span></span><span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>i<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">v</span><span class="token punctuation separator c++">,</span>len<span class="token operator arithmetic c">+</span>Adj<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>v<span class="token punctuation section brackets end c++">]</span></span><span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>i<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">len</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span></span><span class="token method-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token punctuation section block end c++">}</span></span>
+    <span class="token keyword c++">return</span> <span class="token operator arithmetic c">-</span><span class="token number c++">1</span><span class="token punctuation terminator c++">;</span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
 
-vector<span class="token operator">&lt;</span>Edge<span class="token operator">></span> Adj<span class="token punctuation">[</span>MAXN<span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token comment">//图的邻接表表示</span>
-vector<span class="token operator">&lt;</span>Edge<span class="token operator">></span> Rev<span class="token punctuation">[</span>MAXN<span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token comment">//图的逆图</span>
-
-<span class="token keyword">void</span> <span class="token function">Init_graph</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> u<span class="token punctuation">,</span>v<span class="token punctuation">,</span>l<span class="token punctuation">;</span>
-    Edge edge<span class="token punctuation">;</span>
-    <span class="token function">scanf</span><span class="token punctuation">(</span><span class="token string">"%d%d"</span><span class="token punctuation">,</span><span class="token operator">&amp;</span>N<span class="token punctuation">,</span><span class="token operator">&amp;</span>M<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span>M<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token function">scanf</span><span class="token punctuation">(</span><span class="token string">"%d%d%d"</span><span class="token punctuation">,</span><span class="token operator">&amp;</span>u<span class="token punctuation">,</span><span class="token operator">&amp;</span>v<span class="token punctuation">,</span><span class="token operator">&amp;</span>l<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        edge<span class="token punctuation">.</span>v<span class="token operator">=</span>v<span class="token punctuation">;</span>
-        edge<span class="token punctuation">.</span>len<span class="token operator">=</span>l<span class="token punctuation">;</span>
-        Adj<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span>edge<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        edge<span class="token punctuation">.</span>v<span class="token operator">=</span>u<span class="token punctuation">;</span>
-        Rev<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span>edge<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token function">scanf</span><span class="token punctuation">(</span><span class="token string">"%d%d%d"</span><span class="token punctuation">,</span><span class="token operator">&amp;</span>S<span class="token punctuation">,</span><span class="token operator">&amp;</span>T<span class="token punctuation">,</span><span class="token operator">&amp;</span>K<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//计算 S 到 T 的第 K 短路径</span>
-
-    <span class="token keyword">if</span><span class="token punctuation">(</span>S<span class="token operator">==</span>T<span class="token punctuation">)</span> K<span class="token operator">++</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment">//Dijkstra 算法 找出各个点到 T 的最短距离</span>
-<span class="token keyword">void</span> <span class="token function">Dijkstra</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token function">memset</span><span class="token punctuation">(</span>mark<span class="token punctuation">,</span><span class="token boolean">false</span><span class="token punctuation">,</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>mark<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>i<span class="token operator">&lt;=</span>N<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
-        dist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">=</span>INF<span class="token punctuation">;</span>
-    dist<span class="token punctuation">[</span>T<span class="token punctuation">]</span><span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">int</span> u<span class="token punctuation">,</span>v<span class="token punctuation">,</span>min<span class="token punctuation">;</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token punctuation">&#123;</span>
-        u<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span>min<span class="token operator">=</span>INF<span class="token punctuation">;</span>
-        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>i<span class="token operator">&lt;=</span>N<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
-            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>mark<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">&amp;&amp;</span> dist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">&lt;</span>min<span class="token punctuation">)</span>
-            <span class="token punctuation">&#123;</span>
-                min<span class="token operator">=</span>dist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
-                u<span class="token operator">=</span>i<span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>u<span class="token operator">==</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">break</span><span class="token punctuation">;</span>
-        mark<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token operator">=</span><span class="token boolean">true</span><span class="token punctuation">;</span>
-        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> k<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>k<span class="token operator">&lt;</span>Rev<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>k<span class="token operator">++</span><span class="token punctuation">)</span>
-        <span class="token punctuation">&#123;</span>
-            v<span class="token operator">=</span>Rev<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">.</span>v<span class="token punctuation">;</span>
-            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>mark<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">&amp;&amp;</span> dist<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token operator">></span>dist<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token operator">+</span>Rev<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">.</span>len<span class="token punctuation">)</span>
-                dist<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token operator">=</span>dist<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token operator">+</span>Rev<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">.</span>len<span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">int</span> <span class="token function">Astar</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span>dist<span class="token punctuation">[</span>S<span class="token punctuation">]</span><span class="token operator">==</span>INF<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token function">memset</span><span class="token punctuation">(</span>cnt<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>cnt<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    priority_queue<span class="token operator">&lt;</span>Node<span class="token operator">></span> Q<span class="token punctuation">;</span>
-    Q<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token function">Node</span><span class="token punctuation">(</span>S<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token operator">!</span>Q<span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token keyword">int</span> len<span class="token operator">=</span>Q<span class="token punctuation">.</span><span class="token function">top</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>len<span class="token punctuation">;</span>
-        <span class="token keyword">int</span> v<span class="token operator">=</span>Q<span class="token punctuation">.</span><span class="token function">top</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>v<span class="token punctuation">;</span>
-        Q<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        cnt<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token operator">++</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>cnt<span class="token punctuation">[</span>T<span class="token punctuation">]</span><span class="token operator">==</span>K<span class="token punctuation">)</span>
-            <span class="token keyword">return</span> len<span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>cnt<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token operator">></span>K<span class="token punctuation">)</span>
-            <span class="token keyword">continue</span><span class="token punctuation">;</span>
-        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span>Adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
-            Q<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token function">Node</span><span class="token punctuation">(</span>Adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>v<span class="token punctuation">,</span>len<span class="token operator">+</span>Adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>len<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token function">Init_graph</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">Dijkstra</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">int</span> ans<span class="token operator">=</span><span class="token function">Astar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span>ans<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</section>
+<span class="token keyword c">int</span> <span class="token function c++"><span class="token function c++">main</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++">
+</span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token function-call c++"><span class="token variable function c++">Init_graph</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token function-call c++"><span class="token variable function c++">Dijkstra</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">int</span> ans<span class="token operator assignment c">=</span><span class="token function-call c++"><span class="token variable function c++">Astar</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token function-call c++"><span class="token function C99 c">printf</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span><span class="token constant placeholder c">%d</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c++">,</span>ans</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">return</span> <span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
+</span></code></pre></section>
 
     <p></p>
 
@@ -348,12 +345,12 @@ vector<span class="token operator">&lt;</span>Edge<span class="token operator">>
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#A* k-shortest" >
-    <span class="tag-code">A* k-shortest</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -364,17 +361,17 @@ vector<span class="token operator">&lt;</span>Edge<span class="token operator">>
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/p/programming-peal/">
+      <a class="nav-left" href="/p/findsum/">
         <span class="nav-arrow">← </span>
         
-          《编程珠玑》：代码优化
+          一个小题目
         
       </a>
     
     
-      <a class="nav-right" href="/p/findsum/">
+      <a class="nav-right" href="/p/sicp/">
         
-          一个小题目
+          魔法书：SICP
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -405,7 +402,7 @@ vector<span class="token operator">&lt;</span>Edge<span class="token operator">>
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#A-%E7%AE%97%E6%B3%95"><span class="toc-nav-text">A* 算法</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Dijkstra%EF%BC%8BA-%E6%B1%82-k-%E7%9F%AD%E8%B7%AF%E5%BE%84"><span class="toc-nav-text">Dijkstra＋A* 求 k 短路径</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#A-算法"><span class="toc-nav-text">A* 算法</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Dijkstra＋A-求-k-短路径"><span class="toc-nav-text">Dijkstra＋A* 求 k 短路径</span></a></li></ol>
     
   </div>
 </aside>
@@ -416,7 +413,7 @@ vector<span class="token operator">&lt;</span>Edge<span class="token operator">>
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/astart-k-shortest-path/';
+    var url = 'http://catcoding.me//p/astart-k-shortest-path/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -477,7 +474,7 @@ vector<span class="token operator">&lt;</span>Edge<span class="token operator">>
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -502,8 +499,6 @@ vector<span class="token operator">&lt;</span>Edge<span class="token operator">>
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

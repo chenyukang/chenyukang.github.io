@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,62 +177,78 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h2 id="为什么要折腾"><a href="#为什么要折腾" class="headerlink" title="为什么要折腾"></a>为什么要折腾</h2><p>折腾了几次终于把博客从 wordpress 搬到 Github 了，迁徙这事本来是够麻烦的，而且也比较无聊。不过最终还是抑制不住诱惑，这有下面几点点好处。</p>
-<hr>
+    <section class="markdown-content"><h2 id="为什么要折腾"><a href="#为什么要折腾" class="headerlink" title="为什么要折腾"></a>为什么要折腾</h2>
+<p>折腾了几次终于把博客从 wordpress 搬到 Github 了，迁徙这事本来是够麻烦的，而且也比较无聊。不过最终还是抑制不住诱惑，这有下面几点点好处。</p>
+<hr />
 <ul>
-<li><p><strong>编辑方便，专注写作</strong></p>
-<p>在线下编辑，可以随便选择自己喜欢的编辑器。当然 wordpress 也有离线编辑工具，不过 Linux 下我还没找到合适的，<br>我平常是用<a target="_blank" rel="noopener" href="http://mwolson.org/projects/EmacsMuse.html">Muse</a>生成 html，然后再粘贴到站上。其实还好，<br>就是插入图片不方便。使用 Github 和 Jekyll 是完全的离线，你甚至都不需要离开终端就可以发布文章，一切都只是简单的 git push 而已。<br>写的过程中还可以用 jekyll  –server 预览最终排版。</p>
+<li>
+<p><strong>编辑方便，专注写作</strong></p>
+<p>在线下编辑，可以随便选择自己喜欢的编辑器。当然 wordpress 也有离线编辑工具，不过 Linux 下我还没找到合适的，
+我平常是用<a target="_blank" rel="noopener" href="http://mwolson.org/projects/EmacsMuse.html">Muse</a>生成 html，然后再粘贴到站上。其实还好，
+就是插入图片不方便。使用 Github 和 Jekyll 是完全的离线，你甚至都不需要离开终端就可以发布文章，一切都只是简单的 git push 而已。
+写的过程中还可以用 jekyll  –server 预览最终排版。</p>
 </li>
-<li><p><strong>可以使用 Github 进行版本管理</strong></p>
+<li>
+<p><strong>可以使用 Github 进行版本管理</strong></p>
 </li>
 </ul>
-<p>像写程序一样写日志，这对程序员吸引很大。<br>我用这个小脚本来完成发布：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/sh</span>
-<span class="token function-name function">do_commit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token assign-left variable">cmd</span><span class="token operator">=</span><span class="token string">"git commit -a -m<span class="token entity" title="\&quot;">\"</span><span class="token variable">$log</span><span class="token entity" title="\&quot;">\"</span>"</span>
-    <span class="token builtin class-name">echo</span> <span class="token variable">$cmd</span>
-    <span class="token function">git</span> <span class="token function">add</span> <span class="token builtin class-name">.</span><span class="token punctuation">;</span>
-    <span class="token function">git</span> commit <span class="token parameter variable">-a</span> -m<span class="token string">"<span class="token variable">$log</span>"</span>
-    <span class="token function">git</span> push<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
+<p>像写程序一样写日志，这对程序员吸引很大。
+我用这个小脚本来完成发布：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token comment number-sign shell"><span class="token punctuation definition comment begin shell">#</span></span><span class="token comment number-sign shell">!/bin/sh</span><span class="token comment number-sign shell">
+</span><span class="token function shell"><span class="token function shell">do_commit</span><span class="token punctuation section parens begin shell">(</span><span class="token punctuation section parens end shell">)</span> <span class="token punctuation section braces begin shell">{</span>
+    <span class="token variable other readwrite assignment shell">cmd</span><span class="token operator assignment shell">=</span><span class="token string unquoted shell"><span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>git commit -a -m<span class="constant character escape shell">\&quot;</span><span class="token group expansion parameter shell"><span class="token punctuation definition variable shell">$</span><span class="token variable other readwrite shell">log</span></span><span class="constant character escape shell">\&quot;</span><span class="token punctuation definition string end shell">&quot;</span></span></span>
+    <span class="token function-call shell"><span class="token function echo shell">echo</span></span><span class="token function-call arguments shell"> <span class="token group expansion parameter shell"><span class="token punctuation definition variable shell">$</span><span class="token variable other readwrite shell">cmd</span></span></span>
+    <span class="token function-call shell"><span class="token variable function shell">git</span></span><span class="token function-call arguments shell"> add .</span><span class="token operator logical continue shell">;</span>
+    <span class="token function-call shell"><span class="token variable function shell">git</span></span><span class="token function-call arguments shell"> commit<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>a</span><span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>m</span><span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span><span class="token group expansion parameter shell"><span class="token punctuation definition variable shell">$</span><span class="token variable other readwrite shell">log</span></span><span class="token punctuation definition string end shell">&quot;</span></span></span>
+    <span class="token function-call shell"><span class="token variable function shell">git</span></span><span class="token function-call arguments shell"> push</span><span class="token operator logical continue shell">;</span>
+<span class="token punctuation section braces end shell">}</span></span>
 
-<span class="token keyword">while</span> <span class="token punctuation">[</span> <span class="token variable">$#</span> <span class="token parameter variable">-gt</span> <span class="token number">0</span> <span class="token punctuation">]</span>
-<span class="token keyword">do</span>
-  <span class="token keyword">case</span> <span class="token variable">$1</span> <span class="token keyword">in</span>
-    <span class="token parameter variable">-commit</span> <span class="token operator">|</span>-u<span class="token punctuation">)</span> <span class="token builtin class-name">shift</span><span class="token punctuation">;</span> <span class="token assign-left variable">log</span><span class="token operator">=</span><span class="token variable">$1</span><span class="token punctuation">;</span> do_commit<span class="token punctuation">;</span> <span class="token builtin class-name">exit</span> <span class="token number">0</span><span class="token punctuation">;</span><span class="token punctuation">;</span>
-  <span class="token keyword">esac</span>
-  <span class="token builtin class-name">shift</span>
-<span class="token keyword">done</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token keyword while shell">while</span> <span class="token function test begin shell">[</span><span class="token function-call arguments shell"> <span class="token group expansion parameter shell"><span class="token punctuation definition variable shell">$</span><span class="token variable language shell">#</span></span> <span class="token variable parameter option shell"><span class="token punctuation definition parameter shell">-</span>gt</span> 0 <span class="token function test end shell">]</span></span>
+<span class="token keyword do shell">do</span>
+  <span class="token keyword case begin shell">case</span> <span class="token group expansion parameter shell"><span class="token punctuation definition variable shell">$</span><span class="token variable other readwrite shell">1</span></span> <span class="token keyword case in shell">in</span>
+    -commit <span class="token operator logical shell">|</span>-u<span class="token keyword case item shell">)</span> <span class="token function-call shell"><span class="token function shift shell">shift</span></span><span class="token operator logical continue shell">;</span> <span class="token variable other readwrite assignment shell">log</span><span class="token operator assignment shell">=</span><span class="token string unquoted shell"><span class="token group expansion parameter shell"><span class="token punctuation definition variable shell">$</span><span class="token variable other readwrite shell">1</span></span></span><span class="token function-call shell"></span><span class="token operator logical continue shell">;</span> <span class="token function-call shell"><span class="token variable function shell">do_commit</span></span><span class="token operator logical continue shell">;</span> <span class="token function-call shell"><span class="token function exit shell">exit</span></span><span class="token function-call arguments shell"> 0</span><span class="token punctuation terminator case shell">;;</span>
+  <span class="token keyword case end shell">esac</span>
+  <span class="token function-call shell"><span class="token function shift shell">shift</span></span>
+<span class="token keyword done shell">done</span>
+
+</span></code></pre>
 <ul>
 <li><strong>简洁</strong></li>
 </ul>
 <p>我喜欢这套是因为感觉一切都很简单，在_post 目录下写 markdown 格式的文章，生成网页、push 上去就发布了。页面也非常整洁，这对于一个以文字和代码为主要内容的站点来说最合适不过了。而且因为生成的全是静态网页，所以打开的速度也非常快。</p>
-<hr>
-<h2 id="折腾过程"><a href="#折腾过程" class="headerlink" title="折腾过程"></a>折腾过程</h2><hr>
-<p> 这套工具适合程序员，因为一切都可以在本机上操作，你可以自己写程序来批量处理文档。我是自己写了一点 Python 小程序转移图片。迁徙的过程中也会碰上一些问题，不过如果你懂一点 Ruby，这些都还是比较好解决的。基本步骤为：</p>
+<hr />
+<h2 id="折腾过程"><a href="#折腾过程" class="headerlink" title="折腾过程"></a>折腾过程</h2>
+<hr />
+<p>这套工具适合程序员，因为一切都可以在本机上操作，你可以自己写程序来批量处理文档。我是自己写了一点 Python 小程序转移图片。迁徙的过程中也会碰上一些问题，不过如果你懂一点 Ruby，这些都还是比较好解决的。基本步骤为：</p>
 <ul>
-<li><p>申请 GitHub，这个不少程序员有，直接跳过。</p>
+<li>
+<p>申请 GitHub，这个不少程序员有，直接跳过。</p>
 </li>
-<li><p>安装 Jekyll 在本地，可能会遇上 ruby 版本的问题，我的机子上是 1.8.7，需要 1.9.2，使用<a target="_blank" rel="noopener" href="https://rvm.io//">rvm</a>来解决，具体参考<a target="_blank" rel="noopener" href="http://lanvige.iteye.com/blog/857501">这里</a>。具体使用下面一些命令：</p>
+<li>
+<p>安装 Jekyll 在本地，可能会遇上 ruby 版本的问题，我的机子上是 1.8.7，需要 1.9.2，使用<a target="_blank" rel="noopener" href="https://rvm.io//">rvm</a>来解决，具体参考<a target="_blank" rel="noopener" href="http://lanvige.iteye.com/blog/857501">这里</a>。具体使用下面一些命令：</p>
 </li>
 </ul>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> gems <span class="token function">curl</span>
-gem <span class="token function">install</span> rvm
-rvm get latest
-rvm reload
-rvm <span class="token function">install</span> <span class="token number">1.9</span>.2
-rvm use <span class="token number">1.9</span>.2
-ruby <span class="token parameter variable">-v</span> <span class="token comment">#(use 1.9.2)</span>
-gem <span class="token function">install</span> directory_watcher liquid open4 maruku classifier jekyll
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">sudo</span></span><span class="token function-call arguments shell"> apt-get install gems curl</span>
+<span class="token function-call shell"><span class="token variable function shell">gem</span></span><span class="token function-call arguments shell"> install rvm</span>
+<span class="token function-call shell"><span class="token variable function shell">rvm</span></span><span class="token function-call arguments shell"> get latest</span>
+<span class="token function-call shell"><span class="token variable function shell">rvm</span></span><span class="token function-call arguments shell"> reload</span>
+<span class="token function-call shell"><span class="token variable function shell">rvm</span></span><span class="token function-call arguments shell"> install 1.9.2</span>
+<span class="token function-call shell"><span class="token variable function shell">rvm</span></span><span class="token function-call arguments shell"> use 1.9.2</span>
+<span class="token function-call shell"><span class="token variable function shell">ruby</span></span><span class="token function-call arguments shell"><span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>v <span class="token comment number-sign shell"><span class="token punctuation definition comment begin shell">#</span></span><span class="token comment number-sign shell">(use 1.9.2)</span><span class="token comment number-sign shell">
+</span></span></span><span class="token function-call shell"><span class="token variable function shell">gem</span></span><span class="token function-call arguments shell"> install directory_watcher liquid open4 maruku classifier jekyll</span>
+
+</span></code></pre>
 <ul>
-<li><p>再建立 yourname.github.com 项目，git clone <a target="_blank" rel="noopener" href="https://github.com/plusjade/jekyll-bootstrap.git">jekyll bootstrap</a>到自己的代码库。</p>
+<li>
+<p>再建立 yourname.github.com 项目，git clone <a target="_blank" rel="noopener" href="https://github.com/plusjade/jekyll-bootstrap.git">jekyll bootstrap</a>到自己的代码库。</p>
 </li>
-<li><p>从 wordpress 迁徙，我使用 wordpress.xml 这个方法，最后修改域名解析就大功告成了。<br>修改域名的时候在 Git 上建立 CNAME 为 demo.com，在 DNS 处设置 demo.com 的 A 记录到 Github 的地址 (207.97.227.245)，同时为了使得 <a target="_blank" rel="noopener" href="http://www.demo.com">www.demo.com</a> 也指向 GitHub，设定<br>www 的 A 记录到这个地址。这是我设置的时候出错了的地方。</p>
+<li>
+<p>从 wordpress 迁徙，我使用 wordpress.xml 这个方法，最后修改域名解析就大功告成了。
+修改域名的时候在 Git 上建立 CNAME 为 demo.com，在 DNS 处设置 demo.com 的 A 记录到 Github 的地址 (207.97.227.245)，同时为了使得 www.demo.com 也指向 GitHub，设定
+www 的 A 记录到这个地址。这是我设置的时候出错了的地方。</p>
+</li>
+</ul>
 <p>整个流程非常简单，你甚至可以在<a target="_blank" rel="noopener" href="http://ztpala.com/2012/01/12/zero-to-hosted-jekyll-blog-in-3-minutes/">三分钟内完成 Github 的博客搭建</a>，更相详细可以参考<a target="_blank" rel="noopener" href="http://jekyllbootstrap.com/usage/jekyll-quick-start.html">这里</a><a target="_blank" rel="noopener" href="http://vitobotta.com/how-to-migrate-from-wordpress-to-jekyll/">这里</a>。</p>
-</li>
-</ul>
 </section>
 
     <p></p>
@@ -263,12 +267,12 @@ gem <span class="token function">install</span> directory_watcher liquid open4 m
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Git" >
-    <span class="tag-code">Git</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Jekyll" >
-    <span class="tag-code">Jekyll</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -289,7 +293,7 @@ gem <span class="token function">install</span> directory_watcher liquid open4 m
     
       <a class="nav-right" href="/p/find-duplicated-cycle-detection/">
         
-          Find duplicated Number ...
+          Find duplicated Number and Cycle detection
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -320,7 +324,7 @@ gem <span class="token function">install</span> directory_watcher liquid open4 m
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%8A%98%E8%85%BE"><span class="toc-nav-text">为什么要折腾</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%8A%98%E8%85%BE%E8%BF%87%E7%A8%8B"><span class="toc-nav-text">折腾过程</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#为什么要折腾"><span class="toc-nav-text">为什么要折腾</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#折腾过程"><span class="toc-nav-text">折腾过程</span></a></li></ol>
     
   </div>
 </aside>
@@ -331,7 +335,7 @@ gem <span class="token function">install</span> directory_watcher liquid open4 m
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/try-jekyll-git/';
+    var url = 'http://catcoding.me//p/try-jekyll-git/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -392,7 +396,7 @@ gem <span class="token function">install</span> directory_watcher liquid open4 m
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -417,8 +421,6 @@ gem <span class="token function">install</span> directory_watcher liquid open4 m
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

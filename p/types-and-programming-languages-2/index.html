@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,27 +177,31 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><h3 id="Side-effect"><a href="#Side-effect" class="headerlink" title="Side effect"></a>Side effect</h3><p>In particular, besides just yielding results, evaluation of terms in these languages may assign to mutable variables (reference cells, arrays, mutable record fields, etc.), perform input and output to files, displays, or network connections, make non-local transfers of control via exceptions, jumps, or continuations, engage in inter-process synchronization and communication, and so on. In the literature on programming languages, such “side effects” of computation are more generally referred to as computational effects.</p>
+    <section class="markdown-content"><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><h3 id="Side-effect"><a href="#Side-effect" class="headerlink" title="Side effect"></a>Side effect</h3>
+<p>In particular, besides just yielding results, evaluation of terms in these languages may assign to mutable variables (reference cells, arrays, mutable record fields, etc.), perform input and output to files, displays, or network connections, make non-local transfers of control via exceptions, jumps, or continuations, engage in inter-process synchronization and communication, and so on. In the literature on programming languages, such “side effects” of computation are more generally referred to as computational effects.</p>
 <p>引用指向的对象可以是基本类型、组合类型，甚至是函数，把指向函数的 ref 放进对应的 record，就变成一个简单的 object，OOP 的原型就出来了。</p>
-<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml">update <span class="token operator">=</span> λa<span class="token punctuation">:</span>NatArray<span class="token punctuation">.</span> λm<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span> λv<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span>
-     a <span class="token operator">:=</span> <span class="token punctuation">(</span>λn<span class="token punctuation">:</span>Nat<span class="token punctuation">.</span> <span class="token keyword">if</span> equal m n <span class="token keyword">then</span> v <span class="token keyword">else</span> <span class="token punctuation">(</span><span class="token operator">!</span>a<span class="token punctuation">)</span> n<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token ocaml">update <span class="token operator infix ocaml">=</span> λa:<span class="token module-reference ocaml">NatArray.</span> λm:<span class="token module-reference ocaml">Nat.</span> λv:<span class="token module-reference ocaml">Nat.</span>
+     a <span class="token operator symbol ocaml">:=</span> <span class="token type-constraint ocaml"><span class="token punctuation section type-constraint ocaml">(</span>λn<span class="token punctuation separator type-constraint ocaml">:</span><span class="token keyword ocaml">Nat. if equal m n then v else (!a</span><span class="token punctuation section type-constraint ocaml">)</span></span> n)<span class="token punctuation separator ocaml">;</span>
+</span></code></pre>
 <p>通过这个习题的例子可以看出 ref 引进的副作用。</p>
-<h2 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a>Garbage Collection</h2><h3 id="GC-or-not"><a href="#GC-or-not" class="headerlink" title="GC or not"></a>GC or not</h3><p>This is not just a question of taste in language design: it is extremely difficult to achieve type safety in the presence of an explicit deallocation operation.</p>
+<h2 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a>Garbage Collection</h2><h3 id="GC-or-not"><a href="#GC-or-not" class="headerlink" title="GC or not"></a>GC or not</h3>
+<p>This is not just a question of taste in language design: it is extremely difficult to achieve type safety in the presence of an explicit deallocation operation.</p>
 <p>The reason for this is the familiar dangling reference problem: we allocate a cell holding a number, save a reference to it in some data structure, use it for a while, then deallocate it and allocate a new cell holding a boolean, possibly reusing the same storage. Now we can have two names for the same storage cell—one with type Ref Nat and the other with type Ref Bool.</p>
-<h3 id="Pointer"><a href="#Pointer" class="headerlink" title="Pointer"></a>Pointer</h3><p>Pointer arithmetic is occasionally very useful (especially for implementing low-level components of run-time systems, such as garbage collectors), it cannot be tracked by most type systems: knowing that location n in the store contains a Float doesn’t tell us anything useful about the type of location n + 4. In C, pointer arithmetic is a notorious source of type safety violations.</p>
+<h3 id="Pointer"><a href="#Pointer" class="headerlink" title="Pointer"></a>Pointer</h3>
+<p>Pointer arithmetic is occasionally very useful (especially for implementing low-level components of run-time systems, such as garbage collectors), it cannot be tracked by most type systems: knowing that location n in the store contains a Float doesn’t tell us anything useful about the type of location n + 4. In C, pointer arithmetic is a notorious source of type safety violations.</p>
 <p>Store typings: 引入引用后类型系统需要处理 Cyclic reference structures，比如 double linked list。Store typings 就是一个 locations 到 typings 的映射。</p>
 <p>实现 fullref：引用部分的实现非常简单，</p>
-<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmRef<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">)</span> <span class="token operator">-></span>
-    TyRef<span class="token punctuation">(</span>typeof ctx t1<span class="token punctuation">)</span>
-<span class="token operator">|</span> TmLoc<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>l<span class="token punctuation">)</span> <span class="token operator">-></span>
-    error fi <span class="token string">"locations are not supposed to occur in source programs!"</span>
-<span class="token operator">|</span> TmDeref<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">)</span> <span class="token operator">-></span>
-    <span class="token punctuation">(</span><span class="token keyword">match</span> simplifyty ctx <span class="token punctuation">(</span>typeof ctx t1<span class="token punctuation">)</span> <span class="token keyword">with</span>
-        TyRef<span class="token punctuation">(</span>tyT1<span class="token punctuation">)</span> <span class="token operator">-></span> tyT1
-      <span class="token operator">|</span> TyBot <span class="token operator">-></span> TyBot
-      <span class="token operator">|</span> TySource<span class="token punctuation">(</span>tyT1<span class="token punctuation">)</span> <span class="token operator">-></span> tyT1
-      <span class="token operator">|</span> <span class="token punctuation">_</span> <span class="token operator">-></span> error fi <span class="token string">"argument of ! is not a Ref or Source"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</section>
+<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token ocaml"><span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">|</span> <span class="token class-name variant ocaml">TmRef</span><span class="token paren-group ocaml">(<span class="token variable parameter ocaml">fi</span>,<span class="token variable parameter ocaml">t1</span>)</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span>
+    <span class="token class-name variant ocaml">TyRef</span><span class="token paren-group ocaml">(typeof ctx t1)</span>
+<span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">|</span> <span class="token class-name variant ocaml">TmLoc</span><span class="token paren-group ocaml">(<span class="token variable parameter ocaml">fi</span>,<span class="token variable parameter ocaml">l</span>)</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span>
+    error fi <span class="token string double ocaml"><span class="token punctuation definition string begin ocaml">&quot;</span>locations are not supposed to occur in source programs!<span class="token punctuation definition string end ocaml">&quot;</span></span>
+<span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">|</span> <span class="token class-name variant ocaml">TmDeref</span><span class="token paren-group ocaml">(<span class="token variable parameter ocaml">fi</span>,<span class="token variable parameter ocaml">t1</span>)</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span>
+    <span class="token paren-group ocaml">(<span class="token keyword ocaml">match</span> simplifyty ctx <span class="token paren-group ocaml">(typeof ctx t1)</span> <span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">with</span>
+        <span class="token class-name variant ocaml">TyRef</span><span class="token paren-group ocaml">(<span class="token variable parameter ocaml">tyT1</span>)</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span> tyT1
+      <span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">|</span> <span class="token class-name variant ocaml">TyBot</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span> <span class="token class-name variant ocaml">TyBot</span>
+      <span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">|</span> <span class="token class-name variant ocaml">TySource</span><span class="token paren-group ocaml">(<span class="token variable parameter ocaml">tyT1</span>)</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span> tyT1
+      <span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">|</span> <span class="token boolean universal-match ocaml">_</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span> error fi <span class="token string double ocaml"><span class="token punctuation definition string begin ocaml">&quot;</span>argument of ! is not a Ref or Source<span class="token punctuation definition string end ocaml">&quot;</span></span>)</span>
+</span></code></pre></section>
 
     <p></p>
 
@@ -227,16 +219,16 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#OCaml" >
-    <span class="tag-code">OCaml</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#PL" >
-    <span class="tag-code">PL</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -257,7 +249,7 @@
     
       <a class="nav-right" href="/p/types-and-programming-languages-3/">
         
-          Types and Programming  ...
+          Types and Programming Languages (3)
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -299,7 +291,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/types-and-programming-languages-2/';
+    var url = 'http://catcoding.me//p/types-and-programming-languages-2/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -360,7 +352,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -385,8 +377,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

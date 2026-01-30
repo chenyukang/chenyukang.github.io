@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,7 +177,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><img src="/images/ob_pasted-image-20230205134219.png" alt=""></p>
+    <section class="markdown-content"><p><img src="/images/ob_pasted-image-20230205134219.png" alt="" /></p>
 <p>西西里岛，是位于意大利南部阳光而宁静的岛屿，正如电影《西西里岛的美丽传说》中演绎的那样，这里有着古老的历史和建筑，看起来和 IT 不沾边，却是 Redis 的作者 antirez 的居住地。</p>
 <p>Redis 是互联网的一个基础设施，这个世界上大量的网站背后都有 Redis 的影子。相比于 Redis 的流行度，很多程序员并不了解 antirez 的故事。最近我看了他几乎所有的博文，和你分享一下我了解到的趣事以及我们能从这位 70 后的上一代程序员身上学到什么。</p>
 <p>antirez 不是一个典型的意大利程序员，大部分当地人喜欢 boring-but-sure 的路径，IT 这行在当地算不得特别高薪的工作，大多数人不喜欢做过多探索，但 antirez 喜欢新东西和创造新东西。在一篇 10 年前的访谈中 antirez 谈到，住在意大利对程序员而言没有多大的影响，因为我们可以在互联网上经历有趣的一切：</p>
@@ -201,8 +189,8 @@
 <p>antirez 使用 Tcl 快速撸了一个名为 <a target="_blank" rel="noopener" href="https://gist.github.com/antirez/6ca04dd191bdb82aad9fb241013e88a8">LLOOGG Memory DB</a> 的模块，总共只有 300 行，但却解决了手里的问题并包含了 Redis 的核心设计，有 <code>protocol</code> 和 <code>list</code>，还有 6379 端口！</p>
 <p>随后 antirez 重新用 C 语言实现了新的版本，投入生产环境良好运行了几周，随后发表在 Hacker News 上并由此得到了更多关注，越来越多的公司开始在生产环境运行 Redis。</p>
 <p><sub>这里谈点题外话，Redis 最初在 Ruby 社区受到了关注，随后 Github、Instagram 等站点开始使用 Redis。Ruby 社区曾经是潮流的引领者，比如 Git 最初发表 Linus 也搞不懂为什么 Ruby 社区的人们这么喜欢这东西，后来就有了 Rails 写的 Github。虽然 Ruby 现在略显式微，但我们应该感谢 Ruby 社区的好品味给业界发现和创造了这么多好东西。</sub></p>
-<p>如果只是用来做缓存，2003 年开始我们已经有了 memcached，比如我 2011 年刚工作那会儿 memcached 是更成熟通用的组件，我还仔细<a href="https://catcoding.me/p/memcached/">读过 memcached 的源码</a>，但为什么 Redis 能后来居上？</p>
-<p><img src="/images/ob_pasted-image-20230331121122.png" alt=""></p>
+<p>如果只是用来做缓存，2003 年开始我们已经有了 memcached，比如我 2011 年刚工作那会儿 memcached 是更成熟通用的组件，我还仔细<a target="_blank" rel="noopener" href="https://catcoding.me/p/memcached/">读过 memcached 的源码</a>，但为什么 Redis 能后来居上？</p>
+<p><img src="/images/ob_pasted-image-20230331121122.png" alt="" /></p>
 <p>antirez 谈到主要有两点：</p>
 <ul>
 <li>对于密集写入的场景，特别是缓存相关的需求，Redis 可以节省成本，性能也很好</li>
@@ -215,12 +203,12 @@
 <p>Redis 天然支持各种常用的数据结构，比如 list、set、maps 等等，这些数据结构让 Redis 可以应对各种业务需求，可以说 Redis 开启了一个 KV 数据库的新时代。</p>
 <p>这个故事和 SQLite 的由来相得益彰，SQLite 的第一个版本只是个 Tcl 扩展，Git 的第一个版本只有 1200 行，这似乎印证了软件设计中的一个道理：运行良好的复杂系统往往由简单设计演化而来，而一个从开头设计的复杂系统往往不行，通过打补丁的方式通常也无法解决：</p>
 <blockquote>
-<p>A complex system that works is invariably found to have evolved from a simple system that worked. A complex system designed from scratch never works and cannot be patched up to make it work. You have to start over with a working simple system.” – John Gall</p>
+<p>A complex system that works is invariably found to have evolved from a simple system that worked. A complex system designed from scratch never works and cannot be patched up to make it work. You have to start over with a working simple system.“ – John Gall</p>
 </blockquote>
-<p><sub>Redis 和 SQLite 都深受 Tcl 的影响，而 Tcl 是一门 1988 年发明有着 35 年历史的语言。Tcl 继承着 Unix 那种设计可组合、小巧的组件并保持简洁接口的设计风格，antirez 认为自己的程序理念深受 Tcl 的启发，特别是 Tcl 里 <code>All data types can be manipulated as strings</code> 和命令的风格延续到了 Redis 里。而 John Ousterhout 当年是为了解决 <a href="https://catcoding.me/p/3-years-in-eda/">EDA 开发</a> 中的一个需求发明了 Tcl，在互联网浪潮还未掀起的 80、90 年代里 EDA 真算是个技术领域里的一颗明珠，衍生出了很多技术分支。</sub></p>
+<p><sub>Redis 和 SQLite 都深受 Tcl 的影响，而 Tcl 是一门 1988 年发明有着 35 年历史的语言。Tcl 继承着 Unix 那种设计可组合、小巧的组件并保持简洁接口的设计风格，antirez 认为自己的程序理念深受 Tcl 的启发，特别是 Tcl 里 <code>All data types can be manipulated as strings</code> 和命令的风格延续到了 Redis 里。而 John Ousterhout 当年是为了解决 <a target="_blank" rel="noopener" href="https://catcoding.me/p/3-years-in-eda/">EDA 开发</a> 中的一个需求发明了 Tcl，在互联网浪潮还未掀起的 80、90 年代里 EDA 真算是个技术领域里的一颗明珠，衍生出了很多技术分支。</sub></p>
 <p>Redis 的源码可作为 C 系统编程的典范，还包含了很多经典的数据结构的实现，你可以读读这本 <a target="_blank" rel="noopener" href="http://redisbook.com/index.html">Redis 设计与实现</a> 来领略一番。</p>
 <p>随后 Redis 被 VMWare 赞助，后来又成立了专门的 Redis Labs。虽然 Redis 从一开始就是个热门的开源项目，但我们可以从提交数排名可以看出，在这近 10 年间主要是 antirez 一个人在做贡献和维护。</p>
-<p><img src="/images/ob_screenshot-2023-03-30-at-09.29.44.png" alt=""></p>
+<p><img src="/images/ob_screenshot-2023-03-30-at-09.29.44.png" alt="" /></p>
 <p>这是一个较为奇怪的现象，毕竟 Redis 是一个如此通用的组件，Github 上的关注度也很高，来自各种场景的需求会非常多。</p>
 <p>但如果你仔细回顾 antirez 的风格，这就有了合理的解释。他认为对 Redis 来说，避免复杂度、保持稳定性是最重要的事，所以每天他面对众多的需求和 PR 时，大多数时候他都会说“No”，否则就会出现 <code>Less stable code base, more problems</code> 的恶性循环。</p>
 <blockquote>
@@ -236,7 +224,17 @@
 </blockquote>
 <p>我想，这也是我们作为程序员想要提升到更高层次必须意识到的一个方面，<strong>不要过多花时间关注在编码上，而应该是花时间在思考需求和问题、找到好的设计这些事情上</strong>。</p>
 <p>长久维护一个项目也会感觉到无聊，为了让自己保持兴趣，antirez 会尝试在不同的领域切换，比如一段时间做数据结构，过几周就切换到 cluster 之类的。并且除了 Redis 之外，他还在做更多 <a target="_blank" rel="noopener" href="http://antirez.com/news/86">side project</a>:</p>
-<p>1) Load81, children programming environment.<br>2) Dump1090, software defined radio ADS-B decoder.<br>3) A Javascript ray tracer.<br>4) lua-cmsgpack, C implementation of msgpack for Lua.<br>5) linenoise line editing library. Used in Redis, but well, was not our top priority.<br>6) lamernews, Redis-based HN clone.<br>7) Gitan, a small Git web interface.<br>8) shapeme, images evolver using simulated annealing.<br>9) Disque, a distributed queue (work in progress right now).</p>
+<ol>
+<li>Load81, children programming environment.</li>
+<li>Dump1090, software defined radio ADS-B decoder.</li>
+<li>A Javascript ray tracer.</li>
+<li>lua-cmsgpack, C implementation of msgpack for Lua.</li>
+<li>linenoise line editing library. Used in Redis, but well, was not our top priority.</li>
+<li>lamernews, Redis-based HN clone.</li>
+<li>Gitan, a small Git web interface.</li>
+<li>shapeme, images evolver using simulated annealing.</li>
+<li>Disque, a distributed queue (work in progress right now).</li>
+</ol>
 <p>作为程序员 side project 是一种探索也是一种精神休息的方式，并且程序员通常会在 side project 中显得更有创造力：</p>
 <blockquote>
 <p>Like a writer will do her best when writing that novel that, maybe, nobody will pay a single cent for, and not when doing copywriting work for a well known company, programmers are likely to spend more energies in their open source side projects than during office hours, while writing another piece of a project they feel stupid, boring, pointless.</p>
@@ -287,16 +285,16 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#写作" >
-    <span class="tag-code">写作</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#技术" >
-    <span class="tag-code">技术</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Redis" >
-    <span class="tag-code">Redis</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -349,7 +347,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/redis-antriez/';
+    var url = 'http://catcoding.me//p/redis-antriez/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -410,7 +408,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -435,8 +433,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

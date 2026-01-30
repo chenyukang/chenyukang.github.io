@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -191,39 +179,51 @@
   <article class="post-article">
     <section class="markdown-content"><p>上周末试着在 Andriod 上配置好了 Obsidian 的客户端，没想到还挺好用。<sub>如果你已经买了 Obsidian 的 sync 服务，并且一切用起来都挺好的，那就不用看我这篇介绍了。</sub></p>
 <p>我折腾这个的主要的需求是使用私有仓库的 Git repo 来同步日记。为什么不买 <code>Obsidian sync</code>，我认为 Github 更符合我的使用习惯，并且我选择使用 Obisidian 的一个原因就是我不想把笔记数据同步到其他的第三方平台上，相对来说 Github 是我更信任的基础设施，毕竟我已经使用 Github 这么多年了。</p>
-<h2 id="Andriod-客户端"><a href="#Andriod-客户端" class="headerlink" title="Andriod 客户端"></a>Andriod 客户端</h2><p>Obsidian 的安卓客户端好像没有在国内各个安卓软件市场上，你需要用过 Google play 来安装。</p>
-<h2 id="Termux"><a href="#Termux" class="headerlink" title="Termux"></a>Termux</h2><p><a target="_blank" rel="noopener" href="https://github.com/termux/termux-app#installation">termux/termux-app</a>  是一个 Andriod 上的终端模拟器，也是一个开源软件。基本上你可以把 Andriod 当作一个简化版本的 Linux 服务器来使用，<a target="_blank" rel="noopener" href="https://www.sqlsec.com/2018/05/termux.html#Termux-%E7%AE%80%E4%BB%8B">Termux 高级终端安装使用配置教程</a> 是一个很详细的介绍文章。</p>
+<h2 id="Andriod-客户端"><a href="#Andriod-客户端" class="headerlink" title="Andriod 客户端"></a>Andriod 客户端</h2>
+<p>Obsidian 的安卓客户端好像没有在国内各个安卓软件市场上，你需要用过 Google play 来安装。</p>
+<h2 id="Termux"><a href="#Termux" class="headerlink" title="Termux"></a>Termux</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/termux/termux-app#installation">termux/termux-app</a>  是一个 Andriod 上的终端模拟器，也是一个开源软件。基本上你可以把 Andriod 当作一个简化版本的 Linux 服务器来使用，<a target="_blank" rel="noopener" href="https://www.sqlsec.com/2018/05/termux.html#Termux-%E7%AE%80%E4%BB%8B">Termux 高级终端安装使用配置教程</a> 是一个很详细的介绍文章。</p>
 <p>注意目前 termux 已经不能在 Google Play 上安装了，你需要去 <a target="_blank" rel="noopener" href="https://github.com/termux/termux-app/releases">Releases · termux/termux-app</a> 下 apk 安装包来手动安装。</p>
 <p>termux 安装好之后就可以在 Andriod 手机上跑一个 Shell，打卡进去之后运行来创建一个叫作 <code>storage</code> 的目录：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">termux-setup-storage<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">termux-setup-storage</span></span>
+</span></code></pre>
 <p>接下来安装一些后面需要用到的依赖：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">pkg <span class="token function">install</span> <span class="token function">git</span>
-pkg <span class="token function">install</span> openssl<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><p>用 <code>ssh-keygen</code> 来生成一对公钥和私钥，把公钥配置到自己的 Github 账户上，然后 clone 你的 Obsidian vault repo：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> storage/share
-<span class="token function">git</span> config <span class="token parameter variable">--global</span> credential.helper store
-<span class="token function">git</span> config <span class="token parameter variable">--global</span> user.email <span class="token string">"&lt;your_email>"</span>
-<span class="token function">git</span> config <span class="token parameter variable">--global</span> user.name <span class="token string">"&lt;The name you want on your commits>"</span>
-<span class="token function">git</span> config <span class="token parameter variable">--global</span> pull.rebase <span class="token boolean">true</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">pkg</span></span><span class="token function-call arguments shell"> install git</span>
+<span class="token function-call shell"><span class="token variable function shell">pkg</span></span><span class="token function-call arguments shell"> install openssl</span>
+</span></code></pre><h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2>
+<p>用 <code>ssh-keygen</code> 来生成一对公钥和私钥，把公钥配置到自己的 Github 账户上，然后 clone 你的 Obsidian vault repo：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token function cd shell">cd</span></span><span class="token function-call arguments shell"> storage/share</span>
+<span class="token function-call shell"><span class="token variable function shell">git</span></span><span class="token function-call arguments shell"> config<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>global</span> credential.helper store</span>
+<span class="token function-call shell"><span class="token variable function shell">git</span></span><span class="token function-call arguments shell"> config<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>global</span> user.email <span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>&lt;your_email&gt;<span class="token punctuation definition string end shell">&quot;</span></span></span>
+<span class="token function-call shell"><span class="token variable function shell">git</span></span><span class="token function-call arguments shell"> config<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>global</span> user.name <span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>&lt;The name you want on your commits&gt;<span class="token punctuation definition string end shell">&quot;</span></span></span>
+<span class="token function-call shell"><span class="token variable function shell">git</span></span><span class="token function-call arguments shell"> config<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>global</span> pull.rebase true</span>
+</span></code></pre>
 <p>确保能在 Termux 上正确提交改动到 Github 上。如果有一些文件是不想同步到远程的，可以加入到<code>.git/info/exclude</code> 里，比如把 <code>.obsidian/workspace-mobile.json</code> 忽略了。</p>
 <p>打开 Obsidian 的客户端，找到刚才 Git clone 的目录，打开作为 vault 即可使用。</p>
-<h2 id="定时备份"><a href="#定时备份" class="headerlink" title="定时备份"></a>定时备份</h2><p>先安装 Termux 上的 cron 服务：<br><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">pkg <span class="token function">install</span> cronie termux-services<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></p>
-<p>然后退出 Termux 重新打开，运行：<br><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sv-enable crond<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></p>
+<h2 id="定时备份"><a href="#定时备份" class="headerlink" title="定时备份"></a>定时备份</h2>
+<p>先安装 Termux 上的 cron 服务：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">pkg</span></span><span class="token function-call arguments shell"> install cronie termux-services</span>
+</span></code></pre>
+<p>然后退出 Termux 重新打开，运行：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">sv-enable</span></span><span class="token function-call arguments shell"> crond</span>
+</span></code></pre>
 <p>运行 <code>crontab -e</code> 来创建一个定时备份的 job：</p>
-<pre class="line-numbers language-none"><code class="language-none">*&#x2F;2 * * * * ~&#x2F;sync_repo.sh<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+*/2 * * * * ~/sync_repo.sh
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
 <p>每两分钟自动备份一次，我的 <code>sync_repo.sh</code> 是这样的：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/bash</span>
-<span class="token builtin class-name">cd</span>  /data/data/com.termux/files/home/storage/shared/ob
-<span class="token function">git</span> <span class="token function">add</span> <span class="token parameter variable">-A</span> <span class="token operator">&amp;&amp;</span> <span class="token function">git</span> commit <span class="token parameter variable">-a</span> <span class="token parameter variable">-m</span> <span class="token string">"android backup: <span class="token variable"><span class="token variable">`</span><span class="token function">date</span> +<span class="token string">'%Y-%m-%d %H-%M-%S'</span><span class="token variable">`</span></span>"</span>
-<span class="token function">git</span> pull
-<span class="token function">git</span> <span class="token function">add</span> <span class="token builtin class-name">.</span>
-<span class="token function">git</span> rebase <span class="token parameter variable">--continue</span>
-<span class="token function">git</span> push<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">#!/bin/bash
+cd  /data/data/com.termux/files/home/storage/shared/ob
+git add -A &amp;&amp; git commit -a -m &quot;android backup: `date +&#39;%Y-%m-%d %H-%M-%S&#39;`&quot;
+git pull
+git add .
+git rebase --continue
+git push
+</code></pre>
 <p>上面的同步脚本很粗暴，如果冲突了我会把冲突一起提交进去，但这也是合理的，因为我需要让自动同步尽量成功，至于冲突可以在笔记本上解决。如果 Termux 进程被杀了，自动备份将无法自动运行。但在我的日常使用过程中，这倒不是一个大问题。</p>
-<hr>
+<hr />
 <p>参考：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://forum.obsidian.md/t/guide-using-git-to-sync-your-obsidian-vault-on-android-devices/41887">Using Git to sync your Obsidian vault on Android devices - Share &amp; showcase - Obsidian Forum</a></li>
+<li><a target="_blank" rel="noopener" href="https://forum.obsidian.md/t/guide-using-git-to-sync-your-obsidian-vault-on-android-devices/41887">Using Git to sync your Obsidian vault on Android devices - Share & showcase - Obsidian Forum</a></li>
 <li><a target="_blank" rel="noopener" href="https://gist.github.com/Makeshift/43c7ecb3f1c28a623ea4386552712114">Tutorial for automatically syncing an Obsidian vault with Git on an Android device</a></li>
 </ul>
 </section>
@@ -244,12 +244,12 @@ pkg <span class="token function">install</span> openssl<span aria-hidden="true" 
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Obsidian" >
-    <span class="tag-code">Obsidian</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Git" >
-    <span class="tag-code">Git</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -301,7 +301,7 @@ pkg <span class="token function">install</span> openssl<span aria-hidden="true" 
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Andriod-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-nav-text">Andriod 客户端</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Termux"><span class="toc-nav-text">Termux</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Git"><span class="toc-nav-text">Git</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%AE%9A%E6%97%B6%E5%A4%87%E4%BB%BD"><span class="toc-nav-text">定时备份</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Andriod-客户端"><span class="toc-nav-text">Andriod 客户端</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Termux"><span class="toc-nav-text">Termux</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Git"><span class="toc-nav-text">Git</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#定时备份"><span class="toc-nav-text">定时备份</span></a></li></ol>
     
   </div>
 </aside>
@@ -312,7 +312,7 @@ pkg <span class="token function">install</span> openssl<span aria-hidden="true" 
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/obsidian-andriod-client-sync-git/';
+    var url = 'http://catcoding.me//p/obsidian-andriod-client-sync-git/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -373,7 +373,7 @@ pkg <span class="token function">install</span> openssl<span aria-hidden="true" 
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -398,8 +398,6 @@ pkg <span class="token function">install</span> openssl<span aria-hidden="true" 
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

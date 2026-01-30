@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,97 +178,115 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>Kong 的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。</p>
-<h3 id="worker-模型"><a href="#worker-模型" class="headerlink" title="worker 模型"></a>worker 模型</h3><p>假设我们对 Kong 做了一个更改的请求，这个请求通常是通过 admin_api 这个路由处理的。也就是说最终执行数据库操作的动作是在一个 Nginx worker 进程里。因为操作了数据库所以我们需要刷新这个 Kong 节点的所有 worker 的缓存，而且要把事件分发给其他 Kong 节点，让其他 Kong 节点刷新所有 worker 的缓存。</p>
-<p><img src="/images/kong-message.png" alt="kong-message" class="img-center"><span class="image-caption">kong-message</span></p>
+<h3 id="worker-模型"><a href="#worker-模型" class="headerlink" title="worker 模型"></a>worker 模型</h3>
+<p>假设我们对 Kong 做了一个更改的请求，这个请求通常是通过 admin_api 这个路由处理的。也就是说最终执行数据库操作的动作是在一个 Nginx worker 进程里。因为操作了数据库所以我们需要刷新这个 Kong 节点的所有 worker 的缓存，而且要把事件分发给其他 Kong 节点，让其他 Kong 节点刷新所有 worker 的缓存。</p>
+<img src="/images/kong-message.png" alt="kong-message" class="img-center">
 <p>这就涉及到两部分：</p>
 <ol>
 <li>Kong 节点之间的消息通信，这是使用<a target="_blank" rel="noopener" href="https://www.serf.io/">serf</a>来实现的</li>
 <li>Kong 每个节点内部，也就是 Nginx worker 之间的通信，这是使用<a target="_blank" rel="noopener" href="https://github.com/Mashape/lua-resty-worker-events">lua-resty-worker-events</a>来进行。</li>
 </ol>
-<h3 id="发布订阅模式"><a href="#发布订阅模式" class="headerlink" title="发布订阅模式"></a>发布订阅模式</h3><p>发布订阅是实现事件的一种经典设计模式，主要需要有两类操作：</p>
+<h3 id="发布订阅模式"><a href="#发布订阅模式" class="headerlink" title="发布订阅模式"></a>发布订阅模式</h3>
+<p>发布订阅是实现事件的一种经典设计模式，主要需要有两类操作：</p>
 <ol>
 <li>发布消息</li>
 <li>订阅消息，收到消息后触发指定的函数。</li>
 </ol>
-<p>Kong 使用的是一个<a target="_blank" rel="noopener" href="https://github.com/Olivine-Labs/mediator_lua">叫作 mediator_lua</a>，mediator 中文意思为”中间人”，很符合项目的意思。可以看到 kong/core/events.lua 里面实现如下：</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">function</span> Events<span class="token punctuation">:</span><span class="token function">subscribe</span><span class="token punctuation">(</span>event_name<span class="token punctuation">,</span> fn<span class="token punctuation">)</span>
-  <span class="token keyword">if</span> fn <span class="token keyword">then</span>
-    self<span class="token punctuation">.</span>_mediator<span class="token punctuation">:</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>event_name<span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>message_t<span class="token punctuation">)</span>
-      <span class="token function">fn</span><span class="token punctuation">(</span>message_t<span class="token punctuation">)</span>
-      <span class="token keyword">return</span> <span class="token keyword">nil</span><span class="token punctuation">,</span> <span class="token keyword">true</span> <span class="token comment">-- Required to tell mediator to continue processing other events</span>
-    <span class="token keyword">end</span><span class="token punctuation">)</span>
-  <span class="token keyword">end</span>
-<span class="token keyword">end</span>
+<p>Kong 使用的是一个<a target="_blank" rel="noopener" href="https://github.com/Olivine-Labs/mediator_lua">叫作 mediator_lua</a>，mediator 中文意思为“中间人“，很符合项目的意思。可以看到 kong/core/events.lua 里面实现如下：</p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua"><span class="token function lua"><span class="token keyword lua">function</span> <span class="token function scope lua">Events:</span><span class="token function lua">subscribe</span><span class="token punctuation definition parameters begin lua">(</span><span class="token variable parameter function lua">event_name, fn</span><span class="token punctuation definition parameters end lua">)</span></span>
+  <span class="token keyword lua">if</span> fn <span class="token keyword lua">then</span>
+    <span class="token variable language self lua">self</span>._mediator:subscribe({event_name}, <span class="token keyword lua">function</span>(message_t)
+      fn(message_t)
+      <span class="token keyword lua">return</span> <span class="token boolean lua">nil</span>, <span class="token boolean lua">true</span> <span class="token comment double-dash lua"><span class="token punctuation definition comment lua">--</span> Required to tell mediator to continue processing other events
+</span>    <span class="token keyword lua">end</span>)
+  <span class="token keyword lua">end</span>
+<span class="token keyword lua">end</span>
 
-<span class="token keyword">function</span> Events<span class="token punctuation">:</span><span class="token function">publish</span><span class="token punctuation">(</span>event_name<span class="token punctuation">,</span> message_t<span class="token punctuation">)</span>
-  <span class="token keyword">if</span> event_name <span class="token keyword">then</span>
-    self<span class="token punctuation">.</span>_mediator<span class="token punctuation">:</span><span class="token function">publish</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>string<span class="token punctuation">.</span><span class="token function">upper</span><span class="token punctuation">(</span>event_name<span class="token punctuation">)</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span> message_t<span class="token punctuation">)</span>
-  <span class="token keyword">end</span>
-<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token function lua"><span class="token keyword lua">function</span> <span class="token function scope lua">Events:</span><span class="token function lua">publish</span><span class="token punctuation definition parameters begin lua">(</span><span class="token variable parameter function lua">event_name, message_t</span><span class="token punctuation definition parameters end lua">)</span></span>
+  <span class="token keyword lua">if</span> event_name <span class="token keyword lua">then</span>
+    <span class="token variable language self lua">self</span>._mediator:publish({<span class="token function library lua">string.upper</span>(event_name)}, message_t)
+  <span class="token keyword lua">end</span>
+<span class="token keyword lua">end</span>
+</span></code></pre>
 <p>Kong.init 初始化的时候会调用一个叫做 attach_hooks 的函数：</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token function">attach_hooks</span><span class="token punctuation">(</span>events<span class="token punctuation">,</span> require <span class="token string">"kong.core.hooks"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua">attach_hooks(events, <span class="token function lua">require</span> <span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>kong.core.hooks<span class="token punctuation definition string end lua">&quot;</span></span>)
+</span></code></pre>
 <p>在 load 插件的时候也会把插件对应 hooks 绑定上：</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token comment">-- Attaching hooks</span>
-<span class="token keyword">local</span> ok<span class="token punctuation">,</span> hooks <span class="token operator">=</span> utils<span class="token punctuation">.</span><span class="token function">load_module_if_exists</span><span class="token punctuation">(</span><span class="token string">"kong.plugins."</span> <span class="token operator">..</span> plugin <span class="token operator">..</span> <span class="token string">".hooks"</span><span class="token punctuation">)</span>
-<span class="token keyword">if</span> ok <span class="token keyword">then</span>
-  <span class="token function">attach_hooks</span><span class="token punctuation">(</span>events<span class="token punctuation">,</span> hooks<span class="token punctuation">)</span>
-<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3 id="事件的来源"><a href="#事件的来源" class="headerlink" title="事件的来源"></a>事件的来源</h3><p>上面说过，Kong 节点之间通信是通过<a target="_blank" rel="noopener" href="https://www.serf.io/">serf</a>发送的。我们来看看事件是如何触发发出通知的。<br>事件来于源数据库的修改，那就应该在数据库代码部分有触发事件的代码，查看 dao/dao.lua 这个文件里的代码，我们可以看到在 insert、update、insert 执行的时候都调用了一行代码</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token function">event</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> event_types<span class="token punctuation">.</span>ENTITY_DELETED<span class="token punctuation">,</span> k<span class="token punctuation">,</span> v<span class="token punctuation">.</span>schema<span class="token punctuation">,</span> entity<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua">    <span class="token comment double-dash lua"><span class="token punctuation definition comment lua">--</span> Attaching hooks
+</span>    <span class="token keyword lua">local</span> ok, hooks <span class="token operator lua">=</span> utils.load_module_if_exists(<span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>kong.plugins.<span class="token punctuation definition string end lua">&quot;</span></span> <span class="token operator lua">..</span> plugin <span class="token operator lua">..</span> <span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>.hooks<span class="token punctuation definition string end lua">&quot;</span></span>)
+    <span class="token keyword lua">if</span> ok <span class="token keyword lua">then</span>
+      attach_hooks(events, hooks)
+    <span class="token keyword lua">end</span>
+</span></code></pre><h3 id="事件的来源"><a href="#事件的来源" class="headerlink" title="事件的来源"></a>事件的来源</h3>
+<p>上面说过，Kong 节点之间通信是通过<a target="_blank" rel="noopener" href="https://www.serf.io/">serf</a>发送的。我们来看看事件是如何触发发出通知的。
+事件来于源数据库的修改，那就应该在数据库代码部分有触发事件的代码，查看 dao/dao.lua 这个文件里的代码，我们可以看到在 insert、update、insert 执行的时候都调用了一行代码</p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua">event(<span class="token variable language self lua">self</span>, event_types.ENTITY_DELETED, k, v.schema, entity)
+</span></code></pre>
 <p>这个函数的实现如下，这里做了数据的序列化，然后发布了一种叫做 CLUSTER_PROGATE 类型的消息：</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">local</span> <span class="token keyword">function</span> <span class="token function">event</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> type<span class="token punctuation">,</span> table<span class="token punctuation">,</span> schema<span class="token punctuation">,</span> data_t<span class="token punctuation">)</span>
-  <span class="token keyword">if</span> self<span class="token punctuation">.</span>events_handler <span class="token keyword">then</span>
-    <span class="token punctuation">.....</span>  执行数据序列化
-    self<span class="token punctuation">.</span>events_handler<span class="token punctuation">:</span><span class="token function">publish</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>events_handler<span class="token punctuation">.</span>TYPES<span class="token punctuation">.</span>CLUSTER_PROPAGATE<span class="token punctuation">,</span> payload<span class="token punctuation">)</span>
-  <span class="token keyword">end</span>
-<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua"><span class="token keyword lua">local</span> <span class="token function lua"><span class="token keyword lua">function</span> <span class="token function lua">event</span><span class="token punctuation definition parameters begin lua">(</span><span class="token variable parameter function lua">self, type, table, schema, data_t</span><span class="token punctuation definition parameters end lua">)</span></span>
+  <span class="token keyword lua">if</span> <span class="token variable language self lua">self</span>.events_handler <span class="token keyword lua">then</span>
+    .....  执行数据序列化
+    <span class="token variable language self lua">self</span>.events_handler:publish(<span class="token variable language self lua">self</span>.events_handler.TYPES.CLUSTER_PROPAGATE, payload)
+  <span class="token keyword lua">end</span>
+<span class="token keyword lua">end</span>
+</span></code></pre>
 <p>在 core/hooks.lua 接受消息部分，events.TYPES.CLUSTER_PROPAGATE 对应的处理部分是 singletons.serf:event(message_t)，所以我们看 serf.lua 这个源文件，最终 event 调用了 invoke_signal，这个函数会运行一个 serf 命令，类似于这样：</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua">serf event <span class="token operator">-</span>coalesce<span class="token operator">=</span><span class="token keyword">false</span> <span class="token operator">-</span>rpc<span class="token operator">-</span>addr<span class="token operator">=</span><span class="token number">127.0</span><span class="token number">.0</span><span class="token number">.1</span><span class="token punctuation">:</span><span class="token number">7373</span>  kong <span class="token string">'&#123;"type":"ENTITY_UPDATED","primary_key":["id"],"collection":"apis","entity":&#123;"id":"94acca76-d61a-429e-86a9-5abf2c61ee31"&#125;&#125;'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua">serf event <span class="token operator lua">-</span>coalesce<span class="token operator lua">=</span><span class="token boolean lua">false</span> <span class="token operator lua">-</span>rpc<span class="token operator lua">-</span>addr<span class="token operator lua">=</span><span class="token number lua">127.0</span><span class="token number lua">.0</span><span class="token number lua">.1</span>:<span class="token number lua">7373</span>  kong <span class="token string single lua"><span class="token punctuation definition string begin lua">&#39;</span>{&quot;type&quot;:&quot;ENTITY_UPDATED&quot;,&quot;primary_key&quot;:[&quot;id&quot;],&quot;collection&quot;:&quot;apis&quot;,&quot;entity&quot;:{&quot;id&quot;:&quot;94acca76-d61a-429e-86a9-5abf2c61ee31&quot;}}<span class="token punctuation definition string end lua">&#39;</span></span>
+</span></code></pre>
 <p>这就出发了一个 serf event，其他 Kong 节点会收到此消息。</p>
-<h3 id="serf-Kong-节点之间通信"><a href="#serf-Kong-节点之间通信" class="headerlink" title="serf: Kong 节点之间通信"></a>serf: Kong 节点之间通信</h3><p>那么 Kong 节点收到消息之后是如何处理的呢？Kong 在启动的时候会在后台执行一个 serf 进程，类似这样：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">serf agent <span class="token parameter variable">-profile</span> wan <span class="token parameter variable">-bind</span> <span class="token number">0.0</span>.0.0:7946 -log-level err -rpc-addr <span class="token number">127.0</span>.0.1:7373 -event-handler member-join,member-leave,member-failed,member-update,member-reap,user:kong<span class="token operator">=</span>/usr/local/kong/serf/serf_event.sh <span class="token parameter variable">-node</span> Kang.local_0.0.0.0:7946_be3b9352808e4839a272f30ca6025650<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="serf-Kong-节点之间通信"><a href="#serf-Kong-节点之间通信" class="headerlink" title="serf: Kong 节点之间通信"></a>serf: Kong 节点之间通信</h3>
+<p>那么 Kong 节点收到消息之后是如何处理的呢？Kong 在启动的时候会在后台执行一个 serf 进程，类似这样：</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">serf agent -profile wan -bind 0.0.0.0:7946 -log-level err -rpc-addr 127.0.0.1:7373 -event-handler member-join,member-leave,member-failed,member-update,member-reap,user:kong=/usr/local/kong/serf/serf_event.sh -node Kang.local_0.0.0.0:7946_be3b9352808e4839a272f30ca6025650
+</code></pre>
 <p>可以看看 serf_event.sh 这个脚本，内容如下：</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua">PAYLOAD<span class="token operator">=</span>`cat` <span class="token operator">#</span> Read from stdin
-<span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token string">"$SERF_EVENT"</span> !<span class="token operator">=</span> <span class="token string">"user"</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
-  PAYLOAD<span class="token operator">=</span><span class="token string">"&#123;\"type\":\"$&#123;SERF_EVENT&#125;\",\"entity\": \"$&#123;PAYLOAD&#125;\"&#125;"</span>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua">PAYLOAD<span class="token operator lua">=</span>`cat` <span class="token operator lua">#</span> Read from stdin
+<span class="token keyword lua">if</span> [ <span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>$SERF_EVENT<span class="token punctuation definition string end lua">&quot;</span></span> !<span class="token operator lua">=</span> <span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>user<span class="token punctuation definition string end lua">&quot;</span></span> ]; <span class="token keyword lua">then</span>
+  PAYLOAD<span class="token operator lua">=</span><span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>{<span class="constant character escape lua">\&quot;</span>type<span class="constant character escape lua">\&quot;</span>:<span class="constant character escape lua">\&quot;</span>${SERF_EVENT}<span class="constant character escape lua">\&quot;</span>,<span class="constant character escape lua">\&quot;</span>entity<span class="constant character escape lua">\&quot;</span>: <span class="constant character escape lua">\&quot;</span>${PAYLOAD}<span class="constant character escape lua">\&quot;</span>}<span class="token punctuation definition string end lua">&quot;</span></span>
 fi
 
-CMD<span class="token operator">=</span><span class="token string">"\
-local http = require 'resty.http' \
-local client = http.new() \
-client:set_timeout(5000) \
-client:connect('127.0.0.1', 8001) \
-client:request &#123; \
-  method = 'POST', \
-  path = '/cluster/events/', \
-  body = [=[$&#123;PAYLOAD&#125;]=], \
-  headers = &#123; \
-    ['content-type'] = 'application/json' \
-  &#125; \
-&#125;"</span>
+CMD<span class="token operator lua">=</span><span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span><span class="constant character escape lua">\
+</span>local http = require &#39;resty.http&#39; <span class="constant character escape lua">\
+</span>local client = http.new() <span class="constant character escape lua">\
+</span>client:set_timeout(5000) <span class="constant character escape lua">\
+</span>client:connect(&#39;127.0.0.1&#39;, 8001) <span class="constant character escape lua">\
+</span>client:request { <span class="constant character escape lua">\
+</span>  method = &#39;POST&#39;, <span class="constant character escape lua">\
+</span>  path = &#39;/cluster/events/&#39;, <span class="constant character escape lua">\
+</span>  body = [=[${PAYLOAD}]=], <span class="constant character escape lua">\
+</span>  headers = { <span class="constant character escape lua">\
+</span>    [&#39;content-type&#39;] = &#39;application/json&#39; <span class="constant character escape lua">\
+</span>  } <span class="constant character escape lua">\
+</span>}<span class="token punctuation definition string end lua">&quot;</span></span>
 
-<span class="token operator">/</span>usr<span class="token operator">/</span><span class="token keyword">local</span><span class="token operator">/</span>openresty<span class="token operator">/</span>bin<span class="token operator">/</span>resty <span class="token operator">-</span>e <span class="token string">"$CMD"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token operator lua">/</span>usr<span class="token operator lua">/</span><span class="token keyword lua">local</span><span class="token operator lua">/</span>openresty<span class="token operator lua">/</span>bin<span class="token operator lua">/</span>resty <span class="token operator lua">-</span>e <span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>$CMD<span class="token punctuation definition string end lua">&quot;</span></span>
+</span></code></pre>
 <p>可以看到 serf 收到消息后会触发这个脚本，然后把消息发送到本节点的/cluster/events 这个路由。api/routes/cluster.lua 这个文件里有收到消息后的处理代码，其中最关键的是：</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token comment">-- Trigger event in the node</span>
-ev<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>constants<span class="token punctuation">.</span>CACHE<span class="token punctuation">.</span>CLUSTER<span class="token punctuation">,</span> message_t<span class="token punctuation">.</span>type<span class="token punctuation">,</span> message_t<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua"><span class="token comment double-dash lua"><span class="token punctuation definition comment lua">--</span> Trigger event in the node
+</span>ev.post(constants.CACHE.CLUSTER, message_t.type, message_t)
+</span></code></pre>
 <p>就是通过 resty.worker.events publish 出收到的消息，本节点的 worker 会处理这些消息。</p>
-<h3 id="worker-刷新缓存"><a href="#worker-刷新缓存" class="headerlink" title="worker 刷新缓存"></a>worker 刷新缓存</h3><p>假设当前 Kong 节点收到一个消息，这个消息是如何分发给各个 worker 的？从代码看出，在 Kong 初始化的时候有调用一个叫做 kong.lua 里面的 Kong.init_worker() 函数，其中有一段代码注册了 event handler:<br><pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">local</span> worker_events <span class="token operator">=</span> require <span class="token string">"resty.worker.events"</span>
+<h3 id="worker-刷新缓存"><a href="#worker-刷新缓存" class="headerlink" title="worker 刷新缓存"></a>worker 刷新缓存</h3>
+<p>假设当前 Kong 节点收到一个消息，这个消息是如何分发给各个 worker 的？从代码看出，在 Kong 初始化的时候有调用一个叫做 kong.lua 里面的 Kong.init_worker() 函数，其中有一段代码注册了 event handler:</p>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua">  <span class="token keyword lua">local</span> worker_events <span class="token operator lua">=</span> <span class="token function lua">require</span> <span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>resty.worker.events<span class="token punctuation definition string end lua">&quot;</span></span>
 
-<span class="token keyword">local</span> handler <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> event<span class="token punctuation">,</span> source<span class="token punctuation">,</span> pid<span class="token punctuation">)</span>
-  <span class="token keyword">if</span> data <span class="token keyword">and</span> data<span class="token punctuation">.</span>collection <span class="token operator">==</span> <span class="token string">"apis"</span> <span class="token keyword">then</span>
-    <span class="token function">assert</span><span class="token punctuation">(</span>core<span class="token punctuation">.</span><span class="token function">build_router</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword lua">local</span> handler <span class="token operator lua">=</span> <span class="token keyword lua">function</span>(data, event, source, pid)
+    <span class="token keyword lua">if</span> data <span class="token operator lua">and</span> data.collection <span class="token operator lua">==</span> <span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>apis<span class="token punctuation definition string end lua">&quot;</span></span> <span class="token keyword lua">then</span>
+      <span class="token function lua">assert</span>(core.build_router())
 
-  <span class="token keyword">elseif</span> source <span class="token keyword">and</span> source <span class="token operator">==</span> constants<span class="token punctuation">.</span>CACHE<span class="token punctuation">.</span>CLUSTER <span class="token keyword">then</span>
-    singletons<span class="token punctuation">.</span>events<span class="token punctuation">:</span><span class="token function">publish</span><span class="token punctuation">(</span>event<span class="token punctuation">,</span> data<span class="token punctuation">)</span>
-  <span class="token keyword">end</span>
-<span class="token keyword">end</span>
+    <span class="token keyword lua">elseif</span> source <span class="token operator lua">and</span> source <span class="token operator lua">==</span> constants.CACHE.CLUSTER <span class="token keyword lua">then</span>
+      singletons.events:publish(event, data)
+    <span class="token keyword lua">end</span>
+  <span class="token keyword lua">end</span>
 
-worker_events<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>handler<span class="token punctuation">)</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
+  worker_events.register(handler)
+
+</span></code></pre>
 <p>可以从上面的 handler 代码看到，一个 worker 接收到消息之后执行的是：</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua">singletons<span class="token punctuation">.</span>events<span class="token punctuation">:</span><span class="token function">publish</span><span class="token punctuation">(</span>event<span class="token punctuation">,</span> data<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua">singletons.events:publish(event, data)
+</span></code></pre>
 <p>也就是通过 mediator_lua 再把消息 publish。之前初始化的时候已经 attach_hooks 了各种 handler，这时候那些注册的函数才会被最终执行，比如核心的刷新缓存部分代码在 core/hooks.lua 的 invalidate 函数里面。</p>
-<h3 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h3><p>总的来说 Kong 事件部分的代码相当精妙，也很统一。比如当前 worker 做了修改，这个事件会发送给各个节点，包括当前自己所在的节点。通过发布订阅模式，写代码的时候只需关心消息发送、接受消息索要处理的逻辑。</p>
+<h3 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h3>
+<p>总的来说 Kong 事件部分的代码相当精妙，也很统一。比如当前 worker 做了修改，这个事件会发送给各个节点，包括当前自己所在的节点。通过发布订阅模式，写代码的时候只需关心消息发送、接受消息索要处理的逻辑。</p>
 </section>
 
     <p></p>
@@ -299,12 +305,12 @@ worker_events<span class="token punctuation">.</span><span class="token function
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Kong" >
-    <span class="tag-code">Kong</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -356,7 +362,7 @@ worker_events<span class="token punctuation">.</span><span class="token function
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#worker-%E6%A8%A1%E5%9E%8B"><span class="toc-nav-text">worker 模型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F"><span class="toc-nav-text">发布订阅模式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%BA%8B%E4%BB%B6%E7%9A%84%E6%9D%A5%E6%BA%90"><span class="toc-nav-text">事件的来源</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#serf-Kong-%E8%8A%82%E7%82%B9%E4%B9%8B%E9%97%B4%E9%80%9A%E4%BF%A1"><span class="toc-nav-text">serf: Kong 节点之间通信</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#worker-%E5%88%B7%E6%96%B0%E7%BC%93%E5%AD%98"><span class="toc-nav-text">worker 刷新缓存</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%9B%9E%E9%A1%BE"><span class="toc-nav-text">回顾</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#worker-模型"><span class="toc-nav-text">worker 模型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#发布订阅模式"><span class="toc-nav-text">发布订阅模式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#事件的来源"><span class="toc-nav-text">事件的来源</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#serf-Kong-节点之间通信"><span class="toc-nav-text">serf: Kong 节点之间通信</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#worker-刷新缓存"><span class="toc-nav-text">worker 刷新缓存</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#回顾"><span class="toc-nav-text">回顾</span></a></li></ol>
     
   </div>
 </aside>
@@ -367,7 +373,7 @@ worker_events<span class="token punctuation">.</span><span class="token function
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/kong-intro-5/';
+    var url = 'http://catcoding.me//p/kong-intro-5/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -428,7 +434,7 @@ worker_events<span class="token punctuation">.</span><span class="token function
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -453,8 +459,6 @@ worker_events<span class="token punctuation">.</span><span class="token function
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

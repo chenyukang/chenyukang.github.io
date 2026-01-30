@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -191,11 +179,13 @@
   <article class="post-article">
     <section class="markdown-content"><p>I’ve always wanted to learn RISC-V. A few days ago, I finally got my hands dirty with it now.</p>
 <p>This post will guide you through the process of building a simple RISC-V VM from the ground up, using Rust as our implementation language.</p>
-<h2 id="Understanding-the-Core-Concepts"><a href="#Understanding-the-Core-Concepts" class="headerlink" title="Understanding the Core Concepts"></a><strong>Understanding the Core Concepts</strong></h2><p>Before writing any code, I need to grasp the fundamentals of RISC-V.</p>
+<h2 id="Understanding-the-Core-Concepts"><a href="#Understanding-the-Core-Concepts" class="headerlink" title="Understanding the Core Concepts"></a>Understanding the Core Concepts</h2>
+<p>Before writing any code, I need to grasp the fundamentals of RISC-V.</p>
 <ul>
 <li><strong>RISC vs. CISC</strong>: RISC (Reduced Instruction Set Computing) architectures use a small, highly optimized set of instructions. This is in contrast to CISC (Complex Instruction Set Computing), which has a large number of complex instructions. RISC-V’s simplicity makes it ideal for building a VM.</li>
 <li><strong>Modular Architecture</strong>: RISC-V has a base instruction set (RV32I for 32-bit systems) and optional extensions like M (for multiplication) or F (for floating-point). We’ll focus on the RV32I base to keep things simple.</li>
-<li><strong>The Three Pillars</strong>: At its core, a CPU (and thus our VM) consists of three main components:<ul>
+<li><strong>The Three Pillars</strong>: At its core, a CPU (and thus our VM) consists of three main components:
+<ul>
 <li><strong>Registers</strong>: A small set of high-speed memory locations used for calculations. RISC-V has 32 general-purpose registers (<code>x0</code>-<code>x31</code>).</li>
 <li><strong>Memory</strong>: A much larger space for storing program code and data.</li>
 <li><strong>Program Counter (PC)</strong>: A special register that holds the memory address of the next instruction to be executed.</li>
@@ -203,311 +193,330 @@
 </li>
 </ul>
 <p>We can get all the details of RISC-V instructions from <a target="_blank" rel="noopener" href="https://riscv.atlassian.net/wiki/spaces/HOME/pages/16154769/RISC-V+Technical+Specifications">RISC-V Technical Specifications</a>.</p>
-<h2 id="The-VM’s-Core-Logic"><a href="#The-VM’s-Core-Logic" class="headerlink" title="The VM’s Core Logic"></a>The VM’s Core Logic</h2><p>Our VM is essentially a program that emulates a real CPU’s behavior. The core of our VM is the <strong>instruction loop</strong>, which follows a simple <strong>fetch-decode-execute</strong> cycle.</p>
+<h2 id="The-VM’s-Core-Logic"><a href="#The-VM’s-Core-Logic" class="headerlink" title="The VM’s Core Logic"></a>The VM’s Core Logic</h2>
+<p>Our VM is essentially a program that emulates a real CPU’s behavior. The core of our VM is the <strong>instruction loop</strong>, which follows a simple <strong>fetch-decode-execute</strong> cycle.</p>
 <ol>
 <li><strong>Fetch</strong>: Read the 32-bit instruction from the memory address pointed to by the PC.</li>
 <li><strong>Decode</strong>: Parse the instruction’s binary code to determine its type and what operation to perform.</li>
 <li><strong>Execute</strong>: Perform the operation (e.g., an addition) and update the relevant registers or memory.</li>
 </ol>
 <p>Here’s a simplified Rust code snippet to illustrate the <code>VM</code> structure and the <code>run</code> loop:</p>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">struct</span> <span class="token type-definition class-name">VM</span> <span class="token punctuation">&#123;</span>
-    x_registers<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token keyword">u32</span><span class="token punctuation">;</span> <span class="token number">32</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-    pc<span class="token punctuation">:</span> <span class="token keyword">u32</span><span class="token punctuation">,</span>
-    memory<span class="token punctuation">:</span> <span class="token class-name">Vec</span><span class="token operator">&lt;</span><span class="token keyword">u8</span><span class="token operator">></span><span class="token punctuation">,</span>
-<span class="token punctuation">&#125;</span>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token struct rust"><span class="token keyword rust">pub</span> <span class="token keyword struct rust">struct</span> </span><span class="token struct rust"><span class="entity name struct rust">VM</span> </span><span class="token struct rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token variable other member rust">x_registers</span><span class="token punctuation separator rust">:</span> [<span class="token keyword rust">u32</span>; 32],
+    <span class="token variable other member rust">pc</span><span class="token punctuation separator rust">:</span> <span class="token keyword rust">u32</span>,
+    <span class="token variable other member rust">memory</span><span class="token punctuation separator rust">:</span> <span class="token generic rust">Vec<span class="token punctuation definition generic begin rust">&lt;</span><span class="token keyword rust">u8</span><span class="token punctuation definition generic end rust">&gt;</span></span>,
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
 
-<span class="token keyword">impl</span> <span class="token constant">VM</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">run</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token keyword">self</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">loop</span> <span class="token punctuation">&#123;</span>
-            <span class="token comment">// 1. Fetch the instruction</span>
-            <span class="token keyword">let</span> instruction <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token function">fetch_instruction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token comment">// 2. Decode</span>
-            <span class="token keyword">let</span> decoded_instruction <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token function">decode</span><span class="token punctuation">(</span>instruction<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token comment">// 3. Execute</span>
-            <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token function">execute_instruction</span><span class="token punctuation">(</span>decoded_instruction<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token comment">// 4. Increment the PC</span>
-            <span class="token keyword">self</span><span class="token punctuation">.</span>pc <span class="token operator">+=</span> <span class="token number">4</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token impl rust"><span class="token keyword impl rust">impl</span> </span><span class="token impl rust"><span class="entity name impl rust">VM</span> </span><span class="token impl rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token function rust"><span class="token function rust"><span class="token keyword rust">pub</span> <span class="token keyword function rust">fn</span> </span><span class="token function rust">run</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">(</span><span class="token operator rust">&amp;</span><span class="token keyword rust">mut</span> <span class="token variable parameter rust">self</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters end rust">)</span></span></span></span><span class="token function rust"> </span><span class="token function rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        <span class="token keyword rust">loop</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+            <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> 1. Fetch the instruction
+</span>            <span class="token keyword rust">let</span> instruction <span class="token operator rust">=</span> <span class="token variable language rust">self</span>.<span class="token function rust">fetch_instruction</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+            <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> 2. Decode
+</span>            <span class="token keyword rust">let</span> decoded_instruction <span class="token operator rust">=</span> <span class="token variable language rust">self</span>.<span class="token function rust">decode</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>instruction</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+            <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> 3. Execute
+</span>            <span class="token variable language rust">self</span>.<span class="token function rust">execute_instruction</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>decoded_instruction</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+            <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> 4. Increment the PC
+</span>            <span class="token variable language rust">self</span>.pc <span class="token operator rust">+</span><span class="token operator rust">=</span> <span class="token number integer decimal rust">4</span><span class="token punctuation terminator rust">;</span>
+        </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
+</span></code></pre>
 <p>The fetch instruction turns out to be very simple, we just load 4 bytes in little-endian format into a u32 integer:</p>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token comment">/// Fetch 32-bit instruction from memory at current PC</span>
-<span class="token keyword">fn</span> <span class="token function-definition function">fetch_instruction</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">self</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Option</span><span class="token operator">&lt;</span><span class="token keyword">u32</span><span class="token operator">></span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">let</span> pc <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>pc <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> pc <span class="token operator">+</span> <span class="token number">4</span> <span class="token operator">></span> <span class="token keyword">self</span><span class="token punctuation">.</span>memory<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token class-name">None</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust">    <span class="token comment documentation rust"><span class="token punctuation definition comment rust">///</span> Fetch 32-bit instruction from memory at current PC
+</span>    <span class="token function rust"><span class="token function rust"><span class="token keyword function rust">fn</span> </span><span class="token function rust">fetch_instruction</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">(</span><span class="token operator rust">&amp;</span><span class="token variable parameter rust">self</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters end rust">)</span></span></span></span><span class="token function rust"> <span class="token function return-type rust"><span class="token punctuation separator rust">-&gt;</span> <span class="token generic rust">Option<span class="token punctuation definition generic begin rust">&lt;</span><span class="token keyword rust">u32</span><span class="token punctuation definition generic end rust">&gt;</span></span></span> </span><span class="token function rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        <span class="token keyword rust">let</span> pc <span class="token operator rust">=</span> <span class="token variable language rust">self</span>.pc <span class="token operator rust">as</span> <span class="token keyword rust">usize</span><span class="token punctuation terminator rust">;</span>
+        <span class="token keyword rust">if</span> pc <span class="token operator rust">+</span> <span class="token number integer decimal rust">4</span> <span class="token operator rust">&gt;</span> <span class="token variable language rust">self</span>.memory.<span class="token function rust">len</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+            <span class="token keyword rust">return</span> <span class="token class-name rust">None</span><span class="token punctuation terminator rust">;</span>
+        </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
 
-    <span class="token comment">// RISC-V uses little-endian byte order</span>
-    <span class="token keyword">let</span> instruction <span class="token operator">=</span> <span class="token keyword">u32</span><span class="token punctuation">::</span><span class="token function">from_le_bytes</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
-        <span class="token keyword">self</span><span class="token punctuation">.</span>memory<span class="token punctuation">[</span>pc<span class="token punctuation">]</span><span class="token punctuation">,</span>
-        <span class="token keyword">self</span><span class="token punctuation">.</span>memory<span class="token punctuation">[</span>pc <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-        <span class="token keyword">self</span><span class="token punctuation">.</span>memory<span class="token punctuation">[</span>pc <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-        <span class="token keyword">self</span><span class="token punctuation">.</span>memory<span class="token punctuation">[</span>pc <span class="token operator">+</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-    <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> RISC-V uses little-endian byte order
+</span>        <span class="token keyword rust">let</span> instruction <span class="token operator rust">=</span> <span class="token keyword rust">u32</span><span class="token path rust"><span class="token punctuation accessor rust">::</span></span>from_le_bytes<span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token group rust"><span class="token punctuation section group begin rust">[</span>
+            <span class="token variable language rust">self</span>.memory<span class="token group rust"><span class="token punctuation section group begin rust">[</span>pc<span class="token punctuation section group end rust">]</span></span><span class="token punctuation separator rust">,</span>
+            <span class="token variable language rust">self</span>.memory<span class="token group rust"><span class="token punctuation section group begin rust">[</span>pc <span class="token operator rust">+</span> <span class="token number integer decimal rust">1</span><span class="token punctuation section group end rust">]</span></span><span class="token punctuation separator rust">,</span>
+            <span class="token variable language rust">self</span>.memory<span class="token group rust"><span class="token punctuation section group begin rust">[</span>pc <span class="token operator rust">+</span> <span class="token number integer decimal rust">2</span><span class="token punctuation section group end rust">]</span></span><span class="token punctuation separator rust">,</span>
+            <span class="token variable language rust">self</span>.memory<span class="token group rust"><span class="token punctuation section group begin rust">[</span>pc <span class="token operator rust">+</span> <span class="token number integer decimal rust">3</span><span class="token punctuation section group end rust">]</span></span><span class="token punctuation separator rust">,</span>
+        <span class="token punctuation section group end rust">]</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
 
-    <span class="token class-name">Some</span><span class="token punctuation">(</span>instruction<span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>Then we need to decode the integer into a RISC-V instruction. Here’s how we decode <code>IType</code> and <code>RType</code> instructions. The specifications for these two types are:<br><img src="/images/ob_pasted-image-20251117091305.png" alt=""></p>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token comment">/// Decode 32-bit instruction into structured format</span>
-<span class="token keyword">fn</span> <span class="token function-definition function">decode</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">self</span><span class="token punctuation">,</span> code<span class="token punctuation">:</span> <span class="token keyword">u32</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Option</span><span class="token operator">&lt;</span><span class="token class-name">Instruction</span><span class="token operator">></span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">let</span> opcode <span class="token operator">=</span> code <span class="token operator">&amp;</span> <span class="token number">0x7f</span><span class="token punctuation">;</span>
+        <span class="token class-name rust">Some</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>instruction</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
+</span></code></pre>
+<p>Then we need to decode the integer into a RISC-V instruction. Here’s how we decode <code>IType</code> and <code>RType</code> instructions. The specifications for these two types are:
+<img src="/images/ob_pasted-image-20251117091305.png" alt="" /></p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token comment documentation rust"><span class="token punctuation definition comment rust">///</span> Decode 32-bit instruction into structured format
+</span><span class="token function rust"><span class="token function rust"><span class="token keyword function rust">fn</span> </span><span class="token function rust">decode</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">(</span><span class="token operator rust">&amp;</span><span class="token variable parameter rust">self</span>, <span class="token variable parameter rust">code</span><span class="token punctuation separator rust">:</span> <span class="token keyword rust">u32</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters end rust">)</span></span></span></span><span class="token function rust"> <span class="token function return-type rust"><span class="token punctuation separator rust">-&gt;</span> <span class="token generic rust">Option<span class="token punctuation definition generic begin rust">&lt;</span>Instruction<span class="token punctuation definition generic end rust">&gt;</span></span></span> </span><span class="token function rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token keyword rust">let</span> opcode <span class="token operator rust">=</span> code <span class="token operator rust">&amp;</span> <span class="token number integer hexadecimal rust">0x7f</span><span class="token punctuation terminator rust">;</span>
 
-    <span class="token keyword">match</span> opcode <span class="token punctuation">&#123;</span>
-        <span class="token number">0x13</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-            <span class="token comment">// I-type instruction (ADDI, etc.)</span>
-            <span class="token keyword">let</span> rd <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>code <span class="token operator">>></span> <span class="token number">7</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0x1f</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
-            <span class="token keyword">let</span> rs1 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>code <span class="token operator">>></span> <span class="token number">15</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0x1f</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
-            <span class="token keyword">let</span> funct3 <span class="token operator">=</span> <span class="token punctuation">(</span>code <span class="token operator">>></span> <span class="token number">12</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0x7</span><span class="token punctuation">;</span>
-            <span class="token keyword">let</span> imm <span class="token operator">=</span> <span class="token punctuation">(</span>code <span class="token keyword">as</span> <span class="token keyword">i32</span><span class="token punctuation">)</span> <span class="token operator">>></span> <span class="token number">20</span><span class="token punctuation">;</span> <span class="token comment">// Sign-extended</span>
+    <span class="token keyword rust">match</span> opcode <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        <span class="token number integer hexadecimal rust">0x13</span> <span class="token operator rust">=&gt;</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+            <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> I-type instruction (ADDI, etc.)
+</span>            <span class="token keyword rust">let</span> rd <span class="token operator rust">=</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>code <span class="token operator rust">&gt;</span><span class="token operator rust">&gt;</span> <span class="token number integer decimal rust">7</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">&amp;</span> <span class="token number integer hexadecimal rust">0x1f</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">as</span> <span class="token keyword rust">usize</span><span class="token punctuation terminator rust">;</span>
+            <span class="token keyword rust">let</span> rs1 <span class="token operator rust">=</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>code <span class="token operator rust">&gt;</span><span class="token operator rust">&gt;</span> <span class="token number integer decimal rust">15</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">&amp;</span> <span class="token number integer hexadecimal rust">0x1f</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">as</span> <span class="token keyword rust">usize</span><span class="token punctuation terminator rust">;</span>
+            <span class="token keyword rust">let</span> funct3 <span class="token operator rust">=</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span>code <span class="token operator rust">&gt;</span><span class="token operator rust">&gt;</span> <span class="token number integer decimal rust">12</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">&amp;</span> <span class="token number integer hexadecimal rust">0x7</span><span class="token punctuation terminator rust">;</span>
+            <span class="token keyword rust">let</span> imm <span class="token operator rust">=</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span>code <span class="token operator rust">as</span> <span class="token keyword rust">i32</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">&gt;</span><span class="token operator rust">&gt;</span> <span class="token number integer decimal rust">20</span><span class="token punctuation terminator rust">;</span> <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> Sign-extended
+</span>
+            <span class="token class-name rust">Some</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token path rust">Instruction<span class="token punctuation accessor rust">::</span></span>IType <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+                rd<span class="token punctuation separator rust">,</span>
+                rs1<span class="token punctuation separator rust">,</span>
+                imm<span class="token punctuation separator rust">,</span>
+                funct3<span class="token punctuation separator rust">,</span>
+            </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+        </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+        <span class="token number integer hexadecimal rust">0x33</span> <span class="token operator rust">=&gt;</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+            <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> R-type instruction (ADD, SUB, etc.)
+</span>            <span class="token keyword rust">let</span> rd <span class="token operator rust">=</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>code <span class="token operator rust">&gt;</span><span class="token operator rust">&gt;</span> <span class="token number integer decimal rust">7</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">&amp;</span> <span class="token number integer hexadecimal rust">0x1f</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">as</span> <span class="token keyword rust">usize</span><span class="token punctuation terminator rust">;</span>
+            <span class="token keyword rust">let</span> rs1 <span class="token operator rust">=</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>code <span class="token operator rust">&gt;</span><span class="token operator rust">&gt;</span> <span class="token number integer decimal rust">15</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">&amp;</span> <span class="token number integer hexadecimal rust">0x1f</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">as</span> <span class="token keyword rust">usize</span><span class="token punctuation terminator rust">;</span>
+            <span class="token keyword rust">let</span> rs2 <span class="token operator rust">=</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>code <span class="token operator rust">&gt;</span><span class="token operator rust">&gt;</span> <span class="token number integer decimal rust">20</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">&amp;</span> <span class="token number integer hexadecimal rust">0x1f</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">as</span> <span class="token keyword rust">usize</span><span class="token punctuation terminator rust">;</span>
+            <span class="token keyword rust">let</span> funct3 <span class="token operator rust">=</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span>code <span class="token operator rust">&gt;</span><span class="token operator rust">&gt;</span> <span class="token number integer decimal rust">12</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">&amp;</span> <span class="token number integer hexadecimal rust">0x7</span><span class="token punctuation terminator rust">;</span>
+            <span class="token keyword rust">let</span> funct7 <span class="token operator rust">=</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span>code <span class="token operator rust">&gt;</span><span class="token operator rust">&gt;</span> <span class="token number integer decimal rust">25</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">&amp;</span> <span class="token number integer hexadecimal rust">0x7f</span><span class="token punctuation terminator rust">;</span>
 
-            <span class="token class-name">Some</span><span class="token punctuation">(</span><span class="token class-name">Instruction</span><span class="token punctuation">::</span><span class="token class-name">IType</span> <span class="token punctuation">&#123;</span>
-                rd<span class="token punctuation">,</span>
-                rs1<span class="token punctuation">,</span>
-                imm<span class="token punctuation">,</span>
-                funct3<span class="token punctuation">,</span>
-            <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-        <span class="token punctuation">&#125;</span>
-        <span class="token number">0x33</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-            <span class="token comment">// R-type instruction (ADD, SUB, etc.)</span>
-            <span class="token keyword">let</span> rd <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>code <span class="token operator">>></span> <span class="token number">7</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0x1f</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
-            <span class="token keyword">let</span> rs1 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>code <span class="token operator">>></span> <span class="token number">15</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0x1f</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
-            <span class="token keyword">let</span> rs2 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>code <span class="token operator">>></span> <span class="token number">20</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0x1f</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
-            <span class="token keyword">let</span> funct3 <span class="token operator">=</span> <span class="token punctuation">(</span>code <span class="token operator">>></span> <span class="token number">12</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0x7</span><span class="token punctuation">;</span>
-            <span class="token keyword">let</span> funct7 <span class="token operator">=</span> <span class="token punctuation">(</span>code <span class="token operator">>></span> <span class="token number">25</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0x7f</span><span class="token punctuation">;</span>
+            <span class="token class-name rust">Some</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token path rust">Instruction<span class="token punctuation accessor rust">::</span></span>RType <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+                rd<span class="token punctuation separator rust">,</span>
+                rs1<span class="token punctuation separator rust">,</span>
+                rs2<span class="token punctuation separator rust">,</span>
+                funct3<span class="token punctuation separator rust">,</span>
+                funct7<span class="token punctuation separator rust">,</span>
+            </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+        </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+        <span class="token operator rust">_</span> <span class="token operator rust">=&gt;</span> <span class="token class-name rust">None</span><span class="token punctuation separator rust">,</span> <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> Unsupported opcode
+</span>    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
 
-            <span class="token class-name">Some</span><span class="token punctuation">(</span><span class="token class-name">Instruction</span><span class="token punctuation">::</span><span class="token class-name">RType</span> <span class="token punctuation">&#123;</span>
-                rd<span class="token punctuation">,</span>
-                rs1<span class="token punctuation">,</span>
-                rs2<span class="token punctuation">,</span>
-                funct3<span class="token punctuation">,</span>
-                funct7<span class="token punctuation">,</span>
-            <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-        <span class="token punctuation">&#125;</span>
-        _ <span class="token operator">=></span> <span class="token class-name">None</span><span class="token punctuation">,</span> <span class="token comment">// Unsupported opcode</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</span></code></pre>
 <p>Then we want to execute the instruction, just following the specification. For demonstration purposes, we return the execution debug string as a result:</p>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token comment">/// Execute decoded instruction</span>
-<span class="token keyword">fn</span> <span class="token function-definition function">execute</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token keyword">mut</span> <span class="token keyword">self</span><span class="token punctuation">,</span> instruction_type<span class="token punctuation">:</span> <span class="token class-name">Instruction</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token class-name">Result</span><span class="token operator">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token operator">></span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">match</span> instruction_type <span class="token punctuation">&#123;</span>
-        <span class="token class-name">Instruction</span><span class="token punctuation">::</span><span class="token class-name">IType</span> <span class="token punctuation">&#123;</span>
-            rd<span class="token punctuation">,</span>
-            rs1<span class="token punctuation">,</span>
-            imm<span class="token punctuation">,</span>
-            funct3<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-            <span class="token keyword">match</span> funct3 <span class="token punctuation">&#123;</span>
-                <span class="token number">0x0</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-                    <span class="token comment">// ADDI - Add immediate</span>
-                    <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token function">write_register</span><span class="token punctuation">(</span>rd<span class="token punctuation">,</span> <span class="token keyword">self</span><span class="token punctuation">.</span>x_registers<span class="token punctuation">[</span>rs1<span class="token punctuation">]</span> <span class="token operator">+</span> imm <span class="token keyword">as</span> <span class="token keyword">u32</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token class-name">Ok</span><span class="token punctuation">(</span><span class="token macro property">format!</span><span class="token punctuation">(</span>
-                        <span class="token string">"ADDI x&#123;&#125;, x&#123;&#125;, &#123;&#125; -> x&#123;&#125; = &#123;&#125;"</span><span class="token punctuation">,</span>
-                        rd<span class="token punctuation">,</span> rs1<span class="token punctuation">,</span> imm<span class="token punctuation">,</span> rd<span class="token punctuation">,</span> <span class="token keyword">self</span><span class="token punctuation">.</span>x_registers<span class="token punctuation">[</span>rd<span class="token punctuation">]</span>
-                    <span class="token punctuation">)</span><span class="token punctuation">)</span>
-                <span class="token punctuation">&#125;</span>
-                _ <span class="token operator">=></span> <span class="token class-name">Err</span><span class="token punctuation">(</span><span class="token macro property">format!</span><span class="token punctuation">(</span><span class="token string">"Unsupported I-type funct3: &#123;:#x&#125;"</span><span class="token punctuation">,</span> funct3<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-        <span class="token class-name">Instruction</span><span class="token punctuation">::</span><span class="token class-name">RType</span> <span class="token punctuation">&#123;</span>
-            rd<span class="token punctuation">,</span>
-            rs1<span class="token punctuation">,</span>
-            rs2<span class="token punctuation">,</span>
-            funct3<span class="token punctuation">,</span>
-            funct7<span class="token punctuation">,</span>
-        <span class="token punctuation">&#125;</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-            <span class="token keyword">match</span> <span class="token punctuation">(</span>funct3<span class="token punctuation">,</span> funct7<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                <span class="token punctuation">(</span><span class="token number">0x0</span><span class="token punctuation">,</span> <span class="token number">0x00</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-                    <span class="token comment">// ADD - Add registers</span>
-                    <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>x_registers<span class="token punctuation">[</span>rs1<span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token keyword">self</span><span class="token punctuation">.</span>x_registers<span class="token punctuation">[</span>rs2<span class="token punctuation">]</span><span class="token punctuation">;</span>
-                    <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token function">write_register</span><span class="token punctuation">(</span>rd<span class="token punctuation">,</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token class-name">Ok</span><span class="token punctuation">(</span><span class="token macro property">format!</span><span class="token punctuation">(</span>
-                        <span class="token string">"ADD x&#123;&#125;, x&#123;&#125;, x&#123;&#125; -> x&#123;&#125; = &#123;&#125;"</span><span class="token punctuation">,</span>
-                        rd<span class="token punctuation">,</span> rs1<span class="token punctuation">,</span> rs2<span class="token punctuation">,</span> rd<span class="token punctuation">,</span> <span class="token keyword">self</span><span class="token punctuation">.</span>x_registers<span class="token punctuation">[</span>rd<span class="token punctuation">]</span>
-                    <span class="token punctuation">)</span><span class="token punctuation">)</span>
-                <span class="token punctuation">&#125;</span>
-                <span class="token punctuation">(</span><span class="token number">0x0</span><span class="token punctuation">,</span> <span class="token number">0x20</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-                    <span class="token comment">// SUB - Subtract registers</span>
-                    <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>x_registers<span class="token punctuation">[</span>rs1<span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token keyword">self</span><span class="token punctuation">.</span>x_registers<span class="token punctuation">[</span>rs2<span class="token punctuation">]</span><span class="token punctuation">;</span>
-                    <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token function">write_register</span><span class="token punctuation">(</span>rd<span class="token punctuation">,</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token class-name">Ok</span><span class="token punctuation">(</span><span class="token macro property">format!</span><span class="token punctuation">(</span>
-                        <span class="token string">"SUB x&#123;&#125;, x&#123;&#125;, x&#123;&#125; -> x&#123;&#125; = &#123;&#125;"</span><span class="token punctuation">,</span>
-                        rd<span class="token punctuation">,</span> rs1<span class="token punctuation">,</span> rs2<span class="token punctuation">,</span> rd<span class="token punctuation">,</span> <span class="token keyword">self</span><span class="token punctuation">.</span>x_registers<span class="token punctuation">[</span>rd<span class="token punctuation">]</span>
-                    <span class="token punctuation">)</span><span class="token punctuation">)</span>
-                <span class="token punctuation">&#125;</span>
-                _ <span class="token operator">=></span> <span class="token class-name">Err</span><span class="token punctuation">(</span><span class="token macro property">format!</span><span class="token punctuation">(</span>
-                    <span class="token string">"Unsupported R-type instruction: funct3=&#123;:#x&#125;, funct7=&#123;:#x&#125;"</span><span class="token punctuation">,</span>
-                    funct3<span class="token punctuation">,</span> funct7
-                <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token comment documentation rust"><span class="token punctuation definition comment rust">///</span> Execute decoded instruction
+</span><span class="token function rust"><span class="token function rust"><span class="token keyword function rust">fn</span> </span><span class="token function rust">execute</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">(</span><span class="token operator rust">&amp;</span><span class="token keyword rust">mut</span> <span class="token variable parameter rust">self</span>, <span class="token variable parameter rust">instruction_type</span><span class="token punctuation separator rust">:</span> Instruction</span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters end rust">)</span></span></span></span><span class="token function rust"> <span class="token function return-type rust"><span class="token punctuation separator rust">-&gt;</span> <span class="token generic rust">Result<span class="token punctuation definition generic begin rust">&lt;</span>String, String<span class="token punctuation definition generic end rust">&gt;</span></span></span> </span><span class="token function rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token keyword rust">match</span> instruction_type <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        <span class="token path rust">Instruction<span class="token punctuation accessor rust">::</span></span>IType <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+            rd<span class="token punctuation separator rust">,</span>
+            rs1<span class="token punctuation separator rust">,</span>
+            imm<span class="token punctuation separator rust">,</span>
+            funct3<span class="token punctuation separator rust">,</span>
+        </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span> <span class="token operator rust">=&gt;</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+            <span class="token keyword rust">match</span> funct3 <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+                <span class="token number integer hexadecimal rust">0x0</span> <span class="token operator rust">=&gt;</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+                    <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> ADDI - Add immediate
+</span>                    <span class="token variable language rust">self</span>.<span class="token function rust">write_register</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>rd<span class="token punctuation separator rust">,</span> <span class="token variable language rust">self</span>.x_registers<span class="token group rust"><span class="token punctuation section group begin rust">[</span>rs1<span class="token punctuation section group end rust">]</span></span> <span class="token operator rust">+</span> imm <span class="token operator rust">as</span> <span class="token keyword rust">u32</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+                    <span class="token class-name rust">Ok</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="support macro rust">format!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust">
+                        <span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>ADDI x<span class="token constant placeholder rust">{}</span>, x<span class="token constant placeholder rust">{}</span>, <span class="token constant placeholder rust">{}</span> -&gt; x<span class="token constant placeholder rust">{}</span> = <span class="token constant placeholder rust">{}</span><span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation separator rust">,</span>
+                        rd<span class="token punctuation separator rust">,</span> rs1<span class="token punctuation separator rust">,</span> imm<span class="token punctuation separator rust">,</span> rd<span class="token punctuation separator rust">,</span> <span class="token variable language rust">self</span>.x_registers<span class="token group rust"><span class="token punctuation section group begin rust">[</span>rd<span class="token punctuation section group end rust">]</span></span>
+                    <span class="token punctuation section group end rust">)</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+                </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+                <span class="token operator rust">_</span> <span class="token operator rust">=&gt;</span> <span class="token class-name rust">Err</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="support macro rust">format!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>Unsupported I-type funct3: <span class="token constant placeholder rust">{:#x}</span><span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation separator rust">,</span> funct3<span class="token punctuation section group end rust">)</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation separator rust">,</span>
+            </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+        </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+        <span class="token path rust">Instruction<span class="token punctuation accessor rust">::</span></span>RType <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+            rd<span class="token punctuation separator rust">,</span>
+            rs1<span class="token punctuation separator rust">,</span>
+            rs2<span class="token punctuation separator rust">,</span>
+            funct3<span class="token punctuation separator rust">,</span>
+            funct7<span class="token punctuation separator rust">,</span>
+        </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span> <span class="token operator rust">=&gt;</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+            <span class="token keyword rust">match</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span>funct3<span class="token punctuation separator rust">,</span> funct7</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+                <span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token number integer hexadecimal rust">0x0</span><span class="token punctuation separator rust">,</span> <span class="token number integer hexadecimal rust">0x00</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">=&gt;</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+                    <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> ADD - Add registers
+</span>                    <span class="token keyword rust">let</span> result <span class="token operator rust">=</span> <span class="token variable language rust">self</span>.x_registers<span class="token group rust"><span class="token punctuation section group begin rust">[</span>rs1<span class="token punctuation section group end rust">]</span></span> <span class="token operator rust">+</span> <span class="token variable language rust">self</span>.x_registers<span class="token group rust"><span class="token punctuation section group begin rust">[</span>rs2<span class="token punctuation section group end rust">]</span></span><span class="token punctuation terminator rust">;</span>
+                    <span class="token variable language rust">self</span>.<span class="token function rust">write_register</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>rd<span class="token punctuation separator rust">,</span> result</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+                    <span class="token class-name rust">Ok</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="support macro rust">format!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust">
+                        <span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>ADD x<span class="token constant placeholder rust">{}</span>, x<span class="token constant placeholder rust">{}</span>, x<span class="token constant placeholder rust">{}</span> -&gt; x<span class="token constant placeholder rust">{}</span> = <span class="token constant placeholder rust">{}</span><span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation separator rust">,</span>
+                        rd<span class="token punctuation separator rust">,</span> rs1<span class="token punctuation separator rust">,</span> rs2<span class="token punctuation separator rust">,</span> rd<span class="token punctuation separator rust">,</span> <span class="token variable language rust">self</span>.x_registers<span class="token group rust"><span class="token punctuation section group begin rust">[</span>rd<span class="token punctuation section group end rust">]</span></span>
+                    <span class="token punctuation section group end rust">)</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+                </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+                <span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token number integer hexadecimal rust">0x0</span><span class="token punctuation separator rust">,</span> <span class="token number integer hexadecimal rust">0x20</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">=&gt;</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+                    <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> SUB - Subtract registers
+</span>                    <span class="token keyword rust">let</span> result <span class="token operator rust">=</span> <span class="token variable language rust">self</span>.x_registers<span class="token group rust"><span class="token punctuation section group begin rust">[</span>rs1<span class="token punctuation section group end rust">]</span></span> <span class="token operator rust">-</span> <span class="token variable language rust">self</span>.x_registers<span class="token group rust"><span class="token punctuation section group begin rust">[</span>rs2<span class="token punctuation section group end rust">]</span></span><span class="token punctuation terminator rust">;</span>
+                    <span class="token variable language rust">self</span>.<span class="token function rust">write_register</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>rd<span class="token punctuation separator rust">,</span> result</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+                    <span class="token class-name rust">Ok</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="support macro rust">format!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust">
+                        <span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>SUB x<span class="token constant placeholder rust">{}</span>, x<span class="token constant placeholder rust">{}</span>, x<span class="token constant placeholder rust">{}</span> -&gt; x<span class="token constant placeholder rust">{}</span> = <span class="token constant placeholder rust">{}</span><span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation separator rust">,</span>
+                        rd<span class="token punctuation separator rust">,</span> rs1<span class="token punctuation separator rust">,</span> rs2<span class="token punctuation separator rust">,</span> rd<span class="token punctuation separator rust">,</span> <span class="token variable language rust">self</span>.x_registers<span class="token group rust"><span class="token punctuation section group begin rust">[</span>rd<span class="token punctuation section group end rust">]</span></span>
+                    <span class="token punctuation section group end rust">)</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+                </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+                <span class="token operator rust">_</span> <span class="token operator rust">=&gt;</span> <span class="token class-name rust">Err</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="support macro rust">format!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust">
+                    <span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>Unsupported R-type instruction: funct3=<span class="token constant placeholder rust">{:#x}</span>, funct7=<span class="token constant placeholder rust">{:#x}</span><span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation separator rust">,</span>
+                    funct3<span class="token punctuation separator rust">,</span> funct7
+                <span class="token punctuation section group end rust">)</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation separator rust">,</span>
+            </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+        </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
+</span></code></pre>
 <p>The simplest VM code is available at: <a target="_blank" rel="noopener" href="https://github.com/chenyukang/ss/tree/main/risc_vm_v0">riscv-vm-v0</a></p>
-<h2 id="From-Rust-to-RISC-V-binary"><a href="#From-Rust-to-RISC-V-binary" class="headerlink" title="From Rust to RISC-V binary"></a>From Rust to RISC-V binary</h2><p>Now we need to write more complex assembly code for testing our VM, but we don’t want to write assembly code by hand.</p>
+<h2 id="From-Rust-to-RISC-V-binary"><a href="#From-Rust-to-RISC-V-binary" class="headerlink" title="From Rust to RISC-V binary"></a>From Rust to RISC-V binary</h2>
+<p>Now we need to write more complex assembly code for testing our VM, but we don’t want to write assembly code by hand.</p>
 <p>To test our VM,  we will write Rust code then use <strong>cross-compile</strong> toolchains to compile it into RISC-V executable files.</p>
 <ol>
 <li><strong>Prepare the Environment</strong>: Install the <code>riscv32imac-unknown-none-elf</code> target toolchain. This is a bare-metal target, meaning it doesn’t rely on any operating system.</li>
 </ol>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">rustup target <span class="token function">add</span> riscv32imac-unknown-none-elf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">rustup</span></span><span class="token function-call arguments shell"> target add riscv32imac-unknown-none-elf</span>
+</span></code></pre>
 <p>Next, you’ll need a RISC-V linker. You can get this from the official RISC-V GNU toolchain.</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># On Linux or macOS</span>
-<span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> gcc-riscv64-unknown-elf
-<span class="token comment"># Alternatively, on macOS</span>
-brew <span class="token function">install</span> riscv-gnu-toolchain<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token comment number-sign shell"><span class="token punctuation definition comment begin shell">#</span></span><span class="token comment number-sign shell"> On Linux or macOS</span><span class="token comment number-sign shell">
+</span><span class="token function-call shell"><span class="token variable function shell">sudo</span></span><span class="token function-call arguments shell"> apt-get install gcc-riscv64-unknown-elf</span>
+<span class="token comment number-sign shell"><span class="token punctuation definition comment begin shell">#</span></span><span class="token comment number-sign shell"> Alternatively, on macOS</span><span class="token comment number-sign shell">
+</span><span class="token function-call shell"><span class="token variable function shell">brew</span></span><span class="token function-call arguments shell"> install riscv-gnu-toolchain</span>
+</span></code></pre>
 <p><strong>Note:</strong> The <code>gcc-riscv64-unknown-elf</code> package includes both 32-bit and 64-bit tools.</p>
 <ol start="2">
 <li><strong>Write “Bare-Metal” Rust</strong>: Our Rust program must be written for a “bare-metal” environment, meaning you cannot use the standard library and must provide your own entry point and panic handler.</li>
 </ol>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token attribute attr-name">#[unsafe(no_mangle)]</span>
-<span class="token keyword">pub</span> <span class="token keyword">extern</span> <span class="token string">"C"</span> <span class="token keyword">fn</span> <span class="token function-definition function">_start</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">let</span> <span class="token keyword">mut</span> sum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token number">1</span><span class="token punctuation">..=</span><span class="token number">10</span> <span class="token punctuation">&#123;</span>
-        sum <span class="token operator">+=</span> i<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token annotation rust"><span class="token punctuation definition annotation rust">#</span><span class="token punctuation section group begin rust">[</span><span class="token variable annotation rust">unsafe</span><span class="token annotation parameters rust"><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span></span><span class="token annotation parameters rust"><span class="token group rust">no_mangle</span></span><span class="token annotation parameters rust"><span class="token group rust"><span class="token punctuation section group end rust">)</span></span></span><span class="token punctuation section group end rust">]</span></span>
+<span class="token keyword rust">pub</span> <span class="token keyword rust">extern</span> <span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>C<span class="token punctuation definition string end rust">&quot;</span></span> <span class="token function rust"><span class="token function rust"><span class="token keyword function rust">fn</span> </span><span class="token function rust">_start</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">(</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters end rust">)</span></span></span></span><span class="token function rust"> </span><span class="token function rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token keyword rust">let</span> <span class="token keyword rust">mut</span> sum <span class="token operator rust">=</span> <span class="token number integer decimal rust">0</span><span class="token punctuation terminator rust">;</span>
+    <span class="token keyword rust">for</span> i <span class="token operator rust">in</span> <span class="token number integer decimal rust">1</span><span class="token operator rust">..</span><span class="token operator rust">=</span><span class="token number integer decimal rust">10</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        sum <span class="token operator rust">+</span><span class="token operator rust">=</span> i<span class="token punctuation terminator rust">;</span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
 
-    <span class="token comment">// Store the result (which should be 55) in a known memory location.</span>
-    <span class="token keyword">let</span> result_ptr <span class="token operator">=</span> <span class="token number">0x1000</span> <span class="token keyword">as</span> <span class="token operator">*</span><span class="token keyword">mut</span> <span class="token keyword">u32</span><span class="token punctuation">;</span>
-    <span class="token keyword">unsafe</span> <span class="token punctuation">&#123;</span>
-        <span class="token operator">*</span>result_ptr <span class="token operator">=</span> sum<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
+    <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> Store the result (which should be 55) in a known memory location.
+</span>    <span class="token keyword rust">let</span> result_ptr <span class="token operator rust">=</span> <span class="token number integer hexadecimal rust">0x1000</span> <span class="token operator rust">as</span> <span class="token operator rust">*</span><span class="token keyword rust">mut</span> <span class="token keyword rust">u32</span><span class="token punctuation terminator rust">;</span>
+    <span class="token keyword rust">unsafe</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        <span class="token operator rust">*</span>result_ptr <span class="token operator rust">=</span> sum<span class="token punctuation terminator rust">;</span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
 
-<span class="token attribute attr-name">#[panic_handler]</span>
-<span class="token keyword">fn</span> <span class="token function-definition function">panic</span><span class="token punctuation">(</span>_info<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token class-name">PanicInfo</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token operator">!</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">loop</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token annotation rust"><span class="token punctuation definition annotation rust">#</span><span class="token punctuation section group begin rust">[</span><span class="token variable annotation rust">panic_handler</span><span class="token punctuation section group end rust">]</span></span>
+<span class="token function rust"><span class="token function rust"><span class="token keyword function rust">fn</span> </span><span class="token function rust">panic</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">(</span><span class="token variable parameter rust">_info</span><span class="token punctuation separator rust">:</span> <span class="token operator rust">&amp;</span>PanicInfo</span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters end rust">)</span></span></span></span><span class="token function rust"> <span class="token function return-type rust"><span class="token punctuation separator rust">-&gt;</span> </span></span><span class="token operator rust">!</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token keyword rust">loop</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span></span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+</span></code></pre>
 <ol start="3">
 <li><strong>Cross-Compile</strong>: Use <code>cargo</code> with the specific target and a linker script to build the executable. We need to add options for Cargo in <code>.cargo/config.toml</code></li>
 </ol>
-<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml"><span class="token punctuation">[</span><span class="token table class-name">target.riscv32imac-unknown-none-elf</span><span class="token punctuation">]</span>
-<span class="token key property">rustflags</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">"-C"</span><span class="token punctuation">,</span> <span class="token string">"link-arg=-Tlink.ld"</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>The content for <code>link.ld</code> is as follows. It tells the linker the layout of the binary file generated. Notice that we specify the entry point at address <code>0x80</code>:<br><pre class="line-numbers language-none"><code class="language-none">OUTPUT_ARCH(riscv)
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">[target.riscv32imac-unknown-none-elf]
+rustflags = [&quot;-C&quot;, &quot;link-arg=-Tlink.ld&quot;]
+</code></pre>
+<p>The content for <code>link.ld</code> is as follows. It tells the linker the layout of the binary file generated. Notice that we specify the entry point at address <code>0x80</code>:</p>
+OUTPUT_ARCH(riscv)
 ENTRY(_start)
 
-SECTIONS &#123;
-    . &#x3D; 0x80;
-    .text : &#123;
+SECTIONS {
+    . = 0x80;
+    .text : {
         *(.text.boot)
         *(.text)
-    &#125;
-    .rodata : &#123;
+    }
+    .rodata : {
         *(.rodata)
-    &#125;
-    .data : &#123;
+    }
+    .data : {
         *(.data)
-    &#125;
-    .bss : &#123;
+    }
+    .bss : {
         *(.bss)
-    &#125;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
+    }
+}
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
 <p>Then we can build the program to a binary:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">cargo</span> build <span class="token parameter variable">--release</span> <span class="token parameter variable">--target</span> riscv32imac-unknown-none-elf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">cargo build --release --target riscv32imac-unknown-none-elf
+</code></pre>
 <ol start="4">
 <li><strong>Disassemble and check the binary code</strong>: We can use the tool <code>riscv64-unknown-elf-objdump</code> to double-check the generated binary file:</li>
 </ol>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">riscv64-unknown-elf-objdump <span class="token parameter variable">-d</span> ./demo/target/riscv32imac-unknown-none-elf/release/demo
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">riscv64-unknown-elf-objdump -d ./demo/target/riscv32imac-unknown-none-elf/release/demo
 
-./demo/target/riscv32imac-unknown-none-elf/release/demo:     <span class="token function">file</span> <span class="token function">format</span> elf32-littleriscv
+./demo/target/riscv32imac-unknown-none-elf/release/demo:     file format elf32-littleriscv
 
 Disassembly of section .text._start:
 
-00000080 <span class="token operator">&lt;</span>_start<span class="token operator">></span>:
-  <span class="token number">80</span>:   <span class="token number">4501</span>                    li      a0,0
-  <span class="token number">82</span>:   <span class="token number">4605</span>                    li      a2,1
-  <span class="token number">84</span>:   45ad                    li      a1,11
-  <span class="token number">86</span>:   <span class="token number">4729</span>                    li      a4,10
-  <span class="token number">88</span>:   00e61763                bne     a2,a4,96 <span class="token operator">&lt;</span>_start+0x1<span class="token operator"><span class="token file-descriptor important">6</span>></span>
+00000080 &lt;_start&gt;:
+  80:   4501                    li      a0,0
+  82:   4605                    li      a2,1
+  84:   45ad                    li      a1,11
+  86:   4729                    li      a4,10
+  88:   00e61763                bne     a2,a4,96 &lt;_start+0x16&gt;
   8c:   46a9                    li      a3,10
-  8e:   <span class="token number">9532</span>                    <span class="token function">add</span>     a0,a0,a2
-  <span class="token number">90</span>:   00e61863                bne     a2,a4,a0 <span class="token operator">&lt;</span>_start+0x2<span class="token operator"><span class="token file-descriptor important">0</span>></span>
-  <span class="token number">94</span>:   a809                    j       a6 <span class="token operator">&lt;</span>_start+0x2<span class="token operator"><span class="token file-descriptor important">6</span>></span>
-  <span class="token number">96</span>:   00160693                addi    a3,a2,1
-  9a:   <span class="token number">9532</span>                    <span class="token function">add</span>     a0,a0,a2
-  9c:   00e60563                beq     a2,a4,a6 <span class="token operator">&lt;</span>_start+0x2<span class="token operator"><span class="token file-descriptor important">6</span>></span>
-  a0:   <span class="token number">8636</span>                    <span class="token function">mv</span>      a2,a3
-  a2:   feb6e3e3                bltu    a3,a1,88 <span class="token operator">&lt;</span>_start+0x<span class="token operator"><span class="token file-descriptor important">8</span>></span>
-  a6:   <span class="token number">6585</span>                    lui     a1,0x1
-  a8:   c188                    sw      a0,0<span class="token punctuation">(</span>a1<span class="token punctuation">)</span>
-  aa:   <span class="token number">8082</span>                    ret<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+  8e:   9532                    add     a0,a0,a2
+  90:   00e61863                bne     a2,a4,a0 &lt;_start+0x20&gt;
+  94:   a809                    j       a6 &lt;_start+0x26&gt;
+  96:   00160693                addi    a3,a2,1
+  9a:   9532                    add     a0,a0,a2
+  9c:   00e60563                beq     a2,a4,a6 &lt;_start+0x26&gt;
+  a0:   8636                    mv      a2,a3
+  a2:   feb6e3e3                bltu    a3,a1,88 &lt;_start+0x8&gt;
+  a6:   6585                    lui     a1,0x1
+  a8:   c188                    sw      a0,0(a1)
+  aa:   8082                    ret
+</code></pre>
 <p>The complete cross-compile Rust code is available at: <a target="_blank" rel="noopener" href="https://github.com/chenyukang/ss/tree/main/riscv_vm/demo">riscv-demo</a></p>
-<h2 id="Using-the-VM-to-Execute-Binary"><a href="#Using-the-VM-to-Execute-Binary" class="headerlink" title="Using the VM to Execute Binary"></a>Using the VM to Execute Binary</h2><p>The first problem is how do we parse the executable file? It turns out there is a crate called <code>elf</code> that can help us parse the header of an ELF file. We extract the interested parts from the header and record the <code>base_mem</code> so that we can convert <code>virtual address</code> to <code>physical address</code>. Of course, we also load the code into memory:</p>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">pub</span> <span class="token keyword">fn</span> <span class="token function-definition function">new_from_elf</span><span class="token punctuation">(</span>elf_data<span class="token punctuation">:</span> <span class="token operator">&amp;</span><span class="token punctuation">[</span><span class="token keyword">u8</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">Self</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">let</span> <span class="token keyword">mut</span> memory <span class="token operator">=</span> <span class="token macro property">vec!</span><span class="token punctuation">[</span><span class="token number">0u8</span><span class="token punctuation">;</span> <span class="token constant">MEM_SIZE</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<h2 id="Using-the-VM-to-Execute-Binary"><a href="#Using-the-VM-to-Execute-Binary" class="headerlink" title="Using the VM to Execute Binary"></a>Using the VM to Execute Binary</h2>
+<p>The first problem is how do we parse the executable file? It turns out there is a crate called <code>elf</code> that can help us parse the header of an ELF file. We extract the interested parts from the header and record the <code>base_mem</code> so that we can convert <code>virtual address</code> to <code>physical address</code>. Of course, we also load the code into memory:</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token function rust"><span class="token function rust"><span class="token keyword rust">pub</span> <span class="token keyword function rust">fn</span> </span><span class="token function rust">new_from_elf</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">(</span><span class="token variable parameter rust">elf_data</span><span class="token punctuation separator rust">:</span> <span class="token operator rust">&amp;</span>[<span class="token keyword rust">u8</span>]</span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters end rust">)</span></span></span></span><span class="token function rust"> <span class="token function return-type rust"><span class="token punctuation separator rust">-&gt;</span> <span class="token keyword rust">Self</span></span> </span><span class="token function rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token keyword rust">let</span> <span class="token keyword rust">mut</span> memory <span class="token operator rust">=</span> <span class="support macro rust">vec!</span><span class="token group rust"><span class="token punctuation section group begin rust">[</span><span class="token number integer decimal rust">0</span><span class="token keyword numeric rust">u8</span><span class="token punctuation separator rust">;</span> <span class="token constant rust">MEM_SIZE</span><span class="token punctuation section group end rust">]</span></span><span class="token punctuation terminator rust">;</span>
 
-    <span class="token keyword">let</span> elf <span class="token operator">=</span> <span class="token class-name">ElfBytes</span><span class="token punctuation">::</span><span class="token operator">&lt;</span><span class="token namespace">elf<span class="token punctuation">::</span>endian<span class="token punctuation">::</span></span><span class="token class-name">AnyEndian</span><span class="token operator">></span><span class="token punctuation">::</span><span class="token function">minimal_parse</span><span class="token punctuation">(</span>elf_data<span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">expect</span><span class="token punctuation">(</span><span class="token string">"Failed to parse ELF file"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword rust">let</span> elf <span class="token operator rust">=</span> <span class="token path rust">ElfBytes<span class="token punctuation accessor rust">::</span></span><span class="token generic rust"><span class="token punctuation definition generic begin rust">&lt;</span><span class="token path rust">elf<span class="token punctuation accessor rust">::</span></span><span class="token path rust">endian<span class="token punctuation accessor rust">::</span></span>AnyEndian<span class="token punctuation definition generic end rust">&gt;</span></span><span class="token path rust"><span class="token punctuation accessor rust">::</span></span>minimal_parse<span class="token group rust"><span class="token punctuation section group begin rust">(</span>elf_data</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+        .<span class="token function rust">expect</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>Failed to parse ELF file<span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
 
-    <span class="token comment">// Get the program entry point</span>
-    <span class="token keyword">let</span> entry_point <span class="token operator">=</span> elf<span class="token punctuation">.</span>ehdr<span class="token punctuation">.</span>e_entry <span class="token keyword">as</span> <span class="token keyword">u32</span><span class="token punctuation">;</span>
+    <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> Get the program entry point
+</span>    <span class="token keyword rust">let</span> entry_point <span class="token operator rust">=</span> elf.ehdr.e_entry <span class="token operator rust">as</span> <span class="token keyword rust">u32</span><span class="token punctuation terminator rust">;</span>
 
-    <span class="token comment">// Iterate through program headers, load PT_LOAD type segments</span>
-    <span class="token keyword">for</span> segment <span class="token keyword">in</span> elf<span class="token punctuation">.</span><span class="token function">segments</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">expect</span><span class="token punctuation">(</span><span class="token string">"Failed to get segments"</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span> segment<span class="token punctuation">.</span>p_type <span class="token operator">==</span> <span class="token constant">PT_LOAD</span> <span class="token punctuation">&#123;</span>
-            <span class="token keyword">let</span> virt_addr <span class="token operator">=</span> segment<span class="token punctuation">.</span>p_vaddr <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
-            <span class="token keyword">let</span> file_size <span class="token operator">=</span> segment<span class="token punctuation">.</span>p_filesz <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
-            <span class="token keyword">let</span> mem_size <span class="token operator">=</span> segment<span class="token punctuation">.</span>p_memsz <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
-            <span class="token keyword">let</span> file_offset <span class="token operator">=</span> segment<span class="token punctuation">.</span>p_offset <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
+    <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> Iterate through program headers, load PT_LOAD type segments
+</span>    <span class="token keyword rust">for</span> segment <span class="token operator rust">in</span> elf.<span class="token function rust">segments</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>.<span class="token function rust">expect</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>Failed to get segments<span class="token punctuation definition string end rust">&quot;</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        <span class="token keyword rust">if</span> segment.p_type <span class="token operator rust">=</span><span class="token operator rust">=</span> <span class="token constant rust">PT_LOAD</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+            <span class="token keyword rust">let</span> virt_addr <span class="token operator rust">=</span> segment.p_vaddr <span class="token operator rust">as</span> <span class="token keyword rust">usize</span><span class="token punctuation terminator rust">;</span>
+            <span class="token keyword rust">let</span> file_size <span class="token operator rust">=</span> segment.p_filesz <span class="token operator rust">as</span> <span class="token keyword rust">usize</span><span class="token punctuation terminator rust">;</span>
+            <span class="token keyword rust">let</span> mem_size <span class="token operator rust">=</span> segment.p_memsz <span class="token operator rust">as</span> <span class="token keyword rust">usize</span><span class="token punctuation terminator rust">;</span>
+            <span class="token keyword rust">let</span> file_offset <span class="token operator rust">=</span> segment.p_offset <span class="token operator rust">as</span> <span class="token keyword rust">usize</span><span class="token punctuation terminator rust">;</span>
 
-            <span class="token comment">// Address translation: virtual address -> physical address</span>
-            <span class="token keyword">let</span> phys_addr <span class="token operator">=</span> virt_addr <span class="token operator">-</span> entry_point <span class="token keyword">as</span> <span class="token keyword">usize</span><span class="token punctuation">;</span>
-            <span class="token comment">// Check memory boundaries</span>
-            <span class="token keyword">if</span> phys_addr <span class="token operator">+</span> mem_size <span class="token operator">></span> <span class="token constant">MEM_SIZE</span> <span class="token punctuation">&#123;</span>
-                <span class="token macro property">panic!</span><span class="token punctuation">(</span>
-                    <span class="token string">"Segment is too large for the allocated memory. vaddr: &#123;:#x&#125;, mem_size: &#123;:#x&#125;"</span><span class="token punctuation">,</span>
-                    virt_addr<span class="token punctuation">,</span> mem_size
-                <span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
+            <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> Address translation: virtual address -&gt; physical address
+</span>            <span class="token keyword rust">let</span> phys_addr <span class="token operator rust">=</span> virt_addr <span class="token operator rust">-</span> entry_point <span class="token operator rust">as</span> <span class="token keyword rust">usize</span><span class="token punctuation terminator rust">;</span>
+            <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> Check memory boundaries
+</span>            <span class="token keyword rust">if</span> phys_addr <span class="token operator rust">+</span> mem_size <span class="token operator rust">&gt;</span> <span class="token constant rust">MEM_SIZE</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+                <span class="support macro rust">panic!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>
+                    <span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>Segment is too large for the allocated memory. vaddr: {:#x}, mem_size: {:#x}<span class="token punctuation definition string end rust">&quot;</span></span><span class="token punctuation separator rust">,</span>
+                    virt_addr<span class="token punctuation separator rust">,</span> mem_size
+                </span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+            </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
 
-            <span class="token comment">// Copy data from ELF file to memory</span>
-            <span class="token keyword">if</span> file_size <span class="token operator">></span> <span class="token number">0</span> <span class="token punctuation">&#123;</span>
-                <span class="token keyword">let</span> segment_data <span class="token operator">=</span> <span class="token operator">&amp;</span>elf_data<span class="token punctuation">[</span>file_offset<span class="token punctuation">..</span>file_offset <span class="token operator">+</span> file_size<span class="token punctuation">]</span><span class="token punctuation">;</span>
-                memory<span class="token punctuation">[</span>phys_addr<span class="token punctuation">..</span>phys_addr <span class="token operator">+</span> file_size<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">copy_from_slice</span><span class="token punctuation">(</span>segment_data<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
+            <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> Copy data from ELF file to memory
+</span>            <span class="token keyword rust">if</span> file_size <span class="token operator rust">&gt;</span> <span class="token number integer decimal rust">0</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+                <span class="token keyword rust">let</span> segment_data <span class="token operator rust">=</span> <span class="token operator rust">&amp;</span>elf_data<span class="token group rust"><span class="token punctuation section group begin rust">[</span>file_offset<span class="token operator rust">..</span>file_offset <span class="token operator rust">+</span> file_size<span class="token punctuation section group end rust">]</span></span><span class="token punctuation terminator rust">;</span>
+                memory<span class="token group rust"><span class="token punctuation section group begin rust">[</span>phys_addr<span class="token operator rust">..</span>phys_addr <span class="token operator rust">+</span> file_size<span class="token punctuation section group end rust">]</span></span>.<span class="token function rust">copy_from_slice</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>segment_data</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+            </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+        </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
 
-    <span class="token keyword">let</span> <span class="token keyword">mut</span> vm <span class="token operator">=</span> <span class="token constant">VM</span> <span class="token punctuation">&#123;</span>
-        x_registers<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">;</span> <span class="token number">32</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-        <span class="token comment">// Set directly to entry_point to match the linker script</span>
-        pc<span class="token punctuation">:</span> entry_point<span class="token punctuation">,</span>
-        memory<span class="token punctuation">,</span>
-        mem_base<span class="token punctuation">:</span> entry_point<span class="token punctuation">,</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-    vm<span class="token punctuation">.</span>x_registers<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword rust">let</span> <span class="token keyword rust">mut</span> vm <span class="token operator rust">=</span> <span class="token constant rust">VM</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        x_registers<span class="token punctuation separator rust">:</span> <span class="token group rust"><span class="token punctuation section group begin rust">[</span><span class="token number integer decimal rust">0</span><span class="token punctuation separator rust">;</span> <span class="token number integer decimal rust">32</span><span class="token punctuation section group end rust">]</span></span><span class="token punctuation separator rust">,</span>
+        <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> Set directly to entry_point to match the linker script
+</span>        pc<span class="token punctuation separator rust">:</span> entry_point<span class="token punctuation separator rust">,</span>
+        memory<span class="token punctuation separator rust">,</span>
+        mem_base<span class="token punctuation separator rust">:</span> entry_point<span class="token punctuation separator rust">,</span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span><span class="token punctuation terminator rust">;</span>
+    vm.x_registers<span class="token group rust"><span class="token punctuation section group begin rust">[</span><span class="token number integer decimal rust">0</span><span class="token punctuation section group end rust">]</span></span> <span class="token operator rust">=</span> <span class="token number integer decimal rust">0</span><span class="token punctuation terminator rust">;</span>
     vm
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
+</span></code></pre>
 <p>What’s left is that we need to extend our VM to support all the instruction formats used in this binary file, including <code>li</code>, <code>bne</code>, <code>beq</code>, etc.</p>
 <p>There are 16-bit compressed instructions, so we can’t always increment the PC by 4; sometimes we only need to increment it by 2 for shorter ones.</p>
 <p>Another interesting thing is that some of them are conditional jump instructions, so we need to get the return <code>new_pc</code> from the execution of the instruction.</p>
 <p>So now we need to update the core logic of fetch and execution of instructions:</p>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token comment">// Check the lowest 2 bits to determine instruction length</span>
-<span class="token keyword">if</span> first_half <span class="token operator">&amp;</span> <span class="token number">0x3</span> <span class="token operator">!=</span> <span class="token number">0x3</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// 16-bit compressed instruction</span>
-    pc_increment <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
-    new_pc <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token function">execute_compressed_instruction</span><span class="token punctuation">(</span>first_half<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// 32-bit instruction</span>
-    pc_increment <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> physical_pc<span class="token punctuation">.</span><span class="token function">saturating_add</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>memory<span class="token punctuation">.</span><span class="token function">len</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">break</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">let</span> second_half <span class="token operator">=</span> <span class="token keyword">u16</span><span class="token punctuation">::</span><span class="token function">from_le_bytes</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
-        <span class="token keyword">self</span><span class="token punctuation">.</span>memory<span class="token punctuation">[</span>physical_pc <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-        <span class="token keyword">self</span><span class="token punctuation">.</span>memory<span class="token punctuation">[</span>physical_pc <span class="token operator">+</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-    <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">let</span> instruction <span class="token operator">=</span> <span class="token punctuation">(</span>second_half <span class="token keyword">as</span> <span class="token keyword">u32</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token number">16</span> <span class="token operator">|</span> <span class="token punctuation">(</span>first_half <span class="token keyword">as</span> <span class="token keyword">u32</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> Check the lowest 2 bits to determine instruction length
+</span><span class="token keyword rust">if</span> first_half <span class="token operator rust">&amp;</span> <span class="token number integer hexadecimal rust">0x3</span> <span class="token operator rust">!</span><span class="token operator rust">=</span> <span class="token number integer hexadecimal rust">0x3</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> 16-bit compressed instruction
+</span>    pc_increment <span class="token operator rust">=</span> <span class="token number integer decimal rust">2</span><span class="token punctuation terminator rust">;</span>
+    new_pc <span class="token operator rust">=</span> <span class="token variable language rust">self</span>.<span class="token function rust">execute_compressed_instruction</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>first_half</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span> <span class="token keyword rust">else</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> 32-bit instruction
+</span>    pc_increment <span class="token operator rust">=</span> <span class="token number integer decimal rust">4</span><span class="token punctuation terminator rust">;</span>
+    <span class="token keyword rust">if</span> physical_pc.<span class="token function rust">saturating_add</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token number integer decimal rust">3</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">&gt;</span><span class="token operator rust">=</span> <span class="token variable language rust">self</span>.memory.<span class="token function rust">len</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        <span class="token keyword rust">break</span><span class="token punctuation terminator rust">;</span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+    <span class="token keyword rust">let</span> second_half <span class="token operator rust">=</span> <span class="token keyword rust">u16</span><span class="token path rust"><span class="token punctuation accessor rust">::</span></span>from_le_bytes<span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token group rust"><span class="token punctuation section group begin rust">[</span>
+        <span class="token variable language rust">self</span>.memory<span class="token group rust"><span class="token punctuation section group begin rust">[</span>physical_pc <span class="token operator rust">+</span> <span class="token number integer decimal rust">2</span><span class="token punctuation section group end rust">]</span></span><span class="token punctuation separator rust">,</span>
+        <span class="token variable language rust">self</span>.memory<span class="token group rust"><span class="token punctuation section group begin rust">[</span>physical_pc <span class="token operator rust">+</span> <span class="token number integer decimal rust">3</span><span class="token punctuation section group end rust">]</span></span><span class="token punctuation separator rust">,</span>
+    <span class="token punctuation section group end rust">]</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+    <span class="token keyword rust">let</span> instruction <span class="token operator rust">=</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span>second_half <span class="token operator rust">as</span> <span class="token keyword rust">u32</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">&lt;</span><span class="token operator rust">&lt;</span> <span class="token number integer decimal rust">16</span> <span class="token operator rust">|</span> <span class="token group rust"><span class="token punctuation section group begin rust">(</span>first_half <span class="token operator rust">as</span> <span class="token keyword rust">u32</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
 
-    <span class="token keyword">if</span> instruction <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">break</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
+    <span class="token keyword rust">if</span> instruction <span class="token operator rust">=</span><span class="token operator rust">=</span> <span class="token number integer decimal rust">0</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        <span class="token keyword rust">break</span><span class="token punctuation terminator rust">;</span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
 
-    new_pc <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span><span class="token function">execute_instruction</span><span class="token punctuation">(</span>instruction<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    new_pc <span class="token operator rust">=</span> <span class="token variable language rust">self</span>.<span class="token function rust">execute_instruction</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>instruction</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+
+</span></code></pre>
 <p>The complete new VM which can run compiled RISC-V binary files is available at: <a target="_blank" rel="noopener" href="https://github.com/chenyukang/ss/tree/main/riscv_vm">riscv-vm</a></p>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2>
+<ul>
 <li><a target="_blank" rel="noopener" href="https://riscv.org/technical/specifications/">RISC-V Technical Specifications</a></li>
 </ul>
 </section>
@@ -528,16 +537,16 @@ Disassembly of section .text._start:
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#riscv" >
-    <span class="tag-code">riscv</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#VM" >
-    <span class="tag-code">VM</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#programming" >
-    <span class="tag-code">programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -589,7 +598,7 @@ Disassembly of section .text._start:
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Understanding-the-Core-Concepts"><span class="toc-nav-text">Understanding the Core Concepts</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#The-VM%E2%80%99s-Core-Logic"><span class="toc-nav-text">The VM’s Core Logic</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#From-Rust-to-RISC-V-binary"><span class="toc-nav-text">From Rust to RISC-V binary</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Using-the-VM-to-Execute-Binary"><span class="toc-nav-text">Using the VM to Execute Binary</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#References"><span class="toc-nav-text">References</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Understanding-the-Core-Concepts"><span class="toc-nav-text">Understanding the Core Concepts</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#The-VM’s-Core-Logic"><span class="toc-nav-text">The VM’s Core Logic</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#From-Rust-to-RISC-V-binary"><span class="toc-nav-text">From Rust to RISC-V binary</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Using-the-VM-to-Execute-Binary"><span class="toc-nav-text">Using the VM to Execute Binary</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#References"><span class="toc-nav-text">References</span></a></li></ol>
     
   </div>
 </aside>
@@ -600,7 +609,7 @@ Disassembly of section .text._start:
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/riscv-vm/';
+    var url = 'http://catcoding.me//p/riscv-vm/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -661,7 +670,7 @@ Disassembly of section .text._start:
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -686,8 +695,6 @@ Disassembly of section .text._start:
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

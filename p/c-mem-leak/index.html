@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -191,36 +179,37 @@
   <article class="post-article">
     <section class="markdown-content"><p>以前写的一些程序运行一段时间后占用的内存越来越多，估计是内存泄露了。服务端的程序要长时间的运行，内存泄露是个很严重的问题。于是再检查程序，很崩溃的是还有另外一个模块不是自己写的，看起来很麻烦。看了半小时后发现一些问题，但是还是不能保证是否完全解决了。同事让我用以前他们写的一些函数，对应的为 MALLOC 和 FREE。仔细看了一下觉得很不错，其实就是把 malloc 和 free 函数封装了一下，用来记录申请空间的文件和代码位置，使用方法就是用 MALLOC 和 FREE 替代原来的函数。主要的数据结构是：</p>
 <div>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">typedef</span> <span class="token keyword c">struct</span>
+<span class="token block c"><span class="token punctuation section block begin c">{</span>
+    <span class="token keyword c">long</span> pcode<span class="token punctuation terminator c">;</span>                          <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>指针
+</span>    <span class="token keyword c">char</span> filename<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span><span class="token number c">128</span><span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>                  <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>申请空间的源文件名称
+</span>    <span class="token keyword c">int</span> line<span class="token punctuation terminator c">;</span>              <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>申请空间的代码所在的行
+</span>    <span class="token keyword c">int</span> ct<span class="token punctuation terminator c">;</span>                   <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>内存状态：0-未闭合，1-闭合，2-log/脚手架
+</span><span class="token punctuation section block end c">}</span></span><span class="token class-name typedef c">mem_info</span><span class="token punctuation terminator c">;</span>
 
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">long</span> pcode<span class="token punctuation">;</span>                          <span class="token comment">//指针</span>
-    <span class="token keyword">char</span> filename<span class="token punctuation">[</span><span class="token number">128</span><span class="token punctuation">]</span><span class="token punctuation">;</span>                  <span class="token comment">//申请空间的源文件名称</span>
-    <span class="token keyword">int</span> line<span class="token punctuation">;</span>              <span class="token comment">//申请空间的代码所在的行</span>
-    <span class="token keyword">int</span> ct<span class="token punctuation">;</span>                   <span class="token comment">//内存状态：0-未闭合，1-闭合，2-log/脚手架</span>
-<span class="token punctuation">&#125;</span>mem_info<span class="token punctuation">;</span>
-
-mem_info mem_in<span class="token punctuation">[</span>MEM_SIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>  <span class="token comment">//MEM_SIZE 最大指针数目</span>
-<span class="token keyword">int</span> mem_in_id<span class="token punctuation">;</span> <span class="token comment">//数组中已经占有的 mem_info 数目</span>
-<span class="token keyword">int</span> mem_check_statue<span class="token punctuation">;</span> <span class="token comment">//是否进行内存泄露检查</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+mem_info mem_in<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>MEM_SIZE<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>  <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>MEM_SIZE 最大指针数目
+</span><span class="token keyword c">int</span> mem_in_id<span class="token punctuation terminator c">;</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>数组中已经占有的 mem_info 数目
+</span><span class="token keyword c">int</span> mem_check_statue<span class="token punctuation terminator c">;</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>是否进行内存泄露检查
+</span></span></code></pre>
 <p>然后有两个函数，一个是初始化函数 mem_check_init(),另一个为 mem_check_write(),这样就能检查者两个函数之间的代码是否有内存泄露，mem_check_write() 可以打印成一个表，所有申请了空间的代码的文件名称和代码所在的行数，以及运行到 mem_check_write() 这里的时候所有申请空间的状态，1 表示已经释放，0 表示申请未释放，2 表示的是脚手架的位置（用来方便检查哪一小段代码是否有内存泄露）。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">MALLOC</span><span class="token expression"><span class="token punctuation">(</span>size<span class="token punctuation">)</span>  <span class="token function">ck_malloc</span><span class="token punctuation">(</span>size<span class="token punctuation">,</span>FILE__<span class="token punctuation">,</span>LINE<span class="token punctuation">)</span> </span><span class="token comment">//FILE 文件 LINE 代码所在行</span></span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token preprocessor macro c"><span class="token keyword import define c">#define</span></span><span class="token preprocessor macro c"> <span class="token function preprocessor c">MALLOC</span></span><span class="token preprocessor macro parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token variable parameter c">size</span><span class="token punctuation section group end c">)</span></span></span><span class="token preprocessor macro c">  <span class="token function-call c"><span class="token variable function c">ck_malloc</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">size<span class="token punctuation separator c">,</span>FILE__<span class="token punctuation separator c">,</span>LINE</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>FILE 文件 LINE 代码所在行</span></span>
 
-<span class="token keyword">void</span>   <span class="token function">__ck_malloc</span><span class="token punctuation">(</span><span class="token keyword">int</span> size<span class="token punctuation">,</span><span class="token keyword">char</span> file<span class="token punctuation">,</span><span class="token keyword">int</span> line<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">void</span> p<span class="token operator">=</span><span class="token function">malloc</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword c">void</span>   <span class="token function c"><span class="token function c">__ck_malloc</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token keyword c">int</span> <span class="token variable parameter c">size</span><span class="token punctuation separator c">,</span><span class="token keyword c">char</span> <span class="token variable parameter c">file</span><span class="token punctuation separator c">,</span><span class="token keyword c">int</span> <span class="token variable parameter c">line</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    <span class="token keyword c">void</span> p<span class="token operator assignment c">=</span><span class="token function-call c"><span class="token function C99 c">malloc</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">size</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>mem_check_statue<span class="token punctuation">)</span>    <span class="token keyword">return</span> p<span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>mem_in_id<span class="token operator">>=</span>MEM_SIZE<span class="token punctuation">)</span> <span class="token keyword">return</span> p<span class="token punctuation">;</span>
+    <span class="token keyword c">if</span> <span class="token group c"><span class="token punctuation section group begin c">(</span>mem_check_statue<span class="token punctuation section group end c">)</span></span>    <span class="token keyword c">return</span> p<span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">if</span> <span class="token group c"><span class="token punctuation section group begin c">(</span>mem_in_id<span class="token operator comparison c">&gt;=</span>MEM_SIZE<span class="token punctuation section group end c">)</span></span> <span class="token keyword c">return</span> p<span class="token punctuation terminator c">;</span>
 
-    mem_in<span class="token punctuation">[</span>mem_in_id<span class="token punctuation">]</span><span class="token punctuation">.</span>pcode<span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span>p<span class="token punctuation">;</span>
-    <span class="token function">strcpy</span><span class="token punctuation">(</span>mem_in<span class="token punctuation">[</span>mem_in_id<span class="token punctuation">]</span><span class="token punctuation">.</span>filename<span class="token punctuation">,</span>file<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    mem_in<span class="token punctuation">[</span>mem_in_id<span class="token punctuation">]</span><span class="token punctuation">.</span>line<span class="token operator">=</span>line<span class="token punctuation">;</span>
-    mem_in<span class="token punctuation">[</span>mem_in_id<span class="token punctuation">]</span><span class="token punctuation">.</span>ct<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> <span class="token comment">// 状态：0-未闭合</span>
-    mem_in_id<span class="token operator">++</span><span class="token punctuation">;</span>
+    mem_in<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>mem_in_id<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation accessor c">.</span><span class="token variable other member c">pcode</span><span class="token operator assignment c">=</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token keyword c">long</span><span class="token punctuation section group end c">)</span></span>p<span class="token punctuation terminator c">;</span>
+    <span class="token function-call c"><span class="token function C99 c">strcpy</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">mem_in<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>mem_in_id<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation accessor c">.</span><span class="token variable other member c">filename</span><span class="token punctuation separator c">,</span>file</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+    mem_in<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>mem_in_id<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation accessor c">.</span><span class="token variable other member c">line</span><span class="token operator assignment c">=</span>line<span class="token punctuation terminator c">;</span>
+    mem_in<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>mem_in_id<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation accessor c">.</span><span class="token variable other member c">ct</span><span class="token operator assignment c">=</span><span class="token number c">0</span><span class="token punctuation terminator c">;</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span> 状态：0-未闭合
+</span>    mem_in_id<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation terminator c">;</span>
 
-    <span class="token keyword">return</span> p<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token keyword c">return</span> p<span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre>
 <p>那么 FREE(p)，进行的操作就是现在数组中找到是否有这个 p，如果有就改变状态，变为 1 表示闭合了，也就是释放掉了。CALLOC 和 MALLOC 类似，是调用 calloc，函数 malloc() 和函数 calloc() 的主要区别是前者不能初始化所分配的内存空间，而后者能。REALLOC 有点不一样，调用 void* np=realloc(p,size)，这里要注意 np 和原来的 p 有可能不一样，有可能一样，比较一下进行相应处理。最后 mem_check_write() 遍历上上面的数组打印出来表，其顺序就是按照代码执行的顺序了，其中脚手架可以比较方便的定位于申请了没有释放的代码行，也就是查找两个 2 之间的 0 所对应的行。</p>
 <p>这是一个很不错的方法，今天用这个办法找到了好多处不易发现的内存泄露错误。但这也有其缺点，即使完全通过也不能保证就完全没内存泄露了，除非测试时运行代码的覆盖率要保证所有代码都运行到了，这也是正规的、高质量的测试所要做到的程度。我们现在没有时间来做足够好的测试，以后再好好规范一下。</p>
 </section>
@@ -241,16 +230,16 @@ mem_info mem_in<span class="token punctuation">[</span>MEM_SIZE<span class="toke
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#C" >
-    <span class="tag-code">C</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#内存泄漏" >
-    <span class="tag-code">内存泄漏</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -303,7 +292,7 @@ mem_info mem_in<span class="token punctuation">[</span>MEM_SIZE<span class="toke
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/c-mem-leak/';
+    var url = 'http://catcoding.me//p/c-mem-leak/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -364,7 +353,7 @@ mem_info mem_in<span class="token punctuation">[</span>MEM_SIZE<span class="toke
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -389,8 +378,6 @@ mem_info mem_in<span class="token punctuation">[</span>MEM_SIZE<span class="toke
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

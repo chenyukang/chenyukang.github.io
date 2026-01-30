@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,12 +178,14 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>CKB 相关技术文章第二篇。</p>
-<h2 id="Replace-by-fee"><a href="#Replace-by-fee" class="headerlink" title="Replace by fee"></a>Replace by fee</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>如果一个交易成功发送到交易池，但可能出现因为费用较低而一直得不到处理。之前 CKB 没有其他措施来处理这种情况。</p>
+<h2 id="Replace-by-fee"><a href="#Replace-by-fee" class="headerlink" title="Replace by fee"></a>Replace by fee</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3>
+<p>如果一个交易成功发送到交易池，但可能出现因为费用较低而一直得不到处理。之前 CKB 没有其他措施来处理这种情况。</p>
 <p>例如 <a target="_blank" rel="noopener" href="https://www.notion.so/Dotbit-4-45e129cb4c434bd2902569aff67c4383?pvs=21">Dotbit 4 位域名注册拥堵</a> 这个事故发生过程中，<code>CKB</code> 的应用方无法使用任何方式来尽快让自己的交易被打包，这就是引入 <code>Replace-by-fee（RBF)</code> 的原因，我们需要一个机制来提高已经在交易池里交易的费用，替换掉旧的交易，让新的交易尽快被打包。</p>
 <p>在新的 <code>multi_index_map</code> 重构后，交易在 <code>pending</code> 阶段也会按照交易的 <code>score</code> 来优先处理 (通常费用高的交易 <code>score</code> 也会高)，这会避免高费用的交易被阻塞住，所以理论上述需要手动提高费用的情况会减少，但我们还是需要 RBF 来手动提高交易的费用，应对意外的情况。</p>
 <p>另外，RBF 可能将多个老的交易替换出去，因此也是将两个或多个支付合并为一的方法，例如下图所示，如果满足条件 <code>tx-a</code>, <code>tx-b</code>, <code>tx-c</code>, <code>tx-d</code> 都会被 <code>tx-e</code> 这个交易替换掉：</p>
-<p><img src="/images/ob_pasted-image-20241031103004.png" alt=""></p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<p><img src="/images/ob_pasted-image-20241031103004.png" alt="" /></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3>
+<ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/bitcoin/bips/blob/master/bip-0125.mediawiki">bips/bip-0125.mediawiki</a></li>
 <li><a target="_blank" rel="noopener" href="https://bitcoincore.org/en/faq/optin_rbf/">Bitcoin Core :: Opt-in RBF FAQ</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.notion.so/RBF-in-CKB-draft-2023-01-05-79736edd0c824fae98f1e7ee42d4e436?pvs=21">RBF in CKB(draft 2023.01.05)</a></li>
@@ -203,24 +193,30 @@
 </ul>
 <p>中本聪最初的 Bitcoin 版本中就有引入一个 <code>nSequence</code> 的字段，如果相同交易的 <code>nSequence</code> 更高，就可以<a target="_blank" rel="noopener" href="https://github.com/trottier/original-bitcoin/blob/master/src/main.cpp#L434">替换</a>之前老的交易，这个实现的问题是没有支付额外的 fee，miner 没用动力去替换交易，另外因为没有 rate-limiting 从而导致可能被滥用，所以 Bitcoin 在 0.3.12 版本中禁止了这个功能。后来 Bitcoin 重新引入了新的 RBF 改进，主要包括需要支付额外的费用来替换老交易，另外为 RBF 指定了更多的限制条件。</p>
 <p>在 CKB 上我们之前做过两次 RBF 的相关调研，因为之前 <code>Pending</code> 是一个 FIFO 的数据结构，所以处理替换不是很方便，在 RBF in CKB(draft 2023.01.05) 尝试引入一个 <code>high priority queue</code> 来实现 <code>inject-replace</code>。交易池改造之后，整个交易池可当作一个优先队列，所以应对 <code>RBF</code> 会简单很多。</p>
-<h2 id="新增-RBF-的流程"><a href="#新增-RBF-的流程" class="headerlink" title="新增 RBF 的流程"></a>新增 <code>RBF</code> 的流程</h2><p><img src="/images/ob_rbf2.png" alt=""></p>
-<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><ul>
+<h2 id="新增-RBF-的流程"><a href="#新增-RBF-的流程" class="headerlink" title="新增 RBF 的流程"></a>新增 RBF 的流程</h2>
+<p><img src="/images/ob_rbf2.png" alt="" /></p>
+<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2>
+<ul>
 <li><code>pre-check</code> 为 entry 加入到 tx-pool 之前必须要做的检查，之前只是做双花的检查，新增 RBF 后如果双花检查失败（这里意味着冲突），继续做 RBF 的相关检查，如果 RBF 检查成功则也返回成功，否则直接返回错误。这里默认直接做 resolve_tx 的检查，如果成功则走正常流程，目的是不给正常流程增加额外成本。所以这就是<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/44331ec5b9fcda217f33c471057fa479bd36a89f/tx-pool/src/process.rs#L216-L255"><code>pre-check</code> 修改后的主要逻辑</a> 。</li>
 </ul>
-<p>RBF 的检查规则参考 Bitcoin 的六条，<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/2be67e79acec94369a96f786d3041e6cb00cf1f2/tx-pool/src/pool.rs#L483-L565"><strong>check_rbf 初步实现</strong></a></p>
-<pre class="line-numbers language-none"><code class="language-none">实现细节：（Bitcoin Core 0.12.0）
+<p>RBF 的检查规则参考 Bitcoin 的六条，<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/2be67e79acec94369a96f786d3041e6cb00cf1f2/tx-pool/src/pool.rs#L483-L565">check_rbf 初步实现</a></p>
+实现细节：（Bitcoin Core 0.12.0）
 
 ~~1. 交易需要声明为可替换交易~~ 
 2. 新替换交易没有包含新的、未确认的 inputs
 3. 新替换交易的交易费用比待替换交易费用高
 4. 新替换交易费用必须比节点的 min relay fee 高
 5. 待替换交易的子交易数量不可超过 100 条（即使用了该交易的任意 outputs，该交易替换后它们将被从内存池中移出）
-6. 因为 ckb 是做了两步提交，我们新增规则：被替换的交易只能是 Pending 或者 Gap 阶段的。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+6. 因为 ckb 是做了两步提交，我们新增规则：被替换的交易只能是 Pending 或者 Gap 阶段的。
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
 <p>我们不给交易加新的字段表示是否可以被替换，而是通过节点是否配置了 <code>min_rbf_rate</code> 来决定是否能做替换，因此 <code>规则 1</code> 不做对应考虑。</p>
-<h3 id="替换和提交"><a href="#替换和提交" class="headerlink" title="替换和提交"></a>替换和提交</h3><p>修改 <code>tx-pool</code> 的 <code>submit_entry</code> 函数，传入 <code>conflicts</code>，在新增 entry 之前把所有冲突的交易删除 放入 <code>rejected</code> 记录，另外确保所有检查完成了之后才做删除和写操作：<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/2be67e79acec94369a96f786d3041e6cb00cf1f2/tx-pool/src/process.rs#L99-L154">submit_entry 逻辑</a>。</p>
+<h3 id="替换和提交"><a href="#替换和提交" class="headerlink" title="替换和提交"></a>替换和提交</h3>
+<p>修改 <code>tx-pool</code> 的 <code>submit_entry</code> 函数，传入 <code>conflicts</code>，在新增 entry 之前把所有冲突的交易删除 放入 <code>rejected</code> 记录，另外确保所有检查完成了之后才做删除和写操作：<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/2be67e79acec94369a96f786d3041e6cb00cf1f2/tx-pool/src/process.rs#L99-L154">submit_entry 逻辑</a>。</p>
 <p>最终实现在这个 PR 里<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/4079">Tx pool Replace-by-fee</a>。</p>
-<h3 id="并发的-Bug"><a href="#并发的-Bug" class="headerlink" title="并发的 Bug"></a>并发的 Bug</h3><p>在最初的实现版本中，隐藏了一个并发的 bug 后来在测试发现了。RBF 的检查如果放在 <code>pre-check</code> 中，如果多个线程中的多个交易发生了冲突，input resolve 可能会出问题。<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/4258">Fix concurrency issue for RBF</a> 这个 PR 修复了这个问题，把 RBF 的冲突检查移动了 submit entry 之前，因为在这个函数里面会持有 write 锁。</p>
-<h3 id="cycling-attack"><a href="#cycling-attack" class="headerlink" title="cycling attack"></a>cycling attack</h3><p>后来我们在做闪电网络的时候又发现 RBF 可能会引入 cycling attack 的风险，这个攻击通过构造巧妙的新交易，让支付路径上的中间节点的 commitment tx 不能按时上链，<a target="_blank" rel="noopener" href="https://blog.satsbridge.com/lightning-replacement-cycling-attack-explained-45636e41bc6f">Lightning Replacement Cycling Attack Explained</a>这篇文章有更详细的描述。</p>
+<h3 id="并发的-Bug"><a href="#并发的-Bug" class="headerlink" title="并发的 Bug"></a>并发的 Bug</h3>
+<p>在最初的实现版本中，隐藏了一个并发的 bug 后来在测试发现了。RBF 的检查如果放在 <code>pre-check</code> 中，如果多个线程中的多个交易发生了冲突，input resolve 可能会出问题。<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/4258">Fix concurrency issue for RBF</a> 这个 PR 修复了这个问题，把 RBF 的冲突检查移动了 submit entry 之前，因为在这个函数里面会持有 write 锁。</p>
+<h3 id="cycling-attack"><a href="#cycling-attack" class="headerlink" title="cycling attack"></a>cycling attack</h3>
+<p>后来我们在做闪电网络的时候又发现 RBF 可能会引入 cycling attack 的风险，这个攻击通过构造巧妙的新交易，让支付路径上的中间节点的 commitment tx 不能按时上链，<a target="_blank" rel="noopener" href="https://blog.satsbridge.com/lightning-replacement-cycling-attack-explained-45636e41bc6f">Lightning Replacement Cycling Attack Explained</a>这篇文章有更详细的描述。</p>
 <p>所以我们后来又做了这么一个改进：<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/4561">Recover possible transaction in conflicted cache when RBF</a> 来规避这个问题。</p>
 </section>
 
@@ -240,12 +236,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#CKB" >
-    <span class="tag-code">CKB</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Rust" >
-    <span class="tag-code">Rust</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -259,7 +255,7 @@
       <a class="nav-left" href="/p/ckb-new-verify/">
         <span class="nav-arrow">← </span>
         
-          CKB new script verifi ...
+          CKB new script verification with VM pause
         
       </a>
     
@@ -297,7 +293,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Replace-by-fee"><span class="toc-nav-text">Replace by fee</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-nav-text">问题</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%8F%82%E8%80%83"><span class="toc-nav-text">参考</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%96%B0%E5%A2%9E-RBF-%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="toc-nav-text">新增 RBF 的流程</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="toc-nav-text">实现细节</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%9B%BF%E6%8D%A2%E5%92%8C%E6%8F%90%E4%BA%A4"><span class="toc-nav-text">替换和提交</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E5%B9%B6%E5%8F%91%E7%9A%84-Bug"><span class="toc-nav-text">并发的 Bug</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#cycling-attack"><span class="toc-nav-text">cycling attack</span></a></li></ol></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Replace-by-fee"><span class="toc-nav-text">Replace by fee</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#问题"><span class="toc-nav-text">问题</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#参考"><span class="toc-nav-text">参考</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#新增-RBF-的流程"><span class="toc-nav-text">新增 RBF 的流程</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#实现细节"><span class="toc-nav-text">实现细节</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#替换和提交"><span class="toc-nav-text">替换和提交</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#并发的-Bug"><span class="toc-nav-text">并发的 Bug</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#cycling-attack"><span class="toc-nav-text">cycling attack</span></a></li></ol></li></ol>
     
   </div>
 </aside>
@@ -308,7 +304,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/ckb-rbf/';
+    var url = 'http://catcoding.me//p/ckb-rbf/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -369,7 +365,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -394,8 +390,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

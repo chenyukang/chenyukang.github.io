@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,76 +178,79 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>我发现带着问题去看内核代码比较容易理解。如果一个父进程显示的设置 SIGCHLD 为 Ignore，子进程将自己清理自己。</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;signal.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;string.h></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">struct</span> <span class="token class-name">sigaction</span> sa<span class="token punctuation">;</span>
-	<span class="token function">memset</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sa<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>sa<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	sa<span class="token punctuation">.</span>sa_handler <span class="token operator">=</span> SIG_IGN<span class="token punctuation">;</span>
-	<span class="token function">sigaction</span><span class="token punctuation">(</span>SIGCHLD<span class="token punctuation">,</span> <span class="token operator">&amp;</span>sa<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token keyword">int</span> pid <span class="token operator">=</span> <span class="token function">fork</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token keyword">if</span><span class="token punctuation">(</span>pid <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-		<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"parent:%d\n"</span><span class="token punctuation">,</span> <span class="token function">getpid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-		<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"child:%d\n"</span><span class="token punctuation">,</span> <span class="token function">getpid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"finished\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++"><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>signal.h<span class="token punctuation definition string end c++">&gt;</span></span>
+</span><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>unistd.h<span class="token punctuation definition string end c++">&gt;</span></span>
+</span><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>stdlib.h<span class="token punctuation definition string end c++">&gt;</span></span>
+</span><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>string.h<span class="token punctuation definition string end c++">&gt;</span></span>
+</span><span class="token preprocessor include c++"><span class="token keyword import include c++">#include</span> <span class="token string other lt-gt include c++"><span class="token punctuation definition string begin c++">&lt;</span>stdio.h<span class="token punctuation definition string end c++">&gt;</span></span>
+</span>
+<span class="token keyword c">int</span> <span class="token function c++"><span class="token function c++">main</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++"> </span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+	<span class="token keyword c">struct</span> sigaction sa<span class="token punctuation terminator c++">;</span>
+	<span class="token function-call c++"><span class="token function C99 c">memset</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token operator c">&amp;</span>sa<span class="token punctuation separator c++">,</span> <span class="token number c++">0</span><span class="token punctuation separator c++">,</span> <span class="token operator word c++">sizeof</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span><span class="token group c++">sa</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+	sa<span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">sa_handler</span> <span class="token operator assignment c">=</span> SIG_IGN<span class="token punctuation terminator c++">;</span>
+	<span class="token function-call c++"><span class="token variable function c++">sigaction</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">SIGCHLD<span class="token punctuation separator c++">,</span> <span class="token operator c">&amp;</span>sa<span class="token punctuation separator c++">,</span> <span class="token boolean c">NULL</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+	<span class="token keyword c">int</span> pid <span class="token operator assignment c">=</span> <span class="token function-call c++"><span class="token variable function c++">fork</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+	<span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>pid <span class="token operator comparison c">&gt;</span> <span class="token number c++">0</span><span class="token punctuation section group end c++">)</span></span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+		<span class="token function-call c++"><span class="token function C99 c">printf</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>parent:<span class="token constant placeholder c">%d</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c++">,</span> <span class="token function-call c++"><span class="token variable function c++">getpid</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+		<span class="token function-call c++"><span class="token variable function c++">sleep</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token number c++">30</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+	<span class="token punctuation section block end c++">}</span></span> <span class="token keyword c++">else</span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+		<span class="token function-call c++"><span class="token function C99 c">printf</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>child:<span class="token constant placeholder c">%d</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c++">,</span> <span class="token function-call c++"><span class="token variable function c++">getpid</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+		<span class="token function-call c++"><span class="token variable function c++">sleep</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token number c++">4</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+	<span class="token punctuation section block end c++">}</span></span>
+	<span class="token function-call c++"><span class="token function C99 c">printf</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>finished<span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+	<span class="token keyword c++">return</span> <span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
+</span></code></pre>
 <p>我们可以顺便看看内核里面是怎么写的，</p>
 <p>linux/kernel/exit.c 里面这部分是负责进程退出的，我截取了相关的代码：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">/*
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++"><span class="token comment c"><span class="token punctuation definition comment c">/*</span>
  * Send signals to all our closest relatives so that they know
  * to properly mourn us..
- */</span>
-<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">exit_notify</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">task_struct</span> <span class="token operator">*</span>tsk<span class="token punctuation">,</span> <span class="token keyword">int</span> group_dead<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">bool</span> autoreap<span class="token punctuation">;</span>
+ <span class="token punctuation definition comment c">*/</span></span>
+<span class="token keyword c++">static</span> <span class="token keyword c">void</span> <span class="token function c++"><span class="token function c++">exit_notify</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token keyword c">struct</span> task_struct <span class="token operator c">*</span><span class="token variable parameter c++">tsk</span><span class="token punctuation separator c++">,</span> <span class="token keyword c">int</span> <span class="token variable parameter c++">group_dead</span><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++">
+</span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token keyword c">bool</span> autoreap<span class="token punctuation terminator c++">;</span>
 
-    <span class="token function">forget_original_parent</span><span class="token punctuation">(</span>tsk<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">write_lock_irq</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tasklist_lock<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function-call c++"><span class="token variable function c++">forget_original_parent</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">tsk</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token function-call c++"><span class="token variable function c++">write_lock_irq</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token operator c">&amp;</span>tasklist_lock</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
 
-    <span class="token comment">/* .... */</span>
+    <span class="token comment c"><span class="token punctuation definition comment c">/*</span> .... <span class="token punctuation definition comment c">*/</span></span>
 
-    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">thread_group_leader</span><span class="token punctuation">(</span>tsk<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        autoreap <span class="token operator">=</span> <span class="token function">thread_group_empty</span><span class="token punctuation">(</span>tsk<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
-            <span class="token function">do_notify_parent</span><span class="token punctuation">(</span>tsk<span class="token punctuation">,</span> tsk<span class="token operator">-></span>exit_signal<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-        autoreap <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
+    </span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span> <span class="token keyword c++">else</span> <span class="token keyword c++">if</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token function-call c++"><span class="token variable function c++">thread_group_leader</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">tsk</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation section group end c++">)</span></span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+        autoreap <span class="token operator assignment c">=</span> <span class="token function-call c++"><span class="token variable function c++">thread_group_empty</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">tsk</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span> <span class="token operator arithmetic c">&amp;&amp;</span>
+            <span class="token function-call c++"><span class="token variable function c++">do_notify_parent</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">tsk<span class="token punctuation separator c++">,</span> tsk<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">exit_signal</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token punctuation section block end c++">}</span></span> <span class="token keyword c++">else</span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+        autoreap <span class="token operator assignment c">=</span> <span class="token boolean c">true</span><span class="token punctuation terminator c++">;</span>
+    <span class="token punctuation section block end c++">}</span></span>
 
-    tsk<span class="token operator">-></span>exit_state <span class="token operator">=</span> autoreap <span class="token operator">?</span> EXIT_DEAD <span class="token operator">:</span> EXIT_ZOMBIE<span class="token punctuation">;</span>
+    tsk<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">exit_state</span> <span class="token operator assignment c">=</span> autoreap <span class="token operator ternary c">?</span> EXIT_DEAD <span class="token operator ternary c">:</span> EXIT_ZOMBIE<span class="token punctuation terminator c++">;</span>
 
-    <span class="token comment">/*..... */</span>
+    <span class="token comment c"><span class="token punctuation definition comment c">/*</span>..... <span class="token punctuation definition comment c">*/</span></span>
 
-    <span class="token comment">/* If the process is dead, release it - nobody will wait for it */</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>autoreap<span class="token punctuation">)</span>
-        <span class="token function">release_task</span><span class="token punctuation">(</span>tsk<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>其中有一段是判断是否 autoreap，我们继续可以看看<br>linux/kernel/signal.c 里面的 do_notify_parent 函数：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">bool</span> <span class="token function">do_notify_parent</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">task_struct</span> <span class="token operator">*</span>tsk<span class="token punctuation">,</span> <span class="token keyword">int</span> sig<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">struct</span> <span class="token class-name">siginfo</span> info<span class="token punctuation">;</span>
-    <span class="token keyword">unsigned</span> <span class="token keyword">long</span> flags<span class="token punctuation">;</span>
-    <span class="token keyword">struct</span> <span class="token class-name">sighand_struct</span> <span class="token operator">*</span>psig<span class="token punctuation">;</span>
-    <span class="token keyword">bool</span> autoreap <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token comment c"><span class="token punctuation definition comment c">/*</span> If the process is dead, release it - nobody will wait for it <span class="token punctuation definition comment c">*/</span></span>
+    <span class="token keyword c++">if</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span>autoreap<span class="token punctuation section group end c++">)</span></span>
+        <span class="token function-call c++"><span class="token variable function c++">release_task</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">tsk</span><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+<span class="invalid illegal stray-bracket-end c++">}</span>
+</span></code></pre>
+<p>其中有一段是判断是否 autoreap，我们继续可以看看
+linux/kernel/signal.c 里面的 do_notify_parent 函数：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++"><span class="token keyword c">bool</span> <span class="token function c++"><span class="token function c++">do_notify_parent</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++"><span class="token keyword c">struct</span> task_struct <span class="token operator c">*</span><span class="token variable parameter c++">tsk</span><span class="token punctuation separator c++">,</span> <span class="token keyword c">int</span> <span class="token variable parameter c++">sig</span><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++">
+</span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token keyword c">struct</span> siginfo info<span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">unsigned</span> <span class="token keyword c">long</span> flags<span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">struct</span> sighand_struct <span class="token operator c">*</span>psig<span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c">bool</span> autoreap <span class="token operator assignment c">=</span> <span class="token boolean c">false</span><span class="token punctuation terminator c++">;</span>
 
-    <span class="token comment">/* .... */</span>
+    <span class="token comment c"><span class="token punctuation definition comment c">/*</span> .... <span class="token punctuation definition comment c">*/</span></span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>tsk<span class="token operator">-></span>ptrace <span class="token operator">&amp;&amp;</span> sig <span class="token operator">==</span> SIGCHLD <span class="token operator">&amp;&amp;</span>
-        <span class="token punctuation">(</span>psig<span class="token operator">-></span>action<span class="token punctuation">[</span>SIGCHLD<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>sa<span class="token punctuation">.</span>sa_handler <span class="token operator">==</span> SIG_IGN <span class="token operator">||</span>
-         <span class="token punctuation">(</span>psig<span class="token operator">-></span>action<span class="token punctuation">[</span>SIGCHLD<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>sa<span class="token punctuation">.</span>sa_flags <span class="token operator">&amp;</span> SA_NOCLDWAIT<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token comment">/*
-         * We are exiting and our parent doesn't care.  POSIX.1
+    <span class="token keyword c++">if</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token operator arithmetic c">!</span>tsk<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">ptrace</span> <span class="token operator arithmetic c">&amp;&amp;</span> sig <span class="token operator comparison c">==</span> SIGCHLD <span class="token operator arithmetic c">&amp;&amp;</span>
+        <span class="token group c++"><span class="token punctuation section group begin c++">(</span>psig<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">action</span><span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>SIGCHLD<span class="token operator arithmetic c">-</span><span class="token number c++">1</span><span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">sa</span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">sa_handler</span> <span class="token operator comparison c">==</span> SIG_IGN <span class="token operator arithmetic c">||</span>
+         <span class="token group c++"><span class="token punctuation section group begin c++">(</span>psig<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">action</span><span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>SIGCHLD<span class="token operator arithmetic c">-</span><span class="token number c++">1</span><span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">sa</span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">sa_flags</span> <span class="token operator c">&amp;</span> SA_NOCLDWAIT<span class="token punctuation section group end c++">)</span></span><span class="token punctuation section group end c++">)</span></span><span class="token punctuation section group end c++">)</span></span> <span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+        <span class="token comment c"><span class="token punctuation definition comment c">/*</span>
+         * We are exiting and our parent doesn&#39;t care.  POSIX.1
          * defines special semantics for setting SIGCHLD to SIG_IGN
          * or setting the SA_NOCLDWAIT flag: we should be reaped
-         * automatically and not left for our parent's wait4 call.
+         * automatically and not left for our parent&#39;s wait4 call.
          * Rather than having the parent do it as a magic kind of
          * signal handler, we just set this to tell do_exit that we
          * can be cleaned up without becoming a zombie.  Note that
@@ -267,19 +258,20 @@
          * blocked sys_wait4 might now return -ECHILD.
          *
          * Whether we send SIGCHLD or not for SA_NOCLDWAIT
-         * is implementation-defined: we do (if you don't want
+         * is implementation-defined: we do (if you don&#39;t want
          * it, just use SIG_IGN instead).
-         */</span>
-        autoreap <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>psig<span class="token operator">-></span>action<span class="token punctuation">[</span>SIGCHLD<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>sa<span class="token punctuation">.</span>sa_handler <span class="token operator">==</span> SIG_IGN<span class="token punctuation">)</span>
-            sig <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">valid_signal</span><span class="token punctuation">(</span>sig<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> sig<span class="token punctuation">)</span>
-        <span class="token function">__group_send_sig_info</span><span class="token punctuation">(</span>sig<span class="token punctuation">,</span> <span class="token operator">&amp;</span>info<span class="token punctuation">,</span> tsk<span class="token operator">-></span>parent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token punctuation definition comment c">*/</span></span>
+        autoreap <span class="token operator assignment c">=</span> <span class="token boolean c">true</span><span class="token punctuation terminator c++">;</span>
+        <span class="token keyword c++">if</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span>psig<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">action</span><span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>SIGCHLD<span class="token operator arithmetic c">-</span><span class="token number c++">1</span><span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">sa</span><span class="token punctuation accessor dot c++">.</span><span class="token variable other readwrite member c++">sa_handler</span> <span class="token operator comparison c">==</span> SIG_IGN<span class="token punctuation section group end c++">)</span></span>
+            sig <span class="token operator assignment c">=</span> <span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>
+    <span class="token punctuation section block end c++">}</span></span>
+    <span class="token keyword c++">if</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token function-call c++"><span class="token variable function c++">valid_signal</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">sig</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span> <span class="token operator arithmetic c">&amp;&amp;</span> sig<span class="token punctuation section group end c++">)</span></span>
+        <span class="token function-call c++"><span class="token variable function c++">__group_send_sig_info</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">sig<span class="token punctuation separator c++">,</span> <span class="token operator c">&amp;</span>info<span class="token punctuation separator c++">,</span> tsk<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">parent</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
 
-    <span class="token function">__wake_up_parent</span><span class="token punctuation">(</span>tsk<span class="token punctuation">,</span> tsk<span class="token operator">-></span>parent<span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token keyword">return</span> autoreap<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token function-call c++"><span class="token variable function c++">__wake_up_parent</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">tsk<span class="token punctuation separator c++">,</span> tsk<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">parent</span></span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+	<span class="token keyword c++">return</span> autoreap<span class="token punctuation terminator c++">;</span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
+</span></code></pre>
 <p>可以看到如果父进程对子进程的生死不关心，那么设置 autoreap 为 TRUE，甚至这个信号也可以不发送了。</p>
 </section>
 
@@ -299,12 +291,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Linux" >
-    <span class="tag-code">Linux</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Kernel" >
-    <span class="tag-code">Kernel</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -357,7 +349,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/kernel-analysis-process-defunct/';
+    var url = 'http://catcoding.me//p/kernel-analysis-process-defunct/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -418,7 +410,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -443,8 +435,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

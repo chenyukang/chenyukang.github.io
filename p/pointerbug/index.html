@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,31 +178,32 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>今天由一个函数加深了对指针的理解，是这么一个函数：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">BST_Delete</span><span class="token punctuation">(</span>BITREE y<span class="token punctuation">)</span> <span class="token comment">//删除节点 y</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>y<span class="token operator">-></span>lch<span class="token operator">==</span><span class="token constant">NULL</span> <span class="token operator">&amp;&amp;</span> y<span class="token operator">-></span>rch<span class="token operator">==</span><span class="token constant">NULL</span> <span class="token operator">&amp;&amp;</span> y<span class="token operator">-></span>p<span class="token punctuation">)</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>y<span class="token operator">==</span><span class="token punctuation">(</span>y<span class="token operator">-></span>p<span class="token punctuation">)</span><span class="token operator">-></span>lch<span class="token punctuation">)</span> <span class="token punctuation">(</span>y<span class="token operator">-></span>p<span class="token punctuation">)</span><span class="token operator">-></span>lch<span class="token operator">=</span><span class="token constant">NULL</span><span class="token punctuation">;</span>
-        <span class="token keyword">else</span> <span class="token punctuation">(</span>y<span class="token operator">-></span>p<span class="token punctuation">)</span><span class="token operator">-></span>rch<span class="token operator">=</span><span class="token constant">NULL</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>y<span class="token operator">-></span>rch<span class="token operator">==</span><span class="token constant">NULL</span> <span class="token operator">&amp;&amp;</span> y<span class="token operator">-></span>p<span class="token punctuation">)</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>y<span class="token operator">==</span>y<span class="token operator">-></span>p<span class="token operator">-></span>lch<span class="token punctuation">)</span> y<span class="token operator">-></span>p<span class="token operator">-></span>lch<span class="token operator">=</span>y<span class="token operator">-></span>lch<span class="token punctuation">;</span>
-        <span class="token keyword">else</span> y<span class="token operator">-></span>p<span class="token operator">-></span>rch<span class="token operator">=</span>y<span class="token operator">-></span>lch<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>y<span class="token operator">-></span>lch<span class="token operator">==</span><span class="token constant">NULL</span> <span class="token operator">&amp;&amp;</span> y<span class="token operator">-></span>p<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>y<span class="token operator">==</span>y<span class="token operator">-></span>p<span class="token operator">-></span>lch<span class="token punctuation">)</span> y<span class="token operator">-></span>p<span class="token operator">-></span>lch<span class="token operator">=</span>y<span class="token operator">-></span>rch<span class="token punctuation">;</span>
-        <span class="token keyword">else</span> y<span class="token operator">-></span>p<span class="token operator">-></span>rch<span class="token operator">=</span>y<span class="token operator">-></span>rch<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">else</span>    <span class="token punctuation">&#123;</span>
-        BITREE t<span class="token operator">=</span><span class="token function">BST_Successor</span><span class="token punctuation">(</span>y<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        y<span class="token operator">-></span>data<span class="token operator">=</span>t<span class="token operator">-></span>data<span class="token punctuation">;</span>
-        <span class="token function">BST_Delete</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        y<span class="token operator">=</span>t<span class="token punctuation">;</span><span class="token comment">//y=NULL</span>
-
-    <span class="token punctuation">&#125;</span>
-    <span class="token function">free</span><span class="token punctuation">(</span>y<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">void</span> <span class="token function c"><span class="token function c">BST_Delete</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c">BITREE <span class="token variable parameter c">y</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c"> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>删除节点 y
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    <span class="token keyword c">if</span> <span class="token group c"><span class="token punctuation section group begin c">(</span>y<span class="token punctuation accessor c">-&gt;</span>lch<span class="token operator comparison c">==</span><span class="token boolean c">NULL</span> <span class="token operator arithmetic c">&amp;&amp;</span> y<span class="token punctuation accessor c">-&gt;</span>rch<span class="token operator comparison c">==</span><span class="token boolean c">NULL</span> <span class="token operator arithmetic c">&amp;&amp;</span> y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation section group end c">)</span></span>
+    <span class="token block c"><span class="token punctuation section block begin c">{</span>
+        <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span>y<span class="token operator comparison c">==</span><span class="token group c"><span class="token punctuation section group begin c">(</span>y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation section group end c">)</span></span><span class="token punctuation accessor c">-&gt;</span>lch<span class="token punctuation section group end c">)</span></span> <span class="token group c"><span class="token punctuation section group begin c">(</span>y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation section group end c">)</span></span><span class="token punctuation accessor c">-&gt;</span>lch<span class="token operator assignment c">=</span><span class="token boolean c">NULL</span><span class="token punctuation terminator c">;</span>
+        <span class="token keyword c">else</span> <span class="token group c"><span class="token punctuation section group begin c">(</span>y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation section group end c">)</span></span><span class="token punctuation accessor c">-&gt;</span>rch<span class="token operator assignment c">=</span><span class="token boolean c">NULL</span><span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+    <span class="token keyword c">else</span> <span class="token keyword c">if</span> <span class="token group c"><span class="token punctuation section group begin c">(</span>y<span class="token punctuation accessor c">-&gt;</span>rch<span class="token operator comparison c">==</span><span class="token boolean c">NULL</span> <span class="token operator arithmetic c">&amp;&amp;</span> y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation section group end c">)</span></span>
+    <span class="token block c"><span class="token punctuation section block begin c">{</span>
+        <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span>y<span class="token operator comparison c">==</span>y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation accessor c">-&gt;</span>lch<span class="token punctuation section group end c">)</span></span> y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation accessor c">-&gt;</span>lch<span class="token operator assignment c">=</span>y<span class="token punctuation accessor c">-&gt;</span>lch<span class="token punctuation terminator c">;</span>
+        <span class="token keyword c">else</span> y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation accessor c">-&gt;</span>rch<span class="token operator assignment c">=</span>y<span class="token punctuation accessor c">-&gt;</span>lch<span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+    <span class="token keyword c">else</span> <span class="token keyword c">if</span> <span class="token group c"><span class="token punctuation section group begin c">(</span>y<span class="token punctuation accessor c">-&gt;</span>lch<span class="token operator comparison c">==</span><span class="token boolean c">NULL</span> <span class="token operator arithmetic c">&amp;&amp;</span> y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation section group end c">)</span></span><span class="token block c"><span class="token punctuation section block begin c">{</span>
+        <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span>y<span class="token operator comparison c">==</span>y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation accessor c">-&gt;</span>lch<span class="token punctuation section group end c">)</span></span> y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation accessor c">-&gt;</span>lch<span class="token operator assignment c">=</span>y<span class="token punctuation accessor c">-&gt;</span>rch<span class="token punctuation terminator c">;</span>
+        <span class="token keyword c">else</span> y<span class="token punctuation accessor c">-&gt;</span>p<span class="token punctuation accessor c">-&gt;</span>rch<span class="token operator assignment c">=</span>y<span class="token punctuation accessor c">-&gt;</span>rch<span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+    <span class="token keyword c">else</span>    <span class="token block c"><span class="token punctuation section block begin c">{</span>
+        BITREE t<span class="token operator assignment c">=</span><span class="token function-call c"><span class="token variable function c">BST_Successor</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">y</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+        y<span class="token punctuation accessor c">-&gt;</span>data<span class="token operator assignment c">=</span>t<span class="token punctuation accessor c">-&gt;</span>data<span class="token punctuation terminator c">;</span>
+        <span class="token function-call c"><span class="token variable function c">BST_Delete</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">t</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+        y<span class="token operator assignment c">=</span>t<span class="token punctuation terminator c">;</span><span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>y=NULL
+</span>
+    <span class="token punctuation section block end c">}</span></span>
+    <span class="token function-call c"><span class="token function C99 c">free</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">y</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre>
 <p>在最后一个 else 内，如果二叉搜索树中有左右孩子，那么找这个删除节点的后继，把内容互换，然后删除后继 节点，因为后继节点一定只有一个孩子或者没有孩子。最后只有一个 free() 操作其实是为了代码简洁，可以把前面每一个 else if 后面加一个 free，最后不写 free() 操作。但是这么写运行起来会有问题，y=t，就是所指向的地址相同，但是因为是 递归操作，t 指向的地址在调用 BST_Delete(t) 的时候已经被 free 掉了，所以如果再删除一次就会 出现内存错误，修改方法是 y=NULL，或者修改函数参数，用指针引用的形式 void BST_Delete( BITREE&amp; y)，然后再在 free(y) 后面增加一句 y=NULL。以前以为两次调用 free(p) 是不会出现问题的，free() 在释放掉 p 指向的内存以后，会 自动将 p 赋值为 NULL，其实没有这部分操作。</p>
 <p>前些天还看到一个面试题目，malloc 申请的空间用 delete 删除会有什么问题？一般来说没有问题，内存会释放掉，而且即使是有析构函数的对象指针，用 delete 删除的时候同样会调用析构函数。这说明 c++ 的 delete 操作其实是在 c 的基础增加了一些操作，先调用析构函数，然后释放空间。良好的编程风格 就是 free/malloc，new/delete 一一对应，甚至不要出现一次调用，多次释放，像上面那样的因为递归 而产生的多次释放并不是很好发现</p>
 </section>
@@ -235,12 +224,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#C" >
-    <span class="tag-code">C</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -251,17 +240,17 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/p/concrete-abstractions/">
+      <a class="nav-left" href="/p/union-set-maze/">
         <span class="nav-arrow">← </span>
         
-          《Concrete Abstraction ...
+          迷宫生成算法–并查集
         
       </a>
     
     
-      <a class="nav-right" href="/p/the-game-of-life/">
+      <a class="nav-right" href="/p/c-deep/">
         
-          The Game of Life
+          《C 深度探索》笔记
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -293,7 +282,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/pointerbug/';
+    var url = 'http://catcoding.me//p/pointerbug/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -354,7 +343,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -379,8 +368,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

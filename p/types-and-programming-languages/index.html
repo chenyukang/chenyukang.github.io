@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,66 +178,82 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>最近掉进另外一个 PL 的坑里面，就是想读一下<a target="_blank" rel="noopener" href="http://www.cis.upenn.edu/~bcpierce/tapl/">这本书</a>，顺便继续熟悉一下 Ocaml。下面的记录是阅读过程中的一些摘录和理解。</p>
-<p>1-2 章是数学预备部分，理论部分有些地方比较难懂，主要是一些数学符号看久了眼花。<br>解释器的实现大多只用看 syntax.ml 和 core.ml，就是语法和具体 eval，typeof 函数。</p>
-<h4 id="Untyped-Systems"><a href="#Untyped-Systems" class="headerlink" title="Untyped Systems"></a>Untyped Systems</h4><p>arith 是一个无类型的解释器，是后面所有章节的基础。printtm_Term 用了 Format 模块来格式化打印。</p>
-<h4 id="The-Untyped-Lambda-Calculus"><a href="#The-Untyped-Lambda-Calculus" class="headerlink" title="The Untyped Lambda-Calculus"></a>The Untyped Lambda-Calculus</h4><p>浅显易懂的 Lambda-Calculus 解释，同时列举了一些 lambda calculus 扩展其他语言部分的例子。</p>
-<h4 id="An-ML-Implementation-of-the-Lambda-Calculus"><a href="#An-ML-Implementation-of-the-Lambda-Calculus" class="headerlink" title="An ML Implementation of the Lambda-Calculus"></a>An ML Implementation of the Lambda-Calculus</h4><p>shifting 和 substitution 的实现挺难看懂的，本质上是把 context 里面的变量用 index 来替换，处理变量查找的一种实现而已。eval 部分是非常地简洁，我觉得 ML 系的语法看起来比 Scheme 都舒服紧凑。</p>
+<p>1-2 章是数学预备部分，理论部分有些地方比较难懂，主要是一些数学符号看久了眼花。
+解释器的实现大多只用看 syntax.ml 和 core.ml，就是语法和具体 eval，typeof 函数。</p>
+<h4 id="Untyped-Systems"><a href="#Untyped-Systems" class="headerlink" title="Untyped Systems"></a>Untyped Systems</h4>
+<p>arith 是一个无类型的解释器，是后面所有章节的基础。printtm_Term 用了 Format 模块来格式化打印。</p>
+<h4 id="The-Untyped-Lambda-Calculus"><a href="#The-Untyped-Lambda-Calculus" class="headerlink" title="The Untyped Lambda-Calculus"></a>The Untyped Lambda-Calculus</h4>
+<p>浅显易懂的 Lambda-Calculus 解释，同时列举了一些 lambda calculus 扩展其他语言部分的例子。</p>
+<h4 id="An-ML-Implementation-of-the-Lambda-Calculus"><a href="#An-ML-Implementation-of-the-Lambda-Calculus" class="headerlink" title="An ML Implementation of the Lambda-Calculus"></a>An ML Implementation of the Lambda-Calculus</h4>
+<p>shifting 和 substitution 的实现挺难看懂的，本质上是把 context 里面的变量用 index 来替换，处理变量查找的一种实现而已。eval 部分是非常地简洁，我觉得 ML 系的语法看起来比 Scheme 都舒服紧凑。</p>
 <blockquote>
-<p>Just because you’ve implemented something doesn’t mean you understand it.<br>​                                                    —Brian Cantwell Smith</p>
+<p>Just because you’ve implemented something doesn’t mean you understand it.
+​                                                    —Brian Cantwell Smith</p>
 </blockquote>
 <p>说起来全是泪，用这种函数式的编程语言来解释自己确实比较简单，但现实往往不是这样。语言能比较容易地实现自己至少可以表明语言的内核挺小，一个语言能实现 bootstrap 是成熟的一个表现。Rust 的实现最初是用 Ocaml 写的，然后编译出一个 Rust 的编译器，然后用上一版本的 Rust 再重新实现 Rust 编译器。</p>
-<h4 id="Typed-Arithmetic-Expressions"><a href="#Typed-Arithmetic-Expressions" class="headerlink" title="Typed Arithmetic Expressions"></a>Typed Arithmetic Expressions</h4><p>tyarith 是最简单的带类型的解释器，有 bool 和 Nat 类型。</p>
+<h4 id="Typed-Arithmetic-Expressions"><a href="#Typed-Arithmetic-Expressions" class="headerlink" title="Typed Arithmetic Expressions"></a>Typed Arithmetic Expressions</h4>
+<p>tyarith 是最简单的带类型的解释器，有 bool 和 Nat 类型。</p>
 <blockquote>
-<p>Progress: A well-typed term is not stuck (either it is a value or it can take a step according to the evaluation rules).<br>Preservation: If a well-typed term takes a step of evaluation, then the resulting term is also well typed</p>
+<p>Progress: A well-typed term is not stuck (either it is a value or it can take a step according to the evaluation rules).
+Preservation: If a well-typed term takes a step of evaluation, then the resulting term is also well typed</p>
 </blockquote>
 <p>These properties together tell us that a well-typed term can never reach a stuck state during evaluation.</p>
 <blockquote>
 <p>Safety = Progress + Preservation</p>
 </blockquote>
-<h4 id="Simply-Typed-Lambda-Calculus"><a href="#Simply-Typed-Lambda-Calculus" class="headerlink" title="Simply Typed Lambda-Calculus"></a>Simply Typed Lambda-Calculus</h4><blockquote>
+<h4 id="Simply-Typed-Lambda-Calculus"><a href="#Simply-Typed-Lambda-Calculus" class="headerlink" title="Simply Typed Lambda-Calculus"></a>Simply Typed Lambda-Calculus</h4>
+<blockquote>
 <p>In general, languages in which type annotations in terms are used to help guide the typechecker are called explicitly typed. Languages in which we ask the typechecker to infer or reconstruct this information are called implicitly typed.</p>
 </blockquote>
 <blockquote>
-<p> Well-typed programs cannot “go wrong.” —Robin Milner (1978)</p>
+<p>Well-typed programs cannot “go wrong.” —Robin Milner (1978)</p>
 </blockquote>
-<h4 id="An-ML-Implementation-of-Simple-Types"><a href="#An-ML-Implementation-of-Simple-Types" class="headerlink" title="An ML Implementation of Simple Types"></a>An ML Implementation of Simple Types</h4><p>simplebool 是一个只有 bool 类型的解释器，但是加上了函数。typeof 挺简单，主要是函数这里注意处理形参和实参：</p>
-<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmAbs<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>x<span class="token punctuation">,</span>tyT1<span class="token punctuation">,</span>t2<span class="token punctuation">)</span> <span class="token operator">-></span>
-    <span class="token keyword">let</span> ctx' <span class="token operator">=</span> addbinding ctx x <span class="token punctuation">(</span>VarBind<span class="token punctuation">(</span>tyT1<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">in</span>
-    <span class="token keyword">let</span> tyT2 <span class="token operator">=</span> typeof ctx' t2 <span class="token keyword">in</span>
-    TyArr<span class="token punctuation">(</span>tyT1<span class="token punctuation">,</span> tyT2<span class="token punctuation">)</span>
-<span class="token operator">|</span> TmApp<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">,</span>t2<span class="token punctuation">)</span> <span class="token operator">-></span>
-    <span class="token keyword">let</span> tyT1 <span class="token operator">=</span> typeof ctx t1 <span class="token keyword">in</span>
-    <span class="token keyword">let</span> tyT2 <span class="token operator">=</span> typeof ctx t2 <span class="token keyword">in</span>
-    <span class="token punctuation">(</span><span class="token keyword">match</span> tyT1 <span class="token keyword">with</span>
-        TyArr<span class="token punctuation">(</span>tyT11<span class="token punctuation">,</span> tyT12<span class="token punctuation">)</span> <span class="token operator">-></span>
-          <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">=</span><span class="token punctuation">)</span> tyT2 tyT11 <span class="token keyword">then</span> tyT12
-          <span class="token keyword">else</span> error fi <span class="token string">"parameter type mismatch"</span>
-      <span class="token operator">|</span> <span class="token punctuation">_</span> <span class="token operator">-></span> error fi <span class="token string">"arrow type expected"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="An-ML-Implementation-of-Simple-Types"><a href="#An-ML-Implementation-of-Simple-Types" class="headerlink" title="An ML Implementation of Simple Types"></a>An ML Implementation of Simple Types</h4>
+<p>simplebool 是一个只有 bool 类型的解释器，但是加上了函数。typeof 挺简单，主要是函数这里注意处理形参和实参：</p>
+<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token ocaml">  <span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">|</span> <span class="token class-name variant ocaml">TmAbs</span><span class="token paren-group ocaml">(<span class="token variable parameter ocaml">fi</span>,<span class="token variable parameter ocaml">x</span>,<span class="token variable parameter ocaml">tyT1</span>,<span class="token variable parameter ocaml">t2</span>)</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span>
+      <span class="token keyword ocaml">let</span> <span class="token variable other constant ocaml">ctx&#39;</span> <span class="token operator assignment ocaml">=</span> addbinding ctx x <span class="token paren-group ocaml">(<span class="token class-name variant ocaml">VarBind</span><span class="token paren-group ocaml">(tyT1)</span>)</span> <span class="token keyword ocaml">in</span>
+      <span class="token keyword ocaml">let</span> <span class="token variable other constant ocaml">tyT2</span> <span class="token operator assignment ocaml">=</span> typeof ctx&#39; t2 <span class="token keyword ocaml">in</span>
+      <span class="token class-name variant ocaml">TyArr</span><span class="token paren-group ocaml">(tyT1, tyT2)</span>
+  <span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">|</span> <span class="token class-name variant ocaml">TmApp</span><span class="token paren-group ocaml">(<span class="token variable parameter ocaml">fi</span>,<span class="token variable parameter ocaml">t1</span>,<span class="token variable parameter ocaml">t2</span>)</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span>
+      <span class="token keyword ocaml">let</span> <span class="token variable other constant ocaml">tyT1</span> <span class="token operator assignment ocaml">=</span> typeof ctx t1 <span class="token keyword ocaml">in</span>
+      <span class="token keyword ocaml">let</span> <span class="token variable other constant ocaml">tyT2</span> <span class="token operator assignment ocaml">=</span> typeof ctx t2 <span class="token keyword ocaml">in</span>
+      <span class="token paren-group ocaml">(<span class="token keyword ocaml">match</span> tyT1 <span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">with</span>
+          <span class="token class-name variant ocaml">TyArr</span><span class="token paren-group ocaml">(<span class="token variable parameter ocaml">tyT11</span>, <span class="token variable parameter ocaml">tyT12</span>)</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span>
+            <span class="token keyword ocaml">if</span> <span class="token paren-group ocaml">(<span class="token operator infix ocaml">=</span>)</span> tyT2 tyT11 <span class="token keyword ocaml">then</span> tyT12
+            <span class="token keyword ocaml">else</span> error fi <span class="token string double ocaml"><span class="token punctuation definition string begin ocaml">&quot;</span>parameter type mismatch<span class="token punctuation definition string end ocaml">&quot;</span></span>
+        <span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">|</span> <span class="token boolean universal-match ocaml">_</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span> error fi <span class="token string double ocaml"><span class="token punctuation definition string begin ocaml">&quot;</span>arrow type expected<span class="token punctuation definition string end ocaml">&quot;</span></span>)</span>
+</span></code></pre>
 <p>if 的判断部分必须为 bool，而且两个分支必须为同一类型：</p>
-<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token operator">|</span> TmIf<span class="token punctuation">(</span>fi<span class="token punctuation">,</span>t1<span class="token punctuation">,</span>t2<span class="token punctuation">,</span>t3<span class="token punctuation">)</span> <span class="token operator">-></span>
-   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">=</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>typeof ctx t1<span class="token punctuation">)</span> TyBool <span class="token keyword">then</span>
-     <span class="token keyword">let</span> tyT2 <span class="token operator">=</span> typeof ctx t2 <span class="token keyword">in</span>
-     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">=</span><span class="token punctuation">)</span> tyT2 <span class="token punctuation">(</span>typeof ctx t3<span class="token punctuation">)</span> <span class="token keyword">then</span> tyT2
-     <span class="token keyword">else</span> error fi <span class="token string">"arms of conditional have different types"</span>
-     <span class="token keyword">else</span> error fi <span class="token string">"guard of conditional not a boolean"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="Simple-Extensions"><a href="#Simple-Extensions" class="headerlink" title="Simple Extensions"></a>Simple Extensions</h4><p>在上一章的基础上，加上各种 Drived Form。</p>
+<pre class="line-numbers language-ocaml" data-language="ocaml"><code class="language-ocaml"><span class="token ocaml">  <span class="token pattern-match ocaml"><span class="token keyword match-definition ocaml">|</span> <span class="token class-name variant ocaml">TmIf</span><span class="token paren-group ocaml">(<span class="token variable parameter ocaml">fi</span>,<span class="token variable parameter ocaml">t1</span>,<span class="token variable parameter ocaml">t2</span>,<span class="token variable parameter ocaml">t3</span>)</span> <span class="token punctuation separator match-definition ocaml">-&gt;</span></span>
+     <span class="token keyword ocaml">if</span> <span class="token paren-group ocaml">(<span class="token operator infix ocaml">=</span>)</span> <span class="token paren-group ocaml">(typeof ctx t1)</span> <span class="token class-name variant ocaml">TyBool</span> <span class="token keyword ocaml">then</span>
+       <span class="token keyword ocaml">let</span> <span class="token variable other constant ocaml">tyT2</span> <span class="token operator assignment ocaml">=</span> typeof ctx t2 <span class="token keyword ocaml">in</span>
+       <span class="token keyword ocaml">if</span> <span class="token paren-group ocaml">(<span class="token operator infix ocaml">=</span>)</span> tyT2 <span class="token paren-group ocaml">(typeof ctx t3)</span> <span class="token keyword ocaml">then</span> tyT2
+       <span class="token keyword ocaml">else</span> error fi <span class="token string double ocaml"><span class="token punctuation definition string begin ocaml">&quot;</span>arms of conditional have different types<span class="token punctuation definition string end ocaml">&quot;</span></span>
+       <span class="token keyword ocaml">else</span> error fi <span class="token string double ocaml"><span class="token punctuation definition string begin ocaml">&quot;</span>guard of conditional not a boolean<span class="token punctuation definition string end ocaml">&quot;</span></span>
+</span></code></pre><h4 id="Simple-Extensions"><a href="#Simple-Extensions" class="headerlink" title="Simple Extensions"></a>Simple Extensions</h4>
+<p>在上一章的基础上，加上各种 Drived Form。</p>
 <ul>
-<li><p>Sequencing:</p>
-<p> 是多个表达式串，这在有副作用的语言里面很常见。另外也可以把 t1;t2 理解为 (λx:Unit.t2) t1。</p>
+<li>
+<p>Sequencing:</p>
+<p>是多个表达式串，这在有副作用的语言里面很常见。另外也可以把 t1;t2 理解为 (λx:Unit.t2) t1。</p>
 </li>
-<li><p>Wildcards: </p>
+<li>
+<p>Wildcards:</p>
 <p>如何翻译好，意思就是无用形参可以不指定名字。</p>
 </li>
-<li><p>Ascription</p>
+<li>
+<p>Ascription</p>
 <p>是指类型缩写 (或者昵名)，C++ 里面的 typedef，和 Rust 里面的 usize as U 都是。这个的好处在于文档和接口更清晰，如果函数的参数可以是函数，类型加进以后语法看起来就比较繁琐了，用类型缩写更清晰。typechecker 的时候当然需要展开来进行。ascription 和 casting 也有一定关系。</p>
 <p>增加各种简单的基础类型，比如 String，还有 Pairs，Tuple，Record，Sum，Enum，List。支持一种类型除了一个新类型名字外，其 evaluation rules 和 type rules 也要明确。这里的 datatypes 是按照 Ocaml 的语法来说明的。</p>
 <p>因为加上了好多种类型，fullsimple 这个解释器复杂多了。</p>
 </li>
 </ul>
-<h4 id="Type-Dynamic"><a href="#Type-Dynamic" class="headerlink" title="Type Dynamic"></a>Type Dynamic</h4><blockquote>
+<h4 id="Type-Dynamic"><a href="#Type-Dynamic" class="headerlink" title="Type Dynamic"></a>Type Dynamic</h4>
+<blockquote>
 <p>Even in statically typed languages, there is often the need to deal with data whose type cannot be determined at compile time. This occurs in particular when the lifetime of the data spans multiple machines or many runs of the compiler—when, for example, the data is stored in an external file system or database, or communicated across a network. To handle such situations safely, many languages offer facilities for inspecting the types of values at run time.</p>
 </blockquote>
-<h4 id="General-Recursion"><a href="#General-Recursion" class="headerlink" title="General Recursion"></a>General Recursion</h4><p>typed lambda-calculus 加上 fix combinator 就是一门极小的但是是 full abstraction 的语言。Ocaml 里面的 letrec 可以用来定义递归函数。fix point 的概念需要继续理解。</p>
+<h4 id="General-Recursion"><a href="#General-Recursion" class="headerlink" title="General Recursion"></a>General Recursion</h4>
+<p>typed lambda-calculus 加上 fix combinator 就是一门极小的但是是 full abstraction 的语言。Ocaml 里面的 letrec 可以用来定义递归函数。fix point 的概念需要继续理解。</p>
 </section>
 
     <p></p>
@@ -268,16 +272,16 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#OCaml" >
-    <span class="tag-code">OCaml</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#PL" >
-    <span class="tag-code">PL</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -291,7 +295,7 @@
       <a class="nav-left" href="/p/types-and-programming-languages-3/">
         <span class="nav-arrow">← </span>
         
-          Types and Programming ...
+          Types and Programming Languages (3)
         
       </a>
     
@@ -340,7 +344,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/types-and-programming-languages/';
+    var url = 'http://catcoding.me//p/types-and-programming-languages/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -401,7 +405,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -426,8 +430,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

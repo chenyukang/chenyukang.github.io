@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,20 +178,25 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>『Metaprogramming Ruby』这本书看了两遍，从这本书里获取了一些乐趣。技术书籍就应该这样简明扼要，寓理于事。通过一个显示中的例子引入问题，展示元编程的解决办法，顺带介绍一下用到相关技术的 gems。</p>
-<p> 下面这些不是书评，只是我在看第二遍的时候的一些简单的择要，用于自己的记忆和检索。</p>
-<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><ul>
+<p>下面这些不是书评，只是我在看第二遍的时候的一些简单的择要，用于自己的记忆和检索。</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2>
+<ul>
 <li>Meteprogramming is writing code that writes code</li>
 <li>鬼城和集市，很多语言的运行环境在执行的时候已经固定，一片死寂。而支持 Metaprogramming 的语言的执行环境是充满活力的集市。很好的比喻。</li>
 <li>动态元编程和静态元编程，C++ 的 template 属于静态元编程。</li>
 </ul>
-<h2 id="The-Ruby-Object-Model"><a href="#The-Ruby-Object-Model" class="headerlink" title="The Ruby Object Model"></a>The Ruby Object Model</h2><ol>
+<h2 id="The-Ruby-Object-Model"><a href="#The-Ruby-Object-Model" class="headerlink" title="The Ruby Object Model"></a>The Ruby Object Model</h2>
+<ol>
 <li>Class 定义永远是开放的，你能重新定义任何类或者给类加上一些新的东西。注意 MonkeyPatch 可能导致的 Bug。</li>
 <li>分清楚 instance_method 和 class_method，</li>
-<li><img src="/images/instance_method.png" alt="instance_method" class="img-center" /><span class="image-caption">instance_method</span></li>
+<li><img src="/images/instance_method.png" alt="instance_method" class="img-center" />
+</li>
 <li>Class 也是对象。与 C#/Java 的 Class 不一样的地方，Ruby 允许在代码运行期间操作类相关的信息，比如增加 method 或者重新定义 method。</li>
-<li><img src="/images/object_model.png" alt="object_model" class="img-center" /><span class="image-caption">object_model</span></li>
+<li><img src="/images/object_model.png" alt="object_model" class="img-center" />
+</li>
 </ol>
-<h2 id="Methods"><a href="#Methods" class="headerlink" title="Methods"></a>Methods</h2><ul>
+<h2 id="Methods"><a href="#Methods" class="headerlink" title="Methods"></a>Methods</h2>
+<ul>
 <li>static type checking, for example, if you call simple_talk() on Layer object that has no such method, the compiler protests loudly.</li>
 <li>call method dynamic using send().</li>
 <li>define_method generates instance method dynamically, to_s vs to_sym.</li>
@@ -214,7 +207,8 @@
 <p>注意 method_missing 可能导致的死循环调用。</p>
 <p>和继承过来的 method 之间的冲突，undef_method 解决。</p>
 </blockquote>
-<h2 id="Blocks"><a href="#Blocks" class="headerlink" title="Blocks"></a>Blocks</h2><ul>
+<h2 id="Blocks"><a href="#Blocks" class="headerlink" title="Blocks"></a>Blocks</h2>
+<ul>
 <li>class, module, and def change scope.</li>
 <li>Flat Scope.</li>
 <li>instacen_eval/instance_exec</li>
@@ -228,7 +222,8 @@
 <ul>
 <li>A event DSL, a elegent example for blocks.</li>
 </ul>
-<h2 id="Class-Definitions"><a href="#Class-Definitions" class="headerlink" title="Class Definitions"></a>Class Definitions</h2><ul>
+<h2 id="Class-Definitions"><a href="#Class-Definitions" class="headerlink" title="Class Definitions"></a>Class Definitions</h2>
+<ul>
 <li>A Ruby class definition is actually regular code that runs.</li>
 <li>class_eval vs instance_eval</li>
 </ul>
@@ -240,21 +235,24 @@
 <li>three way to define class method</li>
 <li>Around alias</li>
 </ul>
-<h2 id="Code-writes-code"><a href="#Code-writes-code" class="headerlink" title="Code writes code"></a>Code writes code</h2><ul>
+<h2 id="Code-writes-code"><a href="#Code-writes-code" class="headerlink" title="Code writes code"></a>Code writes code</h2>
+<ul>
 <li>The powerful weapon: eval</li>
 <li>A good example: add_attribute</li>
 <li>Three ways to express this idea</li>
 </ul>
-<h2 id="Active-record"><a href="#Active-record" class="headerlink" title="Active record"></a>Active record</h2><ul>
+<h2 id="Active-record"><a href="#Active-record" class="headerlink" title="Active record"></a>Active record</h2>
+<ul>
 <li>Validations</li>
 <li>alias_method_chain</li>
 </ul>
-<hr>
+<hr />
 <ul>
 <li>Dynamic attributes, define read/write/question Dynamic Methods for all the columns in databases, for performance.</li>
 <li>Lesson learned, performance/complexity/readable trade-offs.</li>
 </ul>
-<h2 id="Metaprogramming-safely"><a href="#Metaprogramming-safely" class="headerlink" title="Metaprogramming safely"></a>Metaprogramming safely</h2><ul>
+<h2 id="Metaprogramming-safely"><a href="#Metaprogramming-safely" class="headerlink" title="Metaprogramming safely"></a>Metaprogramming safely</h2>
+<ul>
 <li>Defusing Monkeypatches, make it explicit with module, check it before patche, add warning messages.</li>
 </ul>
 </section>
@@ -288,7 +286,7 @@
     
       <a class="nav-right" href="/p/ruby-warrior/">
         
-          Learning Ruby with Rub ...
+          Learning Ruby with Ruby Warrior
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -330,7 +328,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/meta-programming-ruby/';
+    var url = 'http://catcoding.me//p/meta-programming-ruby/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -391,7 +389,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -416,8 +414,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

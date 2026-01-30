@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,37 +178,39 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>最近都睡的比较晚，对身体不好啊。写了几行恶趣味的 elisp，晚上 10 点 40 开始提醒提醒我准备睡觉，如果 10 点 50 还没动，我的上下移动键就不能用了，下面会有一条提示：太晚了，该睡觉了。不过这时可以用方向键盘来移动。但过十分钟后快捷键又恢复正常，因为过了 11 点表示我确实要再待晚点，下个小时 40 分钟继续提醒，50 分锁死快捷键盘。12 点过后 emacs 彻底对我无语了。真是 egg hurt…</p>
-<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token car">defun</span> is-late-now<span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token string">"Check if it is now late, emmm, go to sleep"</span>
-  <span class="token punctuation">(</span><span class="token keyword">let</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token car">hr</span> <span class="token punctuation">(</span><span class="token car">nth</span> <span class="token number">2</span> <span class="token punctuation">(</span><span class="token car">decode-time</span> <span class="token punctuation">(</span><span class="token car">current-time</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-        <span class="token punctuation">(</span><span class="token car">minute</span> <span class="token punctuation">(</span><span class="token car">nth</span> <span class="token number">1</span> <span class="token punctuation">(</span><span class="token car">decode-time</span> <span class="token punctuation">(</span><span class="token car">current-time</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token punctuation">(</span><span class="token keyword">and</span> <span class="token punctuation">(</span><span class="token keyword">and</span> <span class="token punctuation">(</span><span class="token car">>=</span> hr <span class="token number">22</span><span class="token punctuation">)</span>
-              <span class="token punctuation">(</span><span class="token car">>=</span> minute <span class="token number">40</span><span class="token punctuation">)</span>
-              <span class="token punctuation">(</span><span class="token keyword">message</span> <span class="token string">"prepare sleep now...."</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-         <span class="token punctuation">(</span><span class="token car">>=</span> minute <span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token lisp"><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp"><span class="token keyword function-type lisp">defun</span> <span class="token function lisp">is-late-now</span></span><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token punctuation definition group end lisp">)</span></span>
+  <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>Check if it is now late, emmm, go to sleep<span class="token punctuation definition string end lisp">&quot;</span></span>
+  <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token keyword lisp">let</span> <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>hr <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp">nth</span> <span class="token number lisp">2</span> <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>decode<span class="token operator arithmetic lisp">-</span><span class="token function lisp">time</span> <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>current<span class="token operator arithmetic lisp">-</span><span class="token function lisp">time</span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span>
+        <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>minute <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp">nth</span> <span class="token number lisp">1</span> <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>decode<span class="token operator arithmetic lisp">-</span><span class="token function lisp">time</span> <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>current<span class="token operator arithmetic lisp">-</span><span class="token function lisp">time</span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span>
+    <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token operator logical lisp">and</span> <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token operator logical lisp">and</span> <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token operator comparison lisp">&gt;=</span> hr <span class="token number lisp">22</span><span class="token punctuation definition group end lisp">)</span></span>
+              <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token operator comparison lisp">&gt;=</span> minute <span class="token number lisp">40</span><span class="token punctuation definition group end lisp">)</span></span>
+              <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>message <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>prepare sleep now....<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span>
+         <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token operator comparison lisp">&gt;=</span> minute <span class="token number lisp">50</span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span>
 
-<span class="token punctuation">(</span><span class="token car">defun</span> my-next-line<span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
-  <span class="token punctuation">(</span><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token car">is-late-now</span><span class="token punctuation">)</span>
-      <span class="token punctuation">(</span><span class="token keyword">message</span> <span class="token string">"late now, go to sleep ... baby!"</span><span class="token punctuation">)</span>
-    <span class="token punctuation">(</span><span class="token car">next-line</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp"><span class="token keyword function-type lisp">defun</span> <span class="token function lisp">my-next-line</span></span><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token punctuation definition group end lisp">)</span></span>
+  <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>interactive<span class="token punctuation definition group end lisp">)</span></span>
+  <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token keyword lisp">if</span> <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>is<span class="token operator arithmetic lisp">-</span>late<span class="token operator arithmetic lisp">-</span>now<span class="token punctuation definition group end lisp">)</span></span>
+      <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>message <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>late now, go to sleep ... baby!<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span>
+    <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>next<span class="token operator arithmetic lisp">-</span>line<span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span>
 
-<span class="token punctuation">(</span><span class="token car">defun</span> my-prev-line<span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token punctuation">(</span><span class="token interactive keyword">interactive</span><span class="token punctuation">)</span>
-  <span class="token punctuation">(</span><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token car">is-late-now</span><span class="token punctuation">)</span>
-      <span class="token punctuation">(</span><span class="token keyword">message</span> <span class="token string">"late now, go to sleep ... baby!"</span><span class="token punctuation">)</span>
-    <span class="token punctuation">(</span><span class="token car">previous-line</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp"><span class="token keyword function-type lisp">defun</span> <span class="token function lisp">my-prev-line</span></span><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token punctuation definition group end lisp">)</span></span>
+  <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>interactive<span class="token punctuation definition group end lisp">)</span></span>
+  <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token keyword lisp">if</span> <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>is<span class="token operator arithmetic lisp">-</span>late<span class="token operator arithmetic lisp">-</span>now<span class="token punctuation definition group end lisp">)</span></span>
+      <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>message <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>late now, go to sleep ... baby!<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span>
+    <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp">previous</span><span class="token operator arithmetic lisp">-</span>line<span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span>
 
-<span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">(</span><span class="token car">kbd</span> <span class="token string">"C-n"</span><span class="token punctuation">)</span> <span class="token quoted-symbol variable symbol">'my-next-line</span><span class="token punctuation">)</span>
-<span class="token punctuation">(</span><span class="token car">global-set-key</span> <span class="token punctuation">(</span><span class="token car">kbd</span> <span class="token string">"C-p"</span><span class="token punctuation">)</span> <span class="token quoted-symbol variable symbol">'my-prev-line</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>global<span class="token operator arithmetic lisp">-</span><span class="token function lisp">set</span><span class="token operator arithmetic lisp">-</span>key <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>kbd <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>C-n<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span> &#39;my<span class="token operator arithmetic lisp">-</span>next<span class="token operator arithmetic lisp">-</span>line<span class="token punctuation definition group end lisp">)</span></span>
+<span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>global<span class="token operator arithmetic lisp">-</span><span class="token function lisp">set</span><span class="token operator arithmetic lisp">-</span>key <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>kbd <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>C-p<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span> &#39;my<span class="token operator arithmetic lisp">-</span>prev<span class="token operator arithmetic lisp">-</span>line<span class="token punctuation definition group end lisp">)</span></span>
+</span></code></pre>
 <p>这样写不好看，更好的办法是用 defadvice，那就不用重新绑定 C-n 和 C-p 了，defadvice 可以直接在运行 next-line 和 previous-line 之前检查一下。</p>
-<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token car">defadvice</span> previous-line <span class="token punctuation">(</span><span class="token car">before</span> check-is-later<span class="token punctuation">)</span>
-  <span class="token punctuation">(</span><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token car">is-late-now</span><span class="token punctuation">)</span>
-      <span class="token punctuation">(</span><span class="token car">progn</span>
-        <span class="token punctuation">(</span><span class="token keyword">message</span> “late now”<span class="token punctuation">)</span>
-        <span class="token punctuation">(</span><span class="token car">sleep-for</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">;;just sleep 1 second</span>
-
-<span class="token punctuation">(</span><span class="token car">ad-activate</span> ‘previous-line<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token lisp"><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>defadvice <span class="token function lisp">previous</span><span class="token operator arithmetic lisp">-</span>line <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>before check<span class="token operator arithmetic lisp">-</span>is<span class="token operator arithmetic lisp">-</span>later<span class="token punctuation definition group end lisp">)</span></span>
+  <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token keyword lisp">if</span> <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>is<span class="token operator arithmetic lisp">-</span>late<span class="token operator arithmetic lisp">-</span>now<span class="token punctuation definition group end lisp">)</span></span>
+      <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp">progn</span>
+        <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>message “late now”<span class="token punctuation definition group end lisp">)</span></span>
+        <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp">sleep</span><span class="token operator arithmetic lisp">-</span><span class="token keyword lisp">for</span> <span class="token number lisp">1</span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span> <span class="token comment semicolon lisp"><span class="token punctuation definition comment lisp">;</span>;just sleep 1 second
+</span>
+<span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span>ad<span class="token operator arithmetic lisp">-</span>activate ‘<span class="token function lisp">previous</span><span class="token operator arithmetic lisp">-</span>line<span class="token punctuation definition group end lisp">)</span></span>
+</span></code></pre>
 <p>这样后只要执行 previous-line 这个函数之前都会执行我这个 defadvice 定义的代码，但是这样连方向键也不能移动了，因为向上这个按钮是绑定的 previous-line 这个函数。</p>
 </section>
 
@@ -240,8 +230,8 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Emacs" >
-    <span class="tag-code">Emacs</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -255,7 +245,7 @@
       <a class="nav-left" href="/p/fastsearch-in-python2/">
         <span class="nav-arrow">← </span>
         
-          一种更快的字符串匹配算法 - 源自 Pyt ...
+          一种更快的字符串匹配算法 - 源自 Python2.5
         
       </a>
     
@@ -294,7 +284,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/emacssleep/';
+    var url = 'http://catcoding.me//p/emacssleep/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -355,7 +345,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -380,8 +370,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

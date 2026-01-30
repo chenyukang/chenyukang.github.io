@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,49 +177,54 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>前几天在群里看到有人讨论 dbg！宏已经在 Nightly 可以使用了，最近发布的 stable 版本 1.32.0 也可以使用了。翻看了一下并玩了玩，这个简单的宏确实是调试好帮手，特别是适合我这样的喜欢打印调试的开发者。这个提议从 2017 年 10 月开始，从 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rfcs/pull/2173">https://github.com/rust-lang/rfcs/pull/2173</a> 可以看到，为了增加这个宏很多贡献者经过了无数次的讨论和回复。真是太佩服 Rust Team 的开发者，付出了这么多时间来增加这个看似很小又实用的功能。</p>
-<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>先看看这个调试宏是怎么使用的，目前使用这个宏需要切换到 Nightly 版本或者最新的稳定版，已经安装了 rustup 的话就很简单了：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">rustup default nightly
-rustup update<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+    <section class="markdown-content"><p>前几天在群里看到有人讨论 dbg！宏已经在 Nightly 可以使用了，最近发布的 stable 版本 1.32.0 也可以使用了。翻看了一下并玩了玩，这个简单的宏确实是调试好帮手，特别是适合我这样的喜欢打印调试的开发者。这个提议从 2017 年 10 月开始，从 https://github.com/rust-lang/rfcs/pull/2173 可以看到，为了增加这个宏很多贡献者经过了无数次的讨论和回复。真是太佩服 Rust Team 的开发者，付出了这么多时间来增加这个看似很小又实用的功能。</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4>
+<p>先看看这个调试宏是怎么使用的，目前使用这个宏需要切换到 Nightly 版本或者最新的稳定版，已经安装了 rustup 的话就很简单了：</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rustup default nightly
+rustup update
+</code></pre>
 <p>然后很简单就是把一个表达式当作参数传入：</p>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token keyword">fn</span> <span class="token function-definition function">factorial</span><span class="token punctuation">(</span>n<span class="token punctuation">:</span> <span class="token keyword">u32</span><span class="token punctuation">)</span> <span class="token punctuation">-></span> <span class="token keyword">u32</span> <span class="token punctuation">&#123;</span>
-     <span class="token keyword">if</span> <span class="token macro property">dbg!</span><span class="token punctuation">(</span>n <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-         <span class="token macro property">dbg!</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-         <span class="token macro property">dbg!</span><span class="token punctuation">(</span>n <span class="token operator">*</span> <span class="token function">factorial</span><span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-     <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token function rust"><span class="token function rust"><span class="token keyword function rust">fn</span> </span><span class="token function rust">factorial</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">(</span><span class="token variable parameter rust">n</span><span class="token punctuation separator rust">:</span> <span class="token keyword rust">u32</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters end rust">)</span></span></span></span><span class="token function rust"> <span class="token function return-type rust"><span class="token punctuation separator rust">-&gt;</span> <span class="token keyword rust">u32</span></span> </span><span class="token function rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+     <span class="token keyword rust">if</span> <span class="support macro rust">dbg!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>n <span class="token operator rust">&lt;</span><span class="token operator rust">=</span> <span class="token number integer decimal rust">1</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+         <span class="support macro rust">dbg!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token number integer decimal rust">1</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+    </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span> <span class="token keyword rust">else</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+         <span class="support macro rust">dbg!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>n <span class="token operator rust">*</span> <span class="token function rust">factorial</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>n <span class="token operator rust">-</span> <span class="token number integer decimal rust">1</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+     </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
 
-<span class="token keyword">fn</span> <span class="token function-definition function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token macro property">dbg!</span><span class="token punctuation">(</span><span class="token function">factorial</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token function rust"><span class="token function rust"><span class="token keyword function rust">fn</span> </span><span class="token function rust">main</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters begin rust">(</span></span><span class="token function rust"><span class="token function parameters rust"><span class="token punctuation section parameters end rust">)</span></span></span></span><span class="token function rust"> </span><span class="token function rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="support macro rust">dbg!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token function rust">factorial</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token number integer decimal rust">5</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
+</span></code></pre>
 <p>运行结果如下：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
-<span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
-<span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
-<span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">false</span>
-<span class="token punctuation">[</span>src/main.rs:4<span class="token punctuation">]</span> n <span class="token operator">&lt;=</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token boolean">true</span>
-<span class="token punctuation">[</span>src/main.rs:5<span class="token punctuation">]</span> <span class="token number">1</span> <span class="token operator">=</span> <span class="token number">1</span>
-<span class="token punctuation">[</span>src/main.rs:7<span class="token punctuation">]</span> n * factorial<span class="token punctuation">(</span>n - <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">2</span>
-<span class="token punctuation">[</span>src/main.rs:7<span class="token punctuation">]</span> n * factorial<span class="token punctuation">(</span>n - <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">6</span>
-<span class="token punctuation">[</span>src/main.rs:7<span class="token punctuation">]</span> n * factorial<span class="token punctuation">(</span>n - <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">24</span>
-<span class="token punctuation">[</span>src/main.rs:7<span class="token punctuation">]</span> n * factorial<span class="token punctuation">(</span>n - <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">120</span>
-<span class="token punctuation">[</span>src/main.rs:12<span class="token punctuation">]</span> factorial<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">120</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>原理当然也就是把表达式和位置打印出来，但是这里有个技巧，在宏里面使用 match，这是为了避免参数被调用多次，因为宏在编译之前会被展开。Rust 的宏比较复杂，也不可避免会有些 hacky，对于喜欢爱折腾的程序员还是有吸引力。再看看这个宏是怎么实现的，代码很少。：</p>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token macro property">macro_rules!</span> dbg <span class="token punctuation">&#123;</span>
-    <span class="token punctuation">(</span><span class="token variable">$val</span><span class="token punctuation">:</span><span class="token fragment-specifier punctuation">expr</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">match</span> <span class="token variable">$val</span> <span class="token punctuation">&#123;</span>
-            tmp <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-                <span class="token macro property">eprintln!</span><span class="token punctuation">(</span><span class="token string">"[&#123;&#125;:&#123;&#125;] &#123;&#125; = &#123;:#?&#125;"</span><span class="token punctuation">,</span>
-                          <span class="token macro property">file!</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token macro property">line!</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token macro property">stringify!</span><span class="token punctuation">(</span><span class="token variable">$val</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>tmp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">[src/main.rs:4] n &lt;= 1 = false
+[src/main.rs:4] n &lt;= 1 = false
+[src/main.rs:4] n &lt;= 1 = false
+[src/main.rs:4] n &lt;= 1 = false
+[src/main.rs:4] n &lt;= 1 = true
+[src/main.rs:5] 1 = 1
+[src/main.rs:7] n * factorial(n - 1) = 2
+[src/main.rs:7] n * factorial(n - 1) = 6
+[src/main.rs:7] n * factorial(n - 1) = 24
+[src/main.rs:7] n * factorial(n - 1) = 120
+[src/main.rs:12] factorial(5) = 120
+</code></pre><h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4>
+<p>原理当然也就是把表达式和位置打印出来，但是这里有个技巧，在宏里面使用 match，这是为了避免参数被调用多次，因为宏在编译之前会被展开。Rust 的宏比较复杂，也不可避免会有些 hacky，对于喜欢爱折腾的程序员还是有吸引力。再看看这个宏是怎么实现的，代码很少。：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token macro rust"><span class="token function rust">macro_rules!</span> <span class="entity name macro rust">dbg</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token variable parameter rust">$val</span><span class="token punctuation separator rust">:</span><span class="token keyword rust">expr</span><span class="token punctuation section group end rust">)</span></span> <span class="token operator rust">=&gt;</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+        <span class="token keyword rust">match</span> <span class="token variable other rust">$val</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+            tmp <span class="token operator rust">=&gt;</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+                <span class="support macro rust">eprintln!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>[{}:{}] {} = {:#?}<span class="token punctuation definition string end rust">&quot;</span></span><span class="token punctuation separator rust">,</span>
+                          <span class="support macro rust">file!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation separator rust">,</span> <span class="support macro rust">line!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation separator rust">,</span> <span class="support macro rust">stringify!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token variable other rust">$val</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation separator rust">,</span> <span class="token operator rust">&amp;</span>tmp</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span><span class="token punctuation terminator rust">;</span>
                 tmp
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+        </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
+    <span class="token punctuation section block end rust">}</span></span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
+</span></code></pre>
 <p>可以看到目前这个实现是只支持一个参数的，如果传入的参数类型没有实现 Copy Trait，可以传入引用。另外如果想同时打印多个参数，可以使用类似这样的做法：</p>
-<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token macro property">dbg!</span><span class="token punctuation">(</span><span class="token punctuation">(</span>exp1<span class="token punctuation">,</span> exp2<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-</section>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="support macro rust">dbg!</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>exp1<span class="token punctuation separator rust">,</span> exp2</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+</span></code></pre></section>
 
     <p></p>
 
@@ -249,8 +242,8 @@ rustup update<span aria-hidden="true" class="line-numbers-rows"><span></span><sp
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Rust" >
-    <span class="tag-code">Rust</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -302,7 +295,7 @@ rustup update<span aria-hidden="true" class="line-numbers-rows"><span></span><sp
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-nav-text">使用</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-nav-text">实现</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#使用"><span class="toc-nav-text">使用</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#实现"><span class="toc-nav-text">实现</span></a></li></ol>
     
   </div>
 </aside>
@@ -313,7 +306,7 @@ rustup update<span aria-hidden="true" class="line-numbers-rows"><span></span><sp
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/rust-dbg/';
+    var url = 'http://catcoding.me//p/rust-dbg/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -374,7 +367,7 @@ rustup update<span aria-hidden="true" class="line-numbers-rows"><span></span><sp
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -399,8 +392,6 @@ rustup update<span aria-hidden="true" class="line-numbers-rows"><span></span><sp
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

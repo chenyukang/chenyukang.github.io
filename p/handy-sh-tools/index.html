@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,53 +178,67 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>分享一些日常经常使用的命令行小工具，我认为这些小东西能提高我的工作效率。</p>
-<h2 id="percol"><a href="#percol" class="headerlink" title="percol"></a>percol</h2><p><a target="_blank" rel="noopener" href="https://github.com/mooz/percol?tab=readme-ov-file#zsh-history-search">mooz/percol</a> 这个工具是典型的 Unix 风格工具，它唯一做的事情就是通过管道接收输入，提供一个模糊搜索和 UI，用户选择后再把结果返回给后面的管道继续执行。</p>
+<h2 id="percol"><a href="#percol" class="headerlink" title="percol"></a>percol</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/mooz/percol?tab=readme-ov-file#zsh-history-search">mooz/percol</a> 这个工具是典型的 Unix 风格工具，它唯一做的事情就是通过管道接收输入，提供一个模糊搜索和 UI，用户选择后再把结果返回给后面的管道继续执行。</p>
 <p>比如我这个 <code>gt</code> 的 alias 是我日常使用非常多的一个命令，做的事情就是 check out 一个 git 分支，因为我的本地通常有很多的分支，所以使用这个命令来模糊查找，然后选中就非常方便了：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">alias</span> <span class="token assign-left variable">gt</span><span class="token operator">=</span><span class="token string">"git branch| percol | awk '&#123; print \<span class="token variable">$1</span> &#125;' | xargs git checkout "</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>类似的下面这个命令是 kill 掉某个进程，我们可以通过模糊搜索来找进程：<br><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">alias</span> <span class="token assign-left variable">pk</span><span class="token operator">=</span><span class="token string">"ps eaux | percol | awk '&#123; print \<span class="token variable">$2</span> &#125;' | xargs kill -9 "</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token function alias shell">alias</span> <span class="token function alias shell">gt</span><span class="token operator assignment shell">=</span><span class="token string unquoted shell"><span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>git branch| percol | awk &#39;{ print <span class="constant character escape shell">\$</span>1 }&#39; | xargs git checkout <span class="token punctuation definition string end shell">&quot;</span></span></span></span>
+</span></code></pre>
+<p>类似的下面这个命令是 kill 掉某个进程，我们可以通过模糊搜索来找进程：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token function alias shell">alias</span> <span class="token function alias shell">pk</span><span class="token operator assignment shell">=</span><span class="token string unquoted shell"><span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>ps eaux | percol | awk &#39;{ print <span class="constant character escape shell">\$</span>2 }&#39; | xargs kill -9 <span class="token punctuation definition string end shell">&quot;</span></span></span></span>
+</span></code></pre>
 <p>如果你仔细总结，日常开发任何需要选择的地方都可以使用这个小工具来达到更高的效率，比如我工作的目录下有很多测试文件，测试其中一个文件的命令是 <code>just ts file-path</code>，我需要找到其中一个来测试：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">find</span> ./tests/ui/ <span class="token parameter variable">-name</span> <span class="token punctuation">\</span>*.rs  <span class="token operator">|</span> percol <span class="token operator">|</span> <span class="token function">xargs</span> just ts<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">find ./tests/ui/ -name \*.rs  | percol | xargs just ts
+</code></pre>
 <p><code>percol</code> 可以嵌入到很多配置里面，比如在 <code>tmux.conf</code> 里面加入这个配置，这样可以模糊查找 tmux 的 session 和 window：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">bind</span> B split-window <span class="token string">"tmux lsw | percol --initial-index <span class="token variable"><span class="token variable">$(</span>tmux lsw <span class="token operator">|</span> <span class="token function">awk</span> <span class="token string">'/active.$/ &#123;print NR-1&#125;'</span><span class="token variable">)</span></span> | cut -d':' -f 1 | tr -d '<span class="token entity" title="\n">\n</span>' | xargs -0 tmux select-window -t"</span>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh"><span class="token shell bash"><span class="token function-call shell"><span class="token function bind shell">bind</span></span><span class="token function-call arguments shell"> B split-window <span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>tmux lsw | percol --initial-index <span class="token group expansion command parens shell"><span class="token punctuation definition variable shell">$</span><span class="token punctuation section parens begin shell">(</span><span class="token function-call shell"><span class="token variable function shell">tmux</span></span><span class="token function-call arguments shell"> lsw</span> <span class="token operator logical pipe shell">|</span> <span class="token function-call shell"><span class="token variable function shell">awk</span></span><span class="token function-call arguments shell"> <span class="token string single shell"><span class="token punctuation definition string begin shell">&#39;</span>/active.$/ {print NR-1}<span class="token punctuation definition string end shell">&#39;</span></span></span><span class="token punctuation section parens end shell">)</span></span> | cut -d&#39;:&#39; -f 1 | tr -d &#39;\n&#39; | xargs -0 tmux select-window -t<span class="token punctuation definition string end shell">&quot;</span></span></span>
 
-<span class="token builtin class-name">bind</span> b split-window <span class="token string">"tmux ls | percol --initial-index <span class="token variable"><span class="token variable">$(</span>tmux <span class="token function">ls</span> <span class="token operator">|</span> <span class="token function">awk</span> <span class="token punctuation">\</span>"/^<span class="token punctuation">$(</span>tmux display-message <span class="token parameter variable">-p</span> <span class="token string">'#&#123;session_name&#125;'</span><span class="token punctuation">)</span>:/ <span class="token punctuation">&#123;</span>print NR-1<span class="token punctuation">&#125;</span><span class="token punctuation">\</span>"<span class="token variable">)</span></span> | cut -d':' -f 1 | tr -d '<span class="token entity" title="\n">\n</span>' | xargs -0 tmux switch-client -t"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<h2 id="atuin"><a href="#atuin" class="headerlink" title="atuin"></a>atuin</h2><p><a target="_blank" rel="noopener" href="https://github.com/atuinsh/atuin">atuinsh</a> 是一个记录 shell 历史的小工具，不同于普通的记录 shell history 的工具，atuin 会把数据记录在一个 SQLite 的数据库文件中，这样可以支持更丰富的查询功能。</p>
+<span class="token function-call shell"><span class="token function bind shell">bind</span></span><span class="token function-call arguments shell"> b split-window <span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>tmux ls | percol --initial-index <span class="token group expansion command parens shell"><span class="token punctuation definition variable shell">$</span><span class="token punctuation section parens begin shell">(</span><span class="token function-call shell"><span class="token variable function shell">tmux</span></span><span class="token function-call arguments shell"> ls</span> <span class="token operator logical pipe shell">|</span> <span class="token function-call shell"><span class="token variable function shell">awk</span></span><span class="token function-call arguments shell"> <span class="constant character escape shell">\&quot;</span>/^<span class="token group expansion command parens shell"><span class="token punctuation definition variable shell">$</span><span class="token punctuation section parens begin shell">(</span><span class="token function-call shell"><span class="token variable function shell">tmux</span></span><span class="token function-call arguments shell"> display-message<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>p</span> <span class="token string single shell"><span class="token punctuation definition string begin shell">&#39;</span>#{session_name}<span class="token punctuation definition string end shell">&#39;</span></span></span><span class="token punctuation section parens end shell">)</span></span>:/ <span class="token group expansion brace shell"><span class="token punctuation section expansion brace begin shell">{</span>print NR-1<span class="token punctuation section expansion brace end shell">}</span></span><span class="constant character escape shell">\&quot;</span></span><span class="token punctuation section parens end shell">)</span></span> | cut -d&#39;:&#39; -f 1 | tr -d &#39;\n&#39; | xargs -0 tmux switch-client -t<span class="token punctuation definition string end shell">&quot;</span></span></span>
+</span></code></pre><h2 id="atuin"><a href="#atuin" class="headerlink" title="atuin"></a>atuin</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/atuinsh/atuin">atuinsh</a> 是一个记录 shell 历史的小工具，不同于普通的记录 shell history 的工具，atuin 会把数据记录在一个 SQLite 的数据库文件中，这样可以支持更丰富的查询功能。</p>
 <p>另外 atuin 也支持不同机器之间的同步，当然这需要加密通信。我目前还没使用这种场景，只是把 <code>Ctrl-R</code> 绑定到了 atuin。</p>
 <p>atuin 也是一个 Rust 实现的工具。</p>
-<h2 id="tmux"><a href="#tmux" class="headerlink" title="tmux"></a>tmux</h2><p>tmux 我之前听很多人推荐过，但是我一直没怎么尝试，直到某天我需要通过网页打开跳板机登录到服务器上，网络不稳定的情况下我经常需要重新登录，这时候我尝试了一下 tmux 发现真是太好用了。</p>
+<h2 id="tmux"><a href="#tmux" class="headerlink" title="tmux"></a>tmux</h2>
+<p>tmux 我之前听很多人推荐过，但是我一直没怎么尝试，直到某天我需要通过网页打开跳板机登录到服务器上，网络不稳定的情况下我经常需要重新登录，这时候我尝试了一下 tmux 发现真是太好用了。</p>
 <p>tmux 的教程很多，比如 <a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2019/10/tmux.html">Tmux 使用教程 - 阮一峰的网络日志</a>。我的 <code>tmux.conf</code>配置很简单：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">set</span> <span class="token parameter variable">-g</span> @plugin <span class="token string">'tmux-plugins/tpm'</span>
-<span class="token builtin class-name">set</span> <span class="token parameter variable">-g</span> @plugin <span class="token string">'tmux-plugins/tmux-sensible'</span>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">set -g @plugin &#39;tmux-plugins/tpm&#39;
+set -g @plugin &#39;tmux-plugins/tmux-sensible&#39;
 
-<span class="token builtin class-name">set</span> <span class="token parameter variable">-g</span> @plugin <span class="token string">'tmux-plugins/tmux-resurrect'</span>
-<span class="token builtin class-name">set</span> <span class="token parameter variable">-g</span> @plugin <span class="token string">'tmux-plugins/tmux-continuum'</span>
+set -g @plugin &#39;tmux-plugins/tmux-resurrect&#39;
+set -g @plugin &#39;tmux-plugins/tmux-continuum&#39;
 
 unbind-key C-b
-set-option <span class="token parameter variable">-g</span> prefix C-Space
+set-option -g prefix C-Space
 bind-key C-Space send-prefix
 
-set-option <span class="token parameter variable">-s</span> set-titles on
-set-option <span class="token parameter variable">-g</span> set-titles-string <span class="token string">"#W/#T"</span>
-run <span class="token string">'~/.tmux/plugins/tpm/tpm'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+set-option -s set-titles on
+set-option -g set-titles-string &quot;#W/#T&quot;
+run &#39;~/.tmux/plugins/tpm/tpm&#39;
+</code></pre>
 <p>安装 <code>tmux-resurrect</code> 和 <code>tmux-continuum</code>，这样即使我重启了机器，打开 tmux 后我的 session 仍然和之前一样。</p>
 <p>最近也有个 Rust 写的 <a target="_blank" rel="noopener" href="https://github.com/zellij-org/zellij">zellij</a>，但我认为这种软件使用更老的会更方便，比如公司的远程服务器必然有 tmux，但不一定有 zellij。</p>
-<h2 id="just"><a href="#just" class="headerlink" title="just"></a>just</h2><p><a target="_blank" rel="noopener" href="https://github.com/casey/just">casey/just: 🤖 Just a command runner</a> 是我喜欢的另外一个 Rust 写的工具，我的日常工作中严重依赖这个工具，比如我的 rustc-dev 项目中配置渐渐积累了这么多的配置：<a target="_blank" rel="noopener" href="https://gist.github.com/chenyukang/1483cbbf75a4bd5ae2930415329cb682">rustc-justfile</a></p>
+<h2 id="just"><a href="#just" class="headerlink" title="just"></a>just</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/casey/just">casey/just: 🤖 Just a command runner</a> 是我喜欢的另外一个 Rust 写的工具，我的日常工作中严重依赖这个工具，比如我的 rustc-dev 项目中配置渐渐积累了这么多的配置：<a target="_blank" rel="noopener" href="https://gist.github.com/chenyukang/1483cbbf75a4bd5ae2930415329cb682">rustc-justfile</a></p>
 <p><code>just</code> 有些像 Makefile，但使用起来又比 Makefile 的语法简单和直观，我通常是来把一些常用的命令写入 justfile，然后留下经常需要调整的参数，比如：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">err FILE N:
-        rustup toolchain <span class="token function">link</span> dev2 ./build/aarch64-apple-darwin/stage1/
-        <span class="token assign-left variable">RUSTC_ICE</span><span class="token operator">=</span>/tmp rustc +dev2 <span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span>FILE<span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span> <span class="token parameter variable">-Z</span> treat-err-as-bug<span class="token operator">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span>N<span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">err FILE N:
+        rustup toolchain link dev2 ./build/aarch64-apple-darwin/stage1/
+        RUSTC_ICE=/tmp rustc +dev2 {{FILE}} -Z treat-err-as-bug={{N}}
+</code></pre>
 <p>这样我执行 <code>just err tests/ui/consts/const-eval/infinite_loop.rs 1</code> 的时候就相当于执行配置的一系列命令。</p>
 <p>另外我也会把一些频繁需要修改的参数放到最后一个位置，比如本来我需要执行：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">CKB_TEST_ARGS</span><span class="token operator">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span>SPEC<span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span> <span class="token function">make</span> integration<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>在 justfile 里面配置：<br><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">test-one SPEC:
-        <span class="token assign-left variable">CKB_TEST_ARGS</span><span class="token operator">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span>SPEC<span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span> <span class="token function">make</span> integration<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">CKB_TEST_ARGS={{SPEC}} make integration
+</code></pre>
+<p>在 justfile 里面配置：</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">test-one SPEC:
+        CKB_TEST_ARGS={{SPEC}} make integration
+</code></pre>
 <p>执行 <code>just test-one SPEC</code>  来测试不同的用例就会方便点。</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2>
+<ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/bootandy/dust">bootandy/dust: A more intuitive version of du in rust</a> 一个更直观的 du</li>
 <li><a target="_blank" rel="noopener" href="https://github.com/aristocratos/btop">aristocratos/btop: A monitor of resources</a> 和 htop 类似，但是 UI 更好看些</li>
 <li><a target="_blank" rel="noopener" href="https://github.com/Orange-OpenSource/hurl?tab=readme-ov-file">hurl: Hurl, run and test HTTP requests with plain text.</a> 类似 Curl，但是更方便</li>
 </ul>
-<hr>
+<hr />
 <p>你有什么喜欢的 Shell 工具，希望也能分享给我。</p>
 </section>
 
@@ -256,8 +258,8 @@ run <span class="token string">'~/.tmux/plugins/tpm/tpm'</span><span aria-hidden
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#工具" >
-    <span class="tag-code">工具</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -309,7 +311,7 @@ run <span class="token string">'~/.tmux/plugins/tpm/tpm'</span><span aria-hidden
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#percol"><span class="toc-nav-text">percol</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#atuin"><span class="toc-nav-text">atuin</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#tmux"><span class="toc-nav-text">tmux</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#just"><span class="toc-nav-text">just</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-nav-text">其他</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#percol"><span class="toc-nav-text">percol</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#atuin"><span class="toc-nav-text">atuin</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#tmux"><span class="toc-nav-text">tmux</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#just"><span class="toc-nav-text">just</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#其他"><span class="toc-nav-text">其他</span></a></li></ol>
     
   </div>
 </aside>
@@ -320,7 +322,7 @@ run <span class="token string">'~/.tmux/plugins/tpm/tpm'</span><span aria-hidden
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/handy-sh-tools/';
+    var url = 'http://catcoding.me//p/handy-sh-tools/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -381,7 +383,7 @@ run <span class="token string">'~/.tmux/plugins/tpm/tpm'</span><span aria-hidden
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -406,8 +408,6 @@ run <span class="token string">'~/.tmux/plugins/tpm/tpm'</span><span aria-hidden
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

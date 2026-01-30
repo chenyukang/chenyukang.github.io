@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -192,37 +180,41 @@
     <section class="markdown-content"><p>我需要用 Lua 处理一个与时间相关的问题，比如我们在配置文件里面配置一个日期 (北京时间)，然后在 Openresty 里面判断当前时间是否在这个日期之前或者之后来做对应的逻辑。</p>
 <p>Lua 的时间处理还有点麻烦，主要是自带的相关库函数比较少。</p>
 <blockquote>
-<p>os.time()                &lt;== 返回当前系统的日历时间，1505181586<br>os.date()                &lt;== 返回本地化的时间字符串，Tue Sep 12 09:59:56 2017<br>os.clock()               &lt;== 返回执行该程序 CPU 花去的时钟秒数，这里是 1156.726</p>
+<p>os.time()                &lt;== 返回当前系统的日历时间，1505181586
+os.date()                &lt;== 返回本地化的时间字符串，Tue Sep 12 09:59:56 2017
+os.clock()               &lt;== 返回执行该程序 CPU 花去的时钟秒数，这里是 1156.726</p>
 </blockquote>
 <p>我首先需要一个日期字符串转换为时间戳的函数，找来找去有了这么一个函数，使用正则表达式然后组成表：</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">function</span> <span class="token function">convert_time</span><span class="token punctuation">(</span>time_str<span class="token punctuation">)</span>
-  <span class="token comment">-- Assuming a date pattern like: yyyy-mm-dd hh:mm:ss</span>
-  <span class="token comment">-- Assuming timezone is Beijing</span>
-  <span class="token keyword">local</span> pattern <span class="token operator">=</span> <span class="token string">"(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)"</span>
-  <span class="token keyword">local</span> year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token punctuation">,</span> hour<span class="token punctuation">,</span> minute<span class="token punctuation">,</span> seconds <span class="token operator">=</span> time_str<span class="token punctuation">:</span><span class="token function">match</span><span class="token punctuation">(</span>pattern<span class="token punctuation">)</span>
-  <span class="token keyword">if</span> <span class="token keyword">not</span> <span class="token punctuation">(</span>year <span class="token keyword">and</span> month <span class="token keyword">and</span> day <span class="token keyword">and</span> hour <span class="token keyword">and</span> minute <span class="token keyword">and</span> seconds<span class="token punctuation">)</span> <span class="token keyword">then</span>
-    <span class="token keyword">return</span> <span class="token keyword">nil</span>
-  <span class="token keyword">end</span>
-  <span class="token keyword">local</span> converted_timestamp <span class="token operator">=</span>
-    os<span class="token punctuation">.</span><span class="token function">time</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>tz <span class="token operator">=</span> <span class="token string">"CST"</span><span class="token punctuation">,</span> year <span class="token operator">=</span> year<span class="token punctuation">,</span> month <span class="token operator">=</span> month<span class="token punctuation">,</span>
-             day <span class="token operator">=</span> day<span class="token punctuation">,</span> hour <span class="token operator">=</span> hour<span class="token punctuation">,</span> min <span class="token operator">=</span> minute<span class="token punctuation">,</span> sec <span class="token operator">=</span> seconds<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua"><span class="token function lua"><span class="token keyword lua">function</span> <span class="token function lua">convert_time</span><span class="token punctuation definition parameters begin lua">(</span><span class="token variable parameter function lua">time_str</span><span class="token punctuation definition parameters end lua">)</span></span>
+  <span class="token comment double-dash lua"><span class="token punctuation definition comment lua">--</span> Assuming a date pattern like: yyyy-mm-dd hh:mm:ss
+</span>  <span class="token comment double-dash lua"><span class="token punctuation definition comment lua">--</span> Assuming timezone is Beijing
+</span>  <span class="token keyword lua">local</span> pattern <span class="token operator lua">=</span> <span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)<span class="token punctuation definition string end lua">&quot;</span></span>
+  <span class="token keyword lua">local</span> year, month, day, hour, minute, seconds <span class="token operator lua">=</span> time_str:match(pattern)
+  <span class="token keyword lua">if</span> <span class="token operator lua">not</span> (year <span class="token operator lua">and</span> month <span class="token operator lua">and</span> day <span class="token operator lua">and</span> hour <span class="token operator lua">and</span> minute <span class="token operator lua">and</span> seconds) <span class="token keyword lua">then</span>
+    <span class="token keyword lua">return</span> <span class="token boolean lua">nil</span>
+  <span class="token keyword lua">end</span>
+  <span class="token keyword lua">local</span> converted_timestamp <span class="token operator lua">=</span>
+    <span class="token function library lua">os.time</span>({tz <span class="token operator lua">=</span> <span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>CST<span class="token punctuation definition string end lua">&quot;</span></span>, year <span class="token operator lua">=</span> year, month <span class="token operator lua">=</span> month,
+             day <span class="token operator lua">=</span> day, hour <span class="token operator lua">=</span> hour, min <span class="token operator lua">=</span> minute, sec <span class="token operator lua">=</span> seconds})
       
-    <span class="token keyword">return</span> converted_timestamp 
-<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token keyword lua">return</span> converted_timestamp 
+<span class="token keyword lua">end</span>
+</span></code></pre>
 <p>然后我们可以使用 os.time() 获取当前时间戳来对比。但是必须注意时区问题，Lua 里面要获取当前时区和 UTC 里面的 offset 可以使用一个比较笨拙的办法：</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">function</span> <span class="token function">get_timezone_offset_with_utc</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token keyword">local</span> now <span class="token operator">=</span> os<span class="token punctuation">.</span><span class="token function">time</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token keyword">return</span> os<span class="token punctuation">.</span><span class="token function">difftime</span><span class="token punctuation">(</span>now<span class="token punctuation">,</span> os<span class="token punctuation">.</span><span class="token function">time</span><span class="token punctuation">(</span>os<span class="token punctuation">.</span><span class="token function">date</span><span class="token punctuation">(</span><span class="token string">"!*t"</span><span class="token punctuation">,</span> now<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua"><span class="token function lua"><span class="token keyword lua">function</span> <span class="token function lua">get_timezone_offset_with_utc</span><span class="token punctuation definition parameters begin lua">(</span><span class="token punctuation definition parameters end lua">)</span></span>
+  <span class="token keyword lua">local</span> now <span class="token operator lua">=</span> <span class="token function library lua">os.time</span>()
+  <span class="token keyword lua">return</span> <span class="token function library lua">os.difftime</span>(now, <span class="token function library lua">os.time</span>(<span class="token function library lua">os.date</span>(<span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>!*t<span class="token punctuation definition string end lua">&quot;</span></span>, now)))
+<span class="token keyword lua">end</span>
+</span></code></pre>
 <p>使用这个函数获取时区的 offset 之后，对 convert_time 返回的结果做一下偏移即可和 os.time() 做对比。有个问题是上面的函数居然调用了三次系统调用，开销是比较大的。</p>
 <blockquote>
 <p>在 OpenResty 的世界里，不推荐使用这里的标准时间函数，因为这些函数通常会引发不止一个昂贵的系统调用，同时无法为 LuaJIT JIT 编译，对性能造成较大影响。推荐使用 ngx_lua 模块提供的带缓存的时间接口，如 <code>ngx.today</code>, <code>ngx.time</code>, <code>ngx.utctime</code>, <code>ngx.localtime</code>, <code>ngx.now</code>, <code>ngx.http_time</code>，以及 <code>ngx.cookie_time</code> 等。</p>
 </blockquote>
 <p><a target="_blank" rel="noopener" href="https://github.com/stevedonovan/Penlight/blob/master/lua/pl/Date.lua">Penlight</a>库也有很多日期相关的函数封装，不过大多也都使用了 os 相关函数。为了避免多次调用 get_timezone_offset_with_utc我使用了 Kong 里面自带的 cache 相关函数做一下缓存：</p>
-<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token comment">-- 缓存上面的时区差，减少系统调用</span>
-<span class="token keyword">local</span> offset_with_cst<span class="token punctuation">,</span> err <span class="token operator">=</span>
-  cache<span class="token punctuation">.</span><span class="token function">get_or_set</span><span class="token punctuation">(</span><span class="token string">"timezone_offset"</span><span class="token punctuation">,</span> <span class="token keyword">nil</span><span class="token punctuation">,</span> get_timezone_offset_with_utc<span class="token punctuation">,</span> <span class="token keyword">nil</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-</section>
+<pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token lua">  <span class="token comment double-dash lua"><span class="token punctuation definition comment lua">--</span> 缓存上面的时区差，减少系统调用
+</span>  <span class="token keyword lua">local</span> offset_with_cst, err <span class="token operator lua">=</span>
+    cache.get_or_set(<span class="token string double lua"><span class="token punctuation definition string begin lua">&quot;</span>timezone_offset<span class="token punctuation definition string end lua">&quot;</span></span>, <span class="token boolean lua">nil</span>, get_timezone_offset_with_utc, <span class="token boolean lua">nil</span>)
+</span></code></pre></section>
 
     <p></p>
 
@@ -240,8 +232,8 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -294,7 +286,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/lua-time-related/';
+    var url = 'http://catcoding.me//p/lua-time-related/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -355,7 +347,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -380,8 +372,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

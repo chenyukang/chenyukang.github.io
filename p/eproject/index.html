@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -191,17 +179,18 @@
   <article class="post-article">
     <section class="markdown-content"><p>我之前一直用的是 project-mode.el 来管理项目，在碰上代码很多的工程时还是有点不方便，源文件太多速度有点慢。快速检索文件还是可以，需要指定代码目录，可以增加目录。工程的概念还是不太直观，主要用来快速查找文件。以前看有同学推荐过 eproject，当时没仔细看。这会儿想自己写一个，而今天偶尔试用了一下这个<a target="_blank" rel="noopener" href="http://www.emacswiki.org/emacs/eproject">eproject.el</a>这才是真正需要的好东西啊。</p>
 <p>一个工程包含的是经常需要访问的文件，另一个重要的地方是可以自己绑定 Make, clean, run, configure 等命令。一组常用命令加文件检索，非常方便。看下面的配置文件很清楚，make 绑定到了一组命令。</p>
-<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token punctuation">(</span><span class="token keyword">setq</span> prj-tools
-      <span class="token punctuation">'(</span><span class="token punctuation">(</span><span class="token string">"Make"</span> <span class="token string">"cd ~/source/Panda/; ./run.sh -c;"</span> <span class="token string">"f9"</span><span class="token punctuation">)</span>
-      <span class="token punctuation">(</span><span class="token string">"Clean"</span> <span class="token string">"cd ~/source/Panda/; ./run.sh -x;"</span> <span class="token string">"C-f9"</span><span class="token punctuation">)</span>
-      <span class="token punctuation">(</span><span class="token string">"Run"</span> <span class="token string">"cd ~/source/Panda/; bochs;"</span> <span class="token string">"f8"</span><span class="token punctuation">)</span>
-      <span class="token punctuation">(</span><span class="token string">"Stop"</span> <span class="token string">"-e eproject-killtool"</span> <span class="token string">"C-f8"</span><span class="token punctuation">)</span>
-      <span class="token punctuation">(</span><span class="token string">"Configure"</span> <span class="token string">"./configure"</span> nil）
-      <span class="token punctuation">(</span><span class="token string">"Explore Project"</span> <span class="token string">"nautilus --browser `pwd` &amp;"</span> <span class="token boolean">nil</span><span class="token punctuation">)</span>
-      <span class="token punctuation">(</span><span class="token string">"XTerm In Project"</span> <span class="token string">"xterm &amp;"</span> <span class="token boolean">nil</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token lisp"><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp">setq</span> prj<span class="token operator arithmetic lisp">-</span>tools
+      &#39;<span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>Make<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>cd ~/source/Panda/; ./run.sh -c;<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>f9<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span>
+      <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>Clean<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>cd ~/source/Panda/; ./run.sh -x;<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>C-f9<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span>
+      <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>Run<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>cd ~/source/Panda/; bochs;<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>f8<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span>
+      <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>Stop<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>-e eproject-killtool<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>C-f8<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span>
+      <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>Configure<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>./configure<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token boolean lisp">nil</span>）
+      <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>Explore Project<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>nautilus --browser `pwd` &amp;<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token boolean lisp">nil</span><span class="token punctuation definition group end lisp">)</span></span>
+      <span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>XTerm In Project<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>xterm &amp;<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token boolean lisp">nil</span><span class="token punctuation definition group end lisp">)</span></span><span class="token punctuation definition group end lisp">)</span></span>
+</span></span></span></code></pre>
 <p>另外再推荐一个扩展<a target="_blank" rel="noopener" href="http://www.emacswiki.org/emacs/viewer.el">viewer.el</a>, 这个可以模拟 vi 里面的快捷键，其实我不是觉得 vi 的快捷键好，而是 vi 分为几个模式，编辑模式、浏览模式。这对 emacs 有些用，因为往往我打开一个文件只是看看，编辑的时候少，有时候按错了键使得文件内容不经意就改变了。所以通过这个扩展，默认打开一个文件都是浏览模式，还可以设置和 vi 一样的移动光标的快捷键，当需要进行编辑操作的时候按下 i 键进入编辑模式。状态栏可以显示当前所处的模式。</p>
-<p>(add-hook ‘find-file-hook ‘view-exist-file)</p>
-<p>(global-set-key (kbd “C-o”) ‘view-mode)</p>
+<p>(add-hook ’find-file-hook ’view-exist-file)</p>
+<p>(global-set-key (kbd “C-o”) ’view-mode)</p>
 </section>
 
     <p></p>
@@ -226,7 +215,7 @@
       <a class="nav-left" href="/p/find-duplicated-cycle-detection/">
         <span class="nav-arrow">← </span>
         
-          Find duplicated Numbe ...
+          Find duplicated Number and Cycle detection
         
       </a>
     
@@ -265,7 +254,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/eproject/';
+    var url = 'http://catcoding.me//p/eproject/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -326,7 +315,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -351,8 +340,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

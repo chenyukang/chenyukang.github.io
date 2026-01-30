@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -198,74 +186,69 @@
 <li>删除一个字符串</li>
 <li>查找出树中所有以某个字符串开始的所有字符串</li>
 </ul>
-<p>和 hash 有点像，不过 hash 对于第四点没这么方便。<br>我做了一些性能对比，测试数据是<code>/usr/share/dict/words</code>里面的所有单词，同时做插入和查询的操作。具体测试代码看<a target="_blank" rel="noopener" href="https://github.com/chenyukang/critbit-perf">这里</a>，结果是：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">critbit</th>
-<th style="text-align:center">11.6MB</th>
-<th style="text-align:center">23.34</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">set</td>
-<td style="text-align:center">21.6 MB</td>
-<td style="text-align:center">45.85s</td>
-</tr>
-<tr>
-<td style="text-align:center">trie</td>
-<td style="text-align:center">332.3 MB</td>
-<td style="text-align:center">17.84s</td>
-</tr>
-</tbody>
-</table>
+<p>和 hash 有点像，不过 hash 对于第四点没这么方便。
+我做了一些性能对比，测试数据是<code>/usr/share/dict/words</code>里面的所有单词，同时做插入和查询的操作。具体测试代码看<a target="_blank" rel="noopener" href="https://github.com/chenyukang/critbit-perf">这里</a>，结果是：</p>
+<table><thead><tr><th style="text-align: center">critbit</th><th style="text-align: center">11.6MB</th><th style="text-align: center">23.34</th></tr></thead><tbody>
+<tr><td style="text-align: center">set</td><td style="text-align: center">21.6 MB</td><td style="text-align: center">45.85s</td></tr>
+<tr><td style="text-align: center">trie</td><td style="text-align: center">332.3 MB</td><td style="text-align: center">17.84s</td></tr>
+</tbody></table>
 <p>从中可以看到 trie 树的内存消耗是比较大的，但是查找速度最好。critbit 的内存消耗真的非常小，如果只是把这里所有的单词存下来都要 4MB 的内存，其查找的速度虽然和 trie 树比起来差一些，但还是相当不错。</p>
-<p>好好的研读了 crit-bit 的实现和这篇文章，里面技巧挺多的。<br>critbit 的结构很简单：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">
-<span class="token keyword">typedef</span> <span class="token keyword">struct</span><span class="token punctuation">&#123;</span>
-    <span class="token keyword">void</span><span class="token operator">*</span> child<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-    uint32 byte<span class="token punctuation">;</span>
-    uint8 otherbits<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>critbit0_node<span class="token punctuation">;</span>
+<p>好好的研读了 crit-bit 的实现和这篇文章，里面技巧挺多的。
+critbit 的结构很简单：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++">
+<span class="token keyword c++">typedef</span> <span class="token keyword c">struct</span><span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+    <span class="token keyword c">void</span><span class="token operator c">*</span> child<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span><span class="token number c++">2</span><span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation terminator c++">;</span>
+    uint32 byte<span class="token punctuation terminator c++">;</span>
+    uint8 otherbits<span class="token punctuation terminator c++">;</span>
+<span class="token punctuation section block end c++">}</span></span><span class="token class-name typedef c++">critbit0_node</span><span class="token punctuation terminator c++">;</span>
 
-<span class="token keyword">typedef</span> <span class="token keyword">struct</span><span class="token punctuation">&#123;</span>
-    <span class="token keyword">void</span><span class="token operator">*</span> root<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>critbit0_tree<span class="token punctuation">;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>其中 child 是 void*指针，对于树的内部节点其指向的是子节点，对于叶子节点其指向的是字符串。<br>byte 用来表示当前节点匹配的长度，otherbits 是一个 mask，可以用来快速的取得不同最高位，在查询的过程中用这个来做 branch。</p>
-<p>具体的代码分析这里比较少，最复杂的函数是 critbit0_insert。在插入过程中需要记录下来 byte 和 otherbits,<br>并且更新前面的父节点。<br>​<br><img src="/images/critbit.png" alt="critbit" class="img-center" height="400" width="400" /><span class="image-caption">critbit</span></p>
-<p>然后再继续插入后的结构变化是：<br><img src="/images/critbit_insert.png" alt="critbit" class="img-center" height="400" width="400" /><span class="image-caption">critbit</span></p>
+<span class="token keyword c++">typedef</span> <span class="token keyword c">struct</span><span class="token block c++"><span class="token punctuation section block begin c++">{</span>
+    <span class="token keyword c">void</span><span class="token operator c">*</span> root<span class="token punctuation terminator c++">;</span>
+<span class="token punctuation section block end c++">}</span></span><span class="token class-name typedef c++">critbit0_tree</span><span class="token punctuation terminator c++">;</span>
+
+</span></code></pre>
+<p>其中 child 是 void*指针，对于树的内部节点其指向的是子节点，对于叶子节点其指向的是字符串。
+byte 用来表示当前节点匹配的长度，otherbits 是一个 mask，可以用来快速的取得不同最高位，在查询的过程中用这个来做 branch。</p>
+<p>具体的代码分析这里比较少，最复杂的函数是 critbit0_insert。在插入过程中需要记录下来 byte 和 otherbits,
+并且更新前面的父节点。
+​
+<img src="/images/critbit.png" alt="critbit" class="img-center" height="400" width="400" /></p>
+<p>然后再继续插入后的结构变化是：
+<img src="/images/critbit_insert.png" alt="critbit" class="img-center" height="400" width="400" /></p>
 <p>下面记录一下其中的几个技巧。</p>
-<h4 id="align-指针最后一位用来做标志"><a href="#align-指针最后一位用来做标志" class="headerlink" title="align 指针最后一位用来做标志"></a>align 指针最后一位用来做标志</h4><p>树的结构需要一个标志变量来表示是否是内部节点或者是叶子节点。这个变量如何能省掉？<br>看上面的 void<em> root 和 void</em> child，都是即可以用来指向字符串又可以指向节点，一般申请过来的指针变量都是 align 好的，所以最低位为 0，这是可以拿来用的。因此对于内部节点我们可以在这个位上设置为 1，只是要注意在通过这个指针取值的时候需要减回去。</p>
+<h4 id="align-指针最后一位用来做标志"><a href="#align-指针最后一位用来做标志" class="headerlink" title="align 指针最后一位用来做标志"></a>align 指针最后一位用来做标志</h4>
+<p>树的结构需要一个标志变量来表示是否是内部节点或者是叶子节点。这个变量如何能省掉？
+看上面的 void* root 和 void* child，都是即可以用来指向字符串又可以指向节点，一般申请过来的指针变量都是 align 好的，所以最低位为 0，这是可以拿来用的。因此对于内部节点我们可以在这个位上设置为 1，只是要注意在通过这个指针取值的时候需要减回去。</p>
 <p><code>a = (posix_memalign((void**)&amp;x, sizeof(void*), ulen+1))</code></p>
 <p>posix_memalign 在这里用的是 sizeof(void*)，其实就和 malloc 一样了，因为一般 Linux 上编译器和 C 库已经处理了对齐问题。</p>
 <p>因此在查找的这段代码里是这样的：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> <span class="token function">critbit0_contains</span><span class="token punctuation">(</span>critbit0_tree<span class="token operator">*</span>t<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> u<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">const</span> uint8<span class="token operator">*</span> ubytes<span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">void</span><span class="token operator">*</span><span class="token punctuation">)</span>u<span class="token punctuation">;</span>
-    <span class="token keyword">const</span> size_t ulen<span class="token operator">=</span> <span class="token function">strlen</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    uint8<span class="token operator">*</span> p<span class="token operator">=</span> t<span class="token operator">-></span>root<span class="token punctuation">;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>p<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span> <span class="token number">1</span> <span class="token operator">&amp;</span> <span class="token punctuation">(</span>intptr_t<span class="token punctuation">)</span>p <span class="token punctuation">)</span><span class="token punctuation">&#123;</span>       <span class="token comment">//内部节点？</span>
-        critbit0_node<span class="token operator">*</span> q <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">void</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">(</span>p<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//取得真正的指针</span>
-        uint8 c <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>q<span class="token operator">-></span>byte <span class="token operator">&lt;</span> ulen<span class="token punctuation">)</span> c <span class="token operator">=</span> ubytes<span class="token punctuation">[</span>q<span class="token operator">-></span>byte<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token keyword">const</span> <span class="token keyword">int</span> direction<span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">+</span><span class="token punctuation">(</span>q<span class="token operator">-></span>otherbits<span class="token operator">|</span>c<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">>></span><span class="token number">8</span><span class="token punctuation">;</span>
-        p <span class="token operator">=</span> q<span class="token operator">-></span>child<span class="token punctuation">[</span>direction<span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-	<span class="token comment">//叶子节点</span>
-    <span class="token keyword">return</span> <span class="token number">0</span> <span class="token operator">==</span> <span class="token function">strcmp</span><span class="token punctuation">(</span>u<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span><span class="token punctuation">)</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="取最高位的非-0bit"><a href="#取最高位的非-0bit" class="headerlink" title="取最高位的非 0bit"></a>取最高位的非 0bit</h4><p>在插入过程中计算最高位的不同位。</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++"><span class="token keyword c">int</span> <span class="token function c++"><span class="token function c++">critbit0_contains</span></span><span class="token function parameters c++"><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function parameters c++"><span class="token group c++">critbit0_tree<span class="token operator c">*</span><span class="token variable parameter c++">t</span><span class="token punctuation separator c++">,</span> <span class="token keyword c++">const</span> <span class="token keyword c">char</span><span class="token operator c">*</span> <span class="token variable parameter c++">u</span><span class="token punctuation section group end c++">)</span></span></span><span class="token function c++"> </span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block begin c++">{</span></span></span><span class="token function c++"><span class="token block c++">
+    <span class="token keyword c++">const</span> uint8<span class="token operator c">*</span> ubytes<span class="token operator assignment c">=</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">void</span><span class="token operator c">*</span><span class="token punctuation section group end c++">)</span></span>u<span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">const</span> <span class="token class-name sys-types c">size_t</span> ulen<span class="token operator assignment c">=</span> <span class="token function-call c++"><span class="token function C99 c">strlen</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">u</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+    uint8<span class="token operator c">*</span> p<span class="token operator assignment c">=</span> t<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">root</span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token operator arithmetic c">!</span>p<span class="token punctuation section group end c++">)</span></span> <span class="token keyword c++">return</span> <span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>
+    <span class="token keyword c++">while</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span> <span class="token number c++">1</span> <span class="token operator c">&amp;</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token class-name stdint c">intptr_t</span><span class="token punctuation section group end c++">)</span></span>p <span class="token punctuation section group end c++">)</span></span><span class="token block c++"><span class="token punctuation section block begin c++">{</span>       <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>内部节点？
+</span>        critbit0_node<span class="token operator c">*</span> q <span class="token operator assignment c">=</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c">void</span><span class="token operator c">*</span><span class="token punctuation section group end c++">)</span></span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>p<span class="token operator arithmetic c">-</span><span class="token number c++">1</span><span class="token punctuation section group end c++">)</span></span><span class="token punctuation terminator c++">;</span>  <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>取得真正的指针
+</span>        uint8 c <span class="token operator assignment c">=</span> <span class="token number c++">0</span><span class="token punctuation terminator c++">;</span>
+        <span class="token keyword c++">if</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>q<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">byte</span> <span class="token operator comparison c">&lt;</span> ulen<span class="token punctuation section group end c++">)</span></span> c <span class="token operator assignment c">=</span> ubytes<span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>q<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">byte</span><span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation terminator c++">;</span>
+        <span class="token keyword c++">const</span> <span class="token keyword c">int</span> direction<span class="token operator assignment c">=</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token number c++">1</span><span class="token operator arithmetic c">+</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span>q<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">otherbits</span><span class="token operator arithmetic c">|</span>c<span class="token punctuation section group end c++">)</span></span><span class="token punctuation section group end c++">)</span></span><span class="token operator arithmetic c">&gt;&gt;</span><span class="token number c++">8</span><span class="token punctuation terminator c++">;</span>
+        p <span class="token operator assignment c">=</span> q<span class="token punctuation accessor arrow c++">-&gt;</span><span class="token variable other readwrite member c++">child</span><span class="token brackets c++"><span class="token punctuation section brackets begin c++">[</span>direction<span class="token punctuation section brackets end c++">]</span></span><span class="token punctuation terminator c++">;</span>
+    <span class="token punctuation section block end c++">}</span></span>
+	<span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>叶子节点
+</span>    <span class="token keyword c++">return</span> <span class="token number c++">0</span> <span class="token operator comparison c">==</span> <span class="token function-call c++"><span class="token function C99 c">strcmp</span><span class="token group c++"><span class="token punctuation section group begin c++">(</span></span></span><span class="token function-call c++"><span class="token group c++">u<span class="token punctuation separator c++">,</span> <span class="token group c++"><span class="token punctuation section group begin c++">(</span><span class="token keyword c++">const</span> <span class="token keyword c">char</span><span class="token operator c">*</span><span class="token punctuation section group end c++">)</span></span>p</span></span><span class="token function-call c++"><span class="token group c++"><span class="token punctuation section group end c++">)</span></span></span><span class="token punctuation terminator c++">;</span>
+</span></span><span class="token function c++"><span class="token block c++"><span class="token punctuation section block end c++">}</span></span></span>
+</span></code></pre><h4 id="取最高位的非-0bit"><a href="#取最高位的非-0bit" class="headerlink" title="取最高位的非 0bit"></a>取最高位的非 0bit</h4>
+<p>在插入过程中计算最高位的不同位。</p>
 <p><code>newotherbits = p[newbyte]^ubytes[newbyte];</code></p>
 <p>其实也可以用一个 for 循环来计算，不过这里是这样实现的：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">newotherbits <span class="token operator">|=</span> newotherbits<span class="token operator">>></span><span class="token number">1</span><span class="token punctuation">;</span>
-newotherbits <span class="token operator">|=</span> newotherbits<span class="token operator">>></span><span class="token number">2</span><span class="token punctuation">;</span>
-newotherbits <span class="token operator">|=</span> newotherbits<span class="token operator">>></span><span class="token number">4</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token c++">newotherbits <span class="token operator assignment augmented c">|=</span> newotherbits<span class="token operator arithmetic c">&gt;&gt;</span><span class="token number c++">1</span><span class="token punctuation terminator c++">;</span>
+newotherbits <span class="token operator assignment augmented c">|=</span> newotherbits<span class="token operator arithmetic c">&gt;&gt;</span><span class="token number c++">2</span><span class="token punctuation terminator c++">;</span>
+newotherbits <span class="token operator assignment augmented c">|=</span> newotherbits<span class="token operator arithmetic c">&gt;&gt;</span><span class="token number c++">4</span><span class="token punctuation terminator c++">;</span>
+</span></code></pre>
 <p>这相当于是计算不小于它的 2 的整数次幂，对于 32bit 的代码可以看看<a target="_blank" rel="noopener" href="http://blog.codingnow.com/cloud/CodeCollection">这里</a>的<code>next_pow_of_2</code>。</p>
-<hr>
+<hr />
 <p><a target="_blank" rel="noopener" href="https://github.com/agl/critbit">文章和代码</a>，其中那篇文章有详细分析。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/chenyukang/critbit-perf">我的测试代码，trie/set 等</a>。 </p>
+<p><a target="_blank" rel="noopener" href="https://github.com/chenyukang/critbit-perf">我的测试代码，trie/set 等</a>。</p>
 </section>
 
     <p></p>
@@ -284,12 +267,12 @@ newotherbits <span class="token operator">|=</span> newotherbits<span class="tok
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Critbit" >
-    <span class="tag-code">Critbit</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -341,7 +324,7 @@ newotherbits <span class="token operator">|=</span> newotherbits<span class="tok
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#align-%E6%8C%87%E9%92%88%E6%9C%80%E5%90%8E%E4%B8%80%E4%BD%8D%E7%94%A8%E6%9D%A5%E5%81%9A%E6%A0%87%E5%BF%97"><span class="toc-nav-text">align 指针最后一位用来做标志</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#%E5%8F%96%E6%9C%80%E9%AB%98%E4%BD%8D%E7%9A%84%E9%9D%9E-0bit"><span class="toc-nav-text">取最高位的非 0bit</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#align-指针最后一位用来做标志"><span class="toc-nav-text">align 指针最后一位用来做标志</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#取最高位的非-0bit"><span class="toc-nav-text">取最高位的非 0bit</span></a></li></ol>
     
   </div>
 </aside>
@@ -352,7 +335,7 @@ newotherbits <span class="token operator">|=</span> newotherbits<span class="tok
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/critbit/';
+    var url = 'http://catcoding.me//p/critbit/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -413,7 +396,7 @@ newotherbits <span class="token operator">|=</span> newotherbits<span class="tok
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -438,8 +421,6 @@ newotherbits <span class="token operator">|=</span> newotherbits<span class="tok
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

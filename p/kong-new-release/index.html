@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,7 +177,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>Kong 发布了新的版本<a target="_blank" rel="noopener" href="https://github.com/Mashape/kong/releases/tag/0.11.0">0.11.0</a>，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了 serf，这样整个 Kong 节点之间的缓存同步方式变化了。开发者给出的理由如下： </p>
+    <section class="markdown-content"><p>Kong 发布了新的版本<a target="_blank" rel="noopener" href="https://github.com/Mashape/kong/releases/tag/0.11.0">0.11.0</a>，从这里开始区分了社区版本和商业版。这次改动比较大的是丢弃了 serf，这样整个 Kong 节点之间的缓存同步方式变化了。开发者给出的理由如下：</p>
 <ol>
 <li>依赖 serf，serf 并不属于 Nginx/OpenResty</li>
 <li>这种依赖相互间通信来同步的机制对于 deployment 和容器化都有些不便</li>
@@ -197,7 +185,7 @@
 </ol>
 <p>新的实现的思路是以数据库作为中心，增加一个 cluster events 的表。任何 Kong node 都可以向数据库发送变更消息，其他节点 polling 数据库改动，然后来更新缓存内容。这个改动非常大，不过最终 Kong 终于实现了节点无状态，之前那个数据库里的 nodes 可以丢弃掉了，任何时候节点重启只要连上数据库即可工作。我们需要担心的是这么多节点去 polling 数据库 (当然这些动作都是在后台)，是否是一个比较耗时的工作。</p>
 <p>Kong 增加了新的配置选项 db_update_frequency，默认为 5s，表示多长时间 polling 一次，这需要用户自己权衡效率和及时性了。对于我们的业务来说及时性还是很重要的，比如我们新品发布时间精确到秒，那么我们就需要尽量调低这个参数。</p>
-<p>所有的改动在 <a target="_blank" rel="noopener" href="https://github.com/Mashape/kong/pull/2561/files，">https://github.com/Mashape/kong/pull/2561/files，</a></p>
+<p>所有的改动在 https://github.com/Mashape/kong/pull/2561/files，</p>
 <p>我大概看了一下代码，一些值得注意的地方如下：</p>
 <ol>
 <li>cluster 相关的 API 和 cmd 都被移掉了，启动部分和 serf 信号处理部分都删掉了不少代码。</li>
@@ -224,12 +212,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Kong" >
-    <span class="tag-code">Kong</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Lua" >
-    <span class="tag-code">Lua</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -282,7 +270,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/kong-new-release/';
+    var url = 'http://catcoding.me//p/kong-new-release/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -343,7 +331,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -368,8 +356,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

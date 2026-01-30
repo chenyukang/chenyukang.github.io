@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,67 +178,71 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>以前都是手写 makefile，没使用 automake 之类的工具，今天看了一些相关资料，简单地总结一下，留个备份。</p>
-<h2 id="使用-Makefile"><a href="#使用-Makefile" class="headerlink" title="使用 Makefile"></a>使用 Makefile</h2><p>unix/linux 下面使用相当广泛，对于简单一些的程序，手写 makefile 还是比较容易的，只要指定清目标文件，最后可执行文件的依赖关系。使用一些高级一点的功能更方便，比如下面这个就比较好用，稍微编辑一下就可以用于常用的小工程。</p>
+<h2 id="使用-Makefile"><a href="#使用-Makefile" class="headerlink" title="使用 Makefile"></a>使用 Makefile</h2>
+<p>unix/linux 下面使用相当广泛，对于简单一些的程序，手写 makefile 还是比较容易的，只要指定清目标文件，最后可执行文件的依赖关系。使用一些高级一点的功能更方便，比如下面这个就比较好用，稍微编辑一下就可以用于常用的小工程。</p>
 <p>这个 Makefile 把所有.cpp 的文件编译成相应的.o 文件，然后链接为 Targetfile 文件。</p>
-<pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile">CC <span class="token operator">=</span> g++  -O2
-LD <span class="token operator">=</span> g++
-TARGET <span class="token operator">=</span> Targetfile
-SOURCES <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">wildcard</span> *.cpp<span class="token punctuation">)</span>
-OBJS <span class="token operator">=</span> <span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">patsubst</span> %.cpp,%.o,<span class="token variable">$</span><span class="token punctuation">(</span>SOURCES<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile"><span class="token makefile"><span class="token variable other makefile">CC</span> <span class="token operator assignment makefile">=</span> <span class="token string unquoted makefile">g++  -O2</span>
+<span class="token variable other makefile">LD</span> <span class="token operator assignment makefile">=</span> <span class="token string unquoted makefile">g++</span>
+<span class="token variable other makefile">TARGET</span> <span class="token operator assignment makefile">=</span> <span class="token string unquoted makefile">Targetfile</span>
+<span class="token variable other makefile">SOURCES</span> <span class="token operator assignment makefile">=</span> <span class="token string unquoted makefile"><span class="token function-call makefile"><span class="token keyword block begin makefile">$(</span><span class="token function builtin makefile">wildcard</span> </span><span class="token function-call arguments makefile"><span class="token variable language wildcard makefile">*</span>.cpp</span><span class="token keyword block end makefile">)</span></span>
+<span class="token variable other makefile">OBJS</span> <span class="token operator assignment makefile">=</span> <span class="token string unquoted makefile"><span class="token function-call makefile"><span class="token keyword block begin makefile">$(</span><span class="token function builtin makefile">patsubst</span> </span><span class="token function-call arguments makefile"><span class="token variable language makefile">%</span>.cpp<span class="token punctuation separator makefile">,</span><span class="token variable language makefile">%</span>.o<span class="token punctuation separator makefile">,</span><span class="token variable parameter makefile"><span class="token keyword block begin makefile">$(</span>SOURCES<span class="token keyword block end makefile">)</span></span></span><span class="token keyword block end makefile">)</span></span>
 
-<span class="token target symbol">%.o</span><span class="token punctuation">:</span>%.cpp
-        <span class="token variable">$</span><span class="token punctuation">(</span>CC<span class="token punctuation">)</span> <span class="token variable">$</span><span class="token punctuation">(</span>CFLAGS<span class="token punctuation">)</span> -c <span class="token variable">$&amp;lt;</span> -o <span class="token variable">$@</span>
+<span class="token function makefile"><span class="token function makefile"><span class="token variable language makefile">%</span>.o</span></span><span class="token operator assignment makefile">:</span><span class="token function arguments makefile"><span class="token string unquoted makefile"><span class="token variable language makefile">%</span>.cpp</span></span><span class="token function body makefile">
+</span><span class="token function body makefile">        <span class="token shell"><span class="token variable parameter makefile"><span class="token keyword block begin makefile">$(</span>CC<span class="token keyword block end makefile">)</span></span> <span class="token variable parameter makefile"><span class="token keyword block begin makefile">$(</span>CFLAGS<span class="token keyword block end makefile">)</span></span> <span class="token function-call shell"><span class="token variable function shell">-c</span></span><span class="token function-call arguments shell"> $</span><span class="token operator logical job shell">&amp;</span><span class="token function-call shell"><span class="token variable function shell">lt</span></span><span class="token operator logical continue shell">;</span> <span class="token function-call shell"><span class="token variable function shell">-o</span></span><span class="token function-call arguments shell"> <span class="token variable language automatic makefile">$@</span></span></span>
 
-<span class="token target symbol">Targetfile</span><span class="token punctuation">:</span><span class="token variable">$</span><span class="token punctuation">(</span>OBJS<span class="token punctuation">)</span>
-        <span class="token variable">$</span><span class="token punctuation">(</span>CC<span class="token punctuation">)</span> <span class="token variable">$</span><span class="token punctuation">(</span>OBJS<span class="token punctuation">)</span> -lglut -lglui  -o Targetfile
+</span><span class="token function makefile"><span class="token function makefile">Targetfile</span></span><span class="token operator assignment makefile">:</span><span class="token function arguments makefile"><span class="token string unquoted makefile"><span class="token variable parameter makefile"><span class="token keyword block begin makefile">$(</span>OBJS<span class="token keyword block end makefile">)</span></span></span></span><span class="token function body makefile">
+</span><span class="token function body makefile">        <span class="token shell"><span class="token variable parameter makefile"><span class="token keyword block begin makefile">$(</span>CC<span class="token keyword block end makefile">)</span></span> <span class="token variable parameter makefile"><span class="token keyword block begin makefile">$(</span>OBJS<span class="token keyword block end makefile">)</span></span> <span class="token function-call shell"><span class="token variable function shell">-lglut</span></span><span class="token function-call arguments shell"><span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>lglui</span><span class="token variable parameter option shell"><span class="token punctuation definition parameter shell">  -</span>o</span> Targetfile</span></span>
 
-<span class="token target symbol">clean</span><span class="token punctuation">:</span>
-        <span class="token operator">@</span>/bin/rm *.o&lt;/pre><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="使用-automake-等工具"><a href="#使用-automake-等工具" class="headerlink" title="使用 automake 等工具"></a>使用 automake 等工具</h2><p>首先运行 autoscan，这之后会生成一个 configure.scan 文件，修改为 configure.in，并编辑。典型的一个文件如下，AC_CONFIG_SRCDIR,AC_CONFIG_HEADER 这两项还不知道干什么用的，如果不注释掉后面 automake 会出现错误，那就先注释掉吧。重点修改 AC_INIT，AC_INIT_AUTOMAKE。AC_CHECK 那些不用管，后面提示-lglui 提示要注意，这是需要链接的库文件，这里链接 glui 这个库。</p>
-<pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile"><span class="token comment">#                                               -- Autoconf --</span>
-<span class="token comment"># Process this file with autoconf to produce a configure script.</span>
+</span><span class="token function makefile"><span class="token function makefile">clean</span></span><span class="token operator assignment makefile">:</span>
+<span class="token function arguments makefile"></span><span class="token function body makefile"></span><span class="token function body makefile">        <span class="token boolean makefile">@</span><span class="token shell"><span class="token function-call shell"><span class="token variable function shell">/bin/rm</span></span><span class="token function-call arguments shell"> <span class="token operator regexp quantifier shell">*</span>.o<span class="token operator assignment redirection shell">&lt;</span>/pre<span class="token operator assignment redirection shell">&gt;</span>
+</span></span></span></span></code></pre><h2 id="使用-automake-等工具"><a href="#使用-automake-等工具" class="headerlink" title="使用 automake 等工具"></a>使用 automake 等工具</h2>
+<p>首先运行 autoscan，这之后会生成一个 configure.scan 文件，修改为 configure.in，并编辑。典型的一个文件如下，AC_CONFIG_SRCDIR,AC_CONFIG_HEADER 这两项还不知道干什么用的，如果不注释掉后面 automake 会出现错误，那就先注释掉吧。重点修改 AC_INIT，AC_INIT_AUTOMAKE。AC_CHECK 那些不用管，后面提示-lglui 提示要注意，这是需要链接的库文件，这里链接 glui 这个库。</p>
+<pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile"><span class="token makefile"><span class="token comment number-sign makefile"><span class="token punctuation definition comment makefile">#</span>                                               -- Autoconf --</span>
+<span class="token comment number-sign makefile"><span class="token punctuation definition comment makefile">#</span> Process this file with autoconf to produce a configure script.</span>
 
-AC_PREREQ<span class="token punctuation">(</span>2.61<span class="token punctuation">)</span>
-AC_INIT<span class="token punctuation">(</span>TSPdemo, 1.0, moorekang<span class="token operator">@</span>gamil.com<span class="token punctuation">)</span>
-AM_INIT_AUTOMAKE<span class="token punctuation">(</span>TSPdemo, 1.0<span class="token punctuation">)</span>
-<span class="token comment">#AC_CONFIG_SRCDIR([Elastic_Alg.cpp])</span>
-<span class="token comment">#AC_CONFIG_HEADER([config.h])</span>
+AC_PREREQ(2.61)
+AC_INIT(TSPdemo, 1.0, moorekang@gamil.com)
+AM_INIT_AUTOMAKE(TSPdemo, 1.0)
+<span class="token comment number-sign makefile"><span class="token punctuation definition comment makefile">#</span>AC_CONFIG_SRCDIR([Elastic_Alg.cpp])</span>
+<span class="token comment number-sign makefile"><span class="token punctuation definition comment makefile">#</span>AC_CONFIG_HEADER([config.h])</span>
 
 
-<span class="token comment"># Checks for programs.</span>
+<span class="token comment number-sign makefile"><span class="token punctuation definition comment makefile">#</span> Checks for programs.</span>
 AC_PROG_CXX
 AC_PROG_CC
 
 
-<span class="token comment"># Checks for libraries.</span>
-AC_CHECK_LIB<span class="token punctuation">(</span>[glui], [main]<span class="token punctuation">)</span>
-AC_CHECK_LIB<span class="token punctuation">(</span>[glut], [main]<span class="token punctuation">)</span>
+<span class="token comment number-sign makefile"><span class="token punctuation definition comment makefile">#</span> Checks for libraries.</span>
+AC_CHECK_LIB([glui], [main])
+AC_CHECK_LIB([glut], [main])
 
-<span class="token comment"># Checks for header files.</span>
+<span class="token comment number-sign makefile"><span class="token punctuation definition comment makefile">#</span> Checks for header files.</span>
 AC_HEADER_STDC
-AC_CHECK_HEADERS<span class="token punctuation">(</span>[stdlib.h]<span class="token punctuation">)</span>
+AC_CHECK_HEADERS([stdlib.h])
 
-<span class="token comment"># Checks for typedefs, structures, and compiler characteristics.</span>
+<span class="token comment number-sign makefile"><span class="token punctuation definition comment makefile">#</span> Checks for typedefs, structures, and compiler characteristics.</span>
 AC_HEADER_STDBOOL
 AC_C_CONST
 AC_C_INLINE
 AC_TYPE_SIZE_T
 
 
-<span class="token comment"># Checks for library functions.</span>
-AC_CHECK_FUNCS<span class="token punctuation">(</span>[sqrt]<span class="token punctuation">)</span>
-<span class="token comment">#AC_CONFIG_FILES([makefile])</span>
-AC_OUTPUT<span class="token punctuation">(</span>Makefile<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token comment number-sign makefile"><span class="token punctuation definition comment makefile">#</span> Checks for library functions.</span>
+AC_CHECK_FUNCS([sqrt])
+<span class="token comment number-sign makefile"><span class="token punctuation definition comment makefile">#</span>AC_CONFIG_FILES([makefile])</span>
+AC_OUTPUT(Makefile)
+</span></code></pre>
 <p>编写 Makefile.am，如下面这样。和 makefile 一样，写上可执行文件依赖于的源文件，_LDADD 是要链接的库文件名。</p>
-<pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile">AUTOMAKE_OPTIONS<span class="token operator">=</span>foreign
-bin_PROGRAMS<span class="token operator">=</span>TSPdemo
-TSPdemo_SOURCES<span class="token operator">=</span> Elastic_Alg.cpp  MyMap.cpp   mathlib.cpp \
-Elastic_Alg.h    MyMap.h      mathlib.h \
-LaoMan.cpp       SOM.cpp        pointdef.h \
-LaoMan.h         SOM.h      main.cpp
-TSPdemo_LDADD <span class="token operator">=</span> -lglut<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile"><span class="token makefile"><span class="token variable other makefile">AUTOMAKE_OPTIONS</span><span class="token operator assignment makefile">=</span><span class="token string unquoted makefile">foreign</span>
+<span class="token variable other makefile">bin_PROGRAMS</span><span class="token operator assignment makefile">=</span><span class="token string unquoted makefile">TSPdemo</span>
+<span class="token variable other makefile">TSPdemo_SOURCES</span><span class="token operator assignment makefile">=</span> <span class="token string unquoted makefile">Elastic_Alg.cpp  MyMap.cpp   mathlib.cpp <span class="token punctuation separator continuation line makefile">\</span>
+Elastic_Alg.h    MyMap.h      mathlib.h <span class="token punctuation separator continuation line makefile">\</span>
+LaoMan.cpp       SOM.cpp        pointdef.h <span class="token punctuation separator continuation line makefile">\</span>
+LaoMan.h         SOM.h      main.cpp</span>
+<span class="token variable other makefile">TSPdemo_LDADD</span> <span class="token operator assignment makefile">=</span> <span class="token string unquoted makefile">-lglut</span>
+</span></code></pre>
 <p>然后执行 aclocal，和 autoconf，最后 automake —add-missing 生成 configure 文件。这就完成了，下面就是 unix 下编译安装软件的三个步骤了，./configure，make, makeinstall 等。</p>
-<p>写得比较粗略，详细查看<a target="_blank" rel="noopener" href="http://wenku.baidu.com/view/b01bed02de80d4d8d15a4f4e.html">这个文档</a>。</p>
+<p>写得比较粗略，详细查看<a href="http://wenku.baidu.com/view/b01bed02de80d4d8d15a4f4e.html">这个文档</a>。</p>
 <!-- Page published by Emacs Muse ends here -->
 </section>
 
@@ -270,16 +262,16 @@ TSPdemo_LDADD <span class="token operator">=</span> -lglut<span aria-hidden="tru
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Linux" >
-    <span class="tag-code">Linux</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Backup" >
-    <span class="tag-code">Backup</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#makefile" >
-    <span class="tag-code">makefile</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -331,7 +323,7 @@ TSPdemo_LDADD <span class="token operator">=</span> -lglut<span aria-hidden="tru
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8-Makefile"><span class="toc-nav-text">使用 Makefile</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E4%BD%BF%E7%94%A8-automake-%E7%AD%89%E5%B7%A5%E5%85%B7"><span class="toc-nav-text">使用 automake 等工具</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#使用-Makefile"><span class="toc-nav-text">使用 Makefile</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#使用-automake-等工具"><span class="toc-nav-text">使用 automake 等工具</span></a></li></ol>
     
   </div>
 </aside>
@@ -342,7 +334,7 @@ TSPdemo_LDADD <span class="token operator">=</span> -lglut<span aria-hidden="tru
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/using-automake/';
+    var url = 'http://catcoding.me//p/using-automake/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -403,7 +395,7 @@ TSPdemo_LDADD <span class="token operator">=</span> -lglut<span aria-hidden="tru
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -428,8 +420,6 @@ TSPdemo_LDADD <span class="token operator">=</span> -lglut<span aria-hidden="tru
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

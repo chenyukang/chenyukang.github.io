@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,26 +178,33 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>包管理器是 Linux 上一个经常用的东西，我觉得下面这几个命令是非常有用的，便于查询包的状态，或者搜索我该安装哪些包。</p>
-<h2 id="apt-cache"><a href="#apt-cache" class="headerlink" title="apt-cache"></a>apt-cache</h2><p>用来根据名字查询软件包，比如 apt-cache search vim 查询 vim 相关的。</p>
-<h2 id="apt-file"><a href="#apt-file" class="headerlink" title="apt-file"></a>apt-file</h2><p>用来根据某个文件查询软件包，这在编译程序的时候非常有用，可以通过所需要的头文件去查询要安装的东西，可以避免去 Google 了。注意使用之前需要安装并 update。</p>
-<pre><code>sudo apt-get install apt-file
+<h2 id="apt-cache"><a href="#apt-cache" class="headerlink" title="apt-cache"></a>apt-cache</h2>
+<p>用来根据名字查询软件包，比如 apt-cache search vim 查询 vim 相关的。</p>
+<h2 id="apt-file"><a href="#apt-file" class="headerlink" title="apt-file"></a>apt-file</h2>
+<p>用来根据某个文件查询软件包，这在编译程序的时候非常有用，可以通过所需要的头文件去查询要安装的东西，可以避免去 Google 了。注意使用之前需要安装并 update。</p>
+sudo apt-get install apt-file
 sudo apt-file update
-</code></pre><p>比如我在编译某个软件的时候找不到&lt;readline/readline.h&gt;，使用下面的命令来查询一下：</p>
-<pre><code>sudo apt-file readline.h
-</code></pre><p>结果中有这么一行，那么我就知道继续安装 libreadline5-dev 库就行了。</p>
-<h2 id="dpkg"><a href="#dpkg" class="headerlink" title="dpkg"></a>dpkg</h2><p>apt 是基于 dpkg 开发的，dpkg 是更古老更底层的一套工具，Debian 系统管理器的基础。</p>
-<pre><code>dpkg -l 列出所有已经安装的包
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+<p>比如我在编译某个软件的时候找不到&lt;readline/readline.h&gt;，使用下面的命令来查询一下：</p>
+sudo apt-file readline.h
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+<p>结果中有这么一行，那么我就知道继续安装 libreadline5-dev 库就行了。</p>
+<h2 id="dpkg"><a href="#dpkg" class="headerlink" title="dpkg"></a>dpkg</h2>
+<p>apt 是基于 dpkg 开发的，dpkg 是更古老更底层的一套工具，Debian 系统管理器的基础。</p>
+dpkg -l 列出所有已经安装的包
 dpkg -s vim 列出包 vim 的状态
 dpkg -L vim 列出本地所有 vim 相关联系的文件
 dpkg -S vim 搜索所属包的内容
-</code></pre><h2 id="brew"><a href="#brew" class="headerlink" title="brew"></a>brew</h2><p>Mac 下推荐 Brew 来替代 apt，大部分的开源包都有对应的地址源了。我没使用过 MacPorts，无法比较这两套的差别。<br>不过我个人很喜欢的一点是 brew 所有安装的东西都在<code>brew -prefix</code>/Cellar 这个统一目录下，</p>
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre><h2 id="brew"><a href="#brew" class="headerlink" title="brew"></a>brew</h2>
+<p>Mac 下推荐 Brew 来替代 apt，大部分的开源包都有对应的地址源了。我没使用过 MacPorts，无法比较这两套的差别。
+不过我个人很喜欢的一点是 brew 所有安装的东西都在<code>brew -prefix</code>/Cellar 这个统一目录下，</p>
 <p>brew 相关的命令：</p>
-<pre><code>brew list   — 列出已安装的软件
+brew list   — 列出已安装的软件
 brew update — 更新 Homebrew
 brew home   — 用浏览器打开
 brew info   — 显示软件内容信息
 brew deps   - 显示包依赖
-</code></pre></section>
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre></section>
 
     <p></p>
 
@@ -227,8 +222,8 @@ brew deps   - 显示包依赖
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#工具" >
-    <span class="tag-code">工具</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -291,7 +286,7 @@ brew deps   - 显示包依赖
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/apt-usage/';
+    var url = 'http://catcoding.me//p/apt-usage/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -352,7 +347,7 @@ brew deps   - 显示包依赖
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -377,8 +372,6 @@ brew deps   - 显示包依赖
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

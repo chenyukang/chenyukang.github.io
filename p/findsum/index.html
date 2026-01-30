@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,75 +178,79 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>前些天在班级群里看到一个笔试题：</p>
-<p><blockquote></p>
-<p><p class="quoted">从 1 到 100000 中任意拿掉两个数字，把剩下的 99998 个数顺序打乱，并且放入数组 A 中。要求只扫描一遍，把这两个数找出来；可以使用最多不超过 5 个局部变量，不能使用数组变量，并且不能改变原数组的值。<br></blockquote><br>也想不到什么更好的解法，原解法是顺序扫一边求得所有数的乘积 (mul_res)、和 (sum_res)。用 (N!)/mul_res 得到两个数的乘积，1 到 100000 的和减去 sum_res 得到两个数之和。解这个方程得到两个数。关键是 N！太大了，C 会溢出。刚开始想想乘积每次模 100000，后来写了一下还是不对的，因为模 100000 中可能就出现了 0，后面全为 0 了。最后想到这么一个办法，不过中间 除法和比较多。也许有更快的解法。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">//1 到 100 000</span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;math.h></span></span>
+<blockquote>
+<p class="quoted">从 1 到 100000 中任意拿掉两个数字，把剩下的 99998 个数顺序打乱，并且放入数组 A 中。要求只扫描一遍，把这两个数找出来；可以使用最多不超过 5 个局部变量，不能使用数组变量，并且不能改变原数组的值。
+</blockquote>
+也想不到什么更好的解法，原解法是顺序扫一边求得所有数的乘积 (mul_res)、和 (sum_res)。用 (N!)/mul_res 得到两个数的乘积，1 到 100000 的和减去 sum_res 得到两个数之和。解这个方程得到两个数。关键是 N！太大了，C 会溢出。刚开始想想乘积每次模 100000，后来写了一下还是不对的，因为模 100000 中可能就出现了 0，后面全为 0 了。最后想到这么一个办法，不过中间 除法和比较多。也许有更快的解法。
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>1 到 100 000
+</span><span class="token preprocessor include c"><span class="token keyword import include c">#include</span> <span class="token string other lt-gt include c"><span class="token punctuation definition string begin c">&lt;</span>iostream<span class="token punctuation definition string end c">&gt;</span></span>
+</span><span class="token preprocessor include c"><span class="token keyword import include c">#include</span> <span class="token string other lt-gt include c"><span class="token punctuation definition string begin c">&lt;</span>math.h<span class="token punctuation definition string end c">&gt;</span></span>
+</span>
+using namespace std<span class="token punctuation terminator c">;</span>
+<span class="token preprocessor macro c"><span class="token keyword import define c">#define</span></span><span class="token preprocessor macro c"> <span class="entity name constant preprocessor c">N</span></span><span class="token preprocessor macro c"> <span class="token number c">100000</span></span>
+<span class="token keyword c">typedef</span> <span class="token keyword c">long</span> <span class="token keyword c">long</span> <span class="token class-name typedef c">LL</span><span class="token punctuation terminator c">;</span>
 
-using namespace std<span class="token punctuation">;</span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">N</span> <span class="token expression"><span class="token number">100000</span></span></span>
-<span class="token keyword">typedef</span> <span class="token keyword">long</span> <span class="token keyword">long</span> LL<span class="token punctuation">;</span>
+LL a<span class="token punctuation terminator c">;</span>
+LL b<span class="token punctuation terminator c">;</span>
+LL vec<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>N<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+<span class="token keyword c">int</span> cnt<span class="token punctuation terminator c">;</span>
+LL  MAX_MUL<span class="token punctuation terminator c">;</span>
 
-LL a<span class="token punctuation">;</span>
-LL b<span class="token punctuation">;</span>
-LL vec<span class="token punctuation">[</span>N<span class="token punctuation">]</span><span class="token punctuation">;</span>
-<span class="token keyword">int</span> cnt<span class="token punctuation">;</span>
-LL  MAX_MUL<span class="token punctuation">;</span>
+<span class="token keyword c">void</span> <span class="token function c"><span class="token function c">Find</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token keyword c">const</span> LL<span class="token operator c">*</span> <span class="token variable parameter c">vec</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    <span class="token keyword c">int</span> sum<span class="token operator assignment c">=</span><span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+    LL  mul<span class="token operator assignment c">=</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+    LL  Now<span class="token operator assignment c">=</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">for</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token keyword c">int</span> i<span class="token operator assignment c">=</span><span class="token number c">0</span><span class="token punctuation terminator c">;</span>i<span class="token operator comparison c">&lt;</span>cnt<span class="token punctuation terminator c">;</span>i<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c">)</span></span>
+    <span class="token block c"><span class="token punctuation section block begin c">{</span>
+        sum<span class="token operator assignment augmented c">+=</span>vec<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>i<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+        <span class="token keyword c">while</span><span class="token group c"><span class="token punctuation section group begin c">(</span>mul<span class="token operator arithmetic c">%</span>vec<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>i<span class="token punctuation section brackets end c">]</span></span><span class="token operator comparison c">!=</span><span class="token number c">0</span><span class="token punctuation section group end c">)</span></span>
+            mul<span class="token operator assignment augmented c">*=</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span>Now<span class="token punctuation section group end c">)</span></span><span class="token punctuation terminator c">;</span>
+        mul<span class="token operator assignment augmented c">/=</span>vec<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>i<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+    <span class="token keyword c">while</span><span class="token group c"><span class="token punctuation section group begin c">(</span>Now<span class="token operator comparison c">&lt;</span><span class="token number c">100000</span><span class="token punctuation section group end c">)</span></span>
+         mul<span class="token operator assignment augmented c">*=</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span>Now<span class="token punctuation section group end c">)</span></span><span class="token punctuation terminator c">;</span>
+    LL diff<span class="token operator assignment c">=</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token number c">1</span><span class="token operator arithmetic c">+</span>N<span class="token punctuation section group end c">)</span></span><span class="token operator c">*</span>N<span class="token punctuation section group end c">)</span></span><span class="token operator arithmetic c">/</span><span class="token number c">2</span><span class="token operator arithmetic c">-</span>sum<span class="token punctuation terminator c">;</span>
+    cout<span class="token operator arithmetic c">&lt;&lt;</span>diff<span class="token operator arithmetic c">&lt;&lt;</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span> <span class="token punctuation definition string end c">&quot;</span></span><span class="token operator arithmetic c">&lt;&lt;</span>mul<span class="token operator arithmetic c">&lt;&lt;</span>endl<span class="token punctuation terminator c">;</span>
+    LL a<span class="token operator assignment c">=</span><span class="token group c"><span class="token punctuation section group begin c">(</span>diff<span class="token operator arithmetic c">+</span><span class="token function-call c"><span class="token function C99 c">sqrt</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">diff<span class="token operator c">*</span>diff<span class="token operator arithmetic c">-</span><span class="token number c">4</span><span class="token operator c">*</span>mul</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation section group end c">)</span></span><span class="token operator arithmetic c">/</span><span class="token number c">2</span><span class="token punctuation terminator c">;</span>
+    cout<span class="token operator arithmetic c">&lt;&lt;</span>a<span class="token operator arithmetic c">&lt;&lt;</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span> <span class="token punctuation definition string end c">&quot;</span></span><span class="token operator arithmetic c">&lt;&lt;</span>diff<span class="token operator arithmetic c">-</span>a<span class="token operator arithmetic c">&lt;&lt;</span>endl<span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
 
-<span class="token keyword">void</span> <span class="token function">Find</span><span class="token punctuation">(</span><span class="token keyword">const</span> LL<span class="token operator">*</span> vec<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> sum<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
-    LL  mul<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
-    LL  Now<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span>cnt<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
-    <span class="token punctuation">&#123;</span>
-        sum<span class="token operator">+=</span>vec<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token keyword">while</span><span class="token punctuation">(</span>mul<span class="token operator">%</span>vec<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">!=</span><span class="token number">0</span><span class="token punctuation">)</span>
-            mul<span class="token operator">*=</span><span class="token punctuation">(</span><span class="token operator">++</span>Now<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        mul<span class="token operator">/=</span>vec<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span>Now<span class="token operator">&lt;</span><span class="token number">100000</span><span class="token punctuation">)</span>
-         mul<span class="token operator">*=</span><span class="token punctuation">(</span><span class="token operator">++</span>Now<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    LL diff<span class="token operator">=</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">+</span>N<span class="token punctuation">)</span><span class="token operator">*</span>N<span class="token punctuation">)</span><span class="token operator">/</span><span class="token number">2</span><span class="token operator">-</span>sum<span class="token punctuation">;</span>
-    cout<span class="token operator">&lt;&lt;</span>diff<span class="token operator">&lt;&lt;</span><span class="token string">" "</span><span class="token operator">&lt;&lt;</span>mul<span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-    LL a<span class="token operator">=</span><span class="token punctuation">(</span>diff<span class="token operator">+</span><span class="token function">sqrt</span><span class="token punctuation">(</span>diff<span class="token operator">*</span>diff<span class="token operator">-</span><span class="token number">4</span><span class="token operator">*</span>mul<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token number">2</span><span class="token punctuation">;</span>
-    cout<span class="token operator">&lt;&lt;</span>a<span class="token operator">&lt;&lt;</span><span class="token string">" "</span><span class="token operator">&lt;&lt;</span>diff<span class="token operator">-</span>a<span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token function">srand</span><span class="token punctuation">(</span><span class="token function">time</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    a<span class="token operator">=</span><span class="token punctuation">(</span><span class="token function">rand</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">%</span><span class="token number">100000</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">;</span>
-    b<span class="token operator">=</span><span class="token punctuation">(</span><span class="token function">rand</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">%</span><span class="token number">100000</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">;</span>
-    cnt<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>i<span class="token operator">&lt;=</span>N<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>i<span class="token operator">!=</span>a<span class="token operator">&amp;&amp;</span>i<span class="token operator">!=</span>b<span class="token punctuation">)</span>
-            vec<span class="token punctuation">[</span>cnt<span class="token operator">++</span><span class="token punctuation">]</span><span class="token operator">=</span>i<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    cout<span class="token operator">&lt;&lt;</span>a<span class="token operator">&lt;&lt;</span><span class="token string">" "</span><span class="token operator">&lt;&lt;</span>b<span class="token operator">&lt;&lt;</span><span class="token string">" "</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-    cout<span class="token operator">&lt;&lt;</span>a<span class="token operator">+</span>b<span class="token operator">&lt;&lt;</span><span class="token string">" "</span><span class="token operator">&lt;&lt;</span>a<span class="token operator">*</span>b<span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-    <span class="token function">Find</span><span class="token punctuation">(</span>vec<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<hr>
+<span class="token keyword c">int</span> <span class="token function c"><span class="token function c">main</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    <span class="token function-call c"><span class="token function C99 c">srand</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token function-call c"><span class="token function C99 c">time</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token boolean c">NULL</span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+    a<span class="token operator assignment c">=</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token function-call c"><span class="token function C99 c">rand</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token operator arithmetic c">%</span><span class="token number c">100000</span><span class="token punctuation section group end c">)</span></span><span class="token operator arithmetic c">+</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+    b<span class="token operator assignment c">=</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token function-call c"><span class="token function C99 c">rand</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token operator arithmetic c">%</span><span class="token number c">100000</span><span class="token punctuation section group end c">)</span></span><span class="token operator arithmetic c">+</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+    cnt<span class="token operator assignment c">=</span><span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">for</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token keyword c">int</span> i<span class="token operator assignment c">=</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>i<span class="token operator comparison c">&lt;=</span>N<span class="token punctuation terminator c">;</span>i<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c">)</span></span>
+    <span class="token block c"><span class="token punctuation section block begin c">{</span>
+        <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span>i<span class="token operator comparison c">!=</span>a<span class="token operator arithmetic c">&amp;&amp;</span>i<span class="token operator comparison c">!=</span>b<span class="token punctuation section group end c">)</span></span>
+            vec<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>cnt<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section brackets end c">]</span></span><span class="token operator assignment c">=</span>i<span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+    cout<span class="token operator arithmetic c">&lt;&lt;</span>a<span class="token operator arithmetic c">&lt;&lt;</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span> <span class="token punctuation definition string end c">&quot;</span></span><span class="token operator arithmetic c">&lt;&lt;</span>b<span class="token operator arithmetic c">&lt;&lt;</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span> <span class="token punctuation definition string end c">&quot;</span></span><span class="token operator arithmetic c">&lt;&lt;</span>endl<span class="token punctuation terminator c">;</span>
+    cout<span class="token operator arithmetic c">&lt;&lt;</span>a<span class="token operator arithmetic c">+</span>b<span class="token operator arithmetic c">&lt;&lt;</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span> <span class="token punctuation definition string end c">&quot;</span></span><span class="token operator arithmetic c">&lt;&lt;</span>a<span class="token operator c">*</span>b<span class="token operator arithmetic c">&lt;&lt;</span>endl<span class="token punctuation terminator c">;</span>
+    <span class="token function-call c"><span class="token variable function c">Find</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">vec</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre>
+<hr />
 <p>经熊师兄指点，上面的解法还是不对，如果 vec 前面刚好为比较大的素数，mul 就溢出了。正确的解法应该为求 x+y=B, x^2+y^2=A, 1-100000 的平方和可以用 double 存下来，然后减去 vec 里面的平方和就得到 x^2+y^2 的值。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">Find</span><span class="token punctuation">(</span><span class="token keyword">const</span> LL<span class="token operator">*</span> vec<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">double</span> sum<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">double</span>  square_sum<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span>cnt<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
-    <span class="token punctuation">&#123;</span>
-        sum<span class="token operator">+=</span>vec<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        square_sum<span class="token operator">+=</span><span class="token punctuation">(</span>vec<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">*</span>vec<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">double</span> diff<span class="token operator">=</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">+</span>N<span class="token punctuation">)</span><span class="token operator">*</span>N<span class="token punctuation">)</span><span class="token operator">/</span><span class="token number">2</span><span class="token operator">-</span>sum<span class="token punctuation">;</span>
-    <span class="token keyword">double</span> square_sum_diff<span class="token operator">=</span>
-        <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span>N<span class="token operator">*</span><span class="token punctuation">(</span>N<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span>N<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token number">6</span> <span class="token operator">-</span> square_sum<span class="token punctuation">;</span>
-    cout<span class="token operator">&lt;&lt;</span>diff<span class="token operator">&lt;&lt;</span><span class="token string">" "</span><span class="token operator">&lt;&lt;</span>square_sum_diff<span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-    a<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token operator">*</span><span class="token punctuation">(</span>diff<span class="token punctuation">)</span><span class="token operator">+</span><span class="token function">sqrt</span><span class="token punctuation">(</span><span class="token number">8</span><span class="token operator">*</span>square_sum_diff<span class="token operator">-</span><span class="token number">4</span><span class="token operator">*</span>diff<span class="token operator">*</span>diff<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token number">4</span><span class="token punctuation">;</span>
-    cout<span class="token operator">&lt;&lt;</span>a<span class="token operator">&lt;&lt;</span><span class="token string">" "</span><span class="token operator">&lt;&lt;</span>diff<span class="token operator">-</span>a<span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></section>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">void</span> <span class="token function c"><span class="token function c">Find</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token keyword c">const</span> LL<span class="token operator c">*</span> <span class="token variable parameter c">vec</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    <span class="token keyword c">double</span> sum<span class="token operator assignment c">=</span><span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">double</span>  square_sum<span class="token operator assignment c">=</span><span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">for</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token keyword c">int</span> i<span class="token operator assignment c">=</span><span class="token number c">0</span><span class="token punctuation terminator c">;</span>i<span class="token operator comparison c">&lt;</span>cnt<span class="token punctuation terminator c">;</span>i<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c">)</span></span>
+    <span class="token block c"><span class="token punctuation section block begin c">{</span>
+        sum<span class="token operator assignment augmented c">+=</span>vec<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>i<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+        square_sum<span class="token operator assignment augmented c">+=</span><span class="token group c"><span class="token punctuation section group begin c">(</span>vec<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>i<span class="token punctuation section brackets end c">]</span></span><span class="token operator c">*</span>vec<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>i<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation section group end c">)</span></span><span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+    <span class="token keyword c">double</span> diff<span class="token operator assignment c">=</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token number c">1</span><span class="token operator arithmetic c">+</span>N<span class="token punctuation section group end c">)</span></span><span class="token operator c">*</span>N<span class="token punctuation section group end c">)</span></span><span class="token operator arithmetic c">/</span><span class="token number c">2</span><span class="token operator arithmetic c">-</span>sum<span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">double</span> square_sum_diff<span class="token operator assignment c">=</span>
+        <span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token keyword c">double</span><span class="token punctuation section group end c">)</span></span>N<span class="token operator c">*</span><span class="token group c"><span class="token punctuation section group begin c">(</span>N<span class="token operator arithmetic c">+</span><span class="token number c">1</span><span class="token punctuation section group end c">)</span></span><span class="token operator c">*</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token number c">2</span><span class="token operator c">*</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token keyword c">double</span><span class="token punctuation section group end c">)</span></span>N<span class="token operator arithmetic c">+</span><span class="token number c">1</span><span class="token punctuation section group end c">)</span></span><span class="token punctuation section group end c">)</span></span><span class="token operator arithmetic c">/</span><span class="token number c">6</span> <span class="token operator arithmetic c">-</span> square_sum<span class="token punctuation terminator c">;</span>
+    cout<span class="token operator arithmetic c">&lt;&lt;</span>diff<span class="token operator arithmetic c">&lt;&lt;</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span> <span class="token punctuation definition string end c">&quot;</span></span><span class="token operator arithmetic c">&lt;&lt;</span>square_sum_diff<span class="token operator arithmetic c">&lt;&lt;</span>endl<span class="token punctuation terminator c">;</span>
+    a<span class="token operator assignment c">=</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token number c">2</span><span class="token operator c">*</span><span class="token group c"><span class="token punctuation section group begin c">(</span>diff<span class="token punctuation section group end c">)</span></span><span class="token operator arithmetic c">+</span><span class="token function-call c"><span class="token function C99 c">sqrt</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token number c">8</span><span class="token operator c">*</span>square_sum_diff<span class="token operator arithmetic c">-</span><span class="token number c">4</span><span class="token operator c">*</span>diff<span class="token operator c">*</span>diff</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation section group end c">)</span></span><span class="token operator arithmetic c">/</span><span class="token number c">4</span><span class="token punctuation terminator c">;</span>
+    cout<span class="token operator arithmetic c">&lt;&lt;</span>a<span class="token operator arithmetic c">&lt;&lt;</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span> <span class="token punctuation definition string end c">&quot;</span></span><span class="token operator arithmetic c">&lt;&lt;</span>diff<span class="token operator arithmetic c">-</span>a<span class="token operator arithmetic c">&lt;&lt;</span>endl<span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre></section>
 
     <p></p>
 
@@ -276,8 +268,8 @@ LL  MAX_MUL<span class="token punctuation">;</span>
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -288,17 +280,17 @@ LL  MAX_MUL<span class="token punctuation">;</span>
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/p/astart-k-shortest-path/">
+      <a class="nav-left" href="/p/programming-peal/">
         <span class="nav-arrow">← </span>
         
-          A*算法与 K-shortest path 问题
+          《编程珠玑》：代码优化
         
       </a>
     
     
-      <a class="nav-right" href="/p/sicp/">
+      <a class="nav-right" href="/p/astart-k-shortest-path/">
         
-          魔法书：SICP
+          A*算法与 K-shortest path 问题
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -330,7 +322,7 @@ LL  MAX_MUL<span class="token punctuation">;</span>
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/findsum/';
+    var url = 'http://catcoding.me//p/findsum/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -391,7 +383,7 @@ LL  MAX_MUL<span class="token punctuation">;</span>
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -416,8 +408,6 @@ LL  MAX_MUL<span class="token punctuation">;</span>
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

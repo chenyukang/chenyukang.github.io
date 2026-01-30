@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,20 +178,23 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><h2>cflow</h2>
-
-<p><a target="_blank" rel="noopener" href="http://www.gnu.org/software/cflow/">cflow</a>是个比较古老的程序 (好像比我老一岁)，主要是用来打印 C 程序的函数调用关系，通过函数调用关系能大概看一下程序的流程。最近看了一下这个程序的代码，主要分为两个小程序组成。首先是 prcc.c 这个程序，作用是读源文件，提取出函数名称，然后生成一个函数列表。第一列是调用函数，第二列是被调用的函数名称 (如果是函数声明则这两列相同)。第二个程序 prcg.c 是读取函数关系，里面建起一个有向无环图。根据这个图加上缩进打印出函数调用轮廓，<a target="_blank" rel="noopener" href="http://www.gnu.org/software/cflow/sample.html">这里</a>有一个例子。最后是一个脚本 cflow.sh，其核心代码就是。</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">prcc demo.c <span class="token operator">|</span> prcg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><a href="http://www.gnu.org/software/cflow/">cflow</a>是个比较古老的程序 (好像比我老一岁)，主要是用来打印 C 程序的函数调用关系，通过函数调用关系能大概看一下程序的流程。最近看了一下这个程序的代码，主要分为两个小程序组成。首先是 prcc.c 这个程序，作用是读源文件，提取出函数名称，然后生成一个函数列表。第一列是调用函数，第二列是被调用的函数名称 (如果是函数声明则这两列相同)。第二个程序 prcg.c 是读取函数关系，里面建起一个有向无环图。根据这个图加上缩进打印出函数调用轮廓，<a href="http://www.gnu.org/software/cflow/sample.html">这里</a>有一个例子。最后是一个脚本 cflow.sh，其核心代码就是。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">prcc</span></span><span class="token function-call arguments shell"> demo.c</span> <span class="token operator logical pipe shell">|</span> <span class="token function-call shell"><span class="token variable function shell">prcg</span></span>
+</span></code></pre>
 <p>这是典型的通过管道把小程序组起来的例子。</p>
-<p><h2>life is short , use Python</h2><br>闲着的时候在这个程序上做了些小工作。既然有了第一个程序，那也可以用 python 来快速写个程序继续做些工作。首先想到的是写个程序把函数名打印出来，在有调用关系的函数之间用直线连起来。python 就是容易实现。这里有一个问题，就是怎么排列函数名的位置，使得连线不怎么相交，因为相交起来就不容易看到函数之间的关系了。不好解决，还是用了以前《集体智慧编程》里面的优化函数，也就是优化问题。通用思路就是试着移动各个函数的位置，朝着相交点最少的部分移动 (这里给一个解，相交点的个数为评估函数)。效果不是很好，当函数比较多的时候哪种算法都比较慢，而且交点看起来不可避免。这是一个结果。运行方法是：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">prcc demo.c <span class="token operator">|</span> python drawfuncs.py<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2>life is short , use Python</h2>
+闲着的时候在这个程序上做了些小工作。既然有了第一个程序，那也可以用 python 来快速写个程序继续做些工作。首先想到的是写个程序把函数名打印出来，在有调用关系的函数之间用直线连起来。python 就是容易实现。这里有一个问题，就是怎么排列函数名的位置，使得连线不怎么相交，因为相交起来就不容易看到函数之间的关系了。不好解决，还是用了以前《集体智慧编程》里面的优化函数，也就是优化问题。通用思路就是试着移动各个函数的位置，朝着相交点最少的部分移动 (这里给一个解，相交点的个数为评估函数)。效果不是很好，当函数比较多的时候哪种算法都比较慢，而且交点看起来不可避免。这是一个结果。运行方法是：
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">prcc</span></span><span class="token function-call arguments shell"> demo.c</span> <span class="token operator logical pipe shell">|</span> <span class="token function-call shell"><span class="token variable function shell">python</span></span><span class="token function-call arguments shell"> drawfuncs.py</span>
+</span></code></pre>
 <p>或者</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">find</span>  *.c <span class="token operator">|</span> <span class="token function">xargs</span> prcc<span class="token operator">|</span> python drawfuncs.py<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">find</span></span><span class="token function-call arguments shell">  <span class="token operator regexp quantifier shell">*</span>.c</span> <span class="token operator logical pipe shell">|</span> <span class="token function-call shell"><span class="token variable function shell">xargs</span></span><span class="token function-call arguments shell"> prcc</span><span class="token operator logical pipe shell">|</span> <span class="token function-call shell"><span class="token variable function shell">python</span></span><span class="token function-call arguments shell"> drawfuncs.py</span>
+</span></code></pre>
 <p>来处理多个程序。</p>
-<p><img src="/images/out.jpg" alt="screen" class="img-center" width="70%" height="70%"/><span class="image-caption">screen</span></p>
+<img src="/images/out.jpg" alt="screen" class="img-center" width="70%" height="70%"/>
 <p>然后又想着可以做一个标签一样的东西，把调用深度比较潜的放大，调用深度深的缩小。不连线，位置随机画。这样一眼能看出来这个程序的主要函数是哪些。结果成这样了。</p>
-<p><img src="/images/out5.jpg" alt="screen" class="img-center" width="70%" height="70%"/><span class="image-caption">screen</span></p>
+<img src="/images/out5.jpg" alt="screen" class="img-center" width="70%" height="70%"/>
 <p>位置随便画还是不好，可以分层。然后再相邻层之间的函数有调用关系的再用直线连起来，就变成这样了。清晰一点。既然有函数关系，其实是可以做到更好的，就像上面那个 prcg.c 程序，不过代码要复杂些了。</p>
-<p><img src="/images/out6.jpg" alt="screen" class="img-center" width="70%" height="70%"/><span class="image-caption">screen</span></p>
+<img src="/images/out6.jpg" alt="screen" class="img-center" width="70%" height="70%"/>
 <p>C 要的是运行速度，Python 实现速度快！</p>
 </section>
 
@@ -223,24 +214,24 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Python" >
-    <span class="tag-code">Python</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Tools" >
-    <span class="tag-code">Tools</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Linux" >
-    <span class="tag-code">Linux</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#C" >
-    <span class="tag-code">C</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -251,10 +242,10 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/p/guitar/">
+      <a class="nav-left" href="/p/fuckpaper/">
         <span class="nav-arrow">← </span>
         
-          近期
+          论文吐槽
         
       </a>
     
@@ -292,7 +283,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link"><span class="toc-nav-text">cflow</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link"><span class="toc-nav-text">life is short , use Python</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#cflow"><span class="toc-nav-text">cflow</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#life-is-short-use-Python"><span class="toc-nav-text">life is short , use Python</span></a></li></ol>
     
   </div>
 </aside>
@@ -303,7 +294,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/cflow/';
+    var url = 'http://catcoding.me//p/cflow/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -364,7 +355,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -389,8 +380,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -195,13 +183,14 @@
 <p>首先我问了一个比较宽泛的问题：你如何调试编译器，因为我发现你解决问题非常快。</p>
 <p>compiler-errors: 首先对于一个问题，我会尝试构建一个最小能重现问题的代码用例，根据报错信息或者代码栈看源代码，rust-analyzer 对看代码帮助非常大，我们基本可以很快跳转到任何变量或者函数的定义。使用 VsCode 的 terminal 运行命令，错误栈里的文件信息里面有源代码的路径，ctrl 按下去可以直接跳转到对应的代码行。我对 compiler 的很多部分都了解一些，主要是因为看了不少代码，有时候一看错误信息就能大致判断出问题的位置，如果有必要再去看运行的日志。</p>
 <p><em>VsCode terminal 运行命令直接跳转文件位置这个我学到了，我之前一直习惯在系统终端运行命令，VsCode 只是用来编辑代码。</em></p>
-<p>我：你是否使用 GDB 之类的调试器？<br><strong>compiler-errors:</strong> 我基本不用这个，因为使用 GDB 调试需要另外开一些编译选项，这会让编译变得很慢，而且运行的时候也会变得很慢。我记得很早之前使用过一次，感觉不太好。</p>
+<p>我：你是否使用 GDB 之类的调试器？
+<strong>compiler-errors:</strong> 我基本不用这个，因为使用 GDB 调试需要另外开一些编译选项，这会让编译变得很慢，而且运行的时候也会变得很慢。我记得很早之前使用过一次，感觉不太好。</p>
 <p>我：我进行了两个月的 Rust compiler 开发，所以接触到了很多语言的细节，给我的感受是 Rust 像是一个大杂烩，我能看到 Ruby 的影子，比如链式调用这样的风格，也能看到很多函数式编程的影子，所以这很独特，但我会担心 Rust 未来的发展，是否会太过独特而导致只有一小群人在使用。</p>
 <p><strong>compiler-errors:</strong> 对此我也不是很确定，确实 Rust 比较复杂，有很多问题还没解决，初学者上手的难度比较高，但一个开发者不用掌握所有 Rust 的边边角角也能开始开发，我很肯定，Rust 对于编写和维护大型的、对性能、安全型要求高的项目来说是非常合适的。比如 Rust compiler 这个项目本身，这么庞大的项目我们在 Review 代码的时候其实是比较简单的，主要看实现的逻辑是否有问题，而不会担心内存方面的问题，而且我们也有信心不断地对代码进行重构。Rust 从学术界的编程语言借鉴了不少东西，比如 OCaml 是一门很精美的语言，但是很多年一来一直对并行这块支持不好，工业界的使用范围也比较少。</p>
 <p><em>这些感受和我基本一致，在这么多年我断断续续的学习 Rust 过程中，我从未掌握过 Rust 的所有内容，但我发现从代码层面理解一个 Rust 项目非常容易，我接触过的几个领域的项目都是如此，比如 wasmer, youki, compiler，因为 Cargo 和统一的代码组织方式，还有 rust-analyzer 这样的工具辅助，理解代码相对来说容易很多。</em></p>
 <p>接着我让他帮忙简单看了看我正在做的一个相对比较大的 PR，而后聊了一下他在 aws 工作的情况，这些就不细写了。</p>
 <p>期间也问了一个我觉得自己看代码还没理解的部分，就是 method lookup 的相关实现，他说最好在一个 session 里面来分享这些，这样其他人也可以看到。Compiler team 会定时组织一些技术分享，视频都会上传到 Youtube，感兴趣的可以在这里看：<a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=RustcContributor%3A%3Aexplore">RustcContributor::explore - YouTube</a></p>
-<p>我觉得这种线上面基的经历不错，可以认识一些人，得到一些交流。这一年我基本都在家办公，现实中除了和同事沟通，认识新人的机会比较少。所以我也打算搞一个线上预约，如果想和我交流的可以在这里选择一个时间，我们沟通半小时：<a target="_blank" rel="noopener" href="https://calendly.com/cyukang/30min">https://calendly.com/cyukang/30min</a></p>
+<p>我觉得这种线上面基的经历不错，可以认识一些人，得到一些交流。这一年我基本都在家办公，现实中除了和同事沟通，认识新人的机会比较少。所以我也打算搞一个线上预约，如果想和我交流的可以在这里选择一个时间，我们沟通半小时：https://calendly.com/cyukang/30min</p>
 </section>
 
     <p></p>
@@ -220,8 +209,8 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#写作" >
-    <span class="tag-code">写作</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -274,7 +263,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/talk-with-compiler-hacker/';
+    var url = 'http://catcoding.me//p/talk-with-compiler-hacker/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -335,7 +324,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -360,8 +349,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

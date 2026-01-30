@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,31 +177,35 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>In an normal release, Rails app’s unit testing will avoid most errors. But for the urgent code publishing, we have got several time of typo error. Code syntax error may cause server crash for a little while(Passenger web server and we using <code>./tmp/restart.txt</code> to restart). We use Capistrano to publish code, so I plan to add a syntax checking before publishing code.<br>The method is writing a task to bundle exec rails runner, this will report most ruby syntax error(except the undef variables in some functions, runner will load .rb files). </p>
-<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby">namespace <span class="token symbol">:app</span> <span class="token keyword">do</span>
-  desc <span class="token string-literal"><span class="token string">"check all the ruby code"</span></span>
-  task <span class="token symbol">:check</span> <span class="token operator">=></span> <span class="token symbol">:environment</span> <span class="token keyword">do</span>
-    res <span class="token operator">=</span> <span class="token command-literal"><span class="token command string">`RAILS_ENV=</span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">Rails<span class="token punctuation">.</span>env</span><span class="token delimiter punctuation">&#125;</span></span><span class="token command string">  bundle exec rails runner "" 2>&amp;1`</span></span>
-    <span class="token keyword">raise</span> res <span class="token keyword">if</span> res<span class="token punctuation">.</span>size <span class="token operator">></span> <span class="token number">0</span>
-  <span class="token keyword">end</span>
-<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <section class="markdown-content"><p>In an normal release, Rails app’s unit testing will avoid most errors. But for the urgent code publishing, we have got several time of typo error. Code syntax error may cause server crash for a little while(Passenger web server and we using <code>./tmp/restart.txt</code> to restart). We use Capistrano to publish code, so I plan to add a syntax checking before publishing code.
+The method is writing a task to bundle exec rails runner, this will report most ruby syntax error(except the undef variables in some functions, runner will load .rb files).</p>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token ruby">namespace <span class="token constant symbol ruby"><span class="token punctuation definition constant ruby">:</span>app</span> <span class="token keyword start-block ruby">do</span>
+  desc <span class="token string double ruby"><span class="token punctuation definition string begin ruby">&quot;</span>check all the ruby code<span class="token punctuation definition string end ruby">&quot;</span></span>
+  task <span class="token constant symbol ruby"><span class="token punctuation definition constant ruby">:</span>check</span> <span class="token punctuation separator key-value ruby">=&gt;</span> <span class="token constant symbol ruby"><span class="token punctuation definition constant ruby">:</span>environment</span> <span class="token keyword start-block ruby">do</span>
+    res <span class="token operator assignment ruby">=</span> <span class="token string interpolated ruby"><span class="token punctuation definition string begin ruby">`</span>RAILS_ENV=<span class="token ruby embedded source"><span class="token punctuation section embedded ruby">#{</span><span class="token class-name ruby">Rails</span><span class="token punctuation accessor ruby">.</span>env<span class="token punctuation section embedded ruby">}</span></span>  bundle exec rails runner &quot;&quot; 2&gt;&amp;1<span class="token punctuation definition string end ruby">`</span></span>
+    <span class="token keyword special-method ruby">raise</span> res <span class="token keyword ruby">if</span> res<span class="token punctuation accessor ruby">.</span>size <span class="token operator comparison ruby">&gt;</span> <span class="token number ruby">0</span>
+  <span class="token keyword ruby">end</span>
+<span class="token keyword ruby">end</span>
+</span></code></pre>
 <p>then add this in the deploy.rb (Capistrano 3.1):</p>
-<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby">namespace <span class="token symbol">:deploy</span> <span class="token keyword">do</span>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token ruby">namespace <span class="token constant symbol ruby"><span class="token punctuation definition constant ruby">:</span>deploy</span> <span class="token keyword start-block ruby">do</span>
 
-  task <span class="token symbol">:run_code_check</span> <span class="token keyword">do</span>
-    on roles<span class="token punctuation">(</span><span class="token symbol">:all</span><span class="token punctuation">)</span> <span class="token keyword">do</span>
-      within release_path <span class="token keyword">do</span>
-        with rails_env<span class="token operator">:</span> fetch<span class="token punctuation">(</span><span class="token symbol">:rails_env</span><span class="token punctuation">)</span> <span class="token keyword">do</span>
-          execute <span class="token symbol">:rake</span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">'app:check'</span></span>
-        <span class="token keyword">end</span>
-      <span class="token keyword">end</span>
-    <span class="token keyword">end</span>
-  <span class="token keyword">end</span>
+  task <span class="token constant symbol ruby"><span class="token punctuation definition constant ruby">:</span>run_code_check</span> <span class="token keyword start-block ruby">do</span>
+    on roles<span class="token punctuation definition group begin ruby">(</span><span class="token constant symbol ruby"><span class="token punctuation definition constant ruby">:</span>all</span><span class="token punctuation definition group end ruby">)</span> <span class="token keyword start-block ruby">do</span>
+      within release_path <span class="token keyword start-block ruby">do</span>
+        with <span class="token constant symbol ruby">rails_env<span class="token punctuation definition constant ruby">:</span></span> fetch<span class="token punctuation definition group begin ruby">(</span><span class="token constant symbol ruby"><span class="token punctuation definition constant ruby">:</span>rails_env</span><span class="token punctuation definition group end ruby">)</span> <span class="token keyword start-block ruby">do</span>
+          execute <span class="token constant symbol ruby"><span class="token punctuation definition constant ruby">:</span>rake</span><span class="token punctuation separator ruby">,</span> <span class="token string single ruby"><span class="token punctuation definition string begin ruby">&#39;</span>app:check<span class="token punctuation definition string end ruby">&#39;</span></span>
+        <span class="token keyword ruby">end</span>
+      <span class="token keyword ruby">end</span>
+    <span class="token keyword ruby">end</span>
+  <span class="token keyword ruby">end</span>
 
-  before <span class="token string-literal"><span class="token string">"deploy:updated"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"deploy:run_code_check"</span></span>
-<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+  before <span class="token string double ruby"><span class="token punctuation definition string begin ruby">&quot;</span>deploy:updated<span class="token punctuation definition string end ruby">&quot;</span></span><span class="token punctuation separator ruby">,</span> <span class="token string double ruby"><span class="token punctuation definition string begin ruby">&quot;</span>deploy:run_code_check<span class="token punctuation definition string end ruby">&quot;</span></span>
+<span class="token keyword ruby">end</span>
+</span></code></pre>
 <p>This is not a tricky part, but please pay attention to the line:</p>
-<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby">res <span class="token operator">=</span> <span class="token command-literal"><span class="token command string">`RAILS_ENV=</span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">Rails<span class="token punctuation">.</span>env</span><span class="token delimiter punctuation">&#125;</span></span><span class="token command string">  bundle exec rails runner "" 2>&amp;1`</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token ruby">res <span class="token operator assignment ruby">=</span> <span class="token string interpolated ruby"><span class="token punctuation definition string begin ruby">`</span>RAILS_ENV=<span class="token ruby embedded source"><span class="token punctuation section embedded ruby">#{</span><span class="token class-name ruby">Rails</span><span class="token punctuation accessor ruby">.</span>env<span class="token punctuation section embedded ruby">}</span></span>  bundle exec rails runner &quot;&quot; 2&gt;&amp;1<span class="token punctuation definition string end ruby">`</span></span>
+</span></code></pre>
 <p>This line of code cost me some time, I forget the <code>2&gt;&amp;1</code>. so <code>res</code> will just got the stdout, not the stderr output, which causes the exception is not raised, and Capistrano flow is not stopped.</p>
 </section>
 
@@ -233,8 +225,8 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Rails" >
-    <span class="tag-code">Rails</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -287,7 +279,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/capistrano-syntax-check-for-rails/';
+    var url = 'http://catcoding.me//p/capistrano-syntax-check-for-rails/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -348,7 +340,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -373,8 +365,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

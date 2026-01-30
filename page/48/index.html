@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -60,7 +48,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -73,7 +61,7 @@
       
         <li class="list-item">
           
-            <a href="/" class="item-link active">Home</a>
+            <a href="/" class="item-link">Home</a>
           
         </li>
       
@@ -135,7 +123,7 @@
         
           <li class="menu-item">
             
-              <a href="/" class="menu-link mobile-active">Home</a>
+              <a href="/" class="menu-link">Home</a>
             
           </li>
         
@@ -716,19 +704,9 @@
           <div class="article-summary">
             
             
-            <p><h2>POJ 2714</h2><br>最近又在 POJ 上做题，碰上<a target="_blank" rel="noopener" href="http://poj.org/problem?id=2714">2714</a>，题意是：</p>
-<p>输入 N，和 N 个点 (x,y)，从原点开始一共可以走 N 步，每一步可以随机选择移动 (x,y)，或者 (-x,-y)。N 的范围为 1-100。<br>输出最远能走到离开原点多远的地方，输出其距离。</p>
-<p>分析一下，用迭代肯定可以，不过 2^N 的复杂度肯定太高了。每步有两种选择，其本质是求一个长度为 N 的 0、1 序列使得最后的值最大，为一个优化问 题。这里贪心不能求到最优解，稍微证明一下就能得出。如果不贪心，或者把贪心的范围扩大一点，求出每一步完后的凸包呢，然后再在这步的基础上继续扩展下一 些节点，再求凸包，继续如此，最后求得凸包中距离最远的。求凸包的复杂度位 O(nlgn)，即最后的复杂度为 O(N^2lgN)，是可以接受的。</p>
-<p><h2>随机搜索</h2><br>以前看过《集体智慧编程》这本书，这里有一章是说的优化。稍微回顾一下其中的几个算法。对于优化问题，首先得找到一个评价函数，对于其某个方案评价函数能给出某个值评估方案的优劣。至于返回值越大还是越好没有规定，对于特定的问题选择特定的评价函数。随机搜索不是一种好的优化算法，但是却是后面的算法的根源。其基本思想是，我们随机长生一些解，看是否好，如果比当前更好，替换当前最优解，直到收敛了，或者猜测了足够的次数了。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">do</span><span class="token punctuation">&#123;</span>
-   solution<span class="token operator">=</span>rand_solution<span class="token punctuation">;</span>
-   value<span class="token operator">=</span><span class="token function">eval</span><span class="token punctuation">(</span>solution<span class="token punctuation">)</span><span class="token punctuation">;</span>
-   <span class="token keyword">if</span><span class="token punctuation">(</span>value<span class="token operator">></span>best<span class="token punctuation">)</span>
-       best<span class="token operator">=</span>value<span class="token punctuation">;</span>
-   times<span class="token operator">++</span><span class="token punctuation">;</span>
-   <span class="token comment">//测试是否收敛</span>
-<span class="token punctuation">&#125;</span><span class="token keyword">while</span><span class="token punctuation">(</span>times<span class="token operator">&lt;</span>max_iter<span class="token operator">&amp;&amp;</span><span class="token punctuation">(</span><span class="token operator">!</span>limit_flag<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>这种盲目的猜测虽然有机会在某一次猜中最优解，但是效率肯定不怎么好。随机算法还是有一些问题可以适用，比如素数判定，如果能保证错误率很低很低也是可行的算法。<br>
+            POJ 2714
+最近又在 POJ 上做题，碰上2714，题意是：
+输入 N，和 N 个点 (x,y)，从原点开始一共可以走 N 步，每一步可以随机选择移动 (x,y)，或者 (-x,-y)。N 的范...
             
           </div>
         </article>
@@ -742,7 +720,8 @@
             
             
               Muse 简介   Muse 的配置   Muse 中源代码高亮显示   Muse 来写主页和博客  
-Muse 简介Muse 是由 EmacsWiki 衍生的，为 emacs 下的一个扩展模式，可以方便快捷的为文档生成各种格式，包括 html,pdf，latex 等等。Muse ...... 
+Muse 简介
+Muse 是由 EmacsWiki 衍生的，为 emacs 下的一个扩展模式...
             
           </div>
         </article>
@@ -755,7 +734,21 @@ Muse 简介Muse 是由 EmacsWiki 衍生的，为 emacs 下的一个扩展模式�
           <div class="article-summary">
             
             
-            实验室的机子要被占，要搬出来，所以得把资料整理一下。发现一个原来研一英语课上做 representation 的 ppt，题目是介绍一位自己喜欢的歌手。那次第一次上台做英报告，呵呵。我喜欢缓慢而伤感，有些沉重的歌。在一位同学日记上看到介绍 Damien Rice 的，然后喜欢上了他的 ...... 
+            实验室的机子要被占，要搬出来，所以得把资料整理一下。发现一个原来研一英语课上做 representation 的 ppt，题目是介绍一位自己喜欢的歌手。那次第一次上台做英报告，呵呵。我喜欢缓慢而伤感，...
+            
+          </div>
+        </article>
+        
+        <article class="article-card">
+          <h3>
+            <a href="/p/haveyourfun/">有你的快乐</a>
+          </h3>
+          <p class="article-date">2010-10-27</p>
+          <div class="article-summary">
+            
+            
+            晚上睡在公司，这边除了晚上偶尔有施工的声音，一切都还不错。洗个热水澡，随便写写早点睡。嘈杂的音响放着这么王若琳的《有你的快乐》，标题就用这个吧，哈哈。
+关于工作：今年好像计算机专业的同学们还是非常好找...
             
           </div>
         </article>
@@ -770,23 +763,11 @@ Muse 简介Muse 是由 EmacsWiki 衍生的，为 emacs 下的一个扩展模式�
             
             C 瓜同学一直关注这个我这个小地方，下面是一些我面试中或者和同学讨论的一些不错的面试题，备份一下，也希望对你有用。
 
+
 1：C++ 的多态是如何实现的？如果你用 C 如何来实现面向对象的多态？
 
-2：判断一个有向图中是否有环。上篇文章里面写的那个杯子倒水问题。给一个都是正整数的数组，和 ...... 
-            
-          </div>
-        </article>
-        
-        <article class="article-card">
-          <h3>
-            <a href="/p/haveyourfun/">有你的快乐</a>
-          </h3>
-          <p class="article-date">2010-10-27</p>
-          <div class="article-summary">
-            
-            
-            晚上睡在公司，这边除了晚上偶尔有施工的声音，一切都还不错。洗个热水澡，随便写写早点睡。嘈杂的音响放着这么王若琳的《有你的快乐》，标题就用这个吧，哈哈。
-关于工作：今年好像计算机专业的同学们还是非常好找工作，首先华为华赛来得非常早，然后就是腾讯，这几个公司就签了好多。成都很多同学都不想 ...... 
+
+2...
             
           </div>
         </article>
@@ -812,7 +793,7 @@ Muse 简介Muse 是由 EmacsWiki 衍生的，为 emacs 下的一个扩展模式�
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -837,8 +818,6 @@ Muse 简介Muse 是由 EmacsWiki 衍生的，为 emacs 下的一个扩展模式�
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,35 +178,48 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>今天解决了一个长期会碰到的问题，就是用 GDB 如何来调试动态链接库。我这个问题的难点是我的需要调试代码是在动态链接库里面，但是启动的不是普通的可以调试的二进制文件，换句话说这不是我所能控制的代码所编译出来的，甚至可能是由脚本程序来控制启动的。这个问题时不时地困扰着我，总结一下尝试过几种调试方式：</p>
-<p> 1 使用 print 来打印 log，有时候有用，不好的地方是有时候定位出问题的代码位置还是稍显麻烦。很常用的会定义一对宏，进入函数和退出某个函数的时候都相应调用。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">APP_LOG</span><span class="token expression"><span class="token punctuation">(</span>X<span class="token punctuation">)</span>                                  </span><span class="token punctuation">\</span>
-    <span class="token expression"><span class="token function">fprintf</span><span class="token punctuation">(</span><span class="token constant">stderr</span><span class="token punctuation">,</span> </span><span class="token string">"log: %s %d %s %s\n"</span><span class="token expression"><span class="token punctuation">,</span>           </span><span class="token punctuation">\</span>
-            <span class="token expression"><span class="token constant">__FILE__</span><span class="token punctuation">,</span> <span class="token constant">__LINE__</span><span class="token punctuation">,</span> __FUNCTION__<span class="token punctuation">,</span> X<span class="token punctuation">)</span><span class="token punctuation">;</span>   </span><span class="token punctuation">\</span>
+<p>1 使用 print 来打印 log，有时候有用，不好的地方是有时候定位出问题的代码位置还是稍显麻烦。很常用的会定义一对宏，进入函数和退出某个函数的时候都相应调用。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token preprocessor macro c"><span class="token keyword import define c">#define</span></span><span class="token preprocessor macro c"> <span class="token function preprocessor c">APP_LOG</span></span><span class="token preprocessor macro parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token variable parameter c">X</span><span class="token punctuation section group end c">)</span></span></span><span class="token preprocessor macro c">                                  <span class="token punctuation separator continuation c">\</span>
+    <span class="token function-call c"><span class="token function C99 c">fprintf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">stderr<span class="token punctuation separator c">,</span> <span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>log: <span class="token constant placeholder c">%s</span> <span class="token constant placeholder c">%d</span> <span class="token constant placeholder c">%s</span> <span class="token constant placeholder c">%s</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span>           \
+            <span class="support constant c">__FILE__</span><span class="token punctuation separator c">,</span> <span class="support constant c">__LINE__</span><span class="token punctuation separator c">,</span> <span class="support constant c">__FUNCTION__</span><span class="token punctuation separator c">,</span> X</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>   <span class="token punctuation separator continuation c">\</span>
 </span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">LOG_ENTER</span>     <span class="token punctuation">\</span>
-    <span class="token expression"><span class="token function">APP_LOG</span><span class="token punctuation">(</span></span><span class="token string">"enter"</span><span class="token expression"><span class="token punctuation">)</span></span></span>
+<span class="token preprocessor macro c"><span class="token keyword import define c">#define</span></span><span class="token preprocessor macro c"> <span class="entity name constant preprocessor c">LOG_ENTER</span></span><span class="token preprocessor macro c">     <span class="token punctuation separator continuation c">\</span>
+<span class="token assumed-macro c">    <span class="token variable function assumed-macro c">APP_LOG</span><span class="token punctuation section group begin c">(</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>enter<span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation section group end c">)</span></span></span>
     
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">LOG_LEAVE</span> <span class="token punctuation">\</span>
-    <span class="token expression"><span class="token function">APP_LOG</span><span class="token punctuation">(</span></span><span class="token string">"leave"</span><span class="token expression"><span class="token punctuation">)</span></span></span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p> 2 对于 crash 掉的 bug，打印出来调用栈是非常有用的。使用<a target="_blank" rel="noopener" href="http://www.gnu.org/software/libc/manual/html_node/Backtraces.html#Backtraces">libc 提供的 Backtraces 函数</a>来获取调用栈。这是在不能提供 GDB 环境下拿到调用栈的不错方法。不过经过我的实验这对于动态链接库有一定的问题。</p>
-<p> 3 最后就是今天试用的比较通用办法。</p>
-<p> 我们不管是如何调用到动态链接库文件的，但是肯定会调用进来。所以需要想办法让代码在库代码处停下来，然后把找机会把 GDB 弄进去。于是乎有这么一个变态的办法，在动态链接库入口处来这么一段，就是执行到这里停住，等待 GDB attach 这个进程，然后在 GDB 里设置一个断点，touch 创建当前文件夹 debug 文件就跳出死循环，接下来就是一切在 GDB 控制下了。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">wait_attach</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">fprintf</span><span class="token punctuation">(</span><span class="token constant">stderr</span><span class="token punctuation">,</span> <span class="token string">"Waiting attach pid: %d\n"</span><span class="token punctuation">,</span> <span class="token function">getpid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token function">access</span><span class="token punctuation">(</span><span class="token string">"./debug"</span><span class="token punctuation">,</span> F_OK<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token keyword">break</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-        <span class="token keyword">else</span>
-            <span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token preprocessor macro c"><span class="token keyword import define c">#define</span></span><span class="token preprocessor macro c"> <span class="entity name constant preprocessor c">LOG_LEAVE</span></span><span class="token preprocessor macro c"> <span class="token punctuation separator continuation c">\</span>
+<span class="token assumed-macro c">    <span class="token variable function assumed-macro c">APP_LOG</span><span class="token punctuation section group begin c">(</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>leave<span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation section group end c">)</span></span></span>
+
+</span></code></pre>
+<p>2 对于 crash 掉的 bug，打印出来调用栈是非常有用的。使用<a target="_blank" rel="noopener" href="http://www.gnu.org/software/libc/manual/html_node/Backtraces.html#Backtraces">libc 提供的 Backtraces 函数</a>来获取调用栈。这是在不能提供 GDB 环境下拿到调用栈的不错方法。不过经过我的实验这对于动态链接库有一定的问题。</p>
+<p>3 最后就是今天试用的比较通用办法。</p>
+<p>我们不管是如何调用到动态链接库文件的，但是肯定会调用进来。所以需要想办法让代码在库代码处停下来，然后把找机会把 GDB 弄进去。于是乎有这么一个变态的办法，在动态链接库入口处来这么一段，就是执行到这里停住，等待 GDB attach 这个进程，然后在 GDB 里设置一个断点，touch 创建当前文件夹 debug 文件就跳出死循环，接下来就是一切在 GDB 控制下了。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">void</span> <span class="token function c"><span class="token function c">wait_attach</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token function c"> </span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    <span class="token function-call c"><span class="token function C99 c">fprintf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">stderr<span class="token punctuation separator c">,</span> <span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>Waiting attach pid: <span class="token constant placeholder c">%d</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span> <span class="token function-call c"><span class="token variable function c">getpid</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">while</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token number c">1</span><span class="token punctuation section group end c">)</span></span> <span class="token block c"><span class="token punctuation section block begin c">{</span>
+        <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token function-call c"><span class="token variable function c">access</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c"><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>./debug<span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span> F_OK</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation section group end c">)</span></span> <span class="token operator comparison c">!=</span> <span class="token operator arithmetic c">-</span><span class="token number c">1</span><span class="token punctuation section group end c">)</span></span> <span class="token block c"><span class="token punctuation section block begin c">{</span>
+            <span class="token keyword c">break</span><span class="token punctuation terminator c">;</span>
+        <span class="token punctuation section block end c">}</span></span>
+        <span class="token keyword c">else</span>
+            <span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre>
 <p>这是一个 stupid and work 的方法，不过我总觉得还有更好的办法来在这种情况下调试。</p>
 <p>在查找资料的过程中有点意外收获，顺便推荐 GDB 一个选项，gdb -tui，以 texture gui 方式启动 GDB，这是非常方便的文字界面。如果不用这个选项也可以在运行 GDB 以后按下快捷键盘 C-x C-a(怎么这么像 Emacs 快捷键) 来进行 gui 和非 gui 的切换。CLI 爱好者可以试用一下，DDD 什么的可以放下了，嘿嘿。</p>
 <p>另外一些有用的 GDB 命令：</p>
 <blockquote>
-<p>rbreak:              break on function matching regular expression<br>where:               Line number currently being executed<br>tbreak:              Break once, and then remove the breakpoint<br>watch:               Suspend the process when a certain condition is met<br>finish:              Continue till end of function<br>info locals:         View all local variables<br>backtrace full:      Complete backtrace with local variables<br>up, down, frame:     Move through frames<br>set print pretty on: Prints out prettily formatted C source code<br>set print array on:  Pretty array printing<br>enable and disable:  Enable/disable breakpoints<br>set logging on:      Log debugging session to show to others for support</p>
+<p>rbreak:              break on function matching regular expression
+where:               Line number currently being executed
+tbreak:              Break once, and then remove the breakpoint
+watch:               Suspend the process when a certain condition is met
+finish:              Continue till end of function
+info locals:         View all local variables
+backtrace full:      Complete backtrace with local variables
+up, down, frame:     Move through frames
+set print pretty on: Prints out prettily formatted C source code
+set print array on:  Pretty array printing
+enable and disable:  Enable/disable breakpoints
+set logging on:      Log debugging session to show to others for support</p>
 </blockquote>
 </section>
 
@@ -238,16 +239,16 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#gdb" >
-    <span class="tag-code">gdb</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#debug" >
-    <span class="tag-code">debug</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -300,7 +301,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/gdb-with-libso/';
+    var url = 'http://catcoding.me//p/gdb-with-libso/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -361,7 +362,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -386,8 +387,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

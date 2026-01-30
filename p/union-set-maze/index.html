@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -190,47 +178,43 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><h3>好书好书</h3>
-
-<p>在看<a target="_blank" rel="noopener" href="http://book.douban.com/subject/1971825/">《数据结构与算法分析》</a>这本书的时候看到后面的一个关于并查集的有趣应用，是个生成迷宫的算法，看起来非常有趣，所以就实现了一下。顺便把几种走迷宫的算法都整了 进去。八卦一下，这本书的作者是<a target="_blank" rel="noopener" href="http://users.cis.fiu.edu/%7Eweiss/#adspc++2">Mark Weiss</a>,这牛写了几本数据结构和算法的书，各种语言版本 (C,C++,Java)，原来是师出名门啊，在他的主页上一看，原来是<a target="_blank" rel="noopener" href="http://www.cs.princeton.edu/%7Ers/">Robert Sedgewick</a> 的学生。Sedgewick 更是师出名门，在 Princeton 跟高纳德神牛读的博士，也写了 N 本算法和数据结构的书。这两人写的书都还不错，对于初学者和中等水平来说很好，覆盖了一般的数据结构和算法，同时带有一定的理论分析还有特定的语言实现。</p>
+<p>在看<a href="http://book.douban.com/subject/1971825/">《数据结构与算法分析》</a>这本书的时候看到后面的一个关于并查集的有趣应用，是个生成迷宫的算法，看起来非常有趣，所以就实现了一下。顺便把几种走迷宫的算法都整了 进去。八卦一下，这本书的作者是<a href="http://users.cis.fiu.edu/%7Eweiss/#adspc++2">Mark Weiss</a>,这牛写了几本数据结构和算法的书，各种语言版本 (C,C++,Java)，原来是师出名门啊，在他的主页上一看，原来是<a href="http://www.cs.princeton.edu/%7Ers/">Robert Sedgewick</a> 的学生。Sedgewick 更是师出名门，在 Princeton 跟高纳德神牛读的博士，也写了 N 本算法和数据结构的书。这两人写的书都还不错，对于初学者和中等水平来说很好，覆盖了一般的数据结构和算法，同时带有一定的理论分析还有特定的语言实现。</p>
 <h3>并查集</h3>
-
-<p>可能一般的大学教材上面没有说这个数据结构，这是个很有趣的东西。《算法导论》上面用这个来作为均摊分析的例子吧。在 ACM/ICPC 中这个数据结构经常出现，有可能是一个小题（难点的就是要维护节点之间关系的那种），或者是有的图论算法中实现要用，比如实现 Kruskar 算法求最小生成树。<br>并查集本身比较简单，主要是用来操作元素集合，支持的操作有：</p>
-<li> UnionSets(int root1,int root2), 用来合并两个根节点。 </li><br><li> FindSet(int x) , 用来查找 x 所属的根节点。 </li>
-
+<p>可能一般的大学教材上面没有说这个数据结构，这是个很有趣的东西。《算法导论》上面用这个来作为均摊分析的例子吧。在 ACM/ICPC 中这个数据结构经常出现，有可能是一个小题（难点的就是要维护节点之间关系的那种），或者是有的图论算法中实现要用，比如实现 Kruskar 算法求最小生成树。
+并查集本身比较简单，主要是用来操作元素集合，支持的操作有：</p>
+<li> UnionSets(int root1,int root2), 用来合并两个根节点。 </li>
+<li> FindSet(int x) , 用来查找 x 所属的根节点。 </li>
 <p>一并一查，所以叫作并查集。实现时候可以通过按秩合并 (union by rank)，和路径压缩 (path compression) 来增加效率，可以获得几乎与总操作数 m 成线性关系的运行时间。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> rank<span class="token punctuation">[</span>MAXSIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>    <span class="token comment">// 节点高度的上界</span>
-<span class="token keyword">int</span> parent<span class="token punctuation">[</span>MAXSIZE<span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// 根节点</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">int</span> rank<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>MAXSIZE<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>    <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span> 节点高度的上界
+</span><span class="token keyword c">int</span> parent<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>MAXSIZE<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span> 根节点
+</span>
+<span class="token keyword c">void</span> <span class="token function c"><span class="token function c">Init</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token keyword c">void</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+  <span class="token function-call c"><span class="token function C99 c">memset</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">rank<span class="token punctuation separator c">,</span> <span class="token number c">0</span><span class="token punctuation separator c">,</span> <span class="token operator word c">sizeof</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span><span class="token group c">rank</span><span class="token group c"><span class="token punctuation section group end c">)</span></span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">for</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token keyword c">int</span> i<span class="token operator assignment c">=</span><span class="token number c">0</span><span class="token punctuation terminator c">;</span> i <span class="token operator comparison c">&lt;</span> MAXSIZE<span class="token punctuation terminator c">;</span> <span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span>i <span class="token punctuation section group end c">)</span></span>
+    parent<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>i<span class="token punctuation section brackets end c">]</span></span> <span class="token operator assignment c">=</span> i<span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
 
-<span class="token keyword">void</span> <span class="token function">Init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-  <span class="token function">memset</span><span class="token punctuation">(</span>rank<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>rank<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> MAXSIZE<span class="token punctuation">;</span> <span class="token operator">++</span>i <span class="token punctuation">)</span>
-    parent<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> i<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token keyword">int</span> <span class="token function">FindSet</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token comment">// 查找 + 递归的路径压缩</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span> x <span class="token operator">!=</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token punctuation">)</span>
-    parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">FindSet</span><span class="token punctuation">(</span>parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">return</span> parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
+<span class="token keyword c">int</span> <span class="token function c"><span class="token function c">FindSet</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token keyword c">int</span> <span class="token variable parameter c">x</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c"><span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span> 查找 + 递归的路径压缩
+</span>  <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span> x <span class="token operator comparison c">!=</span> parent<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>x<span class="token punctuation section brackets end c">]</span></span> <span class="token punctuation section group end c">)</span></span>
+    parent<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>x<span class="token punctuation section brackets end c">]</span></span> <span class="token operator assignment c">=</span> <span class="token function-call c"><span class="token variable function c">FindSet</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">parent<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>x<span class="token punctuation section brackets end c">]</span></span></span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">return</span> parent<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>x<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
 ​
-<span class="token keyword">void</span> <span class="token function">UnionSet</span><span class="token punctuation">(</span><span class="token keyword">int</span> root1<span class="token punctuation">,</span> <span class="token keyword">int</span> root2<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-  <span class="token keyword">int</span> x <span class="token operator">=</span> <span class="token function">FindSet</span><span class="token punctuation">(</span>root1<span class="token punctuation">)</span><span class="token punctuation">,</span> y <span class="token operator">=</span> <span class="token function">FindSet</span><span class="token punctuation">(</span>root2<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span> x <span class="token operator">==</span> y <span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token punctuation">;</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span> rank<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">></span> rank<span class="token punctuation">[</span>y<span class="token punctuation">]</span> <span class="token punctuation">)</span> parent<span class="token punctuation">[</span>y<span class="token punctuation">]</span> <span class="token operator">=</span> x<span class="token punctuation">;</span>
-  <span class="token keyword">else</span><span class="token punctuation">&#123;</span>
-    parent<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">=</span> y<span class="token punctuation">;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span> rank<span class="token punctuation">[</span>x<span class="token punctuation">]</span> <span class="token operator">==</span> rank<span class="token punctuation">[</span>y<span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token operator">++</span>rank<span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">;</span>
-  <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3>迷宫的实现</h3>
-
+<span class="token keyword c">void</span> <span class="token function c"><span class="token function c">UnionSet</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token keyword c">int</span> <span class="token variable parameter c">root1</span><span class="token punctuation separator c">,</span> <span class="token keyword c">int</span> <span class="token variable parameter c">root2</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+  <span class="token keyword c">int</span> x <span class="token operator assignment c">=</span> <span class="token function-call c"><span class="token variable function c">FindSet</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">root1</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation separator c">,</span> y <span class="token operator assignment c">=</span> <span class="token function-call c"><span class="token variable function c">FindSet</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">root2</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span> x <span class="token operator comparison c">==</span> y <span class="token punctuation section group end c">)</span></span> <span class="token keyword c">return</span> <span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span> rank<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>x<span class="token punctuation section brackets end c">]</span></span> <span class="token operator comparison c">&gt;</span> rank<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>y<span class="token punctuation section brackets end c">]</span></span> <span class="token punctuation section group end c">)</span></span> parent<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>y<span class="token punctuation section brackets end c">]</span></span> <span class="token operator assignment c">=</span> x<span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">else</span><span class="token block c"><span class="token punctuation section block begin c">{</span>
+    parent<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>x<span class="token punctuation section brackets end c">]</span></span> <span class="token operator assignment c">=</span> y<span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span> rank<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>x<span class="token punctuation section brackets end c">]</span></span> <span class="token operator comparison c">==</span> rank<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>y<span class="token punctuation section brackets end c">]</span></span> <span class="token punctuation section group end c">)</span></span> <span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span>rank<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>y<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+  <span class="token punctuation section block end c">}</span></span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre><h3>迷宫的实现</h3>
 <p>上面那本书上的习题上给了提示，比如首先所有的墙都没有去掉，那么是一个一个的方格，每一个方格为并查集合的一个元素，已经连通的元素是在并查集的一个集合中，有相同的根节点。随机的选择一个墙，在并查集中查询这两个元素是否已经连通，如果已经连通则另选一个墙，如果不连通，union 两个节点的根节点，这样操作以后这两个方格已经连通。继续上面的操作，直到入口和出口连通位置，那么这就形成了一个只有一条合法路径的迷宫，称为单迷宫。如下图所示。</p>
 <p>左上角起点 右下角终点</p>
 <p><a href="/images/maze.png"><img class="size-full wp-image-34" title="maze" src="/images/maze.png" alt="" width="579" height="438" align="center"></a></p>
-<p><p style="text-align: center;"></p>
 <p style="text-align: center;">
-
-
+<p style="text-align: center;">
 </section>
 
     <p></p>
@@ -249,12 +233,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#迷宫" >
-    <span class="tag-code">迷宫</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -265,17 +249,17 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/p/the-game-of-life/">
+      <a class="nav-left" href="/p/maze/">
         <span class="nav-arrow">← </span>
         
-          The Game of Life
+          走出迷宫 - 路径搜索
         
       </a>
     
     
-      <a class="nav-right" href="/p/emacs-keyboard-macros/">
+      <a class="nav-right" href="/p/pointerbug/">
         
-          Emacs: keyboard macros
+          指针指针
         
         <span class="nav-arrow"> →</span>
       </a>
@@ -306,7 +290,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">好书好书</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">并查集</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link"><span class="toc-nav-text">迷宫的实现</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#好书好书"><span class="toc-nav-text">好书好书</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#并查集"><span class="toc-nav-text">并查集</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#迷宫的实现"><span class="toc-nav-text">迷宫的实现</span></a></li></ol>
     
   </div>
 </aside>
@@ -317,7 +301,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/union-set-maze/';
+    var url = 'http://catcoding.me//p/union-set-maze/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -378,7 +362,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -403,8 +387,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

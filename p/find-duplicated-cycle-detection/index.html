@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -191,57 +179,61 @@
   <article class="post-article">
     <section class="markdown-content"><p>一个有趣的问题，据说这个题目耗费了 Don Knuth 24 小时解决。一起来看看。</p>
 <blockquote>
-<p> You are given an array of integers of length n, where each element ranges<br>  from 0 to n - 2, inclusive.  Prove that at least one  duplicate element must<br>  exist, and give an O(n)-time, O(1)-space algorithm for finding some<br>  duplicated element.  You must not modify the array elements during this<br>  process.</p>
+<p>You are given an array of integers of length n, where each element ranges
+from 0 to n - 2, inclusive.  Prove that at least one  duplicate element must
+exist, and give an O(n)-time, O(1)-space algorithm for finding some
+duplicated element.  You must not modify the array elements during this
+process.</p>
 </blockquote>
 <p>这有几个重要的约束，O(n)，O(1) 的复杂度，不能修改这个数组。可能有多个数重复了，但至少有一个数重复了。</p>
 <p>首先第一个证明问题，等价于 n 个鸽子，n-1 个笼子，那么至少有一个笼子里面有 2 个鸽子，就是鸽笼原理 (抽屉原理), 反证法可以证明。</p>
-<p>难的是第二个问题，假设 a[0, n], 值都在 0,1, …, n-2 范围内。如果扫描这个数组，重复的会出现第二次 (废话，囧)，<br>关键是只能用 O(1) 的空间，否则用空间记录出现过的就行了。如果把数组看成一个映射，i -&gt; f(i) = a[i]，那么这个问题可以转换成更抽象的模型。举个例子：</p>
+<p>难的是第二个问题，假设 a[0, n], 值都在 0,1, …, n-2 范围内。如果扫描这个数组，重复的会出现第二次 (废话，囧)，
+关键是只能用 O(1) 的空间，否则用空间记录出现过的就行了。如果把数组看成一个映射，i -&gt; f(i) = a[i]，那么这个问题可以转换成更抽象的模型。举个例子：</p>
 <pre class="example">n = 6
 index: 0 1 2 3 4 5
 value: 1 4 0 0 3 2</pre>
-
 <p>其 index 对应 value 映射为为 0-&gt;1, 1-&gt;4, 2-&gt;0 等等，那么把这个图画出来就是这样：</p>
 <p><a href="/images/cycle3.png"><img class="img-center size-full wp-image-844" title="cycle" src="/images/cycle3.png" alt="" width="275" height="259" /></a></p>
-<p>&nbsp;</p>
+<p> </p>
 <p>这个问题转换为求图中环开始的点，因为出现环说明某个点重复出现了。从 5 开始遍历这个图会在 0 处发现环，为什么选取 5，因为 5 肯定为一个起点，并且不在 0~N-2 内。其实只要选取不孤立的那个点当作起点就可以检测环，极端情况比如：</p>
 <pre>n = 6
 index: 0 1 2 3 4 5
 value: 0 1 2 4 5 3</pre>
-
 <p>选择 index=5 还是可以发现环，如果选取 0 就发现不了 3 和 4,5 之间的那个环。</p>
 <p>[Cycle detection] 是一个经典的计算机问题。经典的算法是 Floyd’s cycle-finding algorithm，这个算法简单而优美。严格的数学证明当然可以，也能更明显的从现实经验得出结论。如果一个赛道中间出现某个环 (分两种情况，赛道本身是环、赛道前面有一段没环而中间出现一个环 9 字形)，求这个环的周长 C。让两位运动员同时出发，并且 P1 的速度是 P2 的两倍，当他们第一重新相遇的时候，一定是在环的某个点上，并且其路程之差为这个环的周长的 K 倍 (K&gt;=1)，这解决了一部分问题，我们知道了 KC 的值，如果 K==1，则得出结果，说明两人刚好是在环开始点相遇。否则就是在环内其余点相遇，可以得知现在 P2 的路程为 KC(P1 的路程为 2KC), 如果让 P3 以和 P2 同样的速度从起点开始，P2 继续从相遇点开始跑，那么 P2 和 P3 肯定还会相遇，并且相遇的点一定为环开始点！回到这个问题，这个 index 的值就是重复的值。代码描述如下：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">detectCycle</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token operator">*</span> seq， <span class="token keyword">int</span> Num<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> slow <span class="token operator">=</span> Num <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token keyword">int</span> fast <span class="token operator">=</span> Num <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        slow <span class="token operator">=</span> seq<span class="token punctuation">[</span>slow<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        fast <span class="token operator">=</span> seq<span class="token punctuation">[</span>seq<span class="token punctuation">[</span>fast<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>slow <span class="token operator">==</span> fast<span class="token punctuation">)</span>
-            <span class="token keyword">break</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">int</span> finder <span class="token operator">=</span> Num <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        slow <span class="token operator">=</span> seq<span class="token punctuation">[</span>slow<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        finder <span class="token operator">=</span> seq<span class="token punctuation">[</span>finder<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>slow <span class="token operator">==</span> finder<span class="token punctuation">)</span>
-            <span class="token keyword">break</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">return</span> finder<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">int</span> <span class="token function c"><span class="token function c">detectCycle</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token keyword c">int</span><span class="token operator c">*</span> seq， <span class="token keyword c">int</span> <span class="token variable parameter c">Num</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    <span class="token keyword c">int</span> slow <span class="token operator assignment c">=</span> Num <span class="token operator arithmetic c">-</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">int</span> fast <span class="token operator assignment c">=</span> Num <span class="token operator arithmetic c">-</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">while</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token number c">1</span><span class="token punctuation section group end c">)</span></span> <span class="token block c"><span class="token punctuation section block begin c">{</span>
+        slow <span class="token operator assignment c">=</span> seq<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>slow<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+        fast <span class="token operator assignment c">=</span> seq<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>seq<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>fast<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+        <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span>slow <span class="token operator comparison c">==</span> fast<span class="token punctuation section group end c">)</span></span>
+            <span class="token keyword c">break</span><span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+    <span class="token keyword c">int</span> finder <span class="token operator assignment c">=</span> Num <span class="token operator arithmetic c">-</span> <span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">while</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token number c">1</span><span class="token punctuation section group end c">)</span></span> <span class="token block c"><span class="token punctuation section block begin c">{</span>
+        slow <span class="token operator assignment c">=</span> seq<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>slow<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+        finder <span class="token operator assignment c">=</span> seq<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>finder<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+        <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span>slow <span class="token operator comparison c">==</span> finder<span class="token punctuation section group end c">)</span></span>
+            <span class="token keyword c">break</span><span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+    <span class="token keyword c">return</span> finder<span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre>
 <p>算法描述很简单，但其中思维的却很有乐趣。以前同样有一个问题，检测一个链表是否有环，这是由此出来的一个特例，因为对于一个链表的每个节点除了头节点都有一个前节点和后节点 (无环则末节点指向空)，而图是一个更通用的模型。</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">bool <span class="token function">hasCycle</span><span class="token punctuation">(</span>ListNode <span class="token operator">*</span>head<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-  ListNode<span class="token operator">*</span> slow <span class="token operator">=</span> head<span class="token punctuation">;</span>
-  ListNode<span class="token operator">*</span> fast <span class="token operator">=</span> head<span class="token punctuation">;</span>
-  <span class="token keyword">while</span><span class="token punctuation">(</span>fast <span class="token operator">&amp;&amp;</span> fast<span class="token operator">-></span>next<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-      slow <span class="token operator">=</span> slow<span class="token operator">-></span>next<span class="token punctuation">;</span>
-      fast <span class="token operator">=</span> fast<span class="token operator">-></span>next<span class="token operator">-></span>next<span class="token punctuation">;</span>
-      <span class="token keyword">if</span><span class="token punctuation">(</span>slow <span class="token operator">==</span> fast<span class="token punctuation">)</span>
-        <span class="token keyword">return</span> true<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-  <span class="token keyword">return</span> false<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-</section>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">bool</span> <span class="token function c"><span class="token function c">hasCycle</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c">ListNode <span class="token operator c">*</span><span class="token variable parameter c">head</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c"> </span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+  ListNode<span class="token operator c">*</span> slow <span class="token operator assignment c">=</span> head<span class="token punctuation terminator c">;</span>
+  ListNode<span class="token operator c">*</span> fast <span class="token operator assignment c">=</span> head<span class="token punctuation terminator c">;</span>
+  <span class="token keyword c">while</span><span class="token group c"><span class="token punctuation section group begin c">(</span>fast <span class="token operator arithmetic c">&amp;&amp;</span> fast<span class="token punctuation accessor c">-&gt;</span>next<span class="token punctuation section group end c">)</span></span> <span class="token block c"><span class="token punctuation section block begin c">{</span>
+      slow <span class="token operator assignment c">=</span> slow<span class="token punctuation accessor c">-&gt;</span>next<span class="token punctuation terminator c">;</span>
+      fast <span class="token operator assignment c">=</span> fast<span class="token punctuation accessor c">-&gt;</span>next<span class="token punctuation accessor c">-&gt;</span>next<span class="token punctuation terminator c">;</span>
+      <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span>slow <span class="token operator comparison c">==</span> fast<span class="token punctuation section group end c">)</span></span>
+        <span class="token keyword c">return</span> <span class="token boolean c">true</span><span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+  <span class="token keyword c">return</span> <span class="token boolean c">false</span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre></section>
 
     <p></p>
 
@@ -259,12 +251,12 @@ value: 0 1 2 4 5 3</pre>
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Algorithms" >
-    <span class="tag-code">Algorithms</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -317,7 +309,7 @@ value: 0 1 2 4 5 3</pre>
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/find-duplicated-cycle-detection/';
+    var url = 'http://catcoding.me//p/find-duplicated-cycle-detection/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -378,7 +370,7 @@ value: 0 1 2 4 5 3</pre>
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -403,8 +395,6 @@ value: 0 1 2 4 5 3</pre>
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -191,7 +179,7 @@
   <article class="post-article">
     <section class="markdown-content"><p>这两天都在讨论  Cloudflare 的安全事故  <a target="_blank" rel="noopener" href="https://blog.cloudflare.com/18-november-2025-outage/">Cloudflare outage on November 18, 2025</a>，我也写点自己的想法。</p>
 <p>这个事故当然引起的范围特别广，我当时正在用 ChatGPT，突然再打开总是提示正在加载，我还以为是自己的 VPN 出了问题，第二天起来才知道 Cloudflare 跪了好久。</p>
-<p>没多久 Cloudflare 就发出来了一个非常详细的事故说明。我对里面的场景非常熟悉，因为我之前因为类似的原因把大疆的大部分流量都给搞挂了，具体请看<a href="https://catcoding.me/p/avoid-mistake/">谈谈工作中的犯错</a>中的配置错误。</p>
+<p>没多久 Cloudflare 就发出来了一个非常详细的事故说明。我对里面的场景非常熟悉，因为我之前因为类似的原因把大疆的大部分流量都给搞挂了，具体请看<a target="_blank" rel="noopener" href="https://catcoding.me/p/avoid-mistake/">谈谈工作中的犯错</a>中的配置错误。</p>
 <p>这次事故里 Cloudflare 给出了一段 Rust 代码，所以讨论自然会集中在 Rust 上。但把事故归咎于 Rust 本身就不太合理。从他们的场景来看和我之前在 Kong 上做流量分发是非常类似的，无非是这里他们使用了机器学习的技术来判断一个流量是否为恶意请求，而文中所说的 features 文件是训练好的模型数据。</p>
 <p>根本原因是数据库的权限更改，导致查询出来的 features 是有重复的，size 变成期望的两倍。而这个错误的配置通过自动同步机制会同步到全球各个节点。每个节点会有一个 bot 模块，根据 features 去计算是否拦截请求，可以想象这是个典型的机器学习分类问题，比如带有什么特征的 HTTP agent、或者是请求的 payload 之类的这些特征综合考虑来计算。这个 <a target="_blank" rel="noopener" href="https://www.cloudflare.com/application-services/products/bot-management/">Bot Management</a>具体内容可以参考其产品说明。</p>
 <p>那么如果 features 坏了，这个机器学习模块 bot 能否正常工作？答案是不行的，这点文章已经说明：</p>
@@ -208,8 +196,9 @@
 <li>load 到最大 limit 的时候停止，这时候不确定整个 feature 文件是否完整，按照上文所说，bot 用这个配置计算的 request score 是 0，同样请求拦截，甚至日志中可能都看不出来什么错误。</li>
 </ul>
 <p>可以看到这两种情形都差不多，甚至如果按照 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Fail-fast_system">fail fast</a> 的策略，日志中会有明显的 500 错误，我不知道 Cloudflare 是否做了错误监控，因为按理来说这种级别的错误是非常明显的，需要立即报警。</p>
-<p>很多人都集中讨论在这里的 <code>unwrap</code>:<br><img src="/images/ob_pasted-image-20251120062013.png" alt=""></p>
-<p>当然这不是最佳实践，但这时候即使使用 <code>.expect(&quot;invalid bots input&quot;)</code> 这样的写法也好不到哪里去，同样会 500 错误，只是日志里面多留一条错误信息。因为如果不监控错误码，是没人立即发现问题所在的。</p>
+<p>很多人都集中讨论在这里的 <code>unwrap</code>:
+<img src="/images/ob_pasted-image-20251120062013.png" alt="" /></p>
+<p>当然这不是最佳实践，但这时候即使使用 <code>.expect("invalid bots input")</code> 这样的写法也好不到哪里去，同样会 500 错误，只是日志里面多留一条错误信息。因为如果不监控错误码，是没人立即发现问题所在的。</p>
 <p>更好的做法是对输入进行严格校验，例如检查特征数量和大小。如果不符合预期，应保留旧配置并拒绝加载新数据，而不是加载到一半才发现尺寸异常，更不应该没有 fallback 机制。</p>
 <p>当然这里代码没有完全开源，我们从短短的代码片段无法了解整个项目的场景。</p>
 <p>从这个经典的错误我们应该发现的是更高维度的警戒，开发管理和运维上有这些问题：</p>
@@ -227,13 +216,14 @@
 <p>Cloudflare Rewrote Their Core in Rust, Then Half of the Internet Went Down</p>
 </blockquote>
 <p>这里有点混淆视听，因为 Rust 所说的要解决的安全问题是内存问题，不是逻辑问题。另外，也不是因为重写导致的问题发生。</p>
-<p>为什么 Cloudflare 要用 Rust 重写一些关键组件，可以看看他们之前的文章<br><a target="_blank" rel="noopener" href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">Incident report on memory leak caused by Cloudflare parser bug</a></p>
+<p>为什么 Cloudflare 要用 Rust 重写一些关键组件，可以看看他们之前的文章
+<a target="_blank" rel="noopener" href="https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/">Incident report on memory leak caused by Cloudflare parser bug</a></p>
 <p>当然我承认在有的公司，可能有的团队完全是为了绩效或者纯个人偏好而发起重写老组件的项目。而更多公司确实是被内存安全问题折磨得怀疑人生才会去重写，像上面文中所说的安全事故是底裤被人扒了，自己还不知道，得让旁观者告诉你才发现。和这次事故的因为工程管理上所做成的安全事故有明显的分别。所以 Rust 所说的安全，是如何避免内存安全。</p>
 <p>甚至即使是用了 Rust，一些内存上的问题还是可能因为逻辑上的错误而出现，比如我这个工作中的 PR <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber/pull/932">Avoid duplicated retryable tasks</a>就是避免往队列里加了重复的 task 而造成内存用得越来越多。</p>
 <p>这次 Cloudflare 的事故就比如一个司机驾驶沃尔沃，结果碰上了山体滑坡被压死了，这种场景下就是换成任意其他品牌的车都会是一个结果。但如果你跑来说，看吧，沃尔沃号称安全，结果还不是一样死，这叫做虚假宣传。</p>
 <p>这不叫虚假宣传，而是你对车有了不切实际的幻想。沃尔沃确实不完美，但每个人都会有不同的选择偏好。正常人理解沃尔沃说的安全是大部分场景下、对比其他车会安全一点，而不是说买了沃尔沃就会长生不老了。</p>
 <p>永远记住：No Silver Bullet。</p>
-<hr>
+<hr />
 <p>总之，这次 Cloudflare 的事故虽然造成的影响挺大，但这个公司也确实足够公开透明，事故分析写得非常清晰，值得大家学习并反思自己组织上有没有类似的工程问题。</p>
 </section>
 
@@ -253,8 +243,8 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -307,7 +297,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/rust-in-cloudflare-incident/';
+    var url = 'http://catcoding.me//p/rust-in-cloudflare-incident/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -368,7 +358,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -393,8 +383,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

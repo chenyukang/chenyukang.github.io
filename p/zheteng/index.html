@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,19 +177,26 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h2 id="centos-环境变量"><a href="#centos-环境变量" class="headerlink" title="centos 环境变量"></a>centos 环境变量</h2><p>在配服务器 web 环境的时候，因为这个问题花费了不少时间。tomcat 找不到 java 的其他开发包，开始以为是服务器是 64 位的问题。</p>
+    <section class="markdown-content"><h2 id="centos-环境变量"><a href="#centos-环境变量" class="headerlink" title="centos 环境变量"></a>centos 环境变量</h2>
+<p>在配服务器 web 环境的时候，因为这个问题花费了不少时间。tomcat 找不到 java 的其他开发包，开始以为是服务器是 64 位的问题。</p>
 <p>最后因为在/etc/profile 文件里面设置为 export CLASSPATH=…,这个 export 貌似不能少。或者是因为命令 prelink -a 的作用起了效果，这个命令好像只是起到加速到作用。orz，我是被 ubuntu 宠坏了，什么 linux 命令都没怎么用咯。</p>
-<h2 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h2><p>mysql 配置局域网内都能访问。</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">1</span> mysql <span class="token parameter variable">-h</span> localhost <span class="token parameter variable">-u</span> root
-<span class="token number">2</span> mysql<span class="token operator">></span>GRANT ALL PRIVILEGES ON <span class="token builtin class-name">.</span> TO ‘root’@‘%’WITH GRANT OPTION
-<span class="token number">3</span> mysql<span class="token operator">></span>FLUSH PRIVILEGES
-<span class="token number">4</span> mysql<span class="token operator">></span>EXIT<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h2>
+<p>mysql 配置局域网内都能访问。</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">1</span></span><span class="token function-call arguments shell"> mysql<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>h</span> localhost<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>u</span> root</span>
+<span class="token function-call shell"><span class="token variable function shell">2</span></span><span class="token function-call arguments shell"> mysql<span class="token operator assignment redirection shell">&gt;</span>GRANT ALL PRIVILEGES ON . TO ‘root’@‘<span class="token group expansion job shell"><span class="token punctuation definition variable job shell">%</span></span>’WITH GRANT OPTION</span>
+<span class="token function-call shell"><span class="token variable function shell">3</span></span><span class="token function-call arguments shell"> mysql<span class="token operator assignment redirection shell">&gt;</span>FLUSH PRIVILEGES</span>
+<span class="token function-call shell"><span class="token variable function shell">4</span></span><span class="token function-call arguments shell"> mysql<span class="token operator assignment redirection shell">&gt;</span>EXIT</span>
+</span></code></pre>
 <p>这样就可以在其它任何的主机上以 root 登录，其他用户类似。但是连上以后速度比较慢，在 my.cnf 文件里面配置一下啊，</pre></p>
-<p><pre class="src">把缓存那些改大一些，加上这么一行：skip-name-resolve。</pre></p>
-<h2 id="centos-双网卡路由问题"><a href="#centos-双网卡路由问题" class="headerlink" title="centos 双网卡路由问题"></a>centos 双网卡路由问题</h2><p>centos 能 ping 通局域网，但是不能上外网，最后查处是因为双网卡到问题，添加一个默认的网关就可以了。<br>使用命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">route <span class="token function">add</span> defualt gw <span class="token number">192.168</span>.1.1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="src">把缓存那些改大一些，加上这么一行：skip-name-resolve。</pre>
+<h2 id="centos-双网卡路由问题"><a href="#centos-双网卡路由问题" class="headerlink" title="centos 双网卡路由问题"></a>centos 双网卡路由问题</h2>
+<p>centos 能 ping 通局域网，但是不能上外网，最后查处是因为双网卡到问题，添加一个默认的网关就可以了。
+使用命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">route</span></span><span class="token function-call arguments shell"> add defualt gw 192.168.1.1</span>
+</span></code></pre>
 <p>netstat -nr 查看内核 iP 路由表。</p>
-<h2 id="two-or-more-data-types-in-declaration-specifiers"><a href="#two-or-more-data-types-in-declaration-specifiers" class="headerlink" title="two or more data types in declaration specifiers"></a>two or more data types in declaration specifiers</h2><p>C 编译器这个错误指向到行会不准确，有一种情况最容易出现这样的错误，那就是在你的程序里少了个”;”号，有可能在你的头文件里，也有可能在本文件中。</p>
+<h2 id="two-or-more-data-types-in-declaration-specifiers"><a href="#two-or-more-data-types-in-declaration-specifiers" class="headerlink" title="two or more data types in declaration specifiers"></a>two or more data types in declaration specifiers</h2>
+<p>C 编译器这个错误指向到行会不准确，有一种情况最容易出现这样的错误，那就是在你的程序里少了个“;“号，有可能在你的头文件里，也有可能在本文件中。</p>
 </section>
 
     <p></p>
@@ -220,12 +215,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Linux" >
-    <span class="tag-code">Linux</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Backup" >
-    <span class="tag-code">Backup</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -277,7 +272,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#centos-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-nav-text">centos 环境变量</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#mysql"><span class="toc-nav-text">mysql</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#centos-%E5%8F%8C%E7%BD%91%E5%8D%A1%E8%B7%AF%E7%94%B1%E9%97%AE%E9%A2%98"><span class="toc-nav-text">centos 双网卡路由问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#two-or-more-data-types-in-declaration-specifiers"><span class="toc-nav-text">two or more data types in declaration specifiers</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#centos-环境变量"><span class="toc-nav-text">centos 环境变量</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#mysql"><span class="toc-nav-text">mysql</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#centos-双网卡路由问题"><span class="toc-nav-text">centos 双网卡路由问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#two-or-more-data-types-in-declaration-specifiers"><span class="toc-nav-text">two or more data types in declaration specifiers</span></a></li></ol>
     
   </div>
 </aside>
@@ -288,7 +283,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/zheteng/';
+    var url = 'http://catcoding.me//p/zheteng/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -349,7 +344,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -374,8 +369,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

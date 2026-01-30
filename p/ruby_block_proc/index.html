@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,39 +177,44 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h3 id="Callable-objects"><a href="#Callable-objects" class="headerlink" title="Callable objects"></a>Callable objects</h3><p>在 Ruby 当中一切都是对象，但是有一个例外，那就是 block。Block 和 Proc 类似，但是还是有稍有差别的，Block 更常用一些。最近在看《Metaprogramming Ruby》，在这节中有个例子是这样的。</p>
-<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token keyword">require</span> <span class="token string-literal"><span class="token string">'highline'</span></span>
-hl <span class="token operator">=</span> <span class="token class-name">HighLine</span><span class="token punctuation">.</span><span class="token keyword">new</span>
-friends <span class="token operator">=</span> hl<span class="token punctuation">.</span>ask<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"Friends?"</span></span> <span class="token punctuation">,</span> lambda <span class="token punctuation">&#123;</span><span class="token operator">|</span>s<span class="token operator">|</span> s<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">','</span></span> <span class="token punctuation">)</span> <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-puts <span class="token string-literal"><span class="token string">"You're friends with: </span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">friends<span class="token punctuation">.</span>inspect</span><span class="token delimiter punctuation">&#125;</span></span><span class="token string">"</span></span>
+    <section class="markdown-content"><h3 id="Callable-objects"><a href="#Callable-objects" class="headerlink" title="Callable objects"></a>Callable objects</h3>
+<p>在 Ruby 当中一切都是对象，但是有一个例外，那就是 block。Block 和 Proc 类似，但是还是有稍有差别的，Block 更常用一些。最近在看《Metaprogramming Ruby》，在这节中有个例子是这样的。</p>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token ruby"><span class="token require ruby"><span class="token keyword special-method ruby">require</span> <span class="token string single ruby"><span class="token punctuation definition string begin ruby">&#39;</span>highline<span class="token punctuation definition string end ruby">&#39;</span></span></span>
+hl <span class="token operator assignment ruby">=</span> <span class="token class-name ruby">HighLine</span><span class="token punctuation accessor ruby">.</span><span class="token keyword special-method ruby">new</span>
+friends <span class="token operator assignment ruby">=</span> hl<span class="token punctuation accessor ruby">.</span>ask<span class="token punctuation definition group begin ruby">(</span><span class="token string double ruby"><span class="token punctuation definition string begin ruby">&quot;</span>Friends?<span class="token punctuation definition string end ruby">&quot;</span></span> <span class="token punctuation separator ruby">,</span> <span class="token function builtin ruby">lambda</span> <span class="token punctuation section scope ruby">{</span><span class="token block parameters ruby"><span class="token punctuation definition parameters begin ruby">|</span></span><span class="token block parameters ruby"><span class="token variable parameter ruby">s</span><span class="token block parameters ruby"><span class="token punctuation definition parameters end ruby">|</span></span></span> s<span class="token punctuation accessor ruby">.</span>split<span class="token punctuation definition group begin ruby">(</span><span class="token string single ruby"><span class="token punctuation definition string begin ruby">&#39;</span>,<span class="token punctuation definition string end ruby">&#39;</span></span> <span class="token punctuation definition group end ruby">)</span> <span class="token punctuation section scope ruby">}</span><span class="token punctuation definition group end ruby">)</span>
+<span class="token function builtin ruby">puts</span> <span class="token string double ruby"><span class="token punctuation definition string begin ruby">&quot;</span>You&#39;re friends with: <span class="token ruby embedded source"><span class="token punctuation section embedded ruby">#{</span>friends<span class="token punctuation accessor ruby">.</span><span class="token function builtin ruby">inspect</span><span class="token punctuation section embedded ruby">}</span></span><span class="token punctuation definition string end ruby">&quot;</span></span>
 ⇒
-Friends<span class="token operator">?</span>
-Bill<span class="token punctuation">,</span>Mirella<span class="token punctuation">,</span>Luca
-You're friends with<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string-literal"><span class="token string">"Bill"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"Mirella"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"Luca"</span></span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token variable other constant ruby">Friends</span><span class="token operator conditional ruby">?</span>
+<span class="token variable other constant ruby">Bill</span><span class="token punctuation separator ruby">,</span><span class="token variable other constant ruby">Mirella</span><span class="token punctuation separator ruby">,</span><span class="token variable other constant ruby">Luca</span>
+<span class="token variable other constant ruby">You</span><span class="token string single ruby"><span class="token punctuation definition string begin ruby">&#39;</span>re friends with: [&quot;Bill&quot;, &quot;Mirella&quot;, &quot;Luca&quot;]
+</span></span></code></pre>
 <p>这里看起来 hl.ask 把 Proc 当作参数来传递，而不是接受了一个 block，接受 Block 是另外一种使用模式：</p>
-<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token keyword">require</span> <span class="token string-literal"><span class="token string">'highline'</span></span>
-hl <span class="token operator">=</span> <span class="token class-name">HighLine</span><span class="token punctuation">.</span><span class="token keyword">new</span>
-new_pass <span class="token operator">=</span> hl<span class="token punctuation">.</span>ask<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"password: "</span></span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token operator">|</span>prompt<span class="token operator">|</span> prompt<span class="token punctuation">.</span>echo <span class="token operator">=</span> <span class="token boolean">false</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token ruby"><span class="token require ruby"><span class="token keyword special-method ruby">require</span> <span class="token string single ruby"><span class="token punctuation definition string begin ruby">&#39;</span>highline<span class="token punctuation definition string end ruby">&#39;</span></span></span>
+hl <span class="token operator assignment ruby">=</span> <span class="token class-name ruby">HighLine</span><span class="token punctuation accessor ruby">.</span><span class="token keyword special-method ruby">new</span>
+new_pass <span class="token operator assignment ruby">=</span> hl<span class="token punctuation accessor ruby">.</span>ask<span class="token punctuation definition group begin ruby">(</span><span class="token string double ruby"><span class="token punctuation definition string begin ruby">&quot;</span>password: <span class="token punctuation definition string end ruby">&quot;</span></span><span class="token punctuation definition group end ruby">)</span> <span class="token punctuation section scope ruby">{</span> <span class="token block parameters ruby"><span class="token punctuation definition parameters begin ruby">|</span></span><span class="token block parameters ruby"><span class="token variable parameter ruby">prompt</span><span class="token block parameters ruby"><span class="token punctuation definition parameters end ruby">|</span></span></span> prompt<span class="token punctuation accessor ruby">.</span>echo <span class="token operator assignment ruby">=</span> <span class="token boolean ruby">false</span> <span class="token punctuation section scope ruby">}</span>
+</span></code></pre>
 <p>在 highline 代码可以看到相应的处理方式，第一种方式 lambda 构造成的 Proc 其实传递给了 answer_type，而 yield 来处理 block。</p>
-<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token keyword">def</span> <span class="token method-definition"><span class="token function">initialize</span></span><span class="token punctuation">(</span> question<span class="token punctuation">,</span> answer_type <span class="token punctuation">)</span>
-  <span class="token comment"># initialize instance data</span>
-  <span class="token variable">@question</span>    <span class="token operator">=</span> question
-  <span class="token variable">@answer_type</span> <span class="token operator">=</span> answer_type
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token ruby">    <span class="token function ruby"><span class="token keyword def ruby">def</span></span><span class="token function ruby"> <span class="token function ruby">initialize</span></span><span class="token function parameters ruby"><span class="token punctuation definition group begin ruby">(</span></span><span class="token function parameters ruby"> <span class="token variable parameter ruby">question</span><span class="token punctuation separator ruby">,</span> <span class="token variable parameter ruby">answer_type</span> </span><span class="token function parameters ruby"><span class="token punctuation definition group end ruby">)</span></span>
+      <span class="token comment number-sign ruby"><span class="token punctuation definition comment ruby">#</span> initialize instance data
+</span>      <span class="token variable other readwrite instance ruby"><span class="token punctuation definition variable ruby">@</span>question</span>    <span class="token operator assignment ruby">=</span> question
+      <span class="token variable other readwrite instance ruby"><span class="token punctuation definition variable ruby">@</span>answer_type</span> <span class="token operator assignment ruby">=</span> answer_type
 
-  <span class="token comment"># allow block to override settings</span>
-  <span class="token keyword">yield</span> <span class="token keyword">self</span> <span class="token keyword">if</span> block_given<span class="token operator">?</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3 id="Proc-Lambda-Block"><a href="#Proc-Lambda-Block" class="headerlink" title="Proc, Lambda, Block"></a>Proc, Lambda, Block</h3><p>有三种方式转化 Block 为 Proc, Proc.new、Lambda、&amp;Operator。但是在使用过程中 Block 还是比 Proc 要常见，在给一个函数传递这种 callable objcts 的时候，可以隐式或者显示传递，像这样：</p>
-<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token keyword">def</span> <span class="token method-definition"><span class="token function">foo</span></span><span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">)</span>
- <span class="token keyword">yield</span><span class="token punctuation">(</span>args<span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">' '</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token keyword">end</span>
+      <span class="token comment number-sign ruby"><span class="token punctuation definition comment ruby">#</span> allow block to override settings
+</span>      <span class="token keyword pseudo-method ruby">yield</span> <span class="token variable language ruby">self</span> <span class="token keyword ruby">if</span> <span class="token keyword pseudo-method ruby">block_given?</span>
+</span></code></pre><h3 id="Proc-Lambda-Block"><a href="#Proc-Lambda-Block" class="headerlink" title="Proc, Lambda, Block"></a>Proc, Lambda, Block</h3>
+<p>有三种方式转化 Block 为 Proc, Proc.new、Lambda、&amp;Operator。但是在使用过程中 Block 还是比 Proc 要常见，在给一个函数传递这种 callable objcts 的时候，可以隐式或者显示传递，像这样：</p>
+<pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token ruby"><span class="token function ruby"><span class="token keyword def ruby">def</span></span><span class="token function ruby"> <span class="token function ruby">foo</span></span><span class="token function parameters ruby"><span class="token punctuation definition group begin ruby">(</span></span><span class="token function parameters ruby"><span class="token operator splat ruby">*</span><span class="token variable parameter ruby">args</span></span><span class="token function parameters ruby"><span class="token punctuation definition group end ruby">)</span></span>
+ <span class="token keyword pseudo-method ruby">yield</span><span class="token punctuation definition group begin ruby">(</span>args<span class="token punctuation accessor ruby">.</span>join<span class="token punctuation definition group begin ruby">(</span><span class="token string single ruby"><span class="token punctuation definition string begin ruby">&#39;</span> <span class="token punctuation definition string end ruby">&#39;</span></span><span class="token punctuation definition group end ruby">)</span><span class="token punctuation definition group end ruby">)</span>
+<span class="token keyword ruby">end</span>
 
-foo<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">'Yukang'</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">'Chen'</span></span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token operator">|</span>name<span class="token operator">|</span> puts <span class="token string-literal"><span class="token string">"Hello </span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">name</span><span class="token delimiter punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">&#125;</span> <span class="token comment"># => "Hello Yukang Chen"</span>
+foo<span class="token punctuation definition group begin ruby">(</span><span class="token string single ruby"><span class="token punctuation definition string begin ruby">&#39;</span>Yukang<span class="token punctuation definition string end ruby">&#39;</span></span><span class="token punctuation separator ruby">,</span> <span class="token string single ruby"><span class="token punctuation definition string begin ruby">&#39;</span>Chen<span class="token punctuation definition string end ruby">&#39;</span></span><span class="token punctuation definition group end ruby">)</span><span class="token punctuation section scope ruby">{</span><span class="token block parameters ruby"><span class="token punctuation definition parameters begin ruby">|</span></span><span class="token block parameters ruby"><span class="token variable parameter ruby">name</span><span class="token block parameters ruby"><span class="token punctuation definition parameters end ruby">|</span></span></span> <span class="token function builtin ruby">puts</span> <span class="token string double ruby"><span class="token punctuation definition string begin ruby">&quot;</span>Hello <span class="token ruby embedded source"><span class="token punctuation section embedded ruby">#{</span><span class="token function builtin ruby">name</span><span class="token punctuation section embedded ruby">}</span></span><span class="token punctuation definition string end ruby">&quot;</span></span><span class="token punctuation section scope ruby">}</span> <span class="token comment number-sign ruby"><span class="token punctuation definition comment ruby">#</span> =&gt; &quot;Hello Yukang Chen&quot;
+</span>
+<span class="token function ruby"><span class="token keyword def ruby">def</span></span><span class="token function ruby"> <span class="token function ruby">foo</span></span><span class="token function parameters ruby"><span class="token punctuation definition group begin ruby">(</span></span><span class="token function parameters ruby"><span class="token operator splat ruby">*</span><span class="token variable parameter ruby">args</span><span class="token punctuation separator ruby">,</span> <span class="token operator ruby">&amp;</span><span class="token variable parameter ruby">blk</span></span><span class="token function parameters ruby"><span class="token punctuation definition group end ruby">)</span></span>
+ blk<span class="token punctuation accessor ruby">.</span>call<span class="token punctuation definition group begin ruby">(</span>args<span class="token punctuation accessor ruby">.</span>join<span class="token punctuation definition group begin ruby">(</span><span class="token string single ruby"><span class="token punctuation definition string begin ruby">&#39;</span> <span class="token punctuation definition string end ruby">&#39;</span></span><span class="token punctuation definition group end ruby">)</span><span class="token punctuation definition group end ruby">)</span>
+<span class="token keyword ruby">end</span>
 
-<span class="token keyword">def</span> <span class="token method-definition"><span class="token function">foo</span></span><span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">&amp;</span>blk<span class="token punctuation">)</span>
- blk<span class="token punctuation">.</span>call<span class="token punctuation">(</span>args<span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">' '</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token keyword">end</span>
-
-foo<span class="token punctuation">(</span><span class="token string-literal"><span class="token string">'Yukang'</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">'Chen'</span></span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token operator">|</span>name<span class="token operator">|</span> puts <span class="token string-literal"><span class="token string">"Hello </span><span class="token interpolation"><span class="token delimiter punctuation">#&#123;</span><span class="token content">name</span><span class="token delimiter punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">&#125;</span> <span class="token comment"># => "Hello Yukang Chen"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+foo<span class="token punctuation definition group begin ruby">(</span><span class="token string single ruby"><span class="token punctuation definition string begin ruby">&#39;</span>Yukang<span class="token punctuation definition string end ruby">&#39;</span></span><span class="token punctuation separator ruby">,</span> <span class="token string single ruby"><span class="token punctuation definition string begin ruby">&#39;</span>Chen<span class="token punctuation definition string end ruby">&#39;</span></span><span class="token punctuation definition group end ruby">)</span><span class="token punctuation section scope ruby">{</span><span class="token block parameters ruby"><span class="token punctuation definition parameters begin ruby">|</span></span><span class="token block parameters ruby"><span class="token variable parameter ruby">name</span><span class="token block parameters ruby"><span class="token punctuation definition parameters end ruby">|</span></span></span> <span class="token function builtin ruby">puts</span> <span class="token string double ruby"><span class="token punctuation definition string begin ruby">&quot;</span>Hello <span class="token ruby embedded source"><span class="token punctuation section embedded ruby">#{</span><span class="token function builtin ruby">name</span><span class="token punctuation section embedded ruby">}</span></span><span class="token punctuation definition string end ruby">&quot;</span></span><span class="token punctuation section scope ruby">}</span> <span class="token comment number-sign ruby"><span class="token punctuation definition comment ruby">#</span> =&gt; &quot;Hello Yukang Chen&quot;
+</span></span></code></pre>
 <p>隐式传递要比显式传递 performance 要好一些。这很早就有<a target="_blank" rel="noopener" href="http://www.ruby-forum.com/topic/71221">讨论</a>，具体原因是根据 Ruby 的实现一个 Block 在 yield 的时候并没有转换为 Proc 或者其他对象，所以少了一些开销。Ruby 中的函数块是高阶函数的一种特殊形式的语法，Matz 在设计块的时候考虑到： (1) 在高阶函数中，这种只有一个函数参数非常常见，在实际使用中几乎没有必要在一个地方使用多个函数参数，(2) 外观和形式上更直观，Enumerable 利用块写的代码简洁易懂。</p>
 </section>
 
@@ -241,12 +234,12 @@ foo<span class="token punctuation">(</span><span class="token string-literal"><s
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Ruby" >
-    <span class="tag-code">Ruby</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -309,7 +302,7 @@ foo<span class="token punctuation">(</span><span class="token string-literal"><s
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/ruby_block_proc/';
+    var url = 'http://catcoding.me//p/ruby_block_proc/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -370,7 +363,7 @@ foo<span class="token punctuation">(</span><span class="token string-literal"><s
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -395,8 +388,6 @@ foo<span class="token punctuation">(</span><span class="token string-literal"><s
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

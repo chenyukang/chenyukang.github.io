@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -191,50 +179,60 @@
   <article class="post-article">
     <section class="markdown-content"><p>周末在和一个日本小伙一直讨论一个 Obsidian 的 <a target="_blank" rel="noopener" href="https://github.com/tadashi-aikawa/obsidian-various-complements-plugin">补全插件</a>，经过一个周末的努力，最终这个插件完善了不少。我主要想用这个插件来补全英文输入，这个插件目前没有自带的词典。我在互联网上搜索了一圈，最终在 Github 上找了这个 <a target="_blank" rel="noopener" href="https://github.com/first20hours/google-10000-english">Google 10000 English</a>，也就是最长使用的搜索单词。</p>
 <p>实际上，前 7000 个英语单词覆盖了日常的 90% 使用场景。</p>
-<h3 id="中文输入"><a href="#中文输入" class="headerlink" title="中文输入"></a>中文输入</h3><p>首先我碰到的问题是，输入中文的时候插件也在补全英文。然后我提了第一个 issue。作者很快就回复了，给了我一个开发版本尝试，很完美的修复了这个问题。<br><img src="/images/ob_pasted-image-20211128185804.png" alt=""><br>然后在使用过程中发现另一个小问题，比如我的字典里面有 <code>apple</code>，但是如果我是在句子头部输入 <code>Ap</code> ，这个单词并没有出现在补全列表。我们当然可以把字典的单词都进行首字母大写的处理，但是这就会让字典翻倍。</p>
+<h3 id="中文输入"><a href="#中文输入" class="headerlink" title="中文输入"></a>中文输入</h3>
+<p>首先我碰到的问题是，输入中文的时候插件也在补全英文。然后我提了第一个 issue。作者很快就回复了，给了我一个开发版本尝试，很完美的修复了这个问题。
+<img src="/images/ob_pasted-image-20211128185804.png" alt="" />
+然后在使用过程中发现另一个小问题，比如我的字典里面有 <code>apple</code>，但是如果我是在句子头部输入 <code>Ap</code> ，这个单词并没有出现在补全列表。我们当然可以把字典的单词都进行首字母大写的处理，但是这就会让字典翻倍。</p>
 <p>我看了看源码，果然如自己猜想的那样，匹配的时候没有考虑首字母大写的问题。我花了一些时间做了一个 PR：<a target="_blank" rel="noopener" href="https://github.com/chenyukang/obsidian-various-complements-plugin/commit/935d7de1633b9a7685349a97302a0e908e10b215">fix issue #30, take care of uppercase </a>。</p>
-<h3 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h3><p>在我做上个修复的时候，也顺便修复了一个性能上的问题，看这个补全插件的核心算法如下：</p>
-<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">suggestWords</span><span class="token punctuation">(</span><span class="token parameter"><span class="token literal-property property">words</span><span class="token operator">:</span> Word<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token literal-property property">query</span><span class="token operator">:</span> string<span class="token punctuation">,</span> <span class="token literal-property property">max</span><span class="token operator">:</span> number</span><span class="token punctuation">)</span><span class="token operator">:</span> Word<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token punctuation">&#123;</span>
-  <span class="token keyword">return</span> Array<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>words<span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=></span> x<span class="token punctuation">.</span>value <span class="token operator">!==</span> query<span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">caseIncludesWithoutSpace</span><span class="token punctuation">(</span>x<span class="token punctuation">.</span>value<span class="token punctuation">,</span> query<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token punctuation">&#123;</span> <span class="token literal-property property">word</span><span class="token operator">:</span> x<span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> x<span class="token punctuation">.</span>value<span class="token punctuation">,</span> <span class="token literal-property property">alias</span><span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-      <span class="token punctuation">&#125;</span>
+<h3 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h3>
+<p>在我做上个修复的时候，也顺便修复了一个性能上的问题，看这个补全插件的核心算法如下：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript"><span class="token js"><span class="token function declaration js"><span class="token keyword function js">function</span> <span class="token function js">suggestWords</span><span class="token punctuation section group begin js">(</span><span class="token variable parameter function js">words</span>: <span class="token variable parameter function js">Word</span>[]<span class="token punctuation separator parameter function js">,</span> <span class="token variable parameter function js">query</span>: <span class="token variable parameter function js">string</span><span class="token punctuation separator parameter function js">,</span> <span class="token variable parameter function js">max</span>: <span class="token variable parameter function js">number</span><span class="token punctuation section group end js">)</span></span>: <span class="token class-name js">Word</span><span class="token brackets js"><span class="token punctuation section brackets js">[</span><span class="token punctuation section brackets js">]</span></span> <span class="token block js"><span class="token punctuation section block js">{</span>
+  <span class="token keyword flow js">return</span> <span class="token class-name builtin js">Array</span><span class="token punctuation accessor js">.</span><span class="token function-call method js"><span class="token variable function js">from</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token variable other readwrite js">words</span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span>
+    <span class="token punctuation accessor js">.</span><span class="token function-call method js"><span class="token variable function js">filter</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token function declaration js"><span class="token punctuation section group begin js">(</span><span class="token variable parameter function js">x</span><span class="token punctuation section group end js">)</span><span class="token function declaration js"> </span><span class="token keyword function arrow js">=&gt;</span></span> <span class="token block js"><span class="token variable other object js">x</span><span class="token punctuation accessor js">.</span><span class="token property object js">value</span> <span class="token operator comparison js">!==</span> <span class="token variable other readwrite js">query</span></span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span>
+    <span class="token punctuation accessor js">.</span><span class="token function-call method js"><span class="token variable function js">map</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token function declaration js"><span class="token punctuation section group begin js">(</span><span class="token variable parameter function js">x</span><span class="token punctuation section group end js">)</span><span class="token function declaration js"> </span><span class="token keyword function arrow js">=&gt;</span></span> <span class="token block js"><span class="token punctuation section block js">{</span>
+      <span class="token conditional js"><span class="token keyword conditional js">if</span> <span class="token group js"><span class="token punctuation section group js">(</span><span class="token function-call js"><span class="token variable function js">caseIncludesWithoutSpace</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token variable other object js">x</span><span class="token punctuation accessor js">.</span><span class="token property object js">value</span><span class="token punctuation separator comma js">,</span> <span class="token variable other readwrite js">query</span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span><span class="token punctuation section group js">)</span></span> <span class="token block js"><span class="token punctuation section block js">{</span>
+        <span class="token keyword flow js">return</span> <span class="token object-literal js"><span class="token punctuation section block js">{</span> <span class="token object-literal key js">word</span><span class="token punctuation separator key-value js">:</span> <span class="token variable other readwrite js">x</span><span class="token punctuation separator comma js">,</span> <span class="token object-literal key js">value</span><span class="token punctuation separator key-value js">:</span> <span class="token variable other object js">x</span><span class="token punctuation accessor js">.</span><span class="token property object js">value</span><span class="token punctuation separator comma js">,</span> <span class="token object-literal key js">alias</span><span class="token punctuation separator key-value js">:</span> <span class="token boolean boolean false js">false</span> <span class="token punctuation section block js">}</span></span><span class="token punctuation terminator statement js">;</span>
+      </span><span class="token block js"><span class="token punctuation section block js">}</span></span></span>
 
-      <span class="token keyword">const</span> matchedAlias <span class="token operator">=</span> x<span class="token punctuation">.</span>aliases<span class="token operator">?.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">a</span><span class="token punctuation">)</span> <span class="token operator">=></span>
-        <span class="token function">caseIncludesWithoutSpace</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> query<span class="token punctuation">)</span>
-      <span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>matchedAlias<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token punctuation">&#123;</span> <span class="token literal-property property">word</span><span class="token operator">:</span> x<span class="token punctuation">,</span> <span class="token literal-property property">value</span><span class="token operator">:</span> matchedAlias<span class="token punctuation">,</span> <span class="token literal-property property">alias</span><span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-      <span class="token punctuation">&#125;</span>
+      <span class="token keyword js">const</span> <span class="token variable other readwrite js">matchedAlias</span> <span class="token operator assignment js">=</span> <span class="token variable other object js">x</span><span class="token punctuation accessor js">.</span><span class="token property object js">aliases</span><span class="token operator ternary js">?</span><span class="token punctuation accessor js">.</span><span class="token function-call method js"><span class="token variable function js">find</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token function declaration js"><span class="token punctuation section group begin js">(</span><span class="token variable parameter function js">a</span><span class="token punctuation section group end js">)</span><span class="token function declaration js"> </span><span class="token keyword function arrow js">=&gt;</span></span>
+        <span class="token block js"><span class="token function-call js"><span class="token variable function js">caseIncludesWithoutSpace</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token variable other readwrite js">a</span><span class="token punctuation separator comma js">,</span> <span class="token variable other readwrite js">query</span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span>
+      </span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span><span class="token punctuation terminator statement js">;</span>
+      <span class="token conditional js"><span class="token keyword conditional js">if</span> <span class="token group js"><span class="token punctuation section group js">(</span><span class="token variable other readwrite js">matchedAlias</span><span class="token punctuation section group js">)</span></span> <span class="token block js"><span class="token punctuation section block js">{</span>
+        <span class="token keyword flow js">return</span> <span class="token object-literal js"><span class="token punctuation section block js">{</span> <span class="token object-literal key js">word</span><span class="token punctuation separator key-value js">:</span> <span class="token variable other readwrite js">x</span><span class="token punctuation separator comma js">,</span> <span class="token object-literal key js">value</span><span class="token punctuation separator key-value js">:</span> <span class="token variable other readwrite js">matchedAlias</span><span class="token punctuation separator comma js">,</span> <span class="token object-literal key js">alias</span><span class="token punctuation separator key-value js">:</span> <span class="token boolean boolean true js">true</span> <span class="token punctuation section block js">}</span></span><span class="token punctuation terminator statement js">;</span>
+      </span><span class="token block js"><span class="token punctuation section block js">}</span></span></span>
 
-      <span class="token keyword">return</span> <span class="token punctuation">&#123;</span> <span class="token literal-property property">word</span><span class="token operator">:</span> x<span class="token punctuation">,</span> <span class="token literal-property property">alias</span><span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=></span> x<span class="token punctuation">.</span>value <span class="token operator">!==</span> <span class="token keyword">undefined</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
-      <span class="token keyword">const</span> aliasP <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">Number</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span>alias<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">Number</span><span class="token punctuation">(</span>b<span class="token punctuation">.</span>alias<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">10000</span><span class="token punctuation">;</span>
-      <span class="token keyword">const</span> startP <span class="token operator">=</span>
-        <span class="token punctuation">(</span><span class="token function">Number</span><span class="token punctuation">(</span><span class="token function">lowerStartsWith</span><span class="token punctuation">(</span>b<span class="token punctuation">.</span>value<span class="token operator">!</span><span class="token punctuation">,</span> query<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span>
-          <span class="token function">Number</span><span class="token punctuation">(</span><span class="token function">lowerStartsWith</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span>value<span class="token operator">!</span><span class="token punctuation">,</span> query<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">*</span>
-        <span class="token number">1000</span><span class="token punctuation">;</span>
-      <span class="token keyword">const</span> lengthP <span class="token operator">=</span> a<span class="token punctuation">.</span>value<span class="token operator">!</span><span class="token punctuation">.</span>length <span class="token operator">-</span> b<span class="token punctuation">.</span>value<span class="token operator">!</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
-      <span class="token keyword">return</span> aliasP <span class="token operator">+</span> startP <span class="token operator">+</span> lengthP<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token operator">=></span> x<span class="token punctuation">.</span>word<span class="token punctuation">)</span>
-    <span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> max<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+      <span class="token keyword flow js">return</span> <span class="token object-literal js"><span class="token punctuation section block js">{</span> <span class="token object-literal key js">word</span><span class="token punctuation separator key-value js">:</span> <span class="token variable other readwrite js">x</span><span class="token punctuation separator comma js">,</span> <span class="token object-literal key js">alias</span><span class="token punctuation separator key-value js">:</span> <span class="token boolean boolean false js">false</span> <span class="token punctuation section block js">}</span></span><span class="token punctuation terminator statement js">;</span>
+    <span class="token punctuation section block js">}</span></span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span>
+    <span class="token punctuation accessor js">.</span><span class="token function-call method js"><span class="token variable function js">filter</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token function declaration js"><span class="token punctuation section group begin js">(</span><span class="token variable parameter function js">x</span><span class="token punctuation section group end js">)</span><span class="token function declaration js"> </span><span class="token keyword function arrow js">=&gt;</span></span> <span class="token block js"><span class="token variable other object js">x</span><span class="token punctuation accessor js">.</span><span class="token property object js">value</span> <span class="token operator comparison js">!==</span> <span class="token boolean undefined js">undefined</span></span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span>
+    <span class="token punctuation accessor js">.</span><span class="token function-call method js"><span class="token function mutator js">sort</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token function declaration js"><span class="token punctuation section group begin js">(</span><span class="token variable parameter function js">a</span><span class="token punctuation separator parameter function js">,</span> <span class="token variable parameter function js">b</span><span class="token punctuation section group end js">)</span><span class="token function declaration js"> </span><span class="token keyword function arrow js">=&gt;</span></span> <span class="token block js"><span class="token punctuation section block js">{</span>
+      <span class="token keyword js">const</span> <span class="token variable other readwrite js">aliasP</span> <span class="token operator assignment js">=</span> <span class="token group js"><span class="token punctuation section group js">(</span><span class="token function-call js"><span class="token variable function js">Number</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token variable other object js">a</span><span class="token punctuation accessor js">.</span><span class="token property object js">alias</span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span> <span class="token operator arithmetic js">-</span> <span class="token function-call js"><span class="token variable function js">Number</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token variable other object js">b</span><span class="token punctuation accessor js">.</span><span class="token property object js">alias</span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span><span class="token punctuation section group js">)</span></span> <span class="token operator arithmetic js">*</span> <span class="token number js">10000</span><span class="token punctuation terminator statement js">;</span>
+      <span class="token keyword js">const</span> <span class="token variable other readwrite js">startP</span> <span class="token operator assignment js">=</span>
+        <span class="token group js"><span class="token punctuation section group js">(</span><span class="token function-call js"><span class="token variable function js">Number</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token function-call js"><span class="token variable function js">lowerStartsWith</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token variable other object js">b</span><span class="token punctuation accessor js">.</span><span class="token property object js">value</span><span class="token operator logical js">!</span><span class="token punctuation separator comma js">,</span> <span class="token variable other readwrite js">query</span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span> <span class="token operator arithmetic js">-</span>
+          <span class="token function-call js"><span class="token variable function js">Number</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token function-call js"><span class="token variable function js">lowerStartsWith</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token variable other object js">a</span><span class="token punctuation accessor js">.</span><span class="token property object js">value</span><span class="token operator logical js">!</span><span class="token punctuation separator comma js">,</span> <span class="token variable other readwrite js">query</span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span><span class="token punctuation section group js">)</span></span> <span class="token operator arithmetic js">*</span>
+        <span class="token number js">1000</span><span class="token punctuation terminator statement js">;</span>
+      <span class="token keyword js">const</span> <span class="token variable other readwrite js">lengthP</span> <span class="token operator assignment js">=</span> <span class="token variable other object js">a</span><span class="token punctuation accessor js">.</span><span class="token property object js">value</span><span class="token operator logical js">!</span><span class="token punctuation accessor js">.</span><span class="token property object js">length</span> <span class="token operator arithmetic js">-</span> <span class="token variable other object js">b</span><span class="token punctuation accessor js">.</span><span class="token property object js">value</span><span class="token operator logical js">!</span><span class="token punctuation accessor js">.</span><span class="token property object js">length</span><span class="token punctuation terminator statement js">;</span>
+      <span class="token keyword flow js">return</span> <span class="token variable other readwrite js">aliasP</span> <span class="token operator arithmetic js">+</span> <span class="token variable other readwrite js">startP</span> <span class="token operator arithmetic js">+</span> <span class="token variable other readwrite js">lengthP</span><span class="token punctuation terminator statement js">;</span>
+    <span class="token punctuation section block js">}</span></span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span>
+    <span class="token punctuation accessor js">.</span><span class="token function-call method js"><span class="token variable function js">map</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token function declaration js"><span class="token punctuation section group begin js">(</span><span class="token variable parameter function js">x</span><span class="token punctuation section group end js">)</span><span class="token function declaration js"> </span><span class="token keyword function arrow js">=&gt;</span></span> <span class="token block js"><span class="token variable other object js">x</span><span class="token punctuation accessor js">.</span><span class="token property object js">word</span></span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span>
+    <span class="token punctuation accessor js">.</span><span class="token function-call method js"><span class="token variable function js">slice</span><span class="token group js"><span class="token punctuation section group js">(</span><span class="token number js">0</span><span class="token punctuation separator comma js">,</span> <span class="token variable other readwrite js">max</span></span><span class="token group js"><span class="token punctuation section group js">)</span></span></span><span class="token punctuation terminator statement js">;</span>
+<span class="token punctuation section block js">}</span></span>
+</span></code></pre>
 <p>在这个函数中如果词典列表很长，这里的 <code>filter</code>, <code>map</code>, <code>filter</code> 会遍历列表三次，是很耗时的操作。我把第一个 filter 干掉了。然后在匹配逻辑里面增加了首字母大写的相关的 <a target="_blank" rel="noopener" href="https://github.com/tadashi-aikawa/obsidian-various-complements-plugin/commit/2b3990af4b4e19198833e1deb0a8783fcd45a60e#diff-25a6634263c1b1f6fc4697a04e2b9904ea4b042a89af59dc93ec1f5d44848a26">处理</a>。除了自定义的单词词典，这里补全的候选词来源包括当前文件内容、Obsidian 的内部链接。而链接需要进行部分匹配进行补全。</p>
-<p>后续在使用过程中我又觉得补全有些慢，甚至会影响输入的体验，在 Obsidian 里面通过 <code>Ctrl+Shift+I</code> 可以打开调试面板，我们可以看到补全的耗时：<br><img src="/images/ob_pasted-image-20211128193253.png" alt=""></p>
+<p>后续在使用过程中我又觉得补全有些慢，甚至会影响输入的体验，在 Obsidian 里面通过 <code>Ctrl+Shift+I</code> 可以打开调试面板，我们可以看到补全的耗时：
+<img src="/images/ob_pasted-image-20211128193253.png" alt="" /></p>
 <p>这里的主要问题还是因为每次输入一个字母，算法都在遍历单词列表两边。优化思路有两条：</p>
 <ol>
 <li>使用类似桶排序的思路，把单词按照首字母进行分割，分成 26 个子列表，这样查找的时候就先根据首字母找到子列表，然后进行遍历搜索。</li>
 <li>使用类似 Trie Tree 的数据结构进行前缀匹配。</li>
 </ol>
 <p>后来那个作者按照第一种思路进行了 <a target="_blank" rel="noopener" href="https://github.com/tadashi-aikawa/obsidian-various-complements-plugin/commit/f6e047d479b57f3dd2171ce5eaa1c1f7692c91ad">优化</a>，很快将补全时间优化到了 0~5 ms。果然粗暴的算法其实很多时候就够了。</p>
-<h3 id="中文分词"><a href="#中文分词" class="headerlink" title="中文分词"></a>中文分词</h3><p>在日常使用过程中，我又发现了还存在这个 <a target="_blank" rel="noopener" href="https://github.com/tadashi-aikawa/obsidian-various-complements-plugin/issues/34">问题</a>。如果我尝试去修改中文句子的某个部分，这个插件会补全当前句子，就像这样：<br><img src="/images/ob_pasted-image-20211128194301.png" alt=""><br>这当然是完全没有意义的。我看了一下代码发现是没有进行中文分词，所以现在的补全把这个中文句子当作一个连续的字符串在补全。</p>
+<h3 id="中文分词"><a href="#中文分词" class="headerlink" title="中文分词"></a>中文分词</h3>
+<p>在日常使用过程中，我又发现了还存在这个 <a target="_blank" rel="noopener" href="https://github.com/tadashi-aikawa/obsidian-various-complements-plugin/issues/34">问题</a>。如果我尝试去修改中文句子的某个部分，这个插件会补全当前句子，就像这样：
+<img src="/images/ob_pasted-image-20211128194301.png" alt="" />
+这当然是完全没有意义的。我看了一下代码发现是没有进行中文分词，所以现在的补全把这个中文句子当作一个连续的字符串在补全。</p>
 <p>我自己尝试这想做一个 PR，但是没找到合适的中文分割 JavaScript 库。Obsidian 不能使用 Node 的库（移动端方面的考虑），所以也就不能使用这个 <a target="_blank" rel="noopener" href="https://github.com/yanyiwu/nodejieba/blob/master/README_EN.md">NodeJieba</a>。虽然还没完成这个分词功能，不过我也在这个过程中学着写了点 TypeScript。</p>
-<h3 id="一些感想"><a href="#一些感想" class="headerlink" title="一些感想"></a>一些感想</h3><p>这个看似简单的功能，如果要做到日常可用其实有很多细节需要完善。这个算法问题看起来不难，很适合用来进行面试，因为这是日常中很常见的一个需求场景，而且优化这个算法思路也可以很开放。</p>
+<h3 id="一些感想"><a href="#一些感想" class="headerlink" title="一些感想"></a>一些感想</h3>
+<p>这个看似简单的功能，如果要做到日常可用其实有很多细节需要完善。这个算法问题看起来不难，很适合用来进行面试，因为这是日常中很常见的一个需求场景，而且优化这个算法思路也可以很开放。</p>
 <p>TypeScript 真强，虽然我只是简单用了一下，一些常见的 JavaScript 错误比如 enum 忘记补全之类的问题都能找出来。<a target="_blank" rel="noopener" href="https://www.electronjs.org/">Electron</a> 真猛，VSCode、Obsidian、Slack 这类工具都是 Electron 开发的。</p>
 <p>开源软件的好处在于很多代码的作者对自己的成果有一种成就感，所以会想办法来完善，而用户也可以帮着来想办法。在这个过程中，不仅可以让其他人受益，自己也得到了一些学习和提高😘。</p>
 </section>
@@ -255,16 +253,16 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Tools" >
-    <span class="tag-code">Tools</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#Obsidian" >
-    <span class="tag-code">Obsidian</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -316,7 +314,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%AD%E6%96%87%E8%BE%93%E5%85%A5"><span class="toc-nav-text">中文输入</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-nav-text">性能优化</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D"><span class="toc-nav-text">中文分词</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#%E4%B8%80%E4%BA%9B%E6%84%9F%E6%83%B3"><span class="toc-nav-text">一些感想</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#中文输入"><span class="toc-nav-text">中文输入</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#性能优化"><span class="toc-nav-text">性能优化</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#中文分词"><span class="toc-nav-text">中文分词</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#一些感想"><span class="toc-nav-text">一些感想</span></a></li></ol>
     
   </div>
 </aside>
@@ -327,7 +325,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/input-complement-algorithm/';
+    var url = 'http://catcoding.me//p/input-complement-algorithm/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -388,7 +386,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -413,8 +411,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

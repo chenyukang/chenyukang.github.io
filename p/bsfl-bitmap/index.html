@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,60 +177,67 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h2 id="如何找出-int-中第一个-1"><a href="#如何找出-int-中第一个-1" class="headerlink" title="如何找出 int 中第一个 1"></a>如何找出 int 中第一个 1</h2><p>对于这个问题我们可以从最原始的做法开始，如果没找到 1 返回 0，如果第一位为 1 返回 1。所以代码很简单如下：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">first_onebit</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>x<span class="token punctuation">)</span>
-        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">else</span><span class="token punctuation">&#123;</span>
-        <span class="token keyword">int</span> idx <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>x<span class="token operator">%</span><span class="token number">2</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
-        <span class="token keyword">while</span><span class="token punctuation">(</span> x<span class="token operator">%</span><span class="token number">2</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            x<span class="token operator">>>=</span><span class="token number">1</span><span class="token punctuation">;</span>
-            idx<span class="token operator">++</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-        <span class="token keyword">return</span> idx<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <section class="markdown-content"><h2 id="如何找出-int-中第一个-1"><a href="#如何找出-int-中第一个-1" class="headerlink" title="如何找出 int 中第一个 1"></a>如何找出 int 中第一个 1</h2>
+<p>对于这个问题我们可以从最原始的做法开始，如果没找到 1 返回 0，如果第一位为 1 返回 1。所以代码很简单如下：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">static</span> <span class="token keyword c">int</span> <span class="token function c"><span class="token function c">first_onebit</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token keyword c">int</span> <span class="token variable parameter c">x</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token operator arithmetic c">!</span>x<span class="token punctuation section group end c">)</span></span>
+        <span class="token keyword c">return</span> <span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">else</span><span class="token block c"><span class="token punctuation section block begin c">{</span>
+        <span class="token keyword c">int</span> idx <span class="token operator assignment c">=</span> <span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+        <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span>x<span class="token operator arithmetic c">%</span><span class="token number c">2</span> <span class="token operator comparison c">!=</span> <span class="token number c">0</span><span class="token punctuation section group end c">)</span></span> <span class="token keyword c">return</span> <span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+        <span class="token keyword c">while</span><span class="token group c"><span class="token punctuation section group begin c">(</span> x<span class="token operator arithmetic c">%</span><span class="token number c">2</span> <span class="token operator comparison c">==</span> <span class="token number c">0</span> <span class="token punctuation section group end c">)</span></span> <span class="token block c"><span class="token punctuation section block begin c">{</span>
+            x<span class="token operator assignment augmented c">&gt;&gt;=</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+            idx<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation terminator c">;</span>
+        <span class="token punctuation section block end c">}</span></span>
+        <span class="token keyword c">return</span> idx<span class="token operator arithmetic c">+</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre>
 <p>如何能做到更好呢？这里有一个 trick 使用一条指令来完成这个工作，具体可以参考<a target="_blank" rel="noopener" href="http://lxr.free-electrons.com/source/arch/x86/include/asm/bitops.h">Linux Kernel 里面这个 ffs</a>的代码。我来简化一下就是这么一个函数：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">/* ffs: if ret == 0 : no one bit found
-   return index is begin with 1 */</span>
-<span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">first_onebit</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>x<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">int</span> ret<span class="token punctuation">;</span>
-        <span class="token function">__asm__</span><span class="token punctuation">(</span><span class="token string">"bsfl %1, %0; incl %0"</span> <span class="token operator">:</span> <span class="token string">"=r"</span> <span class="token punctuation">(</span>ret<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token string">"r"</span> <span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>这里的 bsfl 是一条 intel 汇编指令，它的用法是 bsfl op1,op2:顺向位扫描从右向左（从位 0–&gt;位 15 或位 31）扫描单节字或双字节操作数 op2 中第一个含”1”的位，并把扫描到的第一个含’1’的位的位号送操作数 op1 中，所以就是一条指令完成了这个计算过程。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token comment c"><span class="token punctuation definition comment c">/*</span> ffs: if ret == 0 : no one bit found
+   return index is begin with 1 <span class="token punctuation definition comment c">*/</span></span>
+<span class="token keyword c">static</span> <span class="token keyword c">int</span> <span class="token function c"><span class="token function c">first_onebit</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token keyword c">int</span> <span class="token variable parameter c">x</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    <span class="token keyword c">if</span> <span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token operator arithmetic c">!</span>x<span class="token punctuation section group end c">)</span></span> <span class="token block c"><span class="token punctuation section block begin c">{</span>
+        <span class="token keyword c">return</span> <span class="token operator arithmetic c">-</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+    <span class="token keyword c">else</span> <span class="token block c"><span class="token punctuation section block begin c">{</span>
+        <span class="token keyword c">int</span> ret<span class="token punctuation terminator c">;</span>
+        <span class="token keyword c">__asm__</span><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>bsfl %1, %0; incl %0<span class="token punctuation definition string end c">&quot;</span></span> <span class="token operator ternary c">:</span> <span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>=r<span class="token punctuation definition string end c">&quot;</span></span> <span class="token group c"><span class="token punctuation section group begin c">(</span>ret<span class="token punctuation section group end c">)</span></span> <span class="token operator ternary c">:</span> <span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>r<span class="token punctuation definition string end c">&quot;</span></span> <span class="token group c"><span class="token punctuation section group begin c">(</span>x<span class="token punctuation section group end c">)</span></span><span class="token punctuation section group end c">)</span></span><span class="token punctuation terminator c">;</span>
+        <span class="token keyword c">return</span> ret<span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre>
+<p>这里的 bsfl 是一条 intel 汇编指令，它的用法是 bsfl op1,op2:顺向位扫描从右向左（从位 0–&gt;位 15 或位 31）扫描单节字或双字节操作数 op2 中第一个含“1“的位，并把扫描到的第一个含’1’的位的位号送操作数 op1 中，所以就是一条指令完成了这个计算过程。</p>
 <p>这里真的会有多大的差别么，我们可以用程序来计算一下，测试如下：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">int</span> x<span class="token punctuation">;</span>
-    <span class="token keyword">for</span><span class="token punctuation">(</span>x<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> x<span class="token operator">&lt;=</span><span class="token number">1000000000</span><span class="token punctuation">;</span> x<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-        <span class="token function">first_onebit</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">int</span> <span class="token function c"><span class="token function c">main</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    <span class="token keyword c">int</span> x<span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">for</span><span class="token group c"><span class="token punctuation section group begin c">(</span>x<span class="token operator assignment c">=</span><span class="token number c">0</span><span class="token punctuation terminator c">;</span> x<span class="token operator comparison c">&lt;=</span><span class="token number c">1000000000</span><span class="token punctuation terminator c">;</span> x<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c">)</span></span><span class="token block c"><span class="token punctuation section block begin c">{</span>
+        <span class="token function-call c"><span class="token variable function c">first_onebit</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">x</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+    <span class="token keyword c">return</span> <span class="token number c">0</span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre>
 <p>第一个版本花费时间 15.685s，第二个版本花费时间 5.960s，而其实如果只是循环 1000000000 次什么也不做也好花费 3.091s，所以第二个版本快到如此程度。</p>
-<h2 id="bitmap-的优化"><a href="#bitmap-的优化" class="headerlink" title="bitmap 的优化"></a>bitmap 的优化</h2><p>bitmap 是一种常用的数据结构，在编程珠玑有详细介绍，应用也比较广泛比如可以用来做操作系统当中的<a target="_blank" rel="noopener" href="http://wiki.osdev.org/Page_Frame_Allocation">地址索引查询</a>。对于 bitmap 中我们常常需要一个操作来找一个空位的 bit 来做 set 操作。既然我们知道了第一个 1 是如何快速查找的，第一 0 也就好办了，先取反，然后再找第一个 1 就行了。</p>
-<pre><code>#define first_zerobit(x) (first_onebit(~(x)))
-</code></pre><p>继续 bitmap 的 first_empty 就优化成这样了：</p>
-<pre class="line-numbers language-c" data-language="c"><code class="language-c">u32 <span class="token function">first_empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    u32 idx<span class="token punctuation">;</span>
-    <span class="token keyword">for</span><span class="token punctuation">(</span>idx<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> idx<span class="token operator">&lt;</span>max_idx<span class="token punctuation">;</span> idx<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>arr<span class="token punctuation">[</span>idx<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0xFFFFFFFF</span><span class="token punctuation">)</span> <span class="token comment">//full</span>
-            <span class="token keyword">continue</span><span class="token punctuation">;</span>
-        u32 v <span class="token operator">=</span> arr<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token number">32</span><span class="token operator">*</span>idx <span class="token operator">+</span> <span class="token function">first_zerobit</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>这样的用汇编指令来优化可能会有平台差异，所以你最好清楚自己的平台是否适用。</p>
+<h2 id="bitmap-的优化"><a href="#bitmap-的优化" class="headerlink" title="bitmap 的优化"></a>bitmap 的优化</h2>
+<p>bitmap 是一种常用的数据结构，在编程珠玑有详细介绍，应用也比较广泛比如可以用来做操作系统当中的<a target="_blank" rel="noopener" href="http://wiki.osdev.org/Page_Frame_Allocation">地址索引查询</a>。对于 bitmap 中我们常常需要一个操作来找一个空位的 bit 来做 set 操作。既然我们知道了第一个 1 是如何快速查找的，第一 0 也就好办了，先取反，然后再找第一个 1 就行了。</p>
+#define first_zerobit(x) (first_onebit(~(x)))
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+<p>继续 bitmap 的 first_empty 就优化成这样了：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c">u32 <span class="token function c"><span class="token function c">first_empty</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
+</span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
+    u32 idx<span class="token punctuation terminator c">;</span>
+    <span class="token keyword c">for</span><span class="token group c"><span class="token punctuation section group begin c">(</span>idx<span class="token operator assignment c">=</span><span class="token number c">0</span><span class="token punctuation terminator c">;</span> idx<span class="token operator comparison c">&lt;</span>max_idx<span class="token punctuation terminator c">;</span> idx<span class="token operator arithmetic c">+</span><span class="token operator arithmetic c">+</span><span class="token punctuation section group end c">)</span></span><span class="token block c"><span class="token punctuation section block begin c">{</span>
+        <span class="token keyword c">if</span><span class="token group c"><span class="token punctuation section group begin c">(</span>arr<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>idx<span class="token punctuation section brackets end c">]</span></span> <span class="token operator comparison c">==</span> <span class="token number c">0xFFFFFFFF</span><span class="token punctuation section group end c">)</span></span> <span class="token comment double-slash c"><span class="token punctuation definition comment c">//</span>full
+</span>            <span class="token keyword c">continue</span><span class="token punctuation terminator c">;</span>
+        u32 v <span class="token operator assignment c">=</span> arr<span class="token brackets c"><span class="token punctuation section brackets begin c">[</span>index<span class="token punctuation section brackets end c">]</span></span><span class="token punctuation terminator c">;</span>
+        <span class="token keyword c">return</span> <span class="token number c">32</span><span class="token operator c">*</span>idx <span class="token operator arithmetic c">+</span> <span class="token function-call c"><span class="token variable function c">first_zerobit</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">v</span></span><span class="token function-call c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span> <span class="token operator arithmetic c">-</span> <span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+    <span class="token punctuation section block end c">}</span></span>
+    <span class="token keyword c">return</span> <span class="token operator arithmetic c">-</span><span class="token number c">1</span><span class="token punctuation terminator c">;</span>
+</span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block end c">}</span></span></span>
+</span></code></pre><h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2>
+<p>这样的用汇编指令来优化可能会有平台差异，所以你最好清楚自己的平台是否适用。</p>
 </section>
 
     <p></p>
@@ -261,12 +256,12 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Programming" >
-    <span class="tag-code">Programming</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
-  <a href="/tags#bitmap" >
-    <span class="tag-code">bitmap</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -318,7 +313,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E5%A6%82%E4%BD%95%E6%89%BE%E5%87%BA-int-%E4%B8%AD%E7%AC%AC%E4%B8%80%E4%B8%AA-1"><span class="toc-nav-text">如何找出 int 中第一个 1</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#bitmap-%E7%9A%84%E4%BC%98%E5%8C%96"><span class="toc-nav-text">bitmap 的优化</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-nav-text">注意</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#如何找出-int-中第一个-1"><span class="toc-nav-text">如何找出 int 中第一个 1</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#bitmap-的优化"><span class="toc-nav-text">bitmap 的优化</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#注意"><span class="toc-nav-text">注意</span></a></li></ol>
     
   </div>
 </aside>
@@ -329,7 +324,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/bsfl-bitmap/';
+    var url = 'http://catcoding.me//p/bsfl-bitmap/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -390,7 +385,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -415,8 +410,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>

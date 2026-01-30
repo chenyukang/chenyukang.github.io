@@ -13,36 +13,24 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-
-  
-<link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-
-  
-<script src="/js/qrious.js"></script>
+  <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/geopattern.min.js"></script>
 <script src="/js/nprogress.min.js"></script>
 
-
   
-  <link rel="shortcut icon" href="/css/images/favicon.ico">
+  <link rel="icon" href="/css/images/favicon.ico">
   
   <title>
     
@@ -61,7 +49,7 @@
 
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
-<meta name="generator" content="Hexo 5.4.2"></head>
+</head>
 
   <body>
     <header class="header fixed-header">
@@ -189,15 +177,14 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>公司这群人终于打算从 CVS 迁徙到 Git 上了，CVS 这套公司用了六年。CVS 这是 90 年代的东西，我们不能因为年代久远而嫌弃这，只是 CVS 这东西对于一个比较大的项目来说创建分支是相当漫长，大多数程序员都没有耐心的。<br>迁徙计划虽然纸上谈兵了很长时间，直到现在才终于打算行动。</p>
+    <section class="markdown-content"><p>公司这群人终于打算从 CVS 迁徙到 Git 上了，CVS 这套公司用了六年。CVS 这是 90 年代的东西，我们不能因为年代久远而嫌弃这，只是 CVS 这东西对于一个比较大的项目来说创建分支是相当漫长，大多数程序员都没有耐心的。
+迁徙计划虽然纸上谈兵了很长时间，直到现在才终于打算行动。</p>
 <p>上午把 Git 在服务器上搭建好，主要卡在一个 Git 的命令上，因为一些权限问题。</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> init <span class="token parameter variable">--bare</span> <span class="token parameter variable">--shared</span><span class="token operator">=</span>group <span class="token punctuation">;</span> <span class="token parameter variable">--shared</span><span class="token operator">=</span>group forget this<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">git</span></span><span class="token function-call arguments shell"> init<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>bare</span><span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>shared</span><span class="token operator assignment option shell">=</span>group</span> <span class="token operator logical continue shell">;</span> <span class="token variable other readwrite assignment shell">--shared</span><span class="token operator assignment shell">=</span><span class="token string unquoted shell">group</span> <span class="token function-call shell"><span class="token variable function shell">forget</span></span><span class="token function-call arguments shell"> this</span>
+</span></code></pre>
 <p>Git 的 web 接口是用的是<a target="_blank" rel="noopener" href="http://viewgit.fealdia.org/">ViewGit</a>，自己做了一些修改，加上<a target="_blank" rel="noopener" href="http://qbnz.com/highlighter/">GeShi</a>来高亮代码，并使用了<a target="_blank" rel="noopener" href="https://github.com/trybeee/GitStats">GitStats</a>来做代码统计。GitStats 统计的项目非常多，看起来很直观。</p>
 <p>稍微记录一下常用的一些 git 命令：</p>
 <table><tbody><tr><td>检出仓库</td><td>git clone repo</td></tr><tr><td>更新</td><td>git pull</td></tr><tr><td>提交到远程</td><td>git push</td></tr><tr><td>提交到本地</td><td>git commit -am”log message”</td></tr><tr><td>创建 branch</td><td>git branch branch_name</td></tr><tr><td>切换 branch</td><td>git checkout branch_name</td></tr><tr><td>合并 branch</td><td>git merge branch_name</td></tr><tr><td>图形界面</td><td>gitk</td></tr><tr><td>解决冲突</td><td>git mergetool</td></tr><tr><td>撤销上一次 commit</td><td>git revert HEAD</td></tr><tr><td>撤销上上次 commit</td><td>git revert HEAD^</td></tr><tr><td>撤销上一次的 merge</td><td>git reset –hard HEAD^</td></tr></tbody></table>
-
-
-
 <p>这里有一个最直观的 Git 学习的地方<a target="_blank" rel="noopener" href="http://pcottle.github.io/learnGitBranching/?demo">leanGitBranch</a>。</p>
 </section>
 
@@ -217,8 +204,8 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#Tools" >
-    <span class="tag-code">Tools</span>
+  <a href="/tags#" >
+    <span class="tag-code"></span>
   </a>
 
       </div>
@@ -271,7 +258,7 @@
 
 <script>
   (function () {
-    var url = 'http://catcoding.me/p/git-command/';
+    var url = 'http://catcoding.me//p/git-command/';
     var banner = ''
     if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
       $('#article-banner').css({
@@ -332,7 +319,7 @@
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
-        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a target="_blank" rel="noopener" href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
     </p>
 </footer>
 
@@ -357,8 +344,6 @@
     })
 </script>
 
-
 <script src="/js/script.js"></script>
-
   </body>
 </html>
