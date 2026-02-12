@@ -241,6 +241,35 @@
 <img src="/images/ob_pasted-image-20230307105335.png" alt="" />
 注意必须通过 UI 设置，这条命令虽然提示设置成功了，但是其实没成功 😂：
 <img src="/images/ob_pasted-image-20230307110005.png" alt="" /></p>
+<hr />
+<p>Update 2026-02-12:
+今天我又发现在 VsCode 下的 terminal 跑测试的时候比较慢，比如这个测试程序：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token operator rust">#</span><span class="token operator rust">!</span><span class="token operator rust">/</span>bin<span class="token operator rust">/</span>bash
+
+rm <span class="token operator rust">-</span>rf <span class="token operator rust">/</span>tmp<span class="token operator rust">/</span>speed_test
+mkdir <span class="token operator rust">-</span>p <span class="token operator rust">/</span>tmp<span class="token operator rust">/</span>speed_test
+<span class="token constant rust">TIMEFORMAT</span><span class="token operator rust">=</span><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>%R<span class="token punctuation definition string end rust">&quot;</span></span>
+
+first_execution_time<span class="token operator rust">=</span><span class="token number integer decimal rust">0</span>
+second_execution_time<span class="token operator rust">=</span><span class="token number integer decimal rust">0</span>
+
+<span class="token keyword rust">for</span> i <span class="token operator rust">in</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span><span class="token number integer decimal rust">1</span><span class="token operator rust">..</span><span class="token number integer decimal rust">10</span></span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span><span class="token punctuation terminator rust">;</span><span class="invalid illegal rust">do</span>
+    <span class="token constant rust">FILENAME</span><span class="token operator rust">=</span><span class="token operator rust">$</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>openssl rand <span class="token operator rust">-</span>hex <span class="token number integer decimal rust">10</span></span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+    echo <span class="token operator rust">$</span><span class="token operator rust">&#39;</span><span class="token operator rust">#</span><span class="token operator rust">!</span><span class="token operator rust">/</span>bin<span class="token operator rust">/</span>sh\necho Hello<span class="token operator rust">&#39;</span> <span class="token operator rust">&gt;</span> <span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>/tmp/speed_test/$FILENAME.sh<span class="token punctuation definition string end rust">&quot;</span></span>
+    chmod a<span class="token operator rust">+</span>x <span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>/tmp/speed_test/$FILENAME.sh<span class="token punctuation definition string end rust">&quot;</span></span>
+    <span class="token constant rust">FILE</span><span class="token operator rust">=</span><span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>/tmp/speed_test/$FILENAME.sh<span class="token punctuation definition string end rust">&quot;</span></span>
+
+    first<span class="token operator rust">=</span>`<span class="token group rust"><span class="token punctuation section group begin rust">(</span>time <span class="token variable other rust">$FILE</span> <span class="token operator rust">&gt;</span> <span class="token operator rust">/</span>dev<span class="token operator rust">/</span>null</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token number integer decimal rust">2</span><span class="token operator rust">&gt;</span><span class="token operator rust">&amp;</span><span class="token number integer decimal rust">1</span>`
+    first_execution_time<span class="token operator rust">=</span><span class="token operator rust">$</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>echo <span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>$first_execution_time + $first<span class="token punctuation definition string end rust">&quot;</span></span> <span class="token operator rust">|</span> bc</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+    echo <span class="token variable other rust">$first_execution_time</span>
+
+    second<span class="token operator rust">=</span>`<span class="token group rust"><span class="token punctuation section group begin rust">(</span>time <span class="token variable other rust">$FILE</span> <span class="token operator rust">&gt;</span> <span class="token operator rust">/</span>dev<span class="token operator rust">/</span>null</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span> <span class="token number integer decimal rust">2</span><span class="token operator rust">&gt;</span><span class="token operator rust">&amp;</span><span class="token number integer decimal rust">1</span>`
+    second_execution_time<span class="token operator rust">=</span><span class="token operator rust">$</span><span class="token group rust"><span class="token punctuation section group begin rust">(</span>echo <span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>$second_execution_time + $second<span class="token punctuation definition string end rust">&quot;</span></span> <span class="token operator rust">|</span> bc</span><span class="token group rust"><span class="token punctuation section group end rust">)</span></span>
+    echo <span class="token variable other rust">$second_execution_time</span>
+    echo <span class="token string double rust"><span class="token punctuation definition string begin rust">&quot;</span>------------------------<span class="token punctuation definition string end rust">&quot;</span></span>
+done
+</span></code></pre>
+<p>从我的测试结果来看，第一次比第二次慢 10 倍，但是在我的 Mac terminal 下跑这个测试脚本，第一次和第二次的结果相同，都是比较快的。在 AI 的帮助下，我最终通过把 VsCode 加入 Full Disk Access 列表，即解决了。这是 macOS 的 <code>AMFI</code>（Apple Mobile File Integrity）/ <code>XProtect</code> 对<strong>任何新创建的可执行文件</strong>的首次执行扫描，Developer Tools 不能完全绕过它。</p>
 </section>
 
     <p></p>
