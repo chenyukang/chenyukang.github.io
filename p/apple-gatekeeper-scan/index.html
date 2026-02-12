@@ -197,40 +197,37 @@
 <span class="token keyword done shell">done</span>
 </span></code></pre>
 <p>在 VS Code 终端的输出：</p>
-第一次: 0.525  第二次: 0.007
+<pre class="line-numbers language-console" data-language="console"><code class="language-console">第一次: 0.525  第二次: 0.007
 第一次: 0.290  第二次: 0.009
 第一次: 0.280  第二次: 0.007
 第一次: 0.272  第二次: 0.008
 第一次: 0.307  第二次: 0.008
 ...
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+</code></pre>
 <p>差距大概 30-50 倍。换到 Warp 终端跑同一个脚本，两次都在 0.006s 左右。</p>
 <h2 id="定位：syspolicyd"><a href="#定位：syspolicyd" class="headerlink" title="定位：syspolicyd"></a>定位：syspolicyd</h2>
+<p>应该不是我上篇文章提到的 SIP 问题，我确定 <strong>System Settings → Privacy &amp; Security → Developer Tools</strong> 中已经加入了 VS Code。</p>
 <p>看起来也不像是文件系统缓存的原因，因为 0.2-0.5 秒远超磁盘缓存的量级。用 <code>log show</code> 看了下系统日志：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">log</span></span><span class="token function-call arguments shell"> show<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>predicate</span> <span class="token string single shell"><span class="token punctuation definition string begin shell">&#39;</span>subsystem == &quot;com.apple.syspolicy.exec&quot;<span class="token punctuation definition string end shell">&#39;</span></span><span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>last</span> 2m<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>style</span> compact</span>
 </span></code></pre>
 <p>输出大量这样的记录：</p>
-GK performScan: PST: (path: 8d0e4c2de41c3e77), (team: (null)), (id: (null)), (bundle_id: (null))
+<pre class="line-numbers language-console" data-language="console"><code class="language-console">GK performScan: PST: (path: 8d0e4c2de41c3e77), (team: (null)), (id: (null)), (bundle_id: (null))
 Error Domain=NSOSStatusErrorDomain Code=-67062
 GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_BUNDLE), 0, 0, 1, 0, 7, 7, 0
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
-<p>看起来每次执行新文件 <code>syspolicyd</code> 都会做一次 <code>GK performScan</code>。这就是 macOS 的 Gatekeeper 安全扫描——对首次执行的新可执行文件做代码签名验证和恶意软件检查。扫描结果会被缓存，所以同一个文件第二次执行就快了。</p>
+</code></pre>
+<p>从日志上看每次执行新文件 <code>syspolicyd</code> 都会做一次 <code>GK performScan</code>。这就是 macOS 的 Gatekeeper 安全扫描——对首次执行的新可执行文件做代码签名验证和恶意软件检查。扫描结果会被缓存，所以同一个文件第二次执行就快了。</p>
 <p>进一步验证：我们把测试脚本里改成 <code>(time /bin/sh $FILE &gt; /dev/null) 2&gt;&amp;1</code>，这样就是直接通过 sh 来执行：</p>
-直接执行 ./script.sh  → 0.248s (触发 execve → Gatekeeper 扫描)
+<pre class="line-numbers language-console" data-language="console"><code class="language-console">直接执行 ./script.sh  → 0.248s (触发 execve → Gatekeeper 扫描)
 /bin/sh ./script.sh   → 0.006s (只是让 /bin/sh 读取文件，不触发安全扫描)
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+</code></pre>
 <p>原因确认了。当用 <code>./script.sh</code> 执行时，内核的 <code>execve</code> 系统调用会触发 <code>AppleSystemPolicy.kext</code> 中的 MACF hook (<code>mpo_proc_notify_exec_complete</code>)，通知 <code>syspolicyd</code> 进行评估。而 <code>/bin/sh script.sh</code> 只是让已受信的 <code>/bin/sh</code> 进程读取文件内容来解释执行，不触发 <code>execve</code> 的安全检查路径。</p>
-<h2 id="先试了-Developer-Tools"><a href="#先试了-Developer-Tools" class="headerlink" title="先试了 Developer Tools"></a>先试了 Developer Tools</h2>
-<p>第一个尝试是在 <strong>System Settings → Privacy &amp; Security → Developer Tools</strong> 中加入 VS Code。</p>
-<p>Developer Tools 授权允许应用运行不满足系统安全策略的本地软件。我把 VS Code 加进去并重启，结果——没用。Gatekeeper 扫描照样触发。</p>
-<p>回头想想也合理：Developer Tools 只是告诉系统“允许执行“，但 Gatekeeper 到底扫不扫，那是另一件事。相当于门卫说“可以进“，但安检流程还在。</p>
 <h2 id="Full-Disk-Access-有效"><a href="#Full-Disk-Access-有效" class="headerlink" title="Full Disk Access 有效"></a>Full Disk Access 有效</h2>
 <p>接着试了 <strong>System Settings → Privacy &amp; Security → Full Disk Access</strong>，给 VS Code 完全磁盘访问权限。重启 VS Code，再跑脚本：</p>
-第一次: 0.005  第二次: 0.005
+<pre class="line-numbers language-console" data-language="console"><code class="language-console">第一次: 0.005  第二次: 0.005
 第一次: 0.005  第二次: 0.005
 第一次: 0.006  第二次: 0.006
 ...
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+</code></pre>
 <p>问题消失了。<code>syspolicyd</code> 日志中的 <code>performScan</code> 也不再出现。</p>
 <h2 id="为什么-Full-Disk-Access-有效"><a href="#为什么-Full-Disk-Access-有效" class="headerlink" title="为什么 Full Disk Access 有效"></a>为什么 Full Disk Access 有效</h2>
 <p>Full Disk Access (FDA) 在 macOS 的 TCC (Transparency, Consent, and Control) 框架中对应的是 <code>kTCCServiceSystemPolicyAllFiles</code> 权限。这个权限的含义远超“磁盘访问“——它实际上是 TCC 框架中最高级别的信任授权。</p>
@@ -251,10 +248,10 @@ GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_B
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token comment number-sign shell"><span class="token punctuation definition comment begin shell">#</span></span><span class="token comment number-sign shell"> 查看最近的 syspolicyd 扫描记录</span><span class="token comment number-sign shell">
 </span><span class="token function-call shell"><span class="token variable function shell">log</span></span><span class="token function-call arguments shell"> show<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>predicate</span> <span class="token string single shell"><span class="token punctuation definition string begin shell">&#39;</span>subsystem == &quot;com.apple.syspolicy.exec&quot;<span class="token punctuation definition string end shell">&#39;</span></span><span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>last</span> 5m<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>style</span> compact</span> <span class="token operator logical pipe shell">|</span> <span class="token function-call shell"><span class="token variable function shell">grep</span></span><span class="token function-call arguments shell"> performScan</span>
 </span></code></pre>
-<p>解决方案按偏好排序：</p>
+<p>解决方案按排序：</p>
 <ol>
-<li>给你的程序加 Full Disk Access</li>
 <li>给你的程序加如到 Developer Tools 列表</li>
+<li>给你的程序加 Full Disk Access</li>
 </ol>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2>
 <ul>
@@ -326,7 +323,7 @@ GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_B
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#问题"><span class="toc-nav-text">问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#定位：syspolicyd"><span class="toc-nav-text">定位：syspolicyd</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#先试了-Developer-Tools"><span class="toc-nav-text">先试了 Developer Tools</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Full-Disk-Access-有效"><span class="toc-nav-text">Full Disk Access 有效</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#为什么-Full-Disk-Access-有效"><span class="toc-nav-text">为什么 Full Disk Access 有效</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一个有趣的细节：信任会被“记住“"><span class="toc-nav-text">一个有趣的细节：信任会被“记住“</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结"><span class="toc-nav-text">总结</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参考"><span class="toc-nav-text">参考</span></a></li></ol>
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#问题"><span class="toc-nav-text">问题</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#定位：syspolicyd"><span class="toc-nav-text">定位：syspolicyd</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Full-Disk-Access-有效"><span class="toc-nav-text">Full Disk Access 有效</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#为什么-Full-Disk-Access-有效"><span class="toc-nav-text">为什么 Full Disk Access 有效</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一个有趣的细节：信任会被“记住“"><span class="toc-nav-text">一个有趣的细节：信任会被“记住“</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#总结"><span class="toc-nav-text">总结</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参考"><span class="toc-nav-text">参考</span></a></li></ol>
     
   </div>
 </aside>
