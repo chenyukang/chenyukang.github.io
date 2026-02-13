@@ -44,9 +44,6 @@
   </div>
 
   
-  
-
-
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
 </head>
@@ -163,14 +160,14 @@
   </div>
 </header>
 
-    <div id="article-banner">
+    
+<div id="article-banner">
   <h2>Fiber Network: 基于 CKB 实现的闪电网络</h2>
   <p class="post-date">2025-03-16</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
 </div>
-
 
 <main class="app-body flex-box">
 
@@ -283,17 +280,20 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#" >
-    <span class="tag-code"></span>
+
+  <a href="/tags#区块链" >
+    <span class="tag-code">区块链</span>
   </a>
 
-  <a href="/tags#" >
-    <span class="tag-code"></span>
+  <a href="/tags#CKB" >
+    <span class="tag-code">CKB</span>
   </a>
 
-  <a href="/tags#" >
-    <span class="tag-code"></span>
+  <a href="/tags#Fiber" >
+    <span class="tag-code">Fiber</span>
   </a>
+
+
 
       </div>
     
@@ -303,22 +303,23 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/p/future-size-perf/">
+      <a class="nav-left" href="/p/2024-summary/">
         <span class="nav-arrow">← </span>
         
-          Future 的大小对性能的影响
+          2024：简单的理想生活
         
       </a>
     
     
-      <a class="nav-right" href="/p/2024-summary/">
+      <a class="nav-right" href="/p/future-size-perf/">
         
-          2024：简单的理想生活
+          Future 的大小对性能的影响
         
         <span class="nav-arrow"> →</span>
       </a>
     
   </div>
+
 
     <!-- NAV END -->
 
@@ -334,7 +335,7 @@
       crossorigin="anonymous"
       async>
     </script>
-
+  
 
   </article>
   <!-- Article END -->
@@ -344,7 +345,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Fiber-简介"><span class="toc-nav-text">Fiber 简介</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#前提知识"><span class="toc-nav-text">前提知识</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#重要模块"><span class="toc-nav-text">重要模块</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Actor-Model-和-Channel-管理"><span class="toc-nav-text">Actor Model 和 Channel 管理</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#支付和多跳路由"><span class="toc-nav-text">支付和多跳路由</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#节点广播协议-Gossip"><span class="toc-nav-text">节点广播协议 Gossip</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#隐私-Onion-加解密"><span class="toc-nav-text">隐私 Onion 加解密</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Watchtower"><span class="toc-nav-text">Watchtower</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#其他技术决策"><span class="toc-nav-text">其他技术决策</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#后续展望"><span class="toc-nav-text">后续展望</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Fiber-简介"><span class="toc-text">Fiber 简介</span></a><ol><li class="toc-item toc-level-3"><a class="toc-link" href="#前提知识"><span class="toc-text">前提知识</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重要模块"><span class="toc-text">重要模块</span></a><ol><li class="toc-item toc-level-3"><a class="toc-link" href="#Actor-Model-和-Channel-管理"><span class="toc-text">Actor Model 和 Channel 管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#支付和多跳路由"><span class="toc-text">支付和多跳路由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#节点广播协议-Gossip"><span class="toc-text">节点广播协议 Gossip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#隐私-Onion-加解密"><span class="toc-text">隐私 Onion 加解密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Watchtower"><span class="toc-text">Watchtower</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他技术决策"><span class="toc-text">其他技术决策</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后续展望"><span class="toc-text">后续展望</span></a></li></ol>
     
   </div>
 </aside>
@@ -413,6 +414,7 @@
     <div class="scroll-top">
   <span class="arrow-icon"></span>
 </div>
+
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
@@ -442,5 +444,6 @@
 </script>
 
 <script src="/js/script.js"></script>
+
   </body>
 </html>

@@ -44,9 +44,6 @@
   </div>
 
   
-  
-
-
 
 <script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
 </head>
@@ -163,14 +160,14 @@
   </div>
 </header>
 
-    <div id="article-banner">
+    
+<div id="article-banner">
   <h2>Rust 编译器源码概要</h2>
   <p class="post-date">2023-03-13</p>
   <div class="arrow-down">
     <a href="javascript:;"></a>
   </div>
 </div>
-
 
 <main class="app-body flex-box">
 
@@ -470,17 +467,20 @@
       <div class="tags">
         <span>Tags:</span>
         
-  <a href="/tags#" >
-    <span class="tag-code"></span>
+
+  <a href="/tags#编程" >
+    <span class="tag-code">编程</span>
   </a>
 
-  <a href="/tags#" >
-    <span class="tag-code"></span>
+  <a href="/tags#Rust" >
+    <span class="tag-code">Rust</span>
   </a>
 
-  <a href="/tags#" >
-    <span class="tag-code"></span>
+  <a href="/tags#编译器" >
+    <span class="tag-code">编译器</span>
   </a>
+
+
 
       </div>
     
@@ -490,22 +490,23 @@
   <div class="nav-container">
     <!-- reverse left and right to put prev and next in a more logic postition -->
     
-      <a class="nav-left" href="/p/chatgpt-tools/">
+      <a class="nav-left" href="/p/apple-perf/">
         <span class="nav-arrow">← </span>
         
-          人类的终极工具
+          苹果：为了安全让 M2 吃灰
         
       </a>
     
     
-      <a class="nav-right" href="/p/apple-perf/">
+      <a class="nav-right" href="/p/chatgpt-tools/">
         
-          苹果：为了安全让 M2 吃灰
+          人类的终极工具
         
         <span class="nav-arrow"> →</span>
       </a>
     
   </div>
+
 
     <!-- NAV END -->
 
@@ -521,7 +522,7 @@
       crossorigin="anonymous"
       async>
     </script>
-
+  
 
   </article>
   <!-- Article END -->
@@ -531,7 +532,7 @@
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#整体架构"><span class="toc-nav-text">整体架构</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#编译入口"><span class="toc-nav-text">编译入口</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Lexing"><span class="toc-nav-text">Lexing</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Parsing"><span class="toc-nav-text">Parsing</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#错误处理"><span class="toc-nav-text">错误处理</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#宏展开"><span class="toc-nav-text">宏展开</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Name-resolution"><span class="toc-nav-text">Name resolution</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Ast-validation"><span class="toc-nav-text">Ast validation</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#HIR"><span class="toc-nav-text">HIR</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Type-Inference"><span class="toc-nav-text">Type Inference</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#MIR"><span class="toc-nav-text">MIR</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Codegen-代码生成"><span class="toc-nav-text">Codegen 代码生成</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#整体架构"><span class="toc-text">整体架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译入口"><span class="toc-text">编译入口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lexing"><span class="toc-text">Lexing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Parsing"><span class="toc-text">Parsing</span></a><ol><li class="toc-item toc-level-3"><a class="toc-link" href="#错误处理"><span class="toc-text">错误处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#宏展开"><span class="toc-text">宏展开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Name-resolution"><span class="toc-text">Name resolution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ast-validation"><span class="toc-text">Ast validation</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HIR"><span class="toc-text">HIR</span></a><ol><li class="toc-item toc-level-3"><a class="toc-link" href="#Type-Inference"><span class="toc-text">Type Inference</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MIR"><span class="toc-text">MIR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Codegen-代码生成"><span class="toc-text">Codegen 代码生成</span></a></li></ol>
     
   </div>
 </aside>
@@ -600,6 +601,7 @@
     <div class="scroll-top">
   <span class="arrow-icon"></span>
 </div>
+
     <footer class="app-footer" id="footer">
     <p class="copyright">
         &copy;
@@ -629,5 +631,6 @@
 </script>
 
 <script src="/js/script.js"></script>
+
   </body>
 </html>
