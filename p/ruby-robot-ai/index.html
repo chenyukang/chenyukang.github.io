@@ -180,12 +180,12 @@
     <section class="markdown-content"><p>最近看到一个<a target="_blank" rel="noopener" href="http://rrobots.rubyforge.org/index.html">RRobot</a>，这是一个用 Ruby 来实现的坦克对战平台。感觉挺好玩的，周三在公司也顺带和同事分享了一下。有时间的同学可以尝试尝试，用 Ruby 来写坦克的 AI。另外这个不到 1000 行的程序也比较好读，这种 Robot AI 平台以前也有 C++/Java 版本的，不过都要比这个实现得复杂一点吧。</p>
 <img src="/images/tank.png" alt="tank-ai" class="img-center" />
 <p>每个你控制的 robot 的 api 是这些，注意雷达扫描到的目标只包含距离信息，没有 x 和 y，如果雷达扫描得越快所得到的目标位置准确率越低。自己摸索着写，找一些别人<a target="_blank" rel="noopener" href="http://rubyforge.org/forum/forum.php?forum_id=4792">写好的策略</a>来对战一把吧。</p>
- battlefield_height  #the height of the battlefield
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"> battlefield_height  #the height of the battlefield
  battlefield_width   #the width of the battlefield
  energy              #your remaining energy (if this drops below 0 you are dead)
  gun_heading         #the heading of your gun, 0 pointing east, 90 pointing 
                      #north, 180 pointing west, 270 pointing south
- gun_heat            #your gun heat, if this is above 0 you can't shoot
+ gun_heat            #your gun heat, if this is above 0 you can&#39;t shoot
  heading             #your robots heading, 0 pointing east, 90 pointing north,
                      #180 pointing west, 270 pointing south
  size                #your robots radius, if x &lt;= size you hit the left wall
@@ -207,9 +207,9 @@
  turn_radar(degrees) #turns the radar, max 60 degrees per tick
  dead                #true if you are dead
  say(msg)            #shows msg above the robot on screen
- broadcast(msg)      #broadcasts msg to all bots (they recieve 'broadcasts'
+ broadcast(msg)      #broadcasts msg to all bots (they recieve &#39;broadcasts&#39;
                      #events with the msg and rough direction)
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+</code></pre>
 <p>最近关注 Ruby 比较多，平时工作中也会用 Ruby 来写一些脚本 (渐渐代替了 Python)。有两个原因，Ruby 的语法更符合口味 (不喜欢用 Python 的 indent 约束),
 Ruby 也更 Lisp 化，Ruby 的开源气氛非常好。</p>
 </section>

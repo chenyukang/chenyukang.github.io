@@ -179,9 +179,9 @@
   <article class="post-article">
     <section class="markdown-content"><p>出来工作之前我从来没认真考虑过我的英语口语问题，大学时候的四级口语考试 C 级也没让我意识到自己的发音比较烂。学了好多年哑巴英语，又因为本人生性有点害羞经常不好意思开口说英语，悲剧早就注定。其实我的英语阅读能力还是可以的，不过工作之后同事们都嘲笑我口语听起来像印度人，据说发音极其古怪。</p>
 <p>在 Mac 下有一个叫做 say 的命令行程序，我有时候会用来听单词单词发音。这个程序加上-f 参数也可以用来朗读整个文件。</p>
- say hello wrold
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"> say hello wrold
  say -f demo.txt
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+</code></pre>
 <p>前几天突然觉得如果写个 Emacs Minor Mode，能在边写单词的时候 Emacs 就把你写的朗读一遍就好了，Emacs 号称能煮咖啡，这点小事当然不在话下。其实除了在公司我也很少写英文，不过这个想法看起来比较好玩，于是动手做了一下。预想的基本功能是实现了，我把它叫做 EmacSay-mode，意为在 Emacs+Mac+Say 下实现的，所以这东西可能不能在 Linux 下运行。</p>
 <p>这也是我第一次学着写一个 minor mode，实现起来也很简单。整个不到 100 行 elisp 代码。</p>
 <p>基本思路就是如果当前输入的字符是空白 (或者其他非字母字符)，寻找前面一个字符串，格式化成一个命令行，用 start-process 或者 shell-command 来调用。

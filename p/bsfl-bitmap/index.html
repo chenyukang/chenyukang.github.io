@@ -222,8 +222,8 @@
 <p>第一个版本花费时间 15.685s，第二个版本花费时间 5.960s，而其实如果只是循环 1000000000 次什么也不做也好花费 3.091s，所以第二个版本快到如此程度。</p>
 <h2 id="bitmap-的优化"><a href="#bitmap-的优化" class="headerlink" title="bitmap 的优化"></a>bitmap 的优化</h2>
 <p>bitmap 是一种常用的数据结构，在编程珠玑有详细介绍，应用也比较广泛比如可以用来做操作系统当中的<a target="_blank" rel="noopener" href="http://wiki.osdev.org/Page_Frame_Allocation">地址索引查询</a>。对于 bitmap 中我们常常需要一个操作来找一个空位的 bit 来做 set 操作。既然我们知道了第一个 1 是如何快速查找的，第一 0 也就好办了，先取反，然后再找第一个 1 就行了。</p>
-#define first_zerobit(x) (first_onebit(~(x)))
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain">#define first_zerobit(x) (first_onebit(~(x)))
+</code></pre>
 <p>继续 bitmap 的 first_empty 就优化成这样了：</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c">u32 <span class="token function c"><span class="token function c">first_empty</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group end c">)</span></span></span><span class="token function c">
 </span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">

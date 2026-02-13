@@ -242,8 +242,8 @@
 </span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span>
 </span></code></pre>
 <p>通过环境变量来把编译器运行过程中的中间结果打印出来，重定向到一个文件，运行命令：</p>
-RUSTC_LOG=debug rustc main.rs &gt; /tmp/r.log 2&gt;&amp;1
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain">RUSTC_LOG=debug rustc main.rs &gt; /tmp/r.log 2&gt;&amp;1
+</code></pre>
 <p>我们可以看到这个程序的 <code>TokenTree</code> 是这样的：</p>
 <p><img src="/images/ob_pasted-image-20230302081527.png" alt="" /></p>
 <p>也就是通过分隔符 <code>(...)</code> 、<code>{...}</code>、<code>[...]</code> 把 Token 分组，我最近对这个模块做了一些<a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/108297">改进和重构</a>，任何分隔符不匹配的问题会报错然后终止编译，主要原因是分隔符的不匹配会让 Parser 构造出完全错误的 <code>AST</code>，这样诊断信息就会非常多，而大多数对开发者没有用。</p>
@@ -291,8 +291,8 @@ RUSTC_LOG=debug rustc main.rs &gt; /tmp/r.log 2&gt;&amp;1
 <h3 id="宏展开"><a href="#宏展开" class="headerlink" title="宏展开"></a>宏展开</h3>
 <p>在 <code>Parsing</code> 的过程中会遇到宏，但宏处理需要在 <code>AST</code> 构建之后，所以在这个过程中所有的宏会通过占位符来特殊标识。</p>
 <p>相对 <code>Parsing</code>，宏展开是一个更为复杂的过程，<code>AST</code> 有了之后会 <code>driver</code> 会通过一下调用路径来逐个 crate 展开宏：</p>
-resolver_for_lowering -&gt; configure_and_expand -&gt; expand_crate -&gt; fully_expand_fragment
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain">resolver_for_lowering -&gt; configure_and_expand -&gt; expand_crate -&gt; fully_expand_fragment
+</code></pre>
 <p><a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/blob/master/compiler/rustc_expand/src/expand.rs#L409"><code>fully_expand_fragment</code></a> 这个函数是宏展开的主要算法，首先找到 AST 中的占位符，维护一个队列，然后不断地去展开直到所有的宏占位符都处理完毕，再统一加到 AST 中去，这是因为宏代码中也可能包含宏？如果某次迭代没有展开一个宏说明有语法问题。</p>
 <h3 id="Name-resolution"><a href="#Name-resolution" class="headerlink" title="Name resolution"></a>Name resolution</h3>
 <p><code>Name resolution</code> 就是解析 <code>AST</code> 中的所有名字，包括变量名、函数名、类型名、生命周期的命名等等。总体来说，这里也分两个阶段：</p>

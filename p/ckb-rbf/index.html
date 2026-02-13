@@ -200,7 +200,7 @@
 <li><code>pre-check</code> 为 entry 加入到 tx-pool 之前必须要做的检查，之前只是做双花的检查，新增 RBF 后如果双花检查失败（这里意味着冲突），继续做 RBF 的相关检查，如果 RBF 检查成功则也返回成功，否则直接返回错误。这里默认直接做 resolve_tx 的检查，如果成功则走正常流程，目的是不给正常流程增加额外成本。所以这就是<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/44331ec5b9fcda217f33c471057fa479bd36a89f/tx-pool/src/process.rs#L216-L255"><code>pre-check</code> 修改后的主要逻辑</a> 。</li>
 </ul>
 <p>RBF 的检查规则参考 Bitcoin 的六条，<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/2be67e79acec94369a96f786d3041e6cb00cf1f2/tx-pool/src/pool.rs#L483-L565">check_rbf 初步实现</a></p>
-实现细节：（Bitcoin Core 0.12.0）
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain">实现细节：（Bitcoin Core 0.12.0）
 
 ~~1. 交易需要声明为可替换交易~~ 
 2. 新替换交易没有包含新的、未确认的 inputs
@@ -208,7 +208,7 @@
 4. 新替换交易费用必须比节点的 min relay fee 高
 5. 待替换交易的子交易数量不可超过 100 条（即使用了该交易的任意 outputs，该交易替换后它们将被从内存池中移出）
 6. 因为 ckb 是做了两步提交，我们新增规则：被替换的交易只能是 Pending 或者 Gap 阶段的。
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+</code></pre>
 <p>我们不给交易加新的字段表示是否可以被替换，而是通过节点是否配置了 <code>min_rbf_rate</code> 来决定是否能做替换，因此 <code>规则 1</code> 不做对应考虑。</p>
 <h3 id="替换和提交"><a href="#替换和提交" class="headerlink" title="替换和提交"></a>替换和提交</h3>
 <p>修改 <code>tx-pool</code> 的 <code>submit_entry</code> 函数，传入 <code>conflicts</code>，在新增 entry 之前把所有冲突的交易删除 放入 <code>rejected</code> 记录，另外确保所有检查完成了之后才做删除和写操作：<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ckb/blob/2be67e79acec94369a96f786d3041e6cb00cf1f2/tx-pool/src/process.rs#L99-L154">submit_entry 逻辑</a>。</p>

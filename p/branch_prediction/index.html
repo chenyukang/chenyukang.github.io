@@ -235,9 +235,9 @@ branch = N  N  N  N  N  ...   N    N    T    T    T  ...   T    T    T  ...
 </span><span class="token block-level markdown"><span class="markup raw block markdown">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)
 </span></span></span></code></pre>
 <p>后面作者又加了一条 hack，把这段代码重新改写一下：</p>
-  if (data[c] &gt;= 128)       ====&gt;              int t = (data[c] - 128) &gt;&gt; 31; 
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain">  if (data[c] &gt;= 128)       ====&gt;              int t = (data[c] - 128) &gt;&gt; 31; 
      sum += data[c];        ====&gt;              sum += ~t &amp; data[c];
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+</code></pre>
 <p>那么前面是否排序就对这段代码效率没有影响了，同样是 2 秒多。这和编译器的优化非常相关，不同的编译器的结果不一样，4.6.1 GCC 加上-O3 或者-ftree-vectorize 编译选项可以对这种情况进行优化，所以排序与否没有关系，而 VC++2010 却不能进行类似优化 (GCC 果然强大)。</p>
 <h2 id="一个优化例子"><a href="#一个优化例子" class="headerlink" title="一个优化例子"></a>一个优化例子</h2>
 <p>在 Linux kernel 里面会看到类似 likely 和 unlikely 这样的代码，从其名字就很直观的解释了其意义。看其定义为两个宏。</p>

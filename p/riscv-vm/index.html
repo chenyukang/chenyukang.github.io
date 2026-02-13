@@ -385,7 +385,7 @@
 rustflags = [&quot;-C&quot;, &quot;link-arg=-Tlink.ld&quot;]
 </code></pre>
 <p>The content for <code>link.ld</code> is as follows. It tells the linker the layout of the binary file generated. Notice that we specify the entry point at address <code>0x80</code>:</p>
-OUTPUT_ARCH(riscv)
+<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain">OUTPUT_ARCH(riscv)
 ENTRY(_start)
 
 SECTIONS {
@@ -404,7 +404,7 @@ SECTIONS {
         *(.bss)
     }
 }
-<pre class="line-numbers language-plain" data-language="plain"><code class="language-plain"></code></pre>
+</code></pre>
 <p>Then we can build the program to a binary:</p>
 <pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">cargo build --release --target riscv32imac-unknown-none-elf
 </code></pre>
