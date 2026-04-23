@@ -175,7 +175,8 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>最近断断续续写了一个小工具，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/runnel">Runnel</a>。</p>
-<p>一开始它其实不叫这个名字，目录名也很土，叫 <code>proxy-rs</code>。我原本只是想写一个自己能用的代理工具，顺便把一些网络相关的东西重新摸一遍。写着写着，东西越来越像一个小型 VPN/代理工具箱，于是改了个名字。Runnel 有“小水道”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
+<p>最初的动机是因为自己用的两个机场都跪了 (虽然后来又逐渐恢复了)，想到一个同事说他一直用自己写的一个简单工具叫做 <a target="_blank" rel="noopener" href="https://github.com/libraries/daze">daze</a>，所以立马让 AI 用 Rust 重写了一份跑了起来。</p>
+<p>我原本只是想写一个自己能用的代理工具，顺便把一些网络相关的东西重新摸一遍。写着写着，东西越来越像一个小型 VPN/代理工具箱。Runnel 有“小水道”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
 <p>它现在支持几种模式：<code>native-http</code>、<code>native-mux</code>、几个 daze 风格的模式，以及后来主要投入精力做的 <code>wg</code> 模式。前面这些更像传统 SOCKS 代理，应用明确连到本地 SOCKS 端口，然后 Runnel 把流量转到远端。WG 模式不一样，它走 TUN 设备和 WireGuard 风格的 UDP 包，更像日常会用的全局 VPN。</p>
 <p>真正让我把重心转到 WG 模式的原因也很普通：SOCKS 在浏览器里挺好用，但到系统级流量、命令行工具、各种后台服务时就没那么舒服了。你总会碰到有些软件不吃系统代理，有些软件自己做 DNS，有些东西干脆只看路由表。最后还是得上 TUN。</p>
 <h2 id="先让它能跑"><a href="#先让它能跑" class="headerlink" title="先让它能跑"></a>先让它能跑</h2>
