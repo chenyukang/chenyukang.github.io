@@ -273,23 +273,16 @@ wg          小请求大约 2500 req/s
 <p>日常使用的“流畅”也不完全由大文件吞吐决定。连接建立、DNS、浏览器并发、小请求延迟，这些东西更容易影响体感。WG 在小请求上的数据并不差，而且系统级接管以后，很多应用不用再单独配置代理，反而省心。</p>
 <p>所以 benchmark 还是要有，但不能只看一个数。尤其是代理/VPN 这种东西，不同 workload 差别太大。</p>
 <h2 id="Noise-和混淆"><a href="#Noise-和混淆" class="headerlink" title="Noise 和混淆"></a>Noise 和混淆</h2>
-<p>后来又加了 noise engine。默认的 device engine 是让 boringtun 自己管理 WireGuard 设备和 UAPI socket，比较标准。noise engine 则是 Runnel 自己跑 TUN/UDP loop，直接用 <code>boringtun::noise::Tunn</code> 做加解密。</p>
+<p>标准的 WireGuard 长度非常固定，所以基本上会容易检测出来。我在最初使用单纯的 WG 用一段时间开始丢包，于是我开始琢磨如何加噪音来抗审查。</p>
+<p>于是给 WG mode 加了 noise engine。默认的 device engine 是让 boringtun 自己管理 WireGuard 设备和 UAPI socket，比较标准。noise engine 则是 Runnel 自己跑 TUN/UDP loop，直接用 <code>boringtun::noise::Tunn</code> 做加解密。</p>
 <p>这样做的好处是 transport 变得更可控。比如可以在 WireGuard UDP 包外面包一层 mask，把包头和长度藏一下，再加一些 padding。现在的 <code>obfs: mask</code> 做的就是这个方向。</p>
 <p>我不想把它说成什么“抗审查神器”。这类话太大了，也不诚实。现实网络环境要麻烦得多，包长、时序、UDP 行为、重传模式，都可能暴露特征。但作为一个实验层，它有用：至少可以让标准 WireGuard 包的形状变得不那么裸。</p>
 <p>我也看了一些类似工具的方向，比如 AmneziaWG、Nym 把 QUIC 和 WG 组合起来的思路。它们给我的启发是，VPN 工具不一定非要把“WireGuard 协议”和“底层传输形态”绑死。真正有意思的地方在中间那层：你能不能保留 WG 的 key、handshake、TUN 语义，同时换掉或包装它的传输外观。</p>
 <p>Runnel 现在还只是很早期的版本，但 noise engine 让后面继续试 QUIC、padding profile、甚至更麻烦的 packet shaping 都方便了一些。</p>
-<h2 id="写到后来，变成了调试工具"><a href="#写到后来，变成了调试工具" class="headerlink" title="写到后来，变成了调试工具"></a>写到后来，变成了调试工具</h2>
-<p>如果只看 README，Runnel 像是一个代理工具。但我自己写下来，感觉它更像一个“网络调试工具顺手带了代理功能”。</p>
-<p>它有 <code>wg-config</code>，因为我不想手写 key。</p>
-<p>它有 <code>dry_run</code> 和 <code>print_hooks</code>，因为我不想一上来就改系统路由。</p>
-<p>它有 handshake probe，因为我不想在 key 错的时候还把 TUN 装起来。</p>
-<p>它有 TUI 和 telemetry socket，因为我不想在五个终端里来回翻。</p>
-<p>它有 <code>reload</code>，因为改配置以后 stop/start 太烦。</p>
-<p>它有 benchmark，因为体感经常会骗人。</p>
-<p>这些都不是很酷的功能，但都是自己真用时一点点长出来的。我现在越来越觉得，小工具最好就是这样长出来：先解决一个真实的不爽，然后把这个不爽变成一个命令、一个日志、一条检查、一个默认配置。</p>
+<hr />
 <p>Runnel 还没有到我觉得很完整的阶段。比如 WG 的 domain rules 还是 DNS 驱动，IPv6 和双栈还需要更好的 schema，macOS 上更细粒度的 app split tunneling 也不是简单路由表能解决的。后面如果继续做，可能会往两个方向走：一是把 WG 模式打磨到更适合日常使用，二是继续试验 noise/QUIC 这类 transport。</p>
-<p>但目前这个状态我已经挺满意了。它不是一个周末玩具了，至少已经变成了我自己会认真拿来用、拿来测、拿来折腾网络问题的工具。</p>
-<p>这大概就是个人项目最舒服的地方：不用先证明它有市场，也不用写漂亮的 roadmap。先让自己用得爽一点。然后下一次遇到问题，再把那个问题修掉。</p>
+<p>但目前这个状态我已经挺满意了，它不是一个周末玩具了，至少已经变成了我自己会认真拿来用、拿来测、拿来折腾网络问题的工具。</p>
+<p>这大概就是个人项目最舒服的地方：先让自己用得爽一点，遇到问题再修复。</p>
 </section>
 
     <p></p>
@@ -366,7 +359,7 @@ wg          小请求大约 2500 req/s
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#先让它能跑"><span class="toc-text">先让它能跑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置生成"><span class="toc-text">配置生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分流"><span class="toc-text">分流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#顺手加的-Adblock"><span class="toc-text">顺手加的 Adblock</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TUI-比我预想中更有用"><span class="toc-text">TUI 比我预想中更有用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Benchmark-测试"><span class="toc-text">Benchmark 测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Noise-和混淆"><span class="toc-text">Noise 和混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写到后来，变成了调试工具"><span class="toc-text">写到后来，变成了调试工具</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#先让它能跑"><span class="toc-text">先让它能跑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置生成"><span class="toc-text">配置生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分流"><span class="toc-text">分流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#顺手加的-Adblock"><span class="toc-text">顺手加的 Adblock</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TUI-比我预想中更有用"><span class="toc-text">TUI 比我预想中更有用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Benchmark-测试"><span class="toc-text">Benchmark 测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Noise-和混淆"><span class="toc-text">Noise 和混淆</span></a></li></ol>
     
   </div>
 </aside>
