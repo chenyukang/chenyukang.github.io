@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="CatCoding">
+  <meta property="og:title" content="开发 Runnel 的一些记录 | CatCoding" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
+
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    开发 Runnel 的一些记录 |
+    CatCoding
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>CatCoding</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/ideas/" class="item-link">Ideas</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+    </ul>
+    
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/ideas/" class="menu-link">Ideas</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/links/" class="menu-link">Links</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    
+<div id="article-banner">
+  <h2>开发 Runnel 的一些记录</h2>
+  <p class="post-date">2026-04-23</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+<main class="app-body flex-box">
+
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>最近断断续续写了一个小工具，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/runnel">Runnel</a>。</p>
+<p>一开始它其实不叫这个名字，目录名也很土，叫 <code>proxy-rs</code>。我原本只是想写一个自己能用的代理工具，顺便把一些网络相关的东西重新摸一遍。写着写着，东西越来越像一个小型 VPN/代理工具箱，于是改了个名字。Runnel 有“小水道”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
+<p>它现在支持几种模式：<code>native-http</code>、<code>native-mux</code>、几个 daze 风格的模式，以及后来主要投入精力做的 <code>wg</code> 模式。前面这些更像传统 SOCKS 代理，应用明确连到本地 SOCKS 端口，然后 Runnel 把流量转到远端。WG 模式不一样，它走 TUN 设备和 WireGuard 风格的 UDP 包，更像日常会用的全局 VPN。</p>
+<p>真正让我把重心转到 WG 模式的原因也很普通：SOCKS 在浏览器里挺好用，但到系统级流量、命令行工具、各种后台服务时就没那么舒服了。你总会碰到有些软件不吃系统代理，有些软件自己做 DNS，有些东西干脆只看路由表。最后还是得上 TUN。</p>
+<h2 id="先让它能跑"><a href="#先让它能跑" class="headerlink" title="先让它能跑"></a>先让它能跑</h2>
+<p>WG 模式底层用的是 Cloudflare 的 <code>boringtun</code>。最开始的版本目标很简单：</p>
+<ul>
+<li>client 创建一个 TUN 设备；</li>
+<li>server 也创建一个 TUN 设备；</li>
+<li>两边用 WireGuard key 建立 peer；</li>
+<li>client 把默认路由打进去；</li>
+<li>server 开转发和 NAT。</li>
+</ul>
+<p>听起来像配置一遍 WireGuard 而已，但自己写以后就会发现，大部分时间并不在加密和解密上，而是在处理操作系统。</p>
+<p>Linux 上需要 <code>/dev/net/tun</code>、<code>ip</code>、<code>sysctl</code>、<code>iptables</code>。macOS 上是 <code>ifconfig</code>、<code>route</code>、<code>networksetup</code>。命令不复杂，但出错方式很多。例如服务端没停干净，再起一次就会卡在：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">ip</span></span><span class="token function-call arguments shell"> address add 10.8.0.1 peer 10.8.0.2 dev pipitwg0</span>
+</span></code></pre>
+<p>因为设备还在，地址也还在。再比如 macOS 上如果之前的 tunnel 没清理干净，WG endpoint 的路由可能会被系统解析到某个 <code>utun</code> 上。这个时候 client 还没真正起来，但发往 server endpoint 的 UDP 包已经准备钻进旧 tunnel，最后当然连不上。</p>
+<p>这类问题很烦，但它们也逼着我把启动阶段做得更啰嗦一点。现在 Runnel 会做 preflight，会打印 hook，会在 client 装路由之前先做一次短 handshake probe。key、endpoint 或两端配置有问题时，最好在启动阶段直接报错，而不是把系统路由改完，然后留给用户一个没有响应的黑盒。</p>
+<p>我写这类工具最大的感受是：网络工具的“好用”，很多时候不是吞吐量高一点，而是坏的时候知道坏在哪里。</p>
+<h2 id="配置生成比想象中管用"><a href="#配置生成比想象中管用" class="headerlink" title="配置生成比想象中管用"></a>配置生成比想象中管用</h2>
+<p>WG 的配置很容易写错，尤其是 private key、peer public key、tunnel IP 这种互相交叉的字段。手写一次就够让人烦了，所以后来加了：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">runnel</span></span><span class="token function-call arguments shell"> wg-config<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>server-endpoint</span> SERVER-IP:1443 <span class="token operator assignment redirection shell">&gt;</span> runnel.yaml</span>
+</span></code></pre>
+<p>这个命令会一次生成 client 和 server 两边配置。两台机器用同一个 YAML，只是启动时分别执行：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">sudo</span></span><span class="token function-call arguments shell"> runnel<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>config</span> runnel.yaml server</span>
+<span class="token function-call shell"><span class="token variable function shell">sudo</span></span><span class="token function-call arguments shell"> runnel<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>config</span> runnel.yaml client<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>tui</span></span>
+</span></code></pre>
+<p>我挺喜欢这个设计。它减少了很多“我复制错了吗”的问题，也方便把一些默认值放进去。比如现在生成配置默认带 adblock，默认启用 DNS capture，也会默认带上 noise engine 和 mask obfs：</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token yaml"><span class="token string unquoted plain out yaml"><span class="entity name tag yaml">client</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
+  <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">wg</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
+    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">engine</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token string unquoted plain out yaml">noise</span>
+    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">obfs</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token string unquoted plain out yaml">mask</span>
+    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">obfs_padding_min</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token number integer yaml">8</span>
+    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">obfs_padding_max</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token number integer yaml">96</span>
+    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">obfs_handshake_padding</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token number integer yaml">256</span>
+    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">obfs_response_padding</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token number integer yaml">192</span>
+</span></code></pre>
+<p>这些东西不一定适合所有人，但它们很适合我自己的使用场景：默认配置应该尽量接近日常可用，而不是只给一个裸 tunnel。</p>
+<h2 id="分流这件事绕不开-DNS"><a href="#分流这件事绕不开-DNS" class="headerlink" title="分流这件事绕不开 DNS"></a>分流这件事绕不开 DNS</h2>
+<p>我原来只想做 IP 规则，例如：</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token yaml"><span class="token string unquoted plain out yaml"><span class="entity name tag yaml">client</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
+  <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">ip_rules</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
+    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">direct</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
+      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>10.*<span class="token punctuation definition string end yaml">&quot;</span></span>
+      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>192.168.*<span class="token punctuation definition string end yaml">&quot;</span></span>
+</span></code></pre>
+<p>这个在 WG 模式下比较直观，<code>direct</code> 就是给这些 IP 加本地直连 route，不让它们进 tunnel。后来很快又想要域名规则：</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token yaml"><span class="token string unquoted plain out yaml"><span class="entity name tag yaml">client</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
+  <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">domain_rules</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
+    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">direct</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
+      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>*.qq.com<span class="token punctuation definition string end yaml">&quot;</span></span>
+      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>*.cn<span class="token punctuation definition string end yaml">&quot;</span></span>
+    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">block</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
+      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>*.xxx.com<span class="token punctuation definition string end yaml">&quot;</span></span>
+</span></code></pre>
+<p>问题是 WG 看到的是 IP 包，不知道这个连接原本访问的是 <code>qq.com</code> 还是别的什么域名。能抓到域名的地方只有 DNS。</p>
+<p>所以现在 WG 的 domain rules 是 DNS 驱动的。client 会把本机 DNS 指到 <code>127.0.0.1:53</code>，Runnel 在本地做一个很小的 DNS forwarder。它看到查询 <code>www.qq.com</code>，发现命中 direct 规则，就等上游 DNS 返回 IP，然后动态加一条 host route，让这个 IP 走本地网关。</p>
+<p>这个方案很实用，但并不完美。第一次访问一个域名时，如果系统还没有拿到解析结果，它可能已经先走了 tunnel。DoH、DoT、浏览器缓存、直接访问 IP，也都绕过这条逻辑。CDN 共享 IP 还会带来另一个问题：你为了某个域名加的直连 route，可能影响另一个解析到同一 IP 的域名。</p>
+<p>这些限制没法假装不存在，所以文档里也写清楚了。能解决 80% 的日常问题就很好，剩下 20% 要靠更底层的 packet inspection 或系统扩展，那又是另外一个坑。</p>
+<h2 id="Adblock-是顺手加的，但还挺好用"><a href="#Adblock-是顺手加的，但还挺好用" class="headerlink" title="Adblock 是顺手加的，但还挺好用"></a>Adblock 是顺手加的，但还挺好用</h2>
+<p>后来我把 <a target="_blank" rel="noopener" href="https://github.com/brave/adblock-rust/">adblock-rust</a> 集成进来了。原因很简单：既然 WG 模式已经有 DNS capture，那 block 域名就可以顺手做掉。</p>
+<p>这里我比较在意优先级。最后定下来是：</p>
+<ol>
+<li>用户自己的 <code>domain_rules.block</code></li>
+<li>adblock 规则</li>
+<li>用户自己的 direct/proxy 规则</li>
+<li>默认走 proxy，也就是 tunnel</li>
+</ol>
+<p>用户手写规则永远应该赢过订阅规则。否则哪天 EasyPrivacy 把一个你需要的域名拦了，你会很难受。</p>
+<p>性能上我一开始也有点担心。毕竟 tunnel 里每个包都可能很密集，如果每个请求、每个 packet 都去跑 adblock，那肯定不行。最后实现是 DNS 级别的：只有新的域名查询会进入规则匹配，订阅会缓存在本地，域名决策也有内存缓存。实际看下来，这个成本可以接受。</p>
+<p>有次 TUI 里看到 <code>p.data.cctv.com</code> 被 block，我还专门去查了一下。它不是用户规则拦的，是订阅规则命中的。这个例子也提醒我，TUI 不能只显示 block，还得让用户知道大概是谁 block 的。否则所有东西看起来都像程序在自作主张。</p>
+<h2 id="TUI-比我预想中更有用"><a href="#TUI-比我预想中更有用" class="headerlink" title="TUI 比我预想中更有用"></a>TUI 比我预想中更有用</h2>
+<p>Runnel 有一个 TUI，不是为了好看，主要是为了少开几个终端。</p>
+<p>WG 模式刚开始出问题时，我经常要同时看：</p>
+<ul>
+<li>client 有没有握手；</li>
+<li>server 有没有看到 endpoint；</li>
+<li>最近有没有 REKEY timeout；</li>
+<li>DNS 最近解析了什么域名；</li>
+<li>哪些域名被 direct、proxy、block；</li>
+<li>tunnel 有没有流量。</li>
+</ul>
+<p>这些信息散在 log、<code>netstat</code>、<code>route</code>、<code>tcpdump</code> 里会很痛苦。放到一个 TUI 里之后，很多问题一眼能看出方向。</p>
+<p>比如看到 <code>HANDSHAKE(REKEY_TIMEOUT)</code> 连续刷，基本就是两边没有成功握手，先别怀疑浏览器。看到 <code>www.qq.com pending</code>，就知道 DNS query 被捕获了，但还没拿到可用于直连的 IP。看到某个 tracker 域名一秒内 block 了几十次，就知道 UI 需要合并重复记录，不然屏幕全被刷满。</p>
+<p>这里也有一些取舍。比如 tunnel speed 只能统计 WG tunnel 里的流量，直连出去的流量本来就不经过 tunnel，所以不会出现在 download wave 里。这个听起来像 bug，但其实是统计边界的问题。</p>
+<h2 id="Benchmark-没有想象中直观"><a href="#Benchmark-没有想象中直观" class="headerlink" title="Benchmark 没有想象中直观"></a>Benchmark 没有想象中直观</h2>
+<p>我给所有模式都加了一个 <code>mode_perf</code> benchmark。小请求跑 1000 次，大响应跑 8 个 1MiB 下载。非 WG 模式走 SOCKS path，WG 模式会真正拉起 child process，创建 TUN 设备，然后从 tunnel IP 发 HTTP 请求。</p>
+<p>本机测试的结果挺有意思：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">native-mux  小请求大约 3300 req/s
+daze-czar   小请求大约 3400 req/s
+wg          小请求大约 2500 req/s
+</code></pre>
+<p>但大响应吞吐 WG 看起来很低，只有几十 MiB/s。刚看到这个数字我也有点怀疑，毕竟实际用起来 WG 并不觉得卡。后来想想也正常：这个 benchmark 是 localhost 上的端到端测试，WG 走真实 TUN 设备，会经过内核路由、用户态加解密、UDP socket、NAT 这些路径；而很多 SOCKS 模式本质上就是本机 TCP 流转发，少了不少系统边界。</p>
+<p>日常使用的“流畅”也不完全由大文件吞吐决定。连接建立、DNS、浏览器并发、小请求延迟，这些东西更容易影响体感。WG 在小请求上的数据并不差，而且系统级接管以后，很多应用不用再单独配置代理，反而省心。</p>
+<p>所以 benchmark 还是要有，但不能只看一个数。尤其是代理/VPN 这种东西，不同 workload 差别太大。</p>
+<h2 id="Noise-和混淆"><a href="#Noise-和混淆" class="headerlink" title="Noise 和混淆"></a>Noise 和混淆</h2>
+<p>后来又加了 noise engine。默认的 device engine 是让 boringtun 自己管理 WireGuard 设备和 UAPI socket，比较标准。noise engine 则是 Runnel 自己跑 TUN/UDP loop，直接用 <code>boringtun::noise::Tunn</code> 做加解密。</p>
+<p>这样做的好处是 transport 变得更可控。比如可以在 WireGuard UDP 包外面包一层 mask，把包头和长度藏一下，再加一些 padding。现在的 <code>obfs: mask</code> 做的就是这个方向。</p>
+<p>我不想把它说成什么“抗审查神器”。这类话太大了，也不诚实。现实网络环境要麻烦得多，包长、时序、UDP 行为、重传模式，都可能暴露特征。但作为一个实验层，它有用：至少可以让标准 WireGuard 包的形状变得不那么裸。</p>
+<p>我也看了一些类似工具的方向，比如 AmneziaWG、Nym 把 QUIC 和 WG 组合起来的思路。它们给我的启发是，VPN 工具不一定非要把“WireGuard 协议”和“底层传输形态”绑死。真正有意思的地方在中间那层：你能不能保留 WG 的 key、handshake、TUN 语义，同时换掉或包装它的传输外观。</p>
+<p>Runnel 现在还只是很早期的版本，但 noise engine 让后面继续试 QUIC、padding profile、甚至更麻烦的 packet shaping 都方便了一些。</p>
+<h2 id="写到后来，变成了调试工具"><a href="#写到后来，变成了调试工具" class="headerlink" title="写到后来，变成了调试工具"></a>写到后来，变成了调试工具</h2>
+<p>如果只看 README，Runnel 像是一个代理工具。但我自己写下来，感觉它更像一个“网络调试工具顺手带了代理功能”。</p>
+<p>它有 <code>wg-config</code>，因为我不想手写 key。</p>
+<p>它有 <code>dry_run</code> 和 <code>print_hooks</code>，因为我不想一上来就改系统路由。</p>
+<p>它有 handshake probe，因为我不想在 key 错的时候还把 TUN 装起来。</p>
+<p>它有 TUI 和 telemetry socket，因为我不想在五个终端里来回翻。</p>
+<p>它有 <code>reload</code>，因为改配置以后 stop/start 太烦。</p>
+<p>它有 benchmark，因为体感经常会骗人。</p>
+<p>这些都不是很酷的功能，但都是自己真用时一点点长出来的。我现在越来越觉得，小工具最好就是这样长出来：先解决一个真实的不爽，然后把这个不爽变成一个命令、一个日志、一条检查、一个默认配置。</p>
+<p>Runnel 还没有到我觉得很完整的阶段。比如 WG 的 domain rules 还是 DNS 驱动，IPv6 和双栈还需要更好的 schema，macOS 上更细粒度的 app split tunneling 也不是简单路由表能解决的。后面如果继续做，可能会往两个方向走：一是把 WG 模式打磨到更适合日常使用，二是继续试验 noise/QUIC 这类 transport。</p>
+<p>但目前这个状态我已经挺满意了。它不是一个周末玩具了，至少已经变成了我自己会认真拿来用、拿来测、拿来折腾网络问题的工具。</p>
+<p>这大概就是个人项目最舒服的地方：不用先证明它有市场，也不用写漂亮的 roadmap。先让自己用得爽一点。然后下一次遇到问题，再把那个问题修掉。</p>
+</section>
+
+    <p></p>
+
+  
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Rust" >
+    <span class="tag-code">Rust</span>
+  </a>
+
+  <a href="/tags#Network" >
+    <span class="tag-code">Network</span>
+  </a>
+
+
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/apple-gatekeeper-scan/">
+        <span class="nav-arrow">← </span>
+        
+          macOS 奇怪的安全扫码机制
+        
+      </a>
+    
+    
+  </div>
+
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <script src="https://utteranc.es/client.js"
+      repo="chenyukang/chenyukang.github.io"
+      issue-term="pathname"
+      theme="github-light"
+      crossorigin="anonymous"
+      async>
+    </script>
+  
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#先让它能跑"><span class="toc-text">先让它能跑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置生成比想象中管用"><span class="toc-text">配置生成比想象中管用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分流这件事绕不开-DNS"><span class="toc-text">分流这件事绕不开 DNS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adblock-是顺手加的，但还挺好用"><span class="toc-text">Adblock 是顺手加的，但还挺好用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TUI-比我预想中更有用"><span class="toc-text">TUI 比我预想中更有用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Benchmark-没有想象中直观"><span class="toc-text">Benchmark 没有想象中直观</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Noise-和混淆"><span class="toc-text">Noise 和混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写到后来，变成了调试工具"><span class="toc-text">写到后来，变成了调试工具</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me//p/runnel-dev-notes/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW * 3 / 4}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script src="/js/script.js"></script>
+
+  </body>
+</html>
