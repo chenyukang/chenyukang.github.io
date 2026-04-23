@@ -174,11 +174,12 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>最近断断续续写了一个小工具，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/runnel">Runnel</a>。</p>
-<p>最初的动机是因为自己用的两个机场都跪了 (虽然后来又逐渐恢复了)，想到一个同事说他一直用自己写的一个简单工具叫做 <a target="_blank" rel="noopener" href="https://github.com/libraries/daze">daze</a>，所以立马让 AI 用 Rust 重写了一份跑了起来。</p>
-<p>我原本只是想写一个自己能用的代理工具，顺便把一些网络相关的东西重新摸一遍。写着写着，东西越来越像一个小型 VPN/代理工具箱。Runnel 有“小水道”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
-<p>它现在支持几种模式：<code>native-http</code>、<code>native-mux</code>、几个 daze 风格的模式，以及后来主要投入精力做的 <code>wg</code> 模式。前面这些更像传统 SOCKS 代理，应用明确连到本地 SOCKS 端口，然后 Runnel 把流量转到远端。WG 模式不一样，它走 TUN 设备和 WireGuard 风格的 UDP 包，更像日常会用的全局 VPN。</p>
-<p>真正让我把重心转到 WG 模式的原因也很普通：SOCKS 在浏览器里挺好用，但到系统级流量、命令行工具、各种后台服务时就没那么舒服了。你总会碰到有些软件不吃系统代理，有些软件自己做 DNS，有些东西干脆只看路由表。最后还是得上 TUN。</p>
+    <section class="markdown-content"><p>最近断断续续 Vibe Coding 写了一个小工具，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/runnel">Runnel</a>。我原本只是想写一个自己能用的代理工具，顺便把一些网络相关的东西重新摸一遍。写着写着，东西越来越像一个小型 VPN/代理工具箱。Runnel 有“小水道”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
+<p>最初的动机是因为自己用的两个机场都跪了 (虽然后来又逐渐恢复了)，于是萌生了一个自己写个工具来翻墙的想法。先让 AI 快速撸了一个车 native-http 版本的，然后又加了多路复用的 native-mux 模式。</p>
+<p>后来又想到一个同事说他一直用自己写的代理工具叫做 <a target="_blank" rel="noopener" href="https://github.com/libraries/daze">daze</a>，所以立马让 AI 用 Rust 重写了一份跑了起来。</p>
+<p>于是它现在支持几种模式：<code>native-http</code>、<code>native-mux</code>、几个 daze 风格的模式，以及后来主要投入精力做的 <code>wg</code> 模式。</p>
+<p>前面这些更像传统 SOCKS 代理，应用明确连到本地 SOCKS 端口，然后 Runnel 把流量转到远端。WG 模式不一样，它走 TUN 设备和 WireGuard 风格的 UDP 包，更像日常会用的全局 VPN。</p>
+<p>真正让我把重心转到 WG 模式的原因也很普通：SOCKS 在浏览器里挺好用，但到系统级流量、命令行工具、各种后台服务时就没那么舒服了。macOS 下总会碰到有些软件不吃系统代理，有些软件自己做 DNS，有些东西干脆只看路由表。最后还是得上 TUN。</p>
 <h2 id="先让它能跑"><a href="#先让它能跑" class="headerlink" title="先让它能跑"></a>先让它能跑</h2>
 <p>WG 模式底层用的是 Cloudflare 的 <code>boringtun</code>。最开始的版本目标很简单：</p>
 <ul>
@@ -190,12 +191,12 @@
 </ul>
 <p>听起来像配置一遍 WireGuard 而已，但自己写以后就会发现，大部分时间并不在加密和解密上，而是在处理操作系统。</p>
 <p>Linux 上需要 <code>/dev/net/tun</code>、<code>ip</code>、<code>sysctl</code>、<code>iptables</code>。macOS 上是 <code>ifconfig</code>、<code>route</code>、<code>networksetup</code>。命令不复杂，但出错方式很多。例如服务端没停干净，再起一次就会卡在：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">ip</span></span><span class="token function-call arguments shell"> address add 10.8.0.1 peer 10.8.0.2 dev pipitwg0</span>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">ip</span></span><span class="token function-call arguments shell"> address add 10.8.0.1 peer 10.8.0.2 dev runnel-wg0</span>
 </span></code></pre>
 <p>因为设备还在，地址也还在。再比如 macOS 上如果之前的 tunnel 没清理干净，WG endpoint 的路由可能会被系统解析到某个 <code>utun</code> 上。这个时候 client 还没真正起来，但发往 server endpoint 的 UDP 包已经准备钻进旧 tunnel，最后当然连不上。</p>
 <p>这类问题很烦，但它们也逼着我把启动阶段做得更啰嗦一点。现在 Runnel 会做 preflight，会打印 hook，会在 client 装路由之前先做一次短 handshake probe。key、endpoint 或两端配置有问题时，最好在启动阶段直接报错，而不是把系统路由改完，然后留给用户一个没有响应的黑盒。</p>
 <p>我写这类工具最大的感受是：网络工具的“好用”，很多时候不是吞吐量高一点，而是坏的时候知道坏在哪里。</p>
-<h2 id="配置生成比想象中管用"><a href="#配置生成比想象中管用" class="headerlink" title="配置生成比想象中管用"></a>配置生成比想象中管用</h2>
+<h2 id="配置生成"><a href="#配置生成" class="headerlink" title="配置生成"></a>配置生成</h2>
 <p>WG 的配置很容易写错，尤其是 private key、peer public key、tunnel IP 这种互相交叉的字段。手写一次就够让人烦了，所以后来加了：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">runnel</span></span><span class="token function-call arguments shell"> wg-config<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>server-endpoint</span> SERVER-IP:1443 <span class="token operator assignment redirection shell">&gt;</span> runnel.yaml</span>
 </span></code></pre>
@@ -214,7 +215,7 @@
     <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">obfs_response_padding</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token number integer yaml">192</span>
 </span></code></pre>
 <p>这些东西不一定适合所有人，但它们很适合我自己的使用场景：默认配置应该尽量接近日常可用，而不是只给一个裸 tunnel。</p>
-<h2 id="分流这件事绕不开-DNS"><a href="#分流这件事绕不开-DNS" class="headerlink" title="分流这件事绕不开 DNS"></a>分流这件事绕不开 DNS</h2>
+<h2 id="分流"><a href="#分流" class="headerlink" title="分流"></a>分流</h2>
 <p>我原来只想做 IP 规则，例如：</p>
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token yaml"><span class="token string unquoted plain out yaml"><span class="entity name tag yaml">client</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
   <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">ip_rules</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
@@ -235,7 +236,7 @@
 <p>所以现在 WG 的 domain rules 是 DNS 驱动的。client 会把本机 DNS 指到 <code>127.0.0.1:53</code>，Runnel 在本地做一个很小的 DNS forwarder。它看到查询 <code>www.qq.com</code>，发现命中 direct 规则，就等上游 DNS 返回 IP，然后动态加一条 host route，让这个 IP 走本地网关。</p>
 <p>这个方案很实用，但并不完美。第一次访问一个域名时，如果系统还没有拿到解析结果，它可能已经先走了 tunnel。DoH、DoT、浏览器缓存、直接访问 IP，也都绕过这条逻辑。CDN 共享 IP 还会带来另一个问题：你为了某个域名加的直连 route，可能影响另一个解析到同一 IP 的域名。</p>
 <p>这些限制没法假装不存在，所以文档里也写清楚了。能解决 80% 的日常问题就很好，剩下 20% 要靠更底层的 packet inspection 或系统扩展，那又是另外一个坑。</p>
-<h2 id="Adblock-是顺手加的，但还挺好用"><a href="#Adblock-是顺手加的，但还挺好用" class="headerlink" title="Adblock 是顺手加的，但还挺好用"></a>Adblock 是顺手加的，但还挺好用</h2>
+<h2 id="顺手加的-Adblock"><a href="#顺手加的-Adblock" class="headerlink" title="顺手加的 Adblock"></a>顺手加的 Adblock</h2>
 <p>后来我把 <a target="_blank" rel="noopener" href="https://github.com/brave/adblock-rust/">adblock-rust</a> 集成进来了。原因很简单：既然 WG 模式已经有 DNS capture，那 block 域名就可以顺手做掉。</p>
 <p>这里我比较在意优先级。最后定下来是：</p>
 <ol>
@@ -261,7 +262,7 @@
 <p>这些信息散在 log、<code>netstat</code>、<code>route</code>、<code>tcpdump</code> 里会很痛苦。放到一个 TUI 里之后，很多问题一眼能看出方向。</p>
 <p>比如看到 <code>HANDSHAKE(REKEY_TIMEOUT)</code> 连续刷，基本就是两边没有成功握手，先别怀疑浏览器。看到 <code>www.qq.com pending</code>，就知道 DNS query 被捕获了，但还没拿到可用于直连的 IP。看到某个 tracker 域名一秒内 block 了几十次，就知道 UI 需要合并重复记录，不然屏幕全被刷满。</p>
 <p>这里也有一些取舍。比如 tunnel speed 只能统计 WG tunnel 里的流量，直连出去的流量本来就不经过 tunnel，所以不会出现在 download wave 里。这个听起来像 bug，但其实是统计边界的问题。</p>
-<h2 id="Benchmark-没有想象中直观"><a href="#Benchmark-没有想象中直观" class="headerlink" title="Benchmark 没有想象中直观"></a>Benchmark 没有想象中直观</h2>
+<h2 id="Benchmark-测试"><a href="#Benchmark-测试" class="headerlink" title="Benchmark 测试"></a>Benchmark 测试</h2>
 <p>我给所有模式都加了一个 <code>mode_perf</code> benchmark。小请求跑 1000 次，大响应跑 8 个 1MiB 下载。非 WG 模式走 SOCKS path，WG 模式会真正拉起 child process，创建 TUN 设备，然后从 tunnel IP 发 HTTP 请求。</p>
 <p>本机测试的结果挺有意思：</p>
 <pre class="line-numbers language-text" data-language="text"><code class="language-text">native-mux  小请求大约 3300 req/s
@@ -365,7 +366,7 @@ wg          小请求大约 2500 req/s
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#先让它能跑"><span class="toc-text">先让它能跑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置生成比想象中管用"><span class="toc-text">配置生成比想象中管用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分流这件事绕不开-DNS"><span class="toc-text">分流这件事绕不开 DNS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adblock-是顺手加的，但还挺好用"><span class="toc-text">Adblock 是顺手加的，但还挺好用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TUI-比我预想中更有用"><span class="toc-text">TUI 比我预想中更有用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Benchmark-没有想象中直观"><span class="toc-text">Benchmark 没有想象中直观</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Noise-和混淆"><span class="toc-text">Noise 和混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写到后来，变成了调试工具"><span class="toc-text">写到后来，变成了调试工具</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#先让它能跑"><span class="toc-text">先让它能跑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置生成"><span class="toc-text">配置生成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分流"><span class="toc-text">分流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#顺手加的-Adblock"><span class="toc-text">顺手加的 Adblock</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TUI-比我预想中更有用"><span class="toc-text">TUI 比我预想中更有用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Benchmark-测试"><span class="toc-text">Benchmark 测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Noise-和混淆"><span class="toc-text">Noise 和混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写到后来，变成了调试工具"><span class="toc-text">写到后来，变成了调试工具</span></a></li></ol>
     
   </div>
 </aside>
