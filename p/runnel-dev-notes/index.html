@@ -174,14 +174,14 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>最近断断续续 Vibe Coding 写了一个小工具，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/runnel">Runnel</a>。我原本只是想写一个自己能用的代理工具，顺便把一些网络相关的东西重新摸一遍。写着写着，东西越来越像一个小型 VPN/代理工具箱。Runnel 有“小水道”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
-<p>最初的动机是因为自己用的两个机场都跪了 (虽然后来又逐渐恢复了)，于是萌生了一个自己写个工具来翻墙的想法。先让 AI 快速撸了一个车 native-http 版本的，然后又加了多路复用的 native-mux 模式。</p>
-<p>后来又想到一个同事说他一直用自己写的代理工具叫做 <a target="_blank" rel="noopener" href="https://github.com/libraries/daze">daze</a>，所以立马让 AI 用 Rust 重写了一份跑了起来。</p>
+    <section class="markdown-content"><p>最近断断续续 Vibe Coding 写了一个小工具，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/runnel">Runnel</a>。因为我之前用的两个机场都跪了 (虽然后来又逐渐恢复了)，于是萌生了自己写个工具来翻墙的想法，顺便把一些网络相关的东西重新摸一遍。</p>
+<p>Runnel 有“小水道”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
+<p>先让 AI 快速撸了一个车 native-http 版本的，然后又加了多路复用的 native-mux 模式。后来又想到一个同事说他一直用自己写的代理工具叫做 <a target="_blank" rel="noopener" href="https://github.com/libraries/daze">daze</a>，所以立马让 AI 用 Rust 重写了一份跑了起来。</p>
 <p>于是它现在支持几种模式：<code>native-http</code>、<code>native-mux</code>、几个 daze 风格的模式，以及后来主要投入精力做的 <code>wg</code> 模式。</p>
 <p>前面这些更像传统 SOCKS 代理，应用明确连到本地 SOCKS 端口，然后 Runnel 把流量转到远端。WG 模式不一样，它走 TUN 设备和 WireGuard 风格的 UDP 包，更像日常会用的全局 VPN。</p>
 <p>真正让我把重心转到 WG 模式的原因也很普通：SOCKS 在浏览器里挺好用，但到系统级流量、命令行工具、各种后台服务时就没那么舒服了。macOS 下总会碰到有些软件不吃系统代理，有些软件自己做 DNS，有些东西干脆只看路由表。最后还是得上 TUN。</p>
 <h2 id="先让它能跑"><a href="#先让它能跑" class="headerlink" title="先让它能跑"></a>先让它能跑</h2>
-<p>WG 模式底层用的是 Cloudflare 的 <code>boringtun</code>。最开始的版本目标很简单：</p>
+<p>WG 模式底层用的是 Cloudflare 的 <a target="_blank" rel="noopener" href="https://github.com/cloudflare/boringtun">boringtun</a>，目标很简单：</p>
 <ul>
 <li>client 创建一个 TUN 设备；</li>
 <li>server 也创建一个 TUN 设备；</li>
@@ -204,7 +204,7 @@
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">sudo</span></span><span class="token function-call arguments shell"> runnel<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>config</span> runnel.yaml server</span>
 <span class="token function-call shell"><span class="token variable function shell">sudo</span></span><span class="token function-call arguments shell"> runnel<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>config</span> runnel.yaml client<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>tui</span></span>
 </span></code></pre>
-<p>我挺喜欢这个设计。它减少了很多“我复制错了吗”的问题，也方便把一些默认值放进去。比如现在生成配置默认带 adblock，默认启用 DNS capture，也会默认带上 noise engine 和 mask obfs：</p>
+<p>它减少了很多“我复制错了吗”的问题，也方便把一些默认值放进去。比如现在生成配置默认带 adblock，默认启用 DNS capture，也会默认带上 noise engine 和 mask obfs：</p>
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token yaml"><span class="token string unquoted plain out yaml"><span class="entity name tag yaml">client</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
   <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">wg</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
     <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">engine</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token string unquoted plain out yaml">noise</span>
@@ -232,8 +232,8 @@
     <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">block</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
       <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>*.xxx.com<span class="token punctuation definition string end yaml">&quot;</span></span>
 </span></code></pre>
-<p>问题是 WG 看到的是 IP 包，不知道这个连接原本访问的是 <code>qq.com</code> 还是别的什么域名。能抓到域名的地方只有 DNS。</p>
-<p>所以现在 WG 的 domain rules 是 DNS 驱动的。client 会把本机 DNS 指到 <code>127.0.0.1:53</code>，Runnel 在本地做一个很小的 DNS forwarder。它看到查询 <code>www.qq.com</code>，发现命中 direct 规则，就等上游 DNS 返回 IP，然后动态加一条 host route，让这个 IP 走本地网关。</p>
+<p>问题是 WG 看到的是 IP 包，不知道这个连接原本访问的是 <code>github.com</code> 还是别的什么域名。能抓到域名的地方只有 DNS。</p>
+<p>所以现在 WG 的 domain rules 是 DNS 驱动的。client 会把本机 DNS 指到 <code>127.0.0.1:53</code>，Runnel 在本地做一个很小的 DNS forwarder。它看到查询 <code>www.xxx.com</code>，发现命中 direct 规则，就等上游 DNS 返回 IP，然后动态加一条 host route，让这个 IP 走本地网关。</p>
 <p>这个方案很实用，但并不完美。第一次访问一个域名时，如果系统还没有拿到解析结果，它可能已经先走了 tunnel。DoH、DoT、浏览器缓存、直接访问 IP，也都绕过这条逻辑。CDN 共享 IP 还会带来另一个问题：你为了某个域名加的直连 route，可能影响另一个解析到同一 IP 的域名。</p>
 <p>这些限制没法假装不存在，所以文档里也写清楚了。能解决 80% 的日常问题就很好，剩下 20% 要靠更底层的 packet inspection 或系统扩展，那又是另外一个坑。</p>
 <h2 id="顺手加的-Adblock"><a href="#顺手加的-Adblock" class="headerlink" title="顺手加的 Adblock"></a>顺手加的 Adblock</h2>
@@ -245,7 +245,7 @@
 <li>用户自己的 direct/proxy 规则</li>
 <li>默认走 proxy，也就是 tunnel</li>
 </ol>
-<p>用户手写规则永远应该赢过订阅规则。否则哪天 EasyPrivacy 把一个你需要的域名拦了，你会很难受。</p>
+<p>用户手写规则永远应该赢过订阅规则。否则哪天 EasyPrivacy 把一个你需要的域名拦了，就会很难受。</p>
 <p>性能上我一开始也有点担心。毕竟 tunnel 里每个包都可能很密集，如果每个请求、每个 packet 都去跑 adblock，那肯定不行。最后实现是 DNS 级别的：只有新的域名查询会进入规则匹配，订阅会缓存在本地，域名决策也有内存缓存。实际看下来，这个成本可以接受。</p>
 <p>有次 TUI 里看到 <code>p.data.cctv.com</code> 被 block，我还专门去查了一下。它不是用户规则拦的，是订阅规则命中的。这个例子也提醒我，TUI 不能只显示 block，还得让用户知道大概是谁 block 的。否则所有东西看起来都像程序在自作主张。</p>
 <h2 id="TUI-比我预想中更有用"><a href="#TUI-比我预想中更有用" class="headerlink" title="TUI 比我预想中更有用"></a>TUI 比我预想中更有用</h2>
