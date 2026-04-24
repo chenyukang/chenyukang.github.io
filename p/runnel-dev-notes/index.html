@@ -247,7 +247,7 @@
 </ol>
 <p>用户手写规则永远应该赢过订阅规则。否则哪天 EasyPrivacy 把一个你需要的域名拦了，就会很难受。</p>
 <p>性能上我一开始也有点担心。毕竟 tunnel 里每个包都可能很密集，如果每个请求、每个 packet 都去跑 adblock，那肯定不行。最后实现是 DNS 级别的：只有新的域名查询会进入规则匹配，订阅会缓存在本地，域名决策也有内存缓存。实际看下来，这个成本可以接受。</p>
-<p>有次 TUI 里看到 <code>p.data.cctv.com</code> 被 block，我还专门去查了一下。它不是用户规则拦的，是订阅规则命中的。这个例子也提醒我，TUI 不能只显示 block，还得让用户知道大概是谁 block 的。否则所有东西看起来都像程序在自作主张。</p>
+<p>有次 TUI 里看到 <code>p.data.cctv.com</code> 被 block，我还专门去查了一下。它不是用户规则拦的，是订阅规则命中的。</p>
 <h2 id="TUI-比我预想中更有用"><a href="#TUI-比我预想中更有用" class="headerlink" title="TUI 比我预想中更有用"></a>TUI 比我预想中更有用</h2>
 <p>Runnel 有一个 TUI，不是为了好看，主要是为了少开几个终端。</p>
 <p>WG 模式刚开始出问题时，我经常要同时看：</p>
@@ -260,8 +260,7 @@
 <li>tunnel 有没有流量。</li>
 </ul>
 <p>这些信息散在 log、<code>netstat</code>、<code>route</code>、<code>tcpdump</code> 里会很痛苦。放到一个 TUI 里之后，很多问题一眼能看出方向。</p>
-<p>比如看到 <code>HANDSHAKE(REKEY_TIMEOUT)</code> 连续刷，基本就是两边没有成功握手，先别怀疑浏览器。看到 <code>www.qq.com pending</code>，就知道 DNS query 被捕获了，但还没拿到可用于直连的 IP。看到某个 tracker 域名一秒内 block 了几十次，就知道 UI 需要合并重复记录，不然屏幕全被刷满。</p>
-<p>这里也有一些取舍。比如 tunnel speed 只能统计 WG tunnel 里的流量，直连出去的流量本来就不经过 tunnel，所以不会出现在 download wave 里。这个听起来像 bug，但其实是统计边界的问题。</p>
+<p>比如看到 <code>HANDSHAKE(REKEY_TIMEOUT)</code> 连续刷，基本就是两边没有成功握手，先别怀疑浏览器。看到 <code>www.qq.com pending</code>，就知道 DNS query 被捕获了，但还没拿到可用于直连的 IP。</p>
 <h2 id="Benchmark-测试"><a href="#Benchmark-测试" class="headerlink" title="Benchmark 测试"></a>Benchmark 测试</h2>
 <p>我给所有模式都加了一个 <code>mode_perf</code> benchmark。小请求跑 1000 次，大响应跑 8 个 1MiB 下载。非 WG 模式走 SOCKS path，WG 模式会真正拉起 child process，创建 TUN 设备，然后从 tunnel IP 发 HTTP 请求。</p>
 <p>本机测试的结果挺有意思：</p>
@@ -276,11 +275,10 @@ wg          小请求大约 2500 req/s
 <p>标准的 WireGuard 长度非常固定，所以基本上会容易检测出来。我在最初使用单纯的 WG 用一段时间开始丢包，于是我开始琢磨如何加噪音来抗审查。</p>
 <p>于是给 WG mode 加了 noise engine。默认的 device engine 是让 boringtun 自己管理 WireGuard 设备和 UAPI socket，比较标准。noise engine 则是 Runnel 自己跑 TUN/UDP loop，直接用 <code>boringtun::noise::Tunn</code> 做加解密。</p>
 <p>这样做的好处是 transport 变得更可控。比如可以在 WireGuard UDP 包外面包一层 mask，把包头和长度藏一下，再加一些 padding。现在的 <code>obfs: mask</code> 做的就是这个方向。</p>
-<p>我不想把它说成什么“抗审查神器”。这类话太大了，也不诚实。现实网络环境要麻烦得多，包长、时序、UDP 行为、重传模式，都可能暴露特征。但作为一个实验层，它有用：至少可以让标准 WireGuard 包的形状变得不那么裸。</p>
-<p>我也看了一些类似工具的方向，比如 AmneziaWG、Nym 把 QUIC 和 WG 组合起来的思路。它们给我的启发是，VPN 工具不一定非要把“WireGuard 协议”和“底层传输形态”绑死。真正有意思的地方在中间那层：你能不能保留 WG 的 key、handshake、TUN 语义，同时换掉或包装它的传输外观。</p>
-<p>Runnel 现在还只是很早期的版本，但 noise engine 让后面继续试 QUIC、padding profile、甚至更麻烦的 packet shaping 都方便了一些。</p>
+<p>我不想把它说成什么“抗审查神器”，但从我平稳使用的一周结果看这样的混淆对于个人使用已经足够。现实网络环境要麻烦得多，包长、时序、UDP 行为、重传模式，都可能暴露特征。</p>
+<p>我也看了一些类似工具的方向，比如 AmneziaWG、Nym 把 QUIC 和 WG 组合起来的思路，Runnel 现在还只是很早期的版本，但 noise engine 让后面继续试 QUIC、padding profile、甚至更麻烦的 packet shaping 都方便了一些。</p>
 <hr />
-<p>Runnel 还没有到我觉得很完整的阶段。比如 WG 的 domain rules 还是 DNS 驱动，IPv6 和双栈还需要更好的 schema，macOS 上更细粒度的 app split tunneling 也不是简单路由表能解决的。后面如果继续做，可能会往两个方向走：一是把 WG 模式打磨到更适合日常使用，二是继续试验 noise/QUIC 这类 transport。</p>
+<p>Runnel 还没有到我觉得很完整的阶段，还有些细节比如 WG 的 domain rules 还是 DNS 驱动，IPv6 和双栈还需要更好的 schema，macOS 上更细粒度的 app split tunneling 也不是简单路由表能解决的。后面如果继续做，可能会往两个方向走：一是把 WG 模式打磨到更适合日常使用，二是继续试验 noise/QUIC 这类 transport。</p>
 <p>但目前这个状态我已经挺满意了，它不是一个周末玩具了，至少已经变成了我自己会认真拿来用、拿来测、拿来折腾网络问题的工具。</p>
 <p>这大概就是个人项目最舒服的地方：先让自己用得爽一点，遇到问题再修复。</p>
 </section>
