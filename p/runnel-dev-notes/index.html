@@ -175,7 +175,7 @@
   <!-- Article START -->
   <article class="post-article">
     <section class="markdown-content"><p>最近断断续续 Vibe Coding 写了一个小工具，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/runnel">Runnel</a>。因为我之前用的两个机场都跪了 (虽然后来又逐渐恢复了)，于是萌生了自己写个工具来翻墙的想法，顺便把一些网络相关的东西重新摸一遍。</p>
-<p>Runnel 有“小水道”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
+<p>Runnel 有“小河流”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
 <p>先让 AI 快速撸了一个车 native-http 版本的，然后又加了多路复用的 native-mux 模式。后来又想到一个同事说他一直用自己写的代理工具叫做 <a target="_blank" rel="noopener" href="https://github.com/libraries/daze">daze</a>，所以立马让 AI 用 Rust 重写了一份跑了起来。</p>
 <p>于是它现在支持几种模式：<code>native-http</code>、<code>native-mux</code>、几个 daze 风格的模式，以及后来主要投入精力做的 <code>wg</code> 模式。</p>
 <p>前面这些更像传统 SOCKS 代理，应用明确连到本地 SOCKS 端口，然后 Runnel 把流量转到远端。WG 模式不一样，它走 TUN 设备和 WireGuard 风格的 UDP 包，更像日常会用的全局 VPN。</p>
@@ -227,7 +227,7 @@
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token yaml"><span class="token string unquoted plain out yaml"><span class="entity name tag yaml">client</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
   <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">domain_rules</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
     <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">direct</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
-      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>*.qq.com<span class="token punctuation definition string end yaml">&quot;</span></span>
+      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>*.baidu.com<span class="token punctuation definition string end yaml">&quot;</span></span>
       <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>*.cn<span class="token punctuation definition string end yaml">&quot;</span></span>
     <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">block</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
       <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>*.xxx.com<span class="token punctuation definition string end yaml">&quot;</span></span>
@@ -276,11 +276,11 @@ wg          小请求大约 2500 req/s
 <p>于是给 WG mode 加了 noise engine。默认的 device engine 是让 boringtun 自己管理 WireGuard 设备和 UAPI socket，比较标准。noise engine 则是 Runnel 自己跑 TUN/UDP loop，直接用 <code>boringtun::noise::Tunn</code> 做加解密。</p>
 <p>这样做的好处是 transport 变得更可控。比如可以在 WireGuard UDP 包外面包一层 mask，把包头和长度藏一下，再加一些 padding。现在的 <code>obfs: mask</code> 做的就是这个方向。</p>
 <p>我不想把它说成什么“抗审查神器”，但从我平稳使用的一周结果看这样的混淆对于个人使用已经足够。现实网络环境要麻烦得多，包长、时序、UDP 行为、重传模式，都可能暴露特征。</p>
-<p>我也看了一些类似工具的方向，比如 AmneziaWG、Nym 把 QUIC 和 WG 组合起来的思路，Runnel 现在还只是很早期的版本，但 noise engine 让后面继续试 QUIC、padding profile、甚至更麻烦的 packet shaping 都方便了一些。</p>
+<p>我也看了一些类似工具的方向，比如 <a target="_blank" rel="noopener" href="https://github.com/amnezia-vpn">AmneziaVPN</a>、Nym 把 QUIC 和 WG 组合起来的思路，Runnel 现在还只是很早期的版本，但 noise engine 让后面继续试 QUIC、padding profile、甚至更麻烦的 packet shaping 都方便了一些。</p>
 <hr />
-<p>Runnel 还没有到我觉得很完整的阶段，还有些细节比如 WG 的 domain rules 还是 DNS 驱动，IPv6 和双栈还需要更好的 schema，macOS 上更细粒度的 app split tunneling 也不是简单路由表能解决的。后面如果继续做，可能会往两个方向走：一是把 WG 模式打磨到更适合日常使用，二是继续试验 noise/QUIC 这类 transport。</p>
-<p>但目前这个状态我已经挺满意了，它不是一个周末玩具了，至少已经变成了我自己会认真拿来用、拿来测、拿来折腾网络问题的工具。</p>
-<p>这大概就是个人项目最舒服的地方：先让自己用得爽一点，遇到问题再修复。</p>
+<p>Runnel 还没有到我觉得很完整的阶段，还有些细节可以继续打磨，比如 IPv6 和双栈还需要更好的 schema，macOS 上更细粒度的 app split tunneling 也不是简单路由表能解决的。</p>
+<p>但目前这个状态我已经挺满意了，它不是一个周末玩具了，至少已经变成了我自己会认真拿来使用、测试、折腾网络问题的工具。</p>
+<p>这大概就是个人项目最舒服的地方：先让自己用得爽一点，遇到问题再修复。我的日常使用场景是 macOS(client) + Linux(server)，其他路径目前只是在单元测试中有覆盖，也许其他实际场景会碰到一些配置问题，欢迎 PR。</p>
 </section>
 
     <p></p>
