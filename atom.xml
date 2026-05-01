@@ -3,15 +3,60 @@
   <title>CatCoding</title>
   <link href="http://catcoding.me/atom.xml" rel="self"/>
   <link href="http://catcoding.me/"/>
-  <updated>2026-05-01T03:09:29.684042067+00:00</updated>
+  <updated>2026-05-01T05:09:10.079462048+00:00</updated>
   <id>http://catcoding.me/</id>
   <author><name>yukang</name></author>
+  <entry>
+    <title>GitHeron：把网页标注写到 GitHub</title>
+    <link href="http://catcoding.me/p/githeron/"/>
+    <id>http://catcoding.me/p/githeron/</id>
+    <published>2026-05-01T13:08:26+00:00</published>
+    <updated>2026-05-01T05:08:42.723049428+00:00</updated>
+    <content type="html"><![CDATA[<p>最近写了一个 Chrome 插件，叫 GitHeron。它想解决的问题很简单：</p>
+<blockquote>
+<p>Web highlights and clippings, synced to GitHub as Markdown.</p>
+</blockquote>
+<p>我一直使用  <a target="_blank" rel="noopener" href="https://web.hypothes.is/">Hypothesis</a> 来同步冲浪记录，然后使用一个 <a target="_blank" rel="noopener" href="https://github.com/weichenw/obsidian-hypothesis-plugin">Obsidian 插件</a>来同步到我的知识库。但 hypothesis 的浏览器插件体验不佳，时不时需要登录，选中文字打算做备注时又偶尔无法激活，我就想自己写个插件来解决这个问题。</p>
+<p>GitHeron 的思路是直接使用 Github token 访问私有 repo，通过 API 把数据写入仓库。GitHub 当然不是传统意义上的数据库。但对个人工具来说，它已经提供了很多“数据库”才有的能力：同步、历史、权限、备份、API、跨设备访问。更重要的是，这些都完全是由自己控制的。</p>
+<h2 id="网页备注和高亮"><a href="#网页备注和高亮" class="headerlink" title="网页备注和高亮"></a>网页备注和高亮</h2>
+<p>GitHeron 最核心的功能是网页标注。</p>
+<p>在网页上选中一段文字，按下快捷键 (默认 <code>Ctrl+E</code>)，就可以打开 note 编辑框。写完之后，这段文字会在页面上变成高亮。下次再打开同一个页面，GitHeron 会自动把之前的高亮恢复出来。</p>
+<p>这件事听起来不复杂，但体验上很重要。很多阅读笔记工具只能把内容保存走，却不能在原网页上重新建立上下文。GitHeron 更在意的是“回到现场”：当你再次打开这篇文章时，能立刻看到自己上次为什么停在这里。</p>
+<p>写 note 时也可以加 tags。最近使用过的 tags 会出现在输入框附近，点一下就能选中，也可以随时移除，新的 tag 会自动进入最近使用列表。</p>
+<h2 id="保存整篇网页"><a href="#保存整篇网页" class="headerlink" title="保存整篇网页"></a>保存整篇网页</h2>
+<p>除了高亮，GitHeron 还可以保存当前网页的主要内容。</p>
+<p>按下快捷键 (默认 <code>Ctrl + O</code>) 后，它会提取页面正文，转换成 Markdown，然后保存到仓库中的 Clippings 目录。这里保存的是 main content，不是整个网页 HTML，所以导航栏、广告、推荐列表这些内容会尽量被过滤掉。</p>
+<p>网页剪藏部分使用 Defuddle 来提取 main content，再转换成 Markdown。它不能保证所有网页都完美，但比直接保存整个 DOM 更接近“我真正想留下来的文章内容”。</p>
+<p>这个功能更接近 Obsidian Web Clipper：遇到一篇值得完整保存的文章，不需要复制粘贴，也不需要手工整理格式，直接让它进入自己的 Markdown 仓库。</p>
+<h2 id="使用体验"><a href="#使用体验" class="headerlink" title="使用体验"></a>使用体验</h2>
+<p>在 Settings 填入一个 Github repo 地址，私有的或者公开的都行，然后去 <a target="_blank" rel="noopener" href="https://github.com/settings/personal-access-tokens">Github token</a> 页面生成一个 token 含有写入这个 repo 权限的 token，填入插件的配置里即可。</p>
+<p>默认有两个快捷键：</p>
+<ul>
+<li><code>Ctrl+E</code>：给当前选中文字添加 note；</li>
+<li><code>Ctrl+O</code>：保存当前网页正文。</li>
+</ul>
+<p>如果喜欢鼠标操作，也可以开启选中文字后的悬浮按钮；如果不喜欢它打扰阅读，可以在 settings 里关掉，只使用快捷键。</p>
+<p>同步 GitHub 时也有两种模式。普通模式会等 GitHub 写入完成再结束；后台同步模式则会先更新页面状态，把任务放到后台慢慢同步。网络失败或 GitHub 返回错误时，可以在 settings 的 tasks 里看到最近任务，并进行 retry。</p>
+<p>写 note 应该是一个很轻的动作，不应该因为网络慢而打断阅读节奏。</p>
+<table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>![[Pasted image 20260428224559.png]]</td><td>![[Pasted image 20260428224735.png]]</td></tr>
+</tbody></table>
+<h2 id="技术方案"><a href="#技术方案" class="headerlink" title="技术方案"></a>技术方案</h2>
+<p>GitHeron 是一个 Chrome MV3 插件，主要由 content script 和 service worker 组成。</p>
+<p>content script 负责页面里的交互：选区、高亮、快捷键、弹框和正文提取。为了避免被网页自身样式影响，弹框和面板都放在 Shadow DOM 里。</p>
+<p>service worker 负责设置、后台任务和 GitHub API。写入仓库时使用 GitHub 的 Git Data API 来生成 commit，这样一次保存可以同时更新 Markdown 内容和用于恢复高亮的辅助数据。</p>
+<p>这里有一个取舍：Markdown 文件应该尽量保持可读，不应该塞进大段元数据。所以 GitHeron 会把可读内容写进 <code>.md</code>，把用于定位高亮的 selector 信息放到旁边的 JSON 文件里。这样仓库里既有人能直接读的笔记，也有插件重新打开网页时需要的结构化数据。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2>
+<p>GitHeron 是一个很个人化的工具，它的目标不是做一个复杂的标注系统，而是让“读到有用内容”到“进入自己的知识库”之间少一点摩擦。</p>
+<p>对了，我最近还 Vibe coding 了另一个小插件 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/auto-tabs">atuo tabs</a>，也是解决我日常的具体问题的。在 AI 时代，稍微有点编程经验的人都会把自己的工作流优化到极致。</p>
+]]></content>
+  </entry>
   <entry>
     <title>开发 Runnel 的一些记录</title>
     <link href="http://catcoding.me/p/runnel-dev-notes/"/>
     <id>http://catcoding.me/p/runnel-dev-notes/</id>
     <published>2026-04-23T19:15:24+00:00</published>
-    <updated>2026-05-01T03:09:02.545785974+00:00</updated>
+    <updated>2026-05-01T05:08:42.729050419+00:00</updated>
     <content type="html"><![CDATA[<p>最近断断续续 Vibe Coding 写了一个小工具，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/runnel">Runnel</a>。因为我之前用的两个机场都跪了 (虽然后来又逐渐恢复了)，于是萌生了自己写个工具来翻墙的想法，顺便把一些网络相关的东西重新摸一遍。</p>
 <p>Runnel 有“小河流”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
 <p>先让 AI 快速撸了一个车 native-http 版本的，然后又加了多路复用的 native-mux 模式。后来又想到一个同事说他一直用自己写的代理工具叫做 <a target="_blank" rel="noopener" href="https://github.com/libraries/daze">daze</a>，所以立马让 AI 用 Rust 重写了一份跑了起来。</p>
@@ -126,7 +171,7 @@ wg          小请求大约 2500 req/s
     <link href="http://catcoding.me/p/apple-gatekeeper-scan/"/>
     <id>http://catcoding.me/p/apple-gatekeeper-scan/</id>
     <published>2026-02-12T16:55:52+00:00</published>
-    <updated>2026-05-01T03:09:02.533785980+00:00</updated>
+    <updated>2026-05-01T05:08:42.718279374+00:00</updated>
     <content type="html"><![CDATA[<p>今天跑 Rust 编译器测试的时候又发现非常地慢，CPU 资源根本无法利用起来，我记得几年前碰到过这个问题，当时我写了篇<a target="_blank" rel="noopener" href="https://catcoding.me/p/apple-perf/">文章</a>分享出来，并发现很多人都有同样的困扰。</p>
 <p>而我今天碰到的这个问题虽然现象一样，但解决方法又不同了。我不确定是 macOS 系统更新，亦或是我更新了 VS Code 造成的。</p>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2>
@@ -216,7 +261,7 @@ GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_B
     <link href="http://catcoding.me/p/hexo-rs/"/>
     <id>http://catcoding.me/p/hexo-rs/</id>
     <published>2026-01-30T23:00:00+00:00</published>
-    <updated>2026-05-01T03:09:02.539785977+00:00</updated>
+    <updated>2026-05-01T05:08:42.723049428+00:00</updated>
     <content type="html"><![CDATA[<p>月底升级了 Copilot Pro+，月初额度重置，这几天可以放开用，想到什么就 vibe 一把。</p>
 <p>我的博客跑在 Hexo 上很多年了。其实没什么大问题，就是每次看到那几百 MB 的 node_modules，心里总有点膈应——生成几百个静态 HTML，真的需要这么多依赖吗？但迁移到别的博客系统又懒得折腾，所以一直拖着。</p>
 <p>这次干脆试试：能不能用 AI 一个下午撸一个 Rust 版的 Hexo？我的目标比较简单：生成跟原来一样的静态文件，兼容我现在用的主题就行。</p>
@@ -270,7 +315,7 @@ GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_B
     <link href="http://catcoding.me/p/how-fiber-works/"/>
     <id>http://catcoding.me/p/how-fiber-works/</id>
     <published>2025-12-09T17:05:59+00:00</published>
-    <updated>2026-05-01T03:09:02.540785976+00:00</updated>
+    <updated>2026-05-01T05:08:42.723049428+00:00</updated>
     <content type="html"><![CDATA[<p>I just got back from CKCon in beautiful Chiang Mai 🌴, where I gave a talk on the Fiber Network. To help everyone wrap their heads around how Fiber (CKB’s Lightning Network) actually moves assets, I hacked a visual simulation with AI.</p>
 <p>To my surprise, people didn’t just understand it—they loved it! 🎉</p>
 <p>Here is the “too long; didn’t read” version. But first, go ahead and play with the dots yourself, 👉 <strong>Play the Simulation:</strong> <a target="_blank" rel="noopener" href="https://fiber-world.vercel.app/simulate.html">fiber-simulation</a></p>
@@ -319,7 +364,7 @@ GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_B
     <link href="http://catcoding.me/p/llm-in-open-source/"/>
     <id>http://catcoding.me/p/llm-in-open-source/</id>
     <published>2025-11-26T10:15:38+00:00</published>
-    <updated>2026-05-01T03:09:02.541785976+00:00</updated>
+    <updated>2026-05-01T05:08:42.725049758+00:00</updated>
     <content type="html"><![CDATA[<p>越来越多的开发者开始使用 LLM 等 AI 工具，过去半年我看到不少相关讨论：有人非常反感使用 LLM 工具，有人保持中立，但确实有相当数量的 AI 生成 PR 给开源项目维护者带来了负担和困扰。</p>
 <p>现在出现了一些新苗头，比如 GitHub 账号也开始“养号”。我推测大概有以下几个原因：</p>
 <h3 id="为了加密货币空投"><a href="#为了加密货币空投" class="headerlink" title="为了加密货币空投"></a>为了加密货币空投</h3>
@@ -368,7 +413,7 @@ No LLMs for comments on the bug tracker, including translation.</p>
     <link href="http://catcoding.me/p/rust-in-cloudflare-incident/"/>
     <id>http://catcoding.me/p/rust-in-cloudflare-incident/</id>
     <published>2025-11-20T07:07:23+00:00</published>
-    <updated>2026-05-01T03:09:02.545785974+00:00</updated>
+    <updated>2026-05-01T05:08:42.729050419+00:00</updated>
     <content type="html"><![CDATA[<p>这两天都在讨论  Cloudflare 的安全事故  <a target="_blank" rel="noopener" href="https://blog.cloudflare.com/18-november-2025-outage/">Cloudflare outage on November 18, 2025</a>，我也写点自己的想法。</p>
 <p>这个事故当然引起的范围特别广，我当时正在用 ChatGPT，突然再打开总是提示正在加载，我还以为是自己的 VPN 出了问题，第二天起来才知道 Cloudflare 跪了好久。</p>
 <p>没多久 Cloudflare 就发出来了一个非常详细的事故说明。我对里面的场景非常熟悉，因为我之前因为类似的原因把大疆的大部分流量都给搞挂了，具体请看<a target="_blank" rel="noopener" href="https://catcoding.me/p/avoid-mistake/">谈谈工作中的犯错</a>中的配置错误。</p>
@@ -424,7 +469,7 @@ No LLMs for comments on the bug tracker, including translation.</p>
     <link href="http://catcoding.me/p/zero-knowledge-proof/"/>
     <id>http://catcoding.me/p/zero-knowledge-proof/</id>
     <published>2025-09-26T16:49:47+00:00</published>
-    <updated>2026-05-01T03:09:02.550785971+00:00</updated>
+    <updated>2026-05-01T05:08:42.734051246+00:00</updated>
     <content type="html"><![CDATA[<p>无论是在聊 L2、隐私还是下一代 Web 技术，零知识证明都是经常会碰到的技术术语，听起来就像是科幻小说里的东西：<strong>向你证明我知道一个秘密，但绝不透露这个秘密本身</strong>，这简直是程序员的终极浪漫。</p>
 <p>大多数人粗看都会觉得这东西是密码学博士们的专属玩具，我花了一段时间学习后，发现这条通往魔法世界的路似乎有迹可循，希望这篇入门介绍能帮助到更多这方向的学习者。</p>
 <h2 id="魔法洞穴"><a href="#魔法洞穴" class="headerlink" title="魔法洞穴"></a>魔法洞穴</h2>
@@ -756,7 +801,7 @@ No LLMs for comments on the bug tracker, including translation.</p>
     <link href="http://catcoding.me/p/riscv-vm/"/>
     <id>http://catcoding.me/p/riscv-vm/</id>
     <published>2025-09-23T00:54:14+00:00</published>
-    <updated>2026-05-01T03:09:02.544785974+00:00</updated>
+    <updated>2026-05-01T05:08:42.728050254+00:00</updated>
     <content type="html"><![CDATA[<p>I’ve always wanted to learn RISC-V. A few days ago, I finally got my hands dirty with it now.</p>
 <p>This post will guide you through the process of building a simple RISC-V VM from the ground up, using Rust as our implementation language.</p>
 <h2 id="Understanding-the-Core-Concepts"><a href="#Understanding-the-Core-Concepts" class="headerlink" title="Understanding the Core Concepts"></a>Understanding the Core Concepts</h2>
@@ -1106,7 +1151,7 @@ Disassembly of section .text._start:
     <link href="http://catcoding.me/p/rust-week-notes/"/>
     <id>http://catcoding.me/p/rust-week-notes/</id>
     <published>2025-06-11T10:23:14+00:00</published>
-    <updated>2026-05-01T03:09:02.545785974+00:00</updated>
+    <updated>2026-05-01T05:08:42.729050419+00:00</updated>
     <content type="html"><![CDATA[<p>5 月中旬我参加了在荷兰 Utrecht 举行的 Rust Week，想来可以写篇文章记录下所见所闻。</p>
 <p>我年初和 Rust 基金会邮件确认参加，但直到 4 月 9 日才开始动手申请签证。在深圳办理荷兰签证流程简单，只需提交材料并录指纹，但我嫌麻烦找了中介帮忙。据说大概也就两周多就会有结果，但直到五一查询还是没结果，中介说可以加 600 元加急。看到官网解释近期审批延迟，我便花钱加急，第二周拿到了签证。不知道这其中是否有猫腻，但确实有华为的朋友同样卡在那个节点审批，结果没有如期下来。</p>
 <p>从广州白云机场有直飞阿姆斯特丹的航班，只是起飞时间大概是凌晨 1 点多。飞机上座位空间狭小，难以入睡，趴着或躺着都不舒服，到了阿姆斯特丹是早晨 6 点多。通过海关后，我因不熟悉荷兰语而有些迷茫。由于未携带 Visa 卡，只能使用现金，幸好两位路人热心相助。我直接购买火车票前往 Utrecht，约于上午 10 点抵达酒店。因为时间还比较早没有空房，我把行李箱放在酒店自己去城里逛逛。</p>
@@ -1169,7 +1214,7 @@ Disassembly of section .text._start:
     <link href="http://catcoding.me/p/elliptic-curve/"/>
     <id>http://catcoding.me/p/elliptic-curve/</id>
     <published>2025-06-08T18:20:12+00:00</published>
-    <updated>2026-05-01T03:09:02.537785978+00:00</updated>
+    <updated>2026-05-01T05:08:42.721049097+00:00</updated>
     <content type="html"><![CDATA[<p>区块链这行经常会和椭圆曲线密码算法打交道，我也在尝试理解这其中的数学原理，这里记录一下。</p>
 <h2 id="什么是椭圆曲线-elliptic-curve"><a href="#什么是椭圆曲线-elliptic-curve" class="headerlink" title="什么是椭圆曲线 (elliptic curve)"></a>什么是椭圆曲线 (elliptic curve)</h2>
 <p>先想象一个普通的曲线，比如抛物线（抛个球的轨迹）。椭圆曲线不是椭圆（名字有点误导），而是一种长得像“对称小山丘”或者“歪歪扭扭的环”的数学图形。</p>
@@ -1286,7 +1331,7 @@ Disassembly of section .text._start:
     <link href="http://catcoding.me/p/future-size-perf/"/>
     <id>http://catcoding.me/p/future-size-perf/</id>
     <published>2025-03-24T10:21:03+00:00</published>
-    <updated>2026-05-01T03:09:02.539785977+00:00</updated>
+    <updated>2026-05-01T05:08:42.722049262+00:00</updated>
     <content type="html"><![CDATA[<p>在 Rust 异步编程中，有一种观点认为：<strong>Future 的大小显著影响性能</strong>。你是否怀疑过这个说法的真实性？如果是真的，这种性能差异的根源又是什么？今天，我翻阅了一些源码，并编写实验代码来一探究竟。</p>
 <h2 id="Future-的大小如何计算？"><a href="#Future-的大小如何计算？" class="headerlink" title="Future 的大小如何计算？"></a>Future 的大小如何计算？</h2>
 <p>为了验证“Future 大小影响性能”这一说法是否成立，我们先从一些简单代码入手。首要任务是弄清楚一个 Future 的大小是如何确定的。毕竟，在编译器眼里，Future 只是一个 trait：</p>
@@ -1516,7 +1561,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/fiber-network-on-ckb/"/>
     <id>http://catcoding.me/p/fiber-network-on-ckb/</id>
     <published>2025-03-16T08:53:04+00:00</published>
-    <updated>2026-05-01T03:09:02.538785978+00:00</updated>
+    <updated>2026-05-01T05:08:42.722049262+00:00</updated>
     <content type="html"><![CDATA[<p>最近一年我在做 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber">Fiber Network</a> 这个新的开源项目，上个月底刚好<a target="_blank" rel="noopener" href="https://x.com/FiberDevs/status/1895486339505893880">主网第一个版本发布</a>：</p>
 <p><img src="http://catcoding.me/images/ob_pasted-image-20250316084708.png" alt="" /></p>
 <p>这个项目的挑战还是挺大的，上主网只是一个新的开始。我在开发过程中学到了很多东西，这是我前段时间写的一篇关于 Fiber 的大致介绍。</p>
@@ -1612,7 +1657,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/2024-summary/"/>
     <id>http://catcoding.me/p/2024-summary/</id>
     <published>2025-01-01T00:03:41+00:00</published>
-    <updated>2026-05-01T03:09:02.533532888+00:00</updated>
+    <updated>2026-05-01T05:08:42.718279374+00:00</updated>
     <content type="html"><![CDATA[<p>2024 年快结束了，在这最后的一两个小时里我写着这篇年终总结准备跨年了，顺着大致时间线来回顾一下就好了。</p>
 <p>年初就起了个好头，众多加密货币开始上涨。总体而言，2024 年是个加密货币和区块链的大年。有那么一小段时间我每天都在关注涨跌，渐渐地我发现这个领域涨跌都是太频繁了，而过多关注除了浪费时间并没有什么大的用处。因为两年前开始在这个领域工作，所以我自然也会投资一些加密货币。刚开始我稍微接触了一下合约，但很快亏掉了几千元，算是交了学费。然后很快理智地退出了，合约本质上来说和赌博有点类似，钱来得也快亏得也快，但大概率是要亏钱的。</p>
 <p>我听从了一些行业老鸟的建议，拿住比特币就行，其他的看着买点。我从 2023 年开始陆续买入了一些比特币，当时的价格不算高，到今年年底看来也有不少涨幅了。我抱着长期拿住的心态在买入，打算至少持有八九年以上。所以现在我基本不怎么关心价格了，如果买了就当作这钱是存在那里好了，把时间幅度拉长，我相信比特币未来会更值钱。我愿意相信这个行业是因为从技术的角度考虑是即有趣又有挑战。这两年来我工作的项目和比特币是非常类似的，就当作为信仰充值。</p>
@@ -1640,7 +1685,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/ckb-new-verify/"/>
     <id>http://catcoding.me/p/ckb-new-verify/</id>
     <published>2024-11-07T12:03:24+00:00</published>
-    <updated>2026-05-01T03:09:02.535785979+00:00</updated>
+    <updated>2026-05-01T05:08:42.720048932+00:00</updated>
     <content type="html"><![CDATA[<p>CKB 相关技术文章第三篇。</p>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2>
 <p>CKB 的每一个交易在提交到交易池之前都会经过一个 script verification 的过程，本质上就是通过 CKB-VM 把交易里的 script 跑一遍，如果失败了则直接 reject，如果通过了才会继续后面的流程。</p>
@@ -1696,7 +1741,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/ckb-rbf/"/>
     <id>http://catcoding.me/p/ckb-rbf/</id>
     <published>2024-11-06T11:55:13+00:00</published>
-    <updated>2026-05-01T03:09:02.536785979+00:00</updated>
+    <updated>2026-05-01T05:08:42.720048932+00:00</updated>
     <content type="html"><![CDATA[<p>CKB 相关技术文章第二篇。</p>
 <h2 id="Replace-by-fee"><a href="#Replace-by-fee" class="headerlink" title="Replace by fee"></a>Replace by fee</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3>
 <p>如果一个交易成功发送到交易池，但可能出现因为费用较低而一直得不到处理。之前 CKB 没有其他措施来处理这种情况。</p>
@@ -1745,7 +1790,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/ckb-txpool-refactor/"/>
     <id>http://catcoding.me/p/ckb-txpool-refactor/</id>
     <published>2024-11-06T11:39:21+00:00</published>
-    <updated>2026-05-01T03:09:02.536785979+00:00</updated>
+    <updated>2026-05-01T05:08:42.720048932+00:00</updated>
     <content type="html"><![CDATA[<p>在 11.9 号清迈的 <a target="_blank" rel="noopener" href="https://share.foresightnews.pro/article/detail/70811">CKCON</a> 会议上我会做一个关于 CKB 交易池的演讲，这是我准备的 slides <a target="_blank" rel="noopener" href="https://ckb-tx-pool.vercel.app/1">Key Upgrades of the CKB Core</a> 。所以这段时间在整理之前做项目的时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，这些文档其实也是可以分享的。</p>
 <p>第一次听说 CKB 的读者可以参考这个文档以了解什么是 CKB 以及如何工作的：<a target="_blank" rel="noopener" href="https://docs.nervos.org/docs/getting-started/how-ckb-works">How CKB Works | Nervos CKB</a>。</p>
 <p>我加入 Cryptape 之后一年内做的主要工作，涉及到交易池重构、Replace-by-fee 功能、以及 new-verify。这是第一篇关于交易池重构的文章。</p>
@@ -1847,7 +1892,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/xz-backdoor/"/>
     <id>http://catcoding.me/p/xz-backdoor/</id>
     <published>2024-04-04T18:04:33+00:00</published>
-    <updated>2026-05-01T03:09:02.550785971+00:00</updated>
+    <updated>2026-05-01T05:08:42.734051246+00:00</updated>
     <content type="html"><![CDATA[<p>写写最近一周的大瓜 xz-backdoor，该事件可能成为开源供应链安全的一个分水岭，从技术角度看，这里面的社工和混淆也是精彩。</p>
 <p>简单介绍一下背景，xz 是一个开源的无损压缩工具，在出事之前可能很少有人注意到这个压缩库使用如此之广，几乎任何一个 Unix-Like 的操作系统里面都有 xz-utils。在两年多的时间里，一个名为 <code>Jia Tan</code> 的程序员勤奋而高效地给 xz 项目做贡献，最终获得了该项目的直接提交权和维护权。之后他在 libzma 中加入了一个非常隐蔽的后门，该后门可以让攻击者在 SSH 会话开始时发送隐藏命令，使攻击者能够跳过鉴权远程执行命令。</p>
 <p><a target="_blank" rel="noopener" href="https://research.swtch.com/xz-timeline#jia_tan_arrives_on_scene_with_supporting_cast">Timeline of the xz open source attack</a> 总结了该事件的主要时间点，这里我挑一些关键节点：</p>
@@ -1915,7 +1960,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/rust-bootcamp/"/>
     <id>http://catcoding.me/p/rust-bootcamp/</id>
     <published>2024-03-18T16:28:13+00:00</published>
-    <updated>2026-05-01T03:09:02.545785974+00:00</updated>
+    <updated>2026-05-01T05:08:42.729050419+00:00</updated>
     <content type="html"><![CDATA[<p>3 月是怀念海子的月份：</p>
 <blockquote>
 <p>从明天起，做一个 Rust 程序员，喂马、劈柴，周游世界。</p>
@@ -1984,7 +2029,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/handy-sh-tools/"/>
     <id>http://catcoding.me/p/handy-sh-tools/</id>
     <published>2024-03-16T23:52:40+00:00</published>
-    <updated>2026-05-01T03:09:02.539785977+00:00</updated>
+    <updated>2026-05-01T05:08:42.723049428+00:00</updated>
     <content type="html"><![CDATA[<p>分享一些日常经常使用的命令行小工具，我认为这些小东西能提高我的工作效率。</p>
 <h2 id="percol"><a href="#percol" class="headerlink" title="percol"></a>percol</h2>
 <p><a target="_blank" rel="noopener" href="https://github.com/mooz/percol?tab=readme-ov-file#zsh-history-search">mooz/percol</a> 这个工具是典型的 Unix 风格工具，它唯一做的事情就是通过管道接收输入，提供一个模糊搜索和 UI，用户选择后再把结果返回给后面的管道继续执行。</p>
@@ -2048,49 +2093,6 @@ run &#39;~/.tmux/plugins/tpm/tpm&#39;
 </ul>
 <hr />
 <p>你有什么喜欢的 Shell 工具，希望也能分享给我。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>中外程序员差异</title>
-    <link href="http://catcoding.me/p/diff/"/>
-    <id>http://catcoding.me/p/diff/</id>
-    <published>2024-02-24T21:58:03+00:00</published>
-    <updated>2026-05-01T03:09:02.537785978+00:00</updated>
-    <content type="html"><![CDATA[<p>今天看到这个<a target="_blank" rel="noopener" href="https://twitter.com/Piglei/status/1761051133135687853">推特</a>，我理解作者的心情非常复杂，因为我前三年写过一段时间技术类的英文文章，也发现英文技术社区还有那种认真讨论的氛围，而在中文技术圈里，这种氛围已经几乎绝迹。</p>
-<p>这几年因为我在外企和开源上的工作经历，接触了很多来自各个国家的程序员，今天想写写我发现的一些国内外程序员间的差异，我相信经常混迹开源社区的人会有些类似感受。</p>
-<h2 id="讲究细节"><a href="#讲究细节" class="headerlink" title="讲究细节"></a>讲究细节</h2>
-<p>这点是我感受最深的，我自认为已经算是一个对细节比较在乎的人了，但我接触到一些国外的程序员，他们对细节的把握让人佩服。</p>
-<p>最近的一个例子是我在写这篇<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/docs.nervos.org/pull/206">英文文档</a> 的时候遇到的，其中的 Reviewer jordanmack 对我文档里面的所有内容逐字逐句都过了一遍，发现不懂的地方一定要弄明白。这里面有的是中英文表达差异造成的理解偏差，也有他对这个功能的逻辑上的质疑，甚至可以细节到我在文中给出的 json 例子里的数字范围和自洽性。我们在 Github 上来回讨论了很久，然后继续在 Discord 上讨论，而在这个过程中我也确实发现了些代码上需要调整的地方，最后他给我的文章几乎全部<a target="_blank" rel="noopener" href="https://github.com/chenyukang/docs.nervos.org/pull/3">润色了一遍</a>。</p>
-<p>jordanmack 不算是全职的程序员，但他也有一些程序员背景。在我做开源的经历中，PR 中被挑细节的时候太多了，一度我已经不再认为自己是个对细节很把握的人了。后来我总结了一下，有时候我是在赶时间，觉得某些 corner case 就暂且跳过吧，但大多会在代码 Review 中被提出来的。</p>
-<p>然后经历多了也就看淡了，不光是我，任何人的 PR 都可能引发大量的讨论，比如到底是使用 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/pull/75065">µs 还是 us</a>。也许在很多人看来这是个小问题，但却引起了大量的讨论，细看其中还有些引经据典和长篇大论。随便挑一个 RFC，也都可以看到<a target="_blank" rel="noopener" href="https://github.com/rust-lang/rfcs/pull/3573">大量的讨论</a>。</p>
-<p>所以我的感受是，国外程序员中在意细节的比例更大。那么问题是，他们为什么能看这么细？固然其中一个很重要的原因是他们确实有时间，才能静下心来看和写。</p>
-<p>在国内公司我也碰到过对细节的把握，但很多用在了我最讨厌的形式主义上。在微软的时候，我见过各种不够漂亮的 PPT，有的时候翻来一段 onenote 就开始讲，因为都没人关注这些。</p>
-<h2 id="文字表达"><a href="#文字表达" class="headerlink" title="文字表达"></a>文字表达</h2>
-<p>文字表达能力是开源社区里一个非常重要的，因为但凡一个大的改动都需要和其他人广泛讨论和协作。</p>
-<p>不少国外的程序员有文字表达的习惯，就是即使看很小的一点问题也会通过文字表达出来。这是很多国内程序员所没有的习惯，因为我们大多比较含蓄，认为多做比说强，说多容易错，说多容易暴露自己。</p>
-<p>可能和教育和网络环境也有一定关系，如果不是刻意维持文字表达的习惯，很多人高中毕业后就没有写过几篇长文，对很多事情也没有自己的看法。</p>
-<p>另外他们习惯使用 Email 来沟通，但中国开发人员大多习惯使用 IM 沟通。这两者还是有区别的，IM 沟通会让人不自觉地回复得更快，有的模糊想法随口就就表达了。而 Email 沟通更容易让人把事情写清楚，也更容易写得更长和有条理。</p>
-<p>这种细微的差异长久了之后就可看出中英文技术社区的巨大差别。另外，中文网络的环境中戾气更重一些，人们对自我推销很反感，容易揣测你的意图。</p>
-<h2 id="个人目标"><a href="#个人目标" class="headerlink" title="个人目标"></a>个人目标</h2>
-<p>很多欧美大公司里有不少只做 Individual Contributor 而不做管理的人，在这些公司里，管理和技术是两条并行线，薪资和职级挂钩，也就是说纯 IC 的岗位可能收入比管理岗位更高，因为职级更高。</p>
-<p>管理人员和技术人员大多是上下级关系，但下属对管理人员没有绝对的单向服从关系。当然大多数情况下，管理更容易升职上去，因为纯做技术岗位不容易通过杆杠来放大自己，管理就是一种很有效的杠杆。但这种纯粹的并行晋级路线是非常重要的，可以让技术人员有更多的选择权，甚至如果对自己的管理者不满意直接给差评和换组就是了。</p>
-<p>所以在国外程序员中，如果一个人做了多年开发，很可能就是他确实喜欢做技术和更擅长做技术。而中国职场中，管理和技术岗的差别太大了，或者说绝大部分人到了一定年龄，如果你不混个管理的 title，好像就已经落后了，甚至没有职场安全感。</p>
-<p>另外有些人是喜欢混到管理岗之后，纯粹为了获取更高的薪水，或者是为了把不喜欢做的事情推给别人。当然，这其中也有很大一部分中国文化里的官本位的影响，还有一部分原因是太看中钱了。</p>
-<p>我接触过一些年龄在 40 岁多的国外程序员，他们还是对技术有很大热情。如果喜欢做技术，而又能通过做技术挣钱，这没有什么失败的，这与年龄没关系，反而这是一种很好的度过自己短暂一生的方式。</p>
-<p>只是在国内要做到这点并不容易，很多岗位做的事情本来就不够有深度，时间更久也无法积累起来足够的壁垒，业务上的开发年轻人上手很快，而需要深入做下去的岗位不够，所以年龄大了就容易失业。</p>
-<h2 id="业余时间"><a href="#业余时间" class="headerlink" title="业余时间"></a>业余时间</h2>
-<p>国外程序员的业余时间真是非常多，如果你经常混 Github 就会发现，每当到了 12 月份就很多出来很多 aoc 字样的项目，这是他们在做<a target="_blank" rel="noopener" href="https://adventofcode.com/">Advent of Code 2023</a>。</p>
-<p>Advent of Code 就是整个 12 月份每天出一道题目，都是些编程谜题，有点类似 leetcode，但题目描述更长。你可以用任何语言来实现，反正要的结果就是答案。可以发现这些 aoc 项目基本都是欧美的程序员在做，因为他们大多在 12 月份有几乎一个月的假期，我在微软工作的时候，很多人也是 12 月份开始基本不见人影。</p>
-<p>创造性的前提是不用为生存问题发愁，欧洲那些搞哲学、做研究的，大多都是家底丰厚，闲得多了自然就能搞事。如果有大把的业余时间，用来发展工作外的开源项目可就太好了。其实很多著名的开源项目只有吃饱饭没事做的时候才能搞出来，我之前在知乎问题 <a target="_blank" rel="noopener" href="https://www.zhihu.com/question/502884696/answer/2296787480">为什么中国程序员不如外国程序员有创造性</a> 中写到：</p>
-<blockquote>
-<p>荷兰人<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E8%9F%92%E8%9B%87&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2296787480%7D">蟒蛇</a>大叔想着哇塞圣诞假期这么长，找点事做，结果出了 Python。
-日本人松本行弘，经济危机时闲得发慌，搞出了 Ruby。
-芬兰人<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E6%9D%8E%E7%BA%B3%E6%96%AF&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A2296787480%7D">李纳斯</a>，大三不用为了找工作背八股和考研，冬眠似地宅家里写代码，搞出了 Linux。</p>
-</blockquote>
-<p>在 Rust 社区中的贡献人员里，除了美国，第二多的是欧洲，他们也不是为了挣钱，完全就是感兴趣做做而已，我看到好几个大学年轻人做的事情已经非常深入了，当然其中花费的时间也是很多，他们几乎一直在线。</p>
-<hr />
-<p>这些总结比较粗略，另外也可能有幸存者偏差因素。这个话题很大，深入下去探讨会包含很多方面。</p>
-<p>我也不是在抱怨，年龄大了之后发现多看看历史相关的书还挺好，让自己更容易理解所处的环境为什么是这样的，比如《中国国民性演变史》这本书值得推荐。另外《美国种族简史》这本书也值得一看，多了解了解其他人的特点和长处，努力让自己不要局限于国界，另外做到程序员中的 80% 以上水平，保持英文能力。</p>
 ]]></content>
   </entry>
 </feed>
