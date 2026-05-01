@@ -185,6 +185,7 @@
 <p>在网页上选中一段文字，按下快捷键 (默认 <code>Ctrl+E</code>)，就可以打开 note 编辑框。写完之后，这段文字会在页面上变成高亮。下次再打开同一个页面，GitHeron 会自动把之前的高亮恢复出来。</p>
 <p>这件事听起来不复杂，但体验上很重要。很多阅读笔记工具只能把内容保存走，却不能在原网页上重新建立上下文。GitHeron 更在意的是“回到现场”：当你再次打开这篇文章时，能立刻看到自己上次为什么停在这里。</p>
 <p>写 note 时也可以加 tags。最近使用过的 tags 会出现在输入框附近，点一下就能选中，也可以随时移除，新的 tag 会自动进入最近使用列表。</p>
+<p><img src="/images/ob_pasted-image-20260428224559.png" alt="" /></p>
 <h2 id="保存整篇网页"><a href="#保存整篇网页" class="headerlink" title="保存整篇网页"></a>保存整篇网页</h2>
 <p>除了高亮，GitHeron 还可以保存当前网页的主要内容。</p>
 <p>按下快捷键 (默认 <code>Ctrl + O</code>) 后，它会提取页面正文，转换成 Markdown，然后保存到仓库中的 Clippings 目录。这里保存的是 main content，不是整个网页 HTML，所以导航栏、广告、推荐列表这些内容会尽量被过滤掉。</p>
@@ -200,9 +201,7 @@
 <p>如果喜欢鼠标操作，也可以开启选中文字后的悬浮按钮；如果不喜欢它打扰阅读，可以在 settings 里关掉，只使用快捷键。</p>
 <p>同步 GitHub 时也有两种模式。普通模式会等 GitHub 写入完成再结束；后台同步模式则会先更新页面状态，把任务放到后台慢慢同步。网络失败或 GitHub 返回错误时，可以在 settings 的 tasks 里看到最近任务，并进行 retry。</p>
 <p>写 note 应该是一个很轻的动作，不应该因为网络慢而打断阅读节奏。</p>
-<table><thead><tr><th></th><th></th></tr></thead><tbody>
-<tr><td>![[Pasted image 20260428224559.png]]</td><td>![[Pasted image 20260428224735.png]]</td></tr>
-</tbody></table>
+<p><img src="/images/ob_pasted-image-20260428224735.png" alt="" /></p>
 <h2 id="技术方案"><a href="#技术方案" class="headerlink" title="技术方案"></a>技术方案</h2>
 <p>GitHeron 是一个 Chrome MV3 插件，主要由 content script 和 service worker 组成。</p>
 <p>content script 负责页面里的交互：选区、高亮、快捷键、弹框和正文提取。为了避免被网页自身样式影响，弹框和面板都放在 Shadow DOM 里。</p>
