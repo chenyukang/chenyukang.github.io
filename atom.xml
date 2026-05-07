@@ -3,15 +3,53 @@
   <title>CatCoding</title>
   <link href="http://catcoding.me/atom.xml" rel="self"/>
   <link href="http://catcoding.me/"/>
-  <updated>2026-05-01T13:58:13.810410660+00:00</updated>
+  <updated>2026-05-07T16:45:46.483703671+00:00</updated>
   <id>http://catcoding.me/</id>
   <author><name>yukang</name></author>
+  <entry>
+    <title>ghr：把开源维护工作搬进终端</title>
+    <link href="http://catcoding.me/p/ghr-dev/"/>
+    <id>http://catcoding.me/p/ghr-dev/</id>
+    <published>2026-05-08T00:44:46+00:00</published>
+    <updated>2026-05-07T16:45:15.588740016+00:00</updated>
+    <content type="html"><![CDATA[<p>五一期间我看到 dhh 发的一个帖子推荐 <a target="_blank" rel="noopener" href="https://x.com/dhh/status/2050105129085415576">GitHub TUI: ghui</a>，我安装试了一下，发现还需要安装 bun，另外功能看起来也不太够用。</p>
+<p>我也看过 <a target="_blank" rel="noopener" href="https://www.gh-dash.dev/">gh-dash</a>，这东西是 gh 的一个 extension，我试了一下同样感觉体验不好，于是手痒开始让 AI 帮我用 Rust 重新写一个。</p>
+<p>最近在工作中也写过一个 Rust 的 TUI 工具，感觉 Rust 的生态已经很成熟了，写起来也很顺手。于是就有了 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/ghr">ghr</a> 这个项目。</p>
+<p>它的目标一开始很简单：我想少在 GitHub 网页里来回点。作为一个经常看 PR、review 代码、处理 notification 的人，我每天会重复很多小动作：打开 inbox，看谁 @ 了我，扫一眼 assigned PR，点进 diff，读评论，偶尔 checkout 到本地验证一下。</p>
+<p>这些动作单独看都不复杂，但它们很碎。浏览器适合处理一次性的探索，不太适合让我连续地做几十个维护动作。于是 <code>ghr</code> 慢慢变成了一个终端里的 GitHub 工作台。如果你喜欢 lazygit，那么应该也会喜欢 <code>ghr</code>，因为 lazygit 主要是针对 Git 相关的操作，而 <code>ghr</code> 主要是围绕 GitHub 上协作的 TUI，比如看 issue、comments、review 代码，merge PR 等等。我甚至想命名为 lazyhub，这样组合起来就是 GitHub 😅。</p>
+<p><img src="http://catcoding.me/images/ob_pasted-image-20260508001332.png" alt="" /></p>
+<h2 id="先让它打开就能用"><a href="#先让它打开就能用" class="headerlink" title="先让它打开就能用"></a>先让它打开就能用</h2>
+<p>我最早在意的不是功能有多少，而是启动体验。</p>
+<p>如果每次打开 TUI 都要等 GitHub API 慢慢返回，那这个工具很快就会被我自己弃用。终端工具有个很残酷的标准：它必须比打开网页更快，否则手会自动去点浏览器。</p>
+<p>所以 <code>ghr</code> 现在是 snapshot-first。配置、数据库、日志和 UI 状态都放在 <code>~/.ghr</code> 下面。启动时先把本地 SQLite 里的 snapshot 展示出来，然后再后台刷新当前列表。这样哪怕网络慢一点，至少我能先看到上次的现场。</p>
+<p>这个设计听起来不酷，但它很实用，后来我又回看 ghui，发现他也改成了这个方案。</p>
+<h2 id="完整的工作流"><a href="#完整的工作流" class="headerlink" title="完整的工作流"></a>完整的工作流</h2>
+<p>一开始它像一个 GitHub dashboard：Inbox、Pull Requests、Issues，几块列表摆出来。后面越写越发现，只看列表是不够的。</p>
+<p>所以后面加了很多看起来很细的功能：</p>
+<ul>
+<li>recent items 可以跳回最近认真看过的 PR/Issue</li>
+<li>我认为任何工具都应该有 command palette，然后默认会把最近用过的命令排前面</li>
+<li>diff 里可以直接看到 inline review comments，可以 toggle 是否显示 comments</li>
+<li>任何编辑页面都会自动保存 draft，避免误操作导致的内容丢失</li>
+<li>详情页可以保存滚动位置和选中的评论</li>
+<li>虽然是 TUI，但是几乎所有界面上的操作也可以通过鼠标点击操作</li>
+<li>在一个已经关联 GitHub remote 的本地目录，直接运行 <code>ghr</code> 会自动把这个 project 加到顶层列表</li>
+</ul>
+<p>等等各种细节，这些功能单独拿出来都不像“大功能”，但组合起来以后，<code>ghr</code> 才开始有了工作流的味道。</p>
+<p><img src="http://catcoding.me/images/ob_pasted-image-20260508001703.png" alt="" /></p>
+<p>但我也发现 TUI 的局限，比如 diff 这个功能，即使我把细节都打磨好了，但我认为一个 PR 改动比较多的情况下最好的代码 review 体验还是在 VS Code 里，通过 Pull Request 插件直接 checkout 到本地，毕竟代码的 review 还是很依赖于编辑器的功能的（这个插件是我离不开 VS Code 的一个重要原因）。</p>
+<h2 id="AI-让个人工具变得更奢侈"><a href="#AI-让个人工具变得更奢侈" class="headerlink" title="AI 让个人工具变得更奢侈"></a>AI 让个人工具变得更奢侈</h2>
+<p><code>ghr</code> 这类工具放在以前，我大概率不会写到这个程度。细节太多，投入产出不划算。</p>
+<p>TUI 里的鼠标选择、快捷键冲突、评论编辑框、draft 保存、列表分页、缓存失效、各种 GitHub API 的形状，每一个都不难，但都要花时间。AI 让这些小改动的成本降了很多，于是个人工具可以变得更“奢侈”：它不需要证明自己有市场，只要能持续改善我的日常工作流，就值得往前推一点。</p>
+<p>欢迎试用，欢迎提 issue，也欢迎 PR：<a target="_blank" rel="noopener" href="https://github.com/chenyukang/ghr">ghr</a>。</p>
+]]></content>
+  </entry>
   <entry>
     <title>GitHeron：把网页标注写到 GitHub</title>
     <link href="http://catcoding.me/p/githeron/"/>
     <id>http://catcoding.me/p/githeron/</id>
     <published>2026-05-01T13:08:26+00:00</published>
-    <updated>2026-05-01T13:57:46.926990879+00:00</updated>
+    <updated>2026-05-07T16:45:15.588740016+00:00</updated>
     <content type="html"><![CDATA[<p>最近写了一个 Chrome 插件，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/git-heron">GitHeron</a>。它想解决的问题很简单：</p>
 <blockquote>
 <p>Web highlights and clippings, synced to GitHub as Markdown.</p>
@@ -55,7 +93,7 @@
     <link href="http://catcoding.me/p/runnel-dev-notes/"/>
     <id>http://catcoding.me/p/runnel-dev-notes/</id>
     <published>2026-04-23T19:15:24+00:00</published>
-    <updated>2026-05-01T13:57:46.932990890+00:00</updated>
+    <updated>2026-05-07T16:45:15.594740126+00:00</updated>
     <content type="html"><![CDATA[<p>最近断断续续 Vibe Coding 写了一个小工具，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/runnel">Runnel</a>。因为我之前用的两个机场都跪了 (虽然后来又逐渐恢复了)，于是萌生了自己写个工具来翻墙的想法，顺便把一些网络相关的东西重新摸一遍。</p>
 <p>Runnel 有“小河流”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
 <p>先让 AI 快速撸了一个车 native-http 版本的，然后又加了多路复用的 native-mux 模式。后来又想到一个同事说他一直用自己写的代理工具叫做 <a target="_blank" rel="noopener" href="https://github.com/libraries/daze">daze</a>，所以立马让 AI 用 Rust 重写了一份跑了起来。</p>
@@ -170,7 +208,7 @@ wg          小请求大约 2500 req/s
     <link href="http://catcoding.me/p/apple-gatekeeper-scan/"/>
     <id>http://catcoding.me/p/apple-gatekeeper-scan/</id>
     <published>2026-02-12T16:55:52+00:00</published>
-    <updated>2026-05-01T13:57:46.922990872+00:00</updated>
+    <updated>2026-05-07T16:45:15.584904378+00:00</updated>
     <content type="html"><![CDATA[<p>今天跑 Rust 编译器测试的时候又发现非常地慢，CPU 资源根本无法利用起来，我记得几年前碰到过这个问题，当时我写了篇<a target="_blank" rel="noopener" href="https://catcoding.me/p/apple-perf/">文章</a>分享出来，并发现很多人都有同样的困扰。</p>
 <p>而我今天碰到的这个问题虽然现象一样，但解决方法又不同了。我不确定是 macOS 系统更新，亦或是我更新了 VS Code 造成的。</p>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2>
@@ -260,7 +298,7 @@ GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_B
     <link href="http://catcoding.me/p/hexo-rs/"/>
     <id>http://catcoding.me/p/hexo-rs/</id>
     <published>2026-01-30T23:00:00+00:00</published>
-    <updated>2026-05-01T13:57:46.927990881+00:00</updated>
+    <updated>2026-05-07T16:45:15.589740034+00:00</updated>
     <content type="html"><![CDATA[<p>月底升级了 Copilot Pro+，月初额度重置，这几天可以放开用，想到什么就 vibe 一把。</p>
 <p>我的博客跑在 Hexo 上很多年了。其实没什么大问题，就是每次看到那几百 MB 的 node_modules，心里总有点膈应——生成几百个静态 HTML，真的需要这么多依赖吗？但迁移到别的博客系统又懒得折腾，所以一直拖着。</p>
 <p>这次干脆试试：能不能用 AI 一个下午撸一个 Rust 版的 Hexo？我的目标比较简单：生成跟原来一样的静态文件，兼容我现在用的主题就行。</p>
@@ -314,7 +352,7 @@ GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_B
     <link href="http://catcoding.me/p/how-fiber-works/"/>
     <id>http://catcoding.me/p/how-fiber-works/</id>
     <published>2025-12-09T17:05:59+00:00</published>
-    <updated>2026-05-01T13:57:46.927990881+00:00</updated>
+    <updated>2026-05-07T16:45:15.589740034+00:00</updated>
     <content type="html"><![CDATA[<p>I just got back from CKCon in beautiful Chiang Mai 🌴, where I gave a talk on the Fiber Network. To help everyone wrap their heads around how Fiber (CKB’s Lightning Network) actually moves assets, I hacked a visual simulation with AI.</p>
 <p>To my surprise, people didn’t just understand it—they loved it! 🎉</p>
 <p>Here is the “too long; didn’t read” version. But first, go ahead and play with the dots yourself, 👉 <strong>Play the Simulation:</strong> <a target="_blank" rel="noopener" href="https://fiber-world.vercel.app/simulate.html">fiber-simulation</a></p>
@@ -363,7 +401,7 @@ GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_B
     <link href="http://catcoding.me/p/llm-in-open-source/"/>
     <id>http://catcoding.me/p/llm-in-open-source/</id>
     <published>2025-11-26T10:15:38+00:00</published>
-    <updated>2026-05-01T13:57:46.929990885+00:00</updated>
+    <updated>2026-05-07T16:45:15.590740052+00:00</updated>
     <content type="html"><![CDATA[<p>越来越多的开发者开始使用 LLM 等 AI 工具，过去半年我看到不少相关讨论：有人非常反感使用 LLM 工具，有人保持中立，但确实有相当数量的 AI 生成 PR 给开源项目维护者带来了负担和困扰。</p>
 <p>现在出现了一些新苗头，比如 GitHub 账号也开始“养号”。我推测大概有以下几个原因：</p>
 <h3 id="为了加密货币空投"><a href="#为了加密货币空投" class="headerlink" title="为了加密货币空投"></a>为了加密货币空投</h3>
@@ -412,7 +450,7 @@ No LLMs for comments on the bug tracker, including translation.</p>
     <link href="http://catcoding.me/p/rust-in-cloudflare-incident/"/>
     <id>http://catcoding.me/p/rust-in-cloudflare-incident/</id>
     <published>2025-11-20T07:07:23+00:00</published>
-    <updated>2026-05-01T13:57:46.933990892+00:00</updated>
+    <updated>2026-05-07T16:45:15.595740144+00:00</updated>
     <content type="html"><![CDATA[<p>这两天都在讨论  Cloudflare 的安全事故  <a target="_blank" rel="noopener" href="https://blog.cloudflare.com/18-november-2025-outage/">Cloudflare outage on November 18, 2025</a>，我也写点自己的想法。</p>
 <p>这个事故当然引起的范围特别广，我当时正在用 ChatGPT，突然再打开总是提示正在加载，我还以为是自己的 VPN 出了问题，第二天起来才知道 Cloudflare 跪了好久。</p>
 <p>没多久 Cloudflare 就发出来了一个非常详细的事故说明。我对里面的场景非常熟悉，因为我之前因为类似的原因把大疆的大部分流量都给搞挂了，具体请看<a target="_blank" rel="noopener" href="https://catcoding.me/p/avoid-mistake/">谈谈工作中的犯错</a>中的配置错误。</p>
@@ -468,7 +506,7 @@ No LLMs for comments on the bug tracker, including translation.</p>
     <link href="http://catcoding.me/p/zero-knowledge-proof/"/>
     <id>http://catcoding.me/p/zero-knowledge-proof/</id>
     <published>2025-09-26T16:49:47+00:00</published>
-    <updated>2026-05-01T13:57:46.938990900+00:00</updated>
+    <updated>2026-05-07T16:45:15.600740236+00:00</updated>
     <content type="html"><![CDATA[<p>无论是在聊 L2、隐私还是下一代 Web 技术，零知识证明都是经常会碰到的技术术语，听起来就像是科幻小说里的东西：<strong>向你证明我知道一个秘密，但绝不透露这个秘密本身</strong>，这简直是程序员的终极浪漫。</p>
 <p>大多数人粗看都会觉得这东西是密码学博士们的专属玩具，我花了一段时间学习后，发现这条通往魔法世界的路似乎有迹可循，希望这篇入门介绍能帮助到更多这方向的学习者。</p>
 <h2 id="魔法洞穴"><a href="#魔法洞穴" class="headerlink" title="魔法洞穴"></a>魔法洞穴</h2>
@@ -800,7 +838,7 @@ No LLMs for comments on the bug tracker, including translation.</p>
     <link href="http://catcoding.me/p/riscv-vm/"/>
     <id>http://catcoding.me/p/riscv-vm/</id>
     <published>2025-09-23T00:54:14+00:00</published>
-    <updated>2026-05-01T13:57:46.932990890+00:00</updated>
+    <updated>2026-05-07T16:45:15.594740126+00:00</updated>
     <content type="html"><![CDATA[<p>I’ve always wanted to learn RISC-V. A few days ago, I finally got my hands dirty with it now.</p>
 <p>This post will guide you through the process of building a simple RISC-V VM from the ground up, using Rust as our implementation language.</p>
 <h2 id="Understanding-the-Core-Concepts"><a href="#Understanding-the-Core-Concepts" class="headerlink" title="Understanding the Core Concepts"></a>Understanding the Core Concepts</h2>
@@ -1150,7 +1188,7 @@ Disassembly of section .text._start:
     <link href="http://catcoding.me/p/rust-week-notes/"/>
     <id>http://catcoding.me/p/rust-week-notes/</id>
     <published>2025-06-11T10:23:14+00:00</published>
-    <updated>2026-05-01T13:57:46.933990892+00:00</updated>
+    <updated>2026-05-07T16:45:15.595740144+00:00</updated>
     <content type="html"><![CDATA[<p>5 月中旬我参加了在荷兰 Utrecht 举行的 Rust Week，想来可以写篇文章记录下所见所闻。</p>
 <p>我年初和 Rust 基金会邮件确认参加，但直到 4 月 9 日才开始动手申请签证。在深圳办理荷兰签证流程简单，只需提交材料并录指纹，但我嫌麻烦找了中介帮忙。据说大概也就两周多就会有结果，但直到五一查询还是没结果，中介说可以加 600 元加急。看到官网解释近期审批延迟，我便花钱加急，第二周拿到了签证。不知道这其中是否有猫腻，但确实有华为的朋友同样卡在那个节点审批，结果没有如期下来。</p>
 <p>从广州白云机场有直飞阿姆斯特丹的航班，只是起飞时间大概是凌晨 1 点多。飞机上座位空间狭小，难以入睡，趴着或躺着都不舒服，到了阿姆斯特丹是早晨 6 点多。通过海关后，我因不熟悉荷兰语而有些迷茫。由于未携带 Visa 卡，只能使用现金，幸好两位路人热心相助。我直接购买火车票前往 Utrecht，约于上午 10 点抵达酒店。因为时间还比较早没有空房，我把行李箱放在酒店自己去城里逛逛。</p>
@@ -1213,7 +1251,7 @@ Disassembly of section .text._start:
     <link href="http://catcoding.me/p/elliptic-curve/"/>
     <id>http://catcoding.me/p/elliptic-curve/</id>
     <published>2025-06-08T18:20:12+00:00</published>
-    <updated>2026-05-01T13:57:46.925990878+00:00</updated>
+    <updated>2026-05-07T16:45:15.587739997+00:00</updated>
     <content type="html"><![CDATA[<p>区块链这行经常会和椭圆曲线密码算法打交道，我也在尝试理解这其中的数学原理，这里记录一下。</p>
 <h2 id="什么是椭圆曲线-elliptic-curve"><a href="#什么是椭圆曲线-elliptic-curve" class="headerlink" title="什么是椭圆曲线 (elliptic curve)"></a>什么是椭圆曲线 (elliptic curve)</h2>
 <p>先想象一个普通的曲线，比如抛物线（抛个球的轨迹）。椭圆曲线不是椭圆（名字有点误导），而是一种长得像“对称小山丘”或者“歪歪扭扭的环”的数学图形。</p>
@@ -1330,7 +1368,7 @@ Disassembly of section .text._start:
     <link href="http://catcoding.me/p/future-size-perf/"/>
     <id>http://catcoding.me/p/future-size-perf/</id>
     <published>2025-03-24T10:21:03+00:00</published>
-    <updated>2026-05-01T13:57:46.926990879+00:00</updated>
+    <updated>2026-05-07T16:45:15.588740016+00:00</updated>
     <content type="html"><![CDATA[<p>在 Rust 异步编程中，有一种观点认为：<strong>Future 的大小显著影响性能</strong>。你是否怀疑过这个说法的真实性？如果是真的，这种性能差异的根源又是什么？今天，我翻阅了一些源码，并编写实验代码来一探究竟。</p>
 <h2 id="Future-的大小如何计算？"><a href="#Future-的大小如何计算？" class="headerlink" title="Future 的大小如何计算？"></a>Future 的大小如何计算？</h2>
 <p>为了验证“Future 大小影响性能”这一说法是否成立，我们先从一些简单代码入手。首要任务是弄清楚一个 Future 的大小是如何确定的。毕竟，在编译器眼里，Future 只是一个 trait：</p>
@@ -1560,7 +1598,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/fiber-network-on-ckb/"/>
     <id>http://catcoding.me/p/fiber-network-on-ckb/</id>
     <published>2025-03-16T08:53:04+00:00</published>
-    <updated>2026-05-01T13:57:46.926990879+00:00</updated>
+    <updated>2026-05-07T16:45:15.587739997+00:00</updated>
     <content type="html"><![CDATA[<p>最近一年我在做 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber">Fiber Network</a> 这个新的开源项目，上个月底刚好<a target="_blank" rel="noopener" href="https://x.com/FiberDevs/status/1895486339505893880">主网第一个版本发布</a>：</p>
 <p><img src="http://catcoding.me/images/ob_pasted-image-20250316084708.png" alt="" /></p>
 <p>这个项目的挑战还是挺大的，上主网只是一个新的开始。我在开发过程中学到了很多东西，这是我前段时间写的一篇关于 Fiber 的大致介绍。</p>
@@ -1656,7 +1694,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/2024-summary/"/>
     <id>http://catcoding.me/p/2024-summary/</id>
     <published>2025-01-01T00:03:41+00:00</published>
-    <updated>2026-05-01T13:57:46.922682032+00:00</updated>
+    <updated>2026-05-07T16:45:15.584904378+00:00</updated>
     <content type="html"><![CDATA[<p>2024 年快结束了，在这最后的一两个小时里我写着这篇年终总结准备跨年了，顺着大致时间线来回顾一下就好了。</p>
 <p>年初就起了个好头，众多加密货币开始上涨。总体而言，2024 年是个加密货币和区块链的大年。有那么一小段时间我每天都在关注涨跌，渐渐地我发现这个领域涨跌都是太频繁了，而过多关注除了浪费时间并没有什么大的用处。因为两年前开始在这个领域工作，所以我自然也会投资一些加密货币。刚开始我稍微接触了一下合约，但很快亏掉了几千元，算是交了学费。然后很快理智地退出了，合约本质上来说和赌博有点类似，钱来得也快亏得也快，但大概率是要亏钱的。</p>
 <p>我听从了一些行业老鸟的建议，拿住比特币就行，其他的看着买点。我从 2023 年开始陆续买入了一些比特币，当时的价格不算高，到今年年底看来也有不少涨幅了。我抱着长期拿住的心态在买入，打算至少持有八九年以上。所以现在我基本不怎么关心价格了，如果买了就当作这钱是存在那里好了，把时间幅度拉长，我相信比特币未来会更值钱。我愿意相信这个行业是因为从技术的角度考虑是即有趣又有挑战。这两年来我工作的项目和比特币是非常类似的，就当作为信仰充值。</p>
@@ -1684,7 +1722,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/ckb-new-verify/"/>
     <id>http://catcoding.me/p/ckb-new-verify/</id>
     <published>2024-11-07T12:03:24+00:00</published>
-    <updated>2026-05-01T13:57:46.923990874+00:00</updated>
+    <updated>2026-05-07T16:45:15.585739960+00:00</updated>
     <content type="html"><![CDATA[<p>CKB 相关技术文章第三篇。</p>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2>
 <p>CKB 的每一个交易在提交到交易池之前都会经过一个 script verification 的过程，本质上就是通过 CKB-VM 把交易里的 script 跑一遍，如果失败了则直接 reject，如果通过了才会继续后面的流程。</p>
@@ -1740,7 +1778,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/ckb-rbf/"/>
     <id>http://catcoding.me/p/ckb-rbf/</id>
     <published>2024-11-06T11:55:13+00:00</published>
-    <updated>2026-05-01T13:57:46.924990876+00:00</updated>
+    <updated>2026-05-07T16:45:15.585739960+00:00</updated>
     <content type="html"><![CDATA[<p>CKB 相关技术文章第二篇。</p>
 <h2 id="Replace-by-fee"><a href="#Replace-by-fee" class="headerlink" title="Replace by fee"></a>Replace by fee</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3>
 <p>如果一个交易成功发送到交易池，但可能出现因为费用较低而一直得不到处理。之前 CKB 没有其他措施来处理这种情况。</p>
@@ -1789,7 +1827,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/ckb-txpool-refactor/"/>
     <id>http://catcoding.me/p/ckb-txpool-refactor/</id>
     <published>2024-11-06T11:39:21+00:00</published>
-    <updated>2026-05-01T13:57:46.924990876+00:00</updated>
+    <updated>2026-05-07T16:45:15.585739960+00:00</updated>
     <content type="html"><![CDATA[<p>在 11.9 号清迈的 <a target="_blank" rel="noopener" href="https://share.foresightnews.pro/article/detail/70811">CKCON</a> 会议上我会做一个关于 CKB 交易池的演讲，这是我准备的 slides <a target="_blank" rel="noopener" href="https://ckb-tx-pool.vercel.app/1">Key Upgrades of the CKB Core</a> 。所以这段时间在整理之前做项目的时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，这些文档其实也是可以分享的。</p>
 <p>第一次听说 CKB 的读者可以参考这个文档以了解什么是 CKB 以及如何工作的：<a target="_blank" rel="noopener" href="https://docs.nervos.org/docs/getting-started/how-ckb-works">How CKB Works | Nervos CKB</a>。</p>
 <p>我加入 Cryptape 之后一年内做的主要工作，涉及到交易池重构、Replace-by-fee 功能、以及 new-verify。这是第一篇关于交易池重构的文章。</p>
@@ -1891,7 +1929,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/xz-backdoor/"/>
     <id>http://catcoding.me/p/xz-backdoor/</id>
     <published>2024-04-04T18:04:33+00:00</published>
-    <updated>2026-05-01T13:57:46.938990900+00:00</updated>
+    <updated>2026-05-07T16:45:15.599740218+00:00</updated>
     <content type="html"><![CDATA[<p>写写最近一周的大瓜 xz-backdoor，该事件可能成为开源供应链安全的一个分水岭，从技术角度看，这里面的社工和混淆也是精彩。</p>
 <p>简单介绍一下背景，xz 是一个开源的无损压缩工具，在出事之前可能很少有人注意到这个压缩库使用如此之广，几乎任何一个 Unix-Like 的操作系统里面都有 xz-utils。在两年多的时间里，一个名为 <code>Jia Tan</code> 的程序员勤奋而高效地给 xz 项目做贡献，最终获得了该项目的直接提交权和维护权。之后他在 libzma 中加入了一个非常隐蔽的后门，该后门可以让攻击者在 SSH 会话开始时发送隐藏命令，使攻击者能够跳过鉴权远程执行命令。</p>
 <p><a target="_blank" rel="noopener" href="https://research.swtch.com/xz-timeline#jia_tan_arrives_on_scene_with_supporting_cast">Timeline of the xz open source attack</a> 总结了该事件的主要时间点，这里我挑一些关键节点：</p>
@@ -1959,7 +1997,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/rust-bootcamp/"/>
     <id>http://catcoding.me/p/rust-bootcamp/</id>
     <published>2024-03-18T16:28:13+00:00</published>
-    <updated>2026-05-01T13:57:46.933990892+00:00</updated>
+    <updated>2026-05-07T16:45:15.594740126+00:00</updated>
     <content type="html"><![CDATA[<p>3 月是怀念海子的月份：</p>
 <blockquote>
 <p>从明天起，做一个 Rust 程序员，喂马、劈柴，周游世界。</p>
@@ -2021,77 +2059,6 @@ Huge Large Future (100KB): 191.44x slower
 <p>我最早知道陈天是他写的公众号《程序人生》，他是那种技术和文笔都非常棒的程序员，非常难得。我还看过他的 B 站上的技术讲解视频，他的演讲和分享都很流畅。陈天是极客时间《陈天 · Rust 编程第一课》专栏作者，已有 2.3w 人学过，广受好评。技术能力、演讲表达、对技术的热情这些都是讲师最重要的素质要求，所以陈天是这个训练营最好的讲师人选。</p>
 <p>再分享一个小故事，我一年多前跳槽的时候还有些犹豫，因为自己的职业规划方面有些困惑，所以想找些人聊聊。当时我突然想到陈天之前从事过区块链方面的创业，后来从里面退出来了，所以我就想向他咨询一下。我没有他的联系方式，但灵机一动我想到了从 Git 的提交记录里面找 Email，然后抱着试一试的想法给他发了个邮件说明了自己的情况和困惑。没想到他很快给我回复了，并很详细地告诉我他对于区块链的想法，还有如何判断自己是否适合一个公司，通过各种途径了解公司的相关产品来作为决策的依据等等。</p>
 <p>我作为一个陌生人，陈天老师都会乐于给与指导和帮助，可见为人真的很好。还没能有幸和陈天老师现实中有所交流，我本来想用当助教的机会和陈天老师多学习，但时间方面安排不过来了。希望大家能在老师的的训练营学到知识、经验、还有探索技术的乐趣！</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>我喜欢的 shell 工具</title>
-    <link href="http://catcoding.me/p/handy-sh-tools/"/>
-    <id>http://catcoding.me/p/handy-sh-tools/</id>
-    <published>2024-03-16T23:52:40+00:00</published>
-    <updated>2026-05-01T13:57:46.927990881+00:00</updated>
-    <content type="html"><![CDATA[<p>分享一些日常经常使用的命令行小工具，我认为这些小东西能提高我的工作效率。</p>
-<h2 id="percol"><a href="#percol" class="headerlink" title="percol"></a>percol</h2>
-<p><a target="_blank" rel="noopener" href="https://github.com/mooz/percol?tab=readme-ov-file#zsh-history-search">mooz/percol</a> 这个工具是典型的 Unix 风格工具，它唯一做的事情就是通过管道接收输入，提供一个模糊搜索和 UI，用户选择后再把结果返回给后面的管道继续执行。</p>
-<p>比如我这个 <code>gt</code> 的 alias 是我日常使用非常多的一个命令，做的事情就是 check out 一个 git 分支，因为我的本地通常有很多的分支，所以使用这个命令来模糊查找，然后选中就非常方便了：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token function alias shell">alias</span> <span class="token function alias shell">gt</span><span class="token operator assignment shell">=</span><span class="token string unquoted shell"><span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>git branch| percol | awk &#39;{ print <span class="constant character escape shell">\$</span>1 }&#39; | xargs git checkout <span class="token punctuation definition string end shell">&quot;</span></span></span></span>
-</span></code></pre>
-<p>类似的下面这个命令是 kill 掉某个进程，我们可以通过模糊搜索来找进程：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token function alias shell">alias</span> <span class="token function alias shell">pk</span><span class="token operator assignment shell">=</span><span class="token string unquoted shell"><span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>ps eaux | percol | awk &#39;{ print <span class="constant character escape shell">\$</span>2 }&#39; | xargs kill -9 <span class="token punctuation definition string end shell">&quot;</span></span></span></span>
-</span></code></pre>
-<p>如果你仔细总结，日常开发任何需要选择的地方都可以使用这个小工具来达到更高的效率，比如我工作的目录下有很多测试文件，测试其中一个文件的命令是 <code>just ts file-path</code>，我需要找到其中一个来测试：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">find ./tests/ui/ -name \*.rs  | percol | xargs just ts
-</code></pre>
-<p><code>percol</code> 可以嵌入到很多配置里面，比如在 <code>tmux.conf</code> 里面加入这个配置，这样可以模糊查找 tmux 的 session 和 window：</p>
-<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh"><span class="token shell bash"><span class="token function-call shell"><span class="token function bind shell">bind</span></span><span class="token function-call arguments shell"> B split-window <span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>tmux lsw | percol --initial-index <span class="token group expansion command parens shell"><span class="token punctuation definition variable shell">$</span><span class="token punctuation section parens begin shell">(</span><span class="token function-call shell"><span class="token variable function shell">tmux</span></span><span class="token function-call arguments shell"> lsw</span> <span class="token operator logical pipe shell">|</span> <span class="token function-call shell"><span class="token variable function shell">awk</span></span><span class="token function-call arguments shell"> <span class="token string single shell"><span class="token punctuation definition string begin shell">&#39;</span>/active.$/ {print NR-1}<span class="token punctuation definition string end shell">&#39;</span></span></span><span class="token punctuation section parens end shell">)</span></span> | cut -d&#39;:&#39; -f 1 | tr -d &#39;\n&#39; | xargs -0 tmux select-window -t<span class="token punctuation definition string end shell">&quot;</span></span></span>
-
-<span class="token function-call shell"><span class="token function bind shell">bind</span></span><span class="token function-call arguments shell"> b split-window <span class="token string double shell"><span class="token punctuation definition string begin shell">&quot;</span>tmux ls | percol --initial-index <span class="token group expansion command parens shell"><span class="token punctuation definition variable shell">$</span><span class="token punctuation section parens begin shell">(</span><span class="token function-call shell"><span class="token variable function shell">tmux</span></span><span class="token function-call arguments shell"> ls</span> <span class="token operator logical pipe shell">|</span> <span class="token function-call shell"><span class="token variable function shell">awk</span></span><span class="token function-call arguments shell"> <span class="constant character escape shell">\&quot;</span>/^<span class="token group expansion command parens shell"><span class="token punctuation definition variable shell">$</span><span class="token punctuation section parens begin shell">(</span><span class="token function-call shell"><span class="token variable function shell">tmux</span></span><span class="token function-call arguments shell"> display-message<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>p</span> <span class="token string single shell"><span class="token punctuation definition string begin shell">&#39;</span>#{session_name}<span class="token punctuation definition string end shell">&#39;</span></span></span><span class="token punctuation section parens end shell">)</span></span>:/ <span class="token group expansion brace shell"><span class="token punctuation section expansion brace begin shell">{</span>print NR-1<span class="token punctuation section expansion brace end shell">}</span></span><span class="constant character escape shell">\&quot;</span></span><span class="token punctuation section parens end shell">)</span></span> | cut -d&#39;:&#39; -f 1 | tr -d &#39;\n&#39; | xargs -0 tmux switch-client -t<span class="token punctuation definition string end shell">&quot;</span></span></span>
-</span></code></pre><h2 id="atuin"><a href="#atuin" class="headerlink" title="atuin"></a>atuin</h2>
-<p><a target="_blank" rel="noopener" href="https://github.com/atuinsh/atuin">atuinsh</a> 是一个记录 shell 历史的小工具，不同于普通的记录 shell history 的工具，atuin 会把数据记录在一个 SQLite 的数据库文件中，这样可以支持更丰富的查询功能。</p>
-<p>另外 atuin 也支持不同机器之间的同步，当然这需要加密通信。我目前还没使用这种场景，只是把 <code>Ctrl-R</code> 绑定到了 atuin。</p>
-<p>atuin 也是一个 Rust 实现的工具。</p>
-<h2 id="tmux"><a href="#tmux" class="headerlink" title="tmux"></a>tmux</h2>
-<p>tmux 我之前听很多人推荐过，但是我一直没怎么尝试，直到某天我需要通过网页打开跳板机登录到服务器上，网络不稳定的情况下我经常需要重新登录，这时候我尝试了一下 tmux 发现真是太好用了。</p>
-<p>tmux 的教程很多，比如 <a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2019/10/tmux.html">Tmux 使用教程 - 阮一峰的网络日志</a>。我的 <code>tmux.conf</code>配置很简单：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">set -g @plugin &#39;tmux-plugins/tpm&#39;
-set -g @plugin &#39;tmux-plugins/tmux-sensible&#39;
-
-set -g @plugin &#39;tmux-plugins/tmux-resurrect&#39;
-set -g @plugin &#39;tmux-plugins/tmux-continuum&#39;
-
-unbind-key C-b
-set-option -g prefix C-Space
-bind-key C-Space send-prefix
-
-set-option -s set-titles on
-set-option -g set-titles-string &quot;#W/#T&quot;
-run &#39;~/.tmux/plugins/tpm/tpm&#39;
-</code></pre>
-<p>安装 <code>tmux-resurrect</code> 和 <code>tmux-continuum</code>，这样即使我重启了机器，打开 tmux 后我的 session 仍然和之前一样。</p>
-<p>最近也有个 Rust 写的 <a target="_blank" rel="noopener" href="https://github.com/zellij-org/zellij">zellij</a>，但我认为这种软件使用更老的会更方便，比如公司的远程服务器必然有 tmux，但不一定有 zellij。</p>
-<h2 id="just"><a href="#just" class="headerlink" title="just"></a>just</h2>
-<p><a target="_blank" rel="noopener" href="https://github.com/casey/just">casey/just: 🤖 Just a command runner</a> 是我喜欢的另外一个 Rust 写的工具，我的日常工作中严重依赖这个工具，比如我的 rustc-dev 项目中配置渐渐积累了这么多的配置：<a target="_blank" rel="noopener" href="https://gist.github.com/chenyukang/1483cbbf75a4bd5ae2930415329cb682">rustc-justfile</a></p>
-<p><code>just</code> 有些像 Makefile，但使用起来又比 Makefile 的语法简单和直观，我通常是来把一些常用的命令写入 justfile，然后留下经常需要调整的参数，比如：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">err FILE N:
-        rustup toolchain link dev2 ./build/aarch64-apple-darwin/stage1/
-        RUSTC_ICE=/tmp rustc +dev2 {{FILE}} -Z treat-err-as-bug={{N}}
-</code></pre>
-<p>这样我执行 <code>just err tests/ui/consts/const-eval/infinite_loop.rs 1</code> 的时候就相当于执行配置的一系列命令。</p>
-<p>另外我也会把一些频繁需要修改的参数放到最后一个位置，比如本来我需要执行：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">CKB_TEST_ARGS={{SPEC}} make integration
-</code></pre>
-<p>在 justfile 里面配置：</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">test-one SPEC:
-        CKB_TEST_ARGS={{SPEC}} make integration
-</code></pre>
-<p>执行 <code>just test-one SPEC</code>  来测试不同的用例就会方便点。</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/bootandy/dust">bootandy/dust: A more intuitive version of du in rust</a> 一个更直观的 du</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/aristocratos/btop">aristocratos/btop: A monitor of resources</a> 和 htop 类似，但是 UI 更好看些</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Orange-OpenSource/hurl?tab=readme-ov-file">hurl: Hurl, run and test HTTP requests with plain text.</a> 类似 Curl，但是更方便</li>
-</ul>
-<hr />
-<p>你有什么喜欢的 Shell 工具，希望也能分享给我。</p>
 ]]></content>
   </entry>
 </feed>
