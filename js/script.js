@@ -6,6 +6,7 @@
     var top = $('.scroll-top')
     var catalog = $('.catalog-container .toc-main')
     var isOpen = false
+    var systemDarkQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null
 
     // Hide Header on on scroll down
     var didScroll;
@@ -57,6 +58,68 @@
 
     if (detectmob()) {
         $('.nav-container').hide();
+    }
+
+    function systemTheme() {
+        return systemDarkQuery && systemDarkQuery.matches ? 'dark' : 'light'
+    }
+
+    function utterancesTheme(theme) {
+        return theme === 'dark' ? 'github-dark' : 'github-light'
+    }
+
+    function syncUtterancesTheme(theme) {
+        var iframe = document.querySelector('iframe.utterances-frame')
+        if (!iframe || !iframe.contentWindow) {
+            return false
+        }
+        iframe.contentWindow.postMessage({
+            type: 'set-theme',
+            theme: utterancesTheme(theme)
+        }, 'https://utteranc.es')
+        return true
+    }
+
+    function scheduleUtterancesThemeSync(theme) {
+        syncUtterancesTheme(theme)
+        window.setTimeout(function() {
+            syncUtterancesTheme(theme)
+        }, 500)
+        window.setTimeout(function() {
+            syncUtterancesTheme(theme)
+        }, 1500)
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme)
+        document.documentElement.style.colorScheme = theme
+        scheduleUtterancesThemeSync(theme)
+        $('.theme-toggle').each(function() {
+            var nextLabel = theme === 'dark' ? '切换到浅色模式' : '切换到暗黑模式'
+            $(this).attr('aria-label', nextLabel).attr('title', nextLabel)
+        })
+    }
+
+    try {
+        localStorage.removeItem('catcoding-theme')
+    } catch (e) {}
+
+    applyTheme(document.documentElement.getAttribute('data-theme') || systemTheme())
+
+    $('.theme-toggle').on('click', function() {
+        var current = document.documentElement.getAttribute('data-theme') || systemTheme()
+        applyTheme(current === 'dark' ? 'light' : 'dark')
+    })
+
+    if (systemDarkQuery) {
+        var syncSystemTheme = function(event) {
+            applyTheme(event.matches ? 'dark' : 'light')
+        }
+        if (systemDarkQuery.addEventListener) {
+            systemDarkQuery.addEventListener('change', syncSystemTheme)
+        } else if (systemDarkQuery.addListener) {
+            systemDarkQuery.addListener(syncSystemTheme)
+        }
     }
 
     $(document).ready(function() {
