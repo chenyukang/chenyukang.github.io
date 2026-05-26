@@ -3,6 +3,7 @@
   <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="color-scheme" content="light dark">
   <meta name="description" content="All about coding and writing">
   <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
   <meta property="og:site_name" content="CatCoding">
@@ -13,16 +14,23 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  <link rel="stylesheet" href="/css/style.css">
+  <script>
+    (function() {
+      try {
+        localStorage.removeItem('catcoding-theme');
+      } catch (e) {}
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = prefersDark ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.style.colorScheme = theme;
+    })();
+  </script>
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css?v=20260526-project-compact">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -109,8 +117,22 @@
          </span>
         </a>
        </li>
+
+       <li class="list-item theme-toggle-item">
+        <button class="icon-small theme-toggle" type="button" aria-label="切换暗黑模式" title="切换暗黑模式">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-adjust fa-stack-1x fa-inverse" aria-hidden="true"></i>
+          </span>
+        </button>
+       </li>
     </ul>
-    
+
+    <button class="icon-small theme-toggle theme-toggle-mobile" type="button" aria-label="切换暗黑模式" title="切换暗黑模式">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-adjust fa-stack-1x fa-inverse" aria-hidden="true"></i>
+      </span>
+    </button>
+
     <div class="menu">
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -167,73 +189,319 @@
 </div>
 
 <main class="app-body project-app">
-  <div class="card-container">
-    <section class="project-card">
-      <a class="card-wrap" href="https://github.com/rust-lang/rust" target="_blank">
-        <div class="card-header"></div>
-        <h3 class="card-title">rust-lang/rust</h3>
-        <p class="card-description">Empowering everyone to build reliable and efficient software.</p>
-        <div class="card-footer">
-          <span><i class="fa fa-star"></i> 104k</span>
-          <span><i class="fa fa-code-fork"></i> 13.4k</span>
-        </div>
+  <section class="project-showcase project-showcase--featured">
+    <div class="project-showcase-head">
+      <div>
+        <p class="project-eyebrow">Open source / selected contributions</p>
+        <h3>Contributed Projects</h3>
+      </div>
+      <a class="project-github-link" href="https://github.com/chenyukang?tab=repositories" target="_blank">
+        <i class="fa fa-github"></i>
+        <span>GitHub</span>
       </a>
-    </section>
-    <section class="project-card">
-      <a class="card-wrap" href="https://github.com/nervosnetwork/ckb" target="_blank">
-        <div class="card-header"></div>
-        <h3 class="card-title">nervosnetwork/ckb</h3>
-        <p class="card-description">The Nervos CKB is a public permissionless blockchain, and the layer 1 of Nervos network.</p>
-        <div class="card-footer">
-          <span><i class="fa fa-star"></i> 1.2k</span>
-          <span><i class="fa fa-code-fork"></i> 237</span>
-        </div>
-      </a>
-    </section>
-    <section class="project-card">
-      <a class="card-wrap" href="https://github.com/chenyukang/eopl" target="_blank">
-        <div class="card-header"></div>
-        <h3 class="card-title">eopl</h3>
-        <p class="card-description">my solutions to EOPL3</p>
-        <div class="card-footer">
-          <span><i class="fa fa-star"></i> 366</span>
-          <span><i class="fa fa-code-fork"></i> 67</span>
-        </div>
-      </a>
-    </section>
-    <section class="project-card">
-      <a class="card-wrap" href="https://github.com/nervosnetwork/fiber" target="_blank">
-        <div class="card-header"></div>
-        <h3 class="card-title">nervosnetwork/fiber</h3>
-        <p class="card-description">Lightning Network for CKB</p>
-        <div class="card-footer">
-          <span><i class="fa fa-star"></i> 39</span>
-          <span><i class="fa fa-code-fork"></i> 16</span>
-        </div>
-      </a>
-    </section>
-    <section class="project-card">
-      <a class="card-wrap" href="https://github.com/chenyukang/talkGPT" target="_blank">
-        <div class="card-header"></div>
-        <h3 class="card-title">talkGPT</h3>
-        <p class="card-description">An simple Python program that help you talk with ChatGPT, practice Spoken English ...</p>
-        <div class="card-footer">
-          <span><i class="fa fa-star"></i> 93</span>
-          <span><i class="fa fa-code-fork"></i> 10</span>
-        </div>
-      </a>
-    </section>
-    <section class="project-card">
-      <a class="card-wrap" href="https://github.com/chenyukang/rubytt" target="_blank">
-        <div class="card-header"></div>
-        <h3 class="card-title">rubytt</h3>
-        <p class="card-description">Rubytt is a static Ruby code analyzer, written in OCaml</p>
-        <div class="card-footer">
-          <span><i class="fa fa-star"></i> 17</span>
-        </div>
-      </a>
-    </section>
-  </div>
+    </div>
+
+    <div id="featured-project-grid" class="card-container project-grid project-grid--featured" data-github-user="chenyukang">
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/rust-lang/rust" target="_blank">
+          <div class="card-header" data-name="rust-lang/rust"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">rust-lang/rust</h3>
+            </div>
+            <p class="card-description">Empowering everyone to build reliable and efficient software.</p>
+          </div>
+          <div class="card-topics">
+            <span>rust</span><span>compiler</span><span>language</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 100k+</span>
+            <span><i class="fa fa-code-fork"></i> 10k+</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/youki-dev/youki" target="_blank">
+          <div class="card-header" data-name="youki-dev/youki"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">youki-dev/youki</h3>
+            </div>
+            <p class="card-description">A container runtime written in Rust.</p>
+          </div>
+          <div class="card-topics">
+            <span>docker</span><span>kubernetes</span><span>oci</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 7.4k</span>
+            <span><i class="fa fa-code-fork"></i> 437</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/nervosnetwork/ckb" target="_blank">
+          <div class="card-header" data-name="nervosnetwork/ckb"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">nervosnetwork/ckb</h3>
+            </div>
+            <p class="card-description">The Nervos CKB is a public permissionless blockchain, and the layer 1 of Nervos network.</p>
+          </div>
+          <div class="card-topics">
+            <span>rust</span><span>blockchain</span><span>ckb</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 1.2k</span>
+            <span><i class="fa fa-code-fork"></i> 260</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/nervosnetwork/ckb-vm" target="_blank">
+          <div class="card-header" data-name="nervosnetwork/ckb-vm"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">nervosnetwork/ckb-vm</h3>
+            </div>
+            <p class="card-description">CKB's virtual machine, based on the open source RISC-V ISA.</p>
+          </div>
+          <div class="card-topics">
+            <span>blockchain</span><span>ckb</span><span>riscv</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 421</span>
+            <span><i class="fa fa-code-fork"></i> 85</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/nervosnetwork/tentacle" target="_blank">
+          <div class="card-header" data-name="nervosnetwork/tentacle"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">nervosnetwork/tentacle</h3>
+            </div>
+            <p class="card-description">A multiplexed p2p network framework that supports custom protocols.</p>
+          </div>
+          <div class="card-topics">
+            <span>framework</span><span>p2p</span><span>rust-library</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 61</span>
+            <span><i class="fa fa-code-fork"></i> 29</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/nervosnetwork/fiber" target="_blank">
+          <div class="card-header" data-name="nervosnetwork/fiber"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">nervosnetwork/fiber</h3>
+            </div>
+            <p class="card-description">A scalable, privacy-by-default payment & swap network.</p>
+          </div>
+          <div class="card-topics">
+            <span>blockchain</span><span>ckb</span><span>lightning-network</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 55</span>
+            <span><i class="fa fa-code-fork"></i> 24</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+    </div>
+  </section>
+
+  <section class="project-showcase project-showcase--recent">
+    <div class="project-showcase-head">
+      <div>
+        <p class="project-eyebrow">GitHub / recently created</p>
+        <h3>Recently Created Projects</h3>
+      </div>
+    </div>
+
+    <div id="recent-project-grid" class="card-container project-grid project-grid--recent" data-github-user="chenyukang">
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/chenyukang/dotr" target="_blank">
+          <div class="card-header" data-name="chenyukang/dotr"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">dotr</h3>
+              <span class="project-badge">latest</span>
+            </div>
+            <p class="card-description">A backup tool for personal configuration files, with explicit restore, watch mode, compact config, and age encryption.</p>
+          </div>
+          <div class="card-topics">
+            <span>rust</span><span>dotfiles</span><span>backup</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 0</span>
+            <span><i class="fa fa-code-fork"></i> 0</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/chenyukang/obr" target="_blank">
+          <div class="card-header" data-name="chenyukang/obr"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">obr</h3>
+            </div>
+            <p class="card-description">A local-first web companion for capturing, editing, and reading Obsidian notes from any browser.</p>
+          </div>
+          <div class="card-topics">
+            <span>notes</span><span>obsidian</span><span>local-first</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 0</span>
+            <span><i class="fa fa-code-fork"></i> 0</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/chenyukang/ghr" target="_blank">
+          <div class="card-header" data-name="chenyukang/ghr"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">ghr</h3>
+            </div>
+            <p class="card-description">A fast terminal workspace for staying on top of GitHub pull requests, issues, notifications, checks, and diffs.</p>
+          </div>
+          <div class="card-topics">
+            <span>rust</span><span>github</span><span>tui</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 55</span>
+            <span><i class="fa fa-code-fork"></i> 2</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/chenyukang/git-heron" target="_blank">
+          <div class="card-header" data-name="chenyukang/git-heron"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">git-heron</h3>
+            </div>
+            <p class="card-description">Web highlights and clippings, synced to GitHub as Markdown.</p>
+          </div>
+          <div class="card-topics">
+            <span>annotation-tool</span><span>chrome-extension</span><span>hypothesis</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 6</span>
+            <span><i class="fa fa-code-fork"></i> 1</span>
+            <span class="project-language"><b style="background:#f1e05a"></b>JavaScript</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/chenyukang/auto-tabs" target="_blank">
+          <div class="card-header" data-name="chenyukang/auto-tabs"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">auto-tabs</h3>
+            </div>
+            <p class="card-description">Chrome auto tabs.</p>
+          </div>
+          <div class="card-topics">
+            <span>chrome</span><span>tabs</span><span>automation</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 0</span>
+            <span><i class="fa fa-code-fork"></i> 0</span>
+            <span class="project-language"><b style="background:#f1e05a"></b>JavaScript</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/chenyukang/runnel" target="_blank">
+          <div class="card-header" data-name="chenyukang/runnel"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">runnel</h3>
+            </div>
+            <p class="card-description">A compact proxy and tunnel toolbox for daily use, experimentation, and learning.</p>
+          </div>
+          <div class="card-topics">
+            <span>proxy</span><span>tunnel</span><span>networking</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 11</span>
+            <span><i class="fa fa-code-fork"></i> 0</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/chenyukang/hexo-rs" target="_blank">
+          <div class="card-header" data-name="chenyukang/hexo-rs"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">hexo-rs</h3>
+            </div>
+            <p class="card-description">A static site generator written in Rust, designed to be compatible with Hexo themes.</p>
+          </div>
+          <div class="card-topics">
+            <span>rust</span><span>hexo</span><span>static-site</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 4</span>
+            <span><i class="fa fa-code-fork"></i> 0</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/chenyukang/ss" target="_blank">
+          <div class="card-header" data-name="chenyukang/ss"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">ss</h3>
+            </div>
+            <p class="card-description">Some random tiny projects.</p>
+          </div>
+          <div class="card-topics">
+            <span>rust</span><span>tools</span><span>experiments</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 0</span>
+            <span><i class="fa fa-code-fork"></i> 0</span>
+            <span class="project-language"><b style="background:#dea584"></b>Rust</span>
+          </div>
+        </a>
+      </section>
+      <section class="project-card">
+        <a class="card-wrap" href="https://github.com/chenyukang/talkGPT" target="_blank">
+          <div class="card-header" data-name="chenyukang/talkGPT"></div>
+          <div class="card-main">
+            <div class="card-title-row">
+              <h3 class="card-title">talkGPT</h3>
+            </div>
+            <p class="card-description">A simple Python program for practicing spoken English with ChatGPT.</p>
+          </div>
+          <div class="card-topics">
+            <span>python</span><span>chatgpt</span><span>english</span>
+          </div>
+          <div class="card-footer">
+            <span><i class="fa fa-star"></i> 91</span>
+            <span><i class="fa fa-code-fork"></i> 10</span>
+            <span class="project-language"><b style="background:#3572a5"></b>Python</span>
+          </div>
+        </a>
+      </section>
+    </div>
+  </section>
 </main>
 
 <script>
@@ -242,45 +510,142 @@
      var url = 'http://catcoding.me/project/';
      $('#article-banner').geopattern(url);
      $('.header').removeClass('fixed-header')
-     $('.card-header').each(function() {
-        var name = $(this).data('name');
-        $(this).geopattern(name);
-     })
+     function paintProjectHeaders() {
+         $('.card-header').each(function() {
+            var name = $(this).data('name');
+            $(this).geopattern(name);
+         })
+     }
+
+     function escapeHtml(value) {
+         return String(value || '').replace(/[&<>"']/g, function(ch) {
+             return ({
+                 '&': '&amp;',
+                 '<': '&lt;',
+                 '>': '&gt;',
+                 '"': '&quot;',
+                 "'": '&#39;'
+             })[ch]
+         })
+     }
+
+     function formatCount(value) {
+         var count = Number(value || 0)
+         if (count >= 1000) {
+             return (Math.round(count / 100) / 10).toString().replace(/\.0$/, '') + 'k'
+         }
+         return count.toString()
+     }
+
+     function formatDate(value) {
+         var date = new Date(value)
+         if (isNaN(date.getTime())) {
+             return ''
+         }
+         return date.toISOString().slice(0, 10)
+     }
+
+     function languageColor(language) {
+         var colors = {
+             JavaScript: '#f1e05a',
+             TypeScript: '#3178c6',
+             Rust: '#dea584',
+             Python: '#3572a5',
+             Ruby: '#701516',
+             OCaml: '#ef7a08',
+             Go: '#00add8',
+             Shell: '#89e051',
+             HTML: '#e34c26',
+             CSS: '#563d7c'
+         }
+         return colors[language] || '#66d89d'
+     }
+
+     function normalizeDescription(value) {
+         return (value || '').trim().replace(/^https?:\/\/\S+\s+/i, '')
+     }
+
+     function truncateDescription(value) {
+         var description = normalizeDescription(value)
+         if (description.replace(/[\u0391-\uFFE5]/g, 'aa').length > 112) {
+             description = description.slice(0, 112) + '...'
+         }
+         return description
+     }
+
+     function renderRepo(repo, options) {
+         options = options || {}
+         var topics = (repo.topics || []).slice(0, 3).map(function(topic) {
+             return '<span>' + escapeHtml(topic) + '</span>'
+         }).join('')
+         var language = repo.language || 'Code'
+         var created = formatDate(repo.created_at)
+         var badge = options.badge ? '<span class="project-badge">' + escapeHtml(options.badge) + '</span>' : ''
+         var title = options.fullName ? repo.full_name || repo.name : repo.name
+         return (
+             '<section class="project-card' + (options.large ? ' project-card--featured' : '') + '">' +
+             '<a class="card-wrap" href="' + escapeHtml(repo.html_url) + '" target="_blank">' +
+             '<div class="card-header" data-name="' + escapeHtml(repo.full_name || repo.name) + '"></div>' +
+             '<div class="card-main">' +
+             '<div class="card-title-row">' +
+             '<h3 class="card-title">' + escapeHtml(title) + '</h3>' +
+             badge +
+             '</div>' +
+             '<p class="card-description">' + escapeHtml(truncateDescription(repo.description)) + '</p>' +
+             '</div>' +
+             '<div class="card-topics">' + topics + '</div>' +
+             '<div class="card-footer">' +
+             '<span><i class="fa fa-star"></i> ' + formatCount(repo.stargazers_count) + '</span>' +
+             '<span><i class="fa fa-code-fork"></i> ' + formatCount(repo.forks_count) + '</span>' +
+             '<span class="project-language"><b style="background:' + languageColor(language) + '"></b>' + escapeHtml(language) + '</span>' +
+             (created ? '<span><i class="fa fa-calendar-o"></i> ' + created + '</span>' : '') +
+             '</div>' +
+             '</a>' +
+             '</section>'
+         )
+     }
+
+     function hasDescription(repo) {
+         return normalizeDescription(repo.description)
+     }
+
+     paintProjectHeaders()
+
+     var contributedProjectNames = [
+         'rust-lang/rust',
+         'youki-dev/youki',
+         'nervosnetwork/ckb',
+         'nervosnetwork/ckb-vm',
+         'nervosnetwork/tentacle',
+         'nervosnetwork/fiber'
+     ]
+     var contributedProjectMap = contributedProjectNames.reduce(function(map, name) {
+         map[name] = true
+         return map
+     }, {})
+     var githubUser = $('#recent-project-grid').data('github-user') || $('#featured-project-grid').data('github-user')
+
      $.ajax({
          headers: {
-             Accept: 'application/vnd.github.v3.raw'
+             Accept: 'application/vnd.github+json'
          },
          type: 'get',
-         url: 'https://api.github.com/users/chenyukang/repos?type=sources&direction=desc&sort=updated&per_page=1000',
+         url: 'https://api.github.com/users/' + githubUser + '/repos?type=owner&direction=desc&sort=created&per_page=100',
          success: function (data) {
-             var repos = data.sort(function(a, b) {
-                 return (b.stargazers_count - a.stargazers_count)
-             }).slice(0, 9)
-             $('#loader').hide();
-             var cardHtml = repos.map(function(item) {
-                 var description = item.description || ""
-                 if (description.replace(/[\u0391-\uFFE5]/g, "aa").length > 72) {
-                     description = description.slice(0, 72) + '...'
-                 }
-                 return (
-                     '<section class="project-card">' +
-                     '<a class="card-wrap" href="'+ item.html_url +'" target="_blank">' +
-                     '<div class="card-header" data-name="'+ item.name +'"></div>' +
-                     '<h3 class="card-title">' + item.name + '</h3>' +
-                     '<p class="card-description">' + description + '</p>' +
-                     '<div class="card-footer">' +
-                     '<span><i class="fa fa-star"></i>'+ item.stargazers_count +'</span>' +
-                     '<span><i class="fa fa-code-fork"></i>' + item.forks_count +'</span>' +
-                     '</div>' +
-                     '</a>' +
-                     '</section>'
-                 )
-             }).join('')
-             $('#all-project').html(cardHtml)
-             $('.card-header').each(function() {
-                 var name = $(this).data('name');
-                 $(this).geopattern(name);
+             var repos = data.filter(function(item) {
+                 return !item.fork && !item.archived && hasDescription(item)
              })
+             var recentRepos = repos.filter(function(item) {
+                 return !contributedProjectMap[(item.full_name || item.name).toLowerCase()]
+             }).slice(0, 15)
+             if (recentRepos.length) {
+                 $('#recent-project-grid').html(recentRepos.map(function(repo, index) {
+                     return renderRepo(repo, {
+                         badge: index === 0 ? 'latest' : ''
+                     })
+                 }).join(''))
+             }
+             paintProjectHeaders()
          }
      });
  })()
@@ -318,7 +683,7 @@
     })
 </script>
 
-<script src="/js/script.js"></script>
+<script src="/js/script.js?v=20260526-theme-icon"></script>
 
   </body>
 </html>

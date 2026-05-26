@@ -3,6 +3,7 @@
   <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="color-scheme" content="light dark">
   <meta name="description" content="All about coding and writing">
   <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
   <meta property="og:site_name" content="CatCoding">
@@ -13,16 +14,23 @@
   <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
   <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
 
-  <link rel="stylesheet" href="/css/style.css">
+  <script>
+    (function() {
+      try {
+        localStorage.removeItem('catcoding-theme');
+      } catch (e) {}
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = prefersDark ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.style.colorScheme = theme;
+    })();
+  </script>
 <link rel="stylesheet" href="/css/plugins/gitment.css">
-  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/fonts.css">
-  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/code.css">
-  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
-  <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css?v=20260526-project-compact">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -109,8 +117,22 @@
          </span>
         </a>
        </li>
+
+       <li class="list-item theme-toggle-item">
+        <button class="icon-small theme-toggle" type="button" aria-label="切换暗黑模式" title="切换暗黑模式">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-adjust fa-stack-1x fa-inverse" aria-hidden="true"></i>
+          </span>
+        </button>
+       </li>
     </ul>
-    
+
+    <button class="icon-small theme-toggle theme-toggle-mobile" type="button" aria-label="切换暗黑模式" title="切换暗黑模式">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-adjust fa-stack-1x fa-inverse" aria-hidden="true"></i>
+      </span>
+    </button>
+
     <div class="menu">
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -277,12 +299,19 @@ No LLMs for comments on the bug tracker, including translation.</p>
       <!-- No Comment -->
     
 
-    <script src="https://utteranc.es/client.js"
-      repo="chenyukang/chenyukang.github.io"
-      issue-term="pathname"
-      theme="github-light"
-      crossorigin="anonymous"
-      async>
+    <div id="utterances-comments"></div>
+    <script>
+      (function() {
+        var theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'github-dark' : 'github-light';
+        var script = document.createElement('script');
+        script.src = 'https://utteranc.es/client.js';
+        script.setAttribute('repo', 'chenyukang/chenyukang.github.io');
+        script.setAttribute('issue-term', 'pathname');
+        script.setAttribute('theme', theme);
+        script.setAttribute('crossorigin', 'anonymous');
+        script.async = true;
+        document.getElementById('utterances-comments').appendChild(script);
+      })();
     </script>
   
 
@@ -294,7 +323,7 @@ No LLMs for comments on the bug tracker, including translation.</p>
   <div class="toc-main">
     <strong class="toc-title"></strong>
     
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#为了加密货币空投"><span class="toc-text">为了加密货币空投</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为了丰富简历"><span class="toc-text">为了丰富简历</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为了参与到开源项目"><span class="toc-text">为了参与到开源项目</span></a></li></ol>
+      <ol class="toc toc-nav"><li class="toc-item toc-level-3"><a class="toc-link" href="#为了加密货币空投"><span class="toc-text">为了加密货币空投</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为了丰富简历"><span class="toc-text">为了丰富简历</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为了参与到开源项目"><span class="toc-text">为了参与到开源项目</span></a></li></ol>
     
   </div>
 </aside>
@@ -392,7 +421,7 @@ No LLMs for comments on the bug tracker, including translation.</p>
     })
 </script>
 
-<script src="/js/script.js"></script>
+<script src="/js/script.js?v=20260526-theme-icon"></script>
 
   </body>
 </html>
