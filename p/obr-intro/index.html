@@ -266,7 +266,7 @@ deepseek_model = &quot;deepseek-v4-flash&quot;
 <p>Obr’s <code>init --tailscale</code> command starts a separate userspace <code>tailscaled</code>, stores its state in <code>$HOME/.local/share/tailscale-obr</code>, and exposes the local <code>127.0.0.1:8010</code> service through a stable <code>*.ts.net</code> HTTPS address.</p>
 <p>Tailscale can make the app reachable only inside my private network, which feels much better than putting it directly on the public Internet. The downside is that I need the Tailscale client and VPN running on my phone, and that conflicts with the VPN I normally use daily. So I do not always run Obr this way. Tailscale handles the secure device-to-device tunnel; Obr still handles login and authorization. Passkeys are a good fit for that on mobile.</p>
 <h2 id="A-few-implementation-notes"><a href="#A-few-implementation-notes" class="headerlink" title="A few implementation notes"></a>A few implementation notes</h2>
-<p>The backend is Rust + Axum. The frontend is plain HTML, CSS, and JavaScript, no frontend framework, no npm. I hate npm.</p>
+<p>The backend is Rust + Axum. The frontend is plain HTML, CSS, and JavaScript, no 3rd party frontend library, no npm. I hate npm.</p>
 <p>Right now the project has about 15 Rust files, around 14,000 lines under <code>src/</code> including test files, and 7 frontend asset files.</p>
 <p>Most of my Mac development still happens with codex/gpt5.5, but a lot of Obr was built with hermes.</p>
 <p>The workflow is strange in a good way: I notice something annoying while using the app, send a voice message to Hermes, wait a few minutes, and then double check it after the AI agent restarts the service automatically.</p>
