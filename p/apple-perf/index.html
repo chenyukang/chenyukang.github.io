@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>苹果新的芯片性能真是不错，并且续航很可观，所以我最近买了个 M2 Pro。有几年没使用 Mac 系统了，所以日常使用还有些别扭，但最让我闹心是发现了苹果一个让人大跌眼镜的设计，而我几乎没找到关于这点的中文资料，所以写下来分享给你。</p>
+    <section class="markdown-content" lang="zh-CN"><p>苹果新的芯片性能真是不错，并且续航很可观，所以我最近买了个 M2 Pro。有几年没使用 Mac 系统了，所以日常使用还有些别扭，但最让我闹心是发现了苹果一个让人大跌眼镜的设计，而我几乎没找到关于这点的中文资料，所以写下来分享给你。</p>
 <p>我日常会花时间在 Rust 编译器项目上，经常需要编译 rustc 和跑单元测试。单元测试大概是 1.4 w 个测试用例，测试框架会并行跑编译并执行后对比结果。我发现这台 Mac 跑测试一共需要 16 分钟，这是不可接受的，因为我之前使用 <code>WSL</code> 也不过 20-30 分钟左右。我用一台 32 c 64 g 的 Linux VM 跑同样的测试只需要 1.5 分钟。</p>
 <p>我这台 Mac 选的配置一般，CPU 核数是 6 性能 + 4 效能，另外内存 32 G，这样算来也不可能有 10 倍的性能之差。在 <a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust">Rust 代码仓库</a>跑单元测试：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">./x</span></span><span class="token function-call arguments shell"> test tests/ui<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>force-rerun</span></span>

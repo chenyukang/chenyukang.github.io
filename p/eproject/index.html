@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>我之前一直用的是 project-mode.el 来管理项目，在碰上代码很多的工程时还是有点不方便，源文件太多速度有点慢。快速检索文件还是可以，需要指定代码目录，可以增加目录。工程的概念还是不太直观，主要用来快速查找文件。以前看有同学推荐过 eproject，当时没仔细看。这会儿想自己写一个，而今天偶尔试用了一下这个<a target="_blank" rel="noopener" href="http://www.emacswiki.org/emacs/eproject">eproject.el</a>这才是真正需要的好东西啊。</p>
+    <section class="markdown-content" lang="zh-CN"><p>我之前一直用的是 project-mode.el 来管理项目，在碰上代码很多的工程时还是有点不方便，源文件太多速度有点慢。快速检索文件还是可以，需要指定代码目录，可以增加目录。工程的概念还是不太直观，主要用来快速查找文件。以前看有同学推荐过 eproject，当时没仔细看。这会儿想自己写一个，而今天偶尔试用了一下这个<a target="_blank" rel="noopener" href="http://www.emacswiki.org/emacs/eproject">eproject.el</a>这才是真正需要的好东西啊。</p>
 <p>一个工程包含的是经常需要访问的文件，另一个重要的地方是可以自己绑定 Make, clean, run, configure 等命令。一组常用命令加文件检索，非常方便。看下面的配置文件很清楚，make 绑定到了一组命令。</p>
 <pre class="line-numbers language-lisp" data-language="lisp"><code class="language-lisp"><span class="token lisp"><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token function lisp">setq</span> prj<span class="token operator arithmetic lisp">-</span>tools
       &#39;<span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token group lisp"><span class="token punctuation definition group begin lisp">(</span><span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>Make<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>cd ~/source/Panda/; ./run.sh -c;<span class="token punctuation definition string end lisp">&quot;</span></span> <span class="token string double lisp"><span class="token punctuation definition string begin lisp">&quot;</span>f9<span class="token punctuation definition string end lisp">&quot;</span></span><span class="token punctuation definition group end lisp">)</span></span>

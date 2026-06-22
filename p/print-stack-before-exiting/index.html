@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>在程序挂掉的时候最好还是留点有用的遗言，特别是对于一些比较难重现的 Bug，也许这些信息会成为解决问题的关键。</p>
+    <section class="markdown-content" lang="en"><p>在程序挂掉的时候最好还是留点有用的遗言，特别是对于一些比较难重现的 Bug，也许这些信息会成为解决问题的关键。</p>
 <p>下面这个技巧可以让程挂掉的时候打印出来栈信息。这个办法来自<a target="_blank" rel="noopener" href="http://neugierig.org/software/blog/2012/06/backtraces.html">这里</a>, 我觉得把 SIGABRT、SIGBUS 信号加进去也挺好的，在此做了点修改。曾经尝也试过 glibc 的 backtrace 函数，，但是给的信息不全 (没有行号)，对此做得最好的还是 gdb。在终端可以用 gdb 获取某个进程的当前栈：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash">    <span class="token function-call shell"><span class="token variable function shell">$</span></span><span class="token function-call arguments shell"> gdb<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>p</span> 5595<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>batch</span><span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>ex</span> bt</span>
     <span class="token function-call shell"><span class="token variable function shell">0xb7fb4410</span></span><span class="token function-call arguments shell"> in __kernel_vsyscall (</span><span class="token function-call shell"></span><span class="token post-cmd shell">)</span>

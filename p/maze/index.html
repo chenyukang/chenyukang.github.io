@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>上次把那个迷宫弄出来，然后想了想解法，找了些资料。再把界面上弄了一下，右边迷宫大小，然后有一个选项 percent，是代表要推倒的墙占的总百分比，如果数字越小生成的迷宫就越稀疏，有可能有多条 通路从起点到终点，数字大那么生成的迷宫就越密集，但至少有一条通路。</p>
+    <section class="markdown-content" lang="zh-CN"><p>上次把那个迷宫弄出来，然后想了想解法，找了些资料。再把界面上弄了一下，右边迷宫大小，然后有一个选项 percent，是代表要推倒的墙占的总百分比，如果数字越小生成的迷宫就越稀疏，有可能有多条 通路从起点到终点，数字大那么生成的迷宫就越密集，但至少有一条通路。</p>
 <p style="text-align: center;"><a href="/images/gui.jpg"><img class="aligncenter size-full wp-image-45" title="gui" src="/images/gui.jpg" alt="" width="800" height="460" /></a>
 <h2 id="单迷宫解法"><a href="#单迷宫解法" class="headerlink" title="单迷宫解法"></a>单迷宫解法</h2>
 <p>迷宫第一定律：一般而言，只要在出发点单手摸住一面墙出发，手始终不离开墙面，总可以找到迷宫的出口。对于单迷宫而言，这一种万能的破解方法，即沿着某一面墙壁走。或者换句话说，你在走的时候，左（右）手一直摸着左（右）边的墙壁，这种方法可能费时最长，也可能会使你走遍迷宫的每一个角落和每一条死路，但你绝不会永远困在里面。直觉上好像是可以，实现一下也确实能找到终点的，也就是靠着墙，一直靠左或者一直靠右。实现的时候甚至都不用记录哪些点已经访问过了，哪些点还没访问过。这也是一种人能来做的算法，毕竟人不可能像计算机一样 DFS、BFS。</p>

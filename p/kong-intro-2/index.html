@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h3 id="Kong-的初始化过程"><a href="#Kong-的初始化过程" class="headerlink" title="Kong 的初始化过程"></a>Kong 的初始化过程</h3>
+    <section class="markdown-content" lang="zh-CN"><h3 id="Kong-的初始化过程"><a href="#Kong-的初始化过程" class="headerlink" title="Kong 的初始化过程"></a>Kong 的初始化过程</h3>
 <p>安装好 Kong 之后我们是用命令<code>sudo ./bin/kong start -c kong.conf -vv</code>来启动。其中 kong.conf 为配置文件，<code>-vv</code>选项打印出一些重要信息展示出来，方便发现问题。</p>
 <p>可以看到<code>./bin/kong</code>是一个脚本，是用的<code>#!/usr/local/openresty/bin/resty</code>程序来执行，而 resty 是 OpenResty 的一个 Perl 可执行脚本。kong 的内容很简单，就是一个入口函数调用：
 <code>require("kong.cmd.init")(arg)</code></p>

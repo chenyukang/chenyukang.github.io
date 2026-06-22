@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>最近在看一些图算法，发现拓扑排序频繁出现，这里写一下自己的一些总结。</p>
+    <section class="markdown-content" lang="zh-CN"><p>最近在看一些图算法，发现拓扑排序频繁出现，这里写一下自己的一些总结。</p>
 <p>拓扑排序是对于有向无环图而言的 (DAG)，就是对于这个图所有的点 (V1, V2, … Vn) 找到一个点序列使得任意边 (u, v)，u 出现在 v 的前面。很容易证明，如果一个有向图中有环那么不存在拓扑排序。</p>
 <h2 id="现实中的问题"><a href="#现实中的问题" class="headerlink" title="现实中的问题"></a>现实中的问题</h2>
 <p>首先来看现实中哪些问题需要拓扑排序的，课程排序，编译依赖问题，类似的凡是涉及到相关顺序的时间安排，比如 Rails 里面的初始化调用了库<a target="_blank" rel="noopener" href="http://ruby-doc.org/stdlib-2.0/libdoc/tsort/rdoc/TSort.html">Tsort</a>来进行排序。Unix 中有个命令也叫<a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Tsort_(Unix)">tsort</a>，在有的 makefile 里面还直接使用了这个命令来解决依赖问题。</p>

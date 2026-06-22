@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>纪念一下跑测试跑了几天才找出的一个内存泄漏，这个函数源于 UNP，还以为 UNP 有 bug 呢，找到原书当 getaddreinfo 失败或者 res==NULL 的时候直接退出了。但是写这个代码的同学当然不想连接不上直接退出，于是忘记了 freeaddrinfo 调用直接返回，那个 struct addrinfo 就没释放。很多错误都是这种，涉及到库函数的时候更加难查。</p>
+    <section class="markdown-content" lang="zh-CN"><p>纪念一下跑测试跑了几天才找出的一个内存泄漏，这个函数源于 UNP，还以为 UNP 有 bug 呢，找到原书当 getaddreinfo 失败或者 res==NULL 的时候直接退出了。但是写这个代码的同学当然不想连接不上直接退出，于是忘记了 freeaddrinfo 调用直接返回，那个 struct addrinfo 就没释放。很多错误都是这种，涉及到库函数的时候更加难查。</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">int</span> <span class="token function c"><span class="token function c">tcp_connect</span></span><span class="token function parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function parameters c"><span class="token group c"><span class="token keyword c">const</span> <span class="token keyword c">char</span> <span class="token variable parameter c">host</span><span class="token punctuation separator c">,</span> <span class="token keyword c">const</span> <span class="token keyword c">char</span> <span class="token variable parameter c">serv</span><span class="token punctuation section group end c">)</span></span></span><span class="token function c"><span class="token block c"><span class="token punctuation section block begin c">{</span></span></span><span class="token function c"><span class="token block c">
     <span class="token keyword c">int</span>    sockfd<span class="token punctuation separator c">,</span> n<span class="token punctuation terminator c">;</span>
     <span class="token keyword c">struct</span> addrinfo hints<span class="token punctuation separator c">,</span> res<span class="token punctuation separator c">,</span> ressave<span class="token punctuation terminator c">;</span>

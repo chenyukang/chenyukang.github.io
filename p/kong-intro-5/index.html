@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>Kong 的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。</p>
+    <section class="markdown-content" lang="zh-CN"><p>Kong 的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。</p>
 <h3 id="worker-模型"><a href="#worker-模型" class="headerlink" title="worker 模型"></a>worker 模型</h3>
 <p>假设我们对 Kong 做了一个更改的请求，这个请求通常是通过 admin_api 这个路由处理的。也就是说最终执行数据库操作的动作是在一个 Nginx worker 进程里。因为操作了数据库所以我们需要刷新这个 Kong 节点的所有 worker 的缓存，而且要把事件分发给其他 Kong 节点，让其他 Kong 节点刷新所有 worker 的缓存。</p>
 <img src="/images/kong-message.png" alt="kong-message" class="img-center">

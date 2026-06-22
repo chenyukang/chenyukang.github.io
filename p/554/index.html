@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>我是豆瓣 FM 的忠实用户，用这个东西已经有一年多了吧，累计收听了不少歌曲 (316 首喜欢的，45 首不再播放的，7352 首播放过)。通过这个东西发现不少符合自己口味的音乐。这 316 首是我喜欢的类型，所以想把这个列表弄下来，然后把这些歌曲下载到电脑上。</p>
+    <section class="markdown-content" lang="zh-CN"><p>我是豆瓣 FM 的忠实用户，用这个东西已经有一年多了吧，累计收听了不少歌曲 (316 首喜欢的，45 首不再播放的，7352 首播放过)。通过这个东西发现不少符合自己口味的音乐。这 316 首是我喜欢的类型，所以想把这个列表弄下来，然后把这些歌曲下载到电脑上。</p>
 <p>看了一下豆瓣是有自己开放的 API 的，不过还是够麻烦的。于是折腾了一个 Python 程序，输入你的豆瓣用户名和密码，模拟登录豆瓣并记录 cookie，自动地到 FM 的页面去取下这个音乐列表。这个程序在处理 HTML 文件的时候有点笨拙，正则表达式不够强嗄。需要另一个库 python-beautifulsoup。</p>
 <p>通过歌曲名，自动下载这个应该是已经有人做了的，于是发现这个 getsong.py，是通过 Baidu 音乐自动下载的，使用了一下速度和成功率都不错，于是在这个上面做了一些修改，直接从上面的程序
 生成的列表中取歌曲名字，下载下来。如果网速可以一般能在 500k 左右的下载速度，挺不错的。这个程序有可能会抛出一些异常，我没做仔细的检查，如果一首歌下载不下来就 pass 掉。</p>

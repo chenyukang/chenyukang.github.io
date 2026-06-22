@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>最近在看 memcached 的源代码，边看边随手记录了一下。</p>
+    <section class="markdown-content" lang="zh-CN"><p>最近在看 memcached 的源代码，边看边随手记录了一下。</p>
 <p>assoc.c: 记录一个 item 是否存在于缓存中，这里使用了 power 2 扩展，primary_hashtable，和 old_hashtable 分别存新申请的 hashtable 和旧的 hashtable。这里起了个线程来做拷贝的工作，当需要扩展 hashtable 的时候就触发 assoc_expand 函数，但是这个函数做的工作是备份 primary_hashtable，即 old_hashtable=primary_hashtable；然后申请新的空间，标识 expanding 为 true，如果申请空间失败则交换回来。通过条件信号量，assoc_maintenance_thread 把 old_hashtable 的数据逐步拷贝到新的 hashtable 中，当拷贝完了后释放 old_hashtable 的空间。耗时的操作用另外一个线程逐步来处理，不过查询和插入都要注意是否是在扩展状态，判断是去 old 还是 primary 里面去操作。</p>
 <p>cache.c: 在 malloc 和 free 的基础上封装了一层，多线程安全的。维持了一个指针列表，释放的时候并没有一下就把内存还给系统，而是在列表中保存了下来，申请时如果列表中有没用的指针就直接返回给出来。能这么因为这个 cache 模块只是负责申请和释放 size 相同的内存块。</p>
 <p>thread.c: 维持连接列表相关的内容。为一个队列，cq_push、cq_pop，维持一个 LRU 机制。cqi_new 函数返回一个新的 CQ_ITEM 指针，同样维持了一个 cqi_freelist，当有空闲指针的时候直接返回，当没有空闲的时候申请一个列表，从第二个开始连结成链表形式，返回第一个元素的指针。create_worker，创建一个处理线程。Item 为 memcached 中处理的主要对象，item_alloc、item_get、item_link、item_unlink、item_remove 方法，处理的时候都要锁住 cache_lock。threadlocal_stats_reset、threadlocal_stats_aggregate：统计信息相关。slab_stats_aggregate：统计一个线程使用的 slab 信息。threadlocal_stats_reset：清空统计信息。</p>

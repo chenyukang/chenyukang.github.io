@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p><a target="_blank" rel="noopener" href="http://github.com/chenyukang/rubytt">rubytt</a>是一个 Ruby 程序的静态分析器，这个项目从 16 年年初一直到年底，断断续续持续了近一年。这里稍微总结一下自己的开发过程。</p>
+    <section class="markdown-content" lang="zh-CN"><p><a target="_blank" rel="noopener" href="http://github.com/chenyukang/rubytt">rubytt</a>是一个 Ruby 程序的静态分析器，这个项目从 16 年年初一直到年底，断断续续持续了近一年。这里稍微总结一下自己的开发过程。</p>
 <h2 id="0-缘由"><a href="#0-缘由" class="headerlink" title="0. 缘由"></a>0. 缘由</h2>
 <p>14 年开始，从我进入 DJI 之后开始接触 Rails 开发。Ruby 之前也接触过，不过都是写一些小脚本之类的东西。我们几乎用 Rails 写各种系统，开发的效率很快。对于经常变动的 Web 开发 rails 还是挺好的。在我经历过的一个对正确性要求很高的项目里，有一次系统出现一个致命的问题。我们 6 个开发人员在小黑屋里面足足找了一个下午。最后却发现不过是一个 type 错误引入的，导致后台任务一直执行错误。后来稍微多想了想，这样的类型错误应该是在开发阶段就及时发现的。Rails 项目没有测试是不行的，所以我们后续补充了更多单元测试。另外我所使用过的静态语言几乎都能及早避免这样的错误，特别是在使用过 OCaml 这样的强类型语言后，我对类型有了更强的偏好。于是想我能不能做一个自动检测出类似 bug 的工具。据我所知<a target="_blank" rel="noopener" href="https://github.com/yinwang0/rubysonar">王垠的 rubysonar</a>  可以做类型分析，于是我 checkout 出来看了看代码。Java 代码不是特别复杂，也发现了两个问题并提交了 <a target="_blank" rel="noopener" href="https://github.com/yinwang0/rubysonar/pull/12">PR</a>。然后觉得这个东西还是比较好玩，干脆就自己另起一个项目来玩玩。</p>
 <h2 id="1-rubytt-的开发"><a href="#1-rubytt-的开发" class="headerlink" title="1. rubytt 的开发"></a>1. rubytt 的开发</h2>

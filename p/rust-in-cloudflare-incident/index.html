@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>这两天都在讨论  Cloudflare 的安全事故  <a target="_blank" rel="noopener" href="https://blog.cloudflare.com/18-november-2025-outage/">Cloudflare outage on November 18, 2025</a>，我也写点自己的想法。</p>
+    <section class="markdown-content" lang="zh-CN"><p>这两天都在讨论  Cloudflare 的安全事故  <a target="_blank" rel="noopener" href="https://blog.cloudflare.com/18-november-2025-outage/">Cloudflare outage on November 18, 2025</a>，我也写点自己的想法。</p>
 <p>这个事故当然引起的范围特别广，我当时正在用 ChatGPT，突然再打开总是提示正在加载，我还以为是自己的 VPN 出了问题，第二天起来才知道 Cloudflare 跪了好久。</p>
 <p>没多久 Cloudflare 就发出来了一个非常详细的事故说明。我对里面的场景非常熟悉，因为我之前因为类似的原因把大疆的大部分流量都给搞挂了，具体请看<a target="_blank" rel="noopener" href="https://catcoding.me/p/avoid-mistake/">谈谈工作中的犯错</a>中的配置错误。</p>
 <p>这次事故里 Cloudflare 给出了一段 Rust 代码，所以讨论自然会集中在 Rust 上。但把事故归咎于 Rust 本身就不太合理。从他们的场景来看和我之前在 Kong 上做流量分发是非常类似的，无非是这里他们使用了机器学习的技术来判断一个流量是否为恶意请求，而文中所说的 features 文件是训练好的模型数据。</p>

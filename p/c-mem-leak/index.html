@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>以前写的一些程序运行一段时间后占用的内存越来越多，估计是内存泄露了。服务端的程序要长时间的运行，内存泄露是个很严重的问题。于是再检查程序，很崩溃的是还有另外一个模块不是自己写的，看起来很麻烦。看了半小时后发现一些问题，但是还是不能保证是否完全解决了。同事让我用以前他们写的一些函数，对应的为 MALLOC 和 FREE。仔细看了一下觉得很不错，其实就是把 malloc 和 free 函数封装了一下，用来记录申请空间的文件和代码位置，使用方法就是用 MALLOC 和 FREE 替代原来的函数。主要的数据结构是：</p>
+    <section class="markdown-content" lang="zh-CN"><p>以前写的一些程序运行一段时间后占用的内存越来越多，估计是内存泄露了。服务端的程序要长时间的运行，内存泄露是个很严重的问题。于是再检查程序，很崩溃的是还有另外一个模块不是自己写的，看起来很麻烦。看了半小时后发现一些问题，但是还是不能保证是否完全解决了。同事让我用以前他们写的一些函数，对应的为 MALLOC 和 FREE。仔细看了一下觉得很不错，其实就是把 malloc 和 free 函数封装了一下，用来记录申请空间的文件和代码位置，使用方法就是用 MALLOC 和 FREE 替代原来的函数。主要的数据结构是：</p>
 <div>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token keyword c">typedef</span> <span class="token keyword c">struct</span>
 <span class="token block c"><span class="token punctuation section block begin c">{</span>

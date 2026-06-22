@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><p>今天解决了一个长期会碰到的问题，就是用 GDB 如何来调试动态链接库。我这个问题的难点是我的需要调试代码是在动态链接库里面，但是启动的不是普通的可以调试的二进制文件，换句话说这不是我所能控制的代码所编译出来的，甚至可能是由脚本程序来控制启动的。这个问题时不时地困扰着我，总结一下尝试过几种调试方式：</p>
+    <section class="markdown-content" lang="zh-CN"><p>今天解决了一个长期会碰到的问题，就是用 GDB 如何来调试动态链接库。我这个问题的难点是我的需要调试代码是在动态链接库里面，但是启动的不是普通的可以调试的二进制文件，换句话说这不是我所能控制的代码所编译出来的，甚至可能是由脚本程序来控制启动的。这个问题时不时地困扰着我，总结一下尝试过几种调试方式：</p>
 <p>1 使用 print 来打印 log，有时候有用，不好的地方是有时候定位出问题的代码位置还是稍显麻烦。很常用的会定义一对宏，进入函数和退出某个函数的时候都相应调用。</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token c"><span class="token preprocessor macro c"><span class="token keyword import define c">#define</span></span><span class="token preprocessor macro c"> <span class="token function preprocessor c">APP_LOG</span></span><span class="token preprocessor macro parameters c"><span class="token group c"><span class="token punctuation section group begin c">(</span><span class="token variable parameter c">X</span><span class="token punctuation section group end c">)</span></span></span><span class="token preprocessor macro c">                                  <span class="token punctuation separator continuation c">\</span>
     <span class="token function-call c"><span class="token function C99 c">fprintf</span><span class="token group c"><span class="token punctuation section group begin c">(</span></span></span><span class="token function-call c"><span class="token group c">stderr<span class="token punctuation separator c">,</span> <span class="token string double c"><span class="token punctuation definition string begin c">&quot;</span>log: <span class="token constant placeholder c">%s</span> <span class="token constant placeholder c">%d</span> <span class="token constant placeholder c">%s</span> <span class="token constant placeholder c">%s</span><span class="constant character escape c">\n</span><span class="token punctuation definition string end c">&quot;</span></span><span class="token punctuation separator c">,</span>           \

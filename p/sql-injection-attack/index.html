@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
+  
+  
+    
+  
+  
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   <meta name="color-scheme" content="light dark">
@@ -30,7 +35,7 @@
 <link rel="stylesheet" href="/css/plugins/code.css">
 <link rel="stylesheet" href="/css/plugins/prism.css">
 <link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
   <script src="/js/qrious.js"></script>
 <script src="/js/gitment.js"></script>
 <script src="/js/jquery.min.js"></script>
@@ -196,7 +201,7 @@
 
   <!-- Article START -->
   <article class="post-article">
-    <section class="markdown-content"><h3 id="注入原理"><a href="#注入原理" class="headerlink" title="注入原理"></a>注入原理</h3>
+    <section class="markdown-content" lang="zh-CN"><h3 id="注入原理"><a href="#注入原理" class="headerlink" title="注入原理"></a>注入原理</h3>
 <p>SQL 注入一直是 Web 应用的一大安全隐患，注入的基本原理是通过修改输入的参数来操作后台执行的 SQL，注入可能会导致数据库被恶意修改、数据被恶意读取等严重行为。所以如果一个参数有漏洞，通过小心的构造注入点即可利用，这里的<a target="_blank" rel="noopener" href="https://paper.seebug.org/15/">渗透攻防 Web 篇-SQL 注入攻击初级</a>有一些编写注入点的教程。</p>
 <p>最初的时候我在一个用 C 写后台的项目里待过，现在回想起来我们当时根本没注意 SQL 注入，C 拼接处 SQL 的字符串很常见。不过现在大多数 Web 框架都已经有 ORM 了，ORM 可以在很大程度上避免注入的产生，因为程序员通常来说不用写纯的 SQL 了，在最佳实践的前提下 ORM 会生成安全的 SQL。当然什么工具最终还是依赖程序员，比如下面的 Ruby 代码即会有问题：</p>
 <pre class="line-numbers language-ruby" data-language="ruby"><code class="language-ruby"><span class="token ruby"><span class="token class-name ruby">User</span><span class="token punctuation accessor ruby">.</span>where<span class="token punctuation definition group begin ruby">(</span><span class="token string double ruby"><span class="token punctuation definition string begin ruby">&quot;</span>email = <span class="token ruby embedded source"><span class="token punctuation section embedded ruby">#{</span>params<span class="token punctuation section array ruby">[</span><span class="token constant symbol ruby"><span class="token punctuation definition constant ruby">:</span>email</span><span class="token punctuation section array ruby">]</span><span class="token punctuation section embedded ruby">}</span></span><span class="token punctuation definition string end ruby">&quot;</span></span><span class="token punctuation definition group end ruby">)</span><span class="token punctuation accessor ruby">.</span>first
