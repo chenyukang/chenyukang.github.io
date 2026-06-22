@@ -218,7 +218,7 @@ annotation_dir = &quot;annotations&quot;
 <p>On my phone, I want to open a page, write a few lines, pick a path, optionally attach a link or image, and submit. The backend appends the content to the right Markdown file. A daily note goes into today’s file. A regular entry goes under the configured entry directory. A todo goes into the todo file. By the way, I have found Hermes is also good fit for this kind of thing with  proper training.</p>
 <p>Image uploading is the one part that needs a little more care. Uploading through Tailscale is not always fast, and mobile networks are not exactly famous for being polite. So Obr has offline drafts and a sync outbox. If a request fails, the note should not disappear. It should sit locally and retry quietly in the background.</p>
 <p>That is the kind of feature that sounds boring until the first time it saves a paragraph you wrote on the subway.</p>
-<p><img src="/images/ob_635f0d6d5fc60528afc8c5892738a70c.jpg" alt="" /></p>
+<img src="/images/ob_635f0d6d5fc60528afc8c5892738a70c.jpg" alt="" style="width:50%; height:auto;" />
 <h2 id="Making-it-feel-less-like-a-Web-page"><a href="#Making-it-feel-less-like-a-Web-page" class="headerlink" title="Making it feel less like a Web page"></a>Making it feel less like a Web page</h2>
 <p>I use Chrome’s “Add to Home screen” to put Obr on my phone as an app icon, and I allow it to keep running in the background. That alone makes the whole thing feel much closer to a small mobile app than a web page I occasionally visit.</p>
 <p>Under the hood, Obr uses a service worker and a manifest. The shell of the app, along with its CSS and JavaScript, can be cached locally. If the phone is offline, the app can still open, and recently viewed or edited content can often be restored from local cache. Anything that needs to write to the vault goes into the sync outbox when the network is down, then retries after the connection comes back.</p>
@@ -238,7 +238,7 @@ rss_refresh_minutes = 30
 rss_fetch_full_content = true
 </code></pre>
 <p>RSS metadata and read state are stored in a local SQLite database. Article bodies are cached under <code>data/rss/content/</code>. If full-content fetching is enabled, Obr uses <code>rs-trafilatura</code> to extract the page body into Markdown. If extraction fails, it falls back to the feed content or summary.</p>
-<p><img src="/images/ob_e321f0b192c0dc63bfc0c4e7d523b9b2.jpg" alt="" /></p>
+<img src="/images/ob_e321f0b192c0dc63bfc0c4e7d523b9b2.jpg" alt="" style="width:50%; height:auto;" />
 <p>The RSS detail page also supports annotations. When I find a paragraph worth keeping, I can write a note beside it, and Obr saves that note as Markdown under <code>annotations/</code>.</p>
 <h2 id="AI-summaries-and-translation"><a href="#AI-summaries-and-translation" class="headerlink" title="AI summaries and translation"></a>AI summaries and translation</h2>
 <p>Once RSS was local, adding AI summaries felt like the obvious next step.</p>
@@ -247,8 +247,7 @@ rss_fetch_full_content = true
 rss_ai_summary_chars = 200
 deepseek_api_key = &quot;sk-...&quot;
 deepseek_model = &quot;deepseek-v4-flash&quot;
-</code></pre>
-<p><img src="/images/ob_pasted-image-20260622202701.png" alt="" /></p>
+</code></pre><img src="/images/ob_pasted-image-20260622202701.png" alt="" style="width:50%; height:auto;" />
 <h2 id="Security-has-to-be-part-of-the-design"><a href="#Security-has-to-be-part-of-the-design" class="headerlink" title="Security has to be part of the design"></a>Security has to be part of the design</h2>
 <p>Obr can read and write my Obsidian vault, so security comes first.</p>
 <p>At the moment it supports:</p>
