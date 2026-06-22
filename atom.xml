@@ -3,15 +3,94 @@
   <title>CatCoding</title>
   <link href="http://catcoding.me/atom.xml" rel="self"/>
   <link href="http://catcoding.me/"/>
-  <updated>2026-06-18T01:47:47.753586085+00:00</updated>
+  <updated>2026-06-22T12:51:50.873039243+00:00</updated>
   <id>http://catcoding.me/</id>
   <author><name>yukang</name></author>
+  <entry>
+    <title>Obr: a Web UI for My Obsidian Vault</title>
+    <link href="http://catcoding.me/p/obr-intro/"/>
+    <id>http://catcoding.me/p/obr-intro/</id>
+    <published>2026-06-22T20:51:12+00:00</published>
+    <updated>2026-06-22T12:51:31.801498457+00:00</updated>
+    <content type="html"><![CDATA[<p>A few years ago I built a tiny personal tool called <a target="_blank" rel="noopener" href="https://github.com/chenyukang/obweb">Obweb</a>. Its purpose was dead simple: open a browser, type a quick thought, and append it to my Obsidian notes.</p>
+<p>Then one day the VPS was shutdown for some reasons, I need to redeploy it on another VPS and it involve some extra boring stuff, such as rebind a sub-domain and configing on VPS. I’m too lazy for this. Obweb slowly became unmaintained since it was developed in JavaScript when I tried to pick some frontend stuff, and I hate JavaScript, luckly, I don’t need to learn it since AI is good at frontend.</p>
+<p>I tried going back to the official Obsidian Android app one year ago, but it still felt too heavy for the thing I wanted most: fast capture. It takes too long to open, slow to respond, and I remember Termux is needed for some automatic tasks. I just don’t like it. I am clearly not the only one who feels this way, because I still randomly get emails from people asking about Obweb.</p>
+<p>Recently I read an article about <a target="_blank" rel="noopener" href="https://blog.ppb1701.com/self-hosting-vaultwarden-taking-back-password-management-part-8-of-building-a-resilient-home-serve">self-hosting Bitwarden with Tailscale</a>. That reminded me that Obweb was almost made for this style of deployment. It does not need to live on a VPS. It can just run on my local dev machine, reachable from my own devices, without a public-domain, a nginx or another server to babysit.</p>
+<p>So I rewrote it, in the vibe coding way. The new app is called <a target="_blank" rel="noopener" href="https://github.com/chenyukang/obr">Obr</a>.</p>
+<p>Obr is very much a tool shaped around my own workflow. But I think that is also what makes it worth writing about: small personal tools are often where the most honest product decisions happen.</p>
+<hr />
+<p>The basic idea is straightforward. Obr puts a lightweight Web interface in front of an Obsidian vault, with search, capture, and editing for the parts I use most often.</p>
+<p>Its config points at a few vault-relative paths:</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">vault_path = &quot;/path/to/obsidian/vault&quot;
+daily_dir = &quot;Daily&quot;
+entry_dir = &quot;Posts&quot;
+image_dir = &quot;Pics&quot;
+todo_path = &quot;Posts/todo.md&quot;
+annotation_dir = &quot;annotations&quot;
+</code></pre>
+<p>Daily notes go into <code>Daily/YYYY-MM-DD.md</code>, Images live under <code>Pics/</code>. RSS annotations are just Markdown files under <code>annotations/</code>. Obr does not try to invent a new storage model. It stays close to the vault.</p>
+<h2 id="Capture-comes-first"><a href="#Capture-comes-first" class="headerlink" title="Capture comes first"></a>Capture comes first</h2>
+<p>The original reason for Obr was capture.</p>
+<p>On my phone, I want to open a page, write a few lines, pick a path, optionally attach a link or image, and submit. The backend appends the content to the right Markdown file. A daily note goes into today’s file. A regular entry goes under the configured entry directory. A todo goes into the todo file. By the way, I have found Hermes is also good fit for this kind of thing with  proper training.</p>
+<p>Image uploading is the one part that needs a little more care. Uploading through Tailscale is not always fast, and mobile networks are not exactly famous for being polite. So Obr has offline drafts and a sync outbox. If a request fails, the note should not disappear. It should sit locally and retry quietly in the background.</p>
+<p>That is the kind of feature that sounds boring until the first time it saves a paragraph you wrote on the subway.</p>
+<p><img src="http://catcoding.me/images/ob_635f0d6d5fc60528afc8c5892738a70c.jpg" alt="" /></p>
+<h2 id="Making-it-feel-less-like-a-Web-page"><a href="#Making-it-feel-less-like-a-Web-page" class="headerlink" title="Making it feel less like a Web page"></a>Making it feel less like a Web page</h2>
+<p>I use Chrome’s “Add to Home screen” to put Obr on my phone as an app icon, and I allow it to keep running in the background. That alone makes the whole thing feel much closer to a small mobile app than a web page I occasionally visit.</p>
+<p>Under the hood, Obr uses a service worker and a manifest. The shell of the app, along with its CSS and JavaScript, can be cached locally. If the phone is offline, the app can still open, and recently viewed or edited content can often be restored from local cache. Anything that needs to write to the vault goes into the sync outbox when the network is down, then retries after the connection comes back.</p>
+<p>The UI also shows the real connection state. Obr pings the backend and updates the online/offline indicator based on actual requests, not just the browser’s guess. The tiny dot in the top-right corner is easy to ignore, but it answers the important question: did this reach my vault, or is it still waiting on this device?</p>
+<p>There are smaller mobile touches too. Images lazy-load so one article with several large screenshots does not clog the whole connection pool. Reading pages have a progress bar. The RSS detail page hides the top bar while scrolling. None of these are big features by themselves, but together they make the app feel much calmer on a phone.</p>
+<h2 id="Editing-one-block-at-a-time"><a href="#Editing-one-block-at-a-time" class="headerlink" title="Editing one block at a time"></a>Editing one block at a time</h2>
+<p>Obr can render Markdown as HTML, and it can also show the raw file content. But for mobile editing, I wanted something smaller than a full editor.</p>
+<p>Most of the time, I do not want to edit an entire article from my phone. I want to fix one sentence, delete one block, or check off one todo item. So Obr supports block-level editing. The backend splits a Markdown file into blocks, and the frontend can save or delete a single block without putting the whole document into a giant textarea.</p>
+<p>This matters more than it sounds. Long-form editing on a phone is fragile: the cursor jumps, the keyboard covers half the screen, and suddenly you are questioning your stupid choice on editing something on a phone. Block editing keeps the task small, I am not editing a document, I am editing this paragraph.</p>
+<h2 id="RSS-inside-the-vault-workflow"><a href="#RSS-inside-the-vault-workflow" class="headerlink" title="RSS inside the vault workflow"></a>RSS inside the vault workflow</h2>
+<p>Obweb had an RSS reader years ago, and I always missed it a little. Obr brings it back in a more complete form.</p>
+<p>When RSS is enabled, Obr reads feed subscriptions from a file in the vault:</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">rss_enabled = true
+rss_feeds_path = &quot;Zero/feeds.md&quot;
+rss_data_dir = &quot;data/rss&quot;
+rss_refresh_minutes = 30
+rss_fetch_full_content = true
+</code></pre>
+<p>RSS metadata and read state are stored in a local SQLite database. Article bodies are cached under <code>data/rss/content/</code>. If full-content fetching is enabled, Obr uses <code>rs-trafilatura</code> to extract the page body into Markdown. If extraction fails, it falls back to the feed content or summary.</p>
+<p><img src="http://catcoding.me/images/ob_e321f0b192c0dc63bfc0c4e7d523b9b2.jpg" alt="" /></p>
+<p>The RSS detail page also supports annotations. When I find a paragraph worth keeping, I can write a note beside it, and Obr saves that note as Markdown under <code>annotations/</code>.</p>
+<h2 id="AI-summaries-and-translation"><a href="#AI-summaries-and-translation" class="headerlink" title="AI summaries and translation"></a>AI summaries and translation</h2>
+<p>Once RSS was local, adding AI summaries felt like the obvious next step.</p>
+<p>Obr can generate Chinese summaries for newly fetched non-Chinese articles. It supports DeepSeek-based summary translation, and it can also translate the full text.</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">rss_ai_summary_enabled = true
+rss_ai_summary_chars = 200
+deepseek_api_key = &quot;sk-...&quot;
+deepseek_model = &quot;deepseek-v4-flash&quot;
+</code></pre>
+<p><img src="http://catcoding.me/images/ob_pasted-image-20260622202701.png" alt="" /></p>
+<h2 id="Security-has-to-be-part-of-the-design"><a href="#Security-has-to-be-part-of-the-design" class="headerlink" title="Security has to be part of the design"></a>Security has to be part of the design</h2>
+<p>Obr can read and write my Obsidian vault, so security comes first.</p>
+<p>At the moment it supports:</p>
+<ul>
+<li>Argon2 password hashing;</li>
+<li>WebAuthn / Passkey login;</li>
+<li>secure cookies when running over HTTPS;</li>
+<li>Host header validation;</li>
+<li><code>Origin</code> and <code>Sec-Fetch-Site</code> checks for cross-site write requests.</li>
+</ul>
+<p>Obr’s <code>init --tailscale</code> command starts a separate userspace <code>tailscaled</code>, stores its state in <code>$HOME/.local/share/tailscale-obr</code>, and exposes the local <code>127.0.0.1:8010</code> service through a stable <code>*.ts.net</code> HTTPS address.</p>
+<p>Tailscale can make the app reachable only inside my private network, which feels much better than putting it directly on the public Internet. The downside is that I need the Tailscale client and VPN running on my phone, and that conflicts with the VPN I normally use daily. So I do not always run Obr this way. Tailscale handles the secure device-to-device tunnel; Obr still handles login and authorization. Passkeys are a good fit for that on mobile.</p>
+<h2 id="A-few-implementation-notes"><a href="#A-few-implementation-notes" class="headerlink" title="A few implementation notes"></a>A few implementation notes</h2>
+<p>The backend is Rust + Axum. The frontend is plain HTML, CSS, and JavaScript, no frontend framework, no npm. I hate npm.</p>
+<p>Right now the project has about 15 Rust files, around 14,000 lines under <code>src/</code> including test files, and 7 frontend asset files.</p>
+<p>Most of my Mac development still happens with codex/gpt5.5, but a lot of Obr was built with hermes.</p>
+<p>The workflow is strange in a good way: I notice something annoying while using the app, send a voice message to Hermes, wait a few minutes, and then double check it after the AI agent restarts the service automatically.</p>
+<p>That may be the most interesting part of the project for me. Obr was not designed in a big upfront pass. It was shaped while I was using it, one small irritation at a time.</p>
+]]></content>
+  </entry>
   <entry>
     <title>ghr：把开源维护工作搬进终端</title>
     <link href="http://catcoding.me/p/ghr-dev/"/>
     <id>http://catcoding.me/p/ghr-dev/</id>
     <published>2026-05-08T00:44:46+00:00</published>
-    <updated>2026-06-18T01:47:24.599688786+00:00</updated>
+    <updated>2026-06-22T12:51:31.797498499+00:00</updated>
     <content type="html"><![CDATA[<p>五一期间我看到 dhh 发的一个帖子推荐 <a target="_blank" rel="noopener" href="https://x.com/dhh/status/2050105129085415576">GitHub TUI: ghui</a>，我安装试了一下，发现还需要安装 bun，另外功能看起来也不太够用。</p>
 <p>我也看过 <a target="_blank" rel="noopener" href="https://www.gh-dash.dev/">gh-dash</a>，这东西是 gh 的一个 extension，我试了一下同样感觉体验不好，于是手痒开始让 AI 帮我用 Rust 重新写一个。</p>
 <p>最近在工作中也写过一个 Rust 的 TUI 工具，感觉 Rust 的生态已经很成熟了，写起来也很顺手。于是就有了 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/ghr">ghr</a> 这个项目。</p>
@@ -49,7 +128,7 @@
     <link href="http://catcoding.me/p/githeron/"/>
     <id>http://catcoding.me/p/githeron/</id>
     <published>2026-05-01T13:08:26+00:00</published>
-    <updated>2026-06-18T01:47:24.599688786+00:00</updated>
+    <updated>2026-06-22T12:51:31.798498488+00:00</updated>
     <content type="html"><![CDATA[<p>最近写了一个 Chrome 插件，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/git-heron">GitHeron</a>。它想解决的问题很简单：</p>
 <blockquote>
 <p>Web highlights and clippings, synced to GitHub as Markdown.</p>
@@ -93,7 +172,7 @@
     <link href="http://catcoding.me/p/runnel-dev-notes/"/>
     <id>http://catcoding.me/p/runnel-dev-notes/</id>
     <published>2026-04-23T19:15:24+00:00</published>
-    <updated>2026-06-18T01:47:24.603688873+00:00</updated>
+    <updated>2026-06-22T12:51:31.804498426+00:00</updated>
     <content type="html"><![CDATA[<p>最近断断续续 Vibe Coding 写了一个小工具，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/runnel">Runnel</a>。因为我之前用的两个机场都跪了 (虽然后来又逐渐恢复了)，于是萌生了自己写个工具来翻墙的想法，顺便把一些网络相关的东西重新摸一遍。</p>
 <p>Runnel 有“小河流”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
 <p>先让 AI 快速撸了一个车 native-http 版本的，然后又加了多路复用的 native-mux 模式。后来又想到一个同事说他一直用自己写的代理工具叫做 <a target="_blank" rel="noopener" href="https://github.com/libraries/daze">daze</a>，所以立马让 AI 用 Rust 重写了一份跑了起来。</p>
@@ -208,7 +287,7 @@ wg          小请求大约 2500 req/s
     <link href="http://catcoding.me/p/apple-gatekeeper-scan/"/>
     <id>http://catcoding.me/p/apple-gatekeeper-scan/</id>
     <published>2026-02-12T16:55:52+00:00</published>
-    <updated>2026-06-18T01:47:24.597061065+00:00</updated>
+    <updated>2026-06-22T12:51:31.793498540+00:00</updated>
     <content type="html"><![CDATA[<p>今天跑 Rust 编译器测试的时候又发现非常地慢，CPU 资源根本无法利用起来，我记得几年前碰到过这个问题，当时我写了篇<a target="_blank" rel="noopener" href="https://catcoding.me/p/apple-perf/">文章</a>分享出来，并发现很多人都有同样的困扰。</p>
 <p>而我今天碰到的这个问题虽然现象一样，但解决方法又不同了。我不确定是 macOS 系统更新，亦或是我更新了 VS Code 造成的。</p>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2>
@@ -298,7 +377,7 @@ GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_B
     <link href="http://catcoding.me/p/hexo-rs/"/>
     <id>http://catcoding.me/p/hexo-rs/</id>
     <published>2026-01-30T23:00:00+00:00</published>
-    <updated>2026-06-18T01:47:24.599688786+00:00</updated>
+    <updated>2026-06-22T12:51:31.798498488+00:00</updated>
     <content type="html"><![CDATA[<p>月底升级了 Copilot Pro+，月初额度重置，这几天可以放开用，想到什么就 vibe 一把。</p>
 <p>我的博客跑在 Hexo 上很多年了。其实没什么大问题，就是每次看到那几百 MB 的 node_modules，心里总有点膈应——生成几百个静态 HTML，真的需要这么多依赖吗？但迁移到别的博客系统又懒得折腾，所以一直拖着。</p>
 <p>这次干脆试试：能不能用 AI 一个下午撸一个 Rust 版的 Hexo？我的目标比较简单：生成跟原来一样的静态文件，兼容我现在用的主题就行。</p>
@@ -352,7 +431,7 @@ GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_B
     <link href="http://catcoding.me/p/how-fiber-works/"/>
     <id>http://catcoding.me/p/how-fiber-works/</id>
     <published>2025-12-09T17:05:59+00:00</published>
-    <updated>2026-06-18T01:47:24.599688786+00:00</updated>
+    <updated>2026-06-22T12:51:31.798498488+00:00</updated>
     <content type="html"><![CDATA[<p>I just got back from CKCon in beautiful Chiang Mai 🌴, where I gave a talk on the Fiber Network. To help everyone wrap their heads around how Fiber (CKB’s Lightning Network) actually moves assets, I hacked a visual simulation with AI.</p>
 <p>To my surprise, people didn’t just understand it—they loved it! 🎉</p>
 <p>Here is the “too long; didn’t read” version. But first, go ahead and play with the dots yourself, 👉 <strong>Play the Simulation:</strong> <a target="_blank" rel="noopener" href="https://fiber-world.vercel.app/simulate.html">fiber-simulation</a></p>
@@ -401,7 +480,7 @@ GK evaluateScanResult: 2, PST: (path: 8d0e4c2de41c3e77), ... (bundle_id: NOT_A_B
     <link href="http://catcoding.me/p/llm-in-open-source/"/>
     <id>http://catcoding.me/p/llm-in-open-source/</id>
     <published>2025-11-26T10:15:38+00:00</published>
-    <updated>2026-06-18T01:47:24.600688808+00:00</updated>
+    <updated>2026-06-22T12:51:31.800498468+00:00</updated>
     <content type="html"><![CDATA[<p>越来越多的开发者开始使用 LLM 等 AI 工具，过去半年我看到不少相关讨论：有人非常反感使用 LLM 工具，有人保持中立，但确实有相当数量的 AI 生成 PR 给开源项目维护者带来了负担和困扰。</p>
 <p>现在出现了一些新苗头，比如 GitHub 账号也开始“养号”。我推测大概有以下几个原因：</p>
 <h3 id="为了加密货币空投"><a href="#为了加密货币空投" class="headerlink" title="为了加密货币空投"></a>为了加密货币空投</h3>
@@ -450,7 +529,7 @@ No LLMs for comments on the bug tracker, including translation.</p>
     <link href="http://catcoding.me/p/rust-in-cloudflare-incident/"/>
     <id>http://catcoding.me/p/rust-in-cloudflare-incident/</id>
     <published>2025-11-20T07:07:23+00:00</published>
-    <updated>2026-06-18T01:47:24.603688873+00:00</updated>
+    <updated>2026-06-22T12:51:31.804498426+00:00</updated>
     <content type="html"><![CDATA[<p>这两天都在讨论  Cloudflare 的安全事故  <a target="_blank" rel="noopener" href="https://blog.cloudflare.com/18-november-2025-outage/">Cloudflare outage on November 18, 2025</a>，我也写点自己的想法。</p>
 <p>这个事故当然引起的范围特别广，我当时正在用 ChatGPT，突然再打开总是提示正在加载，我还以为是自己的 VPN 出了问题，第二天起来才知道 Cloudflare 跪了好久。</p>
 <p>没多久 Cloudflare 就发出来了一个非常详细的事故说明。我对里面的场景非常熟悉，因为我之前因为类似的原因把大疆的大部分流量都给搞挂了，具体请看<a target="_blank" rel="noopener" href="https://catcoding.me/p/avoid-mistake/">谈谈工作中的犯错</a>中的配置错误。</p>
@@ -506,7 +585,7 @@ No LLMs for comments on the bug tracker, including translation.</p>
     <link href="http://catcoding.me/p/zero-knowledge-proof/"/>
     <id>http://catcoding.me/p/zero-knowledge-proof/</id>
     <published>2025-09-26T16:49:47+00:00</published>
-    <updated>2026-06-18T01:47:24.606688939+00:00</updated>
+    <updated>2026-06-22T12:51:31.809498375+00:00</updated>
     <content type="html"><![CDATA[<p>无论是在聊 L2、隐私还是下一代 Web 技术，零知识证明都是经常会碰到的技术术语，听起来就像是科幻小说里的东西：<strong>向你证明我知道一个秘密，但绝不透露这个秘密本身</strong>，这简直是程序员的终极浪漫。</p>
 <p>大多数人粗看都会觉得这东西是密码学博士们的专属玩具，我花了一段时间学习后，发现这条通往魔法世界的路似乎有迹可循，希望这篇入门介绍能帮助到更多这方向的学习者。</p>
 <h2 id="魔法洞穴"><a href="#魔法洞穴" class="headerlink" title="魔法洞穴"></a>魔法洞穴</h2>
@@ -838,7 +917,7 @@ No LLMs for comments on the bug tracker, including translation.</p>
     <link href="http://catcoding.me/p/riscv-vm/"/>
     <id>http://catcoding.me/p/riscv-vm/</id>
     <published>2025-09-23T00:54:14+00:00</published>
-    <updated>2026-06-18T01:47:24.603688873+00:00</updated>
+    <updated>2026-06-22T12:51:31.803498437+00:00</updated>
     <content type="html"><![CDATA[<p>I’ve always wanted to learn RISC-V. A few days ago, I finally got my hands dirty with it now.</p>
 <p>This post will guide you through the process of building a simple RISC-V VM from the ground up, using Rust as our implementation language.</p>
 <h2 id="Understanding-the-Core-Concepts"><a href="#Understanding-the-Core-Concepts" class="headerlink" title="Understanding the Core Concepts"></a>Understanding the Core Concepts</h2>
@@ -1188,7 +1267,7 @@ Disassembly of section .text._start:
     <link href="http://catcoding.me/p/rust-week-notes/"/>
     <id>http://catcoding.me/p/rust-week-notes/</id>
     <published>2025-06-11T10:23:14+00:00</published>
-    <updated>2026-06-18T01:47:24.603688873+00:00</updated>
+    <updated>2026-06-22T12:51:31.804498426+00:00</updated>
     <content type="html"><![CDATA[<p>5 月中旬我参加了在荷兰 Utrecht 举行的 Rust Week，想来可以写篇文章记录下所见所闻。</p>
 <p>我年初和 Rust 基金会邮件确认参加，但直到 4 月 9 日才开始动手申请签证。在深圳办理荷兰签证流程简单，只需提交材料并录指纹，但我嫌麻烦找了中介帮忙。据说大概也就两周多就会有结果，但直到五一查询还是没结果，中介说可以加 600 元加急。看到官网解释近期审批延迟，我便花钱加急，第二周拿到了签证。不知道这其中是否有猫腻，但确实有华为的朋友同样卡在那个节点审批，结果没有如期下来。</p>
 <p>从广州白云机场有直飞阿姆斯特丹的航班，只是起飞时间大概是凌晨 1 点多。飞机上座位空间狭小，难以入睡，趴着或躺着都不舒服，到了阿姆斯特丹是早晨 6 点多。通过海关后，我因不熟悉荷兰语而有些迷茫。由于未携带 Visa 卡，只能使用现金，幸好两位路人热心相助。我直接购买火车票前往 Utrecht，约于上午 10 点抵达酒店。因为时间还比较早没有空房，我把行李箱放在酒店自己去城里逛逛。</p>
@@ -1251,7 +1330,7 @@ Disassembly of section .text._start:
     <link href="http://catcoding.me/p/elliptic-curve/"/>
     <id>http://catcoding.me/p/elliptic-curve/</id>
     <published>2025-06-08T18:20:12+00:00</published>
-    <updated>2026-06-18T01:47:24.598688765+00:00</updated>
+    <updated>2026-06-22T12:51:31.796498509+00:00</updated>
     <content type="html"><![CDATA[<p>区块链这行经常会和椭圆曲线密码算法打交道，我也在尝试理解这其中的数学原理，这里记录一下。</p>
 <h2 id="什么是椭圆曲线-elliptic-curve"><a href="#什么是椭圆曲线-elliptic-curve" class="headerlink" title="什么是椭圆曲线 (elliptic curve)"></a>什么是椭圆曲线 (elliptic curve)</h2>
 <p>先想象一个普通的曲线，比如抛物线（抛个球的轨迹）。椭圆曲线不是椭圆（名字有点误导），而是一种长得像“对称小山丘”或者“歪歪扭扭的环”的数学图形。</p>
@@ -1368,7 +1447,7 @@ Disassembly of section .text._start:
     <link href="http://catcoding.me/p/future-size-perf/"/>
     <id>http://catcoding.me/p/future-size-perf/</id>
     <published>2025-03-24T10:21:03+00:00</published>
-    <updated>2026-06-18T01:47:24.599688786+00:00</updated>
+    <updated>2026-06-22T12:51:31.797498499+00:00</updated>
     <content type="html"><![CDATA[<p>在 Rust 异步编程中，有一种观点认为：<strong>Future 的大小显著影响性能</strong>。你是否怀疑过这个说法的真实性？如果是真的，这种性能差异的根源又是什么？今天，我翻阅了一些源码，并编写实验代码来一探究竟。</p>
 <h2 id="Future-的大小如何计算？"><a href="#Future-的大小如何计算？" class="headerlink" title="Future 的大小如何计算？"></a>Future 的大小如何计算？</h2>
 <p>为了验证“Future 大小影响性能”这一说法是否成立，我们先从一些简单代码入手。首要任务是弄清楚一个 Future 的大小是如何确定的。毕竟，在编译器眼里，Future 只是一个 trait：</p>
@@ -1598,7 +1677,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/fiber-network-on-ckb/"/>
     <id>http://catcoding.me/p/fiber-network-on-ckb/</id>
     <published>2025-03-16T08:53:04+00:00</published>
-    <updated>2026-06-18T01:47:24.598688765+00:00</updated>
+    <updated>2026-06-22T12:51:31.797498499+00:00</updated>
     <content type="html"><![CDATA[<p>最近一年我在做 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/fiber">Fiber Network</a> 这个新的开源项目，上个月底刚好<a target="_blank" rel="noopener" href="https://x.com/FiberDevs/status/1895486339505893880">主网第一个版本发布</a>：</p>
 <p><img src="http://catcoding.me/images/ob_pasted-image-20250316084708.png" alt="" /></p>
 <p>这个项目的挑战还是挺大的，上主网只是一个新的开始。我在开发过程中学到了很多东西，这是我前段时间写的一篇关于 Fiber 的大致介绍。</p>
@@ -1694,7 +1773,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/2024-summary/"/>
     <id>http://catcoding.me/p/2024-summary/</id>
     <published>2025-01-01T00:03:41+00:00</published>
-    <updated>2026-06-18T01:47:24.597061065+00:00</updated>
+    <updated>2026-06-22T12:51:31.793212384+00:00</updated>
     <content type="html"><![CDATA[<p>2024 年快结束了，在这最后的一两个小时里我写着这篇年终总结准备跨年了，顺着大致时间线来回顾一下就好了。</p>
 <p>年初就起了个好头，众多加密货币开始上涨。总体而言，2024 年是个加密货币和区块链的大年。有那么一小段时间我每天都在关注涨跌，渐渐地我发现这个领域涨跌都是太频繁了，而过多关注除了浪费时间并没有什么大的用处。因为两年前开始在这个领域工作，所以我自然也会投资一些加密货币。刚开始我稍微接触了一下合约，但很快亏掉了几千元，算是交了学费。然后很快理智地退出了，合约本质上来说和赌博有点类似，钱来得也快亏得也快，但大概率是要亏钱的。</p>
 <p>我听从了一些行业老鸟的建议，拿住比特币就行，其他的看着买点。我从 2023 年开始陆续买入了一些比特币，当时的价格不算高，到今年年底看来也有不少涨幅了。我抱着长期拿住的心态在买入，打算至少持有八九年以上。所以现在我基本不怎么关心价格了，如果买了就当作这钱是存在那里好了，把时间幅度拉长，我相信比特币未来会更值钱。我愿意相信这个行业是因为从技术的角度考虑是即有趣又有挑战。这两年来我工作的项目和比特币是非常类似的，就当作为信仰充值。</p>
@@ -1722,7 +1801,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/ckb-new-verify/"/>
     <id>http://catcoding.me/p/ckb-new-verify/</id>
     <published>2024-11-07T12:03:24+00:00</published>
-    <updated>2026-06-18T01:47:24.597688743+00:00</updated>
+    <updated>2026-06-22T12:51:31.795498519+00:00</updated>
     <content type="html"><![CDATA[<p>CKB 相关技术文章第三篇。</p>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2>
 <p>CKB 的每一个交易在提交到交易池之前都会经过一个 script verification 的过程，本质上就是通过 CKB-VM 把交易里的 script 跑一遍，如果失败了则直接 reject，如果通过了才会继续后面的流程。</p>
@@ -1778,7 +1857,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/ckb-rbf/"/>
     <id>http://catcoding.me/p/ckb-rbf/</id>
     <published>2024-11-06T11:55:13+00:00</published>
-    <updated>2026-06-18T01:47:24.597688743+00:00</updated>
+    <updated>2026-06-22T12:51:31.795498519+00:00</updated>
     <content type="html"><![CDATA[<p>CKB 相关技术文章第二篇。</p>
 <h2 id="Replace-by-fee"><a href="#Replace-by-fee" class="headerlink" title="Replace by fee"></a>Replace by fee</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3>
 <p>如果一个交易成功发送到交易池，但可能出现因为费用较低而一直得不到处理。之前 CKB 没有其他措施来处理这种情况。</p>
@@ -1827,7 +1906,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/ckb-txpool-refactor/"/>
     <id>http://catcoding.me/p/ckb-txpool-refactor/</id>
     <published>2024-11-06T11:39:21+00:00</published>
-    <updated>2026-06-18T01:47:24.597688743+00:00</updated>
+    <updated>2026-06-22T12:51:31.795498519+00:00</updated>
     <content type="html"><![CDATA[<p>在 11.9 号清迈的 <a target="_blank" rel="noopener" href="https://share.foresightnews.pro/article/detail/70811">CKCON</a> 会议上我会做一个关于 CKB 交易池的演讲，这是我准备的 slides <a target="_blank" rel="noopener" href="https://ckb-tx-pool.vercel.app/1">Key Upgrades of the CKB Core</a> 。所以这段时间在整理之前做项目的时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，这些文档其实也是可以分享的。</p>
 <p>第一次听说 CKB 的读者可以参考这个文档以了解什么是 CKB 以及如何工作的：<a target="_blank" rel="noopener" href="https://docs.nervos.org/docs/getting-started/how-ckb-works">How CKB Works | Nervos CKB</a>。</p>
 <p>我加入 Cryptape 之后一年内做的主要工作，涉及到交易池重构、Replace-by-fee 功能、以及 new-verify。这是第一篇关于交易池重构的文章。</p>
@@ -1929,7 +2008,7 @@ Huge Large Future (100KB): 191.44x slower
     <link href="http://catcoding.me/p/xz-backdoor/"/>
     <id>http://catcoding.me/p/xz-backdoor/</id>
     <published>2024-04-04T18:04:33+00:00</published>
-    <updated>2026-06-18T01:47:24.606688939+00:00</updated>
+    <updated>2026-06-22T12:51:31.809498375+00:00</updated>
     <content type="html"><![CDATA[<p>写写最近一周的大瓜 xz-backdoor，该事件可能成为开源供应链安全的一个分水岭，从技术角度看，这里面的社工和混淆也是精彩。</p>
 <p>简单介绍一下背景，xz 是一个开源的无损压缩工具，在出事之前可能很少有人注意到这个压缩库使用如此之广，几乎任何一个 Unix-Like 的操作系统里面都有 xz-utils。在两年多的时间里，一个名为 <code>Jia Tan</code> 的程序员勤奋而高效地给 xz 项目做贡献，最终获得了该项目的直接提交权和维护权。之后他在 libzma 中加入了一个非常隐蔽的后门，该后门可以让攻击者在 SSH 会话开始时发送隐藏命令，使攻击者能够跳过鉴权远程执行命令。</p>
 <p><a target="_blank" rel="noopener" href="https://research.swtch.com/xz-timeline#jia_tan_arrives_on_scene_with_supporting_cast">Timeline of the xz open source attack</a> 总结了该事件的主要时间点，这里我挑一些关键节点：</p>
@@ -1990,75 +2069,6 @@ Huge Large Future (100KB): 191.44x slower
 <p><img src="http://catcoding.me/images/ob_pasted-image-20240403135349.png" alt="" /></p>
 <p>从这个角度看，人类数字基础设施这艘巨轮其实建立在非常脆弱的基础上，说不定哪天一个地方就裂开了。我现在养成了一个习惯，升级从来不追新，任何安装到自己电脑上的二进制都小心翼翼。</p>
 <p>这个世界上有无数的恶魔，也会有一些英雄和吹哨人，致敬 Andres Freund。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>从明天起，做一个 Rust 程序员</title>
-    <link href="http://catcoding.me/p/rust-bootcamp/"/>
-    <id>http://catcoding.me/p/rust-bootcamp/</id>
-    <published>2024-03-18T16:28:13+00:00</published>
-    <updated>2026-06-18T01:47:24.603688873+00:00</updated>
-    <content type="html"><![CDATA[<p>3 月是怀念海子的月份：</p>
-<blockquote>
-<p>从明天起，做一个 Rust 程序员，喂马、劈柴，周游世界。</p>
-</blockquote>
-<p>10 年前我开始写第一行 Rust 程序，到如今全职远程做 Rust 开源项目，也许我真能去过喂马劈柴周游世界了😆。但回想自己的学习旅程，其中有各种曲折有几度放弃的时候，如果你也想学习或者提高 Rust 方面的技能，我这篇文章里有一条更容易的路。</p>
-<h2 id="为什么学习-Rust"><a href="#为什么学习-Rust" class="headerlink" title="为什么学习 Rust"></a>为什么学习 Rust</h2>
-<p>Rust 1.0 发布已经快 10 年，所以并不是一门新编程语言了，从发展的角度来看 Rust 已经度过了生存期，并进入了迅速发展的阶段。从目前可见的业界方向来说，Rust 主要在以下几个方面取得了成功：</p>
-<ul>
-<li>在基础软件领域成为有力竞争者
-<ul>
-<li>大量开源的 Rust <a target="_blank" rel="noopener" href="https://github.com/sts10/rust-command-line-utilities">命令行工具</a>和开发库，如果你使用 Python，可以通过  <a target="_blank" rel="noopener" href="https://pyo3.rs/v0.21.0-beta.0/">PyO3</a> 用 Rust 来写对性能要求更高的模块，还出现了 <a target="_blank" rel="noopener" href="https://github.com/apache/opendal">opendal</a> 这样优秀的基础库</li>
-<li>Cloudflare 使用 Rust 开发新的网关 <a target="_blank" rel="noopener" href="https://blog.cloudflare.com/pingora-open-source">Pingora</a></li>
-<li>开源数据库实现，比如 <a target="_blank" rel="noopener" href="https://qdrant.tech/">Qdrant</a>、 <a target="_blank" rel="noopener" href="https://risingwave.com/">RisingWave</a>、<a target="_blank" rel="noopener" href="https://github.com/datafuselabs/databend">databend</a></li>
-<li>AI 方面参考 <a target="_blank" rel="noopener" href="https://www.arewelearningyet.com/">Are we learning yet</a>，虽然 Rust ML 生态系统还很年轻并处于试验阶段，但已经出现了一些雄心勃勃的项目和模块，Hugging Face 开源了 <a target="_blank" rel="noopener" href="https://github.com/huggingface/candle">candle</a>机器学习框架</li>
-</ul>
-</li>
-<li>前端的基础设施
-<ul>
-<li>Rust 在前端领域发展迅速，Rust 是 WebAssembly 支持最好的编程语言，不少 Runtime 都是 Rust 实现的，比如 Wasmer</li>
-<li>大量前端基础工具在使用 Rust 重新实现，比如 <a target="_blank" rel="noopener" href="https://www.rspack.dev/">Rspack</a>、<a target="_blank" rel="noopener" href="https://vercel.com/blog/turbopack">Turbopack</a>、前几天又出现了 <a target="_blank" rel="noopener" href="https://github.com/rolldown/rolldown">rolldown</a>，<a target="_blank" rel="noopener" href="https://leerob.io/blog/rust">Rust Is The Future of JavaScript Infrastructure</a>似乎已经成为共识</li>
-</ul>
-</li>
-<li>操作系统
-<ul>
-<li>Windows 开始使用 Rust 开发一些核心组件</li>
-<li>Rust 开始进入 Linux 内核，使得使用 Rust 开发 Linux module 成为可能</li>
-<li>Andriod 使用 Rust 开发更多组件，并有效减少了内存方面的漏洞，他们发布的 <a target="_blank" rel="noopener" href="https://google.github.io/comprehensive-rust/">Comprehensive Rust</a>是一个很好的学习资料。Google 开始尝到 Rust 的好处，并开始投入更多资金和人力，近期 <a target="_blank" rel="noopener" href="https://security.googleblog.com/2024/02/improving-interoperability-between-rust-and-c.html">Google 打算捐献 100 万美金给 Rust 基金会</a>着重解决 Rust 和 C++ 的互操作性</li>
-</ul>
-</li>
-<li>区块链领域
-<ul>
-<li>以我在这个领域工作一件多的经验来说，Rust 成为了区块链领域的标配，基本区块链相关的工作岗位 Rust 技能是一个极大的加分项</li>
-<li>大量公链使用 Rust 来开发</li>
-</ul>
-</li>
-<li>游戏开发，参考 <a target="_blank" rel="noopener" href="https://arewegameyet.rs/">Are we game yet?</a>，目前已经有成熟的游戏开发框架 <a target="_blank" rel="noopener" href="https://bevyengine.org/">Bevy Engine</a></li>
-</ul>
-<p>如果你对 Rust 的发展情况感兴趣，可以参考 <a target="_blank" rel="noopener" href="https://blog.rust-lang.org/2024/02/19/2023-Rust-Annual-Survey-2023-results.html">2023 Annual Rust Survey Results</a>。在内卷的 IT 市场，作为程序员选择一门小众的编程语言是避免过度竞争的方式，我之前介绍过其他人的类似经验，我们称之为 <a target="_blank" rel="noopener" href="https://catcoding.me/p/weekly-13/">The Niche Programmer</a>。Rust 还未成为主流编程语言，但潜力和发展空间很大，而门槛相对其他语言比较高，所以我认为从求职的角度来考虑是值得一试的。</p>
-<p>之前提到 Google 投入更多的资金在 Rust 上面，钱进来后相关的职位就出来了 <a target="_blank" rel="noopener" href="https://foundation.rust-lang.org/careers/">C++/Rust Interop Initiative Software Engineer Lead</a>。</p>
-<h2 id="我学习-Rust-的体会"><a href="#我学习-Rust-的体会" class="headerlink" title="我学习 Rust 的体会"></a>我学习 Rust 的体会</h2>
-<p>我 2014 年时践行每年学习一门新的编程语言，Rust 作为一门新的编程语言进入了我的视野。我开始使用  Rust 写些简单的个人学习项目，然后我继续做了 <a target="_blank" rel="noopener" href="https://exercism.org/tracks/rust/exercises">Rust exercises</a> 。</p>
-<p>后续几年我偶尔看看 Rust 相关的新闻和项目，时不时动手写点代码都会有点磕磕碰碰。直到四年前开始在 Github 上给一些 Rust 开源项目贡献，两年前开始给 Rust 编译器做贡献，一年前开始全职从事 Rust 区块链相关的工作。</p>
-<p>从技术角度来说，Rust 非常有趣，这里面包含了近些年程序设计方面的一些良好实践。全职写 Rust 程序这一年多是我开发体验最好的阶段，当然有时候我们需要和编译器斗智斗勇、做类型体操，但很多问题在开发阶段给规避掉了。</p>
-<p>Rust 的最大问题还是在于学习门槛相对较高，因为在 Rust 中程序员接触最多的  <code>=</code> 语义都变了。从我个人体验来说，在学会了 Rust 语法后会陷入一个瓶颈，如果日常工作中不使用 Rust，就没有多少机会去实践，另外不知道做一些什么项目。</p>
-<p>我相信很多人同样如此，看了官方 tutorial 之后不知道如何下手，我想如果有一个经验丰富的老师带，会少走很多弯路，这就是我要介绍的极客时间训练营要解决的问题。</p>
-<p><img src="http://catcoding.me/images/ob_pasted-image-20240316231547.png" alt="" /></p>
-<h2 id="极客时间-Rust-训练营"><a href="#极客时间-Rust-训练营" class="headerlink" title="极客时间 Rust 训练营"></a>极客时间 Rust 训练营</h2>
-<p>说起来我与这个训练营还有些渊源。</p>
-<p>当极客时间在筹划这个 Rust 训练营的时候，策划人员找到过我问我是否有意愿当这个课程的讲师。我还稍微犹豫了一下，因为我之前也想过如何在 Rust 领域做更多的分享，我很羡慕优秀的技术分享者比如 <a target="_blank" rel="noopener" href="https://www.youtube.com/@jonhoo">Jon Gjengset</a>能够非常自如地通过视频分享 Rust 方面的技术。当老师当然是个机会能从沟通和表达方面提高这方面的能力。</p>
-<p>后来考虑到自己时间方面安排不过来，我有全职工作、有业余的 Rust 社区工作、还有三个小孩，所以我应该真没时间去录制课程了，而且他们已经找到了我认为最合适的讲师：</p>
-<p><img src="http://catcoding.me/images/ob_pasted-image-20240316223445.png" alt="" /></p>
-<p>我看了这个项目的大纲，陈天老师希望可以教大家怎么用 Rust 比较简单的语法和技巧，来完成 80% 的日常工作，主要是通过各种实践项目来学习，这也是我最推崇的 Learn by doing 的方式。</p>
-<p>有很多主题我都没怎么接触过，比如构建一个 ChatGPT 的应用、比如跨平台 GUI 之类的，所以我对这个课程很感兴趣，然后我和策划说能不能做这个项目的助教，后来沟通下来发现当助教也需要不少时间的，所以就没机会参与到具体的教学里面了。</p>
-<p><img src="http://catcoding.me/images/ob_pasted-image-20240316231751.png" alt="" /></p>
-<p>总之，这个项目对于想学习 Rust 或者已经有一定 Rust 经验，但想获得更多实践经历的人是非常合适的。在和极客时间的相关人员沟通的过程中，我发现他们做事情很用心，这个训练营的课程质量我认为是有保证的。</p>
-<p>这个训练营一共是 15 周的课程安排，其中每周都会有明确的项目安排，课后还有助教答疑。关于训练营的更多信息请参考：<a target="_blank" rel="noopener" href="https://u.geekbang.org/subject/rust">极客时间训练营-Rust 训练营</a></p>
-<p><img src="http://catcoding.me/images/ob_rust-boot-20240318164451.png" alt="" /></p>
-<h2 id="我与陈天老师的小故事"><a href="#我与陈天老师的小故事" class="headerlink" title="我与陈天老师的小故事"></a>我与陈天老师的小故事</h2>
-<p>我最早知道陈天是他写的公众号《程序人生》，他是那种技术和文笔都非常棒的程序员，非常难得。我还看过他的 B 站上的技术讲解视频，他的演讲和分享都很流畅。陈天是极客时间《陈天 · Rust 编程第一课》专栏作者，已有 2.3w 人学过，广受好评。技术能力、演讲表达、对技术的热情这些都是讲师最重要的素质要求，所以陈天是这个训练营最好的讲师人选。</p>
-<p>再分享一个小故事，我一年多前跳槽的时候还有些犹豫，因为自己的职业规划方面有些困惑，所以想找些人聊聊。当时我突然想到陈天之前从事过区块链方面的创业，后来从里面退出来了，所以我就想向他咨询一下。我没有他的联系方式，但灵机一动我想到了从 Git 的提交记录里面找 Email，然后抱着试一试的想法给他发了个邮件说明了自己的情况和困惑。没想到他很快给我回复了，并很详细地告诉我他对于区块链的想法，还有如何判断自己是否适合一个公司，通过各种途径了解公司的相关产品来作为决策的依据等等。</p>
-<p>我作为一个陌生人，陈天老师都会乐于给与指导和帮助，可见为人真的很好。还没能有幸和陈天老师现实中有所交流，我本来想用当助教的机会和陈天老师多学习，但时间方面安排不过来了。希望大家能在老师的的训练营学到知识、经验、还有探索技术的乐趣！</p>
 ]]></content>
   </entry>
 </feed>

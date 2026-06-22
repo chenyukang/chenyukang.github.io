@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="CatCoding">
+  <meta property="og:title" content="Obr: a Web UI for My Obsidian Vault | CatCoding" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
+
+  <script>
+    (function() {
+      try {
+        localStorage.removeItem('catcoding-theme');
+      } catch (e) {}
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = prefersDark ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.style.colorScheme = theme;
+    })();
+  </script>
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css?v=20260526-project-strip-3">
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    Obr: a Web UI for My Obsidian Vault |
+    CatCoding
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>CatCoding</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/ideas/" class="item-link">Ideas</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+
+       <li class="list-item theme-toggle-item">
+        <button class="icon-small theme-toggle" type="button" aria-label="切换暗黑模式" title="切换暗黑模式">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-adjust fa-stack-1x fa-inverse" aria-hidden="true"></i>
+          </span>
+        </button>
+       </li>
+    </ul>
+
+    <button class="icon-small theme-toggle theme-toggle-mobile" type="button" aria-label="切换暗黑模式" title="切换暗黑模式">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-adjust fa-stack-1x fa-inverse" aria-hidden="true"></i>
+      </span>
+    </button>
+
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/ideas/" class="menu-link">Ideas</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/links/" class="menu-link">Links</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    
+<div id="article-banner">
+  <h2>Obr: a Web UI for My Obsidian Vault</h2>
+  <p class="post-date">2026-06-22</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+<main class="app-body flex-box">
+
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>A few years ago I built a tiny personal tool called <a target="_blank" rel="noopener" href="https://github.com/chenyukang/obweb">Obweb</a>. Its purpose was dead simple: open a browser, type a quick thought, and append it to my Obsidian notes.</p>
+<p>Then one day the VPS was shutdown for some reasons, I need to redeploy it on another VPS and it involve some extra boring stuff, such as rebind a sub-domain and configing on VPS. I’m too lazy for this. Obweb slowly became unmaintained since it was developed in JavaScript when I tried to pick some frontend stuff, and I hate JavaScript, luckly, I don’t need to learn it since AI is good at frontend.</p>
+<p>I tried going back to the official Obsidian Android app one year ago, but it still felt too heavy for the thing I wanted most: fast capture. It takes too long to open, slow to respond, and I remember Termux is needed for some automatic tasks. I just don’t like it. I am clearly not the only one who feels this way, because I still randomly get emails from people asking about Obweb.</p>
+<p>Recently I read an article about <a target="_blank" rel="noopener" href="https://blog.ppb1701.com/self-hosting-vaultwarden-taking-back-password-management-part-8-of-building-a-resilient-home-serve">self-hosting Bitwarden with Tailscale</a>. That reminded me that Obweb was almost made for this style of deployment. It does not need to live on a VPS. It can just run on my local dev machine, reachable from my own devices, without a public-domain, a nginx or another server to babysit.</p>
+<p>So I rewrote it, in the vibe coding way. The new app is called <a target="_blank" rel="noopener" href="https://github.com/chenyukang/obr">Obr</a>.</p>
+<p>Obr is very much a tool shaped around my own workflow. But I think that is also what makes it worth writing about: small personal tools are often where the most honest product decisions happen.</p>
+<hr />
+<p>The basic idea is straightforward. Obr puts a lightweight Web interface in front of an Obsidian vault, with search, capture, and editing for the parts I use most often.</p>
+<p>Its config points at a few vault-relative paths:</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">vault_path = &quot;/path/to/obsidian/vault&quot;
+daily_dir = &quot;Daily&quot;
+entry_dir = &quot;Posts&quot;
+image_dir = &quot;Pics&quot;
+todo_path = &quot;Posts/todo.md&quot;
+annotation_dir = &quot;annotations&quot;
+</code></pre>
+<p>Daily notes go into <code>Daily/YYYY-MM-DD.md</code>, Images live under <code>Pics/</code>. RSS annotations are just Markdown files under <code>annotations/</code>. Obr does not try to invent a new storage model. It stays close to the vault.</p>
+<h2 id="Capture-comes-first"><a href="#Capture-comes-first" class="headerlink" title="Capture comes first"></a>Capture comes first</h2>
+<p>The original reason for Obr was capture.</p>
+<p>On my phone, I want to open a page, write a few lines, pick a path, optionally attach a link or image, and submit. The backend appends the content to the right Markdown file. A daily note goes into today’s file. A regular entry goes under the configured entry directory. A todo goes into the todo file. By the way, I have found Hermes is also good fit for this kind of thing with  proper training.</p>
+<p>Image uploading is the one part that needs a little more care. Uploading through Tailscale is not always fast, and mobile networks are not exactly famous for being polite. So Obr has offline drafts and a sync outbox. If a request fails, the note should not disappear. It should sit locally and retry quietly in the background.</p>
+<p>That is the kind of feature that sounds boring until the first time it saves a paragraph you wrote on the subway.</p>
+<p><img src="/images/ob_635f0d6d5fc60528afc8c5892738a70c.jpg" alt="" /></p>
+<h2 id="Making-it-feel-less-like-a-Web-page"><a href="#Making-it-feel-less-like-a-Web-page" class="headerlink" title="Making it feel less like a Web page"></a>Making it feel less like a Web page</h2>
+<p>I use Chrome’s “Add to Home screen” to put Obr on my phone as an app icon, and I allow it to keep running in the background. That alone makes the whole thing feel much closer to a small mobile app than a web page I occasionally visit.</p>
+<p>Under the hood, Obr uses a service worker and a manifest. The shell of the app, along with its CSS and JavaScript, can be cached locally. If the phone is offline, the app can still open, and recently viewed or edited content can often be restored from local cache. Anything that needs to write to the vault goes into the sync outbox when the network is down, then retries after the connection comes back.</p>
+<p>The UI also shows the real connection state. Obr pings the backend and updates the online/offline indicator based on actual requests, not just the browser’s guess. The tiny dot in the top-right corner is easy to ignore, but it answers the important question: did this reach my vault, or is it still waiting on this device?</p>
+<p>There are smaller mobile touches too. Images lazy-load so one article with several large screenshots does not clog the whole connection pool. Reading pages have a progress bar. The RSS detail page hides the top bar while scrolling. None of these are big features by themselves, but together they make the app feel much calmer on a phone.</p>
+<h2 id="Editing-one-block-at-a-time"><a href="#Editing-one-block-at-a-time" class="headerlink" title="Editing one block at a time"></a>Editing one block at a time</h2>
+<p>Obr can render Markdown as HTML, and it can also show the raw file content. But for mobile editing, I wanted something smaller than a full editor.</p>
+<p>Most of the time, I do not want to edit an entire article from my phone. I want to fix one sentence, delete one block, or check off one todo item. So Obr supports block-level editing. The backend splits a Markdown file into blocks, and the frontend can save or delete a single block without putting the whole document into a giant textarea.</p>
+<p>This matters more than it sounds. Long-form editing on a phone is fragile: the cursor jumps, the keyboard covers half the screen, and suddenly you are questioning your stupid choice on editing something on a phone. Block editing keeps the task small, I am not editing a document, I am editing this paragraph.</p>
+<h2 id="RSS-inside-the-vault-workflow"><a href="#RSS-inside-the-vault-workflow" class="headerlink" title="RSS inside the vault workflow"></a>RSS inside the vault workflow</h2>
+<p>Obweb had an RSS reader years ago, and I always missed it a little. Obr brings it back in a more complete form.</p>
+<p>When RSS is enabled, Obr reads feed subscriptions from a file in the vault:</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">rss_enabled = true
+rss_feeds_path = &quot;Zero/feeds.md&quot;
+rss_data_dir = &quot;data/rss&quot;
+rss_refresh_minutes = 30
+rss_fetch_full_content = true
+</code></pre>
+<p>RSS metadata and read state are stored in a local SQLite database. Article bodies are cached under <code>data/rss/content/</code>. If full-content fetching is enabled, Obr uses <code>rs-trafilatura</code> to extract the page body into Markdown. If extraction fails, it falls back to the feed content or summary.</p>
+<p><img src="/images/ob_e321f0b192c0dc63bfc0c4e7d523b9b2.jpg" alt="" /></p>
+<p>The RSS detail page also supports annotations. When I find a paragraph worth keeping, I can write a note beside it, and Obr saves that note as Markdown under <code>annotations/</code>.</p>
+<h2 id="AI-summaries-and-translation"><a href="#AI-summaries-and-translation" class="headerlink" title="AI summaries and translation"></a>AI summaries and translation</h2>
+<p>Once RSS was local, adding AI summaries felt like the obvious next step.</p>
+<p>Obr can generate Chinese summaries for newly fetched non-Chinese articles. It supports DeepSeek-based summary translation, and it can also translate the full text.</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">rss_ai_summary_enabled = true
+rss_ai_summary_chars = 200
+deepseek_api_key = &quot;sk-...&quot;
+deepseek_model = &quot;deepseek-v4-flash&quot;
+</code></pre>
+<p><img src="/images/ob_pasted-image-20260622202701.png" alt="" /></p>
+<h2 id="Security-has-to-be-part-of-the-design"><a href="#Security-has-to-be-part-of-the-design" class="headerlink" title="Security has to be part of the design"></a>Security has to be part of the design</h2>
+<p>Obr can read and write my Obsidian vault, so security comes first.</p>
+<p>At the moment it supports:</p>
+<ul>
+<li>Argon2 password hashing;</li>
+<li>WebAuthn / Passkey login;</li>
+<li>secure cookies when running over HTTPS;</li>
+<li>Host header validation;</li>
+<li><code>Origin</code> and <code>Sec-Fetch-Site</code> checks for cross-site write requests.</li>
+</ul>
+<p>Obr’s <code>init --tailscale</code> command starts a separate userspace <code>tailscaled</code>, stores its state in <code>$HOME/.local/share/tailscale-obr</code>, and exposes the local <code>127.0.0.1:8010</code> service through a stable <code>*.ts.net</code> HTTPS address.</p>
+<p>Tailscale can make the app reachable only inside my private network, which feels much better than putting it directly on the public Internet. The downside is that I need the Tailscale client and VPN running on my phone, and that conflicts with the VPN I normally use daily. So I do not always run Obr this way. Tailscale handles the secure device-to-device tunnel; Obr still handles login and authorization. Passkeys are a good fit for that on mobile.</p>
+<h2 id="A-few-implementation-notes"><a href="#A-few-implementation-notes" class="headerlink" title="A few implementation notes"></a>A few implementation notes</h2>
+<p>The backend is Rust + Axum. The frontend is plain HTML, CSS, and JavaScript, no frontend framework, no npm. I hate npm.</p>
+<p>Right now the project has about 15 Rust files, around 14,000 lines under <code>src/</code> including test files, and 7 frontend asset files.</p>
+<p>Most of my Mac development still happens with codex/gpt5.5, but a lot of Obr was built with hermes.</p>
+<p>The workflow is strange in a good way: I notice something annoying while using the app, send a voice message to Hermes, wait a few minutes, and then double check it after the AI agent restarts the service automatically.</p>
+<p>That may be the most interesting part of the project for me. Obr was not designed in a big upfront pass. It was shaped while I was using it, one small irritation at a time.</p>
+</section>
+
+    <p></p>
+
+  
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Rust" >
+    <span class="tag-code">Rust</span>
+  </a>
+
+  <a href="/tags#Obsidian" >
+    <span class="tag-code">Obsidian</span>
+  </a>
+
+  <a href="/tags#Tool" >
+    <span class="tag-code">Tool</span>
+  </a>
+
+
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/ghr-dev/">
+        <span class="nav-arrow">← </span>
+        
+          ghr：把开源维护工作搬进终端
+        
+      </a>
+    
+    
+  </div>
+
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <div id="utterances-comments"></div>
+    <script>
+      (function() {
+        var theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'github-dark' : 'github-light';
+        var script = document.createElement('script');
+        script.src = 'https://utteranc.es/client.js';
+        script.setAttribute('repo', 'chenyukang/chenyukang.github.io');
+        script.setAttribute('issue-term', 'pathname');
+        script.setAttribute('theme', theme);
+        script.setAttribute('crossorigin', 'anonymous');
+        script.async = true;
+        document.getElementById('utterances-comments').appendChild(script);
+      })();
+    </script>
+  
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc toc-nav"><li class="toc-item toc-level-2"><a class="toc-link" href="#Capture-comes-first"><span class="toc-text">Capture comes first</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Making-it-feel-less-like-a-Web-page"><span class="toc-text">Making it feel less like a Web page</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Editing-one-block-at-a-time"><span class="toc-text">Editing one block at a time</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RSS-inside-the-vault-workflow"><span class="toc-text">RSS inside the vault workflow</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AI-summaries-and-translation"><span class="toc-text">AI summaries and translation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Security-has-to-be-part-of-the-design"><span class="toc-text">Security has to be part of the design</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A-few-implementation-notes"><span class="toc-text">A few implementation notes</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me//p/obr-intro/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW * 3 / 4}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script src="/js/script.js?v=20260526-theme-icon"></script>
+
+  </body>
+</html>
