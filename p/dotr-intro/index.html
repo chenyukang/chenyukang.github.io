@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  
+  
+    
+  
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="All about coding and writing">
+  <meta name="keyword" content="Programming, Programming Languages, Algorithms, Tools">
+  <meta property="og:site_name" content="CatCoding">
+  <meta property="og:title" content="Dotr: 一个简单的配置备份工具 | CatCoding" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content=" http://catcoding.me/css/images/logo.png " />
+  <link rel="alternate" type="application/rss+xml" title="CatCoding; Feed" href="https://catcoding.me/atom.xml" />
+
+  <script>
+    (function() {
+      try {
+        localStorage.removeItem('catcoding-theme');
+      } catch (e) {}
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = prefersDark ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.style.colorScheme = theme;
+    })();
+  </script>
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+<link rel="stylesheet" href="/css/plugins/fonts.css">
+<link rel="stylesheet" href="/css/plugins/code.css">
+<link rel="stylesheet" href="/css/plugins/prism.css">
+<link rel="stylesheet" href="/css/plugins/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css?v=20260622-article-left-align">
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/geopattern.min.js"></script>
+<script src="/js/nprogress.min.js"></script>
+
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+  <title>
+    
+    Dotr: 一个简单的配置备份工具 |
+    CatCoding
+    
+  </title>
+
+  <div style='margin:0 auto;width:0px;height:0px;overflow:hidden;'>
+    <img src="/css/images/logo.png" width='400px' height='400px' />
+  </div>
+
+  
+
+<script defer src="https://cloud.umami.is/script.js" data-website-id="9767b9c8-6554-4673-af8c-2d22e00617aa"></script>
+</head>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>CatCoding</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/ideas/" class="item-link">Ideas</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/links/" class="item-link">Links</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+
+        <li class="list-item" style="margin: 0">
+       <a class="icon-small" href="/search">
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-search fa-stack-1x fa-inverse" style="color:#8ccb8c"></i>
+        </span>
+       </a>
+      </li>
+
+       <li class="list-item" style="margin-left: 3px">
+        <a class="icon-small" href="/atom.xml">
+         <span class="fa-stack fa-lg">
+           <i class="fa fa-rss fa-inverse" style="color:orange"></i>
+         </span>
+        </a>
+       </li>
+
+       <li class="list-item theme-toggle-item">
+        <button class="icon-small theme-toggle" type="button" aria-label="切换暗黑模式" title="切换暗黑模式">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-adjust fa-stack-1x fa-inverse" aria-hidden="true"></i>
+          </span>
+        </button>
+       </li>
+    </ul>
+
+    <button class="icon-small theme-toggle theme-toggle-mobile" type="button" aria-label="切换暗黑模式" title="切换暗黑模式">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-adjust fa-stack-1x fa-inverse" aria-hidden="true"></i>
+      </span>
+    </button>
+
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/ideas/" class="menu-link">Ideas</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/links/" class="menu-link">Links</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    
+<div id="article-banner">
+  <h2>Dotr: 一个简单的配置备份工具</h2>
+  <p class="post-date">2026-08-21</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+
+<main class="app-body flex-box">
+
+
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content" lang="zh-CN"><p>这周我的 Mac 突然无法开机了，睡午觉之前我没插电让它继续跑程序，回来后就发现已经黑屏，无论如何充电都无法开机。用了 14 年 Mac 第一次出现这种情况，麻烦的是我暑假在湖南老家待着，发现整个地级市都没办法修复 Mac，无奈寄去长沙的苹果售后修理。</p>
+<p>但这两天我还有些工作需要处理，所以就在家人的 PC 机上开始重建我的工作流程和工具。这时候才想起，我应该是有份比较新的配置备份。然后直接从 Github 的私有库上拉取下来，交给 AI 帮我恢复配置，一切都方便多了。</p>
+<p>完成这个备份的小工具是 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/dotr">dotr</a>，几个月之前我 vibe coding 的。</p>
+<p>那次的契机也是自己一个命令行失误，导致 <code>.zshrc</code> 完全覆盖了。我最早的备份就是一个 Git 仓库，把 <code>.zshrc</code>、<code>.gitconfig</code>、编辑器配置这些文件手工复制进去。后来用过各种 dotfiles 管理工具，也折腾过 symlink、bootstrap 脚本、chezmoi/yadm 这类更完整的方案。</p>
+<p>这些工具都还行，但有的地方又不符合我的使用习惯，我的需求其实更偏“备份”而不是“配置部署系统”。我不太想把 home 目录变成一套复杂的模板工程，也不想每加一个配置就思考它应该如何 symlink、如何跨机器自动恢复。很多时候我只是想：这个文件对我有用，把它安全地放进一个 Git 仓库里，以后坏了能找回来。</p>
+<p>于是写了一个小工具，发布到 crates.io 的 crate 叫 <code>dotr-cli</code>，安装后命令是 <code>dotr</code>：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">cargo</span></span><span class="token function-call arguments shell"> install dotr-cli</span>
+</span></code></pre><h2 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h2>
+<p>dotr 的核心思路很简单：把你指定的文件和目录复制到一个 Git 仓库里，同时保存一份 metadata，方便以后 restore。</p>
+<p>初始化一个仓库：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> init <span class="token group expansion tilde"><span class="token variable language tilde shell">~</span></span>/dotbackup<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>with-defaults</span><span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>set-default</span></span>
+</span></code></pre>
+<p>仓库结构大概是这样：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">dotr.toml
+files/
+  home/
+metadata/
+  index.json
+</code></pre>
+<p><code>~/.zshrc</code> 会被存到：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">files/home/.zshrc
+</code></pre>
+<p>如果是 <code>$HOME</code> 之外的绝对路径，则会放到：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">files/root/Library/example/hello/world
+</code></pre>
+<p>这个设计看起来朴素，但我挺喜欢。它没有要求真实文件必须变成 symlink，也不要求原来的目录结构适配工具。源文件仍然在它原来的位置，dotr 只是按配置把它们复制到备份仓库。</p>
+<h2 id="配置要短"><a href="#配置要短" class="headerlink" title="配置要短"></a>配置要短</h2>
+<p>dotfiles 备份最麻烦的地方，是每个应用目录都不一样。有的目录里只有配置，有的目录混着缓存、session、数据库、token、日志和临时文件。粗暴地备份整个 <code>.config</code> 基本等于把垃圾也一起提交了。</p>
+<p>所以 dotr 的配置主要围绕 <code>[[path]]</code> 和 <code>[[path_set]]</code>：</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">[[path_set]]
+base = &quot;~&quot;
+items = [
+  &quot;.gitconfig&quot;,
+  { src = &quot;.config/nvim&quot;, include = [&quot;init.lua&quot;, &quot;lua/**&quot;, &quot;after/**&quot;] },
+  { src = &quot;.config/some-app&quot;, include = [&quot;config.toml&quot;, &quot;assets/**&quot;], include_binary_file = true },
+]
+</code></pre>
+<p><code>path_set</code> 是为了让常见的 home-relative 配置写起来更短。字符串等价于 <code>{ src = "..." }</code>，table 则可以继续加 <code>include</code>、<code>exclude</code>、<code>encrypt</code>、<code>force</code> 等字段。</p>
+<p>默认策略会跳过缓存、日志、本地数据库、session、build output、临时文件、环境变量文件、私钥等内容。如果一个目录里只有几个文件值得备份，我更推荐显式写 <code>include</code>，而不是整个目录打包。</p>
+<h2 id="status-和-backup-都是同一套逻辑"><a href="#status-和-backup-都是同一套逻辑" class="headerlink" title="status 和 backup 都是同一套逻辑"></a>status 和 backup 都是同一套逻辑</h2>
+<p>常用命令很少：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> status</span>
+<span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> backup</span>
+<span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> restore<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>diff</span> <span class="token group expansion tilde"><span class="token variable language tilde shell">~</span></span>/.ssh/config</span>
+<span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> restore<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>apply</span> <span class="token group expansion tilde"><span class="token variable language tilde shell">~</span></span>/.zshrc</span>
+</span></code></pre>
+<p><code>status</code> 本质上是一次 dry-run backup：扫描配置的 source，比较当前文件和仓库里的备份，然后告诉你会新增、修改、删除什么。<code>backup</code> 则真正把变化写进去。</p>
+<p>如果开启 Git 自动提交：</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">[git]
+auto_commit = true
+auto_push = false
+commit_message = &quot;chore(dotr): automated backup&quot;
+</code></pre>
+<p>dotr 只会 stage 自己管理的路径：<code>dotr.toml</code>、<code>files/</code>、<code>metadata/</code>、<code>recipients</code> 和 <code>.gitignore</code>。这个细节很重要，因为 backup repo 里可能还有你手工放的 README 或其他文件，工具不应该顺手把用户未准备好的东西一起提交。</p>
+<p><code>dotr add</code> 也会顺手跑一次 scoped backup：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> add <span class="token group expansion tilde"><span class="token variable language tilde shell">~</span></span>/.config/yazi</span>
+<span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> add<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>encrypt</span> <span class="token group expansion tilde"><span class="token variable language tilde shell">~</span></span>/.npmrc</span>
+<span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> add<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>force</span> /Library/Logs/MCXTools.log</span>
+</span></code></pre>
+<p>如果这次 add 实际不会备份任何东西，比如被默认规则全部跳过，它会失败，并给出 <code>dotr add --force PATH</code> 的提示，而不是悄悄把一条无效配置写进 <code>dotr.toml</code>。</p>
+<h2 id="restore-默认保守"><a href="#restore-默认保守" class="headerlink" title="restore 默认保守"></a>restore 默认保守</h2>
+<p>备份工具还有一个危险操作：恢复。</p>
+<p>dotr 的 restore 默认是 dry-run，必须加 <code>--apply</code> 才会写回原位置：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> restore <span class="token group expansion tilde"><span class="token variable language tilde shell">~</span></span>/.zshrc          <span class="token comment number-sign shell"><span class="token punctuation definition comment begin shell">#</span></span><span class="token comment number-sign shell"> 只预览</span><span class="token comment number-sign shell">
+</span></span><span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> restore<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>apply</span> <span class="token group expansion tilde"><span class="token variable language tilde shell">~</span></span>/.zshrc  <span class="token comment number-sign shell"><span class="token punctuation definition comment begin shell">#</span></span><span class="token comment number-sign shell"> 真正恢复</span><span class="token comment number-sign shell">
+</span></span></span></code></pre>
+<p>如果目标文件已经存在，而且内容不同，默认不会覆盖，除非显式加 <code>--force</code>。如果只是想把某个加密文件临时解出来看看，也可以用 <code>-o</code> 输出到另一个路径：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> restore<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> -</span>o</span> /tmp/ssh-config <span class="token group expansion tilde"><span class="token variable language tilde shell">~</span></span>/.ssh/config</span>
+</span></code></pre>
+<p>对于 <code>$HOME</code> 之外的绝对路径，恢复更严格，必须同时给 <code>--apply</code> 和 <code>--allow-absolute</code>：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> restore<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>apply</span><span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>allow-absolute</span> /Library/example/hello/world</span>
+</span></code></pre>
+<p>我自己写这类工具时很在意“危险动作”。backup 可以勤快一点，restore 应该慢一点。尤其是配置文件，一次错误覆盖可能让一个环境很难排查。</p>
+<h2 id="age-加密文件"><a href="#age-加密文件" class="headerlink" title="age 加密文件"></a>age 加密文件</h2>
+<p>很多配置文件里会混进 token、内部 URL、账号名、私有 endpoint。dotfiles 仓库如果要推到远程，这些东西就很尴尬。</p>
+<p>dotr 支持对单个 path 显式开启 age 加密：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> keygen</span>
+<span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> add<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>encrypt</span> <span class="token group expansion tilde"><span class="token variable language tilde shell">~</span></span>/.npmrc</span>
+</span></code></pre>
+<p>对应配置大概是：</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">[encryption]
+backend = &quot;age&quot;
+recipients_file = &quot;recipients&quot;
+identity = &quot;~/.config/dotr/identity&quot;
+
+[[path]]
+src = &quot;~/.npmrc&quot;
+encrypt = true
+</code></pre>
+<p>这里没有依赖系统安装的 <code>age</code> 命令，而是直接用 Rust 的 age 实现完成 keygen、backup 和 restore。<code>recipients</code> 是公钥，可以进仓库；<code>~/.config/dotr/identity</code> 是私钥，必须像密码一样保存，不能提交。</p>
+<p>我没有让 dotr 自动猜哪些文件应该加密。秘密的边界很难可靠推断，自动猜错反而危险。它只提供机制：你明确说这个 path 要加密，它才加密。</p>
+<p>提醒：如果一个 secret 已经以明文进过 Git 历史，后来把 <code>encrypt = true</code> 打开，只能保护未来的备份文件，不能让历史记录自动消失。该 rotate 的 secret 还是要 rotate。</p>
+<h2 id="normalize-去掉琐碎的备份"><a href="#normalize-去掉琐碎的备份" class="headerlink" title="normalize 去掉琐碎的备份"></a>normalize 去掉琐碎的备份</h2>
+<p>现实里的配置文件经常有一些“每次运行都会变”的字段：时间戳、计数器、last refresh、last seen。它们变化了，但并不代表这个配置有备份价值。如果每次 backup 都因为这些字段产生 diff，最后 Git 历史会很吵。</p>
+<p>dotr 支持对 matched 文件做 compare-only normalization：</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">[[path]]
+src = &quot;~/.config/some-app&quot;
+include = [&quot;config.toml&quot;]
+normalize = { match = &quot;config.toml&quot;, drop_paths = [&quot;runtime.last_updated&quot;] }
+</code></pre>
+<p>它的关键点是 compare-only：不会改写源文件，也不会把备份仓库里的文件改成删字段后的版本。它只是在比较 hash 时，先把指定字段 drop 掉。如果只有这些字段变化，backup 就认为没有值得写入的新版本；如果后来真正的配置字段变化了，dotr 仍然会复制当前原始文件。</p>
+<p>目前支持 TOML、JSON、txt、conf 的识别，TOML/JSON 可以按 dot path 删除字段，也支持 <code>*</code> 匹配一层对象，比如：</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">drop_paths = [&quot;marketplaces.*.last_updated&quot;]
+</code></pre><h2 id="watch-和-daemon"><a href="#watch-和-daemon" class="headerlink" title="watch 和 daemon"></a>watch 和 daemon</h2>
+<p>如果只靠手动运行 <code>dotr backup</code>，最后大概率会忘。</p>
+<p>所以 dotr 有 watch 模式：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> watch</span>
+</span></code></pre>
+<p>它会监听配置里的 source path，做 debounce，再按 <code>backup_interval_secs</code> 控制备份频率。也可以用 daemon 命令在后台跑：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> daemon start</span>
+<span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> daemon status</span>
+<span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> daemon restart</span>
+<span class="token function-call shell"><span class="token variable function shell">dotr</span></span><span class="token function-call arguments shell"> daemon stop</span>
+</span></code></pre>
+<p>这里我没有做 systemd unit 或 launchd plist。<code>dotr daemon start</code> 会解析 repo，写一个用户级 daemon config，记录当前 dotr executable 和 repo，然后启动 <code>dotr --repo &lt;repo&gt; watch</code> 到后台。日志默认写到：</p>
+<pre class="line-numbers language-text" data-language="text"><code class="language-text">~/.local/state/dotr/dotr-watch.log
+</code></pre><h2 id="自定义备份命令"><a href="#自定义备份命令" class="headerlink" title="自定义备份命令"></a>自定义备份命令</h2>
+<p>有些东西不是直接复制现有文件就能备份的。比如 Homebrew 包列表、VS Code 扩展列表、某些工具的导出配置。</p>
+<p>dotr 用 <code>[[custom_backup]]</code> 处理这类场景：</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml">[[custom_backup]]
+name = &quot;homebrew&quot;
+backup = &quot;brew bundle dump --file ~/.config/homebrew/Brewfile --force&quot;
+restore = &quot;brew bundle --file ~/.config/homebrew/Brewfile&quot;
+paths = [&quot;~/.config/homebrew/Brewfile&quot;]
+</code></pre>
+<p>backup 前先跑 <code>backup</code> 命令，生成文件后再扫描；restore 时文件恢复后再跑 <code>restore</code> 命令。</p>
+<p>这让我不用把 Homebrew、VS Code、各种工具的“导出命令”写进单独脚本里，dotr 本身就能描述这个备份关系。</p>
+<h2 id="和已有-dotfiles-工具的区别"><a href="#和已有-dotfiles-工具的区别" class="headerlink" title="和已有 dotfiles 工具的区别"></a>和已有 dotfiles 工具的区别</h2>
+<p>如果你需要跨机器模板、条件渲染、复杂 bootstrap、secret manager 集成，那些成熟工具可能更适合。dotr 更像一个保守的 copy-based backup tool：我列出想备份的东西，它定期复制到仓库。它也提供恢复功能，但能力比较基础。就我这次的实际体验而言，直接把备份交给 AI 恢复更方便，AI 还能顺手处理一些跨平台问题。</p>
+</section>
+
+    <p></p>
+
+  
+    <!-- 二维码 START -->
+    
+        <div class="qrcode">
+            <img src="/images/wechat-qr-code.jpg" height="160" width="160">
+            <figcaption>公号同步更新，欢迎关注👻</figcaption>
+      </div>
+    
+
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+
+  <a href="/tags#Programming" >
+    <span class="tag-code">Programming</span>
+  </a>
+
+  <a href="/tags#Rust" >
+    <span class="tag-code">Rust</span>
+  </a>
+
+  <a href="/tags#CLI" >
+    <span class="tag-code">CLI</span>
+  </a>
+
+  <a href="/tags#Tool" >
+    <span class="tag-code">Tool</span>
+  </a>
+
+
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/p/obr-intro/">
+        <span class="nav-arrow">← </span>
+        
+          Obr: a Web UI for My Obsi…
+        
+      </a>
+    
+    
+  </div>
+
+
+    <!-- NAV END -->
+
+    <!-- 二维码 END -->
+    
+      <!-- No Comment -->
+    
+
+    <div id="utterances-comments"></div>
+    <script>
+      (function() {
+        var theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'github-dark' : 'github-light';
+        var script = document.createElement('script');
+        script.src = 'https://utteranc.es/client.js';
+        script.setAttribute('repo', 'chenyukang/chenyukang.github.io');
+        script.setAttribute('issue-term', 'pathname');
+        script.setAttribute('theme', theme);
+        script.setAttribute('crossorigin', 'anonymous');
+        script.async = true;
+        document.getElementById('utterances-comments').appendChild(script);
+      })();
+    </script>
+  
+
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+    <strong class="toc-title"></strong>
+    
+      <ol class="toc toc-nav"><li class="toc-item toc-level-2"><a class="toc-link" href="#备份"><span class="toc-text">备份</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置要短"><span class="toc-text">配置要短</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#status-和-backup-都是同一套逻辑"><span class="toc-text">status 和 backup 都是同一套逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#restore-默认保守"><span class="toc-text">restore 默认保守</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#age-加密文件"><span class="toc-text">age 加密文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#normalize-去掉琐碎的备份"><span class="toc-text">normalize 去掉琐碎的备份</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#watch-和-daemon"><span class="toc-text">watch 和 daemon</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义备份命令"><span class="toc-text">自定义备份命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#和已有-dotfiles-工具的区别"><span class="toc-text">和已有 dotfiles 工具的区别</span></a></li></ol>
+    
+  </div>
+</aside>
+
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://catcoding.me//p/dotr-intro/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW * 3 / 4}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+
+    <footer class="app-footer" id="footer">
+    <p class="copyright">
+        &copy;
+        2026 | Proudly powered by <a href="https://github.com/chenyukang/hexo-rs" target="_blank">hexo-rs</a> with <a href="https://github.com/yanm1ng/hexo-theme-vexo">Vexo</a>
+    </p>
+</footer>
+
+<script>
+    function async(u, c) {
+        var d = document,
+            t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) {
+            o.addEventListener('load', function(e) {
+                c(null, e);
+            }, false);
+        }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+<script>
+    async("//catcoding.me/js/fastclick.min.js", function() {
+        FastClick.attach(document.body);
+    })
+</script>
+
+<script src="/js/script.js?v=20260526-theme-icon"></script>
+
+  </body>
+</html>
