@@ -3,7 +3,7 @@
   <title>CatCoding</title>
   <link href="http://catcoding.me/atom.xml" rel="self"/>
   <link href="http://catcoding.me/"/>
-  <updated>2026-09-23T05:06:25.235177744+00:00</updated>
+  <updated>2026-09-23T05:15:08.726821497+00:00</updated>
   <id>http://catcoding.me/</id>
   <author><name>yukang</name></author>
   <entry>
@@ -345,121 +345,6 @@ deepseek_model = &quot;deepseek-v4-flash&quot;
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2>
 <p>GitHeron 是一个很个人化的工具，它的目标不是做一个复杂的标注系统，而是让“读到有用内容”到“进入自己的知识库”之间少一点摩擦。</p>
 <p>对了，我最近还 Vibe coding 了另一个小插件 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/auto-tabs">auto tabs</a>，也是解决我日常的具体问题的。在 AI 时代，稍微有点编程经验的人都会把自己的工作流优化到极致。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>开发 Runnel 的一些记录</title>
-    <link href="http://catcoding.me/p/runnel-dev-notes/"/>
-    <id>http://catcoding.me/p/runnel-dev-notes/</id>
-    <published>2026-04-23T19:15:24+08:00</published>
-    <updated>2026-09-23T13:05:52+08:00</updated>
-    <content type="html"><![CDATA[<p>最近断断续续 Vibe Coding 写了一个小工具，叫 <a target="_blank" rel="noopener" href="https://github.com/chenyukang/runnel">Runnel</a>。因为我之前用的两个机场都跪了 (虽然后来又逐渐恢复了)，于是萌生了自己写个代理工具的想法，顺便把一些网络相关的东西重新摸一遍。</p>
-<p>Runnel 有“小河流”的意思，我觉得还挺贴切：不是要做一个很宏大的网络基础设施，就是在本机和远端之间挖一条能用、能看、能调试的小通道。</p>
-<p>先让 AI 快速撸了一个车 native-http 版本的，然后又加了多路复用的 native-mux 模式。后来又想到一个同事说他一直用自己写的代理工具叫做 <a target="_blank" rel="noopener" href="https://github.com/libraries/daze">daze</a>，所以立马让 AI 用 Rust 重写了一份跑了起来。</p>
-<p>于是它现在支持几种模式：<code>native-http</code>、<code>native-mux</code>、几个 daze 风格的模式，以及后来主要投入精力做的 <code>wg</code> 模式。</p>
-<p>前面这些更像传统 SOCKS 代理，应用明确连到本地 SOCKS 端口，然后 Runnel 把流量转到远端。WG 模式不一样，它走 TUN 设备和 WireGuard 风格的 UDP 包，更像日常会用的全局 VPN。</p>
-<p>真正让我把重心转到 WG 模式的原因也很普通：SOCKS 在浏览器里挺好用，但到系统级流量、命令行工具、各种后台服务时就没那么舒服了。macOS 下总会碰到有些软件不吃系统代理，有些软件自己做 DNS，有些东西干脆只看路由表。最后还是得上 TUN。</p>
-<h2 id="先让它能跑"><a href="#先让它能跑" class="headerlink" title="先让它能跑"></a>先让它能跑</h2>
-<p>WG 模式底层用的是 Cloudflare 的 <a target="_blank" rel="noopener" href="https://github.com/cloudflare/boringtun">boringtun</a>，目标很简单：</p>
-<ul>
-<li>client 创建一个 TUN 设备；</li>
-<li>server 也创建一个 TUN 设备；</li>
-<li>两边用 WireGuard key 建立 peer；</li>
-<li>client 把默认路由打进去；</li>
-<li>server 开转发和 NAT。</li>
-</ul>
-<p>听起来像配置一遍 WireGuard 而已，但自己写以后就会发现，大部分时间并不在加密和解密上，而是在处理操作系统。</p>
-<p>Linux 上需要 <code>/dev/net/tun</code>、<code>ip</code>、<code>sysctl</code>、<code>iptables</code>。macOS 上是 <code>ifconfig</code>、<code>route</code>、<code>networksetup</code>。命令不复杂，但出错方式很多。例如服务端没停干净，再起一次就会卡在：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">ip</span></span><span class="token function-call arguments shell"> address add 10.8.0.1 peer 10.8.0.2 dev runnel-wg0</span>
-</span></code></pre>
-<p>因为设备还在，地址也还在。再比如 macOS 上如果之前的 tunnel 没清理干净，WG endpoint 的路由可能会被系统解析到某个 <code>utun</code> 上。这个时候 client 还没真正起来，但发往 server endpoint 的 UDP 包已经准备钻进旧 tunnel，最后当然连不上。</p>
-<p>这类问题很烦，但它们也逼着我把启动阶段做得更啰嗦一点。现在 Runnel 会做 preflight，会打印 hook，会在 client 装路由之前先做一次短 handshake probe。key、endpoint 或两端配置有问题时，最好在启动阶段直接报错，而不是把系统路由改完，然后留给用户一个没有响应的黑盒。</p>
-<p>我写这类工具最大的感受是：网络工具的“好用”，很多时候不是吞吐量高一点，而是坏的时候知道坏在哪里。</p>
-<h2 id="配置生成"><a href="#配置生成" class="headerlink" title="配置生成"></a>配置生成</h2>
-<p>WG 的配置很容易写错，尤其是 private key、peer public key、tunnel IP 这种互相交叉的字段。手写一次就够让人烦了，所以后来加了：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">runnel</span></span><span class="token function-call arguments shell"> wg-config<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>server-endpoint</span> SERVER-IP:1443 <span class="token operator assignment redirection shell">&gt;</span> runnel.yaml</span>
-</span></code></pre>
-<p>这个命令会一次生成 client 和 server 两边配置。两台机器用同一个 YAML，只是启动时分别执行：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shell bash"><span class="token function-call shell"><span class="token variable function shell">sudo</span></span><span class="token function-call arguments shell"> runnel<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>config</span> runnel.yaml server</span>
-<span class="token function-call shell"><span class="token variable function shell">sudo</span></span><span class="token function-call arguments shell"> runnel<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>config</span> runnel.yaml client<span class="token variable parameter option shell"><span class="token punctuation definition parameter shell"> --</span>tui</span></span>
-</span></code></pre>
-<p>它减少了很多“我复制错了吗”的问题，也方便把一些默认值放进去。比如现在生成配置默认带 adblock，默认启用 DNS capture，也会默认带上 noise engine 和 mask obfs：</p>
-<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token yaml"><span class="token string unquoted plain out yaml"><span class="entity name tag yaml">client</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
-  <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">wg</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
-    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">engine</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token string unquoted plain out yaml">noise</span>
-    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">obfs</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token string unquoted plain out yaml">mask</span>
-    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">obfs_padding_min</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token number integer yaml">8</span>
-    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">obfs_padding_max</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token number integer yaml">96</span>
-    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">obfs_handshake_padding</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token number integer yaml">256</span>
-    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">obfs_response_padding</span></span><span class="token punctuation separator key-value mapping yaml">:</span> <span class="token number integer yaml">192</span>
-</span></code></pre>
-<p>这些东西不一定适合所有人，但它们很适合我自己的使用场景：默认配置应该尽量接近日常可用，而不是只给一个裸 tunnel。</p>
-<h2 id="分流"><a href="#分流" class="headerlink" title="分流"></a>分流</h2>
-<p>我原来只想做 IP 规则，例如：</p>
-<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token yaml"><span class="token string unquoted plain out yaml"><span class="entity name tag yaml">client</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
-  <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">ip_rules</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
-    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">direct</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
-      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>10.*<span class="token punctuation definition string end yaml">&quot;</span></span>
-      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>192.168.*<span class="token punctuation definition string end yaml">&quot;</span></span>
-</span></code></pre>
-<p>这个在 WG 模式下比较直观，<code>direct</code> 就是给这些 IP 加本地直连 route，不让它们进 tunnel。后来很快又想要域名规则：</p>
-<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token yaml"><span class="token string unquoted plain out yaml"><span class="entity name tag yaml">client</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
-  <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">domain_rules</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
-    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">direct</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
-      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>*.baidu.com<span class="token punctuation definition string end yaml">&quot;</span></span>
-      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>*.cn<span class="token punctuation definition string end yaml">&quot;</span></span>
-    <span class="token string unquoted plain out yaml"><span class="entity name tag yaml">block</span></span><span class="token punctuation separator key-value mapping yaml">:</span>
-      <span class="token punctuation definition block sequence item yaml">-</span> <span class="token string double yaml"><span class="token punctuation definition string begin yaml">&quot;</span>*.xxx.com<span class="token punctuation definition string end yaml">&quot;</span></span>
-</span></code></pre>
-<p>问题是 WG 看到的是 IP 包，不知道这个连接原本访问的是 <code>github.com</code> 还是别的什么域名。能抓到域名的地方只有 DNS。</p>
-<p>所以现在 WG 的 domain rules 是 DNS 驱动的。client 会把本机 DNS 指到 <code>127.0.0.1:53</code>，Runnel 在本地做一个很小的 DNS forwarder。它看到查询 <code>www.xxx.com</code>，发现命中 direct 规则，就等上游 DNS 返回 IP，然后动态加一条 host route，让这个 IP 走本地网关。</p>
-<p>这个方案很实用，但并不完美。第一次访问一个域名时，如果系统还没有拿到解析结果，它可能已经先走了 tunnel。DoH、DoT、浏览器缓存、直接访问 IP，也都绕过这条逻辑。CDN 共享 IP 还会带来另一个问题：你为了某个域名加的直连 route，可能影响另一个解析到同一 IP 的域名。</p>
-<p>这些限制没法假装不存在，所以文档里也写清楚了。能解决 80% 的日常问题就很好，剩下 20% 要靠更底层的 packet inspection 或系统扩展，那又是另外一个坑。</p>
-<h2 id="顺手加的-Adblock"><a href="#顺手加的-Adblock" class="headerlink" title="顺手加的 Adblock"></a>顺手加的 Adblock</h2>
-<p>后来我把 <a target="_blank" rel="noopener" href="https://github.com/brave/adblock-rust/">adblock-rust</a> 集成进来了。原因很简单：既然 WG 模式已经有 DNS capture，那 block 域名就可以顺手做掉。</p>
-<p>这里我比较在意优先级。最后定下来是：</p>
-<ol>
-<li>用户自己的 <code>domain_rules.block</code></li>
-<li>adblock 规则</li>
-<li>用户自己的 direct/proxy 规则</li>
-<li>默认走 proxy，也就是 tunnel</li>
-</ol>
-<p>用户手写规则永远应该赢过订阅规则。否则哪天 EasyPrivacy 把一个你需要的域名拦了，就会很难受。</p>
-<p>性能上我一开始也有点担心。毕竟 tunnel 里每个包都可能很密集，如果每个请求、每个 packet 都去跑 adblock，那肯定不行。最后实现是 DNS 级别的：只有新的域名查询会进入规则匹配，订阅会缓存在本地，域名决策也有内存缓存。实际看下来，这个成本可以接受。</p>
-<p>有次 TUI 里看到 <code>p.data.cctv.com</code> 被 block，我还专门去查了一下。它不是用户规则拦的，是订阅规则命中的。</p>
-<h2 id="TUI-比我预想中更有用"><a href="#TUI-比我预想中更有用" class="headerlink" title="TUI 比我预想中更有用"></a>TUI 比我预想中更有用</h2>
-<p>Runnel 有一个 TUI，不是为了好看，主要是为了少开几个终端。</p>
-<p>WG 模式刚开始出问题时，我经常要同时看：</p>
-<ul>
-<li>client 有没有握手；</li>
-<li>server 有没有看到 endpoint；</li>
-<li>最近有没有 REKEY timeout；</li>
-<li>DNS 最近解析了什么域名；</li>
-<li>哪些域名被 direct、proxy、block；</li>
-<li>tunnel 有没有流量。</li>
-</ul>
-<p>这些信息散在 log、<code>netstat</code>、<code>route</code>、<code>tcpdump</code> 里会很痛苦。放到一个 TUI 里之后，很多问题一眼能看出方向。</p>
-<p>比如看到 <code>HANDSHAKE(REKEY_TIMEOUT)</code> 连续刷，基本就是两边没有成功握手，先别怀疑浏览器。看到 <code>www.qq.com pending</code>，就知道 DNS query 被捕获了，但还没拿到可用于直连的 IP。</p>
-<h2 id="Benchmark-测试"><a href="#Benchmark-测试" class="headerlink" title="Benchmark 测试"></a>Benchmark 测试</h2>
-<p>我给所有模式都加了一个 <code>mode_perf</code> benchmark。小请求跑 1000 次，大响应跑 8 个 1MiB 下载。非 WG 模式走 SOCKS path，WG 模式会真正拉起 child process，创建 TUN 设备，然后从 tunnel IP 发 HTTP 请求。</p>
-<p>本机测试的结果挺有意思：</p>
-<pre class="line-numbers language-text" data-language="text"><code class="language-text">native-mux  小请求大约 3300 req/s
-daze-czar   小请求大约 3400 req/s
-wg          小请求大约 2500 req/s
-</code></pre>
-<p>但大响应吞吐 WG 看起来很低，只有几十 MiB/s。刚看到这个数字我也有点怀疑，毕竟实际用起来 WG 并不觉得卡。后来想想也正常：这个 benchmark 是 localhost 上的端到端测试，WG 走真实 TUN 设备，会经过内核路由、用户态加解密、UDP socket、NAT 这些路径；而很多 SOCKS 模式本质上就是本机 TCP 流转发，少了不少系统边界。</p>
-<p>日常使用的“流畅”也不完全由大文件吞吐决定。连接建立、DNS、浏览器并发、小请求延迟，这些东西更容易影响体感。WG 在小请求上的数据并不差，而且系统级接管以后，很多应用不用再单独配置代理，反而省心。</p>
-<p>所以 benchmark 还是要有，但不能只看一个数。尤其是代理/VPN 这种东西，不同 workload 差别太大。</p>
-<h2 id="Noise-和混淆"><a href="#Noise-和混淆" class="headerlink" title="Noise 和混淆"></a>Noise 和混淆</h2>
-<p>标准的 WireGuard 长度非常固定，所以基本上会容易检测出来。我在最初使用单纯的 WG 用一段时间开始丢包，于是我开始琢磨如何加噪音来抗审查。</p>
-<p>于是给 WG mode 加了 noise engine。默认的 device engine 是让 boringtun 自己管理 WireGuard 设备和 UAPI socket，比较标准。noise engine 则是 Runnel 自己跑 TUN/UDP loop，直接用 <code>boringtun::noise::Tunn</code> 做加解密。</p>
-<p>这样做的好处是 transport 变得更可控。比如可以在 WireGuard UDP 包外面包一层 mask，把包头和长度藏一下，再加一些 padding。现在的 <code>obfs: mask</code> 做的就是这个方向。</p>
-<p>我不想把它说成什么“抗审查神器”，但从我平稳使用的一周结果看这样的混淆对于个人使用已经足够。现实网络环境要麻烦得多，包长、时序、UDP 行为、重传模式，都可能暴露特征。</p>
-<p>我也看了一些类似工具的方向，比如 <a target="_blank" rel="noopener" href="https://github.com/amnezia-vpn">AmneziaVPN</a>、Nym 把 QUIC 和 WG 组合起来的思路，Runnel 现在还只是很早期的版本，但 noise engine 让后面继续试 QUIC、padding profile、甚至更麻烦的 packet shaping 都方便了一些。</p>
-<hr />
-<p>Runnel 还没有到我觉得很完整的阶段，还有些细节可以继续打磨，比如 IPv6 和双栈还需要更好的 schema，macOS 上更细粒度的 app split tunneling 也不是简单路由表能解决的。</p>
-<p>但目前这个状态我已经挺满意了，它不是一个周末玩具了，至少已经变成了我自己会认真拿来使用、测试、折腾网络问题的工具。</p>
-<p>这大概就是个人项目最舒服的地方：先让自己用得爽一点，遇到问题再修复。我的日常使用场景是 macOS(client) + Linux(server)，其他路径目前只是在单元测试中有覆盖，也许其他实际场景会碰到一些配置问题，欢迎 PR。</p>
 ]]></content>
   </entry>
   <entry>
@@ -2079,6 +1964,108 @@ Huge Large Future (100KB): 191.44x slower
 <h3 id="cycling-attack"><a href="#cycling-attack" class="headerlink" title="cycling attack"></a>cycling attack</h3>
 <p>后来我们在做闪电网络的时候又发现 RBF 可能会引入 cycling attack 的风险，这个攻击通过构造巧妙的新交易，让支付路径上的中间节点的 commitment tx 不能按时上链，<a target="_blank" rel="noopener" href="https://blog.satsbridge.com/lightning-replacement-cycling-attack-explained-45636e41bc6f">Lightning Replacement Cycling Attack Explained</a>这篇文章有更详细的描述。</p>
 <p>所以我们后来又做了这么一个改进：<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/4561">Recover possible transaction in conflicted cache when RBF</a> 来规避这个问题。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>CKB 交易池重构</title>
+    <link href="http://catcoding.me/p/ckb-txpool-refactor/"/>
+    <id>http://catcoding.me/p/ckb-txpool-refactor/</id>
+    <published>2024-11-06T11:39:21+08:00</published>
+    <updated>2024-11-06T11:39:21+08:00</updated>
+    <content type="html"><![CDATA[<p>在 11.9 号清迈的 <a target="_blank" rel="noopener" href="https://share.foresightnews.pro/article/detail/70811">CKCON</a> 会议上我会做一个关于 CKB 交易池的演讲，这是我准备的 slides <a target="_blank" rel="noopener" href="https://ckb-tx-pool.vercel.app/1">Key Upgrades of the CKB Core</a> 。所以这段时间在整理之前做项目的时候写的一些文档，顺便分享到自己的博客上。既然我们整个项目的源码都是公开的，这些文档其实也是可以分享的。</p>
+<p>第一次听说 CKB 的读者可以参考这个文档以了解什么是 CKB 以及如何工作的：<a target="_blank" rel="noopener" href="https://docs.nervos.org/docs/getting-started/how-ckb-works">How CKB Works | Nervos CKB</a>。</p>
+<p>我加入 Cryptape 之后一年内做的主要工作，涉及到交易池重构、Replace-by-fee 功能、以及 new-verify。这是第一篇关于交易池重构的文章。</p>
+<h2 id="什么是交易池"><a href="#什么是交易池" class="headerlink" title="什么是交易池"></a>什么是交易池</h2>
+<p>在 bitcoin 中交易池叫作 mempool，比如 <a target="_blank" rel="noopener" href="https://mempool.space/">mempool - Bitcoin Explorer</a> 这个网站就很好地展示了其当前的状态。</p>
+<p>交易池是 bitcoin 中的一个重要的组件，但感觉专门关于这块的资料很少，只能通过 PR 和邮件列表上的讨论看到一些文档。但交易池非常重要，因为一个交易要上链必须会通过交易池，而其中的交易打包算法涉及到如何选择合适的交易，这里面有很多因素需要考虑，所以在实现上也是比较复杂的。</p>
+<p>当一个交易被提交到一个节点时，或者一个节点从网络中同步到交易时，这个交易首先需要被加入到交易池中，交易池里会根据一定的算法去选择下一个需要被打包的交易，另外交易池作为一个缓存，我们需要为其设置一个最大的 size。所以交易池里面最重要的两个操作就是 packaging 和 evicting。</p>
+<p>交易池里面的交易存在父子关系，打包的时候需要从交易链的纬度去考虑，后面的 Replace by fee 这些功能也需要关注整个交易的所有子交易。</p>
+<p><img src="http://catcoding.me/images/ob_pasted-image-20250221102123.png" alt="" /></p>
+<h2 id="交易池重构"><a href="#交易池重构" class="headerlink" title="交易池重构"></a>交易池重构</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3>
+<p>根据 RFC <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/rfcs/blob/master/rfcs/0020-ckb-consensus-protocol/0020-ckb-consensus-protocol.md#two-step-transaction-confirmation">consensus-protocol</a> 的设计，CKB 里的 tx-pool 采用了两段提交的方式：</p>
+<p><img src="http://catcoding.me/images/ob_pasted-image-20241031100804.png" alt="" /></p>
+<p>相应地在交易池最初实现的时候， <code>ckb</code> 的代码实现中 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/rc/v0.111.x/tx-pool/src/pool.rs">tx-pool</a> 同样采用了三个独立的队列，具体定义如下：</p>
+<ul>
+<li><code>pending</code> 交易刚加入到交易池时候的状态，我们每次只能处理不多于 <code>MAX_BLOCK_PROPOSALS_LIMIT</code> 个交易，交易需要先进入 <code>gap</code> 备选，具体代码逻辑在 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/3de5a20ce60619927f41f81d9584cab9d39d1275/tx-pool/src/block_assembler/mod.rs#L345C11-L345C11">update_proposals</a> 。</li>
+<li><code>gap</code> 已经被 proposed 了，但是还不能被打包，需要等一个块后才能被打包，所以这只是内部中间过渡状态。</li>
+<li><code>proposed</code> 交易可以加入到 <code>block_template.transactions</code> , 最终打包到 block 里，具体代码逻辑在 <a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/e75ab3faf0f7b1d182be2f1daa30f300cfefabc8/tx-pool/src/block_assembler/mod.rs#L195">block_assembler</a>。</li>
+</ul>
+<p>实现中 <code>pending</code> 和 <code>gap</code> 同样都是使用了 <code>PendingQueue(LinkedHashMap)</code>，而 <code>proposed</code> 采用了 <code>SortedTxMap(HashMap + BTreeSet)</code> ：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token struct rust"><span class="token keyword rust">pub</span> <span class="token keyword struct rust">struct</span> </span><span class="token struct rust"><span class="entity name struct rust">TxPool</span> </span><span class="token struct rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    <span class="token keyword rust">pub</span>(crate) <span class="token variable other member rust">config</span><span class="token punctuation separator rust">:</span> TxPoolConfig,
+    <span class="token comment documentation rust"><span class="token punctuation definition comment rust">///</span> The short id that has not been proposed
+</span>    <span class="token keyword rust">pub</span>(crate) <span class="token variable other member rust">pending</span><span class="token punctuation separator rust">:</span> PendingQueue,
+    <span class="token comment documentation rust"><span class="token punctuation definition comment rust">///</span> The proposal gap
+</span>    <span class="token keyword rust">pub</span>(crate) <span class="token variable other member rust">gap</span><span class="token punctuation separator rust">:</span> PendingQueue,
+    <span class="token comment documentation rust"><span class="token punctuation definition comment rust">///</span> Tx pool that finely for commit
+</span>    <span class="token keyword rust">pub</span>(crate) <span class="token variable other member rust">proposed</span><span class="token punctuation separator rust">:</span> ProposedPool,
+
+    ....
+
+    <span class="token keyword rust">pub</span>(crate) <span class="token variable other member rust">expiry</span><span class="token punctuation separator rust">:</span> <span class="token keyword rust">u64</span>,
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
+
+</span></code></pre>
+<p>这样的实现存在以下问题：</p>
+<ul>
+<li>
+<p>我们不容易对所有在交易池中的 entry 做统一排序，这样会存在以下问题：</p>
+<ul>
+<li>一个 fee 高的交易可能在 transaction 多的情况下在 pending 阶段一直卡着，因为我们在 pending 和 gap 阶段只是按照时间顺序来处理，只在 proposed 后的打包阶段按照交易费来处理。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/issues/3942">issue 3942</a> 交易池满了之后，我们需要选择一些 entry 做 evict，我们目前的 evict 逻辑很<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/blob/fdee47bbd87c66d8a0e54c3ac1f5386cb9aba643/tx-pool/src/pool.rs#L322">简单粗暴</a>。我们希望尽量选择最小 descendants 的交易，这样能避免在 evict 过程中删除过多交易。我们目前在 pending 和 gap 阶段没有记录 descendants，而需要加入这个逻辑就和 proposed 阶段完全重复，而且因为不会统一排序，后续实现也不容易。</li>
+</ul>
+</li>
+<li>
+<p>pending, gap 和 proposed 除了所采用的数据结构不同外，有很多逻辑雷同的代码，比如 entry 的新增和删除等操作，同样都维护了 deps 和 header_deps，resolve_conflict, resolve_conflict_header_dep, resolve_tx 等函数的逻辑也是类似的，但实现上有些细微差异，这导致长期来说代码不容易维护。</p>
+</li>
+<li>
+<p>同样我们在 <code>tx-pool</code> 上对 entry 做迭代和查询时，需要依次针对 pending, gap, proposed 做相同的逻辑，比如 resolve_conflict_header_dep 这样的函数在 pool 中有几个类似的，甚至 get_tx_with_cycles 这样的函数，需要依次判断各个队列。</p>
+</li>
+<li>
+<p>实现其他功能不方便，比如我们如果要实现 Replace by fee，就需要找交易池中和新交易有冲突的交易，我们需要在三个数据结构上分别进行检查才能得到结果。</p>
+</li>
+</ul>
+<h3 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h3>
+<p>基于以上解决现有问题、应对未来的潜在需求、保持代码可维护性的角度，同时参考 <a target="_blank" rel="noopener" href="https://github.com/bitcoin/bitcoin/blob/322ec63b01499c1ec52d3912ee382ebd59f2366b/src/txmempool.h">Bitcoin txmempool</a> 的实现，我们提出引入 <strong>Multi_index_map</strong> 对 tx-pool 进行重构。</p>
+<p>总体方向是把所有的 <code>entry</code> 放入统一的数据结构中进行管理，加入一个新的字段 <code>status</code> 标识目前 <code>entry</code> 所处的阶段，然后通过 index_map 的方式根据不同的属性进行排序和迭代：</p>
+<pre class="line-numbers language-rust" data-language="rust"><code class="language-rust"><span class="token rust"><span class="token enum rust"><span class="token keyword rust">pub</span> <span class="token keyword enum rust">enum</span> <span class="entity name enum rust">Status</span> <span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    Pending<span class="token punctuation separator rust">,</span>
+    Gap<span class="token punctuation separator rust">,</span>
+    Proposed<span class="token punctuation separator rust">,</span>
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
+
+<span class="token annotation rust"><span class="token punctuation definition annotation rust">#</span><span class="token punctuation section group begin rust">[</span><span class="token variable annotation rust">derive</span><span class="token annotation parameters rust"><span class="token group rust"><span class="token punctuation section group begin rust">(</span></span></span><span class="token annotation parameters rust"><span class="token group rust">MultiIndexMap<span class="token punctuation separator rust">,</span> Clone</span></span><span class="token annotation parameters rust"><span class="token group rust"><span class="token punctuation section group end rust">)</span></span></span><span class="token punctuation section group end rust">]</span></span>
+<span class="token struct rust"><span class="token keyword rust">pub</span> <span class="token keyword struct rust">struct</span> </span><span class="token struct rust"><span class="entity name struct rust">PoolEntry</span> </span><span class="token struct rust"><span class="token block rust"><span class="token punctuation section block begin rust">{</span>
+    #[multi_index(hashed_unique)]
+    <span class="token keyword rust">pub</span> <span class="token variable other member rust">id</span><span class="token punctuation separator rust">:</span> ProposalShortId,
+    #[multi_index(ordered_non_unique)]
+    <span class="token keyword rust">pub</span> <span class="token variable other member rust">score</span><span class="token punctuation separator rust">:</span> AncestorsScoreSortKey,
+    #[multi_index(ordered_non_unique)]
+    <span class="token keyword rust">pub</span> <span class="token variable other member rust">status</span><span class="token punctuation separator rust">:</span> Status,
+    #[multi_index(ordered_non_unique)]
+    <span class="token keyword rust">pub</span> <span class="token variable other member rust">evict_key</span><span class="token punctuation separator rust">:</span> EvictKey,
+    <span class="token comment double-slash rust"><span class="token punctuation definition comment rust">//</span> other sort key
+</span>    <span class="token keyword rust">pub</span> <span class="token variable other member rust">inner</span><span class="token punctuation separator rust">:</span> TxEntry,
+</span><span class="token block rust"><span class="token punctuation section block end rust">}</span></span></span>
+</span></code></pre>
+<p>其中根据 Rust 社区的 <a target="_blank" rel="noopener" href="https://github.com/lun3x/multi_index_map">multi_index_map</a> 内部实现采用的数据结构看，性能上应该没有什么大问题：</p>
+<ul>
+<li>Hashed index retrievals are constant-time. (FxHashMap + Slab).</li>
+<li>Sorted indexes retrievals are logarithmic-time. (BTreeMap + Slab).</li>
+<li>Non-Unique Indexes
+<ul>
+<li>Hashed index retrievals are still constant-time with the total number of elements, but linear-time with the number of matching elements. (FxHashMap + (Slab * num_matches)).</li>
+<li>Sorted indexes retrievals are still logarithmic-time with total number of elements, but linear-time with the number of matching elements. (BTreeMap + (Slab * num_matches)).</li>
+<li>Iteration within an equal range of a non-unique index is fast, as the matching elements are stored contiguously in memory. Otherwise iteration is the same as unique indexes.</li>
+</ul>
+</li>
+</ul>
+<p>具体实现时我们是否把 inner 也放在 Slab 里面以后可以通过 benchmark 来选择，从实现的简洁性角度考虑统一放在一个数据结构里面更容易。</p>
+<p>目前的实现版本：<a target="_blank" rel="noopener" href="https://github.com/nervosnetwork/ckb/pull/3993">Tx pool rewrite with multi_index_map #3993</a></p>
+<h2 id="实现结果"><a href="#实现结果" class="headerlink" title="实现结果"></a>实现结果</h2>
+<p>我们首先只是做模块内的重构 (保持对外逻辑和以前一样)，当然考虑引入了新的数据结构，不管是从性能上还是内存占用上都会有一些影响。</p>
+<p>为了做统一排序这件额外的事，本质上我们引入了额外的 Map(FxHashMap 或 BTreeMap) 来存储，所以比以前需要更多内存。另外，我们有时候需要调用 <code>get_by_status</code> 来筛选某个状态的 entries，这在新的实现里面需要先从 index 里面找出 slab 的 id，然后再找到对应的 entry，所以必然也会比以前慢。</p>
+<p>从最终的性能对比结果上，除了内存会稍微有增加，性能上没有大的变化。另外我们在实现的过程中对所用到的 Rust 包 multi-index-map 做了一些贡献：<a target="_blank" rel="noopener" href="https://github.com/lun3x/multi_index_map/pull/23">Non-unique index support, capacity operations, performance improvement & more by wyjin</a></p>
 ]]></content>
   </entry>
 </feed>
