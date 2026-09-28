@@ -197,6 +197,22 @@
         
         <article class="article-card">
           <h3>
+            <a href="/p/nginx-https-too-many-redirect/">Nginx https too many redirect</a>
+          </h3>
+          <p class="article-date">2018-02-23</p>
+          <div class="article-summary">
+            
+            Http 请求在经过多层 Nginx 的时候，通常强制 http 跳转到 https 的时候会这样配置：
+return 302 https://$host$request_uri; 
+## 需要注意这里是 request_uri 而不是 uri，否则会引起安全问题
+
+但是如果是多层 Nginx，前面 ...... 
+            
+          </div>
+        </article>
+        
+        <article class="article-card">
+          <h3>
             <a href="/p/linux-source/">Linux 当前 shell 执行命令</a>
           </h3>
           <p class="article-date">2018-02-22</p>
@@ -317,20 +333,6 @@ os.time()                &l ......
             Kong 的缓存更新很多依赖于事件，而事件看起来是相对来说比较复杂、也是最有趣的一部分。
 worker 模型
 假设我们对 Kong 做了一个更改的请求，这个请求通常是通过 admin_api 这个路由处理的。也就是说最终执行数据库操作的动作是在一个 Nginx worker 进程里。因为操作了数据库 ...... 
-            
-          </div>
-        </article>
-        
-        <article class="article-card">
-          <h3>
-            <a href="/p/kong-intro-4/">Kong 源码分析：缓存</a>
-          </h3>
-          <p class="article-date">2017-07-22</p>
-          <div class="article-summary">
-            
-            Nginx 里的缓存使用
-在 Kong 里面我们缓存的内容大部分是配置，不管是 API 本身的配置还是插件相关的配置，缓存之后就存储在内存中。
-Kong 里的缓存基础代码在 tools/database_cache.lua 文件里面。这里又分两种类型的缓存，一种是shared dict, 一种是使用 ...... 
             
           </div>
         </article>
